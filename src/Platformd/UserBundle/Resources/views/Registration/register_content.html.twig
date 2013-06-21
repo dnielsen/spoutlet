@@ -1,8 +1,48 @@
 {% form_theme form theme %}
 {% form_theme form.recaptcha 'EWZRecaptchaBundle:Form:ewz_recaptcha_widget.html.twig' %}
 
+{% set username_error = '' %}
+{% set email_error = '' %}
+{% set password_error = '' %}
+{% set firstname_error = '' %}
+{% set lastname_error = '' %}
+{% set state_error = '' %}
+{% set news_source_error = '' %}
+{% set accept_error = '' %}
+{% set birthdate_error = '' %}
+{% set invalid_captcha = '' %}
+
 {% for error in errors %}
     {% if error.messageTemplate == 'fos_user.username.blank' %}
+        {% set username_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'fos_user.email.blank' %}
+        {% set email_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'fos_user.password.blank' %}
+        {% set password_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'first_name_not_blank' %}
+        {% set firstname_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'last_name_not_blank' %}
+        {% set lastname_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'state_not_blank' %}
+        {% set state_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'news_source_not_blank' %}
+        {% set news_source_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'You must accept the terms and conditions and the privacy policy' %}
+        {% set accept_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'birthdate_not_blank' %}
+        {% set birthdate_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'This value is not a valid captcha' %}
+        {% set invalid_captcha = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
 {% endfor %}
 
 <div class="std_2col">
@@ -36,7 +76,7 @@
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.username) }}</td>
                             <td class="form-element-cell" valign="top">
                                 {{ form_widget(form.username, {'attr' : {'class' : 'registration-text'}}) }}
-                                {{ form_errors(form.username) }}
+                                <span class="field-error">{{ username_error }}</span>
                             </td>
                         </tr>
                         {% for email in form.email %}
@@ -44,7 +84,7 @@
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(email) }}</td>
                             <td class="form-element-cell" valign="top">
                                 {{ form_widget(email, {'attr' : {'class' : 'registration-text'}}) }}
-                                {{ form_errors(form.email) }}
+                                <span class="field-error">{{ email_error }}</span>
                             </td>
                         </tr>
                         {% endfor %}
@@ -53,7 +93,7 @@
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(plainPassword) }}</td>
                             <td class="form-element-cell" valign="top">
                                 {{ form_widget(plainPassword, {'attr' : {'class' : 'registration-text'}}) }}
-                                {{ form_errors(form.plainPassword) }}
+                                <span class="field-error">{{ password_error }}</span>
                             </td>
                         </tr>
                         {% endfor %}
@@ -61,14 +101,14 @@
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.firstname) }}</td>
                             <td class="form-element-cell" valign="top">
                                 {{ form_widget(form.firstname, {'attr' : {'class' : 'registration-text'}}) }}
-                                {{ form_errors(form.firstname) }}
+                                <span class="field-error">{{ firstname_error }}</span>
                             </td>
                         </tr>
                         <tr id="row_name_last">
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.lastname) }}</td>
                             <td class="form-element-cell" valign="top">
                                 {{ form_widget(form.lastname, {'attr' : {'class' : 'registration-text'}}) }}
-                                {{ form_errors(form.lastname) }}
+                                <span class="field-error">{{ lastname_error }}</span>
                             </td>
                         </tr>
                         <tr id="row_birthdate">
@@ -80,9 +120,8 @@
                                 <span>{{ 'month' | trans({}, 'forms') }}</span>
                                 {{ form_widget(form.birthdate.day, {'attr' : {'class' : 'dob-select'}}) }}
                                 <span>{{ 'day' | trans({}, 'forms') }}</span>
-                                {% if form_errors(form.birthdate) %}
-                                    <br /><span class="field-error">Date of Birth is required.</span>
-                                {% endif %}
+                                <br />
+                                <span class="field-error-np">{{ birthdate_error }}</span>
                             </td>
                         </tr>
                         <tr id="row_address_country">
@@ -96,14 +135,14 @@
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.state) }}</td>
                             <td class="form-element-cell" valign="top">
                                 {{ form_widget(form.state, {'attr' : {'class' : 'registration-text'}}) }}
-                                {{ form_errors(form.state) }}
+                                <span class="field-error">{{ state_error }}</span>
                             </td>
                         </tr>
                         <tr id="row_recaptcha">
                             <td class="form-title-cell" width="33%" align="right" valign="top"></td>
                             <td class="form-element-cell" valign="top">
                                 {{ form_widget(form.recaptcha, {'attr' : {'class' : 'registration-text'}}) }}
-                                {{ form_errors(form.recaptcha) }}
+                                <span class="field-error">{{ invalid_captcha }}</span>
                             </td>
                         </tr>
                         <tr id="row_survey_ownership">
@@ -116,7 +155,8 @@
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.latestNewsSource) }}</td>
                             <td class="form-element-cell" valign="top">
                                 {{ form_widget(form.latestNewsSource) }}
-                                {{ form_errors(form.latestNewsSource) }}
+                                <br />
+                                <span class="field-error-np">{{ news_source_error }}</span>
                             </td>
                         </tr>
                         <tr id="row_agreed_tos_privacy">
@@ -131,7 +171,8 @@
                                     },
                                     'forms'
                                 ) | raw }}
-                                {{ form_errors(form.termsAccepted) }}
+                                <br />
+                                <span class="field-error-np">{{ accept_error }}</span>
                             </td>
                         </tr>
                         <tr>
