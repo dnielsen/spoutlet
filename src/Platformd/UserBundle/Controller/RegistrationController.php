@@ -41,6 +41,7 @@ class RegistrationController extends BaseRegistrationController
         return $this->container->get('templating')->renderResponse('UserBundle:Registration:register.html.'.$this->getEngine(), array(
             'form' => $form->createView(),
             'theme' => $this->container->getParameter('fos_user.template.theme'),
+            'errors' => $form->getErrors(),
         ));
     }
 

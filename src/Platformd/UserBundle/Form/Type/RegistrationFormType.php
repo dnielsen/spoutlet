@@ -105,20 +105,6 @@ class RegistrationFormType extends BaseType
         );
 
         $builder->add('country', 'country', $countryOptions);
-/*
-        $builder->add('country', 'entity', array(
-            'class'             => 'SpoutletBundle:Country',
-            'property'          => 'name',
-            'required'          => true,
-            'error_bubbling'    => true,
-            'query_builder'     => function(CountryRepository $em) {
-                return $em->createQueryBuilder('c')
-                    ->where('c.name not like :doNotUse')
-                    ->orderBy('c.name', 'ASC')
-                    ->setParameter('doNotUse', '%[DO NOT USE]%');
-            },
-            'property_path' => false,
-        ));*/
 
         $builder->add('recaptcha', 'ewz_recaptcha', array(
             'attr' => array('options' => array(

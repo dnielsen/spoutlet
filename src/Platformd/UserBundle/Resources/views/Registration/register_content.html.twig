@@ -1,10 +1,28 @@
 {% form_theme form theme %}
 {% form_theme form.recaptcha 'EWZRecaptchaBundle:Form:ewz_recaptcha_widget.html.twig' %}
+
+{% for error in errors %}
+    {% if error.messageTemplate == 'fos_user.username.blank' %}
+{% endfor %}
+
 <div class="std_2col">
     <div class="left">
         <div id="registrationArea">
             <h2>{{ 'platformd.user.register_title' | trans }}</h2>
-            {{ form_errors(form) }}
+            {% if errors | length %}
+            <div class="formErrors">
+                <div class="error">
+                    <div class="title">Oops!</div>
+                    <div class="message text">{{ 'platformd.user.register.cannot_process' | pd_trans | format(path('contact')) | raw }}<br /><br />{{ 'platformd.user.register.problems_found' | pd_trans }}
+                        <ul>
+                            {% for error in errors %}
+                            <li>{{ error.messageTemplate|trans(error.messageParameters, 'validators') }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
             <div class="registration-requirements">
                 <p>{{ 'platformd.user.register.requirements' | trans }}</p>
                 <p>{{ 'platformd.user.register.already' | trans({'<': '<a href="'~path('fos_user_security_login')~'">', '>': '</a>'})|raw }}</p>
