@@ -32,6 +32,7 @@ sub vcl_recv {
     }
 
     set req.http.X-Country-Code = geoip.country_code(req.http.X-Client-IP);
+
     if (req.http.host !~ ".*.alienwarearena.(com|local:8080)$") {
         error 404 "Page Not Found.";
     }
@@ -89,18 +90,6 @@ sub vcl_recv {
     if (!req.backend.healthy) {
         unset req.http.Cookie;
     }
-
-    if (req.restarts == 0) {
-        if (req.http.X-Forwarded-For) {
-            set req.http.X-Client-IP = regsuball(req.http.X-Forwarded-For, "^.*(, |,| )(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$", "\2");
-            set req.http.X-Forwarded-For = req.http.X-Forwarded-For + ", " + client.ip;
-        } else {
-            set req.http.X-Client-IP = client.ip;
-            set req.http.X-Forwarded-For = client.ip;
-        }
-    }
-
-    set req.http.X-Country-Code = geoip.country_code(req.http.X-Client-IP);
 
     set req.http.Surrogate-Capability = "abc=ESI/1.0";
 
