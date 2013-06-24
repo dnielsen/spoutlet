@@ -48,11 +48,11 @@
 <div class="std_2col">
     <div class="left">
         <div id="registrationArea">
-            <h2>{{ 'platformd.user.register_title' | trans }}</h2>
+            <h2>{{ 'platformd.user.register_title' | pd_trans }}</h2>
             {% if errors | length %}
             <div class="formErrors">
                 <div class="error">
-                    <div class="title">Oops!</div>
+                    <div class="title">{{ 'platformd.user.register.oops' | pd_trans }}</div>
                     <div class="message text">{{ 'platformd.user.register.cannot_process' | pd_trans | format(path('contact')) | raw }}<br /><br />{{ 'platformd.user.register.problems_found' | pd_trans }}
                         <ul>
                             {% for error in errors %}
