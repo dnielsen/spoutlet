@@ -9,6 +9,13 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 class VarnishUtil
 {
     private $varnishDetected = false;
+    private $ipLookupUtil;
+
+    private $ipAddress;
+
+    public function __construct($ipLookupUtil ) {
+        $this->ipLookupUtil = $ipLookupUtil;
+    }
 
     public function cacheResponse($response, $sharedMaxAge, $maxAge = 0) {
 
@@ -36,6 +43,8 @@ class VarnishUtil
         }
 
         $this->varnishDetected = $request->headers->get('surrogate-capability') === 'abc=ESI/1.0';
+
+        $this->ipAddress = $event->getRequest()->getClientIp(true);
     }
 
     public function onKernelResponse(FilterResponseEvent $event) {
@@ -54,5 +63,8 @@ class VarnishUtil
         $response->setSharedMaxAge(0);
         $response->setPrivate();
         $response->headers->set('X-Varnish-Not-Detected', 1);
+
+        $response->headers->set('X-Ip2L-Client-IP', $this->ipAddress);
+        $response->headers->set('X-Ip2L-Country-Code', $this->ipLookupUtil->getCountryCode($this->ipAddress));
     }
 }
