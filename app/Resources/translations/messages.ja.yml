@@ -345,11 +345,13 @@ platformd:
             password: パスワード
             remember: 記録しておく
             title: ログイン
+            title_login: Login
             forgot_password: パスワードをお忘れですか?
             need_help: ヘルプ？
             not_a_member_join: 非会員？参加無料です！
             password_message: パスワードは大小文字が区別されます。Caps-Lockがオフになっていることを確認してください。パスワードをお忘れの場合は、リセットを依頼できます。ご登録のメールアドレスをお忘れの場合は、<a href="%s">サポートまでご連絡ください</a>。
             sign_in: ログイン
+            join: Join for free!
 
         reset:
             title:  パスワードをお忘れですか?

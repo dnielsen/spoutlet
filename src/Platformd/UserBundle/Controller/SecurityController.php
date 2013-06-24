@@ -5,6 +5,7 @@ namespace Platformd\UserBundle\Controller;
 use FOS\UserBundle\Controller\SecurityController as BaseController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Platformd\CEVOBundle\CEVOAuthManager;
 
 /**

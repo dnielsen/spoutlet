@@ -398,11 +398,13 @@ platformd:
             password: Password
             remember: Remember Me
             title: Login to your account
+            title_login: Login
             forgot_password: Forgot Password?
             need_help: Need Help?
             not_a_member_join: Not a Member? Join for Free!
             password_message: Your password is case sensitive. Please make sure CAPS-LOCK is off. If you've forgotten your password you can have it reset. If you can't remember which email address you used <a href="%s">please contact support</a>.
             sign_in: Sign In
+            join: Join for free!
 
         reset:
             title:  Forgot Your Password?

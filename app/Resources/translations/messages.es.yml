@@ -303,11 +303,13 @@ platformd:
             password: Contraseña
             remember: Acuérdate de mí
             title: Iniciar Sesión
+            title_login: Login
             forgot_password: Olvidé mi contraseña
             need_help: ¿Necesita ayuda?
             not_a_member_join: ¡Regístrese gratis!
             password_message: Su contraseña es sensible a las mayúsculas. Asegúrese de que Bloq mayús no esté activado. Si ha olvidado su contraseña, puede restablecerla. Si no puede recordar qué dirección de correo electrónico usó, <a href="%s">contacte a soporte</a>.
             sign_in: Iniciar
+            join: Join for free!
 
     event:
         form:

@@ -1,0 +1,45 @@
+<div id="login-modal" class="login-modal-wrapper simplemodal-data">
+    <div class="login-modal-title">{{ 'platformd.user.login.title_login' | pd_trans }}</div>
+    <div class="login-modal-content">
+        <form id="login-form" action="{{ path("_fos_user_security_check") }}" method="post" class="form form-horizontal">
+            <table class="tbl">
+                <tbody>
+                    <tr>
+                        <th align="right">{{ 'platformd.user.login.username' | pd_trans }}</th>
+                        <td><div><input name="_username" type="text" maxlength="255" value="" /></div></td>
+                    </tr>
+                    <tr>
+                        <th align="right">{{ 'platformd.user.login.password' | pd_trans }}</th>
+                        <td><div><input name="_password" type="password" maxlength="255" value="" class="form-txt" /></div></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="text-align: left;">
+                            <div>
+                                <input name="cookie_login" id="cookie_login" type="checkbox" class="remember-me">&nbsp;&nbsp;
+                                <label style="font-weight: bold;" for="cookie_login">{{ 'platformd.user.login.remember' | pd_trans }}</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center;">
+                            <a href="{{ path('fos_user_resetting_request') }}">{{ 'platformd.user.login.forgot_password' | pd_trans }}</a> |
+                            <a href="{{ path('fos_user_registration_register') }}">{{ 'platformd.user.login.join' | pd_trans }}</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                            <div style="margin: 5px 0 0 0">
+                                <input type="submit" id="_submit" class="button btn btn-primary login-button" name="_submit" value="{{ 'platformd.user.login.sign_in' | pd_trans }}" />
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <input type="hidden" name="_target_path" id="_target_path" value="" />
+        </form>
+    </div>
+    <div class="modal-close">
+        <button id="login-modal-close" class="button btn btn-primary login-button" onclick="$($.unblockUI());">{{ 'cancel' | pd_trans }}</button>
+    </div>
+</div>
