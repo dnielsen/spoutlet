@@ -1,0 +1,68 @@
+event_name: "Name"
+event_slug: "URL string - /events/"
+event_ready: "Ready?"
+event_published: "Published?"
+event_starts_at: "Starts at"
+event_ends_at: "Ends date"
+event_city: "City"
+event_location: "Location"
+event_country: "Country"
+event_content: "Description"
+event_hosted_by: "Hosted by"
+event_game: "Game"
+event_url_redirect: "URL Redirect"
+event_bannerImageFile: "Banner Image"
+event_locale: "Site"
+event_generalImageFile: General Image
+event_timezone: Timezone
+
+platformd_spoutletbundle_homepagebannertype_thumb_file: Thumb
+platformd_spoutletbundle_homepagebannertype_banner_file: Fullsize banner
+platformd_spoutletbundle_homepagebannertype_position: Position
+platformd_spoutletbundle_homepagebannertype_url: URL
+platformd_spoutletbundle_homepagebannertype_locale: Site
+
+year: Year
+month: Month
+day: Day
+
+# some of these should really be in FOSUserBundle.en.yml with the rest of the labels
+# but for some reason, they're run through the forms domain...
+fos_user_registration_form_birthdate: "Fecha de nacimiento"
+fos_user_registration_form_hasAlienwareSystem: "¿Tiene un sistema de Alienware?"
+fos_user_registration_form_termsAccepted: |
+    He leído y acepto los
+    <a href="%terms_url%" target="_blank">Términos y Condiciones</a> y la
+    <a href="%privacy_url%" target="_blank">Política de Privacidad</a>
+fos_user_registration_form_subscribedAlienwareEvents: "Subscribe me to receive news on the latest giveaways, contests, events and more from Alienware Arena via email."
+fos_user_registration_form_subscribedGamingNews: Subscribeme para recibir noticias y ofertas de Alienware/Dell Gaming por correo electrónico. <a href="http://www.dell.com/learn/us/en/19/policies-privacy?c=us&l=en&s=gen&delphi:gr=true" target="_blank">Ver la Protección de datos personales de Dell</a>.
+
+giveaway_name: "Name"
+giveaway_slug: "URL string - /giveaways/"
+giveaway_content: "Description"
+giveaway_bannerImageFile: "Banner Image"
+giveaway_status: "Status"
+giveaway_redemptionInstructionsArray: Redemption Instructions
+giveaway_locale: "Site"
+giveway_pool_giveaway: Giveaway
+giveway_pool_description: Description
+giveway_pool_maxKeysPerIp: Max/IP
+giveway_pool_upperLimit: Upper limit
+giveway_pool_lowerLimit: Lower limit
+giveway_pool_isActive: Active
+giveway_pool_keysfile: Keys file
+giveaway_giveawayType: Giveaway Type
+
+# not an actual field - but used on the index page
+giveway_pool_lower_upper_display: L/U Display
+giveway_pool_assigned_total: Assigned/Total
+
+news_title: Title
+news_body: Body
+news_locale: Site
+news_published: Published?
+
+account_settings_currentPassword: "Current password"
+account_settings_plainPassword_first: "New password"
+account_settings_plainPassword_second: "Confirm new password"
+account_settings_subscribedGamingNews: "Yes, I would like to receive notifications from Alienware Arena about upcoming promotions and specific offers."

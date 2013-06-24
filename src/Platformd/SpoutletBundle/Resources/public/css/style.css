@@ -1040,7 +1040,7 @@ div.blockOverlay {
 #login-modal .remember-me {margin: 0;}
 #login-modal .modal-close button { width: 100px; min-width: 100px;}
 
-#registrationArea { width:750px; padding: 8px 20px 0 20px; background:url('/bundles/spoutlet/images/register-bg.png') top left no-repeat; }
+#registrationArea { width:850px; padding: 8px 20px 0 20px; background:url('/bundles/spoutlet/images/register-bg.png') top left no-repeat; }
 #registrationArea h2 { margin: 10px 0 25px 0; font-family: "verdana"; color: #e7e7e7; font-weight: normal; font-size: 24px; }
 
 #registrationArea .tbl { margin:0 auto; vertical-align:middle; padding:5px 0 0px 0; }

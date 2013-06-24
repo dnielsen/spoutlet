@@ -337,8 +337,9 @@ platformd:
             country_label: 国の選択
             underage_message: 申し訳ありませんが年齢制限によりお客様の登録を完了することができません。
             please_wait: 現在アクセスが集中しているため、作成要求を処理することができませんでした。時間を置いてからもう一度試してください。
-            cannot_process: We were not able to process your request. If you think this is an error or are still experiencing problems after correcting the following problems, please <a href="%s">contact technical support</a>.
-            problems_found: We found the following problems:
+            oops: 申し訳ありません
+            cannot_process: リクエストを完了することができませんでした。もしおかしいと思われ、以下の問題が改善されない場合は <a href="%s">こちらまでご連絡ください</a>。
+            problems_found: よくある問題:
 
         login:
             username: メールアドレス

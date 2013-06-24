@@ -1,0 +1,34 @@
+first_name_not_blank: Por favor ingrese su nombre
+last_name_not_blank: Por favor ingrese su apellido
+birthdate_not_blank: "Por favor, introduzca una fecha de nacimiento válida"
+state_not_blank: Debe proporcionar un estado/provincia
+country_not_blank: Please select a country
+news_source_not_blank: Debes llenar como es que escuchaste más recientemente de Alienware
+has_system_not_blank: Please choose whether or not you have an Alienware System
+
+"The username is already used": Lo sentimos, este nombre de usuario ya esta en uso
+"The email is already used":  Lo sentimos, esta dirección de correo electrónico ya esta en uso
+"Please enter a username":  Debes proveer un nombre de usuario
+"The username is too short":  The username is too short
+"The username is too long":  The username is too long
+"Please enter an email":  Debes proveer una dirección de correo electrónico
+"The email is too short":  The email is too short
+"The email is too long":  The email is too long
+"The email is not valid":  El email no es válido
+"Please enter a password":  Please enter a password
+"The password is too short":  The password is too short
+"Please enter a new password":  Please enter a new password
+"The new password is too short":  The new password is too short
+"Please enter a new password":  Please enter a new password
+"The new password is too short":  The new password is too short
+"Please enter a name":  Please enter a name
+"The name is too short":  The name is too short
+"The name is too long":  The name is too long
+"This value is not a valid captcha":  Su código de verificación no coincide. Por favor inténtelo de nuevo.
+
+"You must accept the terms and conditions and the privacy policy": Debes de estar acuerdo con nuestros Términos y Condiciones y la Protección de datos personales
+
+"The entered password is invalid.": The entered password is invalid.
+
+error:
+    select_status: Please choose a status

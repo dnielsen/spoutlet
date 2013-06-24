@@ -1,26 +1,24 @@
 # some labels are on the "forms" domain
-fos_user_registration_form_username: "Username:"
-fos_user_registration_form_firstname: "First name:"
-fos_user_registration_form_lastname: "Last name:"
-fos_user_registration_form_phoneNumber: "Phone:"
-fos_user_registration_form_country: "Country:"
-fos_user_registration_form_state: "State/Province:"
-fos_user_registration_form_email_first: "E-mail:"
-fos_user_registration_form_email_second: "Confirm E-mail:"
-fos_user_registration_form_plainPassword_first: "Password:"
-fos_user_registration_form_plainPassword_second: "Confirm Password:"
+fos_user_registration_form_username: "Nombre de usuario:"
+fos_user_registration_form_firstname: "Nombre:"
+fos_user_registration_form_lastname: "Apellido:"
+fos_user_registration_form_phoneNumber: "Teléfono:"
+fos_user_registration_form_country: "País:"
+fos_user_registration_form_state: "Estado/Provincia:"
+fos_user_registration_form_email_first: "Correo electrónico:"
+fos_user_registration_form_email_second: "Confirme correo electrónico:"
 fos_user_registration_form_hasAlienwareSystem_0: No
-fos_user_registration_form_hasAlienwareSystem_1: Yes
-fos_user_registration_form_latestNewsSource: "How did you most recently hear about Alienware Arena?"
+fos_user_registration_form_hasAlienwareSystem_1: Si
+fos_user_registration_form_latestNewsSource: "¿Como es que escuchaste más recientemente de Alienware?"
 
-fos_user_profile_form_user_lastname: "Last name"
-fos_user_profile_form_user_firstname: "First name"
+fos_user_profile_form_user_lastname: "Nombre"
+fos_user_profile_form_user_firstname: "Apellido"
 fos_user_profile_form_user_file: "Avatar"
 fos_user_profile_form_current_avatar: "Your current avatar"
 
 profile.show.title: '%username%'
-profile.show.firstname: "First name"
-profile.show.lastname: "Last name"
+profile.show.firstname: "Nombre"
+profile.show.lastname: "Apellido"
 profile.show.my_rig: "My Rig"
 profile.show.update: "Update"
 profile.show.signature: "Signature"
@@ -55,7 +53,7 @@ fos_user_admin_resetted_password_success: "The user's password has been reset an
 fos_user_admin_disapprove_avatar: Disapprove avatar
 
 # Security
-security.login.username: "Username:"
+security.login.username: "Nombre de usuario:"
 security.login.password: "Password:"
 security.login.remember_me: Remember me
 security.login.submit: Login
@@ -161,8 +159,8 @@ fos_user_profile_form_user_monitor: "Monitor:"
 
 security.login.username_or_email: "Email:"
 fos_user_registration_form_email: "Email:"
-fos_user_registration_form_plainPassword_first: "Password:"
-fos_user_registration_form_plainPassword_second: "Confirm Password:"
+fos_user_registration_form_plainPassword_first: "Contraseña:"
+fos_user_registration_form_plainPassword_second: "Confirme contraseña:"
 
 fos_user_resetting_form_new_first: "New password:"
 fos_user_resetting_form_new_second: "Confirm Password:"

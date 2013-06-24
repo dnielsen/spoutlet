@@ -3,7 +3,7 @@ last_name_not_blank: 名前を入力してください
 birthdate_not_blank: 生年月日を選択してください
 state_not_blank: 都道府県を選択してください
 country_not_blank: Please select a country
-news_source_not_blank: Please select how you heard about Alienware Arena
+news_source_not_blank: ALIENWARE ARENA を直近で聞いた時期を入力してください
 has_system_not_blank: Please choose whether or not you have an Alienware System
 oops: Oops!
 
