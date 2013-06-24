@@ -55,6 +55,9 @@ class VarnishUtil
 
         $response = $event->getResponse();
 
+        $response->headers->set('X-Ip2L-Client-IP', $this->ipAddress);
+        $response->headers->set('X-Ip2L-Country-Code', $this->ipLookupUtil->getCountryCode($this->ipAddress));
+
         if ($this->varnishDetected) {
             $response->headers->set('X-Varnish-Detected', 1);
             return;
@@ -63,8 +66,5 @@ class VarnishUtil
         $response->setSharedMaxAge(0);
         $response->setPrivate();
         $response->headers->set('X-Varnish-Not-Detected', 1);
-
-        $response->headers->set('X-Ip2L-Client-IP', $this->ipAddress);
-        $response->headers->set('X-Ip2L-Country-Code', $this->ipLookupUtil->getCountryCode($this->ipAddress));
     }
 }
