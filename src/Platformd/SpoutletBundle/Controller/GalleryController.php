@@ -504,17 +504,6 @@ class GalleryController extends Controller
 
                 $media->setGalleries($galleries);
 
-                if(count($media->getGalleries()) == 0)
-                {
-                    $form = $this->createForm(new GalleryMediaType($user, $this->getCurrentSite(), $galleryRepo, $groupRepo), $media);
-                    $this->setFlash('error', $this->trans('galleries.publish_photo_error_gallery'));
-
-                    return $this->render('SpoutletBundle:Gallery:edit.html.twig', array(
-                        'media' => $media,
-                        'form'  => $form->createView(),
-                    ));
-                }
-
                 $groups = array();
 
                 foreach ($media->getGroups() as $groupId) {
@@ -523,8 +512,9 @@ class GalleryController extends Controller
 
                 $media->setGroups($groups);
 
-                if(count($media->getGroups()) == 0) {
-                    $form = $this->createForm(new GalleryMediaType($user, $this->getCurrentSite(), $galleryRepo, $groupRepo), $media);
+                if(count($media->getGalleries()) == 0 && count($media->getGroups()) == 0)
+                {
+                    $form = $this->createForm(new GalleryMediaType($user, $this->getCurrentSite(), $galleryRepo, $groupRepo, $media, $tagManager), $media);
                     $this->setFlash('error', $this->trans('galleries.publish_photo_error_gallery'));
 
                     return $this->render('SpoutletBundle:Gallery:edit.html.twig', array(
@@ -533,8 +523,13 @@ class GalleryController extends Controller
                     ));
                 }
 
+                $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
+                $tagManager->replaceTags($tags, $media);
+
                 $em->persist($media);
                 $em->flush();
+
+                $tagManager->saveTagging($media);
 
                 $this->setFlash('success', 'Your changes are saved.');
                 return $this->redirect($this->generateUrl('gallery_media_show', array('id' => $media->getId())));
