@@ -19,6 +19,7 @@ API calls will only be allowed from IP addresses that require access.
 API requests should follow these rules:
 
 - All `GET` requests should include an `etag` HTTP header if it is known.  It is worth storing the last known `etag` in your user table so that it can be used for follow up requests.
+- All `POST` requests should have their body sent as `JSON` with the `HTTP Header` `Content-Type` set to `application/json`.
 - All requests must be made with the full `URL` being lowercase.
 - Each individual request parameter must have its value `URL encoded`.
 - All requests must have their optional parameters in alphabetical order and directly after the resource identifier.
