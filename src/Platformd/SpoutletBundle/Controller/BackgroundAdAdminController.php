@@ -16,7 +16,7 @@ class BackgroundAdAdminController extends Controller
         $this->addBackgroundAdBreadcrumb();
 
         return $this->render('SpoutletBundle:BackgroundAdAdmin:index.html.twig', array(
-            'sites' => MultitenancyManager::getSiteChoices()
+            'sites' => $this->getSiteManager()->getSiteChoices()
         ));
     }
 
