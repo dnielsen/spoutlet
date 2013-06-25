@@ -1040,36 +1040,6 @@ div.blockOverlay {
 #login-modal .remember-me {margin: 0;}
 #login-modal .modal-close button { width: 100px; min-width: 100px;}
 
-#registrationArea { width:850px; padding: 8px 20px 0 20px; background:url('/bundles/spoutlet/images/register-bg.png') top left no-repeat; }
-#registrationArea h2 { margin: 10px 0 25px 0; font-family: "verdana"; color: #e7e7e7; font-weight: normal; font-size: 24px; }
-
-#registrationArea .tbl { margin:0 auto; vertical-align:middle; padding:5px 0 0px 0; }
-#registrationArea .tbl th { padding:0 6px; }
-#registrationArea .tbl th, #loginArea .tbl td { padding-top:3px; padding-bottom:3px; }
-
-#row_birthday .form-element-cell select { width: 100px; }
-
-#registrationArea .info { width:425px; margin:0 auto; padding-top:15px; }
-#registrationArea .forgot { font-size:12px; text-align:center; padding:0 0 20px 0; }
-
-#registrationArea .registration-text { background: #ffffff; color: #000000; }
-#registrationArea input[type="checkbox"], #registrationArea input[type="radio"] { margin: 0; }
-#registrationArea .dob-select { width: 80px; }
-#registrationArea .btn-registration { min-width: 150px; }
-#registrationArea .field-error { padding-left: 5px; color: #c62828; font-weight: bold; font-style: italic; }
-#registrationArea .field-error-np { color: #c62828; font-weight: bold; font-style: italic; }
-
-#formId_register {}
-
-#formId_register td { padding:3px 2px; }
-
-
-.registration-underage { width: 400px; font-size: 15px; margin: 20px auto; border: 2px solid #f62929; padding: 10px; background: #5a1212; }
-
-.recaptcha_input_area input[type="text"] { background: #ffffff; color: #000000; border: none; }
-
-#state { text-transform: capitalize; }
-
 #row_military_status { display: none; }
 #row_military_type { display: none; }
 #row_military_base { display: none; }

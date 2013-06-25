@@ -24,7 +24,12 @@
     </fieldset>
     <fieldset>
         <legend>{{ 'platformd.user.account_settings.newsletter'|trans({}, 'FOSUserBundle') }}</legend>
-        {{ form_row(form.subscribedGamingNews) }}
+        <table>
+            <tr>
+                <td style="vertical-align: top;padding-right: 4px;">{{ form_widget(form.subscribedGamingNews) }}</td>
+                <td>{{ form_label(form.subscribedGamingNews) }}</td>
+            </tr>
+        </table>
     </fieldset>
     {{ form_rest(form) }}
 

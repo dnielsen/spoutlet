@@ -63,15 +63,18 @@ ul.normal-margin, ol.normal-margin {
     width: 400px;
 }
 .login_page_interstitial input.button {
-    margin-left: 110px;
+    margin-left: 0px;
 }
 
 /* change password */
 .fos_user_change_password label {
-    width: 150px;
+    width: 100%;
 }
+
+.fos_user_change_password input[type="checkbox"] { margin: 0; }
+
 .fos_user_change_password input.button {
-    margin-left: 150px;
+    margin-left: 0px;
 }
 .fos_user_change_password ul.form-msg-error {
     margin-left: 150px;

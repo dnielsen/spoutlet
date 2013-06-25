@@ -11,8 +11,8 @@ fos_user_registration_form_hasAlienwareSystem_0: No
 fos_user_registration_form_hasAlienwareSystem_1: Si
 fos_user_registration_form_latestNewsSource: "¿Como es que escuchaste más recientemente de Alienware?"
 
-fos_user_profile_form_user_lastname: "Nombre"
-fos_user_profile_form_user_firstname: "Apellido"
+fos_user_profile_form_user_lastname: "Apellido"
+fos_user_profile_form_user_firstname: "Nombre"
 fos_user_profile_form_user_file: "Avatar"
 fos_user_profile_form_current_avatar: "Your current avatar"
 
@@ -39,122 +39,122 @@ profile.show.monitor: "Monitor"
 
 fos_user_admin_user_edit_title: 'Edit user "%username%"'
 fos_user_admin_user_show_title: 'Show user "%username%"'
-fos_user_admin_index_firstname: First Name
-fos_user_admin_index_lastname: Last Name
-fos_user_admin_delete: Delete
-fos_user_admin_edit: Edit
+fos_user_admin_index_firstname: Nombre
+fos_user_admin_index_lastname: Apellido
+fos_user_admin_delete: Borrar
+fos_user_admin_edit: Editar
 
-fos_user_admin_reset_password: Reset password
-fos_user_admin_user_edit: Edit
-fos_user_admin_edit_success: User "%username%" has been successfully updated !
-fos_user_admin_delete_success: User "%username%" has been successfully deleted !
-fos_user_admin_approve_avatar: Approve avatar
-fos_user_admin_resetted_password_success: "The user's password has been reset and has been sent to %email%."
-fos_user_admin_disapprove_avatar: Disapprove avatar
+fos_user_admin_reset_password: Restablecer contraseña
+fos_user_admin_user_edit: Editar
+fos_user_admin_edit_success: El usuario "% username%" se ha actualizado con éxito!
+fos_user_admin_delete_success: El usuario "% username%" se ha eliminado correctamente!
+fos_user_admin_approve_avatar: Aprobar avatar
+fos_user_admin_resetted_password_success: "La contraseña del usuario se ha restablecido y se ha enviado a% email%."
+fos_user_admin_disapprove_avatar: Desaprueba avatar
 
 # Security
 security.login.username: "Nombre de usuario:"
 security.login.password: "Password:"
-security.login.remember_me: Remember me
-security.login.submit: Login
+security.login.remember_me: Acuérdate de mí
+security.login.submit: Iniciar Sesión
 
 # Profile
-profile.edit.submit: Update
-profile.flash.updated: The profile has been updated
+profile.edit.submit: Actualizar
+profile.flash.updated: El perfil ha sido actualizado
 
 # Password change
-change_password.submit: Change password
-change_password.flash.success: The password has been changed
+change_password.submit: Cambiar contraseña
+change_password.flash.success: La contraseña se ha cambiado
 
 # Registration
-registration.check_email: An email has been sent to %email%. It contains an activation link you must click to activate your account.
-registration.confirmed: Congrats %username%, your account is now confirmed.
-registration.back: Back to the originating page.
-registration.submit: Register
-registration.flash.user_created: The user has been created successfully
+registration.check_email: Un correo electrónico ha sido enviado a% email%. Contiene un enlace de activación que debe hacer clic para activar tu cuenta.
+registration.confirmed: Enhorabuena% username%, se confirma ahora su cuenta.
+registration.back: Realice una copia de la página de origen.
+registration.submit: Registrar
+registration.flash.user_created: El usuario ha sido creado con éxito
 
 # the first line is the subject of the email
 registration.email: |
-    Welcome %username%!
-    <h3>Hello %username%!</h3>
+    ¡Bienvenido! %username%!
+    <h3>Hola %username%!</h3>
 
     <p>
-        To finish validating your account - please click the following link
+        Para terminar de validar su cuenta - por favor haga clic en el siguiente enlace
         <a href="%confirmationUrl%">%confirmationUrl%</a>
     </p>
 
     <p>
-    Regards,<br/>
+    Saludos,<br/>
     the Team.
     </p>
 
 # Password resetting
-resetting.password_already_requested: The password for this user has already been requested within the last 24 hours.
-resetting.check_email: An email has been sent to %email%. It contains a link you must click to reset your password.
-resetting.request.invalid_username: The Email address "%username%" does not exist.
+resetting.password_already_requested: La contraseña para este usuario ya ha sido solicitada en las últimas 24 horas.
+resetting.check_email: Un correo electrónico ha sido enviado a% email%. Contiene un enlace que debe hacer clic para restablecer tu contraseña.
+resetting.request.invalid_username: La dirección de correo electrónico no existe "% username%".
 resetting.request.username: "Email:"
-resetting.request.submit: Reset my Password
-resetting.reset.submit: Change password
-resetting.flash.success: The password has been reset successfully
+resetting.request.submit: Cambiar mi Contraseña
+resetting.reset.submit: Cambiar Contraseña
+resetting.flash.success: La contraseña se ha restablecido correctamente
 
 # the first line is the subject of the email
 resetting.email: |
-    Reset Password
-    <h3>Hello %username%!</h3>
+    Restablecer Contraseña
+    <h3>Hola %username%!</h3>
 
     <p>
-        To reset your password - please visit
+        Para restablecer la contraseña - por favor visite
         <a href="%confirmationUrl%">%confirmationUrl%</a>
     </p>
 
     <p>
-    Regards,<br/>
+    Saludos,<br/>
     the Team.
     </p>
 
 # Password resetted by admin
 resetted.email: |
     Alienware Arena - Password Reset
-    <h3>Hello %username%!</h3>
+    <h3>Hola %username%!</h3>
 
     <p>
-        Your password has been reset on our website. To reset your password - please visit:
+        Su contraseña se ha restablecido en nuestra web. Para restablecer la contraseña - por favor visite
         <a href="%confirmationUrl%">%confirmationUrl%</a>
     </p>
 
     <p>
-        ** NOTE: Our Support Staff will never ask for your password.
+        ** NOTA: Nuestros empleados nunca le pedirá su contraseña.
     </p>
 
     <p>
-        Thanks,<br />
+        Gracias,<br />
         Alienware Arena Web Team.
     </p>
 
 
 # Global strings
-layout.logout: Logout
-layout.login: Sign in
-layout.register: Register
+layout.logout: Salir
+layout.login: Iniciar
+layout.register: Registrar
 
 # Form field labels
-fos_user_group_form_name: "Group name:"
+fos_user_group_form_name: "Nombre del Grupo:"
 
-fos_user_profile_form_user_username: "Username:"
+fos_user_profile_form_user_username: "Nombre de Usuario:"
 fos_user_profile_form_user_email: "Email:"
-fos_user_profile_form_current: "Current Password:"
-fos_user_profile_form_user_type: "Type:"
-fos_user_profile_form_user_manufacturer: "Manufacturer:"
-fos_user_profile_form_user_operating_system: "Operating system:"
+fos_user_profile_form_current: "Contraseña Actual:"
+fos_user_profile_form_user_type: "Tipo:"
+fos_user_profile_form_user_manufacturer: "Fabricante:"
+fos_user_profile_form_user_operating_system: "Sistema Operativo:"
 fos_user_profile_form_user_cpu: "CPU:"
-fos_user_profile_form_user_memory: "Memory:"
-fos_user_profile_form_user_video_card: "Video Card:"
-fos_user_profile_form_user_sound_card: "Sound Card:"
-fos_user_profile_form_user_hard_drive: "Hard Drive:"
-fos_user_profile_form_user_headphones: "Headphones:"
-fos_user_profile_form_user_mouse: "Mouse:"
-fos_user_profile_form_user_mousepad: "Mousepad:"
-fos_user_profile_form_user_keyboard: "Keyboard:"
+fos_user_profile_form_user_memory: "Memoria:"
+fos_user_profile_form_user_video_card: "Tarjeta de Video:"
+fos_user_profile_form_user_sound_card: "Tarjeta de Sonido:"
+fos_user_profile_form_user_hard_drive: "Disco Duro:"
+fos_user_profile_form_user_headphones: "Audifonos:"
+fos_user_profile_form_user_mouse: "Ratón:"
+fos_user_profile_form_user_mousepad: "Alfombrilla de Ratón:"
+fos_user_profile_form_user_keyboard: "Teclado:"
 fos_user_profile_form_user_monitor: "Monitor:"
 
 security.login.username_or_email: "Email:"
@@ -162,18 +162,18 @@ fos_user_registration_form_email: "Email:"
 fos_user_registration_form_plainPassword_first: "Contraseña:"
 fos_user_registration_form_plainPassword_second: "Confirme contraseña:"
 
-fos_user_resetting_form_new_first: "New password:"
-fos_user_resetting_form_new_second: "Confirm Password:"
+fos_user_resetting_form_new_first: "Nueva contraseña:"
+fos_user_resetting_form_new_second: "Confirmar contraseña:"
 
-fos_user_change_password_form_new_first: "New password:"
-fos_user_change_password_form_new_second: "Confirm password:"
-fos_user_change_password_form_current: "Current password:"
-platformd.user.account_settings: "Account settings"
-platformd.user.account_settings.change_avatar.submit: "Save"
-account_settings_userAvatars: "Avatars"
-"platformd.user.account_settings.Add an avatar": "Add an avatar"
-"platformd.user.account_settings.Select avatar": "Choose this avatar"
-"platformd.user.account_settings.waiting for approval": "Waiting for approval"
-platformd.user.account_settings.avatars: "Avatars"
-platformd.user.account_settings.password: "Change password"
-platformd.user.account_settings.newsletter: "Newsletter subscriptions"
+fos_user_change_password_form_new_first: "Nueva contraseña:"
+fos_user_change_password_form_new_second: "Confirmar contraseña:"
+fos_user_change_password_form_current: "Contraseña actual:"
+platformd.user.account_settings: "Configuración de la cuenta"
+platformd.user.account_settings.change_avatar.submit: "Guardar"
+account_settings_userAvatars: "Avatares"
+"platformd.user.account_settings.Add an avatar": "Añade un avatar"
+"platformd.user.account_settings.Select avatar": "Elija esta avatar"
+"platformd.user.account_settings.waiting for approval": "Esperando aprobación"
+platformd.user.account_settings.avatars: "Avatares"
+platformd.user.account_settings.password: "Cambiar contraseña"
+platformd.user.account_settings.newsletter: "Suscripciones a boletines"
