@@ -22,7 +22,7 @@ class BackgroundAdAdminController extends Controller
 
     public function listAction($site, Request $request)
     {
-        $this->addBackgroundAdBreadcrumb()->addChild($site);
+        $this->addBackgroundAdBreadcrumb()->addChild($this->getSiteManager()->getSiteName($site));
 
         $em = $this->get('doctrine')->getEntityManager();
         $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $site));
