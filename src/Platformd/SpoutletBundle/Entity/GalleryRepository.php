@@ -90,7 +90,7 @@ class GalleryRepository extends EntityRepository
             ->leftJoin('g.categories', 'c')
             ->andWhere('s = :site')
             ->andWhere('c.name = :image')
-            ->setParameter('site', $site);
+            ->setParameter('site', $site)
             ->setParameter('image', 'image');
 
         if (!$includeDeleted) {
