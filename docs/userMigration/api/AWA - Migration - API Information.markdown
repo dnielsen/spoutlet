@@ -10,6 +10,14 @@ All calls to this RESTful API must be made via HTTPS, must include the `/v1/` ro
 https://api.alienwarearena.com/v1/
 ```
 
+## Recommended Tools For Working With the API
+
+A good tool for testing API calls is the Google Chrome extension `Postman - REST Client`
+
+```
+https://chrome.google.com/webstore/detail/postman-rest-client/fdmmgilgnpjigdojojpjoooidkmcomcm
+```
+
 ## Restrictions on using the API
 
 API calls will only be allowed from IP addresses that require access.
