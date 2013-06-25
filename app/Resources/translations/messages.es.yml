@@ -292,6 +292,7 @@ platformd:
             gallery: Imágen
             images: Imágen
             videos: Vídeos
+            account_settings: Configuración de la cuenta
 
         register:
             please_wait: El sistema está procesando múltiples creaciones de cuenta y no puede procesar su solicitud de creación en este momento, por favor vuelve a intentarlo más tarde.
@@ -311,6 +312,11 @@ platformd:
             password_message: Su contraseña es sensible a las mayúsculas. Asegúrese de que Bloq mayús no esté activado. Si ha olvidado su contraseña, puede restablecerla. Si no puede recordar qué dirección de correo electrónico usó, <a href="%s">contacte a soporte</a>.
             sign_in: Iniciar
             join: Join for free!
+
+        request_reset:
+            title: Forgot Your Password?
+            help_message: To reset your password, please provide the email address you used to create your Alienware Arena account. If you do not remember the email address you used, please contact <a href="%s">support</a>.
+            spam_message: Important: Check Your Spam Folders! - We try our best, but sometimes over zealous spam filters mistake our emails for "junk". Please allow for up to 30 minutes for your password to be reset. It typically only takes a few seconds, but sometimes emails get "stuck" along the way to your inbox.
 
     event:
         form:

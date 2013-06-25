@@ -412,7 +412,7 @@ platformd:
 
         request_reset:
             title: Forgot Your Password?
-            help_message: "If you've forgotten your password, thats okay. Fill out the information below and we will send you a new password to your email account. If you don't remember which username and/or email you used, please contact support."
+            help_message: To reset your password, please provide the email address you used to create your Alienware Arena account. If you do not remember the email address you used, please contact <a href="%s">support</a>.
             spam_message: Important: Check Your Spam Folders! - We try our best, but sometimes over zealous spam filters mistake our emails for "junk". Please allow for up to 30 minutes for your password to be reset. It typically only takes a few seconds, but sometimes emails get "stuck" along the way to your inbox.
 
         account:

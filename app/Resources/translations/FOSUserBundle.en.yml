@@ -69,7 +69,10 @@ change_password.submit: Change password
 change_password.flash.success: The password has been changed
 
 # Registration
-registration.check_email: An email has been sent to %email%. It contains an activation link you must click to activate your account.
+registration.check_email: |
+    Last Step! A confirmation has been send to your email address. Follow the instructions in the email to activate your Alienware Arena account. Once you have activated your account, you will be able to log in.
+    <br />
+    Alienware Arena Team
 registration.confirmed: Congrats %username%, your account is now confirmed.
 registration.back: Back to the originating page.
 registration.submit: Register
@@ -77,17 +80,18 @@ registration.flash.user_created: The user has been created successfully
 
 # the first line is the subject of the email
 registration.email: |
-    Welcome %username%!
-    <h3>Hello %username%!</h3>
+    Activate Your Alienware Arena Account
+    <p>Dear %username%!</p>
 
     <p>
-        To finish validating your account - please click the following link
+        Thank you for registering for an Alienware Arena account. Please activate your account by clicking on the link below<br />
         <a href="%confirmationUrl%">%confirmationUrl%</a>
     </p>
-
     <p>
-    Regards,<br/>
-    the Team.
+        This is an automated message. Please do not respond to this email.
+    </p>
+    <p>
+        Alienware Arena Team
     </p>
 
 # Password resetting
@@ -95,7 +99,7 @@ resetting.password_already_requested: The password for this user has already bee
 resetting.check_email: An email has been sent to %email%. It contains a link you must click to reset your password.
 resetting.request.invalid_username: The Email address "%username%" does not exist.
 resetting.request.username: "Email:"
-resetting.request.submit: Reset my Password
+resetting.request.submit: Reset Password
 resetting.reset.submit: Change password
 resetting.flash.success: The password has been reset successfully
 

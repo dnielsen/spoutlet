@@ -1,30 +1,30 @@
-event_name: "Name"
+event_name: "Nombre"
 event_slug: "URL string - /events/"
-event_ready: "Ready?"
-event_published: "Published?"
-event_starts_at: "Starts at"
-event_ends_at: "Ends date"
-event_city: "City"
-event_location: "Location"
-event_country: "Country"
-event_content: "Description"
+event_ready: "Listo?"
+event_published: "Publicado?"
+event_starts_at: "Fecha de inicio"
+event_ends_at: "Fecha de finalización"
+event_city: "Ciudad"
+event_location: "Localidad"
+event_country: "País"
+event_content: "Descripción"
 event_hosted_by: "Hosted by"
-event_game: "Game"
-event_url_redirect: "URL Redirect"
-event_bannerImageFile: "Banner Image"
-event_locale: "Site"
-event_generalImageFile: General Image
-event_timezone: Timezone
+event_game: "Juego"
+event_url_redirect: "URL Redireccionar"
+event_bannerImageFile: "Imagen del Anuncio"
+event_locale: "Sitio"
+event_generalImageFile: Imagen general
+event_timezone: Zona Horaria
 
-platformd_spoutletbundle_homepagebannertype_thumb_file: Thumb
-platformd_spoutletbundle_homepagebannertype_banner_file: Fullsize banner
-platformd_spoutletbundle_homepagebannertype_position: Position
+platformd_spoutletbundle_homepagebannertype_thumb_file: Imagen Pulgar
+platformd_spoutletbundle_homepagebannertype_banner_file: Fullsize bandera
+platformd_spoutletbundle_homepagebannertype_position: Posición
 platformd_spoutletbundle_homepagebannertype_url: URL
-platformd_spoutletbundle_homepagebannertype_locale: Site
+platformd_spoutletbundle_homepagebannertype_locale: Sitio
 
-year: Year
-month: Month
-day: Day
+year: Año
+month: Mes
+day: Día
 
 # some of these should really be in FOSUserBundle.en.yml with the rest of the labels
 # but for some reason, they're run through the forms domain...
@@ -37,30 +37,30 @@ fos_user_registration_form_termsAccepted: |
 fos_user_registration_form_subscribedAlienwareEvents: "Subscribe me to receive news on the latest giveaways, contests, events and more from Alienware Arena via email."
 fos_user_registration_form_subscribedGamingNews: Subscribeme para recibir noticias y ofertas de Alienware/Dell Gaming por correo electrónico. <a href="http://www.dell.com/learn/us/en/19/policies-privacy?c=us&l=en&s=gen&delphi:gr=true" target="_blank">Ver la Protección de datos personales de Dell</a>.
 
-giveaway_name: "Name"
+giveaway_name: "Nombre"
 giveaway_slug: "URL string - /giveaways/"
-giveaway_content: "Description"
-giveaway_bannerImageFile: "Banner Image"
-giveaway_status: "Status"
-giveaway_redemptionInstructionsArray: Redemption Instructions
-giveaway_locale: "Site"
+giveaway_content: "Descripción"
+giveaway_bannerImageFile: "Imagen del Anuncio"
+giveaway_status: "Estado"
+giveaway_redemptionInstructionsArray: Instrucciones de Intercambio
+giveaway_locale: "Sitio"
 giveway_pool_giveaway: Giveaway
-giveway_pool_description: Description
+giveway_pool_description: Descripción
 giveway_pool_maxKeysPerIp: Max/IP
-giveway_pool_upperLimit: Upper limit
-giveway_pool_lowerLimit: Lower limit
-giveway_pool_isActive: Active
-giveway_pool_keysfile: Keys file
-giveaway_giveawayType: Giveaway Type
+giveway_pool_upperLimit: Límite superior
+giveway_pool_lowerLimit: Límite inferior
+giveway_pool_isActive: Activo
+giveway_pool_keysfile: Archivo de claves
+giveaway_giveawayType: Tipo Giveaway
 
 # not an actual field - but used on the index page
-giveway_pool_lower_upper_display: L/U Display
-giveway_pool_assigned_total: Assigned/Total
+giveway_pool_lower_upper_display: L/U Visualización
+giveway_pool_assigned_total: Asignado/Total
 
-news_title: Title
-news_body: Body
-news_locale: Site
-news_published: Published?
+news_title: Título
+news_body: Contenido
+news_locale: Sitio
+news_published: Publicado?
 
 account_settings_currentPassword: "Contraseña actual"
 account_settings_plainPassword_first: "Nueva contraseña"
