@@ -1,7 +1,7 @@
 import geoip;
 
 probe healthcheck {
-    .request = 
+    .request =
         "GET /healthCheck HTTP/1.1"
         "Host: demo.alienwarearena.com"
         "Connection: close";
@@ -55,7 +55,7 @@ sub vcl_recv {
         error 750 "https://www.alienwarearena.com/account/register";
     }
 
-    # This one is temporarily here as CEVO didn't implement the link to our gallery page correctly... care needs to be taken as they do require the feed to still work...
+    // This one is temporarily here as CEVO didn't implement the link to our gallery page correctly... care needs to be taken as they do require the feed to still work...
     if (req.url ~ "^/galleries/featured-feed" && req.http.referer && req.http.referer ~ "alienwarearena.com") {
         error 750 "http://" + req.http.host  + "/galleries/";
     }
@@ -186,7 +186,7 @@ sub vcl_deliver {
     } else {
         set resp.http.X-Cache = "MISS";
     }
-    
+
     set resp.http.X-Country-Code = req.http.X-Country-Code;
     set resp.http.X-Client-IP = req.http.X-Client-IP;
 
@@ -216,7 +216,7 @@ sub vcl_hash {
 }
 
 sub vcl_error {
-    
+
     set obj.http.Content-Type = "text/html; charset=utf-8";
 
     if (obj.status == 750) {
