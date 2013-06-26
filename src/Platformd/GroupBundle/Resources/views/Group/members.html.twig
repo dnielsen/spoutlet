@@ -33,11 +33,11 @@
                 <tr class="eventListGroup_lan">
                     {% if canRemove %}
                     <td>
-                        <a href="{{ path('group_remove_member', { 'id': group.id, 'uid' : group.owner.id }) }}" onclick="return confirm('Are you sure you want to remove \'{{ group.owner.username }}\' from the group?');">Remove from Group</a>
+                        &nbsp;
                     </td>
                     {% endif %}
                     <td>
-                        <a href="{{ account_link(group.owner.username) }}">{{ group.owner.username }}</a>
+                        <a href="{{ account_link(group.owner.username) }}">{{ group.owner.username }}</a> (Group Owner)
                     </td>
                     <td>
                         {{ group.createdAt|date('M j, Y') }}
