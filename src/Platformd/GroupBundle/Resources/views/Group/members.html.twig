@@ -69,7 +69,22 @@
                 </tbody>
             </table>
         </div>
-        <div class="widget-footer">&nbsp;</div>
+
+        <div class="widget-footer">
+            {% if pager.haveToPaginate %}
+                <div class="pagerfanta" id="pager" style="float:right;margin: 5px;">
+                    {{ pagerfanta(pager, 'spoutlet', {
+                        'previous_message': '',
+                        'next_message': '',
+                        'routeName': 'group_members',
+                        'routeParams': { 'id': group.id }
+                    }) }}
+                </div>
+                <div class="clear"></div>
+            {% else %}
+                &nbsp;
+            {% endif %}
+        </div>
     </div>
     <div id="remove-member-dialog" title="Remove Member" style="display:none;">
         <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>Are you sure you want to remove this user?</p>
