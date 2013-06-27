@@ -324,7 +324,7 @@ class User extends BaseUser
     /**
      * @ORM\Column(name="facebook_id", type="string")
      */
-    protected $facebookId;
+    protected $facebookId = '';
 
     public function __construct()
     {

@@ -166,4 +166,11 @@ class FacebookProvider implements UserProviderInterface
             return '0';
         }
     }
+
+    public function postToTimeline(array $params = array())
+    {
+        if($this->isUserAuthenticated()) {
+            $me = $this->facebook->api('/me/feed', 'post', $params);
+        }
+    }
 }

@@ -1306,3 +1306,5 @@ platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body
         <p>Alienware Arena Team</p>
 platformd.key_request_processor_command.key_not_assigned_group_section: 'Please join the <a href="%promotion_group_show_page%">%promotion_group_name%</a> group to be notified when new keys and activities are available.'
 platformd.key_request_processor_command.key_not_assigned_no_group_extra_info: Please check back later as more codes may be added!
+
+platformd.facebook.account_created: Your account has been created, however you must update your password before doing anything on the site.

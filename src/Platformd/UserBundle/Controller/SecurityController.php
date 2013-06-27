@@ -44,8 +44,7 @@ class SecurityController extends BaseController
             return new RedirectResponse($this->container->get('router')->generate('accounts_settings'));
         }
 
-
-        // this user is logged in with facebook and not platformd, so we create the user using facebook data and log them in
+        // this user has authenticated our facebook app and is not logged into platformd, so we create the user using facebook data and log them in
         $facebookId = $user ? $user->getFacebookId() : $fbProvider->getFacebookId();
         $context    = $this->container->get('security.context');
         $user       = $fbProvider->loadUserByFacebookId($facebookId);
@@ -56,6 +55,7 @@ class SecurityController extends BaseController
         $event = new InteractiveLoginEvent($request, $token);
         $this->container->get('event_dispatcher')->dispatch('security.interactive_login', $event);
 
+        $this->container->get('session')->setFlash('success', 'platformd.facebook.account_created');
 
         return new RedirectResponse($this->container->get('router')->generate('accounts_settings'));
     }
