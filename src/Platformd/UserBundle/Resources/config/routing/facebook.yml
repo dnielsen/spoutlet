@@ -1,0 +1,12 @@
+_security_check:
+    pattern: /login-check
+    defaults: { _controller: UserBundle:Security:facebookSecurityCheck }
+
+_security_logout:
+    pattern: /logout
+
+facebook_deauthorize:
+    pattern: /deauthorize
+    defaults: { _controller: UserBundle:Security:facebookDeauthorize }
+    requirements:
+        _method: POST

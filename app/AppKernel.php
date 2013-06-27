@@ -32,6 +32,7 @@ class AppKernel extends Kernel
             new Cybernox\AmazonWebServicesBundle\CybernoxAmazonWebServicesBundle(),
             new Exercise\HTMLPurifierBundle\ExerciseHTMLPurifierBundle(),
             new Vich\GeographicalBundle\VichGeographicalBundle(),
+            new FOS\FacebookBundle\FOSFacebookBundle(),
 
             // KNP bundles
             new Knp\Bundle\GaufretteBundle\KnpGaufretteBundle(),

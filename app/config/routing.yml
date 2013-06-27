@@ -65,5 +65,3 @@ PlatformDHtmlWidgetBundle:
 PlatformDGroupBundle:
     resource: "@GroupBundle/Resources/config/routing.yml"
     prefix:   /
-
-

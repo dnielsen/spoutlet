@@ -31,6 +31,14 @@
             </tr>
         </table>
     </fieldset>
+    <fieldset>
+            <legend>Facebook</legend>
+            {% if user.facebookId %}
+                <p>You have successfully connected your facebook account.</p>
+            {% else %}
+                {{ facebook_login_button({'autologoutlink': true}) }}
+            {% endif %}
+    </fieldset>
     {{ form_rest(form) }}
 
     <div>

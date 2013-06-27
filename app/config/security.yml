@@ -6,6 +6,9 @@ security:
             encode_as_base64: false
             iterations: 1
 
+    factories:
+            - "%kernel.root_dir%/../vendor/bundles/FOS/FacebookBundle/Resources/config/security_factories.xml"
+
     providers:
         fos_userbundle:
             id: fos_user.user_manager
@@ -26,12 +29,24 @@ security:
                 target:   default_index
             switch_user: ~
 
+        public:
+            pattern:   ^/.*
+            fos_facebook:
+                app_url: "http://apps.facebook.com/AlienwareArena/"
+                server_url: "http://alienwarearena.com/"
+                login_path: ^/login
+                check_path: security_check
+                default_target_path: /
+                provider: fos_userbundle
+            anonymous: true
+            logout:
+                handlers: ["fos_facebook.logout_handler"]
+
     acl:
         connection: acl
 
     access_control:
         # the "([\w]+\/)?" pattern allows for the optional locale prefix (e.g. /jp/comments/new or just /comments/new)
-        - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
         - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
 
         # protects games and game pages
@@ -47,6 +62,10 @@ security:
         # admin is the lowest admin role - catch all for admin routes
         - { path: ^/([\w]+\/)?admin, role: ROLE_ADMIN, requires_channel: %admin_url_scheme% }
         - { path: ^/([\w]+\/)?account/settings, role: IS_AUTHENTICATED_FULLY }
+
+        # facebook protection
+        - { path: ^/secured/.*, role: [IS_AUTHENTICATED_FULLY] } # This is the route secured with fos_facebook
+        - { path: ^/.*, role: [IS_AUTHENTICATED_ANONYMOUSLY] }
 
     role_hierarchy:
         # generic "admin" role - you don't really get to do anything, but you can see the admin page
