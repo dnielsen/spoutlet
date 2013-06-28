@@ -13,7 +13,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse,
 
 use Platformd\UserBundle\Entity\User,
     Platformd\CEVOBundle\CEVOAuthManager,
-    Platformd\UserBundle\Security\User\Provider\FacebookProvider;
+    Platformd\UserBundle\Security\User\Provider\FacebookProvider,
+    Platformd\UserBundle\Form\Type\IncompleteAccountType;
 
 /**
  * Overrides controller for login actions
@@ -67,6 +68,15 @@ class SecurityController extends BaseController
         $fbProvider->deauthorize();
 
         return new Response(json_encode(array('message' => 'success')));
+    }
+
+    public function incompleteAction(Request $request)
+    {
+        $form = $this->container->get('platformd_incomplete_account', $this->getCurrentUser());
+
+        return $this->render('SpoutletBundle:Account:incomplete.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 
     private function getCurrentUser() {

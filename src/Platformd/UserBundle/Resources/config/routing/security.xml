@@ -36,4 +36,8 @@
         <default key="_controller">FOSUserBundle:Security:logout</default>
     </route>
 
+    <route id="accounts_incomplete" pattern="/account/incomplete">
+        <default key="_controller">UserBundle:Security:incomplete</default>
+    </route>
+
 </routes>

@@ -1,0 +1,12 @@
+{% extends 'UserBundle::accountLayout.html.twig' %}
+
+{% block content %}
+<form action="{{ path('accounts_incomplete') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register form form-horizontal">
+    {{ form_row(form.username) }}
+    {{ form_row(form.firstname) }}
+    {{ form_row(form.lastname) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.plainPassword) }}
+    {{ form_row(form.hasAlienwareSystem) }}
+    {{ form_row(form.termsAccepted) }}
+{% endblock %}

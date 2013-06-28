@@ -27,6 +27,11 @@ services:
         tags:
             - { name: form.type, alias: platformd_user_profile }
 
+    platformd_user.account.incomplete_form.type:
+        class: Platformd\UserBundle\Form\Type\IncompleteFormType
+        tags:
+            - { name: form.type, alias: platformd_incomplete_account }
+
     platformd_user.registration.form.handler:
         class: Platformd\UserBundle\Form\Handler\RegistrationFormHandler
         arguments:
