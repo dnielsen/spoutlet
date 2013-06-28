@@ -83,12 +83,15 @@ class GalleryRepository extends EntityRepository
         return $galleries;
     }
 
-    public function findAllGalleriesForSite($site, $includeDeleted = false)
+    public function findAllImageGalleriesForSite($site, $includeDeleted = false)
     {
         $qb = $this->createQueryBuilder('g')
             ->leftJoin('g.sites', 's')
+            ->leftJoin('g.categories', 'c')
             ->andWhere('s = :site')
-            ->setParameter('site', $site);
+            ->andWhere('c.name = :image')
+            ->setParameter('site', $site)
+            ->setParameter('image', 'image');
 
         if (!$includeDeleted) {
             $qb->andWhere('g.deleted = false');

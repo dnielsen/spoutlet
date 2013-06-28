@@ -806,7 +806,7 @@ class GalleryController extends Controller
     {
         $filterOptions  = array();
         $site           = $this->getCurrentSite();
-        $galleries      = $this->getGalleryRepository()->findAllGalleriesForSite($site);
+        $galleries      = $this->getGalleryRepository()->findAllImageGalleriesForSite($site);
 
         $filterOptions[] = array(
             'value' => 'featured',

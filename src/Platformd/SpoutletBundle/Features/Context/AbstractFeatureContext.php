@@ -1468,8 +1468,8 @@ class AbstractFeatureContext extends MinkContext
                     $this->getUserManager()->updateUser($member);
                 }
 
-                $group->getMembers()->add($member);
-                $em->persist($group);
+                $member->getPdgroups()->add($group);
+                $em->persist($member);
                 $em->flush();
             }
         } else {
