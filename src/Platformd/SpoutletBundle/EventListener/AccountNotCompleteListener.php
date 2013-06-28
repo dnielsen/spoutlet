@@ -34,12 +34,14 @@ class AccountNotCompleteListener
 
         if($routeName != 'accounts_settings' && $routeName != '_main_user_strip') {
             if($user) {
-                $this->container->get('session')->setFlash('success', 'platformd.facebook.account_created');
+                if($user->getFacebookId() && !$user->getPassword()) {
+                    $this->container->get('session')->setFlash('success', 'platformd.facebook.account_created');
 
-                $url        = $this->router->generate('accounts_settings');
-                $response   = new RedirectResponse($url);
+                    $url        = $this->router->generate('accounts_settings');
+                    $response   = new RedirectResponse($url);
 
-                $event->setResponse($response);
+                    $event->setResponse($response);
+                }
             }
         }
 
