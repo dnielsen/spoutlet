@@ -442,7 +442,8 @@ class GroupRepository extends EntityRepository
             pd_group_membership_actions.group_id = :id
         AND
             pd_groups_members.user_id IN (select user_id from pd_group_membership_actions)
-        GROUP BY pd_group_membership_actions.user_id';
+        GROUP BY pd_group_membership_actions.user_id
+        ORDER BY created_at DESC';
 
         $stmt = $this->getEntityManager()
                      ->getConnection()

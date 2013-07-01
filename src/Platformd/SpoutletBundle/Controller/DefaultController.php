@@ -24,6 +24,10 @@ class DefaultController extends Controller
 
         $baseHost = $this->getParameter('base_host');
 
+        if (false !== strpos($returnUrl, '/esi/USER_SPECIFIC/')) {
+            $returnUrl = '/';
+        }
+
         $response = new RedirectResponse($returnUrl);
 
         $response->headers->clearCookie('aw_session', '/', $baseHost);

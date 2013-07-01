@@ -21,6 +21,8 @@ use Platformd\MediaBundle\Form\Type\MediaType;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\ArrayAdapter;
 
 /**
  * Group controller.
@@ -1587,13 +1589,26 @@ Alienware Arena Team
     }
 
     public function membersAction($id) {
-        $group = $this->getGroup($id);
+        $group       = $this->getGroup($id);
+
+        $this->ensureGroupExists($group);
+
         $currentUser = $this->getCurrentUser();
-        $canRemove = $group->isOwner($currentUser) && $currentUser !== null;
+        $canRemove   = $group->isOwner($currentUser) && $currentUser !== null;
+        $repo        = $this->getEntityManager()->getRepository('GroupBundle:Group');
+        $request     = $this->getRequest();
+        $page        = $request->query->get('page', 1);
 
-        $repo = $this->getEntityManager()->getRepository('GroupBundle:Group');
+        $adapter  = new ArrayAdapter($repo->getGroupMembers($id));
+        $pager    = new Pagerfanta($adapter);
 
-        $members = $repo->getGroupMembers($id);
+        $pager->setMaxPerPage(50);
+
+        $page = $page > $pager->getNbPages() ? $pager->getNbPages() : $page;
+
+        $pager->setCurrentPage($page);
+
+        $members  = $pager->getCurrentPageResults();
 
         if($currentUser !== null) {
             $canRemove = $currentUser->getAdminLevel() == 'ROLE_SUPER_ADMIN';
@@ -1602,9 +1617,10 @@ Alienware Arena Team
         $permissions = $this->getGroupManager()->getPermissions($this->getUser(), $group, $this->getCurrentSite());
 
         return $this->render('GroupBundle:Group:members.html.twig', array(
-            'group' => $group,
-            'canRemove' => $canRemove,
-            'members' => $members,
+            'group'       => $group,
+            'canRemove'   => $canRemove,
+            'members'     => $members,
+            'pager'       => $pager,
             'permissions' => $permissions,
         ));
     }
