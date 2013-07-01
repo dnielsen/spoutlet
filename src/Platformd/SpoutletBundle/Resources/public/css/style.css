@@ -1014,6 +1014,98 @@ div.blockOverlay {
     background-size: 100%;
 }
 
+#user-settings-page #avatar-update-overlay {
+    position: absolute;
+    opacity: .5;
+    filter: alpha(opacity=50);
+    z-index: 100;
+    background-color: white;
+    width: 184px;
+    height: 184px;
+}
+
+#user-settings-page .user-avatar {
+    width: 184px;
+    height: 184px;
+    border: 2px solid #b3b3b3;
+    margin: 0 10px 10px 0;
+}
+
+#user-settings-page #avatar-update-overlay-text {
+    background: #30EAF7;
+    text-align: center;
+    margin-top: 80px;
+    position: absolute;
+    z-index: 103;
+    font-weight: bold;
+    color: black;
+    font-size: 20px;
+    width: 184px;
+    height: 23px;
+}
+
+#user-settings-page #avatar-update-overlay-text a {
+    color: black;
+}
+
+#user-settings-page #account-settings-password {
+    margin: 40px 0 0 0;
+}
+
+#user-settings-page #account-settings-newsletter {
+    margin: 20px 0 20px 0;
+}
+
+#user-settings-page #account-settings-newsletter h3 {
+    margin-bottom: 10px;
+}
+
+#user-settings-page #account-settings-newsletter h3 span {
+    border-bottom: 1px solid #4a4a4a;
+}
+
+#avatar-modal {
+    padding: 4px;
+    background: #141414;
+    border: #878787 1px solid;
+}
+
+#avatar-modal .modal-title {
+    border-bottom: 1px solid #c2c2c2;
+    padding: 0 0 4px 0;
+    text-align: left;
+}
+
+#avatar-modal #add-avatar-form {
+    border: 1px solid #4a4a4a;
+    width: 250px;
+    margin: 5px auto 20px auto;
+    padding: 7px;
+}
+
+#avatar-modal #add-avatar-form form {
+    margin: 0;
+}
+
+#avatar-modal #add-avatar-form button {
+    height: 25px;
+    width: 100px;
+    min-width: 100px;
+    padding: 0;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#avatar-modal .avatar-image {
+    display: inline-block;
+    margin: 15px;
+}
+
+#avatar-modal #avatar-listings {
+    overflow: auto;
+    max-height: 500px;
+}
+
 #loginArea { width: 595px; height: 300px; padding: 5px 20px 0 20px; background: url('/bundles/spoutlet/images/register-bg.png') top left no-repeat; }
 #loginArea h2 { color: #e7e7e7; font-family: "verdana"; font-weight: normal; font-size: 24px; margin: 10px 0 10px 0; }
 #loginArea .tbl { margin: 0 auto; vertical-align: middle; padding: 5px 0 0px 0; }

@@ -39,7 +39,7 @@ class AccountSettingsType extends AbstractType
                 $data = $event->getData();
                 $form = $event->getForm();
                 $plainPassword = $data->getPlainPassword();
-                if (empty($data->currentPassword) && empty($plainPassword)) {
+                if (empty($plainPassword)) {
                     return;
                 }
                 if (!$encoder->isPasswordValid($data->getPassword(), $data->currentPassword, $data->getSalt())) {

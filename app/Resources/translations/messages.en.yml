@@ -54,6 +54,7 @@ platformd.user.avatars.file_instructions: |
 
     You will have a chance to crop this image in the next step.
 platformd.user.avatars.already_cropped: This image has already been processed and cropped.
+platformd.user.avatars.invalid_avatar: Invalid avatar specified.
 platformd.user.avatars.admin_submit_success: Your image has been queued for processing and will be available soon.
 platformd.user.avatars.submit_success: Your image has been listed for admin approval. It should be reviewed soon.
 platformd.user.avatars.switch_not_found: Unable to find the specified avatar.

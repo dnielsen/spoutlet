@@ -68,7 +68,8 @@ ul.normal-margin, ol.normal-margin {
 
 /* change password */
 .fos_user_change_password label {
-    width: 100%;
+    width: 170px;
+    text-align: right;
 }
 
 .fos_user_change_password input[type="checkbox"] { margin: 0; }
@@ -78,6 +79,11 @@ ul.normal-margin, ol.normal-margin {
 }
 .fos_user_change_password ul.form-msg-error {
     margin-left: 150px;
+}
+
+fieldset.label-full label {
+    width: 100%;
+    text-align: left;
 }
 
 /* comments */
