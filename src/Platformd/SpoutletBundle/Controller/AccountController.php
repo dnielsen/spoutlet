@@ -287,6 +287,7 @@ class AccountController extends Controller
         return $this->render('SpoutletBundle:Account:settings.html.twig', array(
             'form'       => $form->createView(),
             'avatarForm' => $avatarForm->createView(),
+            'data'       => $data,
         ));
     }
 

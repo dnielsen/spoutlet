@@ -1079,7 +1079,7 @@ div.blockOverlay {
 #avatar-modal #add-avatar-form {
     border: 1px solid #4a4a4a;
     width: 250px;
-    margin: 5px auto 0px auto;
+    margin: 5px auto 20px auto;
     padding: 7px;
 }
 
@@ -1094,6 +1094,16 @@ div.blockOverlay {
     padding: 0;
     font-size: 12px;
     font-weight: bold;
+}
+
+#avatar-modal .avatar-image {
+    display: inline-block;
+    margin: 15px;
+}
+
+#avatar-modal #avatar-listings {
+    overflow: auto;
+    max-height: 500px;
 }
 
 #loginArea { width: 595px; height: 300px; padding: 5px 20px 0 20px; background: url('/bundles/spoutlet/images/register-bg.png') top left no-repeat; }

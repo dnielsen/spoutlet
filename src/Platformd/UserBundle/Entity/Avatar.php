@@ -4,6 +4,7 @@ namespace Platformd\UserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Platformd\UserBundle\Entity\AvatarRepository")
@@ -31,6 +32,9 @@ class Avatar
      **/
     protected $uuid;
 
+    /**
+     * @Assert\File()
+     */
     public $file;
 
     /**

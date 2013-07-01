@@ -65,7 +65,23 @@
                 <button id="submit-avatar" type="submit" class="btn btn-primary" formnovalidate>Upload</button>
             </form>
         </div>
-    </div>
+
+        {% if data.activeAvatar or data.avatars|length > 0 %}
+            <div id="avatar-listings">
+
+                {% if data.activeAvatar %}
+                    <div id="avatar-{{ data.activeAvatar.id }}" class="avatar-image"><img src="{{ data.activeAvatar.url }}" class="active" /></div>
+                {% endif %}
+
+                {% for avatar in data.avatars %}
+                    <div class="avatar-image" id="avatar-{{ avatar.id }}">
+                        <a href="{{ path('avatar_switch', ({ 'uuid': avatar.uuid })) }}"><img src="{{ avatar.url }}" /></a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+     </div>
 
 {% endblock content %}
 
@@ -75,11 +91,28 @@
 {% block javascripts %}
 
     {{ parent() }}
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.mCustomScrollbar.js"></script>
     <script type="text/javascript">
 
         var modalVisible = false;
 
         $(function() {
+
+            $('#submit-avatar').click(function (e) {
+
+                e.preventDefault();
+
+                $('#avatar-modal').block({
+                    message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />',
+                    css: {
+                        border: 'none',
+                        background: 'transparent'
+                    }
+                });
+
+                $(this).closest('form').submit();
+            });
+
             $('.user-avatar').hover(
                 function() {
                     $('#avatar-update-overlay-wrapper').show();
@@ -90,7 +123,7 @@
             );
 
             $('.user-avatar').click(function() {
-                $.blockUI({ message: $('#avatar-modal'), css: { width: '500px', cursor: 'default', border: 'none' }, onBlock: showModal });
+                $.blockUI({ message: $('#avatar-modal'), css: { width: '500px', cursor: 'default', border: 'none', top: '10%' }, onBlock: showModal });
             });
 
             $(document).click(function(e) {
@@ -100,9 +133,18 @@
                 }
             });
 
+            $(document).on('keyup', function(e) {
+            if (modalVisible && e.which === 27) { // Escape key
+                    $.unblockUI();
+                    modalVisible = false;
+                }
+            });
+
             function showModal() {
                 modalVisible = true;
             }
+
+            $('#avatar-listings').mCustomScrollbar();
         });
     </script>
 

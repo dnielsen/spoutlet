@@ -52,6 +52,11 @@ class AvatarController extends Controller
     {
         $this->checkSecurity();
 
+        if (!$uuid) {
+            $this->setFlash('error', 'platformd.user.avatars.invalid_avatar');
+            return $this->redirect($this->generateUrl('accounts_settings'));
+        }
+
         $avatar = $this->findAvatar($uuid);
 
         if (!$avatar) {
@@ -154,7 +159,7 @@ class AvatarController extends Controller
         $this->getAvatarManager()->addToFilesystemActionsQueue($avatar->getUuid(), $avatar->getUser(), AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_SWITCH);
 
         $this->setFlash('success', 'platformd.user.avatars.switch_success');
-        return $this->redirect($this->generateUrl('avatars'));
+        return $this->redirect($this->generateUrl('accounts_settings'));
     }
 
     private function findAvatar($uuid, $exceptionOnNotFound = true)
