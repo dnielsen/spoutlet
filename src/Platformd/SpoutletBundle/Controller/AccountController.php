@@ -8,6 +8,8 @@ use Platformd\EventBundle\Service\GroupEventService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\UserBundle\Form\Type\AccountSettingsType;
+use Platformd\UserBundle\Entity\Avatar;
+use Platformd\UserBundle\Form\Type\AvatarType;
 
 class AccountController extends Controller
 {
@@ -274,9 +276,43 @@ class AccountController extends Controller
     {
         $form = $this->createForm($this->getFormType(), $this->getUser());
 
+        $avatarManager = $this->getAvatarManager();
+        $data          = $avatarManager->getAvatarListingData($this->getUser(), 184);
+        $newAvatar     = new Avatar();
+
+        $newAvatar->setUser($this->getUser());
+
+        $avatarForm = $this->createForm(new AvatarType(), $newAvatar);
+
         return $this->render('SpoutletBundle:Account:settings.html.twig', array(
-            'form' => $form->createView(),
+            'form'       => $form->createView(),
+            'avatarForm' => $avatarForm->createView(),
+            'data'       => $data,
         ));
+    }
+
+    public function addAvatarAction(Request $request)
+    {
+        $newAvatar     = new Avatar();
+        $newAvatar->setUser($this->getUser());
+
+        $form = $this->createForm(new AvatarType(), $newAvatar);
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                $newAvatar = $form->getData();
+                $this->getAvatarManager()->save($newAvatar);
+
+                return $this->redirect($this->generateUrl('avatar_crop', array(
+                    'uuid' => $newAvatar->getUuid(),
+                )));
+            }
+        }
+
+        return $this->redirect($this->generateUrl('accounts_settings'));
     }
 
     private function getFormType()
@@ -287,14 +323,17 @@ class AccountController extends Controller
     public function updateSettingsAction(Request $request)
     {
         $form = $this->createForm($this->getFormType(), $this->getUser());
-        $form->bindRequest($request);
 
-        if ($form->isValid()) {
-            $this->get('fos_user.user_manager')->updateUser($form->getData());
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
 
-            $this->get('session')->setFlash('success', 'Profile settings saved');
+            if ($form->isValid()) {
+                $this->get('fos_user.user_manager')->updateUser($form->getData());
 
-            return $this->redirect($this->generateUrl('accounts_settings'));
+                $this->get('session')->setFlash('success', 'Your changes are saved.');
+
+                return $this->redirect($this->generateUrl('accounts_settings'));
+            }
         }
 
         return $this->render('SpoutletBundle:Account:settings.html.twig', array(

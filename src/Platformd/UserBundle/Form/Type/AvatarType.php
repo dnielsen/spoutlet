@@ -13,6 +13,7 @@ class AvatarType extends AbstractType
         $builder
             ->add('file', 'file', array(
                 'label' => 'platformd.user.avatars.file_label',
+                'required' => false,
             ))
         ;
     }

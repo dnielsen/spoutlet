@@ -1,45 +1,151 @@
 {% extends 'UserBundle::accountLayout.html.twig' %}
-
+{% form_theme avatarForm _self %}
 {% form_theme form _self %}
 
 {% block content %}
 
-<h2>{{ 'platformd.user.account_settings'|trans({}, 'FOSUserBundle') }}</h2>
+    <div class="std_2col" id="user-settings-page">
+        <div class="left">
 
-<form action="{{ path('accounts_settings_update') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_password form">
-    <input type="hidden" name="_method" value="PUT" />
-    <fieldset>
-        <legend>{{ 'platformd.user.account_settings.avatars'|trans({}, 'FOSUserBundle') }}</legend>
-        {% if get_avatar_url(user, 184) %}
-            <a href ="{{ path('avatars') }}"><img src="{{ get_avatar_url(user, 184) }}" /></a>
-        {% else %}
-            <a class="button btn btn-primary" href="{{ path('avatars') }}">{{ 'platformd.user.account_settings.Add an avatar'|trans({}, 'FOSUserBundle') }}</a>
-        {% endif %}
-    </fieldset>
-    <fieldset>
-        <legend>{{ 'platformd.user.account_settings.password'|trans({}, 'FOSUserBundle') }}</legend>
-        {{ form_errors(form) }}
-        {{ form_row(form.currentPassword) }}
-        {{ form_row(form.plainPassword) }}
-    </fieldset>
-    <fieldset>
-        <legend>{{ 'platformd.user.account_settings.newsletter'|trans({}, 'FOSUserBundle') }}</legend>
-        <table>
-            <tr>
-                <td style="vertical-align: top;padding-right: 4px;">{{ form_widget(form.subscribedGamingNews) }}</td>
-                <td>{{ form_label(form.subscribedGamingNews) }}</td>
-            </tr>
-        </table>
-    </fieldset>
-    {{ form_rest(form) }}
+            <div class="user-avatar" style="float:left;">
+                <div style="position:absolute;">
+                    {% if get_avatar_url(user, 184) %}
+                        <a class="update-avatar"><img src="{{ get_avatar_url(user, 184) }}" /></a>
+                    {% else %}
+                        <a class="update-avatar"><div class="default-avatar avatar184"></div></a>
+                    {% endif %}
+                </div>
+                <span id="avatar-update-overlay-wrapper" style="display:none;">
+                    <div id="avatar-update-overlay"></div>
+                    <div id="avatar-update-overlay-text">
+                        <a class="update-avatar">UPDATE</a>
+                    </div>
+                </span>
 
-    <div>
-        <input type="submit" class="button" value="{{ 'platformd.user.account_settings.change_avatar.submit'|trans({}, 'FOSUserBundle') }}" />
+                <div class="clear"></div>
+            </div>
+
+            <form action="{{ path('accounts_settings_update') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_password form form-horizontal">
+                <input type="hidden" name="_method" value="PUT" />
+                <fieldset id="account-settings-password">
+                    {{ form_errors(form) }}
+                    {{ form_row(form.currentPassword) }}
+                    {{ form_row(form.plainPassword) }}
+                </fieldset>
+                <div class="clear"></div>
+                <fieldset class="label-full" id="account-settings-newsletter">
+                    <h3><span>{{ 'platformd.user.account_settings.newsletter'|trans({}, 'FOSUserBundle') }}</span></h3>
+                    <table>
+                        <tr>
+                            <td style="vertical-align: top;padding-right: 4px;">{{ form_widget(form.subscribedGamingNews) }}</td>
+                            <td>{{ form_label(form.subscribedGamingNews) }}</td>
+                        </tr>
+                    </table>
+                </fieldset>
+                {{ form_rest(form) }}
+
+                <div>
+                    <input type="submit" class="button" value="{{ 'platformd.user.account_settings.change_avatar.submit'|trans({}, 'FOSUserBundle') }}" />
+                </div>
+            </form>
+
+        </div>
+
+        <div class="right">
+            {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+        </div>
     </div>
-</form>
+
+    <div id="avatar-modal" style="display:none;">
+        <div class="modal-title">Choose Avatar</div>
+        <div id="add-avatar-form">
+            <form action="{{ path('avatar_add') }}" method="post" {{ form_enctype(avatarForm) }}>
+                {{ form_row(avatarForm.file) }}
+                {{ form_rest(avatarForm) }}
+                <button id="submit-avatar" type="submit" class="btn btn-primary" formnovalidate>Upload</button>
+            </form>
+        </div>
+
+        {% if data.activeAvatar or data.avatars|length > 0 %}
+            <div id="avatar-listings">
+
+                {% if data.activeAvatar %}
+                    <div id="avatar-{{ data.activeAvatar.id }}" class="avatar-image"><img src="{{ data.activeAvatar.url }}" class="active" /></div>
+                {% endif %}
+
+                {% for avatar in data.avatars %}
+                    <div class="avatar-image" id="avatar-{{ avatar.id }}">
+                        <a href="{{ path('avatar_switch', ({ 'uuid': avatar.uuid })) }}"><img src="{{ avatar.url }}" /></a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+     </div>
 
 {% endblock content %}
 
 {% block file_label %}
 {% endblock %}
 
+{% block javascripts %}
+
+    {{ parent() }}
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.mCustomScrollbar.js"></script>
+    <script type="text/javascript">
+
+        var modalVisible = false;
+
+        $(function() {
+
+            $('#submit-avatar').click(function (e) {
+
+                e.preventDefault();
+
+                $('#avatar-modal').block({
+                    message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />',
+                    css: {
+                        border: 'none',
+                        background: 'transparent'
+                    }
+                });
+
+                $(this).closest('form').submit();
+            });
+
+            $('.user-avatar').hover(
+                function() {
+                    $('#avatar-update-overlay-wrapper').show();
+                },
+                function() {
+                    $('#avatar-update-overlay-wrapper').hide();
+                }
+            );
+
+            $('.user-avatar').click(function() {
+                $.blockUI({ message: $('#avatar-modal'), css: { width: '500px', cursor: 'default', border: 'none', top: '10%' }, onBlock: showModal });
+            });
+
+            $(document).click(function(e) {
+                if (modalVisible && !$(e.target).parents().andSelf().is('#avatar-modal')) {
+                    $.unblockUI();
+                    modalVisible = false;
+                }
+            });
+
+            $(document).on('keyup', function(e) {
+            if (modalVisible && e.which === 27) { // Escape key
+                    $.unblockUI();
+                    modalVisible = false;
+                }
+            });
+
+            function showModal() {
+                modalVisible = true;
+            }
+
+            $('#avatar-listings').mCustomScrollbar();
+        });
+    </script>
+
+{% endblock %}

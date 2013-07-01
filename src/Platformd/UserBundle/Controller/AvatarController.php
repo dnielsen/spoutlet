@@ -21,7 +21,7 @@ class AvatarController extends Controller
         $this->checkSecurity();
 
         $avatarManager = $this->getAvatarManager();
-        $data          = $avatarManager->getAvatarIndexData($this->getUser());
+        $data          = $avatarManager->getAvatarListingData($this->getUser(), 84);
         $newAvatar     = new Avatar();
 
         $newAvatar->setUser($this->getUser());
@@ -48,15 +48,25 @@ class AvatarController extends Controller
         ));
     }
 
-    public function cropAvatarAction($uuid)
+    public function cropAvatarAction($uuid = null)
     {
         $this->checkSecurity();
 
+        if (!$uuid) {
+            $this->setFlash('error', 'platformd.user.avatars.invalid_avatar');
+            return $this->redirect($this->generateUrl('accounts_settings'));
+        }
+
         $avatar = $this->findAvatar($uuid);
+
+        if (!$avatar) {
+            $this->setFlash('error', 'platformd.user.avatars.invalid_avatar');
+            return $this->redirect($this->generateUrl('accounts_settings'));
+        }
 
         if ($avatar->isCropped()) {
             $this->setFlash('error', 'platformd.user.avatars.already_cropped');
-            return $this->redirect($this->generateUrl('avatars'));
+            return $this->redirect($this->generateUrl('accounts_settings'));
         }
 
         return $this->render('UserBundle:Avatar:cropAvatar.html.twig', array(
@@ -83,7 +93,7 @@ class AvatarController extends Controller
         $flash = $this->getUser()->getAdminLevel() ? 'platformd.user.avatars.admin_submit_success' : 'platformd.user.avatars.submit_success';
 
         $this->setFlash('success', $flash);
-        return $this->redirect($this->generateUrl('avatars'));
+        return $this->redirect($this->generateUrl('accounts_settings'));
     }
 
     public function deleteAction(Request $request)
@@ -149,7 +159,7 @@ class AvatarController extends Controller
         $this->getAvatarManager()->addToFilesystemActionsQueue($avatar->getUuid(), $avatar->getUser(), AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_SWITCH);
 
         $this->setFlash('success', 'platformd.user.avatars.switch_success');
-        return $this->redirect($this->generateUrl('avatars'));
+        return $this->redirect($this->generateUrl('accounts_settings'));
     }
 
     private function findAvatar($uuid, $exceptionOnNotFound = true)

@@ -151,7 +151,7 @@ class AvatarManager
 
     }
 
-    public function getAvatarIndexData(User $user)
+    public function getAvatarListingData(User $user, $size=84)
     {
         $this->checkUserUuid($user);
 
@@ -159,7 +159,7 @@ class AvatarManager
         $avatars = $this->getAllApprovedForUser($user);
 
         foreach ($avatars as $avatar) {
-            $url = $this->getAvatarUrl($user->getUuid(), 84, $avatar->getUuid());
+            $url = $this->getAvatarUrl($user->getUuid(), $size, $avatar->getUuid());
 
             $avatarDetails = array(
                 'id'  => $avatar->getId(),
