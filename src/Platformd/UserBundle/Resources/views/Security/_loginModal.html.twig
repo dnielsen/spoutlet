@@ -43,3 +43,15 @@
         <button id="login-modal-close" class="button btn btn-primary login-button" onclick="$($.unblockUI());">{{ 'cancel' | pd_trans }}</button>
     </div>
 </div>
+<script type="text/javascript">
+    $(function () {
+        $('#login-form').ajaxForm({
+            success: showResponse
+        });
+    });
+
+
+    function showResponse(responseText, statusText, xhr, $form)  {
+        console.log(responseText);
+    }
+</script>
