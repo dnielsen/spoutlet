@@ -1,4 +1,13 @@
+# Move these to config_server
+parameters:
+    auth_using_api: false
+    form_login: true
+    security.authentication.listener.form.class: Platformd\UserBundle\Security\UsernamePasswordFormAuthenticationListener
+
 security:
+
+    factories:
+        - "%kernel.root_dir%/../src/Platformd/UserBundle/Resources/config/security_factory.yml"
 
     encoders:
         "FOS\UserBundle\Model\UserInterface":
@@ -10,6 +19,9 @@ security:
         fos_userbundle:
             id: fos_user.user_manager
 
+        api_provider:
+            id: platformd.security.user.provider.api
+
     firewalls:
         # turn security off entirely for the fake cevo site
         cevo_fake_site:
@@ -17,10 +29,10 @@ security:
             security: false
 
         main:
+            api-auth: %auth_using_api%
             pattern: ^/
             anonymous:    true
-            form_login:
-                check_path: /login_check
+            form_login: %form_login%
             logout:
                 path:     /logout
                 target:   default_index
