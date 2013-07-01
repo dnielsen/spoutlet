@@ -74,9 +74,11 @@ class SecurityController extends BaseController
     {
         $form = $this->container->get('platformd_incomplete_account', $this->getCurrentUser());
 
-        return $this->render('SpoutletBundle:Account:incomplete.html.twig', array(
+        $response = $this->container->get('templating')->render('SpoutletBundle:Account:incomplete.html.twig', array(
             'form' => $form->createView(),
         ));
+
+        return $response;
     }
 
     private function getCurrentUser() {
