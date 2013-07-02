@@ -28,8 +28,9 @@ class AvatarManager
     private $privateBucket;
     private $s3;
     private $queueUtil;
+    private $userManager;
 
-    public function __construct(EntityManager $em, Filesystem $filesystem, $publicBucket, $privateBucket, $s3, $queueUtil)
+    public function __construct(EntityManager $em, Filesystem $filesystem, $publicBucket, $privateBucket, $s3, $queueUtil, $userManager)
     {
         $this->em            = $em;
         $this->filesystem    = $filesystem;
@@ -38,6 +39,7 @@ class AvatarManager
         $this->privateBucket = $privateBucket;
         $this->s3            = $s3;
         $this->queueUtil     = $queueUtil;
+        $this->userManager   = $userManager;
     }
 
     public function save(Avatar $avatar)
@@ -242,8 +244,7 @@ class AvatarManager
     {
         if (!$user->getUuid()) {
             $user->setUuid($this->uuidGen());
-            $this->em->persist($user);
-            $this->em->flush();
+            $this->userManager->updateUser($user);
         }
     }
 }
