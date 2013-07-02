@@ -3,6 +3,7 @@ parameters:
     auth_using_api: false
     form_login: true
     security.authentication.listener.form.class: Platformd\UserBundle\Security\UsernamePasswordFormAuthenticationListener
+    fos_user.security.interactive_login_listener.class: Platformd\UserBundle\Security\InteractiveLoginListener
 
 security:
 

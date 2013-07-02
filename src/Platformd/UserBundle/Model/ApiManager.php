@@ -70,19 +70,32 @@ class ApiManager
         return $result;
     }
 
+    public function updateRemoteUserData($user)
+    {
+        $url = 'users/'.$user->getUuid();
+        $parameters = array(
+            'action' => 'update',
+            'username' => $user->getUsername(),
+            'email' => $user->getEmail(),
+            'uuid' => $user->getUuid(),
+        );
+
+        return $this->call($url, 'POST', $parameters);
+    }
+
     private function call($relativeUrl, $method, $parameters = null)
     {
         $url = rtrim($this->apiBaseUrl, '/').'/'.$relativeUrl;
 
         $curl2 = curl_init();
 
-        if ($method == "POST")
+        if (strtolower($method) == "post")
         {
             if (is_array($parameters)) {
+                $parameters = json_encode($parameters);
+            }
 
-                $parameters = http_build_query($parameters);
-
-            } elseif ($this->isJson($parameters)) {
+            if ($this->isJson($parameters)) {
 
                 curl_setopt($curl2, CURLOPT_HTTPHEADER, array(
                     'Content-Type: application/json',
