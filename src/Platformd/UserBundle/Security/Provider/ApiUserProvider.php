@@ -17,7 +17,7 @@ class ApiUserProvider implements UserProviderInterface
     public function __construct($apiManager, EntityManager $em)
     {
         $this->apiManager  = $apiManager;
-        $this->em       = $em;
+        $this->em          = $em;
     }
 
     public function loadUserByUsername($username)
@@ -27,19 +27,21 @@ class ApiUserProvider implements UserProviderInterface
             return $user;
         }
 
-        // Try manager
+        // Look for remote user
         if ($record = $this->apiManager->getUserByUsername($username)) {
-            // Set some fields
-            $user = new User();
-            $user->setUsername($username);
-            $user->setEmail($record['user']['email']);
-            $user->setUuid($record['user']['uuid']);
-            $user->setCreated($record['user']['created']);
-            $user->setUpdated($record['user']['lastUpdated']);
-            $user->setEnabled(true);
-            $user->setPassword('no_longer_used');
+            if ($record['metaData']['success']) {
+                // Set some fields
+                $user = new User();
+                $user->setUsername($username);
+                $user->setEmail($record['user']['email']);
+                $user->setUuid($record['user']['uuid']);
+                $user->setCreated($record['user']['created']);
+                $user->setUpdated($record['user']['lastUpdated']);
+                $user->setEnabled(true);
+                $user->setPassword('no_longer_used');
 
-            return $user;
+                return $user;
+            }
         }
 
         throw new UsernameNotFoundException(sprintf('No record found for user %s', $username));

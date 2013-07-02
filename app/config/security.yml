@@ -1,7 +1,9 @@
-# Move these to config_server
 parameters:
+    # Defaults set here - override on a per-server basis in config_server.yml
     auth_using_api: false
     form_login: true
+
+    # Overrides for fos user listeners
     security.authentication.listener.form.class: Platformd\UserBundle\Security\UsernamePasswordFormAuthenticationListener
     fos_user.security.interactive_login_listener.class: Platformd\UserBundle\Security\InteractiveLoginListener
 
@@ -31,9 +33,9 @@ security:
 
         main:
             api-auth: %auth_using_api%
+            form_login: %form_login%
             pattern: ^/
             anonymous:    true
-            form_login: %form_login%
             logout:
                 path:     /logout
                 target:   default_index

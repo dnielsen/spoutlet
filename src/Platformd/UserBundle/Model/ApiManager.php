@@ -54,9 +54,9 @@ class ApiManager
 
         $url = sprintf('authenticate?username=%s&hash=%s', $user->getUsername(), $presentedPassword);
 
-        $result = $this->call($url, 'GET');
+        $result = $this->call($url);
 
-        return $result;
+        return $result['metaData']['success'];
     }
 
     public function getUserByUsername($username)
@@ -65,14 +65,14 @@ class ApiManager
 
         $url = sprintf('username?username=%s', $username);
 
-        $result = $this->call($url, 'GET');
+        $result = $this->call($url);
 
         return $result;
     }
 
     public function updateRemoteUserData($user)
     {
-        $url = 'users/'.$user->getUuid();
+        $url        = 'users/'.$user->getUuid();
         $parameters = array(
             'action' => 'update',
             'username' => $user->getUsername(),
@@ -83,7 +83,15 @@ class ApiManager
         return $this->call($url, 'POST', $parameters);
     }
 
-    private function call($relativeUrl, $method, $parameters = null)
+    public function getUserList($offset=0, $limit=100, $sortMethod='created', $since=null)
+    {
+        $sinceQuery = $since ? '&since='.$since->format('Y-m-d') : '';
+
+        $url = 'users?limit='.$limit.'&offset='.$offset.'&orderby=created'.$sinceQuery;
+        return $this->call($url)
+    }
+
+    private function call($relativeUrl, $method='GET', $parameters = null)
     {
         $url = rtrim($this->apiBaseUrl, '/').'/'.$relativeUrl;
 
