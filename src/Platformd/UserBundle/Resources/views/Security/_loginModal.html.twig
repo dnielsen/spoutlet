@@ -38,6 +38,7 @@
             </table>
             <input type="hidden" name="_target_path" id="_target_path" value="" />
         </form>
+        {{ facebook_login_button({'autologoutlink': true}) }}
     </div>
     <div class="modal-close">
         <button id="login-modal-close" class="button btn btn-primary login-button" onclick="$($.unblockUI());">{{ 'cancel' | pd_trans }}</button>

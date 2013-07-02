@@ -24,7 +24,6 @@ class AccountNotCompleteListener
         $this->container    = $container;
     }
 
-
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request    = $this->container->get('request');
@@ -32,12 +31,10 @@ class AccountNotCompleteListener
         $token      = $this->container->get('security.context')->getToken();
         $user       = $this->getCurrentUser();
 
-        if($routeName != 'accounts_settings' && $routeName != '_main_user_strip') {
-            if($user) {
-                if($user->getFacebookId() && !$user->getPassword()) {
-                    $this->container->get('session')->setFlash('success', 'platformd.facebook.account_created');
-
-                    $url        = $this->router->generate('accounts_settings');
+        if($user) {
+            if($user->getFacebookId() && !$user->getPassword()) {
+                if($routeName != 'accounts_incomplete' && $routeName != '_main_user_strip' && $routeName != '_wdt') {
+                    $url        = $this->router->generate('accounts_incomplete');
                     $response   = new RedirectResponse($url);
 
                     $event->setResponse($response);

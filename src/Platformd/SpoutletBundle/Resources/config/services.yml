@@ -348,3 +348,8 @@ services:
             - "@platformd.repository.comment_thread"
             - "@platformd.link.linkable_manager"
             - "@doctrine.orm.entity_manager"
+
+    platformd_user.account.incomplete_form.type:
+        class: Platformd\SpoutletBundle\Form\Type\IncompleteAccountType
+        tags:
+            - { name: form.type, alias: platformd_incomplete_account }

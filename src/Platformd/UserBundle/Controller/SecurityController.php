@@ -70,17 +70,6 @@ class SecurityController extends BaseController
         return new Response(json_encode(array('message' => 'success')));
     }
 
-    public function incompleteAction(Request $request)
-    {
-        $form = $this->container->get('platformd_incomplete_account', $this->getCurrentUser());
-
-        $response = $this->container->get('templating')->render('SpoutletBundle:Account:incomplete.html.twig', array(
-            'form' => $form->createView(),
-        ));
-
-        return $response;
-    }
-
     private function getCurrentUser() {
         $token = $this->container->get('security.context')->getToken();
         $user  = $token === null ? null : $token->getUser();
@@ -93,7 +82,7 @@ class SecurityController extends BaseController
     }
 
     /**
-     * @return \Platformd\SpoutletBundle\Security\User\Provider\FacebookProvider
+     * @return \Platformd\UserBundle\Security\User\Provider\FacebookProvider
      */
     protected function getFacebookProvider()
     {

@@ -340,4 +340,13 @@ class AccountController extends Controller
             'form' => $form->createView(),
         ));
     }
+
+    public function incompleteAction(Request $request)
+    {
+        $form = $this->createForm('platformd_incomplete_account', $this->getCurrentUser());
+
+        return $this->render('SpoutletBundle:Account:incomplete.html.twig', array(
+            'form' => $form->createView(),
+        ));
+    }
 }

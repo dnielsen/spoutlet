@@ -75,10 +75,10 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request }
 
-    # platformd.listener.account_not_complete_listener:
-    #     class: Platformd\SpoutletBundle\EventListener\AccountNotCompleteListener
-    #     arguments:
-    #         - "@router"
-    #         - "@service_container"
-    #     tags:
-    #         - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    platformd.listener.account_not_complete_listener:
+        class: Platformd\SpoutletBundle\EventListener\AccountNotCompleteListener
+        arguments:
+            - "@router"
+            - "@service_container"
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

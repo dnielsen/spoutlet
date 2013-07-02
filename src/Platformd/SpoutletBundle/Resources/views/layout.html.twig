@@ -151,7 +151,7 @@
 	</head>
 	<body class="site-{{ app.session.locale }}">
         {% if features.hasFacebook and config.facebookAppId %}
-        {{ facebook_initialize({'xfbml': true, 'fbAsyncInit': 'onFbInit();', 'culture': site.defaultLocale}) }}
+        {{ facebook_initialize({'appId':config.facebookAppId, 'xfbml': true, 'fbAsyncInit': 'onFbInit();', 'culture': site.defaultLocale}) }}
         <script>
 
             function goLogIn(){
