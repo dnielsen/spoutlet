@@ -1019,6 +1019,7 @@ platformd.show_more: Show More
 platformd.show_less: Show Less
 
 galleries:
+    image: Image
     navigation_label: Image Gallery
     index_page_title: Galleries
     index_page_header: ALIENWARE ARENA IMAGES
@@ -1115,6 +1116,8 @@ galleries:
     likes: Likes
     dislikes: Dislikes
     cast_your_vote: Cast your vote:
+    edit_photo.name: Image Name
+    edit_photo.desc: Description
 
 contests:
     contests: Contests

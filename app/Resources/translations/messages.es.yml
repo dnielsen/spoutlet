@@ -1,4 +1,5 @@
 date_format: M j, Y
+edit: Editar
 submit: Enviar
 cancel: Cancelar
 delete: Borrar
@@ -587,6 +588,7 @@ exclusive_designs: Diseños Exclusivos
 click_to_download: Hacer clic para descargar
 
 galleries:
+    image: Foto
     navigation_label: Galería de Fotos
     index_page_title: Galerías
     index_page_header: Fotos de Alienware Arena
@@ -682,6 +684,8 @@ galleries:
     likes: Gustos
     dislikes: Disgustos
     cast_your_vote: Emite tu voto:
+    edit_photo.name: Nombre de Imagen
+    edit_photo.desc: Descripción
 
 contests:
     contests: Concursos
