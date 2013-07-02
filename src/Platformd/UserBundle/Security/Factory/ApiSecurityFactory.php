@@ -30,14 +30,4 @@ class ApiSecurityFactory extends FormLoginFactory
 
         return $provider;
     }
-
-    public function addConfiguration(NodeDefinition $node)
-    {
-        parent::addConfiguration($node);
-
-        $node
-            ->children()
-            ->scalarNode('api_authentication')->defaultValue(true)
-            ->end();
-    }
 }
