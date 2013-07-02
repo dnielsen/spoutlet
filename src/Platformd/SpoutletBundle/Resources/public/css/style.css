@@ -1115,7 +1115,7 @@ div.blockOverlay {
 #loginArea .info { width:425px; margin:0 auto; padding-top:15px; }
 #loginArea .forgot { font-size:12px; text-align:center; padding:0 0 20px 0; }
 #loginArea .error { width:425px; margin:0 auto; padding:0 0 10px 0; }
-#loginArea .error .title { font-size:22px; color:#c62828; font-weight:bold; padding-bottom:5px; }
+#loginArea .error .title { font-size:22px; color:#c62828; font-weight:bold; padding-bottom:5px; float: none; width: auto; height: auto; }
 #loginArea .error .message { border-left:#c62828 4px solid; border-right:#c62828 4px solid; font-size:12px; font-weight:normal; padding:3px 10px; }
 #loginArea .remember-me {margin: 0;}
 
