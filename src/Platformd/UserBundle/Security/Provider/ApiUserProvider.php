@@ -38,7 +38,6 @@ class ApiUserProvider implements UserProviderInterface
             $user->setUpdated($record['user']['lastUpdated']);
             $user->setEnabled(true);
             $user->setPassword('no_longer_used');
-            //$this->em->persist($user);
 
             return $user;
         }
