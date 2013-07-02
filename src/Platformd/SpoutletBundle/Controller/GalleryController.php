@@ -532,7 +532,10 @@ class GalleryController extends Controller
                 $tagManager->saveTagging($media);
 
                 $this->setFlash('success', 'Your changes are saved.');
-                return $this->redirect($this->generateUrl('gallery_media_show', array('id' => $media->getId())));
+                
+                $url = $media->getGalleries()->count() > 0 ? $this->generateUrl('gallery_media_show', array('id' => $media->getId())) : $this->generateUrl('accounts_photos');
+
+                return $this->redirect($url);
             }
         }
 
