@@ -21,6 +21,9 @@ security:
             anonymous:    true
             form_login:
                 check_path: /login_check
+                success_handler: platformd_user.authentication_handler
+                failure_handler: platformd_user.authentication_handler
+                use_referer: true
             logout:
                 path:     /logout
                 target:   default_index

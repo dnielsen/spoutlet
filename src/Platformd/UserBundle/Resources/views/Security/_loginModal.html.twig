@@ -46,12 +46,16 @@
 <script type="text/javascript">
     $(function () {
         $('#login-form').ajaxForm({
-            success: showResponse
+            success: handleResponse
         });
     });
 
 
-    function showResponse(responseText, statusText, xhr, $form)  {
-        console.log(responseText);
+    function handleResponse(responseText, statusText, xhr, $form)  {
+        if(responseText.success) {
+            window.location.href = responseText.referer;
+        } else {
+            alert(responseText.error);
+        }
     }
 </script>

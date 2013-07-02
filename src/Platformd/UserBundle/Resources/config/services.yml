@@ -84,3 +84,8 @@ services:
             - "%s3_private_bucket_name%"
         calls:
             - [ "setDirectory", [ "images/avatars"]]
+
+    platformd_user.authentication_handler:
+        class: Platformd\UserBundle\Handler\AuthenticationHandler
+        arguments:
+            - "@router"
