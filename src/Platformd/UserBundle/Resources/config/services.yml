@@ -97,6 +97,7 @@ services:
             - '%s3_private_bucket_name%'
             - '@platformd.s3'
             - '@platformd.util.queue_util'
+            - '@fos_user.user_manager'
 
     platformd.avatar.s3.adapter:
         class: Gaufrette\Adapter\AmazonS3

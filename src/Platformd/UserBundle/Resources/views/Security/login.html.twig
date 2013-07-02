@@ -11,7 +11,14 @@
             <h2>{{ 'platformd.user.login_header' | pd_trans }}</h2>
             <form action="{{ path("_fos_user_security_check") }}" method="post" class="form form-horizontal">
                 {% if error %}
-                    <div class="form-msg-error">{{ error | pd_trans }}</div>
+                    <div class="error">
+                        <div class="title">Error Logging In</div>
+                        <div class="message text">We're sorry, but there was a problem logging in:
+                            <ul>
+                                <li>{{ error | pd_trans }}</li>
+                            </ul>
+                        </div>
+                    </div>
                 {% endif %}
                 <div class="login">
                     <table class="tbl">

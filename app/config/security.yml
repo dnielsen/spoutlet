@@ -37,6 +37,11 @@ security:
                 path:     /logout
                 target:   default_index
             switch_user: ~
+            remember_me:
+                key:      "%secret%"
+                lifetime: 604800 # 1 week (in seconds)
+                path:     /
+                domain:   ~ # Defaults to the current domain from $_SERVER
 
     acl:
         connection: acl
