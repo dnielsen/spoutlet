@@ -12,7 +12,7 @@ class ApiSecurityFactory extends FormLoginFactory
 {
     public function getKey()
     {
-        return 'api-auth';
+        return 'platformd-form-login';
     }
 
     protected function getListenerId()
@@ -22,12 +22,27 @@ class ApiSecurityFactory extends FormLoginFactory
 
     protected function createAuthProvider(ContainerBuilder $container, $id, $config, $userProviderId)
     {
-        $provider = 'platformd.security.user.authentication.provider.api.'.$id;
-        $container
-            ->setDefinition($provider, new DefinitionDecorator('platformd.security.user.authentication.provider.api'))
-            ->replaceArgument(3, $id)
-        ;
+        if ($config['api_authentication']) {
+            $provider = 'platformd.security.user.authentication.provider.api.'.$id;
+            $container
+                ->setDefinition($provider, new DefinitionDecorator('platformd.security.user.authentication.provider.api'))
+                ->replaceArgument(3, $id)
+            ;
 
-        return $provider;
+            return $provider;
+        } else {
+            return parent::createAuthProvider($container, $id, $config, $userProviderId);
+        }
+    }
+
+    public function addConfiguration(NodeDefinition $node)
+    {
+        parent::addConfiguration($node);
+
+        $node
+            ->children()
+                ->scalarNode('api_authentication')->defaultValue(false)
+            ->end()
+        ;
     }
 }

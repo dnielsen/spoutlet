@@ -56,7 +56,7 @@ class UserManager extends BaseUserManager
     {
         parent::updateUser($user, $andFlush);
 
-        if ($this->container->getParameter('auth_using_api')) {
+        if ($this->container->getParameter('api_authentication')) {
             $apiManager = $this->container->get('platformd.user.api.manager');
             $apiManager->updateRemoteUserData($user);
         }
