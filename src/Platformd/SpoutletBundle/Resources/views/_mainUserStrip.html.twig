@@ -3,7 +3,7 @@
     '%username%': user.username,
     '%route%': account_link(user.username)
 }) | raw }}
-	<li class="separator"><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | trans }}</a></li>
+	<li class="separator"><a id="logout" href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | trans }}</a></li>
 	<li class="separator"><a href="{{ path('accounts_index') }}">{{ 'platformd.layout.top_menu.account' | trans }}</a></li>
     {% if is_granted("ROLE_ADMIN") %}
     <li class="separator"><a href="{{ path('admin_index') }}">{{ "platformd.layout.top_menu.admin" | trans }}</a></li>

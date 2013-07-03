@@ -1531,6 +1531,14 @@ Alienware Arena Team
 
             $this->setFlash('success', 'The group was created!');
 
+            $this->getFacebookProvider()->postToTimeline(array(
+                'message' => sprintf($this->trans('platformd.facebook.timeline.create_group_message'), $group->getName()),
+                'link' => $this->generateUrl('group_show', array('slug' => $group->getSlug()), true),
+                'name' => $group->getName(),
+                'description' => substr(strip_tags($group->getDescription()), 0, 140) . '...',
+                'picture' => 'http://na.alienwarearena.com/bundles/spoutlet/images/alienwarelogothumb-140x85.png',
+            ));
+
             if($return = $request->getSession()->get('ContestReturnUrl')) {
                 $request->getSession()->remove('ContestReturnUrl');
                 return $this->redirect($return);

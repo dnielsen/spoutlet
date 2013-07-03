@@ -30,15 +30,14 @@ security:
             logout:
                 path:     /logout
                 target:   default_index
+                handlers: ["fos_facebook.logout_handler"]
+                #success_handler: platformd_user.authentication_handler
             switch_user: ~
             remember_me:
                 key:      "%secret%"
                 lifetime: 604800 # 1 week (in seconds)
                 path:     /
                 domain:   ~ # Defaults to the current domain from $_SERVER
-
-        public:
-            pattern:   ^/.*
             fos_facebook:
                 app_url: "http://apps.facebook.com/AlienwareArena/"
                 server_url: "http://alienwarearena.com/"
@@ -46,9 +45,6 @@ security:
                 check_path: security_check
                 default_target_path: /
                 provider: fos_userbundle
-            anonymous: true
-            logout:
-                handlers: ["fos_facebook.logout_handler"]
 
     acl:
         connection: acl

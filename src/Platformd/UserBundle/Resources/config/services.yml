@@ -97,4 +97,5 @@ services:
         class: Platformd\UserBundle\Handler\AuthenticationHandler
         arguments:
             - "@router"
+            - "@platformd.util.site_util"
 

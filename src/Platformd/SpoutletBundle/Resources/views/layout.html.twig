@@ -151,21 +151,23 @@
 	</head>
 	<body class="site-{{ app.session.locale }}">
         {% if features.hasFacebook and config.facebookAppId %}
-        {{ facebook_initialize({'appId':config.facebookAppId, 'xfbml': true, 'fbAsyncInit': 'onFbInit();', 'culture': site.defaultLocale}) }}
+        {{ facebook_initialize({'appId':config.facebookAppId, 'xfbml': true, 'fbAsyncInit': 'onFbInit();', 'culture': site.defaultLocale, 'status': false}) }}
         <script>
-
-            function goLogIn(){
+            function goToLogin() {
                 window.location = "{{ path('_security_check') }}";
             }
 
+            function goToLogout() {
+                window.location = "{{ path('_security_logout') }}";
+            }
+
             function onFbInit() {
-                console.log(FB);
                 if (typeof(FB) != 'undefined' && FB != null ) {
                     FB.Event.subscribe('auth.statusChange', function(response) {
                         if (response.session || response.authResponse) {
-                            setTimeout(goLogIn, 500);
+                            setTimeout(goToLogin, 500);
                         } else {
-                            window.location = "{{ path('_security_logout') }}";
+                            setTimeout(goToLogout, 500);
                         }
                     });
                 }

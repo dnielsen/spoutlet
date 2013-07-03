@@ -1309,3 +1309,6 @@ platformd.key_request_processor_command.key_not_assigned_group_section: 'Please 
 platformd.key_request_processor_command.key_not_assigned_no_group_extra_info: Please check back later as more codes may be added!
 
 platformd.facebook.account_created: Your account has been created, however you must update your password before doing anything on the site.
+platformd.facebook.timeline.account_created_message: I just joined Alienware Arena!
+platformd.facebook.timeline.account_created_description: Access exclusive closed betas, in-game items, and discounts on your favorite video games. Become a part of the most helpful PC gaming community today!
+platformd.facebook.timeline.create_group_message: I just created the group %s.

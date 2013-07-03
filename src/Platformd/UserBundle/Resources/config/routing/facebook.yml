@@ -4,6 +4,7 @@ _security_check:
 
 _security_logout:
     pattern: /logout
+    defaults: { _controller: UserBundle:Security:facebookLogout }
 
 facebook_deauthorize:
     pattern: /deauthorize

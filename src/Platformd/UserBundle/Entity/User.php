@@ -1122,7 +1122,7 @@ class User extends BaseUser
     /**
      * @param Array
      *
-     * Always set the facebook id and facebook role; if there is now first/last name or email, set those from fb data
+     * Always set the facebook id and facebook role; if there is no first/last name, email or birthdate, set those from fb data
      */
     public function setFBData($fbdata)
     {
@@ -1138,6 +1138,9 @@ class User extends BaseUser
         }
         if (isset($fbdata['email']) && !$this->email) {
             $this->setEmail($fbdata['email']);
+        }
+        if (isset($fbdata['birthday']) && !$this->birthdate) {
+            $this->setBirthdate(new \DateTime($fbdata['birthday']));
         }
     }
 }

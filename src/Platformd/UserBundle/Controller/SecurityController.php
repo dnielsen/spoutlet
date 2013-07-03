@@ -56,9 +56,7 @@ class SecurityController extends BaseController
         $event = new InteractiveLoginEvent($request, $token);
         $this->container->get('event_dispatcher')->dispatch('security.interactive_login', $event);
 
-        $this->container->get('session')->setFlash('success', 'platformd.facebook.account_created');
-
-        return new RedirectResponse($this->container->get('router')->generate('accounts_settings'));
+        return new RedirectResponse($this->container->get('router')->generate('default_index'));
     }
 
     public function facebookDeauthorizeAction()
@@ -70,7 +68,15 @@ class SecurityController extends BaseController
         return new Response(json_encode(array('message' => 'success')));
     }
 
-    private function getCurrentUser() {
+    public function facebookLogoutAction()
+    {
+        $response = new Response();
+        $response->headers->clearCookie('fbsr_'.$this->getCurrentSite()->getSiteConfig()->getFacebookAppId());
+        return new RedirectResponse($this->container->get('router')->generate('_fos_user_security_logout'));
+    }
+
+    private function getCurrentUser()
+    {
         $token = $this->container->get('security.context')->getToken();
         $user  = $token === null ? null : $token->getUser();
 
@@ -87,5 +93,10 @@ class SecurityController extends BaseController
     protected function getFacebookProvider()
     {
         return $this->container->get('platformd.facebook.provider');
+    }
+
+    protected function getCurrentSite()
+    {
+        return $this->container->get('platformd.util.site_util')->getCurrentSite();
     }
 }
