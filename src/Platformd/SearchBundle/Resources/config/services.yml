@@ -13,3 +13,4 @@ services:
             - "@aws_s3"
             - %s3_private_bucket_name%
             - "@platformd.util.queue_util"
+            - "%search_item_prefix%"

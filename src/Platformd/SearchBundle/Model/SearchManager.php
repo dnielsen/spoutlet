@@ -17,6 +17,7 @@ class SearchManager
     private $allowIndex;
     private $devMode;
     private $devUser;
+    private $searchPrefix;
     private $em;
     private $tagManager;
     private $translator;
@@ -38,7 +39,7 @@ class SearchManager
 
     const SEARCH_RESULTS_PER_PAGE = 10;
 
-    public function __construct($domainName, $domainId, $allowIndex, $devMode, $devUser, EntityManager $em, $tagManager, $translator, $s3, $privateBucket, $queueUtil) {
+    public function __construct($domainName, $domainId, $allowIndex, $devMode, $devUser, EntityManager $em, $tagManager, $translator, $s3, $privateBucket, $queueUtil, $searchPrefix) {
         $this->domainName    = $domainName;
         $this->domainId      = $domainId;
         $this->allowIndex    = $allowIndex;
@@ -50,6 +51,7 @@ class SearchManager
         $this->s3            = $s3;
         $this->privateBucket = $privateBucket;
         $this->queueUtil     = $queueUtil;
+        $this->searchPrefix  = $searchPrefix;
     }
 
     public function search($criteria, $params = array(), $site, $category = null)
@@ -258,8 +260,8 @@ class SearchManager
 
     public function getIndexData($entity, $site, $add = true)
     {
-        $id = ($this->devMode && $this->devUser ? $this->devUser.'_' : '') . $entity->getSearchId().'_'.$site->getId();
-
+        $id = ($this->searchPrefix ? $this->searchPrefix.'_' : '') . ($this->devMode && $this->devUser ? $this->devUser.'_' : '') . $entity->getSearchId().'_'.$site->getId();
+var_dump($id);exit;
         $indexData = array(
             'type'    => $add ? 'add' : 'delete',
             'id'      => $id,
