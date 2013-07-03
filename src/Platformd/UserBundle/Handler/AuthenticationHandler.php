@@ -15,14 +15,19 @@ use Symfony\Component\Security\Core\SecurityContext;
 class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface
 {
     private $router;
+    private $userManager;
 
-    public function __construct(Router $router)
+    public function __construct(Router $router, $userManager)
     {
-        $this->router = $router;
+        $this->router      = $router;
+        $this->userManager = $userManager;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
+        $user = $token->getUser();
+        $this->userManager->addLoginRecord($user, $request);
+
         if ($request->isXmlHttpRequest()) {
             // handle ajax login success here
             $response   = new Response();

@@ -2,9 +2,6 @@ parameters:
     # Default set here - override on a per-server basis in config_server.yml
     api_authentication: false
 
-    # Override for fos user listener
-    fos_user.security.interactive_login_listener.class: Platformd\UserBundle\Security\InteractiveLoginListener
-
 security:
 
     factories:

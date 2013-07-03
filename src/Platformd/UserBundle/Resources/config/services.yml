@@ -111,3 +111,4 @@ services:
         class: Platformd\UserBundle\Handler\AuthenticationHandler
         arguments:
             - "@router"
+            - "@fos_user.user_manager"
