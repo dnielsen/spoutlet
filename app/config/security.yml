@@ -1,7 +1,11 @@
 parameters:
     # Defaults set here - override on a per-server basis in config_server.yml
     auth_using_api: false
-    form_login: true
+    form_login:
+        check_path: /login_check
+        success_handler: platformd_user.authentication_handler
+        failure_handler: platformd_user.authentication_handler
+        use_referer: true
 
     # Override for fos user listener
     fos_user.security.interactive_login_listener.class: Platformd\UserBundle\Security\InteractiveLoginListener
