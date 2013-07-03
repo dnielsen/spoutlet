@@ -261,7 +261,7 @@ class SearchManager
     public function getIndexData($entity, $site, $add = true)
     {
         $id = ($this->searchPrefix ? $this->searchPrefix.'_' : '') . ($this->devMode && $this->devUser ? $this->devUser.'_' : '') . $entity->getSearchId().'_'.$site->getId();
-var_dump($id);exit;
+
         $indexData = array(
             'type'    => $add ? 'add' : 'delete',
             'id'      => $id,
