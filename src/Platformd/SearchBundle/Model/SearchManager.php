@@ -127,7 +127,7 @@ class SearchManager
 
         $params        = array_merge($defaultParams, $params);
 
-        $criteria      = urlencode(($site->getDefaultLocale() == 'ja' ? "'".$this->encodeString($criteria, true)."'" : "'".$criteria."'"));
+        $criteria      = urlencode(($site->getDefaultLocale() == 'ja' ? "'".$this->encodeString($criteria)."'" : "'".$criteria."'"));
         $siteQuery     = $site ? "%20site:'".$site->getFullDomain()."'" : "";
         $categoryQuery = $category ? "%20f_type:'".$category."'" : '';
         $devQuery      = ($this->devMode && $this->devUser) ? "%20dev_mode:1%20dev_user:'".$this->devUser."'" : '';
