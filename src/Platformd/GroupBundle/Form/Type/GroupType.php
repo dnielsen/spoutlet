@@ -16,10 +16,12 @@ class GroupType extends AbstractType
 
     private $user;
     private $group;
+    private $tagManager;
 
-    public function __construct($user, $group) {
-        $this->user = $user;
-        $this->group = $group;
+    public function __construct($user, $group, $tagManager) {
+        $this->user         = $user;
+        $this->group        = $group;
+        $this->tagManager   = $tagManager;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
@@ -95,6 +97,14 @@ class GroupType extends AbstractType
                     'help'  => 'Check this checkbox to enabled discussions for this group.',
                 ));
             }
+
+            $builder->add('tags', 'text', array(
+                'label' => 'tags.forms.tags',
+                'help' => "tags.forms.enter_keywords_help",
+                'property_path' => false,
+                'data' => $this->group ? $this->tagManager->getConcatenatedTagNames($this->group) : null,
+                'required' => false,
+            ));
     }
 
     public function getName()

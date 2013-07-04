@@ -30,7 +30,6 @@ use Pagerfanta\Adapter\ArrayAdapter;
  */
 class GroupController extends Controller
 {
-
     private function ensureGroupExists($group) {
         if (!$group) {
             throw new NotFoundHttpException('Group does not exist.');
@@ -631,12 +630,20 @@ Alienware Arena Team
         $group = $this->getGroup($id);
         $this->ensureAllowed($group, 'AddNews');
 
+        $tagManager = $this->getTagManager();
         $groupNews = new GroupNews();
 
         $form = $this->createFormBuilder($groupNews)
             ->add('title', 'text')
             ->add('article', 'purifiedTextarea', array(
                 'attr'  => array('class' => 'ckeditor')
+            ))
+            ->add('tags', 'text', array(
+                'label' => 'tags.forms.tags',
+                'help'  => 'tags.forms.enter_keywords_help',
+                'property_path' => false,
+                'data' => null,
+                'required' => false,
             ))
             ->getForm();
 
@@ -647,7 +654,12 @@ Alienware Arena Team
 
                 $groupNews->setGroup($group);
 
+                $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
+                $tagManager->addTags($tags, $groupNews);
+
                 $this->getGroupManager()->saveGroupNews($groupNews);
+
+                $tagManager->saveTagging($groupNews);
 
                 $this->setFlash('success', 'New article posted successfully.');
 
@@ -672,17 +684,27 @@ Alienware Arena Team
         $group = $this->getGroup($id);
         $this->ensureAllowed($group, 'EditNews');
 
-        $newsArticle = $this->getGroupNewsRepository()->find($newsId);
+        $tagManager     = $this->getTagManager();
+        $newsArticle    = $this->getGroupNewsRepository()->find($newsId);
 
         if (!$newsArticle) {
             $this->setFlash('error', 'News article does not exist!');
             return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
         }
 
+        $tagManager->loadTagging($newsArticle);
+
         $form = $this->createFormBuilder($newsArticle)
             ->add('title', 'text')
             ->add('article', 'purifiedTextarea', array(
                 'attr'  => array('class' => 'ckeditor')
+            ))
+            ->add('tags', 'text', array(
+                'label' => 'tags.forms.tags',
+                'help'  => 'tags.forms.enter_keywords_help',
+                'property_path' => false,
+                'data' => $tagManager->getConcatenatedTagNames($newsArticle),
+                'required' => false,
             ))
             ->getForm();
 
@@ -692,7 +714,12 @@ Alienware Arena Team
 
                 $newsArticle->setGroup($group);
 
+                $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
+                $tagManager->replaceTags($tags, $newsArticle);
+
                 $this->getGroupManager()->saveGroupNews($newsArticle);
+
+                $tagManager->saveTagging($newsArticle);
 
                 $this->setFlash('success', 'New article updated successfully.');
 
@@ -1104,7 +1131,9 @@ Alienware Arena Team
         $group = $this->getGroup($id);
         $this->ensureAllowed($group, 'AddDiscussion');
 
+        $tagManager      = $this->getTagManager();
         $groupDiscussion = new GroupDiscussion();
+
 
         $form = $this->createFormBuilder($groupDiscussion)
             ->add('title', 'text', array('label' => 'Discussion Name'))
@@ -1113,6 +1142,12 @@ Alienware Arena Team
                 'help'  => 'Give a description for your discussion.',
                 'required' => true,
                 'attr'  => array('class' => 'ckeditor'),
+            ))
+            ->add('tags', 'text', array(
+                'label' => 'tags.forms.tags',
+                'help'  => 'tags.forms.enter_keywords_help',
+                'property_path' => false,
+                'data' => null,
             ))
             ->getForm();
 
@@ -1123,7 +1158,12 @@ Alienware Arena Team
 
                 $groupDiscussion->setGroup($group);
 
+                $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
+                $tagManager->addTags($tags, $groupDiscussion);
+
                 $this->getGroupManager()->createGroupDiscussion($groupDiscussion);
+
+                $tagManager->saveTagging($groupDiscussion);
 
                 $this->setFlash('success', 'New discussion posted successfully.');
 
@@ -1148,6 +1188,7 @@ Alienware Arena Team
         $group = $this->getGroup($id);
         $this->ensureAllowed($group, 'EditDiscussion');
 
+        $tagManager = $this->getTagManager();
         $discussion = $this->getGroupDiscussionRepository()->find($discussionId);
 
         if (!$discussion) {
@@ -1155,12 +1196,20 @@ Alienware Arena Team
             return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
         }
 
+        $tagManager->loadTagging($discussion);
+
         $form = $this->createFormBuilder($discussion)
             ->add('title', 'text', array('label' => 'Discussion Name'))
             ->add('content', 'purifiedTextarea', array(
                     'label' => 'Content',
                     'help'  => 'Give a description for your discussion.',
                     'attr'  => array('class' => 'ckeditor'),
+            ))
+            ->add('tags', 'text', array(
+                'label' => 'tags.forms.tags',
+                'help'  => 'tags.forms.enter_keywords_help',
+                'property_path' => false,
+                'data' => $tagManager->getConcatenatedTagNames($discussion),
             ))
             ->getForm();
 
@@ -1170,7 +1219,12 @@ Alienware Arena Team
 
                 $discussion->setGroup($group);
 
+                $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
+                $tagManager->replaceTags($tags, $discussion);
+
                 $this->getGroupManager()->updateGroupDiscussion($discussion);
+
+                $tagManager->saveTagging($discussion);
 
                 $this->setFlash('success', 'Discussion updated successfully.');
 
@@ -1489,7 +1543,8 @@ Alienware Arena Team
 
         $this->addGroupsBreadcrumb()->addChild('New Group');
 
-        $group  = new Group();
+        $tagManager = $this->getTagManager();
+        $group      = new Group();
 
         // assume that the group is only being created because the user wants to do something that requires a group first and they have none.
         if ($then = $request->query->get('then')) {
@@ -1501,7 +1556,7 @@ Alienware Arena Team
             $group->setDescription('Welcome to my group! <br /><br />This is the place to share your thoughts with like-minded folks on this topic. <br /><br />Feel free to upload relevant images and videos, or start a discussion on this topic.');
         }
 
-        $form   = $this->createForm(new GroupType($this->getUser(), $group), $group);
+        $form = $this->createForm(new GroupType($this->getUser(), $group, $tagManager), $group);
 
         if($previous = $this->getReturnUrl($request)) {
             $request->getSession()->set(
@@ -1551,8 +1606,10 @@ Alienware Arena Team
         $this->ensureAllowed($group, 'EditGroup');
 
         $this->addGroupsBreadcrumb()->addChild('Edit Group');
+        $tagManager = $this->getTagManager();
+        $tagManager->loadTagging($group);
 
-        $editForm = $this->createForm(new GroupType($this->getUser(), $group), $group);
+        $editForm = $this->createForm(new GroupType($this->getUser(), $group, $tagManager), $group);
 
         if ($this->processForm($editForm, $request)) {
             $this->setFlash('success', 'The group was saved!');
@@ -1627,8 +1684,8 @@ Alienware Arena Team
 
     private function processForm(Form $form, Request $request)
     {
-
-        $em = $this->getEntityManager();
+        $em         = $this->getEntityManager();
+        $tagManager = $this->getTagManager();
 
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
@@ -1661,6 +1718,11 @@ Alienware Arena Team
                 }
 
                 $this->getGroupManager()->saveGroup($group);
+
+                $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
+                $group->getId() ? $tagManager->replaceTags($tags, $group) : $tagManager->addTags($tags, $group);
+
+                $tagManager->saveTagging($group);
 
                 return true;
             }
@@ -1757,5 +1819,10 @@ Alienware Arena Team
     private function getYoutubeManager()
     {
         return $this->get('platformd.model.youtube_manager');
+    }
+
+    private function getTagManager()
+    {
+        return $this->get('platformd.tags.model.tag_manager');
     }
 }

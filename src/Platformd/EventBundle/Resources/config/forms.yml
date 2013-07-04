@@ -9,6 +9,7 @@ services:
         arguments:
             - @security.context
             - %platformd_event.form.event_subscriber.admin_group_event_subscriber.class%
+            - "@platformd.tags.model.tag_manager"
         tags:
             - { name: form.type, alias: groupEvent }
 
@@ -16,5 +17,6 @@ services:
         class: %platformd_event.form.type.global_event.class%
         arguments:
             - @security.context
+            - "@platformd.tags.model.tag_manager"
         tags:
             - { name: form.type, alias: globalEvent }

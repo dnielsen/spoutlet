@@ -167,6 +167,11 @@ class SiteFeatures
     private $hasContact = false;
 
     /**
+     * @ORM\Column(name="has_search", type="boolean")
+     */
+    private $hasSearch = false;
+
+    /**
      * Get id
      *
      * @return integer
@@ -492,6 +497,17 @@ class SiteFeatures
     public function setHasContact($value = true)
     {
         $this->hasContact = $value;
+        return $this;
+    }
+
+    public function getHasSearch()
+    {
+        return $this->hasSearch;
+    }
+
+    public function setHasSearch($value = true)
+    {
+        $this->hasSearch = $value;
         return $this;
     }
 }

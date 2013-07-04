@@ -16,7 +16,7 @@ use DateTimezone;
 
 use Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
-
+use Platformd\TagBundle\Model\TaggableInterface;
 
 
 /**
@@ -34,7 +34,7 @@ use Platformd\SpoutletBundle\Link\LinkableInterface;
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\ContestRepository")
  * @Assert\Callback(methods={"validateDateRanges"})
  */
-class Contest implements LinkableInterface
+class Contest implements LinkableInterface, TaggableInterface
 {
     const REDEMPTION_LINE_PREFIX = '* ';
 
@@ -224,6 +224,12 @@ class Contest implements LinkableInterface
      *
      */
     protected $testOnly = false;
+
+    /**
+     * @var Platformd\TagBundle\Entity\Tag[]
+     *
+     */
+    private $tags;
 
     public function __construct()
     {
@@ -863,5 +869,22 @@ class Contest implements LinkableInterface
     public function isVotable()
     {
         return $this->getVotingStartUtc() < new \DateTime('now');
+    }
+
+    public function getTags()
+    {
+        $this->tags = $this->tags ?: new ArrayCollection();
+
+        return $this->tags;
+    }
+
+    public function getTaggableType()
+    {
+        return 'platformd_contest';
+    }
+
+    public function getTaggableId()
+    {
+        return $this->getId();
     }
 }

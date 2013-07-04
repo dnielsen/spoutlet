@@ -39,6 +39,7 @@
             <div class="span7 edit-discussion" style="width: 610px;">
                 {{ form_row(discussionForm.title) }}
                 {{ form_row(discussionForm.content) }}
+                {{ form_row(discussionForm.tags) }}
                 <div class="form-actions">
                     <button type="submit" formnovalidate>Save Discussion</button>
                     <button id="cancel" class="btn btn-primary" rel="{{ path('group_view_discussion', { id: group.id, discussionId: discussionId}) }}" style="margin-left: 10px;">Cancel</button>
@@ -60,11 +61,19 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.watermark.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.tagsinput.min.js') }}"></script>
     <script type="text/javascript">
         $(function () {
             $('#cancel').delegate('','click change',function(){
                 window.location = $(this).attr('rel');
                 return false;
+            });
+
+            $('#form_tags').watermark('Separate tags with commas');
+            $('#form_tags').tagsInput({
+                placeholderColor: '#aaaaaa',
+                defaultText: "{{ 'tags.forms.add_tag' | pd_trans }}"
             });
         });
     </script>

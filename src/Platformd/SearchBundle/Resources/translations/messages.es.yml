@@ -1,0 +1,26 @@
+platformd.search.form.default.all: Buscar...
+platformd.search.categories.all: Todo
+platformd.search.categories.group: Grupos
+platformd.search.categories.event: Evento
+platformd.search.categories.group_event: Eventos de Grupo
+platformd.search.categories.global_event: Evento
+platformd.search.categories.news: Novedades
+platformd.search.categories.deal: Ofertas
+platformd.search.categories.giveaway: Regalos
+platformd.search.categories.video: Vídeos
+platformd.search.results.title: Buscar
+platformd.search.results.tags: Etiquetas:
+platformd.search.results.extra_data.event_attendee_count: "Asistentes: %value%"
+platformd.search.results.extra_data.event_start_date: "Fecha de Inicio: %value%"
+platformd.search.results.extra_data.group_member_count: "Miembros:%value%"
+platformd.search.results.extra_data.video_views: "Visitas: %value%"
+platformd.search.results.extra_data.video_votes: "Puntos: %value%"
+platformd.search.no_results.no_results_for_term: Lo sentimos, no hay resultados para "%term%".
+platformd.search.no_results.no_results_for_term_in_category: Lo sentimos, no hay resultados para "%term%" en "%category%".
+platformd.search.no_results.search_tips: Sugerencias
+platformd.search.no_results.check_other_categories: Amplía la búsqueda a otras categorías usando los filtros anteriormente
+platformd.search.no_results.check_spelling: Verifique la ortografía
+platformd.search.no_results.different_term: Intenta un término diferente de búsqueda
+platformd.search.no_results.general_term: Intenta un término de búsqueda más general
+platformd.search.no_results.single_word: Intenta un término de búsqueda de solo una palabra, como <a hef="%1">dota</a> o <a hef="%2">giveaway</a>
+platformd.search.no_results.contact_us: Need help? <a href="%url%">Contact us.</a>

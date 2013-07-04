@@ -74,6 +74,8 @@ class YoutubeController extends Controller
     public function editAction(Request $request, $slug)
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
+
+        $tagManager = $this->getTagManager();
         $youtube = $this->getYoutubeManager()->findVideoBySlug($slug);
 
         if(!$youtube) {
@@ -91,6 +93,8 @@ class YoutubeController extends Controller
             $groups[] = $group->getId();
         }
         $youtube->setGroups($groups);
+
+        $tagManager->loadTagging($youtube);
 
         $user    = $this->getUser();
         $form    = $this->createForm('youtube', $youtube);
@@ -344,11 +348,12 @@ class YoutubeController extends Controller
 
     private function processForm($form, $user, $isEdit = false)
     {
-        $manager = $this->getYoutubeManager();
-        $groupManager = $this->getGroupManager();
-        $youtube = $form->getData();
-        $siteRepo = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site');
-        $galleryRepo = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Gallery');
+        $manager        = $this->getYoutubeManager();
+        $tagManager     = $this->getTagManager();
+        $groupManager   = $this->getGroupManager();
+        $youtube        = $form->getData();
+        $siteRepo       = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site');
+        $galleryRepo    = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Gallery');
         $youtube->setYoutubeId($form['youtubeId']->getData());
         $youtube->setDuration($form['duration']->getData());
         $youtube->setSite($this->getCurrentSite());
@@ -375,7 +380,18 @@ class YoutubeController extends Controller
             $youtube->setGroups($groups);
         }
 
-        $isEdit == true ? $manager->updateVideo($youtube) : $manager->createVideo($youtube);
+        $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
+
+        if($youtube->getId()) {
+            $manager->updateVideo($youtube);
+            $tagManager->replaceTags($tags, $youtube);
+            $tagManager->saveTagging($youtube);
+
+        } else {
+            $manager->createVideo($youtube);
+            $tagManager->addTags($tags, $youtube);
+            $tagManager->saveTagging($youtube);
+        }
     }
 
     private function getYoutubeManager()
@@ -386,5 +402,10 @@ class YoutubeController extends Controller
     private function getGroupManager()
     {
         return $this->get('platformd.model.group_manager');
+    }
+
+    private function getTagManager()
+    {
+        return $this->get('platformd.tags.model.tag_manager');
     }
 }

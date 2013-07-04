@@ -12,7 +12,9 @@ use Platformd\SpoutletBundle\Entity\AbstractEvent,
     Platformd\SpoutletBundle\Model\CommentableInterface,
     Platformd\UserBundle\Entity\User,
     Platformd\SpoutletBundle\Link\LinkableInterface,
-    Platformd\SpoutletBundle\Entity\Site
+    Platformd\SpoutletBundle\Entity\Site,
+    Platformd\SearchBundle\Model\IndexableInterface,
+    Platformd\TagBundle\Model\TaggableInterface
 ;
 
 use Symfony\Component\Validator\Constraints as Assert,
@@ -40,7 +42,7 @@ use DateTime;
  * @ORM\Entity(repositoryClass="Platformd\GiveawayBundle\Entity\GiveawayRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class Giveaway implements LinkableInterface, CommentableInterface
+class Giveaway implements LinkableInterface, CommentableInterface, IndexableInterface, TaggableInterface
 {
     const TYPE_KEY_GIVEAWAY = 'key_giveaway'; // the traditional key giveaway type
     const TYPE_MACHINE_CODE_SUBMIT = 'machine_code_submit'; // the machine-submit giveaway type
@@ -239,6 +241,8 @@ class Giveaway implements LinkableInterface, CommentableInterface
 
     const COMMENT_PREFIX = 'giveaway-';
 
+    const SEARCH_PREFIX  = 'giveaway_';
+
     /**
      * One to Many with GiveawayPool
      *
@@ -332,6 +336,12 @@ class Giveaway implements LinkableInterface, CommentableInterface
      * )
      */
     protected $backgroundImage;
+
+    /**
+     * @var Platformd\TagBundle\Entity\Tag[]
+     *
+     */
+    private $tags;
 
     public function __construct()
     {
@@ -1292,5 +1302,57 @@ class Giveaway implements LinkableInterface, CommentableInterface
     public function setBannerImage($bannerImage)
     {
         $this->bannerImage = $bannerImage;
+    }
+
+    public function getSearchEntityType()
+    {
+        return 'giveaway';
+    }
+
+    public function getSearchFacetType()
+    {
+        return 'giveaway';
+    }
+
+    public function getSearchId()
+    {
+        return self::SEARCH_PREFIX.$this->id;
+    }
+
+    public function getSearchTitle()
+    {
+        return $this->name;
+    }
+
+    public function getSearchBlurb()
+    {
+        return $this->content ?: '';
+    }
+
+    public function getSearchDate()
+    {
+        return $this->created;
+    }
+
+    public function getDeleteSearchDocument()
+    {
+        return $this->status == 'disabled' || false == $this->published;
+    }
+
+    public function getTags()
+    {
+        $this->tags = $this->tags ?: new ArrayCollection();
+
+        return $this->tags;
+    }
+
+    public function getTaggableType()
+    {
+        return 'platformd_giveaway';
+    }
+
+    public function getTaggableId()
+    {
+        return $this->getId();
     }
 }

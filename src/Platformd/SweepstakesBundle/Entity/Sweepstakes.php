@@ -13,13 +13,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 use DateTime;
 use Symfony\Component\Locale\Locale;
+use Platformd\TagBundle\Model\TaggableInterface;
 
 /**
  * Platformd\SweepstakesBundle\Entity\Sweepstakes
  *
  * @ORM\Entity(repositoryClass="Platformd\SweepstakesBundle\Entity\SweepstakesRepository")
  */
-class Sweepstakes extends AbstractEvent
+class Sweepstakes extends AbstractEvent implements TaggableInterface
 {
     const COMMENT_PREFIX  = 'sweepstake-';
 
@@ -48,6 +49,12 @@ class Sweepstakes extends AbstractEvent
      * @ORM\OneToMany(targetEntity="Platformd\SweepstakesBundle\Entity\Entry", mappedBy="sweepstakes")
      */
     protected $entries;
+
+    /**
+     * @var Platformd\TagBundle\Entity\Tag[]
+     *
+     */
+    private $tags;
 
     public function __construct()
     {
@@ -215,5 +222,22 @@ class Sweepstakes extends AbstractEvent
         }
 
         return self::COMMENT_PREFIX.$this->getId();
+    }
+
+    public function getTags()
+    {
+        $this->tags = $this->tags ?: new ArrayCollection();
+
+        return $this->tags;
+    }
+
+    public function getTaggableType()
+    {
+        return 'platformd_sweepstakes';
+    }
+
+    public function getTaggableId()
+    {
+        return $this->getId();
     }
 }
