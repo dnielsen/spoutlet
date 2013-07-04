@@ -106,6 +106,8 @@ class EventService
                 $event->setPrivate(false);
             }
         } else {
+            $event->setApproved(true);
+
             if ($event->getExternalUrl()) {
                 $event->setRegistrationOption(GroupEvent::REGISTRATION_3RD_PARTY);
             } else {

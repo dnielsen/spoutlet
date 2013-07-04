@@ -67,6 +67,7 @@
                 'ckeditor/lang/en.js'
                 'plugins/jquery.ad-gallery/jquery.ad-gallery.js'
                 'bundles/spoutlet/js/jquery.blockUI.js'
+                'bundles/spoutlet/js/jquery.watermark.min.js'
 		        output='js/packed/layout_default.js'
 		    %}
 		    <script type="text/javascript" src="{{ asset_url }}"></script>
@@ -92,6 +93,30 @@
         </title>
 
 		<script type="text/javascript">
+
+            var ajaxRequestSent = false;
+
+            function logSearchterm(criteria) {
+                if (ajaxRequestSent) return;
+
+                if (criteria == "") {
+                    return false;
+                }
+
+                var data        = { 'criteria' : criteria };
+                ajaxRequestSent = true;
+
+                $.ajax({
+                    url: '{{ path('log_search') }}',
+                    type: 'post',
+                    async: false,
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    success: function () {
+                        ajaxRequestSent = false;
+                    }
+                });
+            }
 
 		    $(document).ready(function(){
                 $('a[href^="http://"]').not('a[href*=alienwarearena]').attr('target','_blank');
@@ -121,11 +146,7 @@
                 $.blockUI.defaults.overlayCSS = {};
 
                 $.fn.qtip.defaults.style.classes = 'qtip-dark qtip-shadow qtip-rounded';
-		    });
-		</script>
-		<script type="text/javascript">
 
-			$(document).ready(function(){
 				$('#toggleRegion').click(function(e){
                     e.preventDefault();
 
@@ -139,6 +160,39 @@
 				    $('#selectLanguage').toggle();
 				    $('#selectRegion').hide();
 				});
+
+                $('#header-search input').watermark("{{ 'platformd.search.form.default.all' | pd_trans }}");
+
+                $('#header .search input').focus(function() {
+                    $('#header .search .submit').addClass('focused');
+                });
+
+                $('#header .search input').blur(function() {
+                    $('#header .search .submit').removeClass('focused');
+                });
+
+                $('.search .submit').click(function() {
+                    $(this).closest('.search').find('.search-form').submit();
+                });
+
+                $('.search-form').submit(function(e) {
+                    e.preventDefault();
+
+                    var criteria = $(this).find('.search-criteria').val().replace('/', '');
+
+                    if (criteria && criteria != '') {
+                        logSearchterm(criteria);
+                        window.location = '{{ path('search_form') }}' + '/' + $(this).find('.search-category').val() + '/' + encodeURIComponent(criteria);
+                    } else {
+                        $(this).find('.search-criteria').addClass('invalid');
+                    }
+                });
+
+                $('.search-criteria').keyup(function() {
+                    if ($(this).val() != '') {
+                        $(this).removeClass('invalid');
+                    }
+                });
 			});
 		</script>
 

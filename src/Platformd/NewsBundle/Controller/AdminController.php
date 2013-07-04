@@ -60,10 +60,10 @@ class AdminController extends Controller
     public function newAction()
     {
         $this->addNewsBreadcrumb()->addChild('New');
-        $news = new News();
-
-        $form = $this->createForm(new CreateNewsFormType(), $news);
-        $request = $this->getRequest();
+        $news       = new News();
+        $tagManager = $this->getTagManager();
+        $form       = $this->createForm(new CreateNewsFormType($news, $tagManager), $news);
+        $request    = $this->getRequest();
 
         if ($this->processForm($form, $request)) {
 
@@ -82,7 +82,9 @@ class AdminController extends Controller
     public function editAction($id)
     {
         $this->addNewsBreadcrumb()->addChild('Edit');
-        $em = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getEntityManager();
+        $tagManager = $this->getTagManager();
+
         $news = $em
             ->getRepository('NewsBundle:News')
             ->findOneBy(array('id' => $id));
@@ -92,7 +94,9 @@ class AdminController extends Controller
             throw $this->createNotFoundException('Unable to retrieve news item #'.$id);
         }
 
-        $form = $this->createForm(new CreateNewsFormType(), $news);
+        $tagManager->loadTagging($news);
+
+        $form = $this->createForm(new CreateNewsFormType($news, $tagManager), $news);
         $request = $this->getRequest();
 
         if ($this->processForm($form, $request)) {
@@ -134,7 +138,8 @@ class AdminController extends Controller
 
     private function processForm(Form $form, Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getEntityManager();
+        $tagManager = $this->getTagManager();
 
         if ('POST' === $request->getMethod()) {
             $form->bindRequest($request);
@@ -151,12 +156,20 @@ class AdminController extends Controller
                     $news->setImage(null);
                 }
 
+                $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
+
+                $isEdit = $news->getId();
+
                 if (!$mUtil->persistRelatedMedia($news->getThumbnail())) {
                     $news->setThumbnail(null);
                 }
 
                 $em->persist($news);
                 $em->flush();
+
+                $isEdit ? $tagManager->replaceTags($tags, $news) : $tagManager->addTags($tags, $news);
+
+                $tagManager->saveTagging($news);
 
                 return true;
             }
@@ -188,5 +201,10 @@ class AdminController extends Controller
         }
 
         return $this->getBreadcrumbs();
+    }
+
+    private function getTagManager()
+    {
+        return $this->get('platformd.tags.model.tag_manager');
     }
 }

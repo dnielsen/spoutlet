@@ -1,0 +1,26 @@
+platformd.search.form.default.all: Search...
+platformd.search.categories.all: All
+platformd.search.categories.group: Groups
+platformd.search.categories.event: Events
+platformd.search.categories.group_event: Group Events
+platformd.search.categories.global_event: Events
+platformd.search.categories.news: News
+platformd.search.categories.deal: Deals
+platformd.search.categories.giveaway: Giveaways
+platformd.search.categories.video: Videos
+platformd.search.results.title: Search
+platformd.search.results.tags: Tags:
+platformd.search.results.extra_data.event_attendee_count: "Attendees: %value%"
+platformd.search.results.extra_data.event_start_date: "Start Date: %value%"
+platformd.search.results.extra_data.group_member_count: "Members: %value%"
+platformd.search.results.extra_data.video_views: "Views: %value%"
+platformd.search.results.extra_data.video_votes: "Points: %value%"
+platformd.search.no_results.no_results_for_term: Sorry, there are 0 results for "%term%".
+platformd.search.no_results.no_results_for_term_in_category: Sorry, there are 0 results for "%term%" in "%category%".
+platformd.search.no_results.search_tips: Suggestions
+platformd.search.no_results.check_other_categories: Broaden your search to other categories using the filters above
+platformd.search.no_results.check_spelling: Double check your spelling
+platformd.search.no_results.different_term: Try a different search term
+platformd.search.no_results.general_term: Try a more general search term
+platformd.search.no_results.single_word: Try a single-word search term, like <a href="%1">dota</a> or <a href="%2">giveaway</a>
+platformd.search.no_results.contact_us: Need help? <a href="%url%">Contact us.</a>

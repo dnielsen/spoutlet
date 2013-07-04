@@ -15,7 +15,8 @@ use Platformd\GroupBundle\Entity\Group,
     Platformd\EventBundle\Validator\GroupEventUniqueSlug as AssertUniqueSlug,
     Platformd\SpoutletBundle\Entity\ContentReport,
     Platformd\SpoutletBundle\Model\ReportableContentInterface,
-    Platformd\SpoutletBundle\Link\LinkableInterface
+    Platformd\SpoutletBundle\Link\LinkableInterface,
+    Platformd\SearchBundle\Model\IndexableInterface
 ;
 
 /**
@@ -26,10 +27,12 @@ use Platformd\GroupBundle\Entity\Group,
  * @AssertUniqueSlug()
  * @Vich\Geographical(on="update")
  */
-class GroupEvent extends Event implements ReportableContentInterface, LinkableInterface
+class GroupEvent extends Event implements ReportableContentInterface, LinkableInterface, IndexableInterface
 {
     const DELETED_BY_OWNER  = 'by_owner';
     const DELETED_BY_ADMIN  = 'by_admin';
+
+    const SEARCH_PREFIX     = 'group_event_';
 
     static private $validDeletedReasons = array(
         self::DELETED_BY_OWNER,
@@ -381,5 +384,25 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
     public function getRsvpActions()
     {
         return $this->rsvpActions;
+    }
+
+    public function getSearchEntityType()
+    {
+        return 'group_event';
+    }
+
+    public function getSearchFacetType()
+    {
+        return 'event';
+    }
+
+    public function getDeleteSearchDocument()
+    {
+        return false == $this->published || false == $this->approved || false == $this->active || $this->deleted || $this->private;
+    }
+
+    public function getSearchId()
+    {
+        return self::SEARCH_PREFIX.$this->id;
     }
 }

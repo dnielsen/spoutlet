@@ -27,7 +27,7 @@
                                <a href="{{ path('gallery_media_show', { id: image.id }) }}">
                                     <img src="{{ media_path(image.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" alt="{{ image.title }}" />
                                     <div class="thumbnail-caption" style="display:none;">
-                                        <a href="{{ path('gallery_edit_media', { id : image.id }) }}">Edit</a>
+                                        <a href="{{ path('gallery_edit_media', { id : image.id }) }}">{{ 'edit' | trans }}</a>
                                     </div>
                                 </a>
                             </div>

@@ -22,3 +22,5 @@ platformd.news.widget.article: 記事
 platformd.news.widget.news: ニュース
 platformd.news.listings.page_title: ニュースと記事
 platformd.news.listings.read_more: 詳細
+platformd.news.admin.tags: Tags
+platformd.news.admin.tags_help: Enter keywords to help people discover this article.

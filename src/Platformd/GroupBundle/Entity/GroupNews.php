@@ -9,6 +9,7 @@ use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
 use Platformd\SpoutletBundle\Model\ReportableContentInterface;
+use Platformd\TagBundle\Model\TaggableInterface;
 
 /**
  * Platformd\GroupBundle\Entity\GroupNews
@@ -16,7 +17,7 @@ use Platformd\SpoutletBundle\Model\ReportableContentInterface;
  * @ORM\Table(name="pd_group_news")
  * @ORM\Entity(repositoryClass="Platformd\GroupBundle\Entity\GroupNewsRepository")
  */
-class GroupNews implements LinkableInterface, ReportableContentInterface
+class GroupNews implements LinkableInterface, ReportableContentInterface, TaggableInterface
 {
 
     const COMMENT_PREFIX = 'group_news-';
@@ -97,6 +98,12 @@ class GroupNews implements LinkableInterface, ReportableContentInterface
      * @ORM\OrderBy({"reportedAt" = "DESC"})
      */
     protected $contentReports;
+
+    /**
+     * @var Platformd\TagBundle\Entity\Tag[]
+     *
+     */
+    private $tags;
 
     public function __construct()
     {
@@ -297,5 +304,22 @@ class GroupNews implements LinkableInterface, ReportableContentInterface
     public function getReportThreshold()
     {
         return 3;
+    }
+
+    public function getTags()
+    {
+        $this->tags = $this->tags ?: new ArrayCollection();
+
+        return $this->tags;
+    }
+
+    public function getTaggableType()
+    {
+        return 'platformd_group_news';
+    }
+
+    public function getTaggableId()
+    {
+        return $this->getId();
     }
 }

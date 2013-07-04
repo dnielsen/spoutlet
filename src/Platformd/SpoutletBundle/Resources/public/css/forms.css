@@ -1371,7 +1371,8 @@ select:focus:required:invalid {
 
 input:focus:required:invalid:focus,
 textarea:focus:required:invalid:focus,
-select:focus:required:invalid:focus {
+select:focus:required:invalid:focus,
+input.invalid {
   border-color: #e9322d;
   -webkit-box-shadow: 0 0 6px #f8b9b7;
      -moz-box-shadow: 0 0 6px #f8b9b7;

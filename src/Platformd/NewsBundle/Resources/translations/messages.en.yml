@@ -22,3 +22,5 @@ platformd.news.widget.article: Article
 platformd.news.widget.news: News
 platformd.news.listings.page_title: News and Articles
 platformd.news.listings.read_more: Read More
+platformd.news.admin.tags: Tags
+platformd.news.admin.tags_help: Enter keywords to help people discover this article.

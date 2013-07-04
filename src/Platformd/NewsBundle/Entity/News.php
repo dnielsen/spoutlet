@@ -10,6 +10,8 @@ use Platformd\SpoutletBundle\Entity\AbstractEvent;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\GameBundle\Entity\Game as Game;
+use Platformd\SearchBundle\Model\IndexableInterface;
+use Platformd\TagBundle\Model\TaggableInterface;
 
 /**
  * Platformd\NewsBundle\Entity\News
@@ -17,8 +19,9 @@ use Platformd\GameBundle\Entity\Game as Game;
  * @ORM\Table(name="sp_news")
  * @ORM\Entity(repositoryClass="Platformd\NewsBundle\Entity\NewsRepository")
  */
-class News implements LinkableInterface
+class News implements LinkableInterface, IndexableInterface, TaggableInterface
 {
+
     CONST NEWS_TYPE_ARTICLE = 'article';
     CONST NEWS_TYPE_NEWS    = 'news';
 
@@ -26,6 +29,9 @@ class News implements LinkableInterface
         self::NEWS_TYPE_NEWS,
         self::NEWS_TYPE_ARTICLE,
     );
+
+    const SEARCH_PREFIX  = 'news_';
+
 
     /**
      * @var integer $id
@@ -142,10 +148,20 @@ class News implements LinkableInterface
     protected $type = self::NEWS_TYPE_ARTICLE;
 
     /**
+     * @var Platformd\TagBundle\Entity\Tag[]
+     *
+     */
+    private $tags;
+    /**
      * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $thumbnail;
+
+    public function __construct()
+    {
+        $this->sites = new ArrayCollection();
+    }
 
     /**
     * @ORM\Column(name="cevo_article_id", type="integer", nullable=true)
@@ -319,6 +335,58 @@ class News implements LinkableInterface
     public function getThreadId()
     {
         return $this->getCommentThreadId();
+    }
+
+    public function getSearchEntityType()
+    {
+        return 'news';
+    }
+
+    public function getSearchFacetType()
+    {
+        return 'news';
+    }
+
+    public function getSearchId()
+    {
+        return self::SEARCH_PREFIX.$this->id;
+    }
+
+    public function getSearchTitle()
+    {
+        return $this->title;
+    }
+
+    public function getSearchBlurb()
+    {
+        return $this->blurb ?: $this->body;
+    }
+
+    public function getSearchDate()
+    {
+        return $this->postedAt;
+    }
+
+    public function getDeleteSearchDocument()
+    {
+        return false == $this->published;
+    }
+
+    public function getTags()
+    {
+        $this->tags = $this->tags ?: new ArrayCollection();
+
+        return $this->tags;
+    }
+
+    public function getTaggableType()
+    {
+        return 'platformd_news';
+    }
+
+    public function getTaggableId()
+    {
+        return $this->getId();
     }
 
     public function setType($value)

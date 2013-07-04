@@ -28,6 +28,8 @@ parameters:
     # If the file does not exist or is empty, default country is "US".
     ip_lookup_override: true
 
+    search_dev_mode: true
+
 framework:
     router:   { resource: "%kernel.root_dir%/config/routing_dev.yml" }
     profiler: { only_exceptions: false }

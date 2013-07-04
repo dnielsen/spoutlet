@@ -15,7 +15,7 @@ class SendEventEmailRemindersCommand extends ContainerAwareCommand
         $this
             ->setName('platformd:events:reminders')
             ->setDescription('Sends a reminder email to attendees of events')
-            ->addArgument('days', InputArgument::OPTIONAL, 'Number of days ahead to check for events starting', 3)
+            ->addOption('delete-all', null, InputOption::VALUE_NONE, 'If set, the command will first purge all documents from CloudSearch' )
             ->setHelp(<<<EOT
 Checks upcoming group and global events and sends a reminder email to each attendee of those starting <info>[days]</info> days from today:
 

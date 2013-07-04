@@ -20,7 +20,9 @@ use Platformd\GameBundle\Entity\Game,
     Platformd\UserBundle\Entity\User,
     Platformd\EventBundle\Entity\GlobalEvent,
     Platformd\EventBundle\Entity\GroupEvent,
-    Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil
+    Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil,
+    Platformd\SearchBundle\Model\IndexableInterface,
+    Platformd\TagBundle\Model\TaggableInterface
 ;
 
 use DateTime,
@@ -33,12 +35,16 @@ use DateTime,
  * @ORM\MappedSuperclass
  * @Vich\Geographical
  * @Assert\Callback(methods={"externalContentCheck", "validateDateRanges", "validateAddressField", "validateSlug"})
+ * @ORM\HasLifecycleCallbacks()
  */
-abstract class Event implements LinkableInterface
+abstract class Event implements LinkableInterface, IndexableInterface, TaggableInterface
 {
     const REGISTRATION_ENABLED      = 'REGISTRATION_ENABLED';
     const REGISTRATION_DISABLED     = 'REGISTRATION_DISABLED';
     const REGISTRATION_3RD_PARTY    = 'REGISTRATION_3RDPARTY';
+
+    // overridden in group and global event entities
+    const SEARCH_PREFIX             = 'event_';
 
     /**
      * Event's name
@@ -254,6 +260,12 @@ abstract class Event implements LinkableInterface
      * @ORM\Column(type="integer", nullable=true)
      */
     private $attendeeCount = 0;
+
+    /**
+     * @var Platformd\TagBundle\Entity\Tag[]
+     *
+     */
+    private $tags;
 
     /**
      * Constructor
@@ -929,5 +941,50 @@ abstract class Event implements LinkableInterface
         }
 
         return TzUtil::getUtc($this->endsAt, new \DateTimeZone($this->timezone));
+    }
+
+    public function getSearchTitle()
+    {
+        return $this->name;
+    }
+
+    public function getSearchBlurb()
+    {
+        return $this->content && !$this->externalUrl ? $this->content : '';
+    }
+
+    public function getSearchDate()
+    {
+        return $this->startsAt;
+    }
+
+    public function getDeleteSearchDocument()
+    {
+        return false == $this->published || false == $this->approved || false == $this->active;
+    }
+
+    public function getTags()
+    {
+        $this->tags = $this->tags ?: new ArrayCollection();
+
+        return $this->tags;
+    }
+
+    public function getTaggableType()
+    {
+        $calledClass = get_called_class();
+        $type = 'global_event';
+        switch ($calledClass) {
+            case 'Platformd\EventBundle\Entity\GroupEvent':
+                $type = 'group_event';
+                break;
+        }
+
+        return sprintf('platformd_%s', $type);
+    }
+
+    public function getTaggableId()
+    {
+        return $this->getId();
     }
 }

@@ -2,21 +2,16 @@
 
 {% block content %}
 
-<div class="std_1col" style="padding: 0;">
-    <div id="groups-main-banner"></div>
-</div>
-<div class="std_1col">
-    <div class="sub-nav-wrapper">
-        <div class="sub-nav groups-sub-nav">
-            <ul>
-                <li><a href="{{ path('accounts_groups') }}">{{ 'platformd.groups.index.my_groups' | pd_trans }}</a></li>
-                <li><a href="{{ path('group_new') }}">{{ 'platformd.groups.index.create_group' | pd_trans }}</a></li>
-            </ul>
-        </div>
+{% if features.hasSearch %}
+    <div class="std_2col">
+        <div class="left">{% render url('search_form', {'category': 'group', 'watermark': 'platformd.search.form.default.all' }) %}</div>
+        <div class="right"><a href="{{ path('group_new') }}" class="btn">{{ 'platformd.groups.index.create_group' | pd_trans }}</a></div>
     </div>
-</div>
+{% endif %}
+
 <div class="std_2col">
     <div class="left">
+
         <h3 id="groups-index-title">{{ 'platformd.groups.index.recommended_groups' | pd_trans }}</h3>
         {% if featuredGroups|length > 0 %}
         <div class="group-collection">
@@ -185,6 +180,7 @@
 
             $('.group-index-link').truncate();
             $('.item-detail').truncate({width:130});
+            $('.widget-item .news-ellipse').truncate();
         });
     </script>
 

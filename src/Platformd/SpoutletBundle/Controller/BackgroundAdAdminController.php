@@ -16,13 +16,13 @@ class BackgroundAdAdminController extends Controller
         $this->addBackgroundAdBreadcrumb();
 
         return $this->render('SpoutletBundle:BackgroundAdAdmin:index.html.twig', array(
-            'sites' => MultitenancyManager::getSiteChoices()
+            'sites' => $this->getSiteManager()->getSiteChoices()
         ));
     }
 
     public function listAction($site, Request $request)
     {
-        $this->addBackgroundAdBreadcrumb()->addChild($site);
+        $this->addBackgroundAdBreadcrumb()->addChild($this->getSiteManager()->getSiteName($site));
 
         $em = $this->get('doctrine')->getEntityManager();
         $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $site));

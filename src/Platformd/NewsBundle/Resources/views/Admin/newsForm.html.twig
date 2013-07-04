@@ -38,14 +38,19 @@
         </div>
     </div>
 
+    {{ form_row(form.tags) }}
+
     {{ form_rest(form) }}
 
     <input type="submit" class="btn btn-primary" value="{{ "platformd.news.admin.save_news" | trans }}" formnovalidate />
 </form>
 
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.watermark.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.tagsinput.min.js') }}"></script>
 <script type="text/javascript">
-
-    $(function() {
+    $(function () {
+        $('#news_tags').watermark('Separate tags with commas');
+        $('#news_tags').tagsInput();
 
         if ($("select.news-type option:selected").val() == 'news') {
             $('#news-images').hide();

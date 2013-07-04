@@ -1,0 +1,16 @@
+{% if resultCount > 0 %}
+    <h2>{{ 'platformd.search.no_results.no_results_for_term_in_category' | pd_trans({ '%term%': term, '%category%': ('platformd.search.categories.' ~ category) | pd_trans }) }}</h2>
+{% else %}
+    <h2>{{ 'platformd.search.no_results.no_results_for_term' | pd_trans({ '%term%': term }) }}</h2>
+{% endif %}
+
+<div class="search-tips">
+    <h2>{{ 'platformd.search.no_results.search_tips' | pd_trans }}</h2>
+    <ul>
+        {% if resultCount > 0 %}<li>{{ 'platformd.search.no_results.check_other_categories' | pd_trans }}</li>{% endif %}
+        <li>{{ 'platformd.search.no_results.check_spelling' | pd_trans }}</li>
+        <li>{{ 'platformd.search.no_results.different_term' | pd_trans }}</li>
+        <li>{{ 'platformd.search.no_results.general_term' | pd_trans }}</li>
+        <li>{{ 'platformd.search.no_results.single_word' | pd_trans({ '%1': path('search_results', { 'criteria': 'dota' }), '%2': path('search_results', { 'criteria': 'giveaway' }) }) | raw }}
+    </li></ul>
+</div>

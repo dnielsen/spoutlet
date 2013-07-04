@@ -9,7 +9,9 @@ use Platformd\UserBundle\Entity\User,
     Platformd\SpoutletBundle\Model\CommentableInterface,
     Platformd\SpoutletBundle\Model\ReportableContentInterface,
     Platformd\VideoBundle\Validator\YoutubeRestriction as AssertYoutubeRestrictions,
-    Platformd\VideoBundle\Validator\YoutubeGroupCategory as AssertYoutubeGroupCategory
+    Platformd\VideoBundle\Validator\YoutubeGroupCategory as AssertYoutubeGroupCategory,
+    Platformd\SearchBundle\Model\IndexableInterface,
+    Platformd\TagBundle\Model\TaggableInterface
 ;
 
 use Gedmo\Mapping\Annotation as Gedmo,
@@ -32,13 +34,15 @@ use DateTime;
  * @UniqueEntity(fields={"title"}, message="youtube.errors.unique_title_slug")
  * @AssertYoutubeGroupCategory()
  */
-class YoutubeVideo implements LinkableInterface, CommentableInterface, ReportableContentInterface
+class YoutubeVideo implements LinkableInterface, CommentableInterface, ReportableContentInterface, IndexableInterface, TaggableInterface
 {
     const DELETED_REASON_BY_AUTHOR = 'DELETED_BY_AUTHOR';
     const DELETED_REASON_BY_ADMIN  = 'REPORTED_AND_REMOVED_BY_ADMIN';
 
     const YOUTUBE_HQ_THUMBNAIL_URL = 'http://i.ytimg.com/vi/%s/hqdefault.jpg';
     const YOUTUBE_SQ_THUMBNAIL_URL = 'http://i.ytimg.com/vi/%s/mqdefault.jpg';
+
+    const SEARCH_PREFIX  = 'video_';
 
     /**
      * @var integer $id
@@ -205,6 +209,12 @@ class YoutubeVideo implements LinkableInterface, CommentableInterface, Reportabl
      * @ORM\Column(name="is_accessible", type="boolean", nullable="true")
      */
     private $isAccessible = true;
+
+    /**
+     * @var Platformd\TagBundle\Entity\Tag[]
+     *
+     */
+    private $tags;
 
     public function __construct()
     {
@@ -758,5 +768,97 @@ class YoutubeVideo implements LinkableInterface, CommentableInterface, Reportabl
     public function getReportThreshold()
     {
         return 3;
+    }
+
+    public function getSearchEntityType()
+    {
+        return 'video';
+    }
+
+    public function getSearchFacetType()
+    {
+        return 'video';
+    }
+
+    public function getSearchId()
+    {
+        return self::SEARCH_PREFIX.$this->id;
+    }
+
+    public function getSearchTitle()
+    {
+        return $this->title;
+    }
+
+    public function getSearchBlurb()
+    {
+        return $this->description ?: '';
+    }
+
+    public function getSearchDate()
+    {
+        return $this->createdAt;
+    }
+
+    public function getDeleteSearchDocument()
+    {
+        $isVisible = false;
+
+        if ($this->galleries->count() > 0) {
+            $isVisible = true;
+        }
+
+        if (!$isVisible) {
+            foreach ($this->groups as $group) {
+                if ($group->getIsPublic() && !$group->getDeleted()) {
+                    $isVisible = true;
+                    break;
+                }
+            }
+        }
+
+        return $this->deleted || false == $this->isAccessible || false === $isVisible;
+    }
+
+    public function getSites()
+    {
+        $sites = array();
+
+        foreach ($this->galleries as $gallery) {
+            foreach ($gallery->getSites() as $site) {
+                if (!isset($sites[$site->getId()])) {
+                    $sites[$site->getId()] = $site;
+                }
+            }
+        }
+
+        foreach ($this->groups as $group) {
+            if ($group->getIsPublic() && !$group->getDeleted()) {
+                foreach ($group->getSites() as $site) {
+                    if (!isset($sites[$site->getId()])) {
+                        $sites[$site->getId()] = $site;
+                    }
+                }
+            }
+        }
+
+        return $sites;
+    }
+
+    public function getTags()
+    {
+        $this->tags = $this->tags ?: new ArrayCollection();
+
+        return $this->tags;
+    }
+
+    public function getTaggableType()
+    {
+        return 'platformd_youtube_video';
+    }
+
+    public function getTaggableId()
+    {
+        return $this->getId();
     }
 }
