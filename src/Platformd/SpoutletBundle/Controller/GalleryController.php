@@ -169,7 +169,8 @@ class GalleryController extends Controller
         $totalImages = $params['totalImages'];
         $medias      = $params['medias'];
 
-        $em     = $this->getEntityManager();
+        $em         = $this->getEntityManager();
+        $tagManager = $this->getTagManager();
 
         $unpublished = array();
         $published   = array();
@@ -181,6 +182,7 @@ class GalleryController extends Controller
             $description = $submission['description'];
             $gals        = $submission['galleries'];
             $groups      = $submission['groups'];
+            $tagNames    = $submission['tags'];
 
             $errors      = $this->validateMediaPublish($id, $title, $description, $gals, $groups);
 
@@ -209,6 +211,9 @@ class GalleryController extends Controller
                 $allErrors[] = $errors;
             }
 
+            $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($tagNames));
+            $tagManager->addTags($tags, $media);
+
             $em->persist($media);
 
             if (count($groups) > 0) {
@@ -233,6 +238,8 @@ class GalleryController extends Controller
             }
 
             $em->flush();
+
+            $tagManager->saveTagging($media);
         }
 
         $this->setFlash('success', sprintf($this->trans('galleries.publish_photo_multiple_message'), count($published), $totalImages));
@@ -469,14 +476,16 @@ class GalleryController extends Controller
     public function editMediaAction($id, Request $request)
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
-
-        $user   = $this->getCurrentUser();
-        $media  = $this->getGalleryMediaRepository()->find($id);
+        $tagManager = $this->getTagManager();
+        $user       = $this->getCurrentUser();
+        $media      = $this->getGalleryMediaRepository()->find($id);
 
         if(!$media)
         {
             throw $this->createNotFoundException('Media not found.');
         }
+
+        $tagManager->loadTagging($media);
 
         $galleries = array();
         foreach ($media->getGalleries() as $gallery) {
@@ -486,7 +495,7 @@ class GalleryController extends Controller
 
         $galleryRepo = $this->getGalleryRepository();
 
-        $form = $this->createForm(new GalleryMediaType($user, $this->getCurrentSite(), $galleryRepo), $media);
+        $form = $this->createForm(new GalleryMediaType($user, $this->getCurrentSite(), $galleryRepo, $media, $tagManager), $media);
 
         if($request->getMethod() == 'POST')
         {
@@ -507,7 +516,7 @@ class GalleryController extends Controller
 
                 if(count($media->getGalleries()) == 0)
                 {
-                    $form = $this->createForm(new GalleryMediaType($user, $this->getCurrentSite(), $galleryRepo), $media);
+                    $form = $this->createForm(new GalleryMediaType($user, $this->getCurrentSite(), $galleryRepo, $media, $tagManager), $media);
                     $this->setFlash('error', $this->trans('galleries.publish_photo_error_gallery'));
 
                     return $this->render('SpoutletBundle:Gallery:edit.html.twig', array(
@@ -516,8 +525,13 @@ class GalleryController extends Controller
                     ));
                 }
 
+                $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
+                $tagManager->replaceTags($tags, $media);
+
                 $em->persist($media);
                 $em->flush();
+
+                $tagManager->saveTagging($media);
 
                 $this->setFlash('success', 'Your changes are saved.');
                 return $this->redirect($this->generateUrl('gallery_media_show', array('id' => $media->getId())));
@@ -981,5 +995,10 @@ class GalleryController extends Controller
     private function getGroupManager()
     {
         return $this->get('platformd.model.group_manager');
+    }
+
+    private function getTagManager()
+    {
+        return $this->get('platformd.tags.model.tag_manager');
     }
 }

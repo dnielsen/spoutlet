@@ -1,0 +1,9 @@
+services:
+    platformd.event.listener.search_index_listener:
+        class: Platformd\SearchBundle\EventListener\SearchIndexListener
+        arguments:
+            - '@service_container'
+        calls:
+            - [ setLogger, ["@logger"]]
+        tags:
+            - { name: doctrine.event_subscriber }

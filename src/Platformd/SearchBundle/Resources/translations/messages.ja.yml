@@ -1,0 +1,26 @@
+platformd.search.form.default.all: 検索
+platformd.search.categories.all: すべて
+platformd.search.categories.group: グループ
+platformd.search.categories.event: イベント
+platformd.search.categories.group_event: グループイベント
+platformd.search.categories.global_event: イベント
+platformd.search.categories.news: ニュース
+platformd.search.categories.deal: 取引
+platformd.search.categories.giveaway: キャンペーン
+platformd.search.categories.video: ビデオ
+platformd.search.results.title: 検索
+platformd.search.results.tags: タグを追加する
+platformd.search.results.extra_data.event_attendee_count: "参加者: %value%"
+platformd.search.results.extra_data.event_start_date: "開始日時: %value%"
+platformd.search.results.extra_data.group_member_count: "メンバー: %value%"
+platformd.search.results.extra_data.video_views: "ビュー: %value%"
+platformd.search.results.extra_data.video_votes: "ポイント: %value%"
+platformd.search.no_results.no_results_for_term: '"%term%"に関する結果は表示されませんでした。'
+platformd.search.no_results.no_results_for_term_in_category: '恐縮ですが、"%term%"に関する検索結果はこのカテゴリにありません。'
+platformd.search.no_results.search_tips: 提案
+platformd.search.no_results.check_other_categories: 上記のフィルタを使用して、他のカテゴリに検索を広げる
+platformd.search.no_results.check_spelling: あなたの入力をダブルチェックしてください。
+platformd.search.no_results.different_term: 他の検索方法をお試しください。
+platformd.search.no_results.general_term: より一般的な検索キーワードをお試しください。
+platformd.search.no_results.single_word: 単語で検索をお試しください。たとえば、<a href="%1">dota</a>, <a href="%2">giveaway</a>など。
+platformd.search.no_results.contact_us: 助けが必要ですか？ <a href="%url%">お問い合わせ</a>

@@ -57,12 +57,14 @@ class GiveawayAdminController extends Controller
     public function newAction(Request $request)
     {
         $this->addGiveawayBreadcrumb()->addChild('New');
-        $giveaway = new Giveaway();
+
+        $tagManager = $this->getTagManager();
+        $giveaway   = new Giveaway();
 
         // guarantee we have at least 5 open giveaway boxes
         $this->setupEmptyRedemptionInstructions($giveaway);
 
-        $form = $this->createForm(new GiveawayType(), $giveaway);
+        $form = $this->createForm(new GiveawayType($giveaway, $tagManager), $giveaway);
 
         if($request->getMethod() == 'POST')
         {
@@ -188,11 +190,14 @@ class GiveawayAdminController extends Controller
     public function editAction(Request $request, $id)
     {
         $this->addGiveawayBreadcrumb()->addChild('Edit');
-        $giveaway = $this->getGiveawayRepo()->findOneById($id);
+        $tagManager = $this->getTagManager();
+        $giveaway   = $this->getGiveawayRepo()->findOneById($id);
 
         if (!$giveaway) {
             throw $this->createNotFoundException('No giveaway for that id');
         }
+
+        $tagManager->loadTagging($giveaway);
 
         $test   = $giveaway->getTestOnly();
         if ($test === null) {
@@ -201,7 +206,7 @@ class GiveawayAdminController extends Controller
 
         $this->setupEmptyRedemptionInstructions($giveaway);
 
-        $form = $this->createForm(new GiveawayType(), $giveaway);
+        $form = $this->createForm(new GiveawayType($giveaway, $tagManager), $giveaway);
 
         if($request->getMethod() == 'POST')
         {
@@ -522,9 +527,20 @@ class GiveawayAdminController extends Controller
             }
         }
 
+        // do the tag stuff
+        $tagManager = $this->getTagManager();
+        $tags       = $tagManager->loadOrCreateTags($tagManager->splitTagNames($giveawayForm['tags']->getData()));
+
+        $isEdit = $giveaway->getId();
+
+        // persist giveaway
         $this
             ->get('pd_giveaway.giveaway_manager')
             ->save($giveaway);
+
+        $isEdit ? $tagManager->replaceTags($tags, $giveaway) : $tagManager->addTags($tags, $giveaway);
+
+        $tagManager->saveTagging($giveaway);
 
         $this->setFlash('success', 'platformd.giveaway.admin.saved');
     }
@@ -577,5 +593,10 @@ class GiveawayAdminController extends Controller
         }
 
         return $this->getBreadcrumbs();
+    }
+
+    private function getTagManager()
+    {
+        return $this->get('platformd.tags.model.tag_manager');
     }
 }

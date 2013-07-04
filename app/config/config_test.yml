@@ -20,6 +20,8 @@ parameters:
     allow_caching: false
     test_acl_database: %acl_database_name%_test
 
+    allow_search_indexing: false
+
 framework:
     test: ~
     session:

@@ -1,0 +1,14 @@
+search_form:
+    pattern:  /search/{category}
+    defaults: { _controller: "SearchBundle:Search:form", category: 'all' }
+
+search_results:
+    pattern:  /search/{category}/{criteria}/{page}
+    defaults: { _controller: "SearchBundle:Search:results", category: 'all', page: 1 }
+
+log_search:
+    pattern: /api/v1/metrics/siteWideSearch/
+    defaults: { _controller: "SearchBundle:Search:logSearch" }
+    requirements:
+        _format: json
+        _method: POST
