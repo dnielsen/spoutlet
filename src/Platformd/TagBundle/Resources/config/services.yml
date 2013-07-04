@@ -1,0 +1,7 @@
+services:
+    platformd.tags.model.tag_manager:
+        class: Platformd\TagBundle\Model\TagManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "Platformd\TagBundle\Entity\Tag"
+            - "Platformd\TagBundle\Entity\Tagging"

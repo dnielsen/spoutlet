@@ -236,6 +236,10 @@
                                 <li><a href="{{ path('admin_upload_media') }}">Manage Media</a></li>
                             {% endif %}
 
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                <li><a href="{{ path('admin_tags_index') }}">Tags</a></li>
+                            {% endif %}
+
                             <li>
                                 <a href="{{ path('admin_background_ads_index') }}">Background Ads</a>
                                 <ul>

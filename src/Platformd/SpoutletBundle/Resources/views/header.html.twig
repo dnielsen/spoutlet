@@ -40,5 +40,20 @@
             </div>
         </div>
     </div>
+
+    {% if features.hasSearch %}
+        <div class="wide-950" style="position: relative;">
+            <div class="search">
+                <div class="input">
+                    <form class="search-form" id="header-search">
+                        <input type="text" id="form_criteria" name="form[criteria]" class="search-criteria all form-txt">
+                        <input type="hidden" id="form_category" name="form[category]" class="search-category" value="all">
+                    </form>
+                </div>
+                <span class="submit"></span>
+            </div>
+        </div>
+    {% endif %}
+
     <a href="{{ path('default_index') }}" id="header-home-link">&nbsp;</a>
 </div>

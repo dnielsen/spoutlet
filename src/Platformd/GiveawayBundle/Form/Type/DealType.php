@@ -12,6 +12,15 @@ use Platformd\SpoutletBundle\Form\Type\CountryAgeRestrictionRulesetType;
 
 class DealType extends AbstractType
 {
+    private $deal;
+    private $tagManager;
+
+    public function __construct($deal, $tagManager)
+    {
+        $this->deal         = $deal;
+        $this->tagManager   = $tagManager;
+    }
+
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder
@@ -122,6 +131,14 @@ class DealType extends AbstractType
             ));
 
             $builder->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'));
+
+            $builder->add('tags', 'text', array(
+                'label' => 'Tags',
+                'help' => "Enter keywords to help people discover the deal.",
+                'property_path' => false,
+                'data' => $this->deal ? $this->tagManager->getConcatenatedTagNames($this->deal) : null,
+                'required' => false,
+            ));
     }
 
     public function getStatusChoices()

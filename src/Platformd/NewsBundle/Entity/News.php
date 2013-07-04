@@ -10,6 +10,8 @@ use Platformd\SpoutletBundle\Entity\AbstractEvent;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\GameBundle\Entity\Game as Game;
+use Platformd\SearchBundle\Model\IndexableInterface;
+use Platformd\TagBundle\Model\TaggableInterface;
 
 /**
  * Platformd\NewsBundle\Entity\News
@@ -17,8 +19,10 @@ use Platformd\GameBundle\Entity\Game as Game;
  * @ORM\Table(name="sp_news")
  * @ORM\Entity(repositoryClass="Platformd\NewsBundle\Entity\NewsRepository")
  */
-class News implements LinkableInterface
+class News implements LinkableInterface, IndexableInterface, TaggableInterface
 {
+    const SEARCH_PREFIX  = 'news_';
+
     /**
      * @var integer $id
      *
@@ -131,6 +135,12 @@ class News implements LinkableInterface
      * @ORM\Column(name="sitified_at", type="datetime", nullable="true")
      */
     protected $sitifiedAt;
+
+    /**
+     * @var Platformd\TagBundle\Entity\Tag[]
+     *
+     */
+    private $tags;
 
     public function __construct()
     {
@@ -424,5 +434,57 @@ class News implements LinkableInterface
     public function getThreadId()
     {
         return $this->getCommentThreadId();
+    }
+
+    public function getSearchEntityType()
+    {
+        return 'news';
+    }
+
+    public function getSearchFacetType()
+    {
+        return 'news';
+    }
+
+    public function getSearchId()
+    {
+        return self::SEARCH_PREFIX.$this->id;
+    }
+
+    public function getSearchTitle()
+    {
+        return $this->title;
+    }
+
+    public function getSearchBlurb()
+    {
+        return $this->blurb ?: $this->body;
+    }
+
+    public function getSearchDate()
+    {
+        return $this->postedAt;
+    }
+
+    public function getDeleteSearchDocument()
+    {
+        return false == $this->published;
+    }
+
+    public function getTags()
+    {
+        $this->tags = $this->tags ?: new ArrayCollection();
+
+        return $this->tags;
+    }
+
+    public function getTaggableType()
+    {
+        return 'platformd_news';
+    }
+
+    public function getTaggableId()
+    {
+        return $this->getId();
     }
 }

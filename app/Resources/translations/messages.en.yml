@@ -434,6 +434,8 @@ platformd:
             edit_title: Edit a news item
             upload_image: Upload an image
             image_dimensions: (recommended size: 634x400)
+            tags: Tags
+            tags_help: Enter keywords to help people discover this article.
         games:
             category:
                 action:     Action
@@ -466,6 +468,8 @@ platformd:
             sites: "Regions"
             private_public: "Is this a public or private event?"
             published: "Do you want your event published?"
+            tags: Tags
+            tags_help: Enter keywords to help people discover the event.
 
             choice:
                 private_event: "Private Event"
@@ -637,7 +641,7 @@ platformd:
         index:
             my_groups: My Groups
             create_group: Create Group
-            recommended_groups: Recommended Alienware Arena Groups
+            recommended_groups: Alienware Arena Groups
             featured_groups: Featured Groups
             members: Members
             organizer: Organizer
@@ -1019,6 +1023,7 @@ platformd.show_more: Show More
 platformd.show_less: Show Less
 
 galleries:
+    image: Image
     navigation_label: Image Gallery
     index_page_title: Galleries
     index_page_header: ALIENWARE ARENA IMAGES
@@ -1116,6 +1121,8 @@ galleries:
     likes: Likes
     dislikes: Dislikes
     cast_your_vote: Cast your vote:
+    edit_photo.name: Image Name
+    edit_photo.desc: Description
 
 contests:
     contests: Contests

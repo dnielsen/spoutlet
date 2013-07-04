@@ -9,6 +9,7 @@ use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Platformd\TagBundle\Model\TaggableInterface;
 
 
 /**
@@ -17,7 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="pd_group_discussion")
  * @ORM\Entity(repositoryClass="Platformd\GroupBundle\Entity\GroupDiscussionRepository")
  */
-class GroupDiscussion implements LinkableInterface, ReportableContentInterface
+class GroupDiscussion implements LinkableInterface, ReportableContentInterface, TaggableInterface
 {
     /**
      * @var integer $id
@@ -127,6 +128,12 @@ class GroupDiscussion implements LinkableInterface, ReportableContentInterface
      * @ORM\Column(name="last_post_id", type="integer", nullable=true)
      */
     private $lastPostId = 0;
+
+    /**
+     * @var Platformd\TagBundle\Entity\Tag[]
+     *
+     */
+    private $tags;
 
     public function __construct()
     {
@@ -395,5 +402,22 @@ class GroupDiscussion implements LinkableInterface, ReportableContentInterface
     public function getClass()
     {
         return get_class($this);
+    }
+
+    public function getTags()
+    {
+        $this->tags = $this->tags ?: new ArrayCollection();
+
+        return $this->tags;
+    }
+
+    public function getTaggableType()
+    {
+        return 'platformd_group_discussion';
+    }
+
+    public function getTaggableId()
+    {
+        return $this->getId();
     }
 }

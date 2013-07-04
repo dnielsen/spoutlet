@@ -10,6 +10,7 @@ use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 use Platformd\MediaBundle\Entity\Media;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection;
+use Platformd\TagBundle\Model\TaggableInterface;
 
 /**
  * Platformd\MediaBundle\Entity\GalleryMedia
@@ -17,7 +18,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="pd_gallery_media")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\GalleryMediaRepository")
  */
-class GalleryMedia implements LinkableInterface, ReportableContentInterface
+class GalleryMedia implements LinkableInterface, ReportableContentInterface, TaggableInterface
 {
 
     const IMAGE = 'image';
@@ -168,6 +169,12 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
      * @ORM\Column(name="views", type="integer")
      */
     private $views = 0;
+
+    /**
+     * @var Platformd\TagBundle\Entity\Tag[]
+     *
+     */
+    private $tags;
 
     public function __construct()
     {
@@ -541,5 +548,22 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface
     public function getReportThreshold()
     {
         return 3;
+    }
+
+    public function getTags()
+    {
+        $this->tags = $this->tags ?: new ArrayCollection();
+
+        return $this->tags;
+    }
+
+    public function getTaggableType()
+    {
+        return 'platformd_gallery_media';
+    }
+
+    public function getTaggableId()
+    {
+        return $this->getId();
     }
 }

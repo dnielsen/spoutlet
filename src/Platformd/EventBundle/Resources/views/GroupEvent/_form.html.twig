@@ -17,6 +17,7 @@
             {% endif %}
             {% if form.externalUrl is defined %}{{ form_row(form.externalUrl) }}{% endif %}
             {{ form_row(form.content) }}
+            {{ form_row(form.tags) }}
             {{ form_row(form.online) }}
 
             <div id="location-info" {% if isOnline %}style="display:none;"{% endif %}>
@@ -64,6 +65,8 @@
 }
 </style>
 {# @TODO put that in a form_theme if possible - could not find that #}
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.watermark.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.tagsinput.min.js') }}"></script>
 <script type="text/javascript">
     $(document).ready(function() {
 
@@ -202,6 +205,12 @@
 
         $('#toggle-advanced').click(function () {
             $('#advanced-options').slideToggle();
+        });
+
+        $('#groupEvent_tags').watermark('Separate tags with commas');
+        $('#groupEvent_tags').tagsInput({
+            placeholderColor: '#aaaaaa',
+            defaultText: "{{ 'tags.forms.add_tag' | pd_trans }}"
         });
 
     });

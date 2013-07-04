@@ -73,6 +73,12 @@
                         <textarea id="media-description" name="media-description" required="required" maxlength="512" class="photo-description"></textarea>
                     </div>
                 </div>
+                <div class="control-group ">
+                    <label class="control-label" for="media-tags">{{ 'tags.forms.tags' | pd_trans }}</label>
+                    <div class="controls">
+                        <input type="text" id="media-tags" name="media-tags" />
+                    </div>
+                </div>
                 <div id="platformd_spoutletbundle_gallery_media_galleries">
                     <div class="control-group ">
                         <label class="control-label">{{ 'galleries.submit_photo_image_galleries' | trans }}</label>
@@ -141,6 +147,7 @@
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/tags.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
@@ -148,6 +155,8 @@
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.MultiFile.pack.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.MetaData.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.blockUI.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.watermark.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.tagsinput.min.js') }}"></script>
     <script type="text/javascript">
         $(function() {
 
@@ -194,8 +203,11 @@
                         'title' : $('#media-title').val(),
                         'description' : $('#media-description').val(),
                         'galleries' : getSelectedGalleries(),
-                        'groups' : getSelectedGroups()
+                        'groups' : getSelectedGroups(),
+                        'tags' : ''
+
                     };
+                    $('#media-tags').importTags('');
 
                     medias.push(media);
                 } else {
@@ -204,6 +216,7 @@
                     $('#media-description').val(media.description);
                     setSelectedGalleries(media.galleries);
                     setSelectedGroups(media.groups);
+                    $('#media-tags').importTags(media.tags);
                 }
             }
 
@@ -482,6 +495,30 @@
 
             initMedia();
             hideFlash();
+
+            $('#media-tags').watermark('Separate tags with commas');
+            $('#media-tags').tagsInput({
+                placeholderColor: '#aaaaaa',
+                defaultText: "{{ 'tags.forms.add_tag' | pd_trans }}",
+                onChange: function (e) {
+                    var id = $('#media-id').val();
+                    var media = getMedia(id);
+                    if(media == null) {
+                        media = {
+                            'id' : $('#media-id').val(),
+                            'title' : $('#media-title').val(),
+                            'description' : $('#media-description').val(),
+                            'galleries' : getSelectedGalleries(),
+                            'groups' : getSelectedGroups(),
+                            'tags' : e.val()
+                        };
+
+                        medias.push(media);
+                    } else {
+                        media.tags = e.val();
+                    }
+                }
+            });
 
         });
     </script>

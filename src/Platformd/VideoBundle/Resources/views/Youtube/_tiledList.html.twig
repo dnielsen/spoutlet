@@ -6,8 +6,8 @@
         </div>
         <div class="more-videos-link">{{ video | pd_link_full(video.title) }}</div>
         <div class="video-details">
-            <span class="views">{{ video.views}} {{ 'youtube.views' | trans }}</span>
-            <span class="points">{{ video.votes | length }} {{ 'youtube.points' | trans }}</span>
+            <span class="views">{{ video.views}} {{ 'youtube.views' | pd_trans }}</span>
+            <span class="points">{{ video.votes | length }} {{ 'youtube.points' | pd_trans }}</span>
         </div>
     </div>
 {% endfor %}

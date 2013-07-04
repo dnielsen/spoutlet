@@ -1,0 +1,26 @@
+<div class="search-result-link"><a href="{{ result.url }}">{{ result.title }}</a></div>
+
+<div class="search-result-category">{{ ('platformd.search.categories.' ~ result.category) | pd_trans }}</div>
+{% if result.date %}<div class="search-result-date">{{ result.date | date_translate }}</div>{% endif %}
+
+{% if result.blurb and result.blurb != '' %}
+    <div class="search-result-description">{{ result.blurb }}</div>
+{% endif %}
+
+{% if result.extra_data is not null %}
+    <div class="search-result-extra">
+    {% for key, value in result.extra_data %}
+        <div class="search-result-extra-info">{{ ('platformd.search.results.extra_data.' ~ key) | pd_trans({ '%value%': value }) }}</div>
+        {% if not loop.last %} | {% endif %}
+    {% endfor %}
+    </div>
+{% endif %}
+
+{# if result.tags|length > 0 %}
+    <div class="tagslist">
+        <span class="tags-header">{{ 'platformd.search.results.tags' | pd_trans }}</span>
+        {% for tag in result.tags %}
+            <span class="tag">{{ tag }}</span>
+        {% endfor %}
+    </div>
+{% endif #}
