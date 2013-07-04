@@ -957,3 +957,64 @@ div.blockOverlay {
     background: url('/bundles/spoutlet/images/profile-default.png') center center no-repeat;
     background-size: 100%;
 }
+
+#header .search {
+    float: right;
+    height: 19px;
+    width: 200px;
+    margin: 0px 0 0 0;
+    position: absolute;
+    right: 0;
+    top: 70px;
+}
+
+#header .search .input {
+    float: left;
+    height: 19px;
+    padding-left: 11px;
+}
+
+#header .search .input input {
+    height: 16px;
+    width: 155px;
+    background: #181818;
+    border: 1px solid #2a2a2a;
+    border-right: none;
+    color: #FFFFFF;
+    padding: 3px;
+    font-size: 11px;
+    border-radius: 0;
+}
+
+#header .search .submit {
+    float: right;
+    height: 22px;
+    display: inline-block;
+    width: 25px;
+    border: 1px solid #2a2a2a;
+    background: url('/bundles/spoutlet/images/link-icon-2.png') center center no-repeat #181818;
+    cursor: pointer;
+
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
+       -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
+        -ms-transition: border linear 0.2s, box-shadow linear 0.2s;
+         -o-transition: border linear 0.2s, box-shadow linear 0.2s;
+            transition: border linear 0.2s, box-shadow linear 0.2s;
+}
+
+#header .search .submit.focused {
+    outline: 0;
+    outline: thin dotted \9;
+    /* IE6-9 */
+
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+       -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+
+.search-form {
+    margin: 0;
+}

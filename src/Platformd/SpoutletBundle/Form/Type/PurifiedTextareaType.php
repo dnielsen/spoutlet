@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Platformd\UserBundle\Entity\User;
 
 class PurifiedTextareaType extends AbstractType
 {

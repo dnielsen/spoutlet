@@ -1,0 +1,10 @@
+admin_tags_index:
+    pattern: /
+    defaults: { _controller: SpoutletBundle:TagAdmin:index }
+
+admin_tags_edit:
+    pattern: /edit
+    defaults: { _controller: SpoutletBundle:TagAdmin:edit }
+    requirements:
+        _method: POST
+

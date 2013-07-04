@@ -226,27 +226,24 @@ class CommentsController extends Controller
 
         $comments = null; # this should be null because of caching... ALL comments are loaded DYNAMICALLY now
 
-        return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
+        $response = $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
             'thread'    => $threadId,
             'comments'  => $comments,
             'offset'    => 0,
             'permalink' => $thread->getPermalink(),
         ));
+
+        $this->varnishCache($response, 1);
+
+        return $response;
     }
 
     public function threadSortAction(Request $request)
     {
         $response = new Response();
         $response->headers->set('Content-type', 'text/json; charset=utf-8');
-        $params   = array();
-        $content  = $request->getContent();
 
-        if (empty($content)) {
-            $response->setContent(json_encode(array("message" => "error", "details" => "no content passed")));
-            return $response;
-        }
-
-        $params   = json_decode($content, true);
+        $params = array('thread' => $request->get('thread'), 'method' => $request->get('method'), 'commentLimit' => $request->get('commentLimit'));
 
         if (!isset($params['thread']) || !isset($params['method'])) {
             $response->setContent(json_encode(array("message" => "error", "details" => "required content missing")));
@@ -284,28 +281,25 @@ class CommentsController extends Controller
                 break;
         }
 
-        return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
+        $response = $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
             'thread'    => $threadId,
             'comments'  => $comments,
             'offset'    => $commentLimit,
             'method'    => $method,
             'permalink' => $thread->getPermalink(),
         ));
+
+        $this->varnishCache($response, 1);
+
+        return $response;
     }
 
     public function updateThreadAction(Request $request)
     {
         $response = new Response();
         $response->headers->set('Content-type', 'text/json; charset=utf-8');
-        $params   = array();
-        $content  = $request->getContent();
 
-        if (empty($content)) {
-            $response->setContent(json_encode(array("message" => "error", "details" => "no content passed")));
-            return $response;
-        }
-
-        $params   = json_decode($content, true);
+        $params = array('threadId' => $request->get('threadId'), 'increment' => $request->get('increment'), 'offset' => $request->get('offset'), 'sort' => $request->get('sort'));
 
         if (!isset($params['threadId']) || !isset($params['increment']) || !isset($params['offset']) || !isset($params['sort'])) {
             $response->setContent(json_encode(array("message" => "error", "details" => "required content missing")));
@@ -332,13 +326,16 @@ class CommentsController extends Controller
             return $response;
         }
 
-        return $this->render('SpoutletBundle:Comments:_comments.html.twig', array(
+        $response = $this->render('SpoutletBundle:Comments:_comments.html.twig', array(
             'thread'    => $threadId,
             'comments'  => $comments,
             'offset'    => $offset + count($comments),
             'permalink' => $thread->getPermalink(),
         ));
 
+        $this->varnishCache($response, 1);
+
+        return $response;
     }
 
     private function createThread($threadId, $object)

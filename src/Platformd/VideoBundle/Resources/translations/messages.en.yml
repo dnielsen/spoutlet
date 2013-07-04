@@ -25,9 +25,12 @@ youtube.form.title: "Title:"
 youtube.form.description: "Description:"
 youtube.form.category: "Category:"
 youtube.form.tags: "Tags:"
+youtube.form.tags_help: Enter keywords to help people discover your video.
 youtube.form.select_category: "Select Category"
 youtube.form.optional: "Groups:"
 youtube.form.select_group: <a id="select-group" href="javascript:void(0)">Select a group</a> to add your video.
+youtube.form.select_group_or_category: You must select at least one group or category for your video.
+youtube.form.select_category: You must select a category for your video.
 youtube.form.invalid_youtube_link: Invalid YouTube link.
 youtube.form.general_error: You must provide information in the required fields to submit your video.
 youtube.navigation.video_main: Video Main
@@ -36,3 +39,4 @@ youtube.flash.edit_success: Your video has been saved.
 youtube.flash.delete_success: Your video has been deleted.
 youtube.flash.delete_insufficient_permissions: You do not have permission to perform this action.
 youtube.account.my_videos: My Videos
+

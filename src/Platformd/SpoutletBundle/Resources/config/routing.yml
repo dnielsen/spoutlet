@@ -2,6 +2,10 @@ _main_user_strip:
     pattern: /esi/USER_SPECIFIC/mainUserStrip
     defaults: { _controller: SpoutletBundle:Default:_mainUserStrip }
 
+force_logout:
+    pattern: /forceLogout/{returnUrl}
+    defaults: { _controller: SpoutletBundle:Default:forceLogout, returnUrl: '/' }
+
 default_index:
     pattern:  /
     defaults: { _controller: SpoutletBundle:Default:index }
@@ -143,3 +147,11 @@ SpoutletBundle_admin_timeline:
 SpoutletBundle_timeline:
     resource: "@SpoutletBundle/Resources/config/routing/timeline.yml"
     prefix:   /timeline
+
+TagBundle_admin:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_tags.yml"
+    prefix: /admin/tags
+
+TagBundle_frontend:
+    resource: "@SpoutletBundle/Resources/config/routing/tags.yml"
+    prefix: /tags

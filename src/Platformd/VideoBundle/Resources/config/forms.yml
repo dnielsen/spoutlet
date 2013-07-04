@@ -7,6 +7,7 @@ services:
             - '@platformd.repository.group'
             - "@security.context"
             - "@request"
+            - "@platformd.tags.model.tag_manager"
         scope: request
         tags:
             - { name: form.type, alias: youtube }

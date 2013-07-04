@@ -109,7 +109,7 @@ platformd:
             terms_and_conditions: 利用規約
             steam_community: Steam コミュニティ
             xfire_community: Xfire コミュニティ
-            copyright_2012: "Copyright 2013 ALIENWARE Corporation. All Rights Reserved."
+            copyright_2012: "Copyright 2013 ALIENWARE Corporation. All Rights Reserved.<br /> Intel、インテル、Intel ロゴ、Intel Inside、Intel Inside ロゴ、Intel Atom、Intel Atom Inside、Intel Core、Core Inside、Intel vPro、vPro Inside、Celeron、Celeron Inside、Itanium、Itanium Inside、Pentium、Pentium Inside、Xeon、Xeon Phi、Xeon Inside、Ultrabook は、アメリカ合衆国および/またはその他の国における Intel Corporation の商標です。"
 
     help:
         actions: 操作
@@ -411,6 +411,8 @@ platformd:
             modified: Your news item has been modified !
             deleted: Your news item has been deleted !
             edit_title: Edit a news item
+            tags: Tags
+            tags_help: Enter keywords to help people discover this article.
 
     event:
         form:
@@ -433,6 +435,8 @@ platformd:
             sites: "Regions"
             private_public: "Is this a public or private event?"
             published: "Do you want your event published?"
+            tags: Tags
+            tags_help: Enter keywords to help people discover the event.
 
             choice:
                 private_event: "Private Event"

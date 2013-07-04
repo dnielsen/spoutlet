@@ -5,6 +5,7 @@ namespace Platformd\SpoutletBundle\Controller;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class DefaultController extends Controller
 {
@@ -12,6 +13,25 @@ class DefaultController extends Controller
         $response = $this->render('SpoutletBundle::_mainUserStrip.html.twig');
 
         $this->varnishCache($response, 120);
+
+        return $response;
+    }
+
+    public function forceLogoutAction(Request $request, $returnUrl) {
+
+        $request->getSession()->invalidate();
+        $this->getSecurity()->setToken(null);
+
+        $baseHost = $this->getParameter('base_host');
+
+        if (false !== strpos($returnUrl, '/esi/USER_SPECIFIC/')) {
+            $returnUrl = '/';
+        }
+
+        $response = new RedirectResponse($returnUrl);
+
+        $response->headers->clearCookie('aw_session', '/', $baseHost);
+        $response->headers->clearCookie('PHPSESSID', '/', $baseHost);
 
         return $response;
     }

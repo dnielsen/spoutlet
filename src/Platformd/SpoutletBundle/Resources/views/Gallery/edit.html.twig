@@ -6,9 +6,9 @@
 <div class="form-horizontal">
     <div class="span11">
         <div class="control-group">
-            <label class="control-label">Image File</label>
+            <label class="control-label">{{ 'galleries.image' | trans }}</label>
             <div class="controls">
-                <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" alt="{{ media.title }}" />
+                <img style="width: 177px; height: 107px;" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" alt="{{ media.title }}" />
             </div>
         </div>
     </div>
@@ -17,7 +17,7 @@
     {% include 'SpoutletBundle:Gallery:_editImageForm.html.twig' %}
     <div class="form-actions">
         <button class="btn btn-primary" type="submit">{{ 'galleries.save_image' | trans }}</button>
-        <button class="btn btn-primary" id="delete-media" rel="{{ path('gallery_delete_media', { 'id' : media.id })}}" style="margin-left: 10px;">{{ 'galleries.delete_image' | trans }}</button>
+        <button class="btn btn-primary" id="delete-media" rel="{{ path('gallery_delete_media', { 'id' : media.id })}}" style="margin-left: 10px;">{{ 'delete' | trans }}</button>
     </div>
 </form>
 {% endblock %}
@@ -27,15 +27,23 @@
 
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/galleries.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/tags.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.watermark.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.tagsinput.min.js') }}"></script>
     <script type="text/javascript">
         $(function () {
            $('#delete-media').delegate('','click change',function(){
                 window.location = $(this).attr('rel');
                 return false;
+            });
+
+            $('#platformd_spoutletbundle_gallery_media_tags').watermark('Separate tags with commas');
+            $('#platformd_spoutletbundle_gallery_media_tags').tagsInput({
+                placeholderColor: '#aaaaaa'
             });
         });
     </script>

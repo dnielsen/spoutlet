@@ -29,6 +29,13 @@
 {% block content %}
 
 <div id="group-show">
+    {% if features.hasSearch %}
+        <div class="std_2col" style="padding: 0;">
+            <div class="left">{% render url('search_form', {'category': 'group', 'watermark': 'platformd.search.form.default.all' }) %}</div>
+            <div class="right"><a href="{{ path('group_new') }}" class="btn">{{ 'platformd.groups.index.create_group' | pd_trans }}</a></div>
+        </div>
+    {% endif %}
+
     <div class="std_1col" style="padding: 0;">
         <div id="group-avatar">
             {% if group.groupAvatar %}

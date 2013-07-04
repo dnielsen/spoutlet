@@ -10,6 +10,7 @@ use Platformd\SpoutletBundle\Entity\GalleryRepository;
 use Platformd\GroupBundle\Entity\GroupRepository;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Request;
+use Platformd\TagBundle\Model\TagManager;
 
 class YoutubeType extends AbstractType
 {
@@ -18,13 +19,16 @@ class YoutubeType extends AbstractType
     private $groupRepo;
     private $securityContext;
     private $request;
+    private $tagManager;
+    private $video;
 
-    function __construct(SiteUtil $siteUtil, EntityRepository $galleryRepo, GroupRepository $groupRepo, SecurityContext $securityContext, Request $request) {
+    function __construct(SiteUtil $siteUtil, EntityRepository $galleryRepo, GroupRepository $groupRepo, SecurityContext $securityContext, Request $request, TagManager $tagManager) {
         $this->siteUtil         = $siteUtil;
         $this->galleryRepo      = $galleryRepo;
         $this->groupRepo        = $groupRepo;
         $this->securityContext  = $securityContext;
         $this->request          = $request;
+        $this->tagManager       = $tagManager;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
@@ -54,7 +58,7 @@ class YoutubeType extends AbstractType
             ))
             ->add('galleries', 'choice', array(
                 'label'         => 'youtube.form.category',
-                'required'      => true,
+                'required'      => false,
                 'expanded'      => true,
                 'multiple'      => true,
                 'choices'       => $this->getCategoryChoices(),
@@ -80,6 +84,14 @@ class YoutubeType extends AbstractType
                 'choices'       => $this->getGroupChoices(),
             ));
         }
+
+        $builder->add('tags', 'text', array(
+            'label'         => 'youtube.form.tags',
+            'help'          => "youtube.form.tags_help",
+            'property_path' => false,
+            'data'          => $builder->getData() ? $this->tagManager->getConcatenatedTagNames($builder->getData()) : null,
+            'required' => false,
+        ));
     }
 
     public function getName()

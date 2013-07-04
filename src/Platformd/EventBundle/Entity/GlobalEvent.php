@@ -12,7 +12,8 @@ use Vich\GeographicalBundle\Annotation as Vich;
 use Platformd\SpoutletBundle\Entity\Site,
     Platformd\EventBundle\Validator\GlobalEventUniqueSlug as AssertUniqueSlug,
     Platformd\UserBundle\Entity\User,
-    Platformd\SpoutletBundle\Link\LinkableInterface
+    Platformd\SpoutletBundle\Link\LinkableInterface,
+    Platformd\SearchBundle\Model\IndexableInterface
 ;
 
 /**
@@ -23,8 +24,10 @@ use Platformd\SpoutletBundle\Entity\Site,
  * @AssertUniqueSlug()
  * @Vich\Geographical(on="update")
  */
-class GlobalEvent extends Event implements LinkableInterface
+class GlobalEvent extends Event implements LinkableInterface, IndexableInterface
 {
+    const SEARCH_PREFIX  = 'global_event_';
+
     /**
      * @var integer $id
      *
@@ -310,5 +313,20 @@ class GlobalEvent extends Event implements LinkableInterface
     public function getContentType()
     {
         return 'GlobalEvent';
+    }
+
+    public function getSearchEntityType()
+    {
+        return 'global_event';
+    }
+
+    public function getSearchFacetType()
+    {
+        return 'event';
+    }
+
+    public function getSearchId()
+    {
+        return self::SEARCH_PREFIX.$this->id;
     }
 }

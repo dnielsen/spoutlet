@@ -92,6 +92,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasIndex()
           ->setHasAbout()
           ->setHasContact()
+          ->setHasSearch()
         ;
 
         $japan->getSiteFeatures()
@@ -122,6 +123,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasIndex()
           ->setHasAbout()
           ->setHasContact()
+          ->setHasSearch()
         ;
 
         $china->getSiteFeatures()
@@ -152,6 +154,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasIndex()
           ->setHasAbout()
           ->setHasContact()
+          ->setHasSearch()
         ;
 
         $na->getSiteFeatures()
@@ -182,6 +185,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasIndex(false)
           ->setHasAbout(false)
           ->setHasContact(false)
+          ->setHasSearch()
         ;
 
         $eu->getSiteFeatures()
@@ -212,6 +216,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasIndex(false)
           ->setHasAbout(false)
           ->setHasContact(false)
+          ->setHasSearch()
         ;
 
         $latam->getSiteFeatures()
@@ -242,6 +247,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasIndex(false)
           ->setHasAbout(false)
           ->setHasContact(false)
+          ->setHasSearch()
         ;
 
         $in->getSiteFeatures()
@@ -272,6 +278,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasIndex(false)
           ->setHasAbout(false)
           ->setHasContact(false)
+          ->setHasSearch()
         ;
 
         $mysg->getSiteFeatures()
@@ -302,6 +309,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasIndex(false)
           ->setHasAbout(false)
           ->setHasContact(false)
+          ->setHasSearch()
         ;
 
         $anz->getSiteFeatures()
@@ -332,6 +340,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasIndex(false)
           ->setHasAbout(false)
           ->setHasContact(false)
+          ->setHasSearch()
         ;
 
         $this->manager->flush();

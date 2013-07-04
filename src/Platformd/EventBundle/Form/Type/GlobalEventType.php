@@ -5,9 +5,19 @@ namespace Platformd\EventBundle\Form\Type;
 use Symfony\Component\Form\FormBuilder;
 
 use Platformd\SpoutletBundle\Form\Type\SlugType;
+use Platformd\TagBundle\Model\TaggableInterface;
 
 class GlobalEventType extends EventType
 {
+    private $event;
+    private $tagManager;
+
+    public function __construct($event, $tagManager)
+    {
+        $this->event        = $event;
+        $this->tagManager   = $tagManager;
+    }
+
     public function buildForm(FormBuilder $builder, array $options)
     {
         parent::buildForm($builder, $options);
@@ -48,6 +58,15 @@ class GlobalEventType extends EventType
             ))
             ->add('timezone', 'gmtTimezone', array(
                 'label' => 'platformd.event.form.timezone',
+            ))
+        ;
+
+        $builder->add('tags', 'text', array(
+                'label' => 'platformd.event.form.tags',
+                'help' => 'platformd.event.form.tags_help',
+                'property_path' => false,
+                'data' => $builder->getData() ? $this->tagManager->getConcatenatedTagNames($builder->getData()) : null,
+                'required' => false,
             ))
         ;
     }
