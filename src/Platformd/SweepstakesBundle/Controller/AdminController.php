@@ -52,9 +52,11 @@ class AdminController extends Controller
     public function newAction(Request $request)
     {
         $this->addSweepstakesBreadcrumb()->addChild('New');
-    	$sweepstakes = new Sweepstakes();
 
-    	$form = $this->createForm(new SweepstakesAdminType(), $sweepstakes);
+        $tagManager    = $this->getTagManager();
+    	$sweepstakes   = new Sweepstakes();
+
+    	$form = $this->createForm(new SweepstakesAdminType($sweepstakes, $tagManager), $sweepstakes);
 
     	if($request->getMethod() == 'POST')
     	{
@@ -79,18 +81,21 @@ class AdminController extends Controller
     public function editAction(Request $request, $id)
     {
         $this->addSweepstakesBreadcrumb()->addChild('Edit');
-        $sweepstakes = $this->getSweepstakesRepo()->findOneById($id);
+        $tagManager     = $this->getTagManager();
+        $sweepstakes    = $this->getSweepstakesRepo()->findOneById($id);
 
         if (!$sweepstakes) {
             throw $this->createNotFoundException('No sweepstakes for that id');
         }
+
+        $tagManager->loadTagging($sweepstakes);
 
         $test   = $sweepstakes->getTestOnly();
         if ($test === null) {
             $sweepstakes->setTestOnly(0);
         }
 
-        $form = $this->createForm(new SweepstakesAdminType(), $sweepstakes);
+        $form = $this->createForm(new SweepstakesAdminType($sweepstakes, $tagManager), $sweepstakes);
 
         if($request->getMethod() == 'POST')
         {
@@ -284,9 +289,18 @@ class AdminController extends Controller
             }
         }
 
+        $tagManager = $this->getTagManager();
+        $tags       = $tagManager->loadOrCreateTags($tagManager->splitTagNames($sweepstakesForm['tags']->getData()));
+
+        $sweepstakes->getId() ? $tagManager->replaceTags($tags, $sweepstakes) : $tagManager->addTags($tags, $sweepstakes);
+
         $this
             ->get('platformd.events_manager')
             ->save($sweepstakes);
+
+        $tagManager->saveTagging($sweepstakes);
+
+        $tagManager->loadTagging($sweepstakes);
 
         $this->setFlash('success', 'Sweepstakes Saved');
     }
@@ -331,5 +345,10 @@ class AdminController extends Controller
         }
 
         return $this->getBreadcrumbs();
+    }
+
+    private function getTagManager()
+    {
+        return $this->get('platformd.tags.model.tag_manager');
     }
 }

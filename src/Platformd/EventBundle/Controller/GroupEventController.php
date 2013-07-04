@@ -9,6 +9,7 @@ use Platformd\SpoutletBundle\Controller\Controller,
 
 use Platformd\EventBundle\Entity\GroupEvent,
     Platformd\EventBundle\Form\Type\EventType,
+    Platformd\EventBundle\Form\Type\GroupEventType,
     Platformd\EventBundle\Service\EventService,
     Platformd\EventBundle\Entity\GroupEventTranslation,
     Platformd\EventBundle\Entity\GroupEventEmail
@@ -35,7 +36,7 @@ class GroupEventController extends Controller
     public function newAction($groupSlug, Request $request)
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
-
+        $tagManager = $this->getTagManager();
         /** @var Group $group */
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
 
@@ -82,7 +83,13 @@ class GroupEventController extends Controller
                     $groupEvent->setApproved(true);
                 }
 
+                $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
+
                 $this->getGroupEventService()->createEvent($groupEvent);
+
+                $tagManager->addTags($tags, $groupEvent);
+
+                $tagManager->saveTagging($groupEvent);
 
                 if ($groupEvent->isApproved()) {
                     $this->setFlash('success', 'Your event has been successfully added.');
@@ -197,7 +204,8 @@ class GroupEventController extends Controller
      */
     public function editAction($groupSlug, $eventId, Request $request)
     {
-        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+        $group      = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+        $tagManager = $this->getTagManager();
 
         if (!$group) {
             throw new NotFoundHttpException('Group does not exist.');
@@ -218,6 +226,8 @@ class GroupEventController extends Controller
             throw new AccessDeniedException();
         }
 
+        $tagManager->loadTagging($groupEvent);
+
         $form = $this->createForm('groupEvent', $groupEvent);
 
         if ($request->getMethod() == 'POST') {
@@ -229,7 +239,13 @@ class GroupEventController extends Controller
                 $groupEvent = $form->getData();
                 $groupEvent->setUser($this->getUser());
 
+                $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
+
                 $this->getGroupEventService()->updateEvent($groupEvent);
+
+                $tagManager->addTags($tags, $groupEvent);
+                $tagManager->saveTagging($groupEvent);
+
                 $this->setFlash('success', 'Event has been saved successfully.');
 
                 return $this->redirect($this->generateUrl('group_event_view', array(
@@ -918,5 +934,10 @@ class GroupEventController extends Controller
     private function getGroupManager()
     {
         return $this->get('platformd.model.group_manager');
+    }
+
+    private function getTagManager()
+    {
+        return $this->get('platformd.tags.model.tag_manager');
     }
 }

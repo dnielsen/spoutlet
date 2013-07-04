@@ -1,0 +1,16 @@
+<div class="search">
+    <div class="input">
+        <form class="search-form" id="search-{{ category }}">
+            <div class="input-append">
+                {{ form_widget(form.criteria) }}
+                <span class="add-on submit"><i class="icon-search"></i></span></div>
+                {{ form_widget(form.category) }}
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $('#search-{{ category }} input').watermark('{{ watermark }}');
+
+</script>

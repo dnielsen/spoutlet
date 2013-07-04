@@ -9,6 +9,16 @@ use Platformd\MediaBundle\Form\Type\MediaType;
 
 class CreateNewsFormType extends AbstractType
 {
+
+    private $news;
+    private $tagManager;
+
+    public function __construct($news, $tagManager)
+    {
+        $this->news         = $news;
+        $this->tagManager   = $tagManager;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -23,7 +33,7 @@ class CreateNewsFormType extends AbstractType
             ->add('postedAt', 'date', array(
                 'widget' => 'single_text',
                 'attr'   => array(
-                    'class' => 'date-picker',
+                    'class' => 'datetime-picker',
                 ),
                 'label' => 'posted_at',
                 'format' => 'yyyy-MM-dd',
@@ -52,6 +62,14 @@ class CreateNewsFormType extends AbstractType
                 'with_remove_checkbox' => true
             ))
         ;
+
+        $builder->add('tags', 'text', array(
+            'label' => 'platformd.admin.news.tags',
+            'help' => "platformd.admin.news.tags_help",
+            'property_path' => false,
+            'data' => $this->news ? $this->tagManager->getConcatenatedTagNames($this->news) : null,
+            'required' => false,
+        ));
     }
 
     /**

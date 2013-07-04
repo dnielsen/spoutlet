@@ -1,0 +1,13 @@
+tags.tag: Tag
+tags.times_used: Times Used
+tags.status: Status
+tags.action: Action
+tags.no_tags_found: No tags found.
+tags.forms.upload_tags: Upload
+tags.forms.csv_restrictions: Please upload csv files only. No headers and only one column of tag names.
+tags.forms.upload: Upload
+tags.forms.upload_success: Your tags are uploaded successfully.
+tags.forms.upload_no_file_selected: Please select a csv file to upload.
+tags.forms.tags: Tags
+tags.forms.enter_keywords_help: Enter keywords to help people discover your item
+tags.forms.add_tag: Add a tag

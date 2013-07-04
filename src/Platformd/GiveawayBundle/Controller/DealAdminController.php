@@ -57,9 +57,10 @@ class DealAdminController extends Controller
     public function newAction(Request $request)
     {
         $this->addDealsBreadcrumb()->addChild('New Deal');
+        $tagManager = $this->getTagManager();
 
         $deal   = new Deal();
-        $form   = $this->createForm(new DealType(), $deal);
+        $form   = $this->createForm(new DealType($deal, $tagManager), $deal);
 
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The deal was created!');
@@ -82,6 +83,7 @@ class DealAdminController extends Controller
     {
         $this->addDealsBreadcrumb()->addChild('Edit Deal');
         $em = $this->getDoctrine()->getEntityManager();
+        $tagManager = $this->getTagManager();
 
         $deal = $em->getRepository('GiveawayBundle:Deal')->find($id);
 
@@ -89,12 +91,14 @@ class DealAdminController extends Controller
             throw $this->createNotFoundException('Unable to find deal.');
         }
 
+        $tagManager->loadTagging($deal);
+
         $test   = $deal->getTestOnly();
         if ($test === null) {
             $deal->setTestOnly(0);
         }
 
-        $editForm   = $this->createForm(new DealType(), $deal);
+        $editForm   = $this->createForm(new DealType($deal, $tagManager), $deal);
         $deleteForm = $this->createDeleteForm($id);
         $group      = $deal->getGroup();
 
@@ -105,10 +109,10 @@ class DealAdminController extends Controller
         }
 
         return $this->render('GiveawayBundle:DealAdmin:edit.html.twig', array(
-            'deal'      => $deal,
-            'edit_form'   => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-            'group' => $group,
+            'deal'          => $deal,
+            'edit_form'     => $editForm->createView(),
+            'delete_form'   => $deleteForm->createView(),
+            'group'         => $group,
         ));
     }
 
@@ -220,7 +224,6 @@ class DealAdminController extends Controller
                     }
                 }
 
-
                 $ruleset    = $deal->getRuleset();
                 $rules      = $ruleset->getRules();
 
@@ -250,7 +253,16 @@ class DealAdminController extends Controller
                 $deal->getRuleset()->setParentType('deal');
                 $deal->getRuleset()->setDefaultAllow($defaultAllow);
 
+                $tagManager = $this->getTagManager();
+                $tags       = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
+
+                $isEdit = $deal->getId();
+
                 $this->getDealManager()->saveDeal($deal);
+
+                $isEdit ? $tagManager->replaceTags($tags, $deal) : $tagManager->addTags($tags, $deal);
+
+                $tagManager->saveTagging($deal);
 
                 return true;
             }
@@ -269,8 +281,8 @@ class DealAdminController extends Controller
             ));
         }
 
-        return $this->getBreadcrumbs();
-    }
+        return $this->getBreadcrumbs()
+;    }
 
     /**
      * @return \Knp\Menu\ItemInterface
@@ -287,5 +299,10 @@ class DealAdminController extends Controller
     private function getDealManager()
     {
         return $this->get('platformd.model.deal_manager');
+    }
+
+    private function getTagManager()
+    {
+        return $this->get('platformd.tags.model.tag_manager');
     }
 }

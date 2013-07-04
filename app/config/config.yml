@@ -13,6 +13,8 @@ imports:
     - { resource: "@GameBundle/Resources/config/services.yml" }
     - { resource: "@HtmlWidgetBundle/Resources/config/services.yml" }
     - { resource: "@VideoBundle/Resources/config/services.yml" }
+    - { resource: "@SearchBundle/Resources/config/services.yml" }
+    - { resource: "@TagBundle/Resources/config/services.yml" }
 
 framework:
     #esi:             ~
@@ -129,6 +131,13 @@ vich_geographical:
     db_driver: orm
 
 parameters:
+
+    services_queue_util_class: Platformd\SpoutletBundle\Util\QueueUtil
+
+    mock_data_directory: %kernel.root_dir%/../mock_data/
+    mock_queue_util_full_filename: %mock_data_directory%queue_util_mock_data.txt
+
+    search_dev_mode: false
 
     services_queue_util_class: Platformd\SpoutletBundle\Util\QueueUtil
 

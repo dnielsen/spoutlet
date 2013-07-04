@@ -16,6 +16,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use DateTime;
 use DateTimezone;
 use Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil;
+use Platformd\SearchBundle\Model\IndexableInterface;
+use Platformd\TagBundle\Model\TaggableInterface;
 
 /**
  * Platformd\GiveawayBundle\Entity\Deal
@@ -32,13 +34,14 @@ use Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil;
  * @ORM\Entity(repositoryClass="Platformd\GiveawayBundle\Entity\Repository\DealRepository")
  */
 
-class Deal implements LinkableInterface, CommentableInterface
+class Deal implements LinkableInterface, CommentableInterface, IndexableInterface, TaggableInterface
 {
     const REDEMPTION_LINE_PREFIX = '* ';
     const STATUS_PUBLISHED       = 'published';
     const STATUS_UNPUBLISHED     = 'unpublished';
 
     const COMMENT_PREFIX         = 'deal-';
+    const SEARCH_PREFIX          = 'deal_';
 
     private static $validStatuses = array(
         self::STATUS_PUBLISHED,
@@ -238,6 +241,12 @@ class Deal implements LinkableInterface, CommentableInterface
      * @ORM\Column(name="featured_at", type="datetime", nullable=true)
      */
     protected $featuredAt;
+
+    /**
+     * @var Platformd\TagBundle\Entity\Tag[]
+     *
+     */
+    private $tags;
 
     public function __construct()
     {
@@ -735,5 +744,57 @@ class Deal implements LinkableInterface, CommentableInterface
     public function setFeaturedAt($value)
     {
         $this->featuredAt = $value;
+    }
+
+    public function getSearchEntityType()
+    {
+        return 'deal';
+    }
+
+    public function getSearchFacetType()
+    {
+        return 'deal';
+    }
+
+    public function getSearchId()
+    {
+        return self::SEARCH_PREFIX.$this->id;
+    }
+
+    public function getSearchTitle()
+    {
+        return $this->name;
+    }
+
+    public function getSearchBlurb()
+    {
+        return $this->description ?: '';
+    }
+
+    public function getSearchDate()
+    {
+        return $this->startsAt;
+    }
+
+    public function getDeleteSearchDocument()
+    {
+        return !$this->isPublished();
+    }
+
+    public function getTags()
+    {
+        $this->tags = $this->tags ?: new ArrayCollection();
+
+        return $this->tags;
+    }
+
+    public function getTaggableType()
+    {
+        return 'platformd_deal';
+    }
+
+    public function getTaggableId()
+    {
+        return $this->getId();
     }
 }

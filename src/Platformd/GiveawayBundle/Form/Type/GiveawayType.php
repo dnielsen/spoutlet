@@ -14,6 +14,15 @@ use Platformd\GiveawayBundle\Entity\GiveawayTranslation;
 
 class GiveawayType extends AbstractType
 {
+    private $giveaway;
+    private $tagManager;
+
+    public function __construct($giveaway, $tagManager)
+    {
+        $this->giveaway     = $giveaway;
+        $this->tagManager   = $tagManager;
+    }
+
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder
@@ -98,6 +107,14 @@ class GiveawayType extends AbstractType
                 'image_label' => 'Thumbnail',
                 'image_help'  => 'Recommended size: 138x83',
                 'with_remove_checkbox' => true
+        ));
+
+        $builder->add('tags', 'text', array(
+            'label' => 'Tags',
+            'help' => "Enter keywords to help people discover the giveaway.",
+            'property_path' => false,
+            'data' => $this->giveaway ? $this->tagManager->getConcatenatedTagNames($this->giveaway) : null,
+            'required' => false,
         ));
     }
 

@@ -13,11 +13,15 @@ class GalleryMediaType extends AbstractType
     private $user;
     private $currentSite;
     private $galleryRepo;
+    private $galleryMedia;
+    private $tagManager;
 
-    public function __construct($user, $currentSite, $galleryRepo) {
+    public function __construct($user, $currentSite, $galleryRepo, $galleryMedia, $tagManager) {
         $this->user         = $user;
         $this->currentSite  = $currentSite;
         $this->galleryRepo  = $galleryRepo;
+        $this->galleryMedia = $galleryMedia;
+        $this->tagManager   = $tagManager;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
@@ -26,17 +30,17 @@ class GalleryMediaType extends AbstractType
 
         $builder->add('title', 'text', array(
             'max_length' => 255,
-            'label'      => 'Image Name',
+            'label'      => 'galleries.edit_photo.name',
             'attr'       => array('class' => 'photo-title')
         ));
         $builder->add('description', 'textarea', array(
             'max_length' => 512,
-            'label'      => 'Description',
+            'label'      => 'galleries.edit_photo.desc',
             'attr'       => array('class' => 'photo-description')
         ));
 
         $builder->add('galleries', 'choice', array(
-            'label'         => 'Galleries',
+            'label'         => 'galleries.index_page_title',
             'required'      => true,
             'expanded'      => true,
             'multiple'      => true,
@@ -50,6 +54,14 @@ class GalleryMediaType extends AbstractType
                 'required'  => false,
             ));
         }
+
+        $builder->add('tags', 'text', array(
+            'label' => 'tags.forms.tags',
+            'help' => "tags.forms.enter_keywords_help",
+            'property_path' => false,
+            'data' => $this->galleryMedia ? $this->tagManager->getConcatenatedTagNames($this->galleryMedia) : null,
+            'required' => false,
+        ));
     }
 
     public function getName()

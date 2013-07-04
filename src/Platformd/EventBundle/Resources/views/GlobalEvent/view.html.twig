@@ -43,6 +43,10 @@
 
     <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
         <div class="left">
+            {% if features.hasSearch %}
+                <div style="margin-bottom: 10px;">{% render url('search_form', {'category': 'event', 'watermark': 'platformd.search.form.default.all'}) %}</div>
+            {% endif %}
+
             <div class="widget-66">
                 <div class="widget-header" style="padding-bottom:10px;">
                     <div class="widget-title">
@@ -81,9 +85,9 @@
                             data-colorscheme="dark"
                             style="vertical-align:top;zoom:1;*display:inline">
                         </div>
-                        <div class="fb-send" data-font="arial" data-colorscheme="dark" style="vertical-align:top;zoom:1;*display:inline"></div>
-                            <a href="https://twitter.com/share" class="twitter-share-button" data-via="Alienware" data-text="Check out this exciting event!" data-url="{{ app.request.getUri }}">Tweet</a>
-                            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                        <!-- <div class="fb-send" data-font="arial" data-colorscheme="dark" style="vertical-align:top;zoom:1;*display:inline"></div> -->
+                        <a href="https://twitter.com/share" class="twitter-share-button" data-via="Alienware" data-text="Check out this exciting event!" data-url="{{ app.request.getUri }}">Tweet</a>
+                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
                     </div>
 
                     <div id="event-organizer"><strong>{{ 'platformd.events.event_show.organizer' | pd_trans }}: </strong><a href="{{ account_link(event.user.username) }}">{{ event.user.username }}</a></div>

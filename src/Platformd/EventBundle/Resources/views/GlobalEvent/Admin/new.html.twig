@@ -49,4 +49,17 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/event/css/event.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/tags-admin.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.watermark.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.tagsinput.min.js') }}"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#globalEvent_tags').watermark('Separate tags with commas');
+            $('#globalEvent_tags').tagsInput();
+        });
+    </script>
 {% endblock %}
