@@ -68,6 +68,17 @@ class SecurityController extends BaseController
         return new Response(json_encode(array('message' => 'success')));
     }
 
+    public function facebookLoginAction()
+    {
+        // use this action when you don't want to use the javascript SDK login button
+        $api        = $this->container->get('fos_facebook.api');
+        $scope      = $this->container->get('request')->get('scope', 'publish_stream');
+        $callback   = $this->container->get('router')->generate('_security_check', array(), true);
+        $url        = $api->getLoginUrl(array('scope' => $scope, 'redirect_uri' => $callback));
+
+        return new RedirectResponse($url);
+    }
+
     public function facebookLogoutAction()
     {
         $response = new Response();

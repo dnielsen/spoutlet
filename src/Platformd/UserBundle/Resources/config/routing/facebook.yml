@@ -11,3 +11,7 @@ facebook_deauthorize:
     defaults: { _controller: UserBundle:Security:facebookDeauthorize }
     requirements:
         _method: POST
+
+facebook_login:
+    pattern: /login
+    defaults: { _controller: UserBundle:Security:facebookLogin }

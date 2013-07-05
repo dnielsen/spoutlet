@@ -69,8 +69,8 @@
                 </div>
             </form>
         </div>
-        <div id="facebook-login">
-            {{ facebook_login_button({'autologoutlink': true}) }}
+        <div class="social">
+            {% include 'UserBundle:Security:_facebookLoginButton.html.twig' %}
         </div>
     </div>
     <div class="right">
