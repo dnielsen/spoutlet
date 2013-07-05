@@ -233,7 +233,7 @@ class CommentsController extends Controller
             'permalink' => $thread->getPermalink(),
         ));
 
-        $this->varnishCache($response, 1);
+        $this->varnishCache($response, 30);
 
         return $response;
     }
@@ -289,7 +289,7 @@ class CommentsController extends Controller
             'permalink' => $thread->getPermalink(),
         ));
 
-        $this->varnishCache($response, 1);
+        $this->varnishCache($response, 30);
 
         return $response;
     }
@@ -333,7 +333,7 @@ class CommentsController extends Controller
             'permalink' => $thread->getPermalink(),
         ));
 
-        $this->varnishCache($response, 1);
+        $this->varnishCache($response, 30);
 
         return $response;
     }
