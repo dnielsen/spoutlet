@@ -10,6 +10,15 @@ use Platformd\SpoutletBundle\Form\Type\SlugType;
 
 class ContestType extends AbstractType
 {
+    private $contest;
+    private $tagManager;
+
+    public function __construct($contest, $tagManager)
+    {
+        $this->contest         = $contest;
+        $this->tagManager   = $tagManager;
+    }
+
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder
@@ -101,6 +110,13 @@ class ContestType extends AbstractType
                 ),
                 'label' => 'Allow admin testing?',
                 'help'  => 'This allows admins to still test the operation of the contest IF it is unpublished',
+            ));
+
+            $builder->add('tags', 'text', array(
+                'label' => 'Tags',
+                'help' => "Enter keywords to help people discover the contest.",
+                'property_path' => false,
+                'data' => $this->contest ? $this->tagManager->getConcatenatedTagNames($this->contest) : null,
             ));
     }
 

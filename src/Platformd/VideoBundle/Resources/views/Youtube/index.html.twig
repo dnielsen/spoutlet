@@ -1,18 +1,21 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block title 'youtube.videos' | trans %}
+{% block title 'youtube.videos' | pd_trans %}
 
 {% block content %}
 
 <div id="video-index">
-    <div class="std_2col">
-        <div class="left">
-            <h1 class="content-title">{{ 'youtube.alienware_video_network' | trans }}</h1>
+    <h1 class="content-title">{{ 'youtube.alienware_video_network' | pd_trans }}</h1>
+    {% if features.hasSearch %}
+        <div class="std_2col">
+            <div class="left">
+                {% render url('search_form', {'category': 'video', 'watermark': 'platformd.search.form.default.all'}) %}
+            </div>
+            <div class="right">
+                <a href="{{ path('youtube_submit') }}" class="btn">{{ 'youtube.submit_video' | pd_trans }}</a>
+            </div>
         </div>
-        <div class="right">
-            <a href="{{ path('youtube_submit') }}" class="btn">{{ 'youtube.submit_video' | trans }}</a>
-        </div>
-    </div>
+    {% endif %}
     <div class="std_2col">
         <div class="left">
             {% if featuredVideo %}
@@ -21,9 +24,9 @@
             <div class="videos-wrapper">
                 <div class="widget-66">
                     <div class="featured-content-header">
-                        <a href="javascript:void(0);" class="active" id="videos-category" data-tab="categories">{{ 'youtube.categories' | trans }}</a>
-                        <a href="javascript:void(0);" id="videos-popular" data-tab="popular">{{ 'youtube.popular' | trans }}</a>
-                        <a href="javascript:void(0);" id="videos-watched" data-tab="currently_watched">{{ 'youtube.recently_watched' | trans }}</a>
+                        <a href="javascript:void(0);" class="active" id="videos-category" data-tab="categories">{{ 'youtube.categories' | pd_trans }}</a>
+                        <a href="javascript:void(0);" id="videos-popular" data-tab="popular">{{ 'youtube.popular' | pd_trans }}</a>
+                        <a href="javascript:void(0);" id="videos-watched" data-tab="currently_watched">{{ 'youtube.recently_watched' | pd_trans }}</a>
                         <div style="clear: left;"></div>
                     </div>
                     <div class="widget-content" id="video-content" style="min-height: 440px;">
@@ -34,7 +37,7 @@
         <div class="right">
 
             {%if featured|length > 0 %}
-                <h3 class="featured-videos-header">{{ 'youtube.featured_videos' | trans }}</h3>
+                <h3 class="featured-videos-header">{{ 'youtube.featured_videos' | pd_trans }}</h3>
                 {% for video in featured %}
                     <div class="video-thumb-wrapper {% if loop.index > 1 %}more{% endif %}">
                         <a href="{{ path('youtube_view', {'slug' : video.slug}) }}"><img src="{{ video.thumbnailSq }}" alt="{{ video.title }}" /></a>
@@ -51,7 +54,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/video/css/youtube.css') }}" />
+    {% include 'VideoBundle::_css_assets.html.twig' %}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/js/video-js-3.2.0/video-js.min.css') }}" />
 {% endblock %}
 

@@ -423,6 +423,8 @@ platformd:
             modified: Your news item has been modified !
             deleted: Your news item has been deleted !
             edit_title: Edit a news item
+            tags: Tags
+            tags_help: Enter keywords to help people discover this article.
 
     event:
         form:
@@ -445,6 +447,8 @@ platformd:
             sites: "Regions"
             private_public: "Is this a public or private event?"
             published: "Do you want your event published?"
+            tags: Tags
+            tags_help: Enter keywords to help people discover the event.
 
             choice:
                 private_event: "Private Event"

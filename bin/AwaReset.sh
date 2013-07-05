@@ -18,7 +18,7 @@
 echo
 echo "---------------------------------------------------"
 echo "|                                                 |"
-echo "|  Alienware Arena Reset Script v1.7              |"
+echo "|  Alienware Arena Reset Script v1.8              |"
 echo "|                                                 |"
 echo "---------------------------------------------------"
 echo
@@ -71,6 +71,11 @@ echo
 echo "Creating necessary symlinks for themes..."
 
 ./app/console themes:install web --symlink >> bin/AwaReset.log
+
+echo
+echo "Clearing developer specific indexed search documents..."
+
+./app/console pd:search:deleteAll --confirm-delete >> bin/AwaReset.log
 
 echo
 echo "Resetting development database:"

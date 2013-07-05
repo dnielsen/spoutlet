@@ -48,6 +48,7 @@ class ContestAdminController extends Controller
         $this->addContestsBreadcrumb()->addChild('New Contest');
 
         $em                 = $this->getDoctrine()->getEntityManager();
+        $tagManager         = $this->getTagManager();
         $existingContests   = $em->getRepository('SpoutletBundle:Contest')->findAllForSiteAlphabetically($this->getCurrentSite());
         $importId           = $request->get('existing_contest_select');
         $importedContest    = $em->getRepository('SpoutletBundle:Contest')->find($importId);
@@ -65,7 +66,7 @@ class ContestAdminController extends Controller
             $contest = new Contest();
         }
 
-        $form    = $this->createForm(new ContestType(), $contest);
+        $form    = $this->createForm(new ContestType($contest, $tagManager), $contest);
 
         if (!$importedContest && $this->processForm($form, $request)) {
             $this->setFlash('success', 'The contest was created!');
@@ -83,7 +84,9 @@ class ContestAdminController extends Controller
     public function editAction($slug, Request $request)
     {
         $this->addContestsBreadcrumb()->addChild('Edit Contest');
-        $em = $this->getDoctrine()->getEntityManager();
+
+        $em         = $this->getDoctrine()->getEntityManager();
+        $tagManager = $this->getTagManager();
 
         $contest = $em->getRepository('SpoutletBundle:Contest')->findOneBy(array('slug' => $slug));
 
@@ -91,12 +94,14 @@ class ContestAdminController extends Controller
             throw $this->createNotFoundException('Unable to find contest.');
         }
 
+        $tagManager->loadTagging($contest);
+
         $test   = $contest->getTestOnly();
         if ($test === null) {
             $contest->setTestOnly(0);
         }
 
-        $editForm   = $this->createForm(new ContestType(), $contest);
+        $editForm   = $this->createForm(new ContestType($contest, $tagManager), $contest);
 
         if ($this->processForm($editForm, $request)) {
             $this->setFlash('success', 'The contest was saved!');
@@ -498,9 +503,18 @@ class ContestAdminController extends Controller
                     $contest->setBanner(null);
                 }
 
+                $tagManager = $this->getTagManager();
+                $tags       = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
+
+                $isEdit = $contest->getId();
+
                 $em->persist($contest);
 
                 $em->flush();
+
+                $isEdit ? $tagManager->replaceTags($tags, $contest) : $tagManager->addTags($tags, $contest);
+
+                $tagManager->saveTagging($contest);
 
                 return true;
             }
@@ -574,5 +588,10 @@ class ContestAdminController extends Controller
         }
 
         return $total;
+    }
+
+    private function getTagManager()
+    {
+        return $this->get('platformd.tags.model.tag_manager');
     }
 }

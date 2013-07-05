@@ -15,9 +15,11 @@ use Platformd\SpoutletBundle\Model\ReportableContentInterface;
 use Symfony\Component\Validator\ExecutionContext;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Platformd\GroupBundle\Validator\GroupSlugCollision;
+use Platformd\TagBundle\Model\TaggableInterface;
 
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\GroupBundle\Entity\GroupMembershipAction;
+use Platformd\SearchBundle\Model\IndexableInterface;
 
 /**
  * Platformd\GroupBundle\Entity\Group
@@ -30,7 +32,7 @@ use Platformd\GroupBundle\Entity\GroupMembershipAction;
  * @GroupSlugCollision()
  * @ORM\HasLifecycleCallbacks()
  */
-class Group implements LinkableInterface, ReportableContentInterface
+class Group implements LinkableInterface, ReportableContentInterface, IndexableInterface, TaggableInterface
 {
     const GROUP_CATEGORY_LABEL_PREFIX  = 'platformd.groups.category.';
     const DELETED_BY_OWNER  = 'by_owner';
@@ -51,6 +53,7 @@ class Group implements LinkableInterface, ReportableContentInterface
     );
 
     const COMMENT_PREFIX = 'group-';
+    const SEARCH_PREFIX  = 'group_';
 
     /**
      * @var integer $id
@@ -275,6 +278,12 @@ class Group implements LinkableInterface, ReportableContentInterface
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $deals;
+
+    /**
+     * @var Platformd\TagBundle\Entity\Tag[]
+     *
+     */
+    private $tags;
 
     public function __construct()
     {
@@ -942,5 +951,57 @@ class Group implements LinkableInterface, ReportableContentInterface
     public function getReportThreshold()
     {
         return 3;
+    }
+
+    public function getSearchFacetType()
+    {
+        return 'group';
+    }
+
+    public function getSearchEntityType()
+    {
+        return 'group';
+    }
+
+    public function getSearchId()
+    {
+        return self::SEARCH_PREFIX.$this->id;
+    }
+
+    public function getSearchTitle()
+    {
+        return $this->name;
+    }
+
+    public function getSearchBlurb()
+    {
+        return $this->description ?: '';
+    }
+
+    public function getSearchDate()
+    {
+        return $this->createdAt;
+    }
+
+    public function getDeleteSearchDocument()
+    {
+        return $this->deleted;
+    }
+
+    public function getTags()
+    {
+        $this->tags = $this->tags ?: new ArrayCollection();
+
+        return $this->tags;
+    }
+
+    public function getTaggableType()
+    {
+        return 'platformd_group';
+    }
+
+    public function getTaggableId()
+    {
+        return $this->getId();
     }
 }

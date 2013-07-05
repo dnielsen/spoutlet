@@ -62,8 +62,9 @@ class GlobalEventAdminController extends Controller
     {
         $this->addEventsBreadcrumb()->addChild('New');
 
-        $existingEvents = $this->getGlobalEventService()->findAllOwnedEventsForUser($this->getUser());
-        $importedGlobalEvent = $this->getGlobalEventService()->findOneBy(array('id' => $request->get('existing_event_select')));
+        $existingEvents         = $this->getGlobalEventService()->findAllOwnedEventsForUser($this->getUser());
+        $importedGlobalEvent    = $this->getGlobalEventService()->findOneBy(array('id' => $request->get('existing_event_select')));
+        $tagManager             = $this->getTagManager();
 
         if ($importedGlobalEvent) {
             return $this->redirect($this->generateUrl('admin_events_new_import', array('id' => $importedGlobalEvent->getId())));
@@ -96,7 +97,13 @@ class GlobalEventAdminController extends Controller
                     $event->addSite($this->getCurrentSite());
                 }
 
+                $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
+
                 $this->getGlobalEventService()->createEvent($event);
+
+                $tagManager->addTags($tags, $event);
+
+                $tagManager->saveTagging($event);
 
                 $this->setFlash('success', 'New event posted successfully!');
 
@@ -162,11 +169,15 @@ class GlobalEventAdminController extends Controller
     public function editEventAction(Request $request, $id)
     {
         $this->addEventsBreadcrumb()->addChild('Edit');
-        $event = $this->getGlobalEventService()->find($id);
+
+        $tagManager = $this->getTagManager();
+        $event      = $this->getGlobalEventService()->find($id);
 
         if (!$event) {
             throw $this->createNotFoundException('No event for that id');
         }
+
+        $tagManager->loadTagging($event);
 
         $form = $this->createForm('globalEvent', $event);
 
@@ -176,7 +187,14 @@ class GlobalEventAdminController extends Controller
 
             if($form->isValid())
             {
-                $this->getGlobalEventService()->updateEvent($form->getData());
+                $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
+
+                $this->getGlobalEventService()->updateEvent($event);
+
+                $tagManager->addTags($tags, $event);
+
+                $tagManager->saveTagging($event);
+
                 $this->setFlash('success', 'Event saved successfully');
                 return $this->redirect($this->generateUrl('admin_events_edit', array('id' => $event->getId())));
             }
@@ -430,5 +448,10 @@ class GlobalEventAdminController extends Controller
     private function getEventService()
     {
         return $this->get('platformd_event.service.event');
+    }
+
+    private function getTagManager()
+    {
+        return $this->get('platformd.tags.model.tag_manager');
     }
 }

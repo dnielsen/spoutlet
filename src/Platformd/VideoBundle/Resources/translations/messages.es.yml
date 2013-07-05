@@ -25,9 +25,12 @@ youtube.form.title: "Título:"
 youtube.form.description: "Descripción:"
 youtube.form.category: "Categoría:"
 youtube.form.tags: "Etiquetas:"
+youtube.form.tags_help: Introduzca las palabras clave
 youtube.form.select_category: "Selecciona Categoría"
 youtube.form.optional: "Opcional:"
 youtube.form.select_group: <a id="select-group" href="javascript:void(0)">Select a group</a> to add your video.
+youtube.form.select_group_or_category: El título que has facilitado ya está en uso. Debes ingresar un título diferente.
+youtube.form.select_category: Debes seleccionar un categoría para tu video.
 youtube.form.invalid_youtube_link: Inválido enlace de YouTube.
 youtube.form.general_error: Debes proporcionar la información en los campos requeridos para enviar su video.
 youtube.navigation.video_main: Vídeo Principal

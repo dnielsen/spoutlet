@@ -18,6 +18,7 @@
             </div>
             {{ form_row(form.isPublic) }}
             {{ form_row(form.description) }}
+            {{ form_row(form.tags) }}
 
 
             <h4><a href="javascript:void(0);" id="toggle-advanced">Advanced Options (click to view)</a></h4>
@@ -53,6 +54,8 @@
         </div>
     {{ form_rest(form) }}
 </div>
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.watermark.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.tagsinput.min.js') }}"></script>
 <script type="text/javascript">
     $(function () {
         $('#toggle-advanced').click(function () {
@@ -70,5 +73,11 @@
                 scrollTop: ($('.control-group.error').first().offset().top) - 100
             }, 400);
         }
+
+        $('#platformd_groupbundle_grouptype_tags').watermark('Separate tags with commas');
+        $('#platformd_groupbundle_grouptype_tags').tagsInput({
+            placeholderColor: '#aaaaaa',
+            defaultText: "{{ 'tags.forms.add_tag' | pd_trans }}"
+        });
     });
 </script>
