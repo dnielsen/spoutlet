@@ -24,8 +24,8 @@ set :repository,  "git@github.com:platformd/spoutlet.git"
 set :user,        "ubuntu"
 set :branch,      "master"
 
-role :web,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, campWeb1
-role :app,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, campWeb1
+role :web,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, awaWeb5, awaWeb6, awaWeb7, awaWeb8, campWeb1
+role :app,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, awaWeb5, awaWeb6, awaWeb7, awaWeb8, campWeb1
 
 role :db,         awaWeb1, :primary => true
 
