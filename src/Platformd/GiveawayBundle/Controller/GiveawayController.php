@@ -89,7 +89,7 @@ class GiveawayController extends Controller
                 'data' => $data
             ));
 
-            $this->varnishCache($response, 30);
+            $this->varnishCache($response, 1);
 
             return $response;
         }
@@ -97,7 +97,7 @@ class GiveawayController extends Controller
         # at this stage, there are no notifications for the user
 
         $response = new Response();
-        $this->varnishCache($response, 30);
+        $this->varnishCache($response, 1);
 
         return $response;
     }
