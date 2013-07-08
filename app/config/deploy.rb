@@ -11,7 +11,7 @@ set :awaProcessor1, "ec2-75-101-139-101.compute-1.amazonaws.com"
 set :awaWeb1, "ec2-54-224-7-205.compute-1.amazonaws.com"
 set :awaWeb2, "ec2-54-224-5-214.compute-1.amazonaws.com"
 set :awaWeb3, "ec2-23-20-55-80.compute-1.amazonaws.com"
-set :awaWeb4, "ec2-174-129-62-95.compute-1.amazonaws.com"
+set :awaWeb4, "ec2-23-22-250-200.compute-1.amazonaws.com"
 
 set :campWeb1, "ec2-54-235-26-82.compute-1.amazonaws.com"
 
