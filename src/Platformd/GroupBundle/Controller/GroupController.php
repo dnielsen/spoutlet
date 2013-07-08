@@ -419,6 +419,14 @@ Alienware Arena Team
 
         $this->setFlash('success', 'You have successfully joined this group!');
 
+        $this->getFacebookProvider()->postToTimeline(array(
+            'message' => sprintf($this->trans('platformd.facebook.timeline.joined_group_message'), $group->getName()),
+            'link' => $this->generateUrl('group_show', array('slug' => $group->getSlug()), true),
+            'name' => $group->getName(),
+            'description' => substr(strip_tags($group->getDescription()), 0, 140) . '...',
+            'picture' => 'http://na.alienwarearena.com/bundles/spoutlet/images/alienwarelogothumb-140x85.png',
+        ));
+
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
     }
 

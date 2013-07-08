@@ -39,7 +39,6 @@ class SecurityController extends BaseController
 
         // user is logged in with platformd and are joining their facebook account with their platformd account
         if($user instanceof User) {
-
             $user = $fbProvider->loadUserByUsername($user->getUsername());
 
             return new RedirectResponse($this->container->get('router')->generate('accounts_settings'));
@@ -72,7 +71,7 @@ class SecurityController extends BaseController
     {
         // use this action when you don't want to use the javascript SDK login button
         $api        = $this->container->get('fos_facebook.api');
-        $scope      = $this->container->get('request')->get('scope', 'publish_stream');
+        $scope      = implode(',', $this->container->getParameter('fos_facebook.permissions'));
         $callback   = $this->container->get('router')->generate('_security_check', array(), true);
         $url        = $api->getLoginUrl(array('scope' => $scope, 'redirect_uri' => $callback));
 

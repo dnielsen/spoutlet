@@ -80,10 +80,12 @@ class FacebookProvider implements UserProviderInterface
             $fbdata = null;
         }
 
+        var_dump($fbdata);
+
         if (!empty($fbdata)) {
             if (empty($user)) {
                 $user = $this->userManager->createUser();
-                $user->setUsername($fbdata['first_name'].'.'.$fbdata['last_name']);
+                $user->setUsername($fbdata['username']);
                 $user->setEnabled(true);
                 $user->setPassword('');
             }
