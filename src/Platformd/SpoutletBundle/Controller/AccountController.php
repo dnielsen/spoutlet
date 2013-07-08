@@ -364,7 +364,8 @@ class AccountController extends Controller
         }
 
         return $this->render('SpoutletBundle:Account:incomplete.html.twig', array(
-            'form' => $form->createView(),
+            'form'      => $form->createView(),
+            'errors'    => $form->getErrors(),
         ));
     }
 }

@@ -322,6 +322,21 @@ platformd:
             change_your_password: Change your password
         giveaway:
             your_giveaway_keys: My Giveaway Keys
+        incomplete_form:
+            username: "Username:"
+            first_name: "First name:"
+            last_name: "Last name:"
+            email: "E-mail:"
+            password: "Password:"
+            password_confirm: "Confirm Password:"
+            has_alienware: "Do you own an Alienware system?"
+            yes: "Yes"
+            no: "No"
+            agree_to_terms: |
+                I have read and agreed to the
+                <a href="%terms_url%" target="_blank">Terms & Conditions</a> and
+                <a href="%privacy_url%" target="_blank">Privacy Policy</a>
+            subscribe_me: Subscribe me to receive Alienware/Dell Gaming news and special offers via email. <a href="http://www.dell.com/learn/us/en/19/policies-privacy?c=us&l=en&s=gen&delphi:gr=true" target="_blank">View Dell Privacy Policy</a>.
 
     # used only in the admin area
     homepage_banner:

@@ -4,17 +4,76 @@
 {% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
 
 {% block content %}
-{{ form_errors(form) }}
-<form action="{{ path('accounts_incomplete') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register form form-horizontal">
+
+{% if errors | length %}
+<div class="formErrors">
+    <div class="error">
+        <div class="title">{{ 'platformd.user.register.oops' | pd_trans }}</div>
+        <div class="message text">{{ 'platformd.user.register.cannot_process' | pd_trans | format(path('contact')) | raw }}<br /><br />{{ 'platformd.user.register.problems_found' | pd_trans }}
+            <ul>
+                {% for error in errors %}
+                <li>{{ error.messageTemplate|trans(error.messageParameters, 'validators') }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<form action="{{ path('accounts_incomplete') }}" {{ form_enctype(form) }} method="POST" class="form form-horizontal">
     {{ form_row(form.username) }}
     {{ form_row(form.firstname) }}
     {{ form_row(form.lastname) }}
     {{ form_row(form.email) }}
-    {{ form_row(form.plainPassword) }}
-    {{ form_row(form.hasAlienwareSystem) }}
-    {{ form_row(form.termsAccepted) }}
+
+    {% for password in form.plainPassword %}
+        <div class="control-group">
+            {% if loop.index == 1 %}
+            <label for="platformd_incomplete_account_plainPassword_first" class="control-label">
+                <span class="required">*</span>
+                {{ 'platformd.account_page.incomplete_form.password' | trans }}
+            </label>
+            {% else %}
+            <label for="platformd_incomplete_account_plainPassword_second" class="control-label">
+                <span class="required">*</span>
+                {{ 'platformd.account_page.incomplete_form.password_confirm' | trans }}
+            </label>
+            {% endif %}
+            <div class="controls">
+                {{ form_widget(password) }}
+
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="control-group">
+        <label class="control-label">{{ 'platformd.account_page.incomplete_form.has_alienware' | trans }}</label>
+        <div class="controls">
+            {{ form_widget(form.hasAlienwareSystem) }}
+        </div>
+    </div>
+
+    <div class="control-group" style="margin:0;">
+        <label class="control-label"><span class="required">*</span></label>
+        <div class="controls">
+            {{ form_widget(form.termsAccepted, { 'attr': {'style': 'margin: 0;'}}) }}
+            <span style="padding-left: 4px;">{{ 'platformd.account_page.incomplete_form.agree_to_terms' | trans({ '%terms_url%': path('terms_conditions'), '%privacy_url%': path('privacy')}) | raw }}</span>
+        </div>
+    </div>
+
+    <div class="conrol-group">
+        <label class="control-label"></label>
+        <div class="controls">
+            {{ form_widget(form.subscribedGamingNews, { 'attr': {'style': 'margin:0;'}}) }}
+            <span style="padding-left: 4px;">{{ 'platformd.account_page.incomplete_form.subscribe_me' | trans | raw }}
+
+        </div>
+    </div>
+
     {{ form_rest(form) }}
-    <button type="submit">{{ 'save' | trans }}</button>
+    <div class="form-actions">
+        <button type="submit">{{ 'save' | trans }}</button>
+    </div>
 </form>
 
 {% endblock %}
