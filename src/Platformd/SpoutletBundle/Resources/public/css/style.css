@@ -1226,10 +1226,7 @@ div.blockOverlay {
 .Button.btn[disabled],.Button.btn.disabled,.Button.btn.disabled:hover,.Button.btn.disabled:active{-webkit-box-shadow:none !important;-moz-box-shadow:none !important;box-shadow:none !important;text-shadow:0 0 0 !important;background:#ebebeb !important;border:1px solid #ddd !important;color:#aaa !important;cursor:default}
 
 .Button em{display:-moz-inline-stack;display:inline-block;vertical-align:middle;*vertical-align:auto;zoom:1;*display:inline;position:relative;vertical-align:middle}
-
-
 .Button .hasText em{margin-right:6px}
-
 .Button.xlarge{-webkit-font-smoothing:antialiased;-webkit-box-shadow:0 1px 3px rgba(0,0,0,0.22);-moz-box-shadow:0 1px 3px rgba(0,0,0,0.22);box-shadow:0 1px 3px rgba(0,0,0,0.22);font-size:14px;margin-bottom:4px;padding-bottom:11px;padding-top:12px}
 .Button.unAuthFacebookConnect{background:-webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #5676bc), color-stop(100%, #31497b));background:-webkit-linear-gradient(#5676bc,#31497b);background:-moz-linear-gradient(#5676bc,#31497b);background:-o-linear-gradient(#5676bc,#31497b);background:linear-gradient(#5676bc,#31497b);background-color:#3f5ea0;border:1px solid #293e69;border-top-color:#31497b;color:#444;text-shadow:0 1px #fff;position:relative}
 .Button.unAuthFacebookConnect:hover,.Button.unAuthFacebookConnect:active{border:1px solid #1b2845;border-top-color:#293e69}
