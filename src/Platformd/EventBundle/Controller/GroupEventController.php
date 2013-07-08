@@ -91,6 +91,14 @@ class GroupEventController extends Controller
 
                 $tagManager->saveTagging($groupEvent);
 
+                $this->getFacebookProvider()->postToTimeline(array(
+                    'message' => sprintf($this->trans('platformd.facebook.timeline.group_event_added'), $groupEvent->getName()),
+                    'link' => $this->generateUrl('group_event_view', array('groupSlug' => $groupEvent->getSlug(), 'eventSlug' => $groupEvent->getSlug()), true),
+                    'name' => $groupEvent->getName(),
+                    'description' => substr(strip_tags($groupEvent->getContent()), 0, 140) . '...',
+                    'picture' => 'http://na.alienwarearena.com/bundles/spoutlet/images/alienwarelogothumb-140x85.png',
+                ));
+
                 if ($groupEvent->isApproved()) {
                     $this->setFlash('success', 'Your event has been successfully added.');
 
@@ -835,6 +843,14 @@ class GroupEventController extends Controller
             'platformd.events.event_show.group_joined',
             array('%groupName%' => $group->getName()))
         );
+
+        $this->getFacebookProvider()->postToTimeline(array(
+            'message' => sprintf($this->trans('platformd.facebook.timeline.group_event_register'), $groupEvent->getName()),
+            'link' => $this->generateUrl('group_event_view', array('groupSlug' => $groupEvent->getSlug(), 'eventSlug' => $groupEvent->getSlug()), true),
+            'name' => $groupEvent->getName(),
+            'description' => substr(strip_tags($groupEvent->getContent()), 0, 140) . '...',
+            'picture' => 'http://na.alienwarearena.com/bundles/spoutlet/images/alienwarelogothumb-140x85.png',
+        ));
 
         return $this->redirect($this->generateUrl('group_event_view', array(
             'groupSlug' => $groupSlug,

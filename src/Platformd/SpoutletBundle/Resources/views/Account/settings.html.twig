@@ -49,7 +49,17 @@
                 </div>
             </form>
 
+            <fieldset>
+                    <legend>Facebook</legend>
+                    {% if user.facebookId %}
+                        <p>You have successfully connected your facebook account.</p>
+                    {% else %}
+                        {{ facebook_login_button({'autologoutlink': true}) }}
+                    {% endif %}
+            </fieldset>
+
         </div>
+
 
         <div class="right">
             {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}

@@ -321,6 +321,11 @@ class User extends BaseUser
      */
     public $recaptcha;
 
+    /**
+     * @ORM\Column(name="facebook_id", type="string")
+     */
+    protected $facebookId = '';
+
     public function __construct()
     {
         parent::__construct();
@@ -1102,5 +1107,40 @@ class User extends BaseUser
         }
 
         return false;
+    }
+
+    public function getFacebookId()
+    {
+        return $this->facebookId;
+    }
+
+    public function setFacebookId($value)
+    {
+        $this->facebookId = $value;
+    }
+
+    /**
+     * @param Array
+     *
+     * Always set the facebook id and facebook role; if there is no first/last name, email or birthdate, set those from fb data
+     */
+    public function setFBData($fbdata)
+    {
+        if (isset($fbdata['id'])) {
+            $this->setFacebookId($fbdata['id']);
+            $this->addRole('ROLE_FACEBOOK');
+        }
+        if (isset($fbdata['first_name']) && !$this->firstname) {
+            $this->setFirstname($fbdata['first_name']);
+        }
+        if (isset($fbdata['last_name']) && !$this->lastname) {
+            $this->setLastname($fbdata['last_name']);
+        }
+        if (isset($fbdata['email']) && !$this->email) {
+            $this->setEmail($fbdata['email']);
+        }
+        if (isset($fbdata['birthday']) && !$this->birthdate) {
+            $this->setBirthdate(new \DateTime($fbdata['birthday']));
+        }
     }
 }

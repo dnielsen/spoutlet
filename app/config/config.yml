@@ -534,3 +534,11 @@ liip_theme:
         bundle_resource_dir:
             - %%dir%%/themes/%%current_theme%%/%%bundle_name%%/views/%%template%%
             - %%dir%%/%%bundle_name%%/%%override_path%%
+
+fos_facebook:
+        file:   %kernel.root_dir%/../vendor/facebook/src/base_facebook.php
+        alias:  facebook
+        app_id: 402844226440419
+        secret: dd8882ad44a3c60da1a1dc415a8c4b51
+        cookie: true
+        permissions: [email, user_birthday, user_location, publish_stream]

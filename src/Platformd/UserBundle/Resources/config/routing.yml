@@ -33,3 +33,7 @@ fos_user_suspend:
 platformd_avatars:
     resource: "@FOSUserBundle/Resources/config/routing/avatars.yml"
     prefix: /account/profile/avatars
+
+fos_facebook:
+    resource: "@UserBundle/Resources/config/routing/facebook.yml"
+    prefix:   /facebook

@@ -56,9 +56,19 @@ class YoutubeController extends Controller
             $form->bindRequest($request);
 
             if($form->isValid()) {
+                $video = $form->getData();
                 $this->processForm($form, $user);
 
                 $this->setFlash('success', $this->trans('youtube.flash.submit_success'));
+
+                $this->getFacebookProvider()->postToTimeline(array(
+                    'message' => sprintf($this->trans('platformd.facebook.timeline.video_added'), $video->getTitle()),
+                    'link' => $this->generateUrl('youtube_view', array('slug' => $video->getSlug()), true),
+                    'name' => $video->getTitle(),
+                    'description' => substr(strip_tags($video->getDescription()), 0, 140) . '...',
+                    'picture' => $video->getThumbnailSq(),
+                ));
+
                 return $this->redirect($this->generateUrl('youtube_view', array('slug' => $youtube->getSlug())));
             } else {
                 $this->setFlash('error', $this->trans('youtube.form.general_error'));

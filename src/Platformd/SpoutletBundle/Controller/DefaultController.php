@@ -10,7 +10,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class DefaultController extends Controller
 {
     public function _mainUserStripAction() {
-        $response = $this->render('SpoutletBundle::_mainUserStrip.html.twig');
+        $incompleteAccount = $this->getCurrentUser() ? ($this->getCurrentUser()->getFacebookId() && !$this->getCurrentUser()->getPassword()) : false;
+        $response = $this->render('SpoutletBundle::_mainUserStrip.html.twig', array(
+            'incompleteAccount' => $incompleteAccount,
+        ));
 
         $this->varnishCache($response, 120);
 

@@ -153,6 +153,14 @@ class ContestController extends Controller
             $em->persist($entry);
             $em->flush();
 
+            $this->getFacebookProvider()->postToTimeline(array(
+                'message' => sprintf($this->trans('platformd.facebook.timeline.entered_contest'), $contest->getName()),
+                'link' => $this->generateUrl('contest_show', array('slug' => $contest->getSlug()), true),
+                'name' => $contest->getName(),
+                'description' => substr(strip_tags($contest->getEntryInstructions()), 0, 140) . '...',
+                'picture' => 'http://na.alienwarearena.com/bundles/spoutlet/images/alienwarelogothumb-140x85.png',
+            ));
+
             return $this->redirect($this->generateUrl('contest_submit', array('slug' => $slug)));
         }
     }
