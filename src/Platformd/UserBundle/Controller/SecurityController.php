@@ -116,7 +116,7 @@ class SecurityController extends BaseController
         }
 
         // this user has authenticated our facebook app and is not logged into platformd, so we create the user using facebook data and log them in
-        $twitterId = $user ? $user->getTwitterId() : $twitterProvider->getTwitterId();
+        $twitterId  = $user ? $user->getTwitterId() : $twitterProvider->getTwitterId();
         $context    = $this->container->get('security.context');
         $user       = $twitterProvider->loadUserByTwitterId($twitterId);
         $token      = new UsernamePasswordToken($user, $user->getPassword(), 'main', $user->getRoles());

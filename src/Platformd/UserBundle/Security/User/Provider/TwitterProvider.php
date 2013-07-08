@@ -129,6 +129,7 @@ class TwitterProvider implements UserProviderInterface
     {
         try {
              $info = $this->twitter_oauth->get('account/verify_credentials');
+             var_dump($info);
         } catch (Exception $e) {
              return false;
         }
@@ -141,6 +142,7 @@ class TwitterProvider implements UserProviderInterface
         try {
              $info = $this->twitter_oauth->get('account/verify_credentials');
              if($info) {
+                var_dump($info);
                 return $info->id;
              }
 
