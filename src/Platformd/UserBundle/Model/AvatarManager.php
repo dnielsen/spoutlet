@@ -98,7 +98,8 @@ class AvatarManager
         $this->checkUserUuid($user);
 
         $rawFilename = 'raw.'.$file->guessExtension();
-        $this->filesystem->write($user->getUuid().'/'.$fileUuid.'/'.$rawFilename, file_get_contents($file));
+        $opts = array('headers' => array('Cache-Control' => 'max-age=300'));
+        $this->filesystem->write($user->getUuid().'/'.$fileUuid.'/'.$rawFilename, file_get_contents($file), $opts);
 
         unlink($file);
 
