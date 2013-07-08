@@ -93,6 +93,14 @@ services:
             validator: "@validator"
             container: "@service_container"
 
+    platformd.twitter.provider:
+        class: Platformd\UserBundle\Security\User\Provider\TwitterProvider
+        arguments:
+            twitter_oauth: "@fos_twitter.api"
+            userManager: "@fos_user.user_manager"
+            validator: "@validator"
+            session: "@session"
+
     platformd_user.authentication_handler:
         class: Platformd\UserBundle\Handler\AuthenticationHandler
         arguments:

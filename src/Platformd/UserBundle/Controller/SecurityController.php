@@ -85,6 +85,50 @@ class SecurityController extends BaseController
         return new RedirectResponse($this->container->get('router')->generate('_fos_user_security_logout'));
     }
 
+    public function twitterLoginAction()
+    {
+        $request = $this->container->get('request');
+        $twitter = $this->container->get('fos_twitter.service');
+
+        $url = $twitter->getLoginUrl($request);
+
+        $response = new RedirectResponse($url);
+
+        return $response;
+    }
+
+    public function twitterSecurityCheckAction()
+    {
+        $user               = $this->getCurrentUser();
+        $request            = $this->container->get('request');
+        $twitterProvider    = $this->getTwitterProvider();
+
+        // not logged into twitter or platformd, redirect them to login page
+        if(!$twitterProvider->isUserAuthenticated() && !$user) {
+            return new RedirectResponse($this->container->get('router')->generate('fos_user_security_login'));
+        }
+
+        // user is logged in with platformd and are joining their twitter account with their platformd account
+        if($user instanceof User) {
+            $user = $twitterProvider->loadUserByUsername($user->getUsername());
+
+            return new RedirectResponse($this->container->get('router')->generate('accounts_settings'));
+        }
+
+        // this user has authenticated our facebook app and is not logged into platformd, so we create the user using facebook data and log them in
+        $twitterId = $user ? $user->getTwitterId() : $twitterProvider->getTwitterId();
+        $context    = $this->container->get('security.context');
+        $user       = $twitterProvider->loadUserByTwitterId($twitterId);
+        $token      = new UsernamePasswordToken($user, $user->getPassword(), 'main', $user->getRoles());
+
+        $context->setToken($token);
+
+        $event = new InteractiveLoginEvent($request, $token);
+        $this->container->get('event_dispatcher')->dispatch('security.interactive_login', $event);
+
+        return new RedirectResponse($this->container->get('router')->generate('default_index'));
+    }
+
     private function getCurrentUser()
     {
         $token = $this->container->get('security.context')->getToken();
@@ -103,6 +147,11 @@ class SecurityController extends BaseController
     protected function getFacebookProvider()
     {
         return $this->container->get('platformd.facebook.provider');
+    }
+
+    protected function getTwitterProvider()
+    {
+        return $this->container->get('platformd.twitter.provider');
     }
 
     protected function getCurrentSite()

@@ -37,3 +37,7 @@ platformd_avatars:
 fos_facebook:
     resource: "@UserBundle/Resources/config/routing/facebook.yml"
     prefix:   /facebook
+
+fos_twitter:
+    resource: "@UserBundle/Resources/config/routing/twitter.yml"
+    prefix: /twitter

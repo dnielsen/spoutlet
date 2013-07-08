@@ -326,6 +326,11 @@ class User extends BaseUser
      */
     protected $facebookId = '';
 
+    /**
+     * @ORM\Column(name="twitter_id", type="string")
+     */
+    protected $twitterId = '';
+
     public function __construct()
     {
         parent::__construct();
@@ -1142,5 +1147,15 @@ class User extends BaseUser
         if (isset($fbdata['birthday']) && !$this->birthdate) {
             $this->setBirthdate(new \DateTime($fbdata['birthday']));
         }
+    }
+
+    public function getTwitterId()
+    {
+        return $this->twitterId;
+    }
+
+    public function setTwitterId($value)
+    {
+        $this->twitterId = $value;
     }
 }

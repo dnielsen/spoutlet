@@ -70,7 +70,15 @@
             </form>
         </div>
         <div class="social">
-            {% include 'UserBundle:Security:_facebookLoginButton.html.twig' %}
+            <table style="width:100%">
+                <tbody>
+                    <tr>
+                        <td>{% include 'UserBundle:Security:_facebookLoginButton.html.twig' %}</td>
+                        <td>{% include 'UserBundle:Security:_twitterLoginButton.html.twig' %}</td>
+                    </tr>
+                </tbody>
+            </table>
+
         </div>
     </div>
     <div class="right">

@@ -201,3 +201,12 @@
 [FacebookSDK]
     git=git://github.com/facebook/facebook-php-sdk.git
     target=/facebook
+
+[FOSTwitterBundle]
+    git=git://github.com/FriendsOfSymfony/FOSTwitterBundle.git
+    target=/bundles/FOS/TwitterBundle
+    version=origin/v1.0
+
+[twitteroauth]
+    git=git://github.com/kertz/twitteroauth.git
+    target=twitteroauth
