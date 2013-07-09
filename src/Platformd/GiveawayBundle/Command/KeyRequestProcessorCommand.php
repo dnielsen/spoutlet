@@ -97,7 +97,7 @@ EOT
         $this->output(2, ($queueUtil->deleteFromQueue($message) ? 'Message deleted successfully.' : 'Unable to delete message.'));
     }
 
-    protected function signal_handler($signal)
+    public function signal_handler($signal)
     {
         switch($signal) {
             case SIGTERM:
@@ -108,6 +108,9 @@ EOT
                 break;
             case SIGINT:
                 $signalType = 'SIGINT';
+                break;
+            case SIGHUP:
+                $signalType = 'SIGHUP';
                 break;
             default:
                 $signalType = 'UNKNOWN_SIGNAL';
