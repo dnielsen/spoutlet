@@ -20,6 +20,7 @@ use Platformd\GiveawayBundle\Entity\KeyRequestState;
 class KeyRequestProcessorCommand extends ContainerAwareCommand
 {
     const DELAY_BETWEEN_KEYS_MILLISECONDS = 50;
+    const ITERATION_COUNT = 25;
 
     private $em;
     private $logger;
@@ -144,9 +145,15 @@ EOT
 
         $this->output(0, 'Processing queue for the Key Requests.');
 
+        $iterationCount = 1;
+
         while ($message = $queueUtil->retrieveFromQueue(new KeyRequestQueueMessage())) {
 
             usleep(self::DELAY_BETWEEN_KEYS_MILLISECONDS);
+
+            $this->output();
+            $this->output(0, 'Iteration '.$iterationCount);
+            $this->output();
 
             $this->output();
             $this->output(1, 'Processing message.');
@@ -445,7 +452,16 @@ EOT
             $this->deleteMessageWithOutput($message);
 
             if ($this->exitAfterCurrentItem) {
+                $this->output();
                 $this->output(0, 'Process terminated - exiting.');
+                exit;
+            }
+
+            $iterationCount++;
+
+            if ($iterationCount > self::ITERATION_COUNT) {
+                $this->output();
+                $this->output(0, 'Maximum iterations reached - exiting.');
                 exit;
             }
         }
