@@ -24,6 +24,8 @@ class KeyRequestProcessorCommand extends ContainerAwareCommand
     private $em;
     private $logger;
 
+    private $exitAfterCurrentItem = false;
+
     protected function getRepo($key) {
         return $this->em->getRepository($key);
     }
@@ -94,6 +96,29 @@ EOT
         $this->output(2, ($queueUtil->deleteFromQueue($message) ? 'Message deleted successfully.' : 'Unable to delete message.'));
     }
 
+    protected function signal_handler($signal)
+    {
+        switch($signal) {
+            case SIGTERM:
+                $signalType = 'SIGTERM';
+                break;
+            case SIGKILL:
+                $signalType = 'SIGKILL';
+                break;
+            case SIGINT:
+                $signalType = 'SIGINT';
+                break;
+            default:
+                $signalType = 'UNKNOWN_SIGNAL';
+                break;
+        }
+
+        $this->output();
+        $this->output(0, 'Caught signal ['.$signalType.']. Finishing processing...');
+        $this->exitAfterCurrentItem = true;
+        $this->output();
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->em     = $this->getContainer()->get('doctrine.orm.entity_manager');
@@ -109,6 +134,13 @@ EOT
         $stateRepo    = $this->getRepo('GiveawayBundle:KeyRequestState');
         $ipLookupUtil = $this->getContainer()->get('platformd.model.ip_lookup_util');
         $groupManager = $this->getContainer()->get('platformd.model.group_manager');
+
+        $this->output(0, 'Setting up signal handlers.');
+
+        declare(ticks = 1);
+        pcntl_signal(SIGTERM, array($this, 'signal_handler'));
+        pcntl_signal(SIGINT, array($this, 'signal_handler'));
+
 
         $this->output(0, 'Processing queue for the Key Requests.');
 
@@ -411,6 +443,11 @@ EOT
             $this->output(5, 'Email sent.');
 
             $this->deleteMessageWithOutput($message);
+
+            if ($this->exitAfterCurrentItem) {
+                $this->output(0, 'Process terminated - exiting.');
+                exit;
+            }
         }
 
         $this->output();
