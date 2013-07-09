@@ -103,6 +103,8 @@ class SecurityController extends BaseController
         $request            = $this->container->get('request');
         $twitterProvider    = $this->getTwitterProvider();
 
+        $this->container->get('fos_twitter.service')->getAccessToken($this->container->get('request'));
+
         // not logged into twitter or platformd, redirect them to login page
         if(!$twitterProvider->isUserAuthenticated() && !$user) {
             return new RedirectResponse($this->container->get('router')->generate('fos_user_security_login'));

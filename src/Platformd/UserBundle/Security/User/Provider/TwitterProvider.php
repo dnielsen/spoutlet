@@ -27,6 +27,10 @@ class TwitterProvider implements UserProviderInterface
         $this->userManager = $userManager;
         $this->validator = $validator;
         $this->session = $session;
+
+        $this->twitter_oauth->host = 'https://api.twitter.com/1.1/';
+        $this->twitter_oauth->ssl_verifypeer = true;
+        $this->twitter_oauth->content_type = 'application/x-www-form-urlencoded';
     }
 
     public function supportsClass($class)
@@ -48,7 +52,7 @@ class TwitterProvider implements UserProviderInterface
     {
         $user = $this->findUserByUsername($username);
 
-        $this->twitter_oauth->setOAuthToken( $this->session->get('access_token') , $this->session->get('access_token_secret'));
+        $this->twitter_oauth->setOAuthToken($this->session->get('access_token') , $this->session->get('access_token_secret'));
 
         try {
              $info = $this->twitter_oauth->get('account/verify_credentials');
@@ -84,10 +88,11 @@ class TwitterProvider implements UserProviderInterface
     {
         $user = $this->findUserByTwitterId($twitterId);
 
-        $this->twitter_oauth->setOAuthToken( $this->session->get('access_token') , $this->session->get('access_token_secret'));
+        $this->twitter_oauth->setOAuthToken($this->session->get('access_token'), $this->session->get('access_token_secret'));
 
         try {
              $info = $this->twitter_oauth->get('account/verify_credentials');
+
         } catch (Exception $e) {
              $info = null;
         }
@@ -118,18 +123,18 @@ class TwitterProvider implements UserProviderInterface
 
     public function refreshUser(UserInterface $user)
     {
-        if (!$this->supportsClass(get_class($user)) || !$user->getTwitterID()) {
+        if (!$this->supportsClass(get_class($user)) || !$user->getTwitterId()) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
         }
 
-        return $this->loadUserByUsername($user->getTwitterID());
+        return $this->loadUserByTwitterId($user->getTwitterId());
     }
 
     public function isUserAuthenticated()
     {
         try {
              $info = $this->twitter_oauth->get('account/verify_credentials');
-             var_dump($info);
+
         } catch (Exception $e) {
              return false;
         }
@@ -140,14 +145,12 @@ class TwitterProvider implements UserProviderInterface
     public function getTwitterId()
     {
         try {
-             $info = $this->twitter_oauth->get('account/verify_credentials');
-             if($info) {
-                var_dump($info);
-                return $info->id;
-             }
+            $info = $this->twitter_oauth->get('account/verify_credentials');
+
+            return $info->id;
 
         } catch (Exception $e) {
-             return '0';
+            return '0';
         }
 
     }
