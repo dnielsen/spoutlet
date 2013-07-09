@@ -545,6 +545,6 @@ fos_facebook:
 
 fos_twitter:
     file: %kernel.root_dir%/../vendor/twitteroauth/twitteroauth/twitteroauth.php
-    consumer_key: qWmu15MJSMafA6ylvXb9ig
-    consumer_secret: OY42oydLQJPSKmZKYHPN8Ouc23MxzuYjlOgzUlChM
+    consumer_key: nCv7pi6N8ZibCxmW2lAvQ
+    consumer_secret: Clw9FSeWw6RP1AOCKpGsPL4z2If6FS2sHNsk0hjYA
     callback_url: http://demo.alienwarearena.local/app_dev.php/twitter/login-check

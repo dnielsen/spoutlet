@@ -329,4 +329,12 @@ class Controller extends BaseController
     {
         return $this->container->get('platformd.facebook.provider');
     }
+
+    /**
+     * @return \Platformd\UserBundle\Security\User\Provider\TwitterProvider
+     */
+    protected function getTwitterProvider()
+    {
+        return $this->container->get('platformd.twitter.provider');
+    }
 }

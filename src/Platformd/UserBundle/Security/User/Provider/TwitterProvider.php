@@ -20,17 +20,21 @@ class TwitterProvider implements UserProviderInterface
     protected $userManager;
     protected $validator;
     protected $session;
+    protected $api;
+    protected $container;
 
-    public function __construct(TwitterOAuth $twitter_oauth, UserManager $userManager,Validator $validator, Session $session)
+    public function __construct(TwitterOAuth $twitter_oauth, UserManager $userManager,Validator $validator, Session $session, $api, $container)
     {
-        $this->twitter_oauth = $twitter_oauth;
-        $this->userManager = $userManager;
-        $this->validator = $validator;
-        $this->session = $session;
+        $this->twitter_oauth    = $twitter_oauth;
+        $this->userManager      = $userManager;
+        $this->validator        = $validator;
+        $this->session          = $session;
+        $this->api              = $api;
+        $this->container        = $container;
 
-        $this->twitter_oauth->host = 'https://api.twitter.com/1.1/';
-        $this->twitter_oauth->ssl_verifypeer = true;
-        $this->twitter_oauth->content_type = 'application/x-www-form-urlencoded';
+        $this->twitter_oauth->host              = 'https://api.twitter.com/1.1/';
+        $this->twitter_oauth->ssl_verifypeer    = true;
+        $this->twitter_oauth->content_type      = 'application/x-www-form-urlencoded';
     }
 
     public function supportsClass($class)
@@ -61,18 +65,7 @@ class TwitterProvider implements UserProviderInterface
         }
 
         if (!empty($info)) {
-            if (empty($user)) {
-                $user = $this->userManager->createUser();
-                $user->setEnabled(true);
-                $user->setPassword('');
-            }
-
-            $username = $info->screen_name;
-
             $user->setTwitterId($info->id);
-            $user->setUsername($username);
-            $user->setEmail('example@example.com');
-            $user->setFirstname($info->name);
 
             $this->userManager->updateUser($user);
         }
@@ -152,6 +145,14 @@ class TwitterProvider implements UserProviderInterface
         } catch (Exception $e) {
             return '0';
         }
+    }
 
+    public function tweet($status) {
+        try {
+            $this->twitter_oauth->setOAuthToken($this->session->get('access_token'), $this->session->get('access_token_secret'));
+            $tweet = $this->twitter_oauth->post('statuses/update', array('status' => $status));
+        } catch (Exception $e) {
+
+        }
     }
 }

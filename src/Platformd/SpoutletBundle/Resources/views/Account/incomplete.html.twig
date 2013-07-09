@@ -26,6 +26,10 @@
     {{ form_row(form.lastname) }}
     {{ form_row(form.email) }}
 
+    {% if form.birthdate is defined %}
+        {{ form_row(form.birthdate) }}
+    {% endif %}
+
     {% for password in form.plainPassword %}
         <div class="control-group">
             {% if loop.index == 1 %}

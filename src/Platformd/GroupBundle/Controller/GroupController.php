@@ -427,6 +427,10 @@ Alienware Arena Team
             'picture' => 'http://na.alienwarearena.com/bundles/spoutlet/images/alienwarelogothumb-140x85.png',
         ));
 
+        $this->getTwitterProvider()->tweet(sprintf(
+            $this->trans('platformd.twitter.tweets.joined_group_message'), $group->getName(), $this->generateUrl('group_show', array('slug' => $group->getSlug()), true)
+        ));
+
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
     }
 
@@ -1600,6 +1604,10 @@ Alienware Arena Team
                 'name' => $group->getName(),
                 'description' => substr(strip_tags($group->getDescription()), 0, 140) . '...',
                 'picture' => 'http://na.alienwarearena.com/bundles/spoutlet/images/alienwarelogothumb-140x85.png',
+            ));
+
+            $this->getTwitterProvider()->tweet(sprintf(
+                $this->trans('platformd.twitter.tweets.create_group_message'), $group->getName(), $this->generateUrl('group_show', array('slug' => $group->getSlug()), true)
             ));
 
             if($return = $request->getSession()->get('ContestReturnUrl')) {

@@ -100,6 +100,8 @@ services:
             userManager: "@fos_user.user_manager"
             validator: "@validator"
             session: "@session"
+            api: "@fos_twitter.service"
+            container: "#service_container"
 
     platformd_user.authentication_handler:
         class: Platformd\UserBundle\Handler\AuthenticationHandler

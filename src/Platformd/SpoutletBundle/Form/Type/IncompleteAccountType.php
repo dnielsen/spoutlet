@@ -49,6 +49,13 @@ class IncompleteAccountType extends AbstractType
                 'required'          => true,
             ))
         ;
+
+        if($builder->getData()->getTwitterId() && !$builder->getData()->getBirthdate()) {
+            $builder->add('birthdate', 'birthday', array(
+                'empty_value' => '--', 'required' => true,
+                'years' => range(1940, date('Y')),
+            ));
+        }
     }
 
     public function getName()

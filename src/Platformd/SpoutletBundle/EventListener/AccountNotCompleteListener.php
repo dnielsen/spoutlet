@@ -40,6 +40,15 @@ class AccountNotCompleteListener
                     $event->setResponse($response);
                 }
             }
+
+            if($user->getTwitterId() && !$user->getPassword()) {
+                if($routeName != 'accounts_incomplete' && $routeName != '_main_user_strip' && $routeName != '_wdt' && $routeName != '_security_logout' && $routeName) {
+                    $url        = $this->router->generate('accounts_incomplete');
+                    $response   = new RedirectResponse($url);
+
+                    $event->setResponse($response);
+                }
+            }
         }
 
         return;

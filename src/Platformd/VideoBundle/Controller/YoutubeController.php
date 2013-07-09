@@ -69,6 +69,10 @@ class YoutubeController extends Controller
                     'picture' => $video->getThumbnailSq(),
                 ));
 
+                $this->getTwitterProvider()->tweet(sprintf(
+                    $this->trans('platformd.twitter.tweets.video_added'), $video->getTitle(), $this->generateUrl('youtube_view', array('slug' => $video->getSlug()), true)
+                ));
+
                 return $this->redirect($this->generateUrl('youtube_view', array('slug' => $youtube->getSlug())));
             } else {
                 $this->setFlash('error', $this->trans('youtube.form.general_error'));

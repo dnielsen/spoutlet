@@ -99,6 +99,10 @@ class GroupEventController extends Controller
                     'picture' => 'http://na.alienwarearena.com/bundles/spoutlet/images/alienwarelogothumb-140x85.png',
                 ));
 
+                $this->getTwitterProvider()->tweet(sprintf(
+                    $this->trans('platformd.twitter.tweets.group_event_added'), $groupEvent->getName(), $this->generateUrl('group_event_view', array('groupSlug' => $groupEvent->getSlug(), 'eventSlug' => $groupEvent->getSlug()), true)
+                ));
+
                 if ($groupEvent->isApproved()) {
                     $this->setFlash('success', 'Your event has been successfully added.');
 
@@ -806,6 +810,19 @@ class GroupEventController extends Controller
 
         $attendeeCount = $groupEvent->getAttendeeCount();
 
+
+        $this->getFacebookProvider()->postToTimeline(array(
+            'message' => sprintf($this->trans('platformd.facebook.timeline.group_event_register'), $groupEvent->getName()),
+            'link' => $this->generateUrl('group_event_view', array('groupSlug' => $groupEvent->getSlug(), 'eventSlug' => $groupEvent->getSlug()), true),
+            'name' => $groupEvent->getName(),
+            'description' => substr(strip_tags($groupEvent->getContent()), 0, 140) . '...',
+            'picture' => 'http://na.alienwarearena.com/bundles/spoutlet/images/alienwarelogothumb-140x85.png',
+        ));
+
+        $this->getTwitterProvider()->tweet(sprintf(
+            $this->trans('platformd.twitter.tweets.group_event_register'), $groupEvent->getName(), $this->generateUrl('group_event_view', array('groupSlug' => $groupEvent->getSlug(), 'eventSlug' => $groupEvent->getSlug()), true)
+        ));
+
         $response->setContent(json_encode(array("success" => true, "attendeeCount" => $attendeeCount)));
         return $response;
     }
@@ -850,6 +867,10 @@ class GroupEventController extends Controller
             'name' => $groupEvent->getName(),
             'description' => substr(strip_tags($groupEvent->getContent()), 0, 140) . '...',
             'picture' => 'http://na.alienwarearena.com/bundles/spoutlet/images/alienwarelogothumb-140x85.png',
+        ));
+
+        $this->getTwitterProvider()->tweet(sprintf(
+            $this->trans('platformd.twitter.tweets.group_event_register'), $groupEvent->getName(), $this->generateUrl('group_event_view', array('groupSlug' => $groupEvent->getSlug(), 'eventSlug' => $groupEvent->getSlug()), true)
         ));
 
         return $this->redirect($this->generateUrl('group_event_view', array(

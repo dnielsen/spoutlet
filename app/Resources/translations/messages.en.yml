@@ -1335,8 +1335,17 @@ platformd.facebook.timeline.account_created_message: I just joined Alienware Are
 platformd.facebook.timeline.account_created_description: Access exclusive closed betas, in-game items, and discounts on your favorite video games. Become a part of the most helpful PC gaming community today!
 platformd.facebook.timeline.create_group_message: I just created the group %s.
 platformd.facebook.timeline.joined_group_message: I joined the group %s.
-platformd.facebook.timeline.video_added: "I just added a Video - %s."
+platformd.facebook.timeline.video_added: "I just added a video - %s."
 platformd.facebook.timeline.group_event_added: "I just created an event - %s."
 platformd.facebook.timeline.group_event_register: I am attending %s.
 platformd.facebook.timeline.image_added: I just added %s image(s) on Alienware Arena.
 platformd.facebook.timeline.entered_contest: I entered the %s.
+
+platformd.twitter.tweets.account_created_message: "I just joined Alienwarea Arena! http://alienwarearena.com"
+platformd.twitter.tweets.create_group_message: I just created the group %s %s.
+platformd.twitter.tweets.joined_group_message: I just joined the group %s %s.
+platformd.twitter.tweets.video_added: "I just added a video - %s. %s"
+platformd.twitter.tweets.group_event_added: "I just created an event - %s. %s"
+platformd.twitter.tweets.group_event_register: I am attending %s %s.
+platformd.twitter.tweets.image_added: I just added %s image(s) on Alienware Arena. %s
+platformd.twitter.tweets.entered_contest: I entered the %s %s.

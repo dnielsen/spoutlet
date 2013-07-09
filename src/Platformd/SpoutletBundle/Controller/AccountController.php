@@ -359,6 +359,8 @@ class AccountController extends Controller
                     'picture'       => 'http://na.alienwarearena.com/bundles/spoutlet/images/alienwarelogothumb-140x85.png',
                 ));
 
+                $this->getTwitterProvider()->tweet($this->trans('platformd.twitter.tweets.account_created_message'));
+
                 return $this->redirect($this->generateUrl('accounts_settings'));
             }
         }

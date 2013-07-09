@@ -161,6 +161,10 @@ class ContestController extends Controller
                 'picture' => 'http://na.alienwarearena.com/bundles/spoutlet/images/alienwarelogothumb-140x85.png',
             ));
 
+            $this->getTwitterProvider()->tweet(sprintf(
+                $this->trans('platformd.twitter.tweets.entered_contest'), $contest->getName(), $this->generateUrl('contest_show', array('slug' => $contest->getSlug()), true)
+            ));
+
             return $this->redirect($this->generateUrl('contest_submit', array('slug' => $slug)));
         }
     }

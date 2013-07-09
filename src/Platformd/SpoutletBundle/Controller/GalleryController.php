@@ -245,14 +245,18 @@ class GalleryController extends Controller
         $this->setFlash('success', sprintf($this->trans('galleries.publish_photo_multiple_message'), count($published), $totalImages));
         $message = sprintf($this->trans('galleries.publish_photo_multiple_message'), count($published), $totalImages);
 
-        $mediaForFb = $this->getGalleryMediaRepository()->find($medias[0]['id']);
+        $mediaForSharing = $this->getGalleryMediaRepository()->find($medias[0]['id']);
 
         $this->getFacebookProvider()->postToTimeline(array(
             'message' => sprintf($this->trans('platformd.facebook.timeline.image_added'), $totalImages),
-            'link' => $this->generateUrl('gallery_media_show', array('id' => $mediaForFb->getId()), true),
-            'name' => $mediaForFb->getTitle(),
-            'description' => substr(strip_tags($mediaForFb->getDescription()), 0, 140) . '...',
+            'link' => $this->generateUrl('gallery_media_show', array('id' => $mediaForSharing->getId()), true),
+            'name' => $mediaForSharing->getTitle(),
+            'description' => substr(strip_tags($mediaForSharing->getDescription()), 0, 140) . '...',
             'picture' => 'http://na.alienwarearena.com/bundles/spoutlet/images/alienwarelogothumb-140x85.png',
+        ));
+
+        $this->getTwitterProvider()->tweet(sprintf(
+            $this->trans('platformd.twitter.tweets.image_added'), $totalImages, $this->generateUrl('gallery_media_show', array('id' => $mediaForSharing->getId()), true)
         ));
 
         $response->setContent(json_encode(array(
