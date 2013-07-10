@@ -21,20 +21,25 @@
                         <a class="update-avatar">UPDATE</a>
                     </div>
                 </span>
-
-                <div class="clear"></div>
             </div>
+
+            <div id="user-username">{{ user.username }}</div>
+
+            <div class="clear"></div>
 
             <form action="{{ path('accounts_settings_update') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_password form form-horizontal">
                 <input type="hidden" name="_method" value="PUT" />
-                <fieldset id="account-settings-password">
+                <fieldset id="account-settings-password" class="account-settings-section">
+                    <h3><span>{{ 'platformd.user.account_settings.password'|trans({}, 'FOSUserBundle') }}</h3></span>
                     {{ form_errors(form) }}
                     {{ form_row(form.currentPassword) }}
                     {{ form_row(form.plainPassword) }}
                 </fieldset>
+
                 <div class="clear"></div>
-                <fieldset class="label-full" id="account-settings-newsletter">
-                    <h3><span>{{ 'platformd.user.account_settings.newsletter'|trans({}, 'FOSUserBundle') }}</span></h3>
+
+                <fieldset class="label-full account-settings-section" id="account-settings-newsletter">
+                    <h3><span>{{ 'platformd.user.account_settings.newsletter'|trans({}, 'FOSUserBundle') }}</h3></span>
                     <table>
                         <tr>
                             <td style="vertical-align: top;padding-right: 4px;">{{ form_widget(form.subscribedGamingNews) }}</td>
@@ -45,7 +50,8 @@
                 {{ form_rest(form) }}
 
                 <div>
-                    <input type="submit" class="button" value="{{ 'platformd.user.account_settings.change_avatar.submit'|trans({}, 'FOSUserBundle') }}" />
+                    <button type="submit" class="btn btn-primary">{{ 'platformd.user.account_settings.change_avatar.submit'|trans({}, 'FOSUserBundle') }}</button>
+                    <a href="{{ path('accounts_index') }}" class="btn">{{ 'cancel' | pd_trans }}</a>
                 </div>
             </form>
 

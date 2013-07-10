@@ -336,8 +336,18 @@ class AccountController extends Controller
             }
         }
 
+        $avatarManager = $this->getAvatarManager();
+        $data          = $avatarManager->getAvatarListingData($this->getUser(), 184);
+        $newAvatar     = new Avatar();
+
+        $newAvatar->setUser($this->getUser());
+
+        $avatarForm = $this->createForm(new AvatarType(), $newAvatar);
+
         return $this->render('SpoutletBundle:Account:settings.html.twig', array(
             'form' => $form->createView(),
+            'avatarForm' => $avatarForm->createView(),
+            'data'       => $data,
         ));
     }
 

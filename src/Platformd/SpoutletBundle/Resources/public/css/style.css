@@ -1105,24 +1105,33 @@ div.blockOverlay {
     height: 23px;
 }
 
+#user-settings-page #user-username {
+    color: #b3b3b3;
+    font-weight: normal;
+    font-size: 24px;
+    margin: 20px 0 10px 0;
+    float: right;
+    width: 420px;
+}
+
 #user-settings-page #avatar-update-overlay-text a {
     color: black;
 }
 
-#user-settings-page #account-settings-password {
-    margin: 40px 0 0 0;
-}
-
-#user-settings-page #account-settings-newsletter {
+#user-settings-page .account-settings-section  {
     margin: 20px 0 20px 0;
 }
 
-#user-settings-page #account-settings-newsletter h3 {
+#user-settings-page .account-settings-section h3 {
     margin-bottom: 10px;
 }
 
-#user-settings-page #account-settings-newsletter h3 span {
+#user-settings-page .account-settings-section h3 span {
     border-bottom: 1px solid #4a4a4a;
+}
+
+#user-settings-page form button {
+    margin-top: -4px;
 }
 
 #avatar-modal {
