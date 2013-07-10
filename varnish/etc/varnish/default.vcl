@@ -11,12 +11,20 @@ backend awaWeb1  { .host = "ec2-54-224-7-205.compute-1.amazonaws.com";   .port =
 backend awaWeb2  { .host = "ec2-54-224-5-214.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
 backend awaWeb3  { .host = "ec2-23-20-55-80.compute-1.amazonaws.com";    .port = "http"; .probe = healthcheck; }
 backend awaWeb4  { .host = "ec2-23-22-250-200.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb5  { .host = "ec2-54-235-31-61.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb6  { .host = "ec2-54-234-5-79.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb7  { .host = "ec2-54-242-222-180.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb8  { .host = "ec2-107-22-135-194.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 
 director awaWeb random {
     { .backend = awaWeb1; .weight = 1; }
     { .backend = awaWeb2; .weight = 1; }
     { .backend = awaWeb3; .weight = 1; }
     { .backend = awaWeb4; .weight = 1; }
+    { .backend = awaWeb5; .weight = 1; }
+    { .backend = awaWeb6; .weight = 1; }
+    { .backend = awaWeb7; .weight = 1; }
+    { .backend = awaWeb8; .weight = 1; }
 }
 
 sub vcl_recv {
