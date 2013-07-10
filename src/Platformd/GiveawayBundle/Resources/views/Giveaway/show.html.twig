@@ -1,5 +1,14 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
+{% block open_graph %}
+    <meta property="fb:app_id" content="{{ facebook_app_id }}">
+    <meta property="og:title" content="{{ data.giveaway_name }}" />
+    <meta property="og:type" content="product" />
+    <meta property="og:url" content="{{ app.request.getUri }}" />
+    <meta property="og:site_name" content="Alienware Arena" />
+    <meta property="og:description" content="{{ data.giveaway_content }}" />
+{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
 
