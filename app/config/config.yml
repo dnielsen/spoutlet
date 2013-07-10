@@ -538,8 +538,8 @@ liip_theme:
 fos_facebook:
     file:   %kernel.root_dir%/../vendor/facebook/src/base_facebook.php
     alias:  facebook
-    app_id: 402844226440419
-    secret: dd8882ad44a3c60da1a1dc415a8c4b51
+    app_id: 468808186479620
+    secret: 69c3c3de5039c23497e85ccfd581e424
     cookie: true
     permissions: [email, user_birthday, user_location, publish_stream]
 
