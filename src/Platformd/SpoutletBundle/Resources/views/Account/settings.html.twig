@@ -49,13 +49,28 @@
                 </div>
             </form>
 
-            <fieldset>
-                    <legend>Facebook</legend>
-                    {% if user.facebookId %}
-                        <p>You have successfully connected your facebook account.</p>
-                    {% else %}
-                        {{ facebook_login_button({'autologoutlink': true}) }}
-                    {% endif %}
+            <fieldset class="label-full">
+                <h3><span>Facebook</span></h3>
+                {% if user.facebookId %}
+                    <p>You have successfully connected your facebook account.</p>
+                {% else %}
+                    <div style="width: 270px;margin-left: -5px">
+                        {% include 'UserBundle:Security:_facebookLoginButton.html.twig' with { 'optionalFacebookText': 'platformd.facebook.connect' | trans } %}
+                    </div>
+                    <p>Connecting your account with Facebook is awesome! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras gravida est semper velit ultrices eget tempus purus cursus. Nulla dignissim posuere tristique.</p>
+                {% endif %}
+            </fieldset>
+
+            <fieldset class="label-full">
+                <h3><span>Twitter</span></h3>
+                {% if user.twitterId %}
+                    <p>You have successfully connected your twitter account.</p>
+                {% else %}
+                    <div style="width: 270px;margin-left: -5px">
+                        {% include 'UserBundle:Security:_twitterLoginButton.html.twig' with { 'optionalTwitterText': 'platformd.twitter.connect' | trans } %}
+                    </div>
+                    <p>Connecting your account with Twitter is awesome! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras gravida est semper velit ultrices eget tempus purus cursus. Nulla dignissim posuere tristique.</p>
+                {% endif %}
             </fieldset>
 
         </div>

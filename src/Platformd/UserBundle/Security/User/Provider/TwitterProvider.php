@@ -92,17 +92,16 @@ class TwitterProvider implements UserProviderInterface
 
         if (!empty($info)) {
             if (empty($user)) {
-                $user = $this->userManager->createUser();
+                $user       = $this->userManager->createUser();
+                $username   = $info->screen_name;
+
                 $user->setEnabled(true);
                 $user->setPassword('');
+                $user->setTwitterId($info->id);
+                $user->setUsername($username);
+                $user->setEmail('example@example.com');
+                $user->setFirstname($info->name);
             }
-
-            $username = $info->screen_name;
-
-            $user->setTwitterId($info->id);
-            $user->setUsername($username);
-            $user->setEmail('example@example.com');
-            $user->setFirstname($info->name);
 
             $this->userManager->updateUser($user);
         }

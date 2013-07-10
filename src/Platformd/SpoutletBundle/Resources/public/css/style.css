@@ -1181,7 +1181,7 @@ div.blockOverlay {
 #loginArea .remember-me {margin: 0;}
 .social { width: 500px; }
 
-#login-modal { margin: 0px auto; width: 300px; height: 265px; border: #878787 1px solid; padding: 4px; background: #141414; }
+#login-modal { margin: 0px auto; width: 300px; height: 295px; border: #878787 1px solid; padding: 4px; background: #141414; }
 #login-modal #redirect-url { display: none; }
 #login-modal .login-modal-content { height: 140px; }
 #login-modal .login-modal-content .tbl { min-width: 220px; margin: 0 auto; }
@@ -1246,3 +1246,5 @@ div.blockOverlay {
 .Button.medium:hover span,.Button.medium:active span{text-shadow:0 1px 1px #fff;color:#222}
 .Button.medium:hover.primary span,.Button.medium.btn.primaryOnHover:hover span,.Button.medium.moreItems.primaryOnHover:hover span,.Button.medium:active.primary span,.Button.medium.btn.primaryOnHover:active:hover span,.Button.medium.btn.primaryOnHover.active:active span,.Button.medium.moreItems.primaryOnHover:active:hover span{text-shadow:none;color:#fff}
 .Button.medium:active{-webkit-box-shadow:inset 0 0 4px rgba(0,0,0,0.37);-moz-box-shadow:inset 0 0 4px rgba(0,0,0,0.37);box-shadow:inset 0 0 4px rgba(0,0,0,0.37);border:1px solid rgba(0,0,0,0.26)}
+
+.dob-select { width: 80px; }

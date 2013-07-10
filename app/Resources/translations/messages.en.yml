@@ -1330,6 +1330,8 @@ platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body
 platformd.key_request_processor_command.key_not_assigned_group_section: 'Please join the <a href="%promotion_group_show_page%">%promotion_group_name%</a> group to be notified when new keys and activities are available.'
 platformd.key_request_processor_command.key_not_assigned_no_group_extra_info: Please check back later as more codes may be added!
 
+platformd.facebook.login_label: Login with Facebook
+platformd.facebook.connect: Add Facebook Login
 platformd.facebook.account_created: Your account has been created, however you must update your password before doing anything on the site.
 platformd.facebook.timeline.account_created_message: I just joined Alienware Arena!
 platformd.facebook.timeline.account_created_description: Access exclusive closed betas, in-game items, and discounts on your favorite video games. Become a part of the most helpful PC gaming community today!
@@ -1341,6 +1343,8 @@ platformd.facebook.timeline.group_event_register: I am attending %s.
 platformd.facebook.timeline.image_added: I just added %s image(s) on Alienware Arena.
 platformd.facebook.timeline.entered_contest: I entered the %s.
 
+platformd.twitter.login_label: Login with Facebook
+platformd.twitter.connect: Add Twitter Login
 platformd.twitter.tweets.account_created_message: "I just joined Alienwarea Arena! http://alienwarearena.com"
 platformd.twitter.tweets.create_group_message: I just created the group %s %s.
 platformd.twitter.tweets.joined_group_message: I just joined the group %s %s.

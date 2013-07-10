@@ -1,7 +1,9 @@
+{% set fbLoginText = optionalFacebookText is defined ? optionalFacebookText : 'platformd.facebook.login_label' | trans %}
+
 <div class="socialLogin" data-url="{{ path('facebook_login') }}">
     <div type="button" class="rounded Button hasText Module large ajax btn unAuthFacebookConnect registerLoginButton">
         <em></em>
-        <span class="buttonText">Login with Facebook</span>
+        <span class="buttonText">{{ fbLoginText }}</span>
     </div>
 
 </div>

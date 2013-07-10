@@ -343,7 +343,13 @@ class AccountController extends Controller
 
     public function incompleteAction(Request $request)
     {
-        $form = $this->createForm('platformd_incomplete_account', $this->getCurrentUser());
+        $user = $this->getCurrentUser();
+
+        if($user->getPassword()) {
+            return $this->redirect($this->generateUrl('accounts_settings'));
+        }
+
+        $form = $this->createForm('platformd_incomplete_account', $user);
 
         if($request->getMethod() == 'POST') {
             $form->bindRequest($request);

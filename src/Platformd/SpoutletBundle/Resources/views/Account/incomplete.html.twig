@@ -27,7 +27,17 @@
     {{ form_row(form.email) }}
 
     {% if form.birthdate is defined %}
-        {{ form_row(form.birthdate) }}
+    <div class="control-group">
+        <label class="control-label">{{ form_label(form.birthdate) }}</label>
+        <div class="controls">
+            {{ form_widget(form.birthdate.year, {'attr' : {'class' : 'dob-select'}}) }}
+        <span>{{ 'year' | trans({}, 'forms') }}</span>
+        {{ form_widget(form.birthdate.month, {'attr' : {'class' : 'dob-select'}}) }}
+        <span>{{ 'month' | trans({}, 'forms') }}</span>
+        {{ form_widget(form.birthdate.day, {'attr' : {'class' : 'dob-select'}}) }}
+        <span>{{ 'day' | trans({}, 'forms') }}</span>
+        </div>
+    </div>
     {% endif %}
 
     {% for password in form.plainPassword %}

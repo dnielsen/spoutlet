@@ -1,7 +1,9 @@
+{% set twitterLoginText = optionalTwitterText is defined ? optionalTwitterText : 'platformd.twitter.login_label' | trans %}
+
 <div class="socialLogin" data-url="{{ path('twitter_login') }}">
     <div id="twitter-connect"  type="button" class="rounded Button hasText Module large ajax btn unAuthTwitterConnect registerLoginButton">
         <em></em>
-        <span class="buttonText">Login with Twitter</span>
+        <span class="buttonText">{{ twitterLoginText }}</span>
     </div>
 </div>
 <script type="text/javascript">
