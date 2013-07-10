@@ -300,6 +300,8 @@ platformd:
             oops: ¡Error!
             cannot_process: No hemos podido completar su solicitud. Si cree que esto es un error o continua teniendo problemas de corregir por debajo de los temas, porfavor contacte a <a href="%s">soporte</a>.
             problems_found: Hemos encontrado los siguientes problemas:
+            last_step: Last Step! A confirmation has been send to your email address. Follow the instructions in the email to activate your Alienware Arena account. Once you have activated your account, you will be able to log in.
+            success: Your account has been created!
 
         login:
             username: Nombre de usuario

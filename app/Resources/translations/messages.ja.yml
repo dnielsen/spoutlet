@@ -340,6 +340,8 @@ platformd:
             oops: 申し訳ありません
             cannot_process: リクエストを完了することができませんでした。もしおかしいと思われ、以下の問題が改善されない場合は <a href="%s">こちらまでご連絡ください</a>。
             problems_found: よくある問題:
+            last_step: Last Step! A confirmation has been send to your email address. Follow the instructions in the email to activate your Alienware Arena account. Once you have activated your account, you will be able to log in.
+            success: Your account has been created!
 
         login:
             username: メールアドレス
