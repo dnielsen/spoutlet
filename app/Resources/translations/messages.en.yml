@@ -1343,7 +1343,7 @@ platformd.facebook.timeline.group_event_register: I am attending %s.
 platformd.facebook.timeline.image_added: I just added %s image(s) on Alienware Arena.
 platformd.facebook.timeline.entered_contest: I entered the %s.
 
-platformd.twitter.login_label: Login with Facebook
+platformd.twitter.login_label: Login with Twitter
 platformd.twitter.connect: Add Twitter Login
 platformd.twitter.tweets.account_created_message: "I just joined Alienwarea Arena! http://alienwarearena.com"
 platformd.twitter.tweets.create_group_message: I just created the group %s %s.
