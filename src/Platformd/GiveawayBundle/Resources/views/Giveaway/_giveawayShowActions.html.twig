@@ -35,7 +35,9 @@
     {% endif %}
     </div>
 {% endif %}
-
+<div style="width:100%;text-align:center;padding:5px 0 10px 0;">
+    <div layout="button_count" class="fb-like" data-send="false" data-width="300" data-show-faces="false" data-colorscheme="dark" data-action="like"></div>
+</div>
 <ol>
     {% include 'GiveawayBundle:Giveaway:_defaultSteps.html.twig' with {'giveaway_slug': data.giveaway_slug } %}
     {% if (data.giveaway_redemption_steps is not empty)  %}
