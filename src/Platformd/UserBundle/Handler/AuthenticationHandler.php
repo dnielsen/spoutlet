@@ -11,16 +11,21 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerI
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 
-class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface
+use Platformd\SpoutletBundle\Util\SiteUtil;
+
+class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface, LogoutSuccessHandlerInterface
 {
     private $router;
     private $userManager;
+    private $siteUtil;
 
-    public function __construct(Router $router, $userManager)
+    public function __construct(Router $router, $userManager, SiteUtil $siteUtil)
     {
         $this->router      = $router;
         $this->userManager = $userManager;
+        $this->siteUtil = $siteUtil;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
@@ -66,5 +71,15 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
 
             return new RedirectResponse($url);
         }
+    }
+
+    public function onLogoutSuccess(Request $request)
+    {
+        $site       = $this->siteUtil->getCurrentSite();
+        $response   = new Response();
+
+        $response->headers->clearCookie('fbsr_'.$site->getSiteConfig()->getFacebookAppId());
+
+        return new RedirectResponse($this->router->generate('default_index'));
     }
 }

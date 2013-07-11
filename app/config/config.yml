@@ -534,3 +534,17 @@ liip_theme:
         bundle_resource_dir:
             - %%dir%%/themes/%%current_theme%%/%%bundle_name%%/views/%%template%%
             - %%dir%%/%%bundle_name%%/%%override_path%%
+
+fos_facebook:
+    file:   %kernel.root_dir%/../vendor/facebook/src/base_facebook.php
+    alias:  facebook
+    app_id: 468808186479620
+    secret: 69c3c3de5039c23497e85ccfd581e424
+    cookie: true
+    permissions: [email, user_birthday, user_location, publish_stream]
+
+fos_twitter:
+    file: %kernel.root_dir%/../vendor/twitteroauth/twitteroauth/twitteroauth.php
+    consumer_key: qWmu15MJSMafA6ylvXb9ig
+    consumer_secret: OY42oydLQJPSKmZKYHPN8Ouc23MxzuYjlOgzUlChM
+    callback_url: http://namigration.alienwarearena.com/twitter/login-check

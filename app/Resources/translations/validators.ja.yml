@@ -5,7 +5,7 @@ state_not_blank: 都道府県を選択してください
 country_not_blank: Please select a country
 news_source_not_blank: ALIENWARE ARENA を直近で聞いた時期を入力してください
 has_system_not_blank: Please choose whether or not you have an Alienware System
-oops: Oops!
+passwords_do_not_match: The passwords do not match
 
 "The username is already used": ユーザー名が既に使用されています
 "The email is already used": メールアドレスが既に使用されています

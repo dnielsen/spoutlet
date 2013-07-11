@@ -205,11 +205,27 @@
 	</head>
 	<body class="site-{{ app.session.locale }}">
         {% if features.hasFacebook and config.facebookAppId %}
-        <div id="fb-root"></div>
-        <script src="//connect.facebook.net/en_US/all.js"></script>
+        {{ facebook_initialize({'appId':config.facebookAppId, 'xfbml': true, 'fbAsyncInit': 'onFbInit();', 'culture': site.defaultLocale, 'status': false}) }}
         <script>
-          // assume we are already logged in
-          FB.init({appId: '{{ config.facebookAppId }}', xfbml: true, cookie: true});
+            function goToLogin() {
+                window.location = "{{ path('_security_check') }}";
+            }
+
+            function goToLogout() {
+                window.location = "{{ path('_security_logout') }}";
+            }
+
+            function onFbInit() {
+                if (typeof(FB) != 'undefined' && FB != null ) {
+                    FB.Event.subscribe('auth.statusChange', function(response) {
+                        if (response.session || response.authResponse) {
+                            setTimeout(goToLogin, 500);
+                        } else {
+                            setTimeout(goToLogout, 500);
+                        }
+                    });
+                }
+            }
         </script>
         {% endif %}
 
@@ -330,6 +346,5 @@
             // -->
         </script>
         <!-- end mediaplex -->
-
 	</body>
 </html>

@@ -148,6 +148,14 @@ class FrontendController extends Controller
         $this->getDoctrine()->getEntityManager()->persist($entry);
         $this->getDoctrine()->getEntityManager()->flush();
 
+        $this->getFacebookProvider()->postToTimeline(array(
+            'message' => sprintf($this->trans('platformd.facebook.timeline.entered_contest'), $sweepstakes->getName()),
+            'link' => $this->generateUrl('sweepstakes_show', array('slug' => $sweepstakes->getSlug()), true),
+            'name' => $sweepstakes->getName(),
+            'description' => substr(strip_tags($sweepstakes->getContent()), 0, 140) . '...',
+            'picture' => 'http://na.alienwarearena.com/bundles/spoutlet/images/alienwarelogothumb-140x85.png',
+        ));
+
         return $this->redirect($this->generateUrl(
             'sweepstakes_show',
             array('slug' => $sweepstakes->getSlug(), 'entryId' => $entry->getId())

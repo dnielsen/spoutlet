@@ -15,12 +15,9 @@
                     <label class="control-label" for="username">{{ 'resetting.request.username'|trans({}, 'FOSUserBundle') }}</label>
                     <div class="controls">
                         <input type="text" id="username" name="username" required="required" class="form-txt" />
+                        <button class="btn btn-primary" type="submit" style="margin-left: 10px">{{ 'resetting.request.submit'|trans({}, 'FOSUserBundle') }}</button>
                     </div>
                 </div>
-
-            <div>
-                <button class="btn btn-primary" type="submit">{{ 'resetting.request.submit'|trans({}, 'FOSUserBundle') }}</button>
-            </div>
             <p><a href="{{ path('fos_user_registration_register') }}">{{ 'platformd.user.login.not_a_member_join' | pd_trans }}</a></p>
         </form>
 

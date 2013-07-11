@@ -1,5 +1,7 @@
-{% extends "UserBundle::layout.html.twig" %}
+{% extends "SpoutletBundle::layout.html.twig" %}
 
 {% block content %}
-    <p>Oh hai, you created an account. You deserve a cookie.</p>
+    <div class="std_2col">
+        {{ 'platformd.user.register.last_step' | trans }}
+    </div>
 {% endblock content %}

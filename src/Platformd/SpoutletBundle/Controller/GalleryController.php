@@ -182,7 +182,7 @@ class GalleryController extends Controller
             $description = $submission['description'];
             $gals        = $submission['galleries'];
             $groups      = $submission['groups'];
-            $tagNames    = $submission['tags'];
+            $tagNames    = isset($submission['tags']) ? $submission['tags'] : '';
 
             $errors      = $this->validateMediaPublish($id, $title, $description, $gals, $groups);
 
@@ -244,6 +244,20 @@ class GalleryController extends Controller
 
         $this->setFlash('success', sprintf($this->trans('galleries.publish_photo_multiple_message'), count($published), $totalImages));
         $message = sprintf($this->trans('galleries.publish_photo_multiple_message'), count($published), $totalImages);
+
+        $mediaForSharing = $this->getGalleryMediaRepository()->find($medias[0]['id']);
+
+        $this->getFacebookProvider()->postToTimeline(array(
+            'message' => sprintf($this->trans('platformd.facebook.timeline.image_added'), $totalImages),
+            'link' => $this->generateUrl('gallery_media_show', array('id' => $mediaForSharing->getId()), true),
+            'name' => $mediaForSharing->getTitle(),
+            'description' => substr(strip_tags($mediaForSharing->getDescription()), 0, 140) . '...',
+            'picture' => 'http://na.alienwarearena.com/bundles/spoutlet/images/alienwarelogothumb-140x85.png',
+        ));
+
+        $this->getTwitterProvider()->tweet(sprintf(
+            $this->trans('platformd.twitter.tweets.image_added'), $totalImages, $this->generateUrl('gallery_media_show', array('id' => $mediaForSharing->getId()), true)
+        ));
 
         $response->setContent(json_encode(array(
             "success" => true,

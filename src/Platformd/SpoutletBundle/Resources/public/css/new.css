@@ -41,6 +41,10 @@ ul.normal-margin, ol.normal-margin {
     display: inline-block;
     width: 110px;
 }
+
+.form label.radio {
+    width: 100%;
+}
 .form-msg-error {
     padding: 6px 10px 5px;
     display: block;

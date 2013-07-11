@@ -5,6 +5,7 @@ state_not_blank: Please enter a state
 country_not_blank: Please select a country
 news_source_not_blank: Please select how you heard about Alienware Arena
 has_system_not_blank: Please choose whether or not you have an Alienware System
+passwords_do_not_match: The passwords do not match
 
 "The username is already used": The username is already used
 "The email is already used":  The email is already used

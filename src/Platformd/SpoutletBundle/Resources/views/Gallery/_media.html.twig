@@ -24,7 +24,7 @@
             </div>
             <div style="width:135px;">
                 <a class="media-title" href="{{ path('gallery_media_show', { id: media[0].id }) }}">{{ media[0].title }}</a>
-                <div>{{ 'galleries.by' | trans }} <a href="{{ account_link(media[0].author.username) }}">{{ media[0].author.username }}</a></div>
+                <div>{{ 'galleries.by' | trans }} <a class="media-owner" href="{{ account_link(media[0].author.username) }}">{{ media[0].author.username }}</a></div>
             </div>
         </div>
     {% else %}
@@ -53,7 +53,7 @@
             </div>
             <div style="width:135px;">
                 <a class="media-title" href="{{ path('gallery_media_show', { id: media.id }) }}">{{ media.title }}</a>
-                <div>{{ 'galleries.by' | trans }} <a href="{{ account_link(media.author.username) }}">{{ media.author.username }}</a></div>
+                <div>{{ 'galleries.by' | trans }} <a class="media-owner" href="{{ account_link(media.author.username) }}">{{ media.author.username }}</a></div>
             </div>
             <div class="image-actions">
                 <a href="javascript:void(0);" class="report-content" report-data="{{ media.id }}">{{ 'content_reporting.report' | trans }}</a>

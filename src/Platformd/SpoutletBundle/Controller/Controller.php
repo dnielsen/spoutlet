@@ -326,4 +326,20 @@ class Controller extends BaseController
     {
         return str_replace("\n", '', `uuidgen -r`);
     }
+
+    /**
+     * @return \Platformd\UserBundle\Security\User\Provider\FacebookProvider
+     */
+    protected function getFacebookProvider()
+    {
+        return $this->container->get('platformd.facebook.provider');
+    }
+
+    /**
+     * @return \Platformd\UserBundle\Security\User\Provider\TwitterProvider
+     */
+    protected function getTwitterProvider()
+    {
+        return $this->container->get('platformd.twitter.provider');
+    }
 }

@@ -322,6 +322,21 @@ platformd:
             change_your_password: Change your password
         giveaway:
             your_giveaway_keys: My Giveaway Keys
+        incomplete_form:
+            username: "Username:"
+            first_name: "First name:"
+            last_name: "Last name:"
+            email: "E-mail:"
+            password: "Password:"
+            password_confirm: "Confirm Password:"
+            has_alienware: "Do you own an Alienware system?"
+            yes: "Yes"
+            no: "No"
+            agree_to_terms: |
+                I have read and agreed to the
+                <a href="%terms_url%" target="_blank">Terms & Conditions</a> and
+                <a href="%privacy_url%" target="_blank">Privacy Policy</a>
+            subscribe_me: Subscribe me to receive Alienware/Dell Gaming news and special offers via email. <a href="http://www.dell.com/learn/us/en/19/policies-privacy?c=us&l=en&s=gen&delphi:gr=true" target="_blank">View Dell Privacy Policy</a>.
 
     # used only in the admin area
     homepage_banner:
@@ -394,6 +409,8 @@ platformd:
             oops: Oops!
             cannot_process: We were not able to process your request. If you think this is an error or are still experiencing problems after correcting the following problems, please <a href="%s">contact technical support</a>.
             problems_found: We found the following problems:
+            last_step: Last Step! A confirmation has been send to your email address. Follow the instructions in the email to activate your Alienware Arena account. Once you have activated your account, you will be able to log in.
+            success: Your account has been created!
 
         login:
             username: Username
@@ -1314,3 +1331,27 @@ platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body
         <p>Alienware Arena Team</p>
 platformd.key_request_processor_command.key_not_assigned_group_section: 'Please join the <a href="%promotion_group_show_page%">%promotion_group_name%</a> group to be notified when new keys and activities are available.'
 platformd.key_request_processor_command.key_not_assigned_no_group_extra_info: Please check back later as more codes may be added!
+
+platformd.facebook.login_label: Login with Facebook
+platformd.facebook.connect: Add Facebook Login
+platformd.facebook.account_created: Your account has been created, however you must update your password before doing anything on the site.
+platformd.facebook.timeline.account_created_message: I just joined Alienware Arena!
+platformd.facebook.timeline.account_created_description: Access exclusive closed betas, in-game items, and discounts on your favorite video games. Become a part of the most helpful PC gaming community today!
+platformd.facebook.timeline.create_group_message: I just created the group %s.
+platformd.facebook.timeline.joined_group_message: I joined the group %s.
+platformd.facebook.timeline.video_added: "I just added a video - %s."
+platformd.facebook.timeline.group_event_added: "I just created an event - %s."
+platformd.facebook.timeline.group_event_register: I am attending %s.
+platformd.facebook.timeline.image_added: I just added %s image(s) on Alienware Arena.
+platformd.facebook.timeline.entered_contest: I entered the %s.
+
+platformd.twitter.login_label: Login with Twitter
+platformd.twitter.connect: Add Twitter Login
+platformd.twitter.tweets.account_created_message: "I just joined Alienwarea Arena! http://alienwarearena.com"
+platformd.twitter.tweets.create_group_message: I just created the group %s %s.
+platformd.twitter.tweets.joined_group_message: I just joined the group %s %s.
+platformd.twitter.tweets.video_added: "I just added a video - %s. %s"
+platformd.twitter.tweets.group_event_added: "I just created an event - %s. %s"
+platformd.twitter.tweets.group_event_register: I am attending %s %s.
+platformd.twitter.tweets.image_added: I just added %s image(s) on Alienware Arena. %s
+platformd.twitter.tweets.entered_contest: I entered the %s %s.

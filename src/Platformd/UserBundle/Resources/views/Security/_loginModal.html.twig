@@ -1,4 +1,5 @@
 <div id="login-modal" class="login-modal-wrapper simplemodal-data">
+    <a class="login-modal-close-ne" title="Close" onclick="$($.unblockUI());"></a>
     <div class="login-modal-title">{{ 'platformd.user.login.title_login' | pd_trans }}</div>
     <div class="login-modal-content">
         <form id="login-form" action="{{ path("_fos_user_security_check") }}" method="post" class="form form-horizontal">
@@ -38,9 +39,8 @@
             </table>
             <input type="hidden" name="_target_path" id="_target_path" value="" />
         </form>
-    </div>
-    <div class="modal-close">
-        <button id="login-modal-close" class="button btn btn-primary login-button" onclick="$($.unblockUI());">{{ 'cancel' | pd_trans }}</button>
+        {% include 'UserBundle:Security:_facebookLoginButton.html.twig' %}
+        {% include 'UserBundle:Security:_twitterLoginButton.html.twig' %}
     </div>
 </div>
 <script type="text/javascript">

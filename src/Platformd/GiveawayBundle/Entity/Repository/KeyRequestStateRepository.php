@@ -21,9 +21,16 @@ class KeyRequestStateRepository extends EntityRepository
             ->andWhere('g.id = :giveawayId')
             ->setParameter('userId', $userId)
             ->setParameter('giveawayId', $giveawayId)
+            ->orderBy('s.updatedAt', 'DESC')
             ->getQuery();
 
-        return $query->getOneOrNullResult();
+        $result = $query->getResult();
+
+        if (!$result) {
+            return null;
+        }
+
+        return $result[0];
     }
 
     public function findForUserIdAndDealId($userId, $dealId) {
@@ -36,8 +43,15 @@ class KeyRequestStateRepository extends EntityRepository
             ->andWhere('d.id = :dealId')
             ->setParameter('userId', $userId)
             ->setParameter('dealId', $dealId)
+            ->orderBy('s.updatedAt', 'DESC')
             ->getQuery();
 
-        return $query->getOneOrNullResult();
+        $result = $query->getResult();
+
+        if (!$result) {
+            return null;
+        }
+
+        return $result[0];
     }
 }

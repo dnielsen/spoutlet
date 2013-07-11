@@ -53,3 +53,10 @@ swiftmailer:
 
 assetic:
     use_controller: false
+
+security:
+      firewalls:
+          main:
+              fos_facebook:
+                  app_url: "http://apps.facebook.com/appName/"
+                  server_url: "http://demo.alienwarearena.local/app_dev.php/"
