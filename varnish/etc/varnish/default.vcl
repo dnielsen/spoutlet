@@ -212,8 +212,14 @@ sub vcl_hash {
     hash_data(req.url);
     hash_data(req.http.host);
 
-    if(req.url ~ "^/esi/USER_SPECIFIC/" && req.http.cookie) {
-        hash_data(req.http.cookie);
+    if (req.url ~ "^/esi/USER_SPECIFIC/") {
+        if (req.http.cookie) {
+            hash_data(req.http.cookie);
+        } else {
+            if (req.url ~ "^/esi/USER_SPECIFIC/(giveawayShowMainActions|dealShowMainActions)/") {
+                hash_data(req.http.X-Country-Code);
+            }
+        }
     }
 
     if(req.url ~ "^/esi/COUNTRY_SPECIFIC/") {
