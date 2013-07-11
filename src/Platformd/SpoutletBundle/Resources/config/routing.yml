@@ -6,6 +6,10 @@ force_logout:
     pattern: /forceLogout/{returnUrl}
     defaults: { _controller: SpoutletBundle:Default:forceLogout, returnUrl: '/' }
 
+session_cookie:
+    pattern: /sessionCookie
+    defaults: { _controller: SpoutletBundle:Default:sessionCookie }
+
 default_index:
     pattern:  /
     defaults: { _controller: SpoutletBundle:Default:index }

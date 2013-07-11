@@ -27,6 +27,19 @@
                 $('.blockOverlay').click(function () {
                     $.unblockUI();
                 });
+
+                var sessionExists = document.cookie.indexOf("PHPSESSID") >= 0;
+
+                if (!sessionExists) {
+                    $('#login-modal').block({message: null});
+                    $.ajax({
+                        url: '{{ path("session_cookie") }}',
+                        type: 'get',
+                        success: function(data) {
+                            $('#login-modal').unblock();
+                        }
+                    })
+                }
             });
             $(document).keyup(function(e) {
                 if (e.keyCode == 27) {

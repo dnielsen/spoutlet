@@ -4,9 +4,6 @@ parameters:
 
 security:
 
-    factories:
-        - "%kernel.root_dir%/../src/Platformd/UserBundle/Resources/config/security_factory.yml"
-
     encoders:
         "FOS\UserBundle\Model\UserInterface":
             algorithm: sha512
@@ -14,6 +11,7 @@ security:
             iterations: 1
 
     factories:
+            - "%kernel.root_dir%/../src/Platformd/UserBundle/Resources/config/security_factory.yml"
             - "%kernel.root_dir%/../vendor/bundles/FOS/FacebookBundle/Resources/config/security_factories.xml"
             - "%kernel.root_dir%/../vendor/bundles/FOS/TwitterBundle/Resources/config/security_factories.xml"
 

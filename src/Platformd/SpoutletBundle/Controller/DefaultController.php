@@ -39,6 +39,11 @@ class DefaultController extends Controller
         return $response;
     }
 
+    public function sessionCookieAction()
+    {
+        return new Response('');
+    }
+
     /**
      * The homepage!
      *
