@@ -1197,12 +1197,13 @@ div.blockOverlay {
 #login-modal .login-modal-content .tbl th { padding: 0 5px 0 0; font-weight: normal; color: #ffffff; }
 #login-modal .login-modal-content .tbl td { color: #ffffff; }
 #login-modal .login-modal-content .tbl div { margin: 5px 0; }
-#login-modal .login-modal-content .tbl div input[type="text"] { height: 20px; width: 160px; background: #ffffff; color: #000000; border: none; padding: 0; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; }
-#login-modal .login-modal-content .tbl div input[type="password"] { height: 20px; width: 160px; background: #ffffff; color: #000000; border: none; padding: 0; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; }
-#login-modal .login-modal-title { font-size: 20px; color: #aaaaaa; margin: 0 0 7px 0; border-bottom: 1px solid #b3b3b3; padding: 0 0 3px 0; text-align: left; }
+#login-modal .login-modal-content .tbl div input[type="text"] { height: 20px; width: 160px; background: #ffffff; color: #000000; border: none; padding: 0; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; padding: 1px; }
+#login-modal .login-modal-content .tbl div input[type="password"] { height: 20px; width: 160px; background: #ffffff; color: #000000; border: none; padding: 0; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; padding: 1px; font-size: 20px; }
+#login-modal .login-modal-title { font-size: 20px; color: #aaaaaa; margin: 0 0 7px 0; padding: 0 0 3px 0; text-align: left; }
 #login-modal .remember-me {margin: 0;}
 #login-modal .modal-close button { width: 100px; min-width: 100px;}
 #login-modal a.login-modal-close-ne { background: url('/bundles/spoutlet/images/x.png') no-repeat; width: 25px; height: 29px; display: inline; z-index: 3200; position: absolute; top: -15px; right: 120px; cursor: pointer;}
+#login-modal .login-social-modal { width: 240px; margin: 0px auto;}
 
 #row_military_status { display: none; }
 #row_military_type { display: none; }

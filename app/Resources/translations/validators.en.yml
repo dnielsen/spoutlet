@@ -1,35 +1,35 @@
-first_name_not_blank: Please enter your first name
-last_name_not_blank: Please enter your last name
-birthdate_not_blank: Please enter a valid birthdate
-state_not_blank: Please enter a state
-country_not_blank: Please select a country
-news_source_not_blank: Please select how you heard about Alienware Arena
-has_system_not_blank: Please choose whether or not you have an Alienware System
-passwords_do_not_match: The passwords do not match
+first_name_not_blank: Please enter your first name.
+last_name_not_blank: Please enter your last name.
+birthdate_not_blank: Please enter a valid birthdate.
+state_not_blank: Please enter a state.
+country_not_blank: Please select a country.
+news_source_not_blank: Please select how you heard about Alienware Arena.
+has_system_not_blank: Please choose whether or not you have an Alienware System.
+passwords_do_not_match: The passwords do not match.
 
-"The username is already used": The username is already used
-"The email is already used":  The email is already used
-"Please enter a username":  Please enter a username
-"The username is too short":  The username is too short
-"The username is too long":  The username is too long
-"Please enter an email":  Please enter an email
-"The email is too short":  The email is too short
-"The email is too long":  The email is too long
-"The email is not valid":  The email is not valid
-"Please enter a password":  Please enter a password
-"The password is too short":  The password is too short
-"Please enter a new password":  Please enter a new password
-"The new password is too short":  The new password is too short
-"Please enter a new password":  Please enter a new password
-"The new password is too short":  The new password is too short
-"Please enter a name":  Please enter a name
-"The name is too short":  The name is too short
-"The name is too long":  The name is too long
-"This value is not a valid captcha":  Your verification code did not match. Please try again
+fos_user.username.already_used: The username is already used.
+fos_user.email.already_used:  "The email is already used."
+fos_user.username.blank: "Please enter a username."
+fos_user.username.short:  The username is too short.
+"The username is too long":  The username is too long.
+fos_user.email.blank:  Please enter an email.
+"The email is too short":  The email is too short.
+"The email is too long":  The email is too long.
+fos_user.email.invalid:  The email is not valid.
+fos_user.password.blank:  Please enter a password.
+"The password is too short":  The password is too short.
+"Please enter a new password":  Please enter a new password.
+"The new password is too short":  The new password is too short.
+"Please enter a new password":  Please enter a new password.
+"The new password is too short":  The new password is too short.
+"Please enter a name":  Please enter a name.
+"The name is too short":  The name is too short.
+"The name is too long":  The name is too long.
+"This value is not a valid captcha":  Your verification code did not match. Please try again.
 
-"You must accept the terms and conditions and the privacy policy": You must accept the terms and conditions and the privacy policy
+"You must accept the terms and conditions and the privacy policy": You must accept the terms and conditions and the privacy policy.
 
 "The entered password is invalid.": The entered password is invalid.
 
 error:
-    select_status: Please choose a status
+    select_status: Please choose a status.

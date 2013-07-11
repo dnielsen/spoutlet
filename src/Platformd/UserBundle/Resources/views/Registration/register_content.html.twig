@@ -13,10 +13,10 @@
 {% set invalid_captcha = '' %}
 
 {% for error in errors %}
-    {% if error.messageTemplate == 'fos_user.username.blank' %}
+    {% if error.messageTemplate == 'fos_user.username.blank' or error.messageTemplate == 'fos_user.username.already_used' or error.messageTemplate == 'fos_user.username.short' %}
         {% set username_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
     {% endif %}
-    {% if error.messageTemplate == 'fos_user.email.blank' %}
+    {% if error.messageTemplate == 'fos_user.email.blank' or error.messageTemplate == 'fos_user.email.already_used' or error.messageTemplate == 'fos_user.email.invalid' %}
         {% set email_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
     {% endif %}
     {% if error.messageTemplate == 'fos_user.password.blank' %}
@@ -44,7 +44,6 @@
         {% set invalid_captcha = error.messageTemplate|trans(error.messageParameters, 'validators') %}
     {% endif %}
 {% endfor %}
-
 <div class="std_2col">
     <div class="left">
         <div id="registrationArea">
@@ -53,19 +52,14 @@
             <div class="formErrors">
                 <div class="error">
                     <div class="title">{{ 'platformd.user.register.oops' | pd_trans }}</div>
-                    <div class="message text">{{ 'platformd.user.register.cannot_process' | pd_trans | format(path('contact')) | raw }}<br /><br />{{ 'platformd.user.register.problems_found' | pd_trans }}
-                        <ul>
-                            {% for error in errors %}
-                            <li>{{ error.messageTemplate|trans(error.messageParameters, 'validators') }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
+                    <div class="message text">{{ 'platformd.user.register.cannot_process' | pd_trans | format(path('contact')) | raw }}</div>
                 </div>
             </div>
             {% endif %}
             <div class="registration-requirements">
-                <p>{{ 'platformd.user.register.requirements' | trans }}</p>
-                <p>{{ 'platformd.user.register.already' | trans({'<': '<a href="'~path('fos_user_security_login')~'">', '>': '</a>'})|raw }}</p>
+                <p>
+                    {{ 'platformd.user.register.requirements' | trans }}&nbsp;{{ 'platformd.user.register.already' | trans({'<': '<a href="'~path('fos_user_security_login')~'">', '>': '</a>'})|raw }}
+                </p>
             </div>
 
             <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register form form-horizontal">
@@ -139,7 +133,7 @@
                             </td>
                         </tr>
                         <tr id="row_recaptcha">
-                            <td class="form-title-cell" width="33%" align="right" valign="top"></td>
+                            <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.recaptcha) }}</td>
                             <td class="form-element-cell" valign="top">
                                 {{ form_widget(form.recaptcha, {'attr' : {'class' : 'registration-text'}}) }}
                                 <span class="field-error">{{ invalid_captcha }}</span>
@@ -188,7 +182,8 @@
                             </td>
                         </tr>
                         <tr id="row_">
-                            <td class="form-title-cell" colspan="2" align="center">
+                            <td class="form-title-cell"></td>
+                            <td class="form-title-cell" align="left">
                                 <input type="submit" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" class="button btn btn-primary btn-registration" formnovalidate />
                             </td>
                         </tr>

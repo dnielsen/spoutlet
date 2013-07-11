@@ -62,6 +62,9 @@ security:
         connection: acl
 
     access_control:
+        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: ^/login_check, role: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+
         # the "([\w]+\/)?" pattern allows for the optional locale prefix (e.g. /jp/comments/new or just /comments/new)
         - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
 

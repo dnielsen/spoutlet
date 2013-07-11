@@ -7,16 +7,16 @@ news_source_not_blank: ALIENWARE ARENA を直近で聞いた時期を入力し�
 has_system_not_blank: Please choose whether or not you have an Alienware System
 passwords_do_not_match: The passwords do not match
 
-"The username is already used": ユーザー名が既に使用されています
-"The email is already used": メールアドレスが既に使用されています
-"Please enter a username": ユーザー名を入力してください
-"The username is too short": ユーザー名が短すぎます
+fos_user.username.already_used: ユーザー名が既に使用されています
+fos_user.email.already_used: メールアドレスが既に使用されています
+fos_user.username.blank: ユーザー名を入力してください
+fos_user.username.short: ユーザー名が短すぎます
 "The username is too long": ユーザー名が長すぎます
-"Please enter an email": 既に使われています
+fos_user.email.blank: 既に使われています
 "The email is too short": メールアドレスが短すぎます
 "The email is too long": メールアドレスが長すぎます
-"The email is not valid": メールアドレスが有効ではありません
-"Please enter a password": パスワードを入力してください
+fos_user.email.invalid: メールアドレスが有効ではありません
+fos_user.password.blank: パスワードを入力してください
 "The password is too short": パスワードが短すぎます
 "Please enter a new password": 新しいパスワードを入力してください
 "The new password is too short": 新しいパスワードが短すぎます

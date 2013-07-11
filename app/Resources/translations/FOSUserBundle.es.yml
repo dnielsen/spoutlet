@@ -10,6 +10,7 @@ fos_user_registration_form_email_second: "Confirme correo electrónico:"
 fos_user_registration_form_hasAlienwareSystem_0: No
 fos_user_registration_form_hasAlienwareSystem_1: Si
 fos_user_registration_form_latestNewsSource: "¿Como es que escuchaste más recientemente de Alienware?"
+fos_user_registration_form_recaptcha: "Verification:"
 
 fos_user_profile_form_user_lastname: "Apellido"
 fos_user_profile_form_user_firstname: "Nombre"

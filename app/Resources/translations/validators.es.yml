@@ -1,33 +1,33 @@
-first_name_not_blank: Por favor ingrese su nombre
-last_name_not_blank: Por favor ingrese su apellido
-birthdate_not_blank: "Por favor, introduzca una fecha de nacimiento válida"
-state_not_blank: Debe proporcionar un estado/provincia
-country_not_blank: Please select a country
-news_source_not_blank: Debes llenar como es que escuchaste más recientemente de Alienware
-has_system_not_blank: Please choose whether or not you have an Alienware System
-passwords_do_not_match: The passwords do not match
+first_name_not_blank: Por favor ingrese su nombre.
+last_name_not_blank: Por favor ingrese su apellido.
+birthdate_not_blank: "Por favor, introduzca una fecha de nacimiento válida."
+state_not_blank: Debe proporcionar un estado/provincia.
+country_not_blank: Please select a country.
+news_source_not_blank: Debes llenar como es que escuchaste más recientemente de Alienware.
+has_system_not_blank: Please choose whether or not you have an Alienware System.
+passwords_do_not_match: The passwords do not match.
 
-"The username is already used": Lo sentimos, este nombre de usuario ya esta en uso
-"The email is already used":  Lo sentimos, esta dirección de correo electrónico ya esta en uso
-"Please enter a username":  Debes proveer un nombre de usuario
-"The username is too short":  El nombre de usuario es demasiado corto
-"The username is too long":  El nombre de usuario es demasiado largo
-"Please enter an email":  Debes proveer una dirección de correo electrónico
-"The email is too short":  El correo electrónico es demasiado corto
-"The email is too long":  El correo electrónico es demasiado largo
-"The email is not valid":  El email no es válido
-"Please enter a password":  Introduce una contraseña
-"The password is too short":  La contraseña es demasiado corta
-"Please enter a new password":  Por favor, introduzca una nueva contraseña
-"The new password is too short":  La nueva contraseña es demasiado corta
-"Please enter a name":  Por favor, introduzca un nombre
-"The name is too short":  El nombre es muy corto
-"The name is too long":  El nombre es demasiado largo
+fos_user.username.already_used: Lo sentimos, este nombre de usuario ya esta en uso.
+fos_user.email.already_used:  Lo sentimos, esta dirección de correo electrónico ya esta en uso.
+fos_user.username.blank:  Debes proveer un nombre de usuario.
+fos_user.username.short:  El nombre de usuario es demasiado corto.
+"The username is too long":  El nombre de usuario es demasiado largo.
+fos_user.email.blank:  Debes proveer una dirección de correo electrónico.
+"The email is too short":  El correo electrónico es demasiado corto.
+"The email is too long":  El correo electrónico es demasiado largo.
+fos_user.email.invalid:  El email no es válido.
+fos_user.password.blank:  Introduce una contraseña.
+"The password is too short":  La contraseña es demasiado corta.
+"Please enter a new password":  Por favor, introduzca una nueva contraseña.
+"The new password is too short":  La nueva contraseña es demasiado corta.
+"Please enter a name":  Por favor, introduzca un nombre.
+"The name is too short":  El nombre es muy corto.
+"The name is too long":  El nombre es demasiado largo.
 "This value is not a valid captcha":  Su código de verificación no coincide. Por favor inténtelo de nuevo.
 
-"You must accept the terms and conditions and the privacy policy": Debes de estar acuerdo con nuestros Términos y Condiciones y la Protección de datos personales
+"You must accept the terms and conditions and the privacy policy": Debes de estar acuerdo con nuestros Términos y Condiciones y la Protección de datos personales.
 
 "The entered password is invalid.": La contraseña introducida no es válida.
 
 error:
-    select_status: Por favor, elija un estado de
+    select_status: Por favor, elija un estado de.
