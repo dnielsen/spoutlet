@@ -125,6 +125,10 @@ sub vcl_recv {
         return (pass);
     }
 
+     if (req.url ~ "^/login[/]?$" || req.url ~ "^/account/register[/]?$") {
+        return (lookup);
+    }
+
     if (req.url ~ "^/esi/USER_SPECIFIC/") {
         return (lookup);
     }
@@ -162,7 +166,7 @@ sub vcl_recv {
 
 sub vcl_fetch {
 
-    if (req.url !~ "^/age/verify$" && req.url !~ "^/login(_check)?$") { # the only exceptions to the "remove all set-cookies rule"
+    if (req.url !~ "^/age/verify$" && req.url !~ "^/login(_check)?$" && req.url !~ "^/logout$") { # the only exceptions to the "remove all set-cookies rule"
         unset beresp.http.set-cookie;
     }
 
@@ -204,6 +208,10 @@ sub vcl_deliver {
 
     if (req.url ~ "^/forceLogout/") {
         set resp.http.set-cookie = "aw_session=0; Domain=.alienwarearena.com; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;";
+    }
+
+    if (req.url ~ "^/logout") {
+        set resp.http.set-cookie = "PHPSESSID=0; Domain=.alienwarearena.com; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;";
     }
 }
 
