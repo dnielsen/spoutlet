@@ -102,7 +102,7 @@ class AdminController extends Controller
                 if ($users) {
                     foreach ($users as $user) {
                         $user->setSubscribedAlienwareEvents(false);
-                        $em->persist($user);
+                        $this->getUserManager()->updateUser($user, false);
                     }
 
                     $em->flush();

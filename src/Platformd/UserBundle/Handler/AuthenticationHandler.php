@@ -18,16 +18,21 @@ use Platformd\SpoutletBundle\Util\SiteUtil;
 class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface, LogoutSuccessHandlerInterface
 {
     private $router;
+    private $userManager;
     private $siteUtil;
 
-    public function __construct(Router $router, SiteUtil $siteUtil)
+    public function __construct(Router $router, $userManager, SiteUtil $siteUtil)
     {
-        $this->router   = $router;
+        $this->router      = $router;
+        $this->userManager = $userManager;
         $this->siteUtil = $siteUtil;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
+        $user = $token->getUser();
+        $this->userManager->addLoginRecord($user, $request);
+
         if ($request->isXmlHttpRequest()) {
             // handle ajax login success here
             $response   = new Response();

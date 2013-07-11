@@ -1,3 +1,7 @@
+parameters:
+    # Default set here - override on a per-server basis in config_server.yml
+    api_authentication: false
+
 security:
 
     encoders:
@@ -7,6 +11,7 @@ security:
             iterations: 1
 
     factories:
+            - "%kernel.root_dir%/../src/Platformd/UserBundle/Resources/config/security_factory.yml"
             - "%kernel.root_dir%/../vendor/bundles/FOS/FacebookBundle/Resources/config/security_factories.xml"
             - "%kernel.root_dir%/../vendor/bundles/FOS/TwitterBundle/Resources/config/security_factories.xml"
 
@@ -14,9 +19,11 @@ security:
         fos_userbundle:
             id: fos_user.user_manager
 
+        api_provider:
+            id: platformd.security.user.provider.api
+
         platformd_fos_twitter:
             id: platformd.twitter.provider
-
 
     firewalls:
         # turn security off entirely for the fake cevo site
@@ -25,13 +32,14 @@ security:
             security: false
 
         main:
-            pattern: ^/
-            anonymous: true
-            form_login:
+            platformd-form-login:
                 check_path: /login_check
                 success_handler: platformd_user.authentication_handler
                 failure_handler: platformd_user.authentication_handler
                 use_referer: true
+                api_authentication: %api_authentication%
+            pattern: ^/
+            anonymous:    true
             logout:
                 path:     /logout
                 target:   default_index

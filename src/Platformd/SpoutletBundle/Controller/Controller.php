@@ -317,6 +317,11 @@ class Controller extends BaseController
         return $this->get('platformd.model.avatar_manager');
     }
 
+    protected function getApiManager()
+    {
+        return $this->get('platformd.user.api.manager');
+    }
+
     protected function uuidGen()
     {
         return str_replace("\n", '', `uuidgen -r`);

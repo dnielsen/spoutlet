@@ -46,16 +46,6 @@ class UserManager extends BaseUserManager
             );
         }
 
-        /*
-         * Removing this for now. With the big multi-level authentication
-         * system with CEVO, we just need to allow everyone to login anywhere
-         *
-         // don't let a user login if their locale doesn't match the current locale
-         if ($user->getLocale() && $user->getLocale() != $this->getLocale()) {
-             throw new UsernameNotFoundException(sprintf('The user "%s" cannot log into the locale "%s".', $username, $this->getLocale()));
-    }
-         */
-
         return $user;
     }
 
@@ -65,6 +55,11 @@ class UserManager extends BaseUserManager
     public function updateUser(UserInterface $user, $andFlush = true)
     {
         parent::updateUser($user, $andFlush);
+
+        if ($this->container->getParameter('api_authentication')) {
+            $apiManager = $this->container->get('platformd.user.api.manager');
+            $apiManager->updateRemoteUserData($user);
+        }
     }
 
     public function getFindUserQuery($search = null, $type='text', $locale=null, $sort_by = self::DEFAULT_SORTING_FIELD)
@@ -171,6 +166,12 @@ class UserManager extends BaseUserManager
     private function uuidGen()
     {
         return str_replace("\n", '', `uuidgen -r`);
+    }
+
+    public function addLoginRecord($user, $request)
+    {
+        $loginRecordManager = $this->container->get('platformd.model.login_record_manager');
+        $loginRecordManager->recordLogin($user, $request);
     }
 }
 

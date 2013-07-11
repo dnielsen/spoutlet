@@ -7,6 +7,28 @@ parameters:
         resetting.template: %fos_user.resetting.email.template%
 
 services:
+
+    platformd.security.user.authentication.provider.api:
+        class: Platformd\UserBundle\Security\Provider\ApiAuthenticationProvider
+        arguments:
+            - '@platformd.user.api.manager'
+            - '@platformd.security.user.provider.api'
+            - '@security.user_checker'
+            - ~
+            - '@security.encoder_factory'
+            - '%security.authentication.hide_user_not_found%'
+
+    platformd.user.api.manager:
+        class: Platformd\UserBundle\Model\ApiManager
+        arguments:
+            - '%api_base_url%'
+
+    platformd.security.user.provider.api:
+        class: Platformd\UserBundle\Security\Provider\ApiUserProvider
+        arguments:
+            - '@platformd.user.api.manager'
+            - '@doctrine.orm.entity_manager'
+
     # Forms
     platformd_user.registration.form.type:
         class: Platformd\UserBundle\Form\Type\RegistrationFormType
@@ -107,5 +129,5 @@ services:
         class: Platformd\UserBundle\Handler\AuthenticationHandler
         arguments:
             - "@router"
+            - "@fos_user.user_manager"
             - "@platformd.util.site_util"
-
