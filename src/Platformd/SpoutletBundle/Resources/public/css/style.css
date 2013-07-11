@@ -510,7 +510,7 @@ html body .lastBlurb { margin-bottom:0; }
 .xnotices .pad { background:url(/bundles/spoutlet/images/errors/corner-black-top-left.gif) top left no-repeat; }
 .xnotices .pad2 { background:url(/bundles/spoutlet/images/errors/corner-black-top-right.gif) top right no-repeat; }
 .xnotices .pad3 { background:url(/bundles/spoutlet/images/errors/corner-black-bottom-left.gif) bottom left no-repeat; }
-.xnotices .pad4 { background:url(/bundles/spoutlet/images/errors/corner-black-bottom-right.gif) bottom right no-repeat; padding:10px 20px 2px 10px; }
+.xnotices .pad4 { background:url(/bundles/spoutlet/images/errors/corner-black-bottom-right.gif) bottom right no-repeat; padding:10px 20px 2px 10px; min-height: 70px;}
 .xnotices h3 { font-size:18px; font-weight:bold; margin:0 0 10px 70px; }
 .xnotices p { margin:0 0 10px 70px; font-size:12px; color:#000000; }
 

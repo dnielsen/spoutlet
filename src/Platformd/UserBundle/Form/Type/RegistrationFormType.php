@@ -11,6 +11,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Collection;
 use Platformd\SpoutletBundle\Entity\CountryRepository;
+use Platformd\SpoutletBundle\Util\IpLookupUtil;
 
 class RegistrationFormType extends BaseType
 {
@@ -28,8 +29,9 @@ class RegistrationFormType extends BaseType
      * @var String user's locale
      */
     private $locale;
-
     private $translator;
+    private $ipLookupUtil;
+    private $request;
 
     protected static $countries = array(
         'ja' => 'JP',
@@ -39,13 +41,15 @@ class RegistrationFormType extends BaseType
     /**
      * @param string $class The User class name
      */
-    public function __construct($class, array $sources = array(), Session $session, TranslatorInterface $translator)
+    public function __construct($class, array $sources = array(), Session $session, TranslatorInterface $translator, IpLookupUtil $ipLookupUtil, Request $request)
     {
         parent::__construct($class);
 
         $this->locale       = $session->getLocale();
         $this->sources      = $sources;
         $this->translator   = $translator;
+        $this->ipLookupUtil = $ipLookupUtil;
+        $this->request      = $request;
     }
 
     public function setPrefectures(array $list)
@@ -125,6 +129,13 @@ class RegistrationFormType extends BaseType
             )),
             'property_path' => false,
         ));
+
+        $countryCode = $this->ipLookupUtil->getCountryCode($this->request->getClientIp());
+
+        if($countryCode != 'US') {
+            $builder->add('subscribedAlienwareEvents');
+        }
+
     }
 
     public function getDefaultOptions(array $options)

@@ -6,6 +6,7 @@ country_not_blank: Please select a country.
 news_source_not_blank: Debes llenar como es que escuchaste más recientemente de Alienware.
 has_system_not_blank: Please choose whether or not you have an Alienware System.
 passwords_do_not_match: The passwords do not match.
+age_requirement_not_met: You must be %s years old to register.
 
 fos_user.username.already_used: Lo sentimos, este nombre de usuario ya esta en uso.
 fos_user.email.already_used:  Lo sentimos, esta dirección de correo electrónico ya esta en uso.

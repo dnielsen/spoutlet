@@ -37,13 +37,14 @@
     {% if error.messageTemplate == 'You must accept the terms and conditions and the privacy policy' %}
         {% set accept_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
     {% endif %}
-    {% if error.messageTemplate == 'birthdate_not_blank' %}
-        {% set birthdate_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% if error.messageTemplate == 'birthdate_not_blank' or error.messageTemplate == 'age_requirement_not_met' %}
+        {% set birthdate_error = error.messageTemplate|trans(error.messageParameters, 'validators') | format(config.minAgeRequirement)  %}
     {% endif %}
     {% if error.messageTemplate == 'This value is not a valid captcha' %}
         {% set invalid_captcha = error.messageTemplate|trans(error.messageParameters, 'validators') %}
     {% endif %}
 {% endfor %}
+
 <div class="std_2col">
     <div class="left">
         <div id="registrationArea">
@@ -176,6 +177,15 @@
                                 {{ 'fos_user_registration_form_subscribedGamingNews' | trans({}, 'forms') | raw }}
                             </td>
                         </tr>
+                        {% if form.subscribedAlienwareEvents is defined %}
+                        <tr>
+                            <td class="form-title-cell" width="33%" align="right" valign="top"></td>
+                            <td class="form-element-cell" valign="top">
+                                {{ form_widget(form.subscribedAlienwareEvents) }}
+                                {{ 'fos_user_registration_form_subscribedAlienwareEvent' | trans([], 'FOSUserBundle') | raw }}
+                            </td>
+                        </tr>
+                        {% endif %}
                         <tr>
                             <td colspan="2">
                                 {{ form_rest(form) }}
