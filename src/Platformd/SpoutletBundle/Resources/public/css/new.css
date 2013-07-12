@@ -74,6 +74,7 @@ ul.normal-margin, ol.normal-margin {
 .fos_user_change_password label {
     width: 170px;
     text-align: right;
+    margin-right: 20px;
 }
 
 .fos_user_change_password input[type="checkbox"] { margin: 0; }

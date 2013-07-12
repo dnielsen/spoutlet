@@ -182,10 +182,10 @@ EOT
                 }
             }
 
-            if ($action == AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_APPROVE) {
+            $avatar->setProcessed(true);
+            $avatarManager->save($avatar);
 
-                $avatar->setProcessed(true);
-                $avatarManager->save($avatar);
+            if ($action == AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_APPROVE) {
 
                 $this->output(4, 'Deleting originals...', false);
                 $response = $s3->delete_objects($sourceBucket, $deleteItems);
@@ -199,13 +199,6 @@ EOT
                     $this->output();
                     $this->error($response->body->Error->Message);
                 }
-            }
-
-            if ($action == AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_SWITCH && $switch && $avatar->isUsable()) {
-                $this->output(4, 'Setting user\'s avatar...', false);
-                $user->setAvatar($avatar);
-                $userManager->updateUser($user, true);
-                $this->tick();
             }
 
             if ($deleteMessage) {

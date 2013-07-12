@@ -205,7 +205,6 @@ EOT
                     $this->output(4, 'Approving admin avatar...', false);
                     $avatar->setApproved(true);
                     $avatar->setReviewed(true);
-                    $avatar->setProcessed(true);
                     $this->tick();
 
                     $em->persist($avatar);
