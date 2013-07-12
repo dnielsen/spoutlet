@@ -126,7 +126,7 @@ sub vcl_recv {
     }
 
      if (req.url ~ "^/login[/]?$" || req.url ~ "^/account/register[/]?$") {
-        return (lookup);
+        return (pass);
     }
 
     if (req.url ~ "^/esi/USER_SPECIFIC/") {
@@ -166,7 +166,7 @@ sub vcl_recv {
 
 sub vcl_fetch {
 
-    if (req.url !~ "^/age/verify$" && req.url !~ "^/login(_check)?$" && req.url !~ "^/logout$" && req.url !~ "^/sessionCookie$") { # the only exceptions to the "remove all set-cookies rule"
+    if (req.url !~ "^/age/verify$" && req.url !~ "^/login(_check)?$" && req.url !~ "^/logout$" && req.url !~ "^/sessionCookie$" && req.url !~ "^/account/register[/]?$") { # the only exceptions to the "remove all set-cookies rule"
         unset beresp.http.set-cookie;
     }
 
