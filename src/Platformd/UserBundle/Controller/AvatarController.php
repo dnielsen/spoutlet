@@ -81,14 +81,18 @@ class AvatarController extends Controller
 
         $avatarManager = $this->getAvatarManager();
         $avatar        = $this->findAvatar($uuid);
+        $user          = $this->getUser();
 
         list($width, $height, $x, $y) = explode(',', $dimensions);
 
-        $queued = $avatarManager->addToResizeQueue($this->getUser(), $uuid, $avatar->getInitialFormat(), $width, $height, $x, $y);
+        $queued = $avatarManager->addToResizeQueue($user, $uuid, $avatar->getInitialFormat(), $width, $height, $x, $y);
 
         $avatar->setCropDimensions($dimensions);
         $avatar->setCropped(true);
         $avatarManager->save($avatar);
+
+        $user->setAvatar($avatar);
+        $this->getUserManager()->updateUser($user, true);
 
         $flash = $this->getUser()->getAdminLevel() ? 'platformd.user.avatars.admin_submit_success' : 'platformd.user.avatars.submit_success';
 

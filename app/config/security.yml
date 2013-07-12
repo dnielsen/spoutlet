@@ -70,8 +70,8 @@ security:
         connection: acl
 
     access_control:
-        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: %admin_url_scheme% }
-        - { path: ^/login_check, role: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: %admin_url_scheme% }
+        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: %secure_url_scheme% }
+        - { path: ^/login_check, role: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: %secure_url_scheme% }
 
         # the "([\w]+\/)?" pattern allows for the optional locale prefix (e.g. /jp/comments/new or just /comments/new)
         - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
@@ -87,7 +87,7 @@ security:
 
         - { path: ^/([\w]+\/)?admin/users, role: ROLE_SUPER_ADMIN }
         # admin is the lowest admin role - catch all for admin routes
-        - { path: ^/([\w]+\/)?admin, role: ROLE_ADMIN, requires_channel: %admin_url_scheme% }
+        - { path: ^/([\w]+\/)?admin, role: ROLE_ADMIN, requires_channel: %secure_url_scheme% }
         - { path: ^/([\w]+\/)?account/settings, role: IS_AUTHENTICATED_FULLY }
 
         # facebook protection

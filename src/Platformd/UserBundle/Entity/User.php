@@ -599,7 +599,7 @@ class User extends BaseUser
 
     public function getAvatar()
     {
-        if (!$this->avatar || !$this->isAvatarApproved()) {
+        if (!$this->avatar || !$this->avatar->isUsable()) {
             return false;
         }
 

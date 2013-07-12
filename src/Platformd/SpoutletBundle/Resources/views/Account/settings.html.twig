@@ -2,83 +2,90 @@
 {% form_theme avatarForm _self %}
 {% form_theme form _self %}
 
+{% set avatarUsable = user.avatar and user.avatar.isUsable %}
+
 {% block content %}
 
     <div class="std_2col" id="user-settings-page">
         <div class="left">
+            <div id="user-settings">
 
-            <div class="user-avatar" style="float:left;">
-                <div style="position:absolute;">
-                    {% if get_avatar_url(user, 184) %}
-                        <a class="update-avatar"><img src="{{ get_avatar_url(user, 184) }}" /></a>
-                    {% else %}
-                        <a class="update-avatar"><div class="default-avatar avatar184"></div></a>
-                    {% endif %}
-                </div>
-                <span id="avatar-update-overlay-wrapper" style="display:none;">
-                    <div id="avatar-update-overlay"></div>
-                    <div id="avatar-update-overlay-text">
-                        <a class="update-avatar">UPDATE</a>
+                <div class="user-avatar" style="float:left;">
+                    <div style="position:absolute;">
+                        {% if get_avatar_url(user, 184) and avatarUsable %}
+                            <a class="update-avatar"><img src="{{ get_avatar_url(user, 184) }}" /></a>
+                        {% else %}
+                            <a class="update-avatar"><div class="default-avatar avatar184"></div></a>
+                        {% endif %}
                     </div>
-                </span>
-            </div>
+                    <span id="avatar-update-overlay-wrapper" style="display:none;">
+                        <div id="avatar-update-overlay"></div>
+                        <div id="avatar-update-overlay-text">
+                            <a class="update-avatar">UPDATE</a>
+                        </div>
+                        <div id="avatar-awaiting-overlay-text">
+                            <a class="awaiting-approval">Awaiting Approval</a>
+                        </div>
+                    </span>
+                </div>
 
-            <div id="user-username">{{ user.username }}</div>
-
-            <div class="clear"></div>
-
-            <form action="{{ path('accounts_settings_update') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_password form form-horizontal">
-                <input type="hidden" name="_method" value="PUT" />
-                <fieldset id="account-settings-password" class="account-settings-section">
-                    <h3><span>{{ 'platformd.user.account_settings.password'|trans({}, 'FOSUserBundle') }}</h3></span>
-                    {{ form_errors(form) }}
-                    {{ form_row(form.currentPassword) }}
-                    {{ form_row(form.plainPassword) }}
-                </fieldset>
+                <div id="user-username">{{ user.username }}</div>
 
                 <div class="clear"></div>
 
-                <fieldset class="label-full account-settings-section" id="account-settings-newsletter">
-                    <h3><span>{{ 'platformd.user.account_settings.newsletter'|trans({}, 'FOSUserBundle') }}</h3></span>
-                    <table>
-                        <tr>
-                            <td style="vertical-align: top;padding-right: 4px;">{{ form_widget(form.subscribedGamingNews) }}</td>
-                            <td>{{ form_label(form.subscribedGamingNews) }}</td>
-                        </tr>
-                    </table>
+                <form action="{{ path('accounts_settings_update') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_password form form-horizontal">
+                    <input type="hidden" name="_method" value="PUT" />
+                    <fieldset id="account-settings-password" class="account-settings-section">
+                        <h3><span>{{ 'platformd.user.account_settings.password'|trans({}, 'FOSUserBundle') }}</h3></span>
+                        {{ form_errors(form) }}
+                        {{ form_row(form.currentPassword) }}
+                        {{ form_row(form.plainPassword) }}
+                    </fieldset>
+
+                    <div class="clear"></div>
+
+                    <fieldset class="label-full account-settings-section" id="account-settings-newsletter">
+                        <h3><span>{{ 'platformd.user.account_settings.newsletter'|trans({}, 'FOSUserBundle') }}</h3></span>
+                        <table>
+                            <tr>
+                                <td class="subscription-checkbox">{{ form_widget(form.subscribedGamingNews) }}</td>
+                                <td>{{ form_label(form.subscribedGamingNews) }}</td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    {{ form_rest(form) }}
+
+                    <div id="form-buttons">
+                        <button type="submit" class="btn btn-primary">{{ 'platformd.user.account_settings.change_avatar.submit'|trans({}, 'FOSUserBundle') }}</button>
+                        <a href="{{ path('accounts_index') }}" class="btn">{{ 'cancel' | pd_trans }}</a>
+                    </div>
+                </form>
+
+                <fieldset class="label-full">
+                    <h3><span>Facebook</span></h3>
+                    {% if user.facebookId %}
+                        <p>You have successfully connected your facebook account.</p>
+                    {% else %}
+                        <div style="width: 270px;margin-left: -5px">
+                            {% include 'UserBundle:Security:_facebookLoginButton.html.twig' with { 'optionalFacebookText': 'platformd.facebook.connect' | trans } %}
+                        </div>
+                        <p>Connecting your account with Facebook is awesome! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras gravida est semper velit ultrices eget tempus purus cursus. Nulla dignissim posuere tristique.</p>
+                    {% endif %}
                 </fieldset>
-                {{ form_rest(form) }}
 
-                <div>
-                    <button type="submit" class="btn btn-primary">{{ 'platformd.user.account_settings.change_avatar.submit'|trans({}, 'FOSUserBundle') }}</button>
-                    <a href="{{ path('accounts_index') }}" class="btn">{{ 'cancel' | pd_trans }}</a>
-                </div>
-            </form>
+                <fieldset class="label-full">
+                    <h3><span>Twitter</span></h3>
+                    {% if user.twitterId %}
+                        <p>You have successfully connected your twitter account.</p>
+                    {% else %}
+                        <div style="width: 270px;margin-left: -5px">
+                            {% include 'UserBundle:Security:_twitterLoginButton.html.twig' with { 'optionalTwitterText': 'platformd.twitter.connect' | trans } %}
+                        </div>
+                        <p>Connecting your account with Twitter is awesome! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras gravida est semper velit ultrices eget tempus purus cursus. Nulla dignissim posuere tristique.</p>
+                    {% endif %}
+                </fieldset>
 
-            <fieldset class="label-full">
-                <h3><span>Facebook</span></h3>
-                {% if user.facebookId %}
-                    <p>You have successfully connected your facebook account.</p>
-                {% else %}
-                    <div style="width: 270px;margin-left: -5px">
-                        {% include 'UserBundle:Security:_facebookLoginButton.html.twig' with { 'optionalFacebookText': 'platformd.facebook.connect' | trans } %}
-                    </div>
-                    <p>Connecting your account with Facebook is awesome! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras gravida est semper velit ultrices eget tempus purus cursus. Nulla dignissim posuere tristique.</p>
-                {% endif %}
-            </fieldset>
-
-            <fieldset class="label-full">
-                <h3><span>Twitter</span></h3>
-                {% if user.twitterId %}
-                    <p>You have successfully connected your twitter account.</p>
-                {% else %}
-                    <div style="width: 270px;margin-left: -5px">
-                        {% include 'UserBundle:Security:_twitterLoginButton.html.twig' with { 'optionalTwitterText': 'platformd.twitter.connect' | trans } %}
-                    </div>
-                    <p>Connecting your account with Twitter is awesome! Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras gravida est semper velit ultrices eget tempus purus cursus. Nulla dignissim posuere tristique.</p>
-                {% endif %}
-            </fieldset>
-
+            </div>
         </div>
 
 

@@ -1131,7 +1131,20 @@ div.blockOverlay {
 }
 
 #user-settings-page form button {
-    margin-top: -4px;
+    margin: -4px 10px 0 0;
+}
+
+#user-settings-page #form-buttons {
+    margin-left: 190px;
+}
+
+#user-settings-page #user-settings {
+    padding-left: 50px;
+}
+
+#user-settings-page td.subscription-checkbox {
+    padding: 0 20px 0 160px;
+    vertical-align: top;
 }
 
 #avatar-modal {

@@ -201,13 +201,6 @@ EOT
                 }
             }
 
-            if ($action == AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_SWITCH && $switch && $avatar->isUsable()) {
-                $this->output(4, 'Setting user\'s avatar...', false);
-                $user->setAvatar($avatar);
-                $userManager->updateUser($user, true);
-                $this->tick();
-            }
-
             if ($deleteMessage) {
                 $this->deleteMessageWithOutput($message);
             }
