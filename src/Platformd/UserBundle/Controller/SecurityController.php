@@ -26,6 +26,8 @@ class SecurityController extends BaseController
         return parent::loginAction();
     }
 
+
+    // facebook security
     public function facebookSecurityCheckAction()
     {
         $user           = $this->getCurrentUser();
@@ -85,6 +87,7 @@ class SecurityController extends BaseController
         return new RedirectResponse($this->container->get('router')->generate('_fos_user_security_logout'));
     }
 
+    // twitter security
     public function twitterLoginAction()
     {
         $request = $this->container->get('request');
@@ -131,6 +134,7 @@ class SecurityController extends BaseController
         return new RedirectResponse($this->container->get('router')->generate('default_index'));
     }
 
+    // helpers
     private function getCurrentUser()
     {
         $token = $this->container->get('security.context')->getToken();
