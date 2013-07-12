@@ -23,10 +23,12 @@
                         <div id="avatar-update-overlay-text">
                             <a class="update-avatar">UPDATE</a>
                         </div>
-                        <div id="avatar-awaiting-overlay-text">
-                            <a class="awaiting-approval">Awaiting Approval</a>
-                        </div>
                     </span>
+                    {%if not avatarUsable %}
+                        <div id="avatar-awaiting-overlay-text">
+                            <a class="awaiting-approval">AWAITING APPROVAL</a>
+                        </div>
+                    {% endif %}
                 </div>
 
                 <div id="user-username">{{ user.username }}</div>

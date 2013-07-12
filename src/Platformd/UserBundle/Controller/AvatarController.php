@@ -94,9 +94,6 @@ class AvatarController extends Controller
         $user->setAvatar($avatar);
         $this->getUserManager()->updateUser($user, true);
 
-        $flash = $this->getUser()->getAdminLevel() ? 'platformd.user.avatars.admin_submit_success' : 'platformd.user.avatars.submit_success';
-
-        $this->setFlash('success', $flash);
         return $this->redirect($this->generateUrl('accounts_settings'));
     }
 
@@ -148,7 +145,9 @@ class AvatarController extends Controller
     {
         $this->checkSecurity();
 
-        $avatar = $this->findAvatar($uuid, false);
+        $avatar        = $this->findAvatar($uuid, false);
+        $user          = $this->getUser();
+        $avatarManager = $this->getAvatarManager();
 
         if (!$avatar) {
             $this->setFlash('error', 'platformd.user.avatars.switch_not_found');
@@ -160,9 +159,14 @@ class AvatarController extends Controller
             return $this->redirect($this->generateUrl('avatars'));
         }
 
-        $this->getAvatarManager()->addToFilesystemActionsQueue($avatar->getUuid(), $avatar->getUser(), AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_SWITCH);
+        $avatarManager->addToFilesystemActionsQueue($avatar->getUuid(), $avatar->getUser(), AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_SWITCH);
 
-        $this->setFlash('success', 'platformd.user.avatars.switch_success');
+        $avatar->setProcessed(false);
+        $avatarManager->save($avatar);
+
+        $user->setAvatar($avatar);
+        $this->getUserManager()->updateUser($user, true);
+
         return $this->redirect($this->generateUrl('accounts_settings'));
     }
 

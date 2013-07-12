@@ -182,10 +182,10 @@ EOT
                 }
             }
 
-            if ($action == AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_APPROVE) {
+            $avatar->setProcessed(true);
+            $avatarManager->save($avatar);
 
-                $avatar->setProcessed(true);
-                $avatarManager->save($avatar);
+            if ($action == AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_APPROVE) {
 
                 $this->output(4, 'Deleting originals...', false);
                 $response = $s3->delete_objects($sourceBucket, $deleteItems);
