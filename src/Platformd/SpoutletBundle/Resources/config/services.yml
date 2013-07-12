@@ -91,6 +91,7 @@ services:
             - "@platformd.repository.site"
             - "@platformd.repository.background_ads"
             - "%local_auth%"
+            - "%secure_url_scheme%"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
             - { name: twig.extension }

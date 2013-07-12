@@ -39,8 +39,9 @@ class SpoutletExtension extends Twig_Extension
     private $backgroundAdRepo;
     private $localAuth;
     private $siteRepo;
+    private $secureUrlScheme;
 
-    public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager, $contentReportRepo, $siteRepo, $backgroundAdRepo, $localAuth)
+    public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager, $contentReportRepo, $siteRepo, $backgroundAdRepo, $localAuth, $secureUrlScheme)
     {
         $this->bucketName          = $bucketName;
         $this->giveawayManager     = $giveawayManager;
@@ -55,6 +56,7 @@ class SpoutletExtension extends Twig_Extension
         $this->backgroundAdRepo    = $backgroundAdRepo;
         $this->siteRepo            = $siteRepo;
         $this->localAuth           = $localAuth;
+        $this->secureUrlScheme     = $secureUrlScheme;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -109,6 +111,7 @@ class SpoutletExtension extends Twig_Extension
             'target_blank'                   => new Twig_Function_Method($this, 'getTargetBlank', array('is_safe' => array('html'))),
             'can_user_report'                => new Twig_Function_Method($this, 'canReport'),
             'login_link'                     => new Twig_Function_Method($this, 'getLoginUrl'),
+            'login_check_path'               => new Twig_Function_Method($this, 'getLoginCheckPath'),
             'account_home_link'              => new Twig_Function_Method($this, 'getAccountHomeUrl'),
             'current_background_ad_url'      => new Twig_Function_Method($this, 'getCurrentBackgroundUrl'),
             'current_background_ad_link'     => new Twig_Function_Method($this, 'getCurrentBackgroundLink'),
@@ -932,6 +935,15 @@ class SpoutletExtension extends Twig_Extension
         $return     = $returnUrl ? '?return='.urlencode($returnUrl) : '';
 
         return $prefix.$return;
+    }
+
+    public function getLoginCheckPath()
+    {
+        $scheme = $this->secureUrlScheme;
+        $path = $this->router->generate('_fos_user_security_check', array(), $scheme == 'https');
+        $path = preg_replace('#^http:#', 'https:', $path);
+
+        return $path;
     }
 
     public function getAccountHomeUrl() {

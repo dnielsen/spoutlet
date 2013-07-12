@@ -9,7 +9,7 @@
     <div class="left">
         <div id="loginArea">
             <h2>{{ 'platformd.user.login_header' | pd_trans }}</h2>
-            <form action="{{ path("_fos_user_security_check") }}" method="post" class="form form-horizontal">
+            <form action="{{ login_check_path() }}" method="post" class="form form-horizontal">
                 {% if error %}
                     <div class="error">
                         <div class="title">Error Logging In</div>
