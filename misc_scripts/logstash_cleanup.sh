@@ -94,33 +94,42 @@ if [ -n "$ERROR" ]; then
   exit 1
 fi
 
-# Get the indices from elasticsearch
-INDICES_TEXT=`curl -s "$ELASTICSEARCH/_status?pretty=true" | grep $GREP | grep -v index | sort -r | awk -F\" {'print $2'}`
+if [ $KEEP -eq 0 ]; then
+  if [ -z "$LOGFILE" ]; then
+    curl -s -XDELETE "$ELASTICSEARCH/_all/" > /dev/null
+  else
+    curl -s -XDELETE "$ELASTICSEARCH/_all/" >> $LOGFILE
+  fi
+else
 
-if [ -z "$INDICES_TEXT" ]; then
-  echo "No indices returned containing '$GREP' from $ELASTICSEARCH."
-  exit 1
-fi
+  # Get the indices from elasticsearch
+  INDICES_TEXT=`curl -s "$ELASTICSEARCH/_status?pretty=true" | grep $GREP | grep -v index | sort -r | awk -F\" {'print $2'}`
 
-# If we are logging, make sure we have a logfile TODO - handle errors here
-if [ -n "$LOGFILE" ] && ! [ -e $LOGFILE ]; then
-  touch $LOGFILE
-fi
+  if [ -z "$INDICES_TEXT" ]; then
+    echo "No indices returned containing '$GREP' from $ELASTICSEARCH."
+    exit 1
+  fi
 
-# Delete indices
-declare -a INDEX=($INDICES_TEXT)
-if [ ${#INDEX[@]} -gt $KEEP ]; then
-  for index in ${INDEX[@]:$KEEP};do
-    # We don't want to accidentally delete everything
-    if [ -n "$index" ]; then
-      if [ -z "$LOGFILE" ]; then
-        curl -s -XDELETE "$ELASTICSEARCH/$index/" > /dev/null
-      else
-        echo `date "+[%Y-%m-%d %H:%M] "`" Deleting index: $index." >> $LOGFILE
-        curl -s -XDELETE "$ELASTICSEARCH/$index/" >> $LOGFILE
+  # If we are logging, make sure we have a logfile TODO - handle errors here
+  if [ -n "$LOGFILE" ] && ! [ -e $LOGFILE ]; then
+    touch $LOGFILE
+  fi
+
+  # Delete indices
+  declare -a INDEX=($INDICES_TEXT)
+  if [ ${#INDEX[@]} -gt $KEEP ]; then
+    for index in ${INDEX[@]:$KEEP};do
+      # We don't want to accidentally delete everything
+      if [ -n "$index" ]; then
+        if [ -z "$LOGFILE" ]; then
+          curl -s -XDELETE "$ELASTICSEARCH/$index/" > /dev/null
+        else
+          echo `date "+[%Y-%m-%d %H:%M] "`" Deleting index: $index." >> $LOGFILE
+          curl -s -XDELETE "$ELASTICSEARCH/$index/" >> $LOGFILE
+        fi
       fi
-    fi
-  done
+    done
+  fi
 fi
 
 exit 0
