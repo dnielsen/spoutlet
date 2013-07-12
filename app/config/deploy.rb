@@ -8,11 +8,11 @@ default_run_options[:pty] = true
 
 set :awaProcessor1, "ec2-75-101-139-101.compute-1.amazonaws.com"
 
-set :awaWeb1, "ec2-54-224-7-205.compute-1.amazonaws.com"
-set :awaWeb2, "ec2-54-224-5-214.compute-1.amazonaws.com"
-set :awaWeb3, "ec2-23-20-55-80.compute-1.amazonaws.com"
-set :awaWeb4, "ec2-23-22-250-200.compute-1.amazonaws.com"
-set :awaWeb5, "ec2-54-235-31-61.compute-1.amazonaws.com"
+set :awaWeb1, "ec2-54-227-65-32.compute-1.amazonaws.com"
+set :awaWeb2, "ec2-23-20-93-253.compute-1.amazonaws.com"
+set :awaWeb3, "ec2-54-227-94-218.compute-1.amazonaws.com"
+set :awaWeb4, "ec2-23-20-212-246.compute-1.amazonaws.com"
+set :awaWeb5, "ec2-50-16-39-141.compute-1.amazonaws.com"
 
 set :campWeb1, "ec2-54-235-26-82.compute-1.amazonaws.com"
 
