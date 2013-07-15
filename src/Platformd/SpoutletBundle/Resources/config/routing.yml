@@ -3,7 +3,7 @@ _main_user_strip:
     defaults: { _controller: SpoutletBundle:Default:_mainUserStrip }
 
 _session_flash_message:
-    pattern: /esi/USER_SPECIFIC/flashMessage
+    pattern: /flashMessage
     defaults: { _controller: SpoutletBundle:Default:_flashMessage }
 
 _gallery_media_user_votes:
