@@ -32,7 +32,7 @@ set :update_vendors, true
 set :vendors_mode,   "install"
 set :dump_assetic_assets, true
 
-set :shared_children,     [app_path + "/logs", web_path + "/uploads", "vendor", web_path + "/media", app_path + "/data", web_path + "/video", web_path + "/media", "misc_scripts/flock_files"]
+set :shared_children,     [app_path + "/logs", web_path + "/uploads", "vendor", web_path + "/media", app_path + "/data", web_path + "/media", "misc_scripts/flock_files"]
 set :shared_files,      ["app/config/parameters.ini", "app/config/config_server.yml"]
 
 # After finalizing update - update translations
