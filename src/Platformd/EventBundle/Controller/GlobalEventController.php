@@ -12,7 +12,8 @@ use Platformd\SpoutletBundle\Controller\Controller,
 
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response,
-    Symfony\Component\HttpFoundation\RedirectResponse
+    Symfony\Component\HttpFoundation\RedirectResponse,
+    Symfony\Component\Security\Core\Exception\AccessDeniedException
 ;
 
 class GlobalEventController extends Controller
@@ -171,7 +172,7 @@ class GlobalEventController extends Controller
             throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
         }
 
-        if (false === $this->getSecurity()->isGranted('EDIT', $event) || $this->getUser()->getAdminLevel() === null) {
+        if (false === $this->getSecurity()->isGranted('EDIT', $event) && $this->getUser()->getAdminLevel() === null) {
             throw new AccessDeniedException();
         }
 
@@ -322,7 +323,7 @@ class GlobalEventController extends Controller
         }
 
         // check for edit access (permissions match those required to send email)
-        if (false === $this->getSecurity()->isGranted('EDIT', $event))
+        if (false === $this->getSecurity()->isGranted('EDIT', $event) && $this->getUser()->getAdminLevel() === null)
         {
             throw new AccessDeniedException();
         }

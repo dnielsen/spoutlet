@@ -29,7 +29,7 @@ class ProfileController extends BaseProfileController
             if (!$user->isAvatarApproved()) {
 
                 $this->container
-                    ->get('session')
+                    ->get('platformd.util.flash_util')
                     ->setFlash('success', 'avatar_awaiting_approval')
                 ;
             }

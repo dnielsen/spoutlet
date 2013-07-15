@@ -137,20 +137,12 @@ class Controller extends BaseController
 
     protected function setFlash($key, $message)
     {
-        $session = $this->container->get('session');
-        $flashes = $session->get('flashMessages') ?: array();
-
-        $flashes[$key] = $message;
-        return $session->set('flashMessages', $flashes);
+        $this->getFlashUtil()->setFlash($key, $message);
     }
 
     protected function getFlash()
     {
-        $session = $this->container->get('session');
-        $flashes = $session->get('flashMessages');
-        $session->remove('flashMessages');
-
-        return $flashes;
+        return $this->getFlashUtil()->getFlash();
     }
 
     protected function getQueueUtil()
@@ -323,5 +315,10 @@ class Controller extends BaseController
     protected function getSiteManager()
     {
         return $this->get('platformd.model.site_manager');
+    }
+
+    protected function getFlashUtil()
+    {
+        return $this->container->get('platformd.util.flash_util');
     }
 }

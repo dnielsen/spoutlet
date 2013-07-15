@@ -86,11 +86,9 @@ class AdminController extends Controller
         if ($form->isValid()) {
             $manager->updateUser($user);
 
-            $request
-                ->getSession()
-                ->setFlash('success', $translator->trans('fos_user_admin_edit_success', array(
-                    '%username%' => $user->getUsername()
-                ), 'FOSUserBundle'));
+            $this->setFlash('success', $translator->trans('fos_user_admin_edit_success', array(
+                '%username%' => $user->getUsername()
+            ), 'FOSUserBundle'));
 
             return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
         }
@@ -115,12 +113,9 @@ class AdminController extends Controller
 
         $manager->deleteUser($user);
 
-        $this
-            ->getRequest()
-            ->getSession()
-            ->setFlash('success', $translator->trans('fos_user_admin_delete_success', array(
-                '%username' => $user->getUsername()
-            ), 'FOSUserBundle'));
+        $this->setFlash('success', $translator->trans('fos_user_admin_delete_success', array(
+            '%username' => $user->getUsername()
+        ), 'FOSUserBundle'));
 
         return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
     }
@@ -140,12 +135,9 @@ class AdminController extends Controller
 
         $this->get('fos_user.mailer')->sendResettedPasswordMessage($user);
 
-        $request
-            ->getSession()
-            ->setFlash('success', $translator->trans('fos_user_admin_resetted_password_success', array(
-                '%email%' => $user->getEmail()
-            ), 'FOSUserBundle'))
-        ;
+        $this->setFlash('success', $translator->trans('fos_user_admin_resetted_password_success', array(
+            '%email%' => $user->getEmail()
+        ), 'FOSUserBundle'));
 
         return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
     }

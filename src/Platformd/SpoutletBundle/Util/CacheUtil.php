@@ -292,4 +292,27 @@ class CacheUtil
         $this->logger->err(self::LOG_MESSAGE_PREFIX.'Max attempts reached... we were not able to load the cached data (or generate it successfully).');
         throw new CacheFailureException();
     }
+
+    public function getItem($key)
+    {
+        $data = $this->getFromCache($key) ? unserialize($data) : null;
+    }
+
+    public function getAndDeleteItem($key)
+    {
+        $data = $this->getFromCache($key);
+
+        if (!$data) {
+            return null;
+        }
+
+        $this->cache->delete($key);
+
+        return unserialize($data);
+    }
+
+    public function addItem($key, $data, $expiry=86400)
+    {
+        $this->cache->set($key, serialize($data), $expiry);
+    }
 }
