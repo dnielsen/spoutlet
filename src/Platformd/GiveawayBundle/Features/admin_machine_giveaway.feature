@@ -31,7 +31,7 @@ Feature: Machine Code Giveaway Admin
             And I follow "Approve System Tags"
             And I fill in "Emails" with "user@foo.com, japan@ja.com"
             And I press "Approve Tags"
-        Then I should see "2 codes were approved"
+        Then I should see "2 codes were approved" in the flash message
             And there should be "2" "approved" machine code entry in the database
 
     Scenario: I will eventually run out of keys
@@ -41,7 +41,7 @@ Feature: Machine Code Giveaway Admin
             And I follow "Approve System Tags"
             And I fill in "Emails" with "user@foo.com, japan@ja.com, china@zh.com"
             And I press "Approve Tags"
-        Then I should see "There are no more unassigned giveaway keys"
+        Then I should see "There are no more unassigned giveaway keys" in the flash message
             # we should still have 2 approved machine code entries
             And there should be "2" "approved" machine code entry in the database
 
@@ -52,4 +52,4 @@ Feature: Machine Code Giveaway Admin
             And I follow "Approve System Tags"
             And I fill in "Emails" with "foo@foo.com"
             And I press "Approve Tags"
-        Then I should see "No user with email"
+        Then I should see "No user with email" in the flash message

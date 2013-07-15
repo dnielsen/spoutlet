@@ -18,7 +18,7 @@ class FlashUtil
 
     public function setFlash($key, $message)
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->securityContext->getToken() ? $this->securityContext->getToken()->getUser() : null;
 
         if (!$user instanceof User) {
             return;
@@ -32,7 +32,7 @@ class FlashUtil
 
     public function getFlash()
     {
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->securityContext->getToken() ? $this->securityContext->getToken()->getUser() : null;
 
         if (!$user instanceof User) {
             return;

@@ -22,7 +22,7 @@ Feature: Admin background ads
         #And I fill in "admin_background_ad_adSites_1_url" with "http://na.alienwarearena.com"
         #And I select countries in Europe and North America that should see the banner
         When I press "Create"
-        Then I should see "Background ad successully created"
+        Then I should see "Background ad successully created" in the flash message
 
 # Commented out until we implement javascript capable testing
 #    Scenario: Do not allow admin to schedule more than one background ad to appear at the same time for the same region.
@@ -37,5 +37,5 @@ Feature: Admin background ads
 #        And I check the "Europe" option for "Sites"
 #        And I check the "North America" option for "Sites"
 #        When I press "Create"
-#        Then I should see "Error! This schedule conflicts with another banner that is scheduled at the same time. Please uncheck the conflicting site."
+#        Then I should see "Error! This schedule conflicts with another banner that is scheduled at the same time. Please uncheck the conflicting site." in the flash message
 

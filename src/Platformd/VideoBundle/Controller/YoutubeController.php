@@ -39,12 +39,22 @@ class YoutubeController extends Controller
 
     public function indexAction()
     {
-        $featured         = $this->getYoutubeManager()->findFeaturedVideosForCountry($this->getCurrentSite(), $this->getCurrentCountry());
-        $featuredVideo    = count($featured) > 0 ? $featured[0] : null;
+        $site    = $this->getCurrentSite();
+        $country = $this->getCurrentCountry();
+
+        $featured      = $this->getYoutubeManager()->findFeaturedVideosForCountry($site, $country);
+        $featuredVideo = count($featured) > 0 ? $featured[0] : null;
+
+        $categoryVideos         = $this->getYoutubeManager()->findVideosForTabAndCountry('categories', $site, $country);
+        $popularVideos          = $this->getYoutubeManager()->findVideosForTabAndCountry('popular', $site, $country);
+        $currentlyWatchedVideos = $this->getYoutubeManager()->findVideosForTabAndCountry('currently_watched', $site, $country);
 
         $response = $this->render('VideoBundle:Youtube:index.html.twig', array(
-            'featured'          => $featured,
-            'featuredVideo'     => $featuredVideo,
+            'featured'               => $featured,
+            'featuredVideo'          => $featuredVideo,
+            'categoryVideos'         => $categoryVideos,
+            'popularVideos'          => $popularVideos,
+            'currentlyWatchedVideos' => $currentlyWatchedVideos,
         ));
 
         $this->varnishCache($response, 15);

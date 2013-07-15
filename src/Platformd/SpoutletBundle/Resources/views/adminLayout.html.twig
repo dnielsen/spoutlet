@@ -72,7 +72,7 @@
                     success: function(data) {
                         if (data.type && data.message) {
                             $('.flash-message span').html(data.message);
-                            $('.flash-message .alert').addClass('alert' + data.type);
+                            $('.flash-message').addClass('alert-' + data.type);
                             $('.flash-message').fadeIn();
                         }
                     }

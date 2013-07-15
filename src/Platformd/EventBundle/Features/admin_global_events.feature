@@ -26,7 +26,7 @@ Feature: Global Events
             And I check the "Demo" option for "Sites"
             And I select the "Online Event" radio button
             And I press "Save"
-        Then I should see "New event posted successfully!"
+        Then I should see "New event posted successfully!" in the flash message
 
     Scenario: I can edit an event
         Given I am on "/admin"
@@ -37,7 +37,7 @@ Feature: Global Events
                 | Title         | Test Event Updated  |
                 | Event Details | Description Updated |
             And I press "Save"
-        Then I should see "Event saved successfully"
+        Then I should see "Event saved successfully" in the flash message
 
     Scenario: List existing events for admins
         Given I am on "/admin"

@@ -19,7 +19,7 @@ Feature: Giveaway Admin
             And I check the "Demo" option for "Sites"
             And I select "Skyrim" from "Game"
             And I press "Save Giveaway"
-        Then I should see "Giveaway has been saved"
+        Then I should see "Giveaway has been saved" in the flash message
 
     Scenario: Edit a key giveaway
         Given there is a key giveaway called "giveaway"
@@ -27,4 +27,4 @@ Feature: Giveaway Admin
         When I select "Skyrim" from "Game"
             And I fill in "Name" with "Updated name"
             And I press "Save Giveaway"
-        Then I should see "Giveaway has been saved."
+        Then I should see "Giveaway has been saved." in the flash message
