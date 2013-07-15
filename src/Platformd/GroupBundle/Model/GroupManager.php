@@ -180,6 +180,10 @@ class GroupManager
 
         $this->saveGroup($group);
 
+        $user->getPdGroups()->add($group);
+        $this->em->persist($user);
+        $this->em->flush();
+
         if ($group->getIsPublic()) {
             try {
                 $this->CEVOApiManager->GiveUserXp('joingroup');

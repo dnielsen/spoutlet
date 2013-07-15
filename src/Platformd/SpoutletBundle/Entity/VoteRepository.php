@@ -7,6 +7,25 @@ use Doctrine\ORM\EntityRepository;
 
 class VoteRepository extends EntityRepository
 {
+    public function getMediaIdsVotedOnByUserString($user)
+    {
+        $qb = $this->createQueryBuilder('v')
+            ->select('m.id')
+            ->leftJoin('v.galleryMedia', 'm')
+            ->andWhere('v.user = :user')
+            ->setParameter('user', $user);
+
+        $result = $qb->getQuery()->execute();
+
+        $ids = array();
+
+        foreach ($result as $id) {
+            $ids[] = $id['id'];
+        }
+
+        return $ids;
+    }
+
     public function findVotes($media)
     {
         $qb = $this->createQueryBuilder('v')

@@ -23,23 +23,18 @@
         </tr>
         {% else %}
         {% for event in events %}
+        {% set isGroupEvent = event.group is defined %}
         <tr class="eventListGroup_online">
             <td style="vertical-align:top" data-starts="{{ event.startsAt | date('U') }}">
                 {{ event.startsAt | date_translate }}
             </td>
             {# todo - refactor this next line somewhere else #}
             <td style="vertical-align:top">
-                {% set attending  = false %}
-                {% if is_granted('ROLE_USER') %}
-                    {% set attending = event.isUserAttending(app.user) %}
-                {% endif %}
-                {% if attending %}
-                <img src="{{ asset('/bundles/spoutlet/images/form-ic-success-small.png') }}" alt="Attending" />
-                {% endif %}
+                <img id="{% if isGroupEvent %}group{% else %}global{% endif %}-event-attending-{{ event.id }}" src="{{ asset('/bundles/spoutlet/images/form-ic-success-small.png') }}" alt="Attending" style="display:none;" />
             </td>
             <td style="vertical-align:top" class="event-link">
 
-                {% if event.group is defined %}
+                {% if isGroupEvent %}
                     {{ event | pd_link_full(event.name) }}
                 {% else %}
                     {{ event | pd_link_full(event.name, ['global-event-link']) }}
@@ -75,120 +70,123 @@
         {% endif %}
     </tbody>
 </table>
-    <script type="text/javascript">
-        $(function () {
 
-            $.tablesorter.addParser({
-                // set a unique id
-                id: 'myParser',
-                is: function(s) {
-                  // return false so this parser is not auto detected
-                  return false;
-                },
-                format: function(s, table, cell, cellIndex) {
-                  // get data attributes from $(cell).attr('data-something');
-                  // check specific column using cellIndex
-                  return $(cell).attr('data-starts');
-                },
-                // set type, either numeric or text
-                type: 'text'
-            });
+{% render url('_user_event_list') with {}, {'standalone': true } %}
 
-            $('#events-table').tablesorter({
-                headers: {
-                    0: {
-                        sorter: 'myParser'
+<script type="text/javascript">
+    $(function () {
+
+        $.tablesorter.addParser({
+            // set a unique id
+            id: 'myParser',
+            is: function(s) {
+              // return false so this parser is not auto detected
+              return false;
+            },
+            format: function(s, table, cell, cellIndex) {
+              // get data attributes from $(cell).attr('data-something');
+              // check specific column using cellIndex
+              return $(cell).attr('data-starts');
+            },
+            // set type, either numeric or text
+            type: 'text'
+        });
+
+        $('#events-table').tablesorter({
+            headers: {
+                0: {
+                    sorter: 'myParser'
+                }
+            }
+        });
+
+        $('.event-link a').truncate({
+            width: 420
+        });
+
+        $('.qtip-view-map').truncate({
+            width: 170
+        });
+
+        $('.event-organizer a').truncate({
+            width: 170
+        });
+
+
+        $('.qtip-view-map').each(function(i, v) {
+
+            var lat = $(this).attr('data-lat');
+            var lng = $(this).attr('data-lng');
+            var addr = $(this).attr('data-address');
+            var directionsLink = 'http://maps.google.com/maps?daddr=' + addr;
+
+            $(this).qtip({
+                content: {
+                    text: 'Loading map...',
+                    title: {
+                        button: $('<img/>', {
+                           'src': '{{ asset('bundles/spoutlet/images/x.png') }}',
+                           'class': 'qtip-close',
+                           'style': 'background:none;border-style:none;margin-top:-5px'
+                        })
+                    }
+                },
+                style: {
+                    width: 500,
+                },
+                position: {
+                    my: 'top center',
+                    at: 'bottom center',
+                    viewport: $(window),
+                    adjust: { method: 'shift' }
+                },
+                show: 'click',
+                hide: 'unfocus',
+                events: {
+                    render: function (event, api) {
+                        var tooltip = $(this);
+                        //var closeBtn = $('<span class="ui-icon ui-icon-close">×</span>').appendTo(api.elements.content);
+                        var container = $('<div style="width: 490px; height: 300px;"></div>').appendTo(api.elements.content.empty());
+
+                        var mapLink = $('<div style="padding-top: 5px;font-size:12px;font-weight:normal;"><a href="' + directionsLink + '" target="_blank">{{ 'platformd.events.event_show.directions' | trans }}</a></div>').appendTo(api.elements.content);
+
+                        tooltip.show();
+
+                        // options
+                        var myOptions = {
+                            zoom: 12,
+                            mapTypeControl: true,
+                            mapTypeControlOptions: {
+                                style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+                            },
+                            mapTypeId: google.maps.MapTypeId.ROADMAP
+                        }
+
+                        // Create map object as api attribute for later use
+                        api.map = new google.maps.Map(container[0], myOptions);
+                        var map = api.map;
+                        markersArray = [];
+
+                        // set center
+                        centerLatLong = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
+                        map.setCenter(centerLatLong);
+
+                        tooltip.hide();
+                    },
+                    show: function (event, api) {
+                        var map = api.map;
+
+                        centerLatLong = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
+                        map.setCenter(centerLatLong);
+
+                        var marker = new google.maps.Marker({
+                            map: map,
+                            position: centerLatLong,
+                            animation: google.maps.Animation.DROP,
+                        });
                     }
                 }
             });
-
-            $('.event-link a').truncate({
-                width: 420
-            });
-
-            $('.qtip-view-map').truncate({
-                width: 170
-            });
-
-            $('.event-organizer a').truncate({
-                width: 170
-            });
-
-
-            $('.qtip-view-map').each(function(i, v) {
-
-                var lat = $(this).attr('data-lat');
-                var lng = $(this).attr('data-lng');
-                var addr = $(this).attr('data-address');
-                var directionsLink = 'http://maps.google.com/maps?daddr=' + addr;
-
-                $(this).qtip({
-                    content: {
-                        text: 'Loading map...',
-                        title: {
-                            button: $('<img/>', {
-                               'src': '{{ asset('bundles/spoutlet/images/x.png') }}',
-                               'class': 'qtip-close',
-                               'style': 'background:none;border-style:none;margin-top:-5px'
-                            })
-                        }
-                    },
-                    style: {
-                        width: 500,
-                    },
-                    position: {
-                        my: 'top center',
-                        at: 'bottom center',
-                        viewport: $(window),
-                        adjust: { method: 'shift' }
-                    },
-                    show: 'click',
-                    hide: 'unfocus',
-                    events: {
-                        render: function (event, api) {
-                            var tooltip = $(this);
-                            //var closeBtn = $('<span class="ui-icon ui-icon-close">×</span>').appendTo(api.elements.content);
-                            var container = $('<div style="width: 490px; height: 300px;"></div>').appendTo(api.elements.content.empty());
-
-                            var mapLink = $('<div style="padding-top: 5px;font-size:12px;font-weight:normal;"><a href="' + directionsLink + '" target="_blank">{{ 'platformd.events.event_show.directions' | trans }}</a></div>').appendTo(api.elements.content);
-
-                            tooltip.show();
-
-                            // options
-                            var myOptions = {
-                                zoom: 12,
-                                mapTypeControl: true,
-                                mapTypeControlOptions: {
-                                    style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-                                },
-                                mapTypeId: google.maps.MapTypeId.ROADMAP
-                            }
-
-                            // Create map object as api attribute for later use
-                            api.map = new google.maps.Map(container[0], myOptions);
-                            var map = api.map;
-                            markersArray = [];
-
-                            // set center
-                            centerLatLong = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
-                            map.setCenter(centerLatLong);
-
-                            tooltip.hide();
-                        },
-                        show: function (event, api) {
-                            var map = api.map;
-
-                            centerLatLong = new google.maps.LatLng(parseFloat(lat), parseFloat(lng));
-                            map.setCenter(centerLatLong);
-
-                            var marker = new google.maps.Marker({
-                                map: map,
-                                position: centerLatLong,
-                                animation: google.maps.Animation.DROP,
-                            });
-                        }
-                    }
-                });
-            });
         });
-    </script>
+    });
+</script>

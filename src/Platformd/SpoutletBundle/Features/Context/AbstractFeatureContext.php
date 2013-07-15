@@ -259,7 +259,7 @@ class AbstractFeatureContext extends MinkContext
         );
     }
 
-    public function NavigateTo($namedRoute, $parameters, $absolute = false)
+    public function NavigateTo($namedRoute, $parameters=array(), $absolute = false)
     {
         $url = $this->getContainer()->get('router')->generate($namedRoute, $parameters, $absolute);
         $this->getSession()->visit($url);
@@ -1824,4 +1824,17 @@ class AbstractFeatureContext extends MinkContext
             $counter++;
         }
     }
+
+    /**
+     * @Then /^I should see "([^"]*)" in the flash message$/
+     */
+    public function iShouldSeeInTheFlashMessage($string)
+    {
+        $route = '_session_flash_message';
+        $this->NavigateTo($route);
+        $responseBody = $this->getSession()->getDriver()->getClient()->getResponse()->getContent();
+
+        return false !== strpos($responseBody, $string);
+    }
+
 }

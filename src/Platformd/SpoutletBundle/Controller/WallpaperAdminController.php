@@ -66,10 +66,7 @@ class WallpaperAdminController extends Controller
         $em->remove($wallpaper);
         $em->flush();
 
-        $this
-            ->getRequest()
-            ->getSession()
-            ->setFlash('success', "The wallpaper was deleted!");
+        $this->setFlash('success', "The wallpaper was deleted!");
 
         return $this->redirect($this->generateUrl('admin_wallpaper'));
     }

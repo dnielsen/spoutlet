@@ -432,6 +432,9 @@ EOT
 
                         }
                     }
+
+                    $user->getPdGroups()->add($group);
+                    $this->em->persist($user);
                 }
             }
 

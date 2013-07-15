@@ -30,6 +30,28 @@ use Pagerfanta\Adapter\ArrayAdapter;
  */
 class GroupController extends Controller
 {
+    public function _groupMemberCheckAction($groupId)
+    {
+        $group = $this->getGroup($groupId);
+        $user  = $this->getUser();
+
+        $this->ensureGroupExists($group);
+
+        $isMember          = $this->getGroupManager()->isMember($user, $group);
+        $isOwner           = $group->getOwner() == $user;
+        $isApplicant       = $this->getGroupManager()->isApplicant($user, $group);
+
+        $response          = $this->render('GroupBundle:Group:_groupMemberCheck.html.twig', array(
+            'isMember'          => $isMember,
+            'isOwner'           => $isOwner,
+            'isApplicant'       => $isApplicant,
+        ));
+
+        $this->varnishCache($response, 1);
+
+        return $response;
+    }
+
     private function ensureGroupExists($group) {
         if (!$group) {
             throw new NotFoundHttpException('Group does not exist.');
@@ -1514,7 +1536,6 @@ Alienware Arena Team
             $isEntered = $contest->getVotingEnd() > new \DateTime('now');
         }
 
-        $permissions = $this->getGroupManager()->getPermissions($this->getUser(), $group, $this->getCurrentSite());
         $permalink   = $this->get('platformd.model.comment_manager')->checkThread($group);
 
         return $this->render('GroupBundle:Group:show.html.twig', array(
@@ -1529,7 +1550,6 @@ Alienware Arena Team
             'pastEvents'     => $pastEvents,
             'memberCount'    => $memberCount[0]['membershipCount'],
             'groupManager'   => $this->getGroupManager(),
-            'permissions'    => $permissions,
             'permalink'      => $permalink,
         ));
     }

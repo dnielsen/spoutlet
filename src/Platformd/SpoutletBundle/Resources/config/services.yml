@@ -366,6 +366,12 @@ services:
             - "Platformd\TagBundle\Entity\Tag"
             - "Platformd\TagBundle\Entity\Tagging"
 
+    platformd.util.flash_util:
+        class: Platformd\SpoutletBundle\Util\FlashUtil
+        arguments:
+            - "@platformd.util.cache_util"
+            - "@security.context"
+
     platformd_user.account.incomplete_form.type:
         class: Platformd\SpoutletBundle\Form\Type\IncompleteAccountType
         tags:

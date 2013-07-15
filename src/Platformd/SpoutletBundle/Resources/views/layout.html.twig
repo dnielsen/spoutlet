@@ -194,6 +194,24 @@
                         $(this).removeClass('invalid');
                     }
                 });
+
+                {% if block('flash') %}
+                    $('.session-flash').fadeIn();
+                {% else %}
+                    $.ajax({
+                        url: '{{ path('_session_flash_message') }}',
+                        dataType: 'json',
+                        async: false,
+                        success: function(data) {
+                            if (data.type && data.message) {
+                                $('.session-flash #notice-type').html(data.type);
+                                $('.session-flash #notice-message').html(data.message);
+                                $('.session-flash .notice').addClass(data.type + 'Notice');
+                                $('.session-flash').fadeIn();
+                            }
+                        }
+                    });
+                {% endif %}
 			});
 		</script>
 
@@ -246,60 +264,20 @@
 
                                     {% block pre_content_nav %}{% endblock %}
 
-                                    {#
-                                        Messy, but taken from the old site
-                                        To show a flash message, set the "flash" block
-                                        to your actual message. Then set the "flash_type"
-                                        block to: success, warning, or error
-
-                                        This also works out of the box for "error"
-                                        and "success"session flashes - given an "error"
-                                        type and the message is dumped out with
-                                        some markup
-
-                                        Also, yes, I know this is hideous...
-                                    #}
-
-                                    {% if app.session.hasFlash('error') or app.session.hasFlash('fos_user_error')  %}
-                                        {% set sessionFlashType = 'error' %}
-                                    {% elseif (app.session.hasFlash('success') or app.session.hasFlash('fos_user_success')) %}
-                                        {% set sessionFlashType = 'success' %}
-                                    {% elseif (app.session.hasFlash('info')) %}
-                                        {% set sessionFlashType = 'info' %}
-                                    {% else %}
-                                        {% set sessionFlashType = block('flash_type') %}
-                                    {% endif %}
-
-                                    {% if  sessionFlashType %}
-                                        <div class="xnotices">
-                                            <div class="{{ sessionFlashType }}Notice notice">
-                                                <div class="pad">
-                                                    <div class="pad2">
-                                                        <div class="pad3">
-                                                            <div class="pad4">
-                                                                {#
-                                                                    funny, I had to set this as a variable - concatenating
-                                                                    and translating the string all in one line was a fail
-                                                                #}
-                                                                {% set flashTitleKey = 'platformd.flash.'~sessionFlashType~'_title' %}
-                                                                <h3>
-                                                                    {{ flashTitleKey | trans }}
-                                                                </h3>
-
-                                                                {% if app.session.getFlash(sessionFlashType) %}
-                                                                    <p>
-                                                                        {{ app.session.getFlash(sessionFlashType) | trans }}
-                                                                    </p>
-                                                                {% else %}
-                                                                    {{ block('flash') }}
-                                                                {% endif %}
-                                                            </div>
+                                    <div class="xnotices session-flash" style="display: none;">
+                                        <div class="{% if block('flash_type') %}{{ block('flash_type') ~ 'Notice ' }}{% endif %}notice">
+                                            <div class="pad">
+                                                <div class="pad2">
+                                                    <div class="pad3">
+                                                        <div class="pad4">
+                                                            <h3 id="notice-type">{% if block('flash_type') %}{{ block('flash_type') }}{% endif %}</h3>
+                                                            <p id="notice-message">{% if block('flash') %}{{ block('flash') }}{% endif %}</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    {% endif %}
+                                    </div>
 
                                     {% block content %}{% endblock %}
 

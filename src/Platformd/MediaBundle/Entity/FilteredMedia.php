@@ -26,6 +26,7 @@ class FilteredMedia
 
     /**
      * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $parent;
 

@@ -371,9 +371,9 @@ class EventService
      * @param \Platformd\EventBundle\Entity\Event $event
      * @param \Platformd\UserBundle\Entity\User $user
      */
-    public function isUserAttending(Event $event, User $user)
+    public function isUserAttending(Event $event, $user)
     {
-        return $this->repository->isUserAttending($event, $user);
+        return $user instanceof User ? $this->repository->isUserAttending($event, $user) : false;
     }
 
     public function saveEmail(EventEmail $email)

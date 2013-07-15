@@ -43,7 +43,6 @@ youtube_vote:
     requirements:
         _format: json
         _method: POST
-    defaults: { _controller: VideoBundle:Youtube:tabs, tab: null}
 
 youtube_vote:
     pattern:  /vote

@@ -49,7 +49,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
                 $user->setIpAddress($ipAddress);
 
                 if ($this->checkRegistrationTimeoutPassed() === false) {
-                    $this->request->getSession()->setFlash('error', 'platformd.user.register.please_wait');
+                    $this->container->get('platformd.util.flash_util')->setFlash('error', 'platformd.user.register.please_wait');
                     return false;
                 }
 

@@ -30,13 +30,13 @@
         <div class="sub-nav-wrapper events-sub-nav-wrapper">
             <div class="sub-nav events-sub-nav">
                 <ul>
-                    {% if app.user == event.user or (app.user is not null and app.user.adminLevel == 'ROLE_SUPER_ADMIN') %}
+                    <span data-can-admin-event="true">
                         <li><a href="{{ path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) }}">{{ 'platformd.events.event_show.edit_event' | pd_trans }}</a></li>
                         {% if event.registrationOption == "REGISTRATION_ENABLED" %}
                             <li><a href="{{ path("group_event_attendees", event.getLinkableRouteParameters) }}">{{ 'platformd.events.event_show.manage_attendees' | pd_trans }}</a></li>
                             <li><a href="{{ path("group_event_contact", event.getLinkableRouteParameters) }}">{{ 'platformd.events.event_show.contact_attendees' | pd_trans }}</a></li>
                         {% endif %}
-                    {% endif %}
+                    </span>
                     <li><a href="{{ path(group.getLinkableRouteName, group.getLinkableRouteParameters) }}">{{ 'platformd.events.event_show.group_home' | pd_trans }}</a></li>
                 </ul>
             </div>
@@ -108,36 +108,39 @@
                             {% if (event.endsAtUtc | date('Y-m-d H:i:s')) < ('now' | date('Y-m-d H:i:s'))  %}
                                 <div id="event-registration-closed">{{ 'platformd.events.event_show.registration_closed' | pd_trans }}</div>
                             {% else %}
-                                {% if app.user is not null %}
-                                    {% if canJoin %}
-                                        {% if isMember %}
-                                            <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="javascript:void(0);" id="register-link" data-route="{{ path("group_event_rsvp") }}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a></div>
-                                        {% else %}
-                                            <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="{{ path('group_event_register_and_join', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a></div>
-                                        {% endif %}
+                                <div data-user-logged-in="true">
+                                    <div data-can-join="true">
+                                        <div data-user-group-member="true">
+                                            <div id="event-registration-button" data-user-attending="false"><a href="javascript:void(0);" id="register-link" data-route="{{ path("group_event_rsvp") }}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a></div>
+                                        </div>
+                                        <div data-user-group-member="false">
+                                            <div id="event-registration-button" data-user-attending="false"><a href="{{ path('group_event_register_and_join', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a></div>
+                                        </div>
 
                                         <div id="registration-response" style="display:none;"></div>
 
-                                        <div id="event-attending-message"{% if isAttending == false %} style="display:none;"{% endif %}>{{ 'platformd.events.event_show.im_attending' | pd_trans }}</div>
+                                        <div id="event-attending-message" data-user-attending="true">{{ 'platformd.events.event_show.im_attending' | pd_trans }}</div>
 
-                                        <div id="event-rsvp-link"{% if isAttending == false %} style="display:none;"{% endif %}><a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ path("group_event_rsvp") }}" data-contenttype="{{ event.contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | pd_trans }}</a></div>
-
-                                    {% else %}
-                                        {% if isApplicant %}
+                                    <div id="event-rsvp-link" data-user-attending="true"><a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ path("group_event_rsvp") }}" data-contenttype="{{ event.contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | pd_trans }}</a></div>
+                                    </div>
+                                    <div data-can-join="false">
+                                        <div data-group-applicant="true">
                                             <div style="padding: 10px 0px;">
                                                 <p class="alert alert-info help" style="margin:0; text-align:left;"><i class="icon-info-sign"></i>
                                                     A request has been sent to the group organizer to accept you into the private group. Once approved, you will also be registered for the event.
                                                 </p>
                                             </div>
-                                        {% else %}
-                                            <div id="event-registration-private-group-button"{% if isAttending %} style="display:none;"{% endif %}><a href="{{ path('group_apply_with_event', { 'id': group.id, 'eventId': event.id }) }}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a></div>
-                                        {% endif %}
-                                    {% endif %}
-                                {% else %}
+                                        </div>
+                                        <div data-group-applicant="false">
+                                            <div id="event-registration-private-group-button" data-user-attending="false"><a href="{{ path('group_apply_with_event', { 'id': group.id, 'eventId': event.id }) }}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div data-user-logged-in="false">
                                     <div id="event-registration-button">
                                         <a href="{% if group.isPublic %}{{ path('group_event_register_and_join', { 'groupSlug': group.slug, 'eventId': event.id }) }}{% else %}{{ path('group_apply_with_event', { 'id': group.id, 'eventId': event.id }) }}{% endif %}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a>
                                     </div>
-                                {% endif %}
+                                </div>
                             {% endif %}
                         </div>
                     {% endif %}
@@ -184,47 +187,107 @@
 {% include 'EventBundle::_rsvpDialog.html.twig' %}
 {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
 
+{% render url('_group_event_user_info', { 'id': event.id }) with {}, {'standalone': true } %}
+
 <script type="text/javascript">
+
     $(function () {
 
-        $('#register-link').click(function () {
-            $('#register-link').block({
-                message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" style="top:-14px; position: absolute; left: 6px;" />',
-                css: {
-                    border: 'none',
-                    background: 'transparent'
-                }
+        if (user_can_admin_event) {
+            $('[data-can-admin-event="true"]').show();
+            $('[data-can-admin-event="false"]').hide();
+        } else {
+            $('[data-can-admin-event="true"]').hide();
+            $('[data-can-admin-event="false"]').show();
+        }
 
-            });
+        if (user_is_logged_in) {
+            $('[data-user-logged-in="true"]').show();
+            $('[data-user-logged-in="false"]').hide();
+        } else {
+            $('[data-user-logged-in="true"]').hide();
+            $('[data-user-logged-in="false"]').show();
+        }
 
-            $.ajax({
-                url: $(this).attr('data-route'),
-                type: 'post',
-                data: JSON.stringify({
-                    'id' : {{ event.id }},
-                    'rsvp' : 1
-                }),
-                contentType: 'json',
-                success: function(data) {
-                    $('#register-link').unblock();
+        if (user_is_attending) {
+            $('[data-user-attending="true"]').show();
+            $('[data-user-attending="false"]').hide();
+        } else {
+            $('[data-user-attending="true"]').hide();
+            $('[data-user-attending="false"]').show();
+        }
 
-                    if (data.success) {
-                        $('#event-registration-button').hide();
-                        $('#event-attending-message').fadeIn();
-                        $('#event-rsvp-link').fadeIn();
-                        $('#event-attendee-count-{{ event.id }}').text(parseInt(data.attendeeCount));
-                    } else {
-                        $('#registration-response').text(data.errorMessage);
-                        $('.event-registration-button').fadeIn();
-                    }
-                    $('#registration-response').fadeIn();
-                }
-            })
+        if (user_is_group_member) {
+            $('[data-user-group-member="true"]').show();
+            $('[data-user-group-member="false"]').hide();
+        } else {
+            $('[data-user-group-member="true"]').hide();
+            $('[data-user-group-member="false"]').show();
+        }
 
-        });
+        if (user_is_group_applicant) {
+            $('[data-group-applicant="true"]').show();
+            $('[data-group-applicant="false"]').hide();
+        } else {
+            $('[data-group-applicant="true"]').hide();
+            $('[data-group-applicant="false"]').show();
+        }
+
+        if (user_can_join) {
+            $('[data-can-join="true"]').show();
+            $('[data-can-join="false"]').hide();
+        } else {
+            $('[data-can-join="true"]').hide();
+            $('[data-can-join="false"]').show();
+        }
     });
-
 </script>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $(function () {
+
+            $('#register-link').click(function () {
+                $('#register-link').block({
+                    message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" style="top:-14px; position: absolute; left: 6px;" />',
+                    css: {
+                        border: 'none',
+                        background: 'transparent'
+                    }
+
+                });
+
+                $.ajax({
+                    url: $(this).attr('data-route'),
+                    type: 'post',
+                    data: JSON.stringify({
+                        'id' : {{ event.id }},
+                        'rsvp' : 1
+                    }),
+                    contentType: 'json',
+                    success: function(data) {
+                        $('#register-link').unblock();
+
+                        if (data.success) {
+                            $('#event-registration-button').hide();
+                            $('#event-attending-message').fadeIn();
+                            $('#event-rsvp-link').fadeIn();
+                            $('#event-attendee-count-{{ event.id }}').text(parseInt(data.attendeeCount));
+                        } else {
+                            $('#registration-response').text(data.errorMessage);
+                            $('.event-registration-button').fadeIn();
+                        }
+                        $('#registration-response').fadeIn();
+                    }
+                })
+            });
+        });
+
+    </script>
 
 {% endblock %}
 

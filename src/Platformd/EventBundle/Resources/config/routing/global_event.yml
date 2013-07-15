@@ -2,13 +2,13 @@ global_events_index:
     pattern: /events
     defaults: { _controller: EventBundle:GlobalEvent:index }
 
-global_events_current:
-    pattern: /events/current
-    defaults: { _controller: EventBundle:GlobalEvent:current }
+_user_event_list:
+    pattern: /esi/USER_SPECIFIC/userEventList
+    defaults: { _controller: EventBundle:GlobalEvent:_userEventList }
 
-global_events_past:
-    pattern: /events/past
-    defaults: { _controller: EventBundle:GlobalEvent:past }
+_global_event_user_info:
+    pattern: /esi/USER_SPECIFIC/_globalEventUserInfo/{id}
+    defaults: { _controller: EventBundle:GlobalEvent:_globalEventUserInfo }
 
 global_event_contact:
     pattern: /events/contact/{slug}

@@ -1,20 +1,13 @@
 {% set reportContentType    = 'GroupEvent' %}
-{% set canManageEvents      = (app.user is not null and app.user.adminLevel == 'ROLE_SUPER_ADMIN') or (app.user == group.owner) %}
 
 <div id="event-content-scroll" style="height: 550px;">
 
-    {% if canAdd %}
-        {% if groupEvents | length > 0 %}
-            <a href='{{ path('group_event_new', {'groupSlug' : group.slug }) }}'>{{ 'platformd.groups.events.submit' | pd_trans }}</a>
-        {% else %}
-            {{ 'platformd.groups.events.member_no_events' | pd_trans({ '%url%': (path('group_event_new', {'groupSlug' : group.slug})) }) | raw }}
-        {% endif %}
+    {% if groupEvents | length > 0 %}
+        <div data-group-member="true"><a href='{{ path('group_event_new', {'groupSlug' : group.slug }) }}'>{{ 'platformd.groups.events.submit' | pd_trans }}</a></div>
+        <div data-group-member="false">{{ 'platformd.groups.events.non_member_add' | pd_trans }}</div>
     {% else %}
-        {% if groupEvents | length > 0 %}
-            {{ 'platformd.groups.events.non_member_add' | pd_trans }}
-        {% else %}
-            {{ 'platformd.groups.events.non_member_no_events' | pd_trans }}
-        {% endif %}
+        <div data-group-member="true">{{ 'platformd.groups.events.member_no_events' | pd_trans({ '%url%': (path('group_event_new', {'groupSlug' : group.slug})) }) | raw }}</div>
+        <div data-group-member="false">{{ 'platformd.groups.events.non_member_no_events' | pd_trans }}</div>
     {% endif %}
 
     {% for event in groupEvents %}
@@ -35,10 +28,10 @@
                     {% endif %}
                 </div>
                 <div class="group-event-actions">
-                    {% if canManageEvents == true %}
+                    <div data-group-admin="true">
                         <a href="{{ path('group_event_edit', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">{{ 'platformd.groups.events.edit' | pd_trans }}</a> |
                         <a href="{{ path('group_event_delete', { 'groupSlug' : group.slug, 'eventId' : event.id })}}" onclick="return confirm('{{ 'platformd.groups.events.delete_confirmation' | pd_trans }}');">{{ 'platformd.groups.events.delete' | pd_trans }}</a> |
-                    {% endif %}
+                    </div>
                     <a href="javascript:void(0)" class="report-content" report-data="{{ event.id }}"> {{ 'platformd.groups.events.report' | pd_trans }}</a>
                 </div>
             </div>
@@ -69,10 +62,10 @@
                             {% endif %}
                         </div>
                         <div class="group-event-actions">
-                            {% if canManageEvents == true %}
+                            <div data-group-admin="true">
                                 <a href="{{ path('group_event_edit', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">{{ 'platformd.groups.events.edit' | pd_trans }}</a> |
                                 <a href="{{ path('group_event_delete', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">{{ 'platformd.groups.events.delete' | pd_trans }}</a> |
-                            {% endif %}
+                            </div>
                             <a href="javascript:void(0)" class="report-content" report-data="{{ event.id }}"> {{ 'platformd.groups.events.report' | pd_trans }}</a>
                         </div>
                     </div>
@@ -92,6 +85,24 @@
 
 <script type="text/javascript">
     $(function () {
+
+        var canAdd     = (user_is_logged_in && (is_admin || user_is_group_member));
+
+        if (groupAdmin) {
+            $('[data-group-admin="true"]').show();
+            $('[data-group-admin="false"]').hide();
+        } else {
+            $('[data-group-admin="true"]').hide();
+            $('[data-group-admin="false"]').show();
+        }
+
+        if (canAdd) {
+            $('[data-group-member="true"]').show();
+            $('[data-group-member="false"]').hide();
+        } else {
+            $('[data-group-member="true"]').hide();
+            $('[data-group-member="false"]').show();
+        }
 
         $('#show-past-events-link').click(function () {
             $('#group-past-events').toggle();

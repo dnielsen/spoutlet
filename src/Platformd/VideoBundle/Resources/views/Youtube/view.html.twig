@@ -31,11 +31,12 @@
     </div>
     <div class="right">
         <div class="video-add">
-            {% if app.user %}
-            <a href="javascript:void(0);" data-id="{{ video.id }}" class="vote-button{% if voted %} voted{% endif %}" {% if voted %}title="{{ 'youtube.already_voted' | pd_trans }}"{% endif %} id="video-vote"><span id="video-points">{{ video.votes | length }}</span> {{ 'youtube.points' | pd_trans }}<i></i></a>
-            {% else %}
-            <a href="{{ login_link(app.request.uri) }}" data-id="{{ video.id }}" class="vote-button"><span id="video-points">{{ video.votes | length }}</span> {{ 'youtube.points' | pd_trans }}<i></i></a>
-            {% endif %}
+            <span data-logged-in="true">
+                <a href="javascript:void(0);" data-id="{{ video.id }}" class="vote-button" id="video-vote"><span id="video-points">{{ video.votes | length }}</span> {{ 'youtube.points' | trans }}<i></i></a>
+            </span>
+            <span data-logged-in="false">
+                <a href="{{ login_link(app.request.uri) }}" data-id="{{ video.id }}" class="vote-button"><span id="video-points">{{ video.votes | length }}</span> {{ 'youtube.points' | trans }}<i></i></a>
+            </span>
             <a href="{{ path('youtube_submit') }}" class="btn submit-video">{{ 'youtube.submit_video' | pd_trans }}</a>
         </div>
         <div class="video-social">
@@ -85,8 +86,8 @@
                 {% endif %}
                 <div class="video-options">
                     <a class="video-report-options-link" data-id="{{ video.id }}" href="javascript:void(0);">{{ 'youtube.report' | pd_trans }}</a>
-                    {% if isAdmin %} | <a href="javascript:void(0);" id="feature-video" data-id="{{ video.id }}" data-featured="{{ video.featured }}">{{ adminFeatureLinkText }}</a>{% endif %}
-                    {% if canEdit %} | <a href="{{ path('youtube_edit', {'slug' : video.slug}) }}">{{ 'edit' | pd_trans }}</a>{% endif %}
+                    <span data-is-admin="true"> | <a href="javascript:void(0);" id="feature-video" data-id="{{ video.id }}" data-featured="{{ video.featured }}">{{ adminFeatureLinkText }}</a></span>
+                    <span data-can-admin-video="true"> | <a href="{{ path('youtube_edit', {'slug' : video.slug}) }}">{{ 'edit' | trans }}</a></span>
                     <div class="video-report-options" id="video-report-options-{{ video.id }}">
                         <ul>
                             <li><a href="javascript:void(0);" class="video-report-link" data-id="{{ video.id }}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | pd_trans }}</a></li>
@@ -117,6 +118,43 @@
         </div>
     </div>
 </div>
+
+{% render url('_video_user_info', { 'id': video.id }) with {}, {'standalone': true } %}
+
+<script type="text/javascript">
+    $(function () {
+
+        if (user_has_voted_on_video) {
+            $('.vote-button').addClass('voted');
+            $('.vote-button').attr('title', '{{ 'youtube.already_voted' | trans }}');
+        }
+
+        if (user_is_logged_in) {
+            $('[data-user-logged-in="true"]').show();
+            $('[data-user-logged-in="false"]').hide();
+        } else {
+            $('[data-user-logged-in="true"]').hide();
+            $('[data-user-logged-in="false"]').show();
+        }
+
+        if (is_admin) {
+            $('[data-is-admin="true"]').show();
+            $('[data-is-admin="false"]').hide();
+        } else {
+            $('[data-is-admin="true"]').hide();
+            $('[data-is-admin="false"]').show();
+        }
+
+        if (is_admin || user_is_video_owner) {
+            $('[data-can-admin-video="true"]').show();
+            $('[data-can-admin-video="false"]').hide();
+        } else {
+            $('[data-can-admin-video="true"]').hide();
+            $('[data-can-admin-video="false"]').show();
+        }
+
+    });
+</script>
 
 {% endblock %}
 
@@ -191,29 +229,29 @@
             });
 
             $('.video-report-link').click(function (event) {
-                {% if app.user %}
-                var contentId = $(this).attr('data-id');
-                $.ajax({
-                    url: '{{ path('content_reporting') }}',
-                    type: 'post',
-                    data: JSON.stringify({
-                        'ContentId' : contentId,
-                        'Reason' : $(this).attr('data-reason'),
-                        'ContentType' : "YoutubeVideo"
-                    }),
-                    contentType: 'application/json',
-                    success: function(data) {
-                        if(data.success) {
-                            alert(data.messageForUser);
-                        } else {
-                            alert(data.messageForUser);
+                if (user_is_logged_in) {
+                    var contentId = $(this).attr('data-id');
+                    $.ajax({
+                        url: '{{ path('content_reporting') }}',
+                        type: 'post',
+                        data: JSON.stringify({
+                            'ContentId' : contentId,
+                            'Reason' : $(this).attr('data-reason'),
+                            'ContentType' : "YoutubeVideo"
+                        }),
+                        contentType: 'application/json',
+                        success: function(data) {
+                            if(data.success) {
+                                alert(data.messageForUser);
+                            } else {
+                                alert(data.messageForUser);
+                            }
+                            $('.video-report-options').hide();
                         }
-                        $('.video-report-options').hide();
-                    }
-                })
-                {% else %}
-                document.location.href='{{ login_link(app.request.uri) }}';
-                {% endif %}
+                        })
+                } else {
+                    document.location.href='{{ login_link(app.request.uri) }}';
+                }
             });
         });
     </script>

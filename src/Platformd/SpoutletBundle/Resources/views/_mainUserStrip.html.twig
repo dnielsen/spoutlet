@@ -8,7 +8,12 @@
     {% if is_granted("ROLE_ADMIN") %}
     <li class="separator"><a href="{{ path('admin_index') }}">{{ "platformd.layout.top_menu.admin" | trans }}</a></li>
     {% endif %}
-    <script type="text/javascript">var user_is_logged_in = true</script>
+    <script type="text/javascript">
+        var user_is_logged_in = true;
+        var user_id = {{ user.id }};
+        var is_admin = {% if user.adminLevel == 'ROLE_SUPER_ADMIN' %}true{% else %}false{% endif %};
+        var can_report = {% if can_user_report() %}true{% else %}false{% endif %};
+    </script>
 {% else %}
 	<li class="separator"><a id="header-login-link" href="javascript:void(0);">{{ 'platformd.layout.top_menu.sign_in' | trans }}</a></li>
 	<li class="separator"><a href="{{ path('fos_user_registration_register') }}">{{ 'platformd.layout.top_menu.join' | trans }}</a></li>
@@ -52,7 +57,11 @@
                 success: handleResponse
             });
         });
+
         var user_is_logged_in = false
+        var user_id = null;
+        var is_admin = false;
+        var can_report = false;
 
         function handleResponse(responseText, statusText, xhr, $form)  {
             if(responseText.success) {
@@ -61,6 +70,7 @@
                 alert(responseText.error);
             }
         }
+
     </script>
 {% endif %}
 <div id="login-modal-wrapper" style="display:none;">

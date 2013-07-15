@@ -137,7 +137,12 @@ class Controller extends BaseController
 
     protected function setFlash($key, $message)
     {
-        return $this->container->get('session')->setFlash($key, $message);
+        $this->getFlashUtil()->setFlash($key, $message);
+    }
+
+    protected function getFlash()
+    {
+        return $this->getFlashUtil()->getFlash();
     }
 
     protected function getQueueUtil()
@@ -317,6 +322,11 @@ class Controller extends BaseController
     protected function getSiteManager()
     {
         return $this->get('platformd.model.site_manager');
+    }
+
+    protected function getFlashUtil()
+    {
+        return $this->container->get('platformd.util.flash_util');
     }
 
     protected function getAvatarManager()
