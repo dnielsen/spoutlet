@@ -52,23 +52,23 @@
 </div>
 
 <script type="text/javascript">
-    $(function () {
-        var canAdd     = (user_is_logged_in && (is_admin || user_is_group_member));
 
-        if (groupAdmin) {
-            $('[data-group-admin="true"]').show();
-            $('[data-group-admin="false"]').hide();
-        } else {
-            $('[data-group-admin="true"]').hide();
-            $('[data-group-admin="false"]').show();
-        }
+    var canAdd     = (user_is_logged_in && (is_admin || user_is_group_member));
 
-        if (canAdd) {
-            $('[data-group-member="true"]').show();
-            $('[data-group-member="false"]').hide();
-        } else {
-            $('[data-group-member="true"]').hide();
-            $('[data-group-member="false"]').show();
-        }
-    });
+    if (groupAdmin) {
+        $('[data-group-admin="true"]').show();
+        $('[data-group-admin="false"]').hide();
+    } else {
+        $('[data-group-admin="true"]').hide();
+        $('[data-group-admin="false"]').show();
+    }
+
+    if (canAdd) {
+        $('[data-group-member="true"]').show();
+        $('[data-group-member="false"]').hide();
+    } else {
+        $('[data-group-member="true"]').hide();
+        $('[data-group-member="false"]').show();
+    }
+
 </script>
