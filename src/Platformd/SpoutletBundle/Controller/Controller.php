@@ -137,7 +137,20 @@ class Controller extends BaseController
 
     protected function setFlash($key, $message)
     {
-        return $this->container->get('session')->setFlash($key, $message);
+        $session = $this->container->get('session');
+        $flashes = $session->get('flashMessages') ?: array();
+
+        $flashes[$key] = $message;
+        return $session->set('flashMessages', $flashes);
+    }
+
+    protected function getFlash()
+    {
+        $session = $this->container->get('session');
+        $flashes = $session->get('flashMessages');
+        $session->remove('flashMessages');
+
+        return $flashes;
     }
 
     protected function getQueueUtil()

@@ -17,6 +17,44 @@ class DefaultController extends Controller
         return $response;
     }
 
+    public function _flashMessageAction()
+    {
+        if (!$this->isGranted('ROLE_USER')) {
+            $response = new Response();
+            $this->varnishCache($response, 3600);
+
+            return $response;
+        }
+
+        $flashes = $this->getFlash();
+
+        if (!$flashes) {
+            return new Response();
+        }
+
+        $data    = array();
+        $type    = null;
+
+        if (isset($flashes['error'])) {
+            $type = 'error';
+        } elseif (isset($flashes['success'])) {
+            $type = 'success';
+        } elseif (isset($flashes['info'])) {
+            $type = 'info';
+        } else {
+            return new Response();
+        }
+
+        $data['type']    = $type;
+        $data['message'] = $flashes[$type];
+
+        $response = new Response();
+        $response->setContent(json_encode($data));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
     public function forceLogoutAction(Request $request, $returnUrl) {
 
         $request->getSession()->invalidate();
