@@ -43,6 +43,9 @@
                     $(element).closest('#media-likes-wrapper').fadeIn();
                     $('#media-already-voted').fadeIn();
                     $('#media-likes').text(data.likes);
+
+                    voted_media_ids += (voted_media_ids == '' ? '' : ',') + $(element).attr('media-data');
+
                     voteRequestSent = false;
                 }
             })

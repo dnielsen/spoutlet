@@ -2,10 +2,7 @@
 
 {% block title 'Groups - ' ~ group.name %}
 
-{% set openGraphThumb               = app.request.getScheme ~ '://' ~ app.request.getHost ~ '/bundles/spoutlet/images/groups/groups_og.jpg' %}
-{% set isAllowedToViewGroupContent  = groupManager.isAllowedTo(app.user, group, site, "ViewGroupContent") %}
-{% set isAllowedToViewGroup         = groupManager.isAllowedTo(app.user, group, site, "ViewGroup") %}
-{% set isAllowedToManageDiscussions = groupManager.isAllowedTo(app.user, group, site, "ManageDiscussions") %}
+{% set openGraphThumb = app.request.getScheme ~ '://' ~ app.request.getHost ~ '/bundles/spoutlet/images/groups/groups_og.jpg' %}
 
 {% block open_graph %}
     <meta property="fb:app_id" content="{{ facebook_app_id }}">
@@ -50,26 +47,31 @@
     </div>
     <div class="std_2col">
         <div class="right">
-            {% if groupManager.isAllowedTo(app.user, group, site, 'JoinGroup') %}
-            <div class="join-group-options">
-                <form action="{{ path('group_join', { 'id': group.id }) }}">
-                    <button id="join-group-button" type="submit"></button>
-                </form>
-            </div>
+
+            {% if group.isPublic %}
+                <!-- is allowed JoinGroup -->
+                <div data-group-can-join="true" data-group-applicant="false">
+                    <div class="join-group-options">
+                        <form action="{{ path('group_join', { 'id': group.id }) }}">
+                            <button id="join-group-button" type="submit"></button>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                <!-- is allowed ApplyToGroup -->
+                <div data-group-can-join="true" data-group-applicant="false">
+                    <div class="join-group-options">
+                        <a href="{{ path('group_apply', { 'id': group.id }) }}" id="join-group-button" style="width:230px;height:62px;display:block;margin-bottom:18px">&nbsp;</a></li>
+                    </div>
+                </div>
             {% endif %}
 
-            {% if groupManager.isAllowedTo(app.user, group, site, 'ApplyToGroup') %}
-            <div class="join-group-options">
-                <a href="{{ path('group_apply', { 'id': group.id }) }}" id="join-group-button" style="width:230px;height:62px;display:block;margin-bottom:18px">&nbsp;</a></li>
-            </div>
-            {% endif %}
-
-            {% if groupManager.isApplicant(app.user, group) %}
+            <div data-group-applicant="true">
                 <p class="alert alert-info help">
                     <i class="icon-info-sign"></i>
                     {{ 'platformd.groups.show.waiting_on_approval' | pd_trans }}
                 </p>
-            {% endif %}
+            </div>
             <div class="widget-33" style="height: auto; margin-bottom: 10px;">
                 <div class="widget-header">
                     <div class="widget-title">
@@ -172,38 +174,35 @@
         <div class="left">
             <div class="widget-66" id="featured-content">
                 <div class="featured-content-header">
-                    {% if isAllowedToViewGroupContent %}
+                    <div data-view-group-content="true">
                         <a href="javascript:void(0);" id="group-news" class="active">{{ 'platformd.groups.show.news' | pd_trans }}</a>
                         {% if features.hasEvents %}<a href="javascript:void(0);" id="group-events">{{ 'platformd.groups.show.events' | pd_trans }}</a>{% endif %}
                         <a href="javascript:void(0);" id="group-images">{{ 'platformd.groups.show.images' | pd_trans }}</a>
                         <a href="javascript:void(0);" id="group-videos">{{ 'platformd.groups.show.videos' | pd_trans }}</a>
-                        {% if group.discussionsEnabled == true or isAllowedToManageDiscussions %}
-                            <a href="javascript:void(0);" id="group-discussions">{{ 'platformd.groups.show.discussions' | pd_trans }}</a>
-                        {% endif %}
+                        <span data-view-group-discussions="true"><a href="javascript:void(0);" id="group-discussions">{{ 'platformd.groups.show.discussions' | pd_trans }}</a></span>
                         <a href="javascript:void(0);" id="group-about">{{ 'platformd.groups.show.about' | pd_trans }}</a>
-                    {% elseif isAllowedToViewGroup %}
+                    </div>
+
+                    <div data-view-group-content="false">
                         <a href="javascript:void(0);" id="group-about" class="active">{{ 'platformd.groups.show.about' | pd_trans }}</a>
-                    {% endif %}
+                    </div>
                     <div style="clear: left;"></div>
                 </div>
                 <div class="widget-content" id="group-widget-content">
-                    {% if isAllowedToViewGroupContent %}
-                        <div id="group-content" class="featured-content-category active">
-                            {% if not isAllowedToViewGroupContent %}{% include 'GroupBundle:Group:about.html.twig' %}{% endif %}
-                        </div>
-                    {% endif %}
+                    <div id="group-content" class="featured-content-category active"></div>
                 </div>
             </div>
             {% if features.hasComments %}
-                {% if isAllowedToViewGroupContent %}
+                <div data-view-group-content="true">
                     <div id="group-comments">
                         {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : group.threadId, 'comments' : null, 'offset' : 0, 'permalink' : permalink } %}
                     </div>
-                {% else %}
+                </div>
+                <div data-view-group-content="false">
                     <div id="group-comments">
                         <p>{{ 'platformd.groups.show.must_be_member_comments' | pd_trans }}</p>
                     </div>
-                {% endif %}
+                </div>
             {% endif %}
         </div>
         {% include 'GroupBundle:Group:_reportGroupPopup.html.twig' %}
@@ -232,8 +231,53 @@
     {% if group.location and group.category == 'location' %}
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
     {% endif %}
+
     <script type="text/javascript">
+
         $(function () {
+
+            {% if group.isPublic %}
+                var view_group_content = true;
+            {% else %}
+                var view_group_content = (is_admin || user_is_group_member);
+            {% endif %}
+
+            if (user_is_group_applicant) {
+                $('[data-group-applicant="true"]').show();
+                $('[data-group-applicant="false"]').hide();
+            } else {
+                $('[data-group-applicant="true"]').hide();
+                $('[data-group-applicant="false"]').show();
+            }
+
+            if (!user_is_group_member) {
+                $('[data-group-can-join="true"]').show();
+                $('[data-group-can-join="false"]').hide();
+            } else {
+                $('[data-group-can-join="true"]').hide();
+                $('[data-group-can-join="false"]').show();
+            }
+
+            if (view_group_content) {
+                $('[data-view-group-content="true"]').show();
+                $('[data-view-group-content="false"]').hide();
+            } else {
+                $('[data-view-group-content="true"]').hide();
+                $('[data-view-group-content="false"]').show();
+            }
+
+            {% if group.discussionsEnabled %}
+                $('[data-view-group-discussions="true"]').show();
+                $('[data-view-group-discussions="false"]').hide();
+            {% else %}
+                if (user_is_group_owner || is_admin) {
+                    $('[data-view-group-discussions="true"]').show();
+                    $('[data-view-group-discussions="false"]').hide();
+                } else {
+                    $('[data-view-group-discussions="true"]').hide();
+                    $('[data-view-group-discussions="false"]').show();
+                }
+            {% endif %}
 
             $.blockUI.defaults.overlayCSS = {};
 
@@ -375,7 +419,12 @@
                     content.fadeIn();
                 });
             });
-            loadContent(tab);
+
+            if (view_group_content) {
+                loadContent(tab);
+            } else {
+                loadContent('group-about');
+            }
         });
     </script>
 

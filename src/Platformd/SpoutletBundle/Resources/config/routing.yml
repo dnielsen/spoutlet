@@ -2,6 +2,14 @@ _main_user_strip:
     pattern: /esi/USER_SPECIFIC/mainUserStrip
     defaults: { _controller: SpoutletBundle:Default:_mainUserStrip }
 
+_gallery_media_user_votes:
+    pattern: /esi/USER_SPECIFIC/galleryMediaUserVotes
+    defaults: { _controller: SpoutletBundle:Gallery:_galleryMediaUserVotes }
+
+_gallery_media_show_user_data:
+    pattern: /esi/USER_SPECIFIC/galleryMediaShowUserData/{id}
+    defaults: { _controller: SpoutletBundle:Gallery:_galleryMediaShowUserData }
+
 force_logout:
     pattern: /forceLogout/{returnUrl}
     defaults: { _controller: SpoutletBundle:Default:forceLogout, returnUrl: '/' }

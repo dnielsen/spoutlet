@@ -8,13 +8,10 @@
         </a>
     </div>
     <div class="group-image-actions">
-        {% if canDelete %}
+        <div data-group-admin="true">
             <a href="{{ path('youtube_delete', {'slug' : video.slug}) }}" onclick="return confirm('Are you sure you want to delete this video?');">{{ 'platformd.groups.videos.delete' | pd_trans }}</a> |
-        {% endif %}
-        {% if canEdit %}
             <a href="{{ path('youtube_edit', { 'slug' : video.slug }) }}">{{ 'platformd.groups.videos.edit' | pd_trans }}</a> |
-        {% endif %}
-
+        </div>
         <a href="javascript:void(0);" class="report-content" report-data="{{ video.id }}">{{ 'platformd.groups.videos.report' | pd_trans }}</a>
     </div>
 </div>

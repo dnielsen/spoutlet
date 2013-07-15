@@ -1,34 +1,56 @@
 <div id="report-content-dialog-{{ reportContentType }}" class="report-wrapper" style="display: none;" title="{{ 'content_reporting.report_content' | pd_trans }}">
-    {% if app.user is null %}
+    <div data-logged-in="false">
         <div style="height: 120px;">
             {{ 'content_reporting.must_be_logged_in' | pd_trans }}
         </div>
         <button id="close-dialog-{{ reportContentType }}" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
-    {% elseif can_user_report() == false %}
-        <div style="height: 120px;">
-            {{ 'content_reporting.once_per_hour' | pd_trans }}
-        </div>
-        <button id="close-dialog-{{ reportContentType }}" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
-    {% else %}
-        <input type="hidden" id="report-id-{{ reportContentType }}" />
-        <input type="hidden" id="content-type-{{ reportContentType }}" value="{{ reportContentType }}" />
-        <div style="height: 120px;">
-            <div id="report-response" style="display:none;">
-            {{ 'content_reporting.report_success' | pd_trans }}
+    </div>
+
+    <div data-logged-in="true">
+        <div data-can-report="false">
+            <div style="height: 120px;">
+                {{ 'content_reporting.once_per_hour' | pd_trans }}
             </div>
-            <div id="report-options">
-                <input class="report-option" type="radio" name="reason" value="inappropriate_content"> {{ 'content_reporting.inappropriate_content' | pd_trans }} <br />
-                <input class="report-option" type="radio" name="reason" value="spam"> {{ 'content_reporting.spam' | pd_trans }} <br />
-                <input class="report-option" type="radio" name="reason" value="violates_intellectual_property"> {{ 'content_reporting.violates_intellectual_property' | pd_trans }} <br />
-                <input class="report-option" type="radio" name="reason" value="individual_harrassing_me"> {{ 'content_reporting.individual_harrassing_me' | pd_trans }}
-            </div>
+            <button id="close-dialog-{{ reportContentType }}" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
         </div>
-        <button class="btn btn-primary" id="submit-report-{{ reportContentType }}">{{ 'content_reporting.submit' | pd_trans }}</button>
-        <button class="btn btn-primary" id="close-dialog-{{ reportContentType }}" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
-    {% endif %}
+
+        <div data-can-report="true">
+            <input type="hidden" id="report-id-{{ reportContentType }}" />
+            <input type="hidden" id="content-type-{{ reportContentType }}" value="{{ reportContentType }}" />
+            <div style="height: 120px;">
+                <div id="report-response" style="display:none;">
+                {{ 'content_reporting.report_success' | pd_trans }}
+                </div>
+                <div id="report-options">
+                    <input class="report-option" type="radio" name="reason" value="inappropriate_content"> {{ 'content_reporting.inappropriate_content' | pd_trans }} <br />
+                    <input class="report-option" type="radio" name="reason" value="spam"> {{ 'content_reporting.spam' | pd_trans }} <br />
+                    <input class="report-option" type="radio" name="reason" value="violates_intellectual_property"> {{ 'content_reporting.violates_intellectual_property' | pd_trans }} <br />
+                    <input class="report-option" type="radio" name="reason" value="individual_harrassing_me"> {{ 'content_reporting.individual_harrassing_me' | pd_trans }}
+               </div>
+            </div>
+            <button class="btn btn-primary" id="submit-report-{{ reportContentType }}">{{ 'content_reporting.submit' | pd_trans }}</button>
+            <button class="btn btn-primary" id="close-dialog-{{ reportContentType }}" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
     $(function () {
+
+        if (user_is_logged_in) {
+            $('[data-logged-in="true"]').show();
+            $('[data-logged-in="false"]').hide();
+        } else {
+            $('[data-logged-in="true"]').hide();
+            $('[data-logged-in="false"]').show();
+        }
+
+        if (can_report) {
+            $('[data-can_report="true"]').show();
+            $('[data-can_report="false"]').hide();
+        } else {
+            $('[data-can_report="true"]').hide();
+            $('[data-can_report="false"]').show();
+        }
 
         $('.content-report-dialog-wrapper').detach();
 

@@ -1,0 +1,19 @@
+<script type="text/javascript">
+    var user_is_attending    = {% if isAttending %}true{% else %}false{% endif %};
+    var user_is_event_owner  = {% if isOwner %}true{% else %}false{% endif %};
+    var user_can_admin_event = (user_is_logged_in && (is_admin || user_is_event_owner));
+    var event_attendee_count = {{ attendeeCount }}
+    {% if canJoin is defined %}
+        var user_can_join = {% if canJoin %}true{% else %}false{% endif %};
+    {% endif %}
+    {% if isGroupMember is defined %}
+        var user_is_group_member = {% if isGroupMember %}true{% else %}false{% endif %};
+    {% endif %}
+    {% if isApplicant is defined %}
+        var user_is_group_applicant = {% if isApplicant %}true{% else %}false{% endif %};
+    {% endif %}
+
+    $(function() {
+        $('#event-attendee-attendees span').html(event_attendee_count);
+    });
+</script>

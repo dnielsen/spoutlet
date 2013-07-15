@@ -3,9 +3,6 @@
 {% set reportContentType    = 'GalleryMedia' %}
 {% set mediaId              = media.id %}
 
-{% set canFeature           = media.isAllowedTo(app.user, site, 'FeatureMedia') %}
-{% set canEdit              = media.isAllowedTo(app.user, site, 'EditMedia') %}
-{% set canDelete            = media.isAllowedTo(app.user, site, 'DeleteMedia') %}
 {% set openGraphThumb       = media_path(media.image, {'local': true}) | imagine_filter('image_thumb_small') %}
 
 {% set isVotable = (media.contestEntry is null or media.contestEntry.contest is null or media.contestEntry.contest.isVotable()) %}
@@ -68,11 +65,13 @@
 
     <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
         <div class="left">
-            {% if media.contestEntry is not null and media.contestEntry.contest.isVotable() and media.contestEntry.contest.isFinished == false and media.canUserVote(app.user) and media.hasUserVoted(app.user) == false %}
-                <div style="width:100%;padding:5px 0;margin-bottom:10px;text-align:center;">
+            {% if media.contestEntry is not null and media.contestEntry.contest.isVotable() and media.contestEntry.contest.isFinished == false %}
+                <div data-user-can-vote="true">
+                    <div style="width:100%;padding:5px 0;margin-bottom:10px;text-align:center;" data-user-has-voted="false">
                         <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
                             {{ 'contests.ongoing_contest_alert' | trans }}
                         </p>
+                    </div>
                 </div>
             {% endif %}
             <img id="main-photo" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" style="display:none;" />
@@ -147,17 +146,18 @@
 
                         <div id="media-likes-wrapper">
 
-                            {% if app.user is not null %}
-                                {% if media.canUserVote(app.user) == true and isVotable %}
+                            <span data-logged-in="true">
+                                <span data-user-can-vote="true">
                                     <div class="photo-like">
-                                        <span id="media-like-label">Like it? </span><a class="media-voting-button up {% if media.hasUserVoted(app.user) == false %}quick-vote-link {% else %}already-voted{% endif %}" href="javascript:void(0);" media-data="{{ media.id }}" title="{{ 'galleries.vote_caption' | trans }}"></a>
+                                        <span id="media-like-label">Like it? </span><a class="media-voting-button up" href="javascript:void(0);" media-data="{{ media.id }}" title="{{ 'galleries.vote_caption' | trans }}"></a>
                                     </div>
-                                {% endif %}
-                            {% else %}
+                                </span>
+                            </span>
+                            <span data-logged-in="false">
                                 <div class="photo-like">
                                     <span id="media-like-label">Like it? </span><a class="media-voting-button up" href="{{ login_link(app.request.uri ~ '?vote=' ~ media.id) }}"></a>
                                 </div>
-                            {% endif %}
+                            </span>
 
                             <div class="media-likes">
                                <div class="photo-stats">
@@ -170,13 +170,13 @@
 
                     <div class="photo-date">{{ media.createdAt | date('M j, Y')}}</div>
                     <p>
-                            {% if canDelete %}
+                            <span data-user-can-delete-media="true">
                                 <a href="{{ path('gallery_delete_media', { 'id' : media.id })}}" onclick="return confirm('Are you sure you want to delete this item?');">delete</a> |
-                            {% endif %}
-                            {% if canEdit %}
+                            </span>
+                            <span data-user-can-edit-media="true">
                                 <a href="{{ path('gallery_edit_media', { 'id' : media.id })}}">edit</a> |
-                            {% endif %}
-                            {% if canFeature %}
+                            </span>
+                            <span data-user-is-admin="true">
                                 <a href="{{ path('gallery_feature_media', { 'id' : media.id })}}" onclick="return confirm('Are you sure you want to feature this item?');">
                                 {% if media.featured == false %}
                                     feature
@@ -184,7 +184,7 @@
                                     unfeature
                                 {% endif %}
                                 </a>
-                            {% endif %}
+                            </span>
                         </p>
                     <div class="description">{{ media.description }}</div>
                     <div class="views">{{ 'galleries.show_photo_details_views' | trans}}: {{ media.views | number_format(0, '.', ',') }}</div>
@@ -204,13 +204,15 @@
                             <a href="javascript:void(0);" class="report-content" report-data="{{ media.id }}">{{ 'content_reporting.report' | trans }}</a>
                         </p>
                     </div>
-                    {% if app.user is not null %}
-                        <div id="media-already-voted" style="width:290px;padding:5px 0;{% if media.hasUserVoted(app.user) == false %}display:none;{% endif %}">
-                            <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
-                                {{ 'galleries.already_voted' | trans }}
-                            </p>
+                    <div data-logged-in="true">
+                        <div data-user-has-voted="true">
+                            <div id="media-already-voted" style="width:290px;padding:5px 0;">
+                                <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
+                                    {{ 'galleries.already_voted' | trans }}
+                                </p>
+                            </div>
                         </div>
-                        {% if media.hasUserVoted(app.user) == false %}
+                        <div data-user-has-voted="false">
                             {% if isVotable == false %}
                                 <div style="width:290px;padding:5px 0;">
                                     <p class="alert alert-info help" style="margin:0;color:red;"><i class="icon-info-sign"></i>
@@ -218,15 +220,17 @@
                                         {{ 'contests.voting_begins' | trans }} {{ media.contestEntry.contest.votingStart | date('M d, Y') }} - {{ media.contestEntry.contest.votingEnd | date('M d, Y') }}</em>
                                     </p>
                                 </div>
-                            {% elseif media.canUserVote(app.user) == false  %}
-                                <div style="width:290px;padding:5px 0;">
-                                    <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
-                                        {{ 'galleries.ineligible_due_to_contest' | trans }}
-                                    </p>
+                            {% else %}
+                                <div data-user-can-vote="false">
+                                    <div style="width:290px;padding:5px 0;">
+                                        <p class="alert alert-info help" style="margin:0;"><i class="icon-info-sign"></i>
+                                            {{ 'galleries.ineligible_due_to_contest' | trans }}
+                                        </p>
+                                    </div>
                                 </div>
                             {% endif %}
-                        {% endif %}
-                    {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -241,6 +245,8 @@
 
 {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
 {% include 'SpoutletBundle:Gallery:_quickVoteJavascript.html.twig' %}
+
+{% render url('_gallery_media_show_user_data', { 'id': media.id }) with {}, {'standalone': true } %}
 
 {% endblock %}
 

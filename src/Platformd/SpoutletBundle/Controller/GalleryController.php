@@ -27,11 +27,52 @@ use Platformd\MediaBundle\Imagine\Cache\Resolver\AmazonS3Resolver;
  */
 class GalleryController extends Controller
 {
+    public function _galleryMediaUserVotesAction()
+    {
+        $votedMedia = $this->isGranted('ROLE_USER') ? $this->getVoteRepository()->getMediaIdsVotedOnByUserString($this->getUser()) : array();
+        $votedMedia = implode(',', $votedMedia);
+
+        $response = $this->render('SpoutletBundle:Gallery:_galleryMediaUserVotes.html.twig', array(
+            'votedMedia' => $votedMedia,
+        ));
+
+        $this->varnishCache($response, 1);
+
+        return $response;
+    }
+
+    public function _galleryMediaShowUserDataAction($id)
+    {
+        $media = $this->getGalleryMediaRepository()->find($id);
+
+        if(!$media) {
+            throw $this->createNotFoundException('No media found.');
+        }
+
+        $user = $this->getUser();
+        $site = $this->getCurrentSite();
+
+        $hasUserVoted                    = $media->hasUserVoted($user);
+        $canUserVoteBasedOnCountryAndAge = $media->canUserVote($user);
+        $canEdit                         = $media->isAllowedTo($user, $site, 'EditMedia');
+        $canDelete                       = $media->isAllowedTo($user, $site, 'DeleteMedia');
+
+        $response = $this->render('SpoutletBundle:Gallery:_galleryMediaShowUserData.html.twig', array(
+            'canVote'   => $canUserVoteBasedOnCountryAndAge,
+            'hasVoted'  => $hasUserVoted,
+            'canEdit'   => $canEdit,
+            'canDelete' => $canDelete,
+        ));
+
+        $this->varnishCache($response, 1);
+
+        return $response;
+    }
+
     public function indexAction(Request $request)
     {
         $nivoSliderMedia    = $this->getGalleryMediaRepository()->findFeaturedMediaForSite($this->getCurrentSite(), 5);
         $options            = $this->getFilterOptions();
-        $user               = $this->getUser();
         $mediaId            = (int)$request->query->get('vote');
 
         if ($mediaId && $this->isGranted('ROLE_USER')) {

@@ -14,15 +14,42 @@ use Symfony\Component\HttpFoundation\Request,
 
 class YoutubeController extends Controller
 {
+    public function _videoUserInfoAction($id)
+    {
+        $video = $this->getYoutubeManager()->findVideoById($id);
+
+        if(!$video) {
+            throw $this->createNotFoundException($this->trans('youtube.no_video_found'));
+        }
+
+        $user    = $this->getUser();
+
+        $voted   = !$this->getYoutubeManager()->canVoteOnVideo($video, $user);
+        $isOwner = $video->getAuthor() == $user;
+
+        $response = $this->render('VideoBundle:Youtube:_videoUserInfo.html.twig', array(
+            'voted'   => $voted,
+            'isOwner' => $isOwner,
+        ));
+
+        $this->varnishCache($response, 1);
+
+        return $response;
+    }
+
     public function indexAction()
     {
         $featured         = $this->getYoutubeManager()->findFeaturedVideosForCountry($this->getCurrentSite(), $this->getCurrentCountry());
         $featuredVideo    = count($featured) > 0 ? $featured[0] : null;
 
-        return $this->render('VideoBundle:Youtube:index.html.twig', array(
+        $response = $this->render('VideoBundle:Youtube:index.html.twig', array(
             'featured'          => $featured,
             'featuredVideo'     => $featuredVideo,
         ));
+
+        $this->varnishCache($response, 15);
+
+        return $response;
     }
 
     public function categoryAction($slug, Request $request)
@@ -160,14 +187,11 @@ class YoutubeController extends Controller
 
         $video->addView();
 
-        $voted = !$this->getYoutubeManager()->canVoteOnVideo($video, $this->getUser());
-
         $this->getYoutubeManager()->updateVideo($video);
 
         return $this->render('VideoBundle:Youtube:view.html.twig', array(
             'video'                 => $video,
             'videos'                => $videos,
-            'voted'                 => $voted,
             'showFeaturedInstead'   => $showFeaturedInstead,
         ));
     }
@@ -262,8 +286,7 @@ class YoutubeController extends Controller
             'videos' => $videos
         ));
 
-        $this->varnishCache($response, 30)
-;
+        $this->varnishCache($response, 30, 30);
         return $response;
     }
 

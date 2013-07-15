@@ -30,6 +30,38 @@ use DateTime;
 
 class GroupEventController extends Controller
 {
+    public function _groupEventUserInfoAction($id)
+    {
+        $event = $this->getGroupEventService()->find($id);
+
+        if (!$event) {
+            throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
+        }
+
+        $user  = $this->getUser();
+        $group = $event->getGroup();
+
+        $isAttending   = $this->isGranted('ROLE_USER') ? $this->getGroupEventService()->isUserAttending($event, $user) : false;
+        $isOwner       = $user == $event->getUser();
+        $isGroupMember = $this->getGroupManager()->isMember($user, $group);
+        $isApplicant   = $this->getGroupManager()->isApplicant($user, $group);
+        $canJoin       = $this->getGroupManager()->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinEvent');
+        $attendeeCount = $event->getAttendeeCount();
+
+        $response = $this->render('EventBundle:GlobalEvent:_eventUserInfo.html.twig', array(
+            'isAttending'   => $isAttending,
+            'isOwner'       => $isOwner,
+            'isGroupMember' => $isGroupMember,
+            'isApplicant'   => $isApplicant,
+            'canJoin'       => $canJoin,
+            'attendeeCount' => $attendeeCount,
+        ));
+
+        $this->varnishCache($response, 1);
+
+        return $response;
+    }
+
     /**
      * @Secure(roles="ROLE_USER")
      */
@@ -290,24 +322,9 @@ class GroupEventController extends Controller
             }
         }
 
-        $isAttending = false;
-
-        $canJoin = $this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'JoinEvent');
-
-        if ($this->isGranted('ROLE_USER')) {
-            $isAttending = $this->getGroupEventService()->isUserAttending($groupEvent, $this->getUser());
-        }
-
-        $isMember       = $this->getGroupManager()->isMember($this->getUser(), $group);
-        $isApplicant    = $this->getGroupManager()->isApplicant($this->getUser(), $group);
-
         return $this->render('EventBundle:GroupEvent:view.html.twig', array(
             'group'         => $group,
             'event'         => $groupEvent,
-            'isAttending'   => $isAttending,
-            'canJoin'       => $canJoin,
-            'isMember'      => $isMember,
-            'isApplicant'   => $isApplicant,
         ));
     }
 

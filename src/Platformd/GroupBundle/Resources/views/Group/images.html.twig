@@ -1,24 +1,15 @@
 {% set reportContentType    = 'GroupImage' %}
-{% set canAdd               = groupManager.isAllowedTo(app.user, group, site, 'AddImage') %}
-{% set canEdit              = groupManager.isAllowedTo(app.user, group, site, 'EditImage') %}
-{% set canDelete            = groupManager.isAllowedTo(app.user, group, site, 'DeleteImage') %}
 {% set addImageUrl          = features.hasPhotos ? path('gallery_submit') : path('group_add_image', { 'id': group.id }) %}
 
 <div id="group-images">
 
     <div>
         {% if pages | length > 0 %}
-            {% if canAdd %}
-                <a href='{{ addImageUrl }}'>{{ 'platformd.groups.images.submit_images' | pd_trans }}</a>
-            {% else %}
-                {{ 'platformd.groups.images.non_member_add' | pd_trans }}
-            {% endif %}
+            <div data-group-member="true"><a href='{{ addImageUrl }}'>{{ 'platformd.groups.images.submit_images' | pd_trans }}</a></div>
+            <div data-group-member="false">{{ 'platformd.groups.images.non_member_add' | pd_trans }}</div>
         {% else %}
-            {% if canAdd %}
-                {{ 'platformd.groups.images.member_no_images' | pd_trans({'%addImageUrl%': addImageUrl}) | raw }}
-            {% else %}
-                {{ 'platformd.groups.images.non_member_no_images' | pd_trans }}
-            {% endif %}
+            <div data-group-member="true">{{ 'platformd.groups.images.member_no_images' | pd_trans({'%addImageUrl%': addImageUrl}) | raw }}</div>
+            <div data-group-member="false">{{ 'platformd.groups.images.non_member_no_images' | pd_trans }}</div>
         {% endif %}
     </div>
 
@@ -39,12 +30,10 @@
                                 {{ image.title }}
                             </div>
                             <div class="group-image-actions">
-                                {% if canDelete %}
+                                <div data-group-admin="true">
                                     <a href="{{ path('group_delete_image', { 'id' : group.id, 'imageId' : image.id })}}" onclick="return confirm('Are you sure you want to delete this image?');">{{ 'platformd.groups.images.delete' | pd_trans }}</a> |
-                                {% endif %}
-                                {% if canEdit %}
                                     <a href="{{ path('group_edit_image', { 'id' : group.id, 'imageId' : image.id })}}">{{ 'platformd.groups.images.edit' | pd_trans }}</a> |
-                                {% endif %}
+                                </div>
                                 <a href="javascript:void(0);" class="report-content" report-data="{{ image.id }}">{{ 'platformd.groups.images.report' | pd_trans }}</a>
                             </div>
                         </div>
@@ -61,3 +50,25 @@
     {% endif %}
     {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
 </div>
+
+<script type="text/javascript">
+    $(function () {
+        var canAdd     = (user_is_logged_in && (is_admin || user_is_group_member));
+
+        if (groupAdmin) {
+            $('[data-group-admin="true"]').show();
+            $('[data-group-admin="false"]').hide();
+        } else {
+            $('[data-group-admin="true"]').hide();
+            $('[data-group-admin="false"]').show();
+        }
+
+        if (canAdd) {
+            $('[data-group-member="true"]').show();
+            $('[data-group-member="false"]').hide();
+        } else {
+            $('[data-group-member="true"]').hide();
+            $('[data-group-member="false"]').show();
+        }
+    });
+</script>

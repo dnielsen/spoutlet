@@ -1,3 +1,7 @@
+_group_event_user_info:
+    pattern: /esi/USER_SPECIFIC/_groupEventUserInfo/{id}
+    defaults: { _controller: EventBundle:GroupEvent:_groupEventUserInfo }
+
 group_event_rsvp:
     pattern: /group-events/ajax/rsvp
     defaults: { _controller:"EventBundle:GroupEvent:rsvpAjax", site: ~ }

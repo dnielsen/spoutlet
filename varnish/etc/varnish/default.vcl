@@ -3,7 +3,7 @@ import geoip;
 probe healthcheck {
     .request =
         "GET /healthCheck HTTP/1.1"
-        "Host: demo.alienwarearena.com"
+        "Host: demo.alienwarearena.local"
         "Connection: close";
 }
 
@@ -148,6 +148,46 @@ sub vcl_recv {
     }
 
     if (req.url ~ "^/videos/tab/") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/groups[/]?$") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/events[/]?$" || req.url ~ "^/events/([^/]+)[/]?$") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/wallpapers[/]?$") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/microsoft[/]?$") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/contact[/]?$") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/about[/]?$") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/contests[/]?$") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/galleries/gallery-data\?") {
+        remove req.http.Cookie;
+    }
+
+    if ((req.url ~ "^/galleries[/]?$" || req.url ~ "^/galleries/photo/\d$") && req.url !~ "\?vote=\d$") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/videos[/]?$" || req.url ~ "^/videos/view/" || req.url ~ "^/videos/category/([^/]+)[/]?$") {
         remove req.http.Cookie;
     }
 

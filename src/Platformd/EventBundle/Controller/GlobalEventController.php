@@ -19,6 +19,69 @@ class GlobalEventController extends Controller
 {
     private $globalEventService;
 
+    public function _userEventListAction()
+    {
+        if (!$this->isGranted('ROLE_USER')) {
+            $response = new Response();
+            $this->varnishCache($response, 1);
+
+            return $response;
+        }
+
+        $user = $this->getUser();
+
+        $globalEventResult = $this->getGlobalEventService()->getAllEventsUserIsAttending($user);
+        $groupEventResult  = $this->getGroupEventService()->getAllEventsUserIsAttending($user);
+
+        $globalEvents = $groupEvents = array();
+
+        foreach ($globalEventResult as $event) {
+            $globalEvents[] = $event['id'];
+        }
+
+        foreach ($groupEventResult as $event) {
+            $groupEvents[] = $event['id'];
+        }
+
+        $groupEvents  = implode(',', $groupEvents);
+        $globalEvents = implode(',', $globalEvents);
+
+        $response = $this->render('EventBundle:GlobalEvent:_userEventList.html.twig', array(
+            'globalEvents' => $globalEvents,
+            'groupEvents'  => $groupEvents,
+        ));
+
+        $this->varnishCache($response, 1);
+
+        return $response;
+    }
+
+    public function _globalEventUserInfoAction($id)
+    {
+        $event = $this->getGlobalEventService()->find($id);
+
+        if (!$event) {
+            throw $this->createNotFoundException(sprintf('No event for id "%s"', $id));
+        }
+
+        $user = $this->getUser();
+
+        $isAttending = $this->isGranted('ROLE_USER') ? $this->getGlobalEventService()->isUserAttending($event, $user) : false;
+        $isOwner     = $user == $event->getUser();
+
+        $attendeeCount = $event->getAttendeeCount();
+
+        $response = $this->render('EventBundle:GlobalEvent:_eventUserInfo.html.twig', array(
+            'isAttending'   => $isAttending,
+            'isOwner'       => $isOwner,
+            'attendeeCount' => $attendeeCount,
+        ));
+
+        $this->varnishCache($response, 1);
+
+        return $response;
+    }
+
     /**
      * Lists all events, upcoming and past
      *
@@ -41,81 +104,9 @@ class GlobalEventController extends Controller
         uasort($upcomingEvents, array($this, 'eventCompare'));
         uasort($pastEvents, array($this, 'eventCompare'));
 
-        $groupsCount = 0;
-
-        if ($this->isGranted('ROLE_USER') && $hasGroups) {
-            $groups = $this->get('platformd.model.group_manager')->getAllGroupsForUser($this->getUser());
-            $groupsCount = count($groups);
-        }
-
         return $this->render('EventBundle:GlobalEvent:list.html.twig', array(
             'upcomingEvents' => $upcomingEvents,
             'pastEvents'     => $pastEvents,
-            'groupsCount'    => $groupsCount,
-        ));
-    }
-
-    /**
-     * Lists upcoming events and paginates
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function currentAction(Request $request)
-    {
-        $page = $request->query->get('page', 1);
-        $site = $this->getCurrentSite();
-        $hasGroups = $site->getSiteFeatures()->getHasGroups();
-
-        $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site, 20, $page, $pager);
-        $upcomingGroupEvents  = $hasGroups ? $this->getGroupEventService()->findUpcomingEventsForSite($site, 20, $page, $pager) : array();
-
-        $events = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
-        uasort($events, array($this, 'eventCompare'));
-
-        $groupsCount = 0;
-
-        if ($this->isGranted('ROLE_USER') && $hasGroups) {
-            $groups = $this->get('platformd.model.group_manager')->getAllGroupsForUser($this->getUser());
-            $groupsCount = count($groups);
-        }
-
-        return $this->render('EventBundle:GlobalEvent:currentList.html.twig', array(
-            'events' => $events,
-            'pager' => $pager,
-            'groupsCount' => $groupsCount,
-        ));
-    }
-
-    /**
-     * List past events and paginates
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function pastAction(Request $request)
-    {
-        $page = $request->query->get('page', 1);
-        $site = $this->getCurrentSite();
-        $hasGroups = $site->getSiteFeatures()->getHasGroups();
-
-        $pastGlobalEvents = $this->getGlobalEventService()->findPastEventsForSite($site, 20, $page, $pager);
-        $pastGroupEvents  = $hasGroups ? $this->getGroupEventService()->findPastEventsForSite($site, 20, $page, $pager) : array();
-
-        $events = array_merge($pastGlobalEvents, $pastGroupEvents);
-        uasort($events, array($this, 'eventCompare'));
-
-        $groupsCount = 0;
-
-        if ($this->isGranted('ROLE_USER') && $hasGroups) {
-            $groups = $this->get('platformd.model.group_manager')->getAllGroupsForUser($this->getUser());
-            $groupsCount = count($groups);
-        }
-
-        return $this->render('EventBundle:GlobalEvent:pastList.html.twig', array(
-            'events' => $events,
-            'pager' => $pager,
-            'groupsCount' => $groupsCount,
         ));
     }
 

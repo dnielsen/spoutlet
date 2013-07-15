@@ -2,19 +2,42 @@
     <div class="sub-nav groups-sub-nav">
         <ul>
             <li><a href="{{ path('group_show', {'slug' : group.slug }) }}">Group Home</a></li>
-            {% if 'EditGroup' in permissions %}
+            <span data-group-admin="true">
                 <li><a href="{{ path('group_edit', { 'id': group.id }) }}">Group Settings</a></li>
-            {% endif %}
-            {% if 'ManageApplications' in permissions and not group.isPublic %}
-                <li><a href="{{ path('group_applications', { 'id': group.id }) }}">Member Approvals</a></li>
-            {% endif %}
-            {% if 'ApproveEvent' in permissions %}
+
+                {% if not group.isPublic %}
+                    <li><a href="{{ path('group_applications', { 'id': group.id }) }}">Member Approvals</a></li>
+                {% endif %}
+
                 <li><a href="{{ path('group_event_pending_approval', { 'groupSlug': group.slug }) }}">Event Approvals</a></li>
-            {% endif %}
-            {% if 'LeaveGroup' in permissions %}
+            </span>
+
+            <span data-group-member="true">
                 <li><a href="{{ path('group_leave', { 'id': group.id }) }}" onclick="return confirm('Are you sure you want to leave this group?');">Leave Group</a></li>
-            {% endif %}
+            </span>
             <li><a href="{{ path('groups') }}">See All Groups</a></li>
         </ul>
     </div>
 </div>
+
+{% render url('_group_member_check', { 'groupId': group.id }) with {}, {'standalone': true } %}
+
+<script type="text/javascript">
+
+    if (groupAdmin) {
+        $('[data-group-admin="true"]').show();
+        $('[data-group-admin="false"]').hide();
+    } else {
+        $('[data-group-admin="true"]').hide();
+        $('[data-group-admin="false"]').show();
+    }
+
+    if (user_is_group_member) {
+        $('[data-group-member="true"]').show();
+        $('[data-group-member="false"]').hide();
+    } else {
+        $('[data-group-member="true"]').hide();
+        $('[data-group-member="false"]').show();
+    }
+
+</script>

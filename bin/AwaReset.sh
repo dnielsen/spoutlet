@@ -110,6 +110,24 @@ echo "  - Initialising ACL structure..."
 sudo ls > /dev/null
 
 echo
+echo "Clearing development cache:"
+
+./app/console cache:clear --no-debug --env=dev >> bin/AwaReset.log
+
+echo
+echo "Installing web assets..."
+
+./app/console assets:install --symlink web >> bin/AwaReset.log
+./app/console assetic:dump >> bin/AwaReset.log
+
+echo
+echo "Executing development web request:"
+
+wget demo.alienwarearena.local/app_dev.php --quiet -O /dev/null >> bin/AwaReset.log
+
+sudo ls > /dev/null
+
+echo
 echo "Resetting test database:"
 echo "  - Dropping database..."
 
@@ -140,28 +158,12 @@ echo "  - Initialising ACL structure..."
 ./app/console init:acl --env=test >> bin/AwaReset.log
 
 echo
-echo "Clearing caches:"
-echo "  - Development..."
-
-./app/console cache:clear --no-debug --env=dev >> bin/AwaReset.log
-
-echo "  - Testing..."
+echo "Clearing test cache:"
 
 ./app/console cache:clear --no-debug --env=test >> bin/AwaReset.log
 
 echo
-echo "Installing web assets..."
-
-./app/console assets:install --symlink web >> bin/AwaReset.log
-
-echo
-echo "Executing web requests:"
-
-echo "  - Development..."
-
-wget demo.alienwarearena.local/app_dev.php --quiet -O /dev/null >> bin/AwaReset.log
-
-echo "  - Testing..."
+echo "Executing test web request:"
 
 wget demo.alienwarearena.local/app_test.php --quiet -O /dev/null  >> bin/AwaReset.log
 
