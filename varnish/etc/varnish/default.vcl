@@ -3,7 +3,7 @@ import geoip;
 probe healthcheck {
     .request =
         "GET /healthCheck HTTP/1.1"
-        "Host: demo.alienwarearena.local"
+        "Host: demo.alienwarearena.com"
         "Connection: close";
 }
 
