@@ -406,8 +406,8 @@ platformd:
             country_label: Choose a country
             underage_message: Sorry, it appears that you do not meet the minimum age requirement.  We are unable to complete your registration at this time.
             please_wait: The system is currently processing multiple account creations and cannot process your creation request at this time, please try again later.
-            oops: Oops!
-            cannot_process: We were unable to process your request. If you think this is an error please contact <a href="%s">support</a>.
+            oops: Error!
+            cannot_process: We were unable to create your account. Please complete or correct the required fields below.
             problems_found: We found the following problems:
             last_step: Last Step! A confirmation has been send to your email address. Follow the instructions in the email to activate your Alienware Arena account. Once you have activated your account, you will be able to log in.
             success: Your account has been created!

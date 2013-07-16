@@ -53,6 +53,11 @@
     <div class="left">
         <div id="registrationArea">
             <h2>{{ 'platformd.user.register_title' | pd_trans }}</h2>
+            <div class="registration-requirements">
+                <p>
+                    {{ 'platformd.user.register.requirements' | trans }}&nbsp;{{ 'platformd.user.register.already' | trans({'<': '<a href="'~path('fos_user_security_login')~'">', '>': '</a>'})|raw }}
+                </p>
+            </div>
             {% if errors | length %}
             <div class="formErrors">
                 <div class="error">
@@ -61,12 +66,6 @@
                 </div>
             </div>
             {% endif %}
-            <div class="registration-requirements">
-                <p>
-                    {{ 'platformd.user.register.requirements' | trans }}&nbsp;{{ 'platformd.user.register.already' | trans({'<': '<a href="'~path('fos_user_security_login')~'">', '>': '</a>'})|raw }}
-                </p>
-            </div>
-
             <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register form form-horizontal">
 
                 <table border="0" width="100%" cellpadding="6" spacing="2" class="form-table" align="center">
@@ -133,7 +132,7 @@
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.recaptcha) }}</td>
                             <td class="form-element-cell" valign="top">
                                 {{ form_widget(form.recaptcha, {'attr' : {'class' : 'registration-text'}}) }}
-                                <span class="field-error">{{ invalid_captcha }}</span>
+                                <span class="field-error-np">{{ invalid_captcha }}</span>
                             </td>
                         </tr>
                         <tr id="row_survey_ownership">
