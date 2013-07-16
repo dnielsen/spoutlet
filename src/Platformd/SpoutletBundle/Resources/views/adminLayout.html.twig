@@ -70,7 +70,7 @@
                     dataType: 'json',
                     async: false,
                     success: function(data) {
-                        if (data.type && data.message) {
+                        if (data && data.type && data.message) {
                             $('.flash-message span').html(data.message);
                             $('.flash-message').addClass('alert-' + data.type);
                             $('.flash-message').fadeIn();

@@ -19,12 +19,11 @@
 	<li class="separator"><a href="{{ path('fos_user_registration_register') }}">{{ 'platformd.layout.top_menu.join' | trans }}</a></li>
 
     <script type="text/javascript">
-        $(function () {
 
-            var newUrl = '{{ login_link() }}' + '?return=' + encodeURIComponent(window.location.href);
+        var newUrl = '{{ login_link() }}' + '?return=' + encodeURIComponent(window.location.href);
 
-            $('#header-login-link').attr('href', newUrl);
-        });
+        $('#header-login-link').attr('href', newUrl);
+
         var user_is_logged_in = false;
         var user_id = null;
         var is_admin = false;
