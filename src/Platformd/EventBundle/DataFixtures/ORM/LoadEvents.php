@@ -49,8 +49,6 @@ class LoadEvents extends AbstractFixture implements OrderedFixtureInterface, Con
       }
 
       $this->manager->persist($event);
-      $user->getPdGroups()->add($event);
-      $this->manager->persist($user);
 
       return $event;
     }
@@ -86,6 +84,9 @@ class LoadEvents extends AbstractFixture implements OrderedFixtureInterface, Con
         $group->getSites()->add($site);
         $group->setFeatured(true);
         $this->manager->persist($group);
+
+        $user->getPdGroups()->add($group);
+        $this->manager->persist($user);
 
         // Group Events [Online]
         for ($i=0; $i < self::NUM_EVENTS; $i++) {

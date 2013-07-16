@@ -84,7 +84,6 @@
 {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
 
 <script type="text/javascript">
-    $(function () {
 
         var canAdd     = (user_is_logged_in && (is_admin || user_is_group_member));
 
@@ -114,5 +113,4 @@
             $(this).hide();
             $('#event-content-scroll').mCustomScrollbar('update');
         });
-    });
 </script>

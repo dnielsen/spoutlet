@@ -8,7 +8,7 @@
         <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}" style="text-align:left;{% if not isFirstInRow %}margin: 0 0 0 18px;{% endif %}">
             <div class="gallery-media-thumb">
                 <a href="{{ path('gallery_media_show', { id: media[0].id }) }}">
-                    <img class="media-thumb" title="{{ media[0].title }}" src="{{ media_path(media[0].image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
+                    <img class="media-thumb lazy" title="{{ media[0].title }}" src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" data-src="{{ media_path(media[0].image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
                     </a>
                 {% if isVotable %}
                     <span data-user-logged-in="true">
@@ -40,7 +40,7 @@
         <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}" style="text-align:left;{% if not isFirstInRow %}margin: 0 0 0 18px;{% endif %}">
             <div class="gallery-media-thumb">
                 <a href="{{ path('gallery_media_show', { id: media.id }) }}">
-                    <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
+                    <img class="media-thumb lazy" title="{{ media.title }}" src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" data-src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
                     </a>
                 {% if isVotable %}
                     <span data-user-logged-in="true">
@@ -75,26 +75,24 @@
 {% include 'SpoutletBundle:Gallery:_quickVoteJavascript.html.twig' %}
 
 <script type="text/javascript">
-    $(document).ready(function() {
+    for (var i = 0; i < voted_media_ids.length; i++) {
+        $('[data-media-vote-id="' + voted_media_ids[i] + '"]').hide();
+    }
 
-        for (var i = 0; i < voted_media_ids.length; i++) {
-            $('[data-media-vote-id="' + voted_media_ids[i] + '"]').hide();
-        }
+    if (user_is_logged_in) {
+        $('[data-user-logged-in="true"]').show();
+        $('[data-user-logged-in="false"]').hide();
+    } else {
+        $('[data-user-logged-in="true"]').hide();
+        $('[data-user-logged-in="false"]').show();
+    }
 
-        if (user_is_logged_in) {
-            $('[data-user-logged-in="true"]').show();
-            $('[data-user-logged-in="false"]').hide();
-        } else {
-            $('[data-user-logged-in="true"]').hide();
-            $('[data-user-logged-in="false"]').show();
-        }
-
-        $('.gallery-media-thumb').hover(function() {
-            $(this).find('div.thumbnail-vote-caption').stop(false,true).fadeIn(200);
-        },
-        function() {
-            $(this).find('div.thumbnail-vote-caption').stop(false,true).fadeOut(200);
-        });
+    $('.gallery-media-thumb').hover(function() {
+        $(this).find('div.thumbnail-vote-caption').stop(false,true).fadeIn(200);
+    }, function() {
+        $(this).find('div.thumbnail-vote-caption').stop(false,true).fadeOut(200);
     });
+
+    $('img.lazy').lazyLoad();
 </script>
 
