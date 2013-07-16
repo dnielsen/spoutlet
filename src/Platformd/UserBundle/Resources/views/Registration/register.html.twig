@@ -3,3 +3,14 @@
 {% block content %}
 {% include "FOSUserBundle:Registration:register_content.html.twig" %}
 {% endblock content %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            $('#fos_user_registration_form_birthdate_year option:contains("--")').text('{{ 'year' | trans({}, 'forms') }}');
+            $('#fos_user_registration_form_birthdate_month option:contains("--")').text('{{ 'month' | trans({}, 'forms') }}');
+            $('#fos_user_registration_form_birthdate_day option:contains("--")').text('{{ 'day' | trans({}, 'forms') }}');
+        });
+    </script>
+{% endblock %}

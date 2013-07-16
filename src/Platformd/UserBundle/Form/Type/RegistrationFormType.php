@@ -68,14 +68,16 @@ class RegistrationFormType extends BaseType
             ->add('email', 'repeated', array('type' => 'email', 'required' => true, 'error_bubbling' => true))
             ->add('plainPassword', 'repeated', array('type' => 'password', 'required' => true, 'error_bubbling' => true))
             ->add('birthdate', 'birthday', array(
-                'empty_value' => '--', 'required' => true,
-                'years' => range(1940, date('Y')),
+                'empty_value' => '--',
+                'required' => true,
+                'years' => range(date('Y'), 1920),
                 'error_bubbling' => true,
             ))
             ->add('hasAlienwareSystem', 'choice', array(
                 'expanded' => true,
                 'choices' => array(1 => 'Yes', 0 => 'No'),
                 'required' => true,
+                'error_bubbling' => true,
             ))
             ->add('latestNewsSource', 'choice', array(
                 'empty_value' => 'Select one',

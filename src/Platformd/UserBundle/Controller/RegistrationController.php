@@ -42,6 +42,7 @@ class RegistrationController extends BaseRegistrationController
             'theme'     => $this->container->getParameter('fos_user.template.theme'),
             'errors'    => $form->getErrors(),
             'config'    => $this->getCurrentSite()->getSiteConfig(),
+            'locale'    => $this->getCurrentSite()->getDefaultLocale(),
         ));
     }
 

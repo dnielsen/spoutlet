@@ -7,6 +7,7 @@
 {% set firstname_error = '' %}
 {% set lastname_error = '' %}
 {% set state_error = '' %}
+{% set has_system_error = '' %}
 {% set news_source_error = '' %}
 {% set accept_error = '' %}
 {% set birthdate_error = '' %}
@@ -30,6 +31,9 @@
     {% endif %}
     {% if error.messageTemplate == 'state_not_blank' %}
         {% set state_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'has_system_not_blank' %}
+        {% set has_system_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
     {% endif %}
     {% if error.messageTemplate == 'news_source_not_blank' %}
         {% set news_source_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
@@ -109,14 +113,7 @@
                         <tr id="row_birthdate">
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.birthdate) }}</td>
                             <td class="form-element-cell" valign="top">
-                                {{ form_widget(form.birthdate.year, {'attr' : {'class' : 'dob-select'}}) }}
-                                <span>{{ 'year' | trans({}, 'forms') }}</span>
-                                {{ form_widget(form.birthdate.month, {'attr' : {'class' : 'dob-select'}}) }}
-                                <span>{{ 'month' | trans({}, 'forms') }}</span>
-                                {{ form_widget(form.birthdate.day, {'attr' : {'class' : 'dob-select'}}) }}
-                                <span>{{ 'day' | trans({}, 'forms') }}</span>
-                                <br />
-                                <span class="field-error-np">{{ birthdate_error }}</span>
+                                {% include 'UserBundle:Registration:_register_dob.html.twig' with { 'form': form, 'birthdate_error': birthdate_error, 'locale': locale} %}
                             </td>
                         </tr>
                         <tr id="row_address_country">
@@ -144,6 +141,7 @@
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.hasAlienwareSystem) }}</td>
                             <td class="form-element-cell" valign="top">
                                 {{ form_widget(form.hasAlienwareSystem) }}
+                                <span class="field-error">{{ has_system_error }}</span>
                             </td>
                         </tr>
                         <tr id="row_survey_discover">
@@ -205,3 +203,4 @@
     <div class="right">
     </div>
 </div>
+
