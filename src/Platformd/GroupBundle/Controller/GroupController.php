@@ -293,9 +293,11 @@ Alienware Arena Team
     {
         $this->addGroupsBreadcrumb();
 
-        $em     = $this->getEntityManager();
-        $repo   = $em->getRepository('GroupBundle:Group');
-        $site   = $this->getCurrentSite();
+        $em           = $this->getEntityManager();
+        $repo         = $em->getRepository('GroupBundle:Group');
+        $site         = $this->getCurrentSite();
+        $exposer      = $this->container->get('media_exposer');
+        $groupManager = $this->getGroupManager();
 
         $featuredGroups = $repo->findAllFeaturedGroupsForSite($site);
         $locationGroups = $repo->findGroupsByCategoryAndSite('location', $site);
@@ -303,9 +305,39 @@ Alienware Arena Team
         $recentGroups   = $repo->findMostRecentlyCreatedGroupsForSite($site);
         $popularGroups  = $repo->findMostPopularGroupsForSite($site);
 
+        $location = array();
+        $topic    = array();
+
+        foreach ($locationGroups as $groupInfo) {
+            $group       = $groupInfo[0];
+            $memberCount = $groupInfo['memberCount'];
+
+            $data = $groupManager->getGroupIndexData($group);
+
+            if ($data) {
+                $data['memberCount'] = $memberCount;
+                $location[] = $data;
+            }
+        }
+
+        foreach ($topicGroups as $groupInfo) {
+            $group       = $groupInfo[0];
+            $memberCount = $groupInfo['memberCount'];
+
+            $data = $groupManager->getGroupIndexData($group);
+
+            if ($data) {
+                $data['memberCount'] = $memberCount;
+                $topic[] = $data;
+            }
+        }
+
+        $locationGroups = json_encode($location);
+        $topicGroups    = json_encode($topic);
+
         return $this->render('GroupBundle:Group:index.html.twig', array(
-            'locationGroups' => $this->getGroupPages($locationGroups),
-            'topicGroups'    => $this->getGroupPages($topicGroups),
+            'locationGroups' => $locationGroups,
+            'topicGroups'    => $topicGroups,
             'recentGroups'   => $recentGroups,
             'popularGroups'  => $popularGroups,
             'featuredGroups' => $featuredGroups,
