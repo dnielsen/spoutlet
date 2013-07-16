@@ -20,7 +20,7 @@
     {% if error.messageTemplate == 'fos_user.email.blank' or error.messageTemplate == 'fos_user.email.already_used' or error.messageTemplate == 'fos_user.email.invalid' %}
         {% set email_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
     {% endif %}
-    {% if error.messageTemplate == 'fos_user.password.blank' %}
+    {% if error.messageTemplate == 'fos_user.password.blank' or error.messageTemplate == 'passwords_do_not_match' %}
         {% set password_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
     {% endif %}
     {% if error.messageTemplate == 'first_name_not_blank' %}
@@ -78,15 +78,14 @@
                                 <span class="field-error">{{ username_error }}</span>
                             </td>
                         </tr>
-                        {% for email in form.email %}
+
                         <tr id="row_email">
-                            <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(email) }}</td>
+                            <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.email) }}</td>
                             <td class="form-element-cell" valign="top">
-                                {{ form_widget(email, {'attr' : {'class' : 'registration-text'}}) }}
+                                {{ form_widget(form.email, {'attr' : {'class' : 'registration-text'}}) }}
                                 <span class="field-error">{{ email_error }}</span>
                             </td>
                         </tr>
-                        {% endfor %}
                         {% for plainPassword in form.plainPassword %}
                         <tr id="row_password">
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(plainPassword) }}</td>
