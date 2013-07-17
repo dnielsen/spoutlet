@@ -90,7 +90,6 @@ services:
             - '%platformd_user.mailer.parameters%'
             - '@platformd.util.site_util'
 
-<<<<<<< HEAD
     platformd.model.avatar_manager:
         class: Platformd\UserBundle\Model\AvatarManager
         arguments:
