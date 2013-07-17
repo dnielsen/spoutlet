@@ -41,17 +41,10 @@
                             </tr>
                             <tr>
                                 <td></td>
-                                <td>
-                                    <div>
-                                        <input name="cookie_login" id="cookie_login" type="checkbox" class="remember-me">&nbsp;&nbsp;
-                                        <label style="font-weight: bold;" for="cookie_login">{{ 'platformd.user.login.remember' | pd_trans }}</label>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td></td>
                                 <td align="left">
                                     <input type="submit" id="_submit" class="button btn btn-primary login-button" name="_submit" value="{{ 'platformd.user.login.sign_in' | pd_trans }}" />
+                                    <input name="cookie_login" id="cookie_login" type="checkbox" class="remember-me">
+                                    <label style="font-weight:bold;vertical-align:bottom;" for="cookie_login">{{ 'platformd.user.login.remember' | pd_trans }}</label>
                                 </td>
                             </tr>
                         </tbody>
@@ -65,21 +58,21 @@
                         <p>
                             {{ 'platformd.user.login.password_message' | pd_trans | format(path('contact')) | raw }}
                         </p>
+                        <div class="social">
+                            <table style="width:100%">
+                                <tbody>
+                                    <tr>
+                                        <td>{% include 'UserBundle:Security:_facebookLoginButton.html.twig' %}</td>
+                                        <td>{% include 'UserBundle:Security:_twitterLoginButton.html.twig' %}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </form>
         </div>
-        <div class="social">
-            <table style="width:100%">
-                <tbody>
-                    <tr>
-                        <td>{% include 'UserBundle:Security:_facebookLoginButton.html.twig' %}</td>
-                        <td>{% include 'UserBundle:Security:_twitterLoginButton.html.twig' %}</td>
-                    </tr>
-                </tbody>
-            </table>
 
-        </div>
     </div>
     <div class="right">
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}

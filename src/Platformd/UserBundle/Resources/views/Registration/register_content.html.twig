@@ -48,7 +48,11 @@
         {% set invalid_captcha = error.messageTemplate|trans(error.messageParameters, 'validators') %}
     {% endif %}
 {% endfor %}
-
+<ul>
+    {% for error in errors %}
+    <li>{{ error.messageTemplate }}</li>
+    {% endfor %}
+</ul>
 <div class="std_2col">
     <div class="left">
         <div id="registrationArea">

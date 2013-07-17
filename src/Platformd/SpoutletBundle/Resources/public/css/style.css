@@ -1213,27 +1213,28 @@ div.blockOverlay {
 #loginArea .tbl th { padding:0 6px; }
 #loginArea .tbl th, #loginArea .tbl td { padding-top:3px; padding-bottom:3px; }
 #loginArea .info { width:425px; margin:0 auto; padding-top:15px; }
-#loginArea .forgot { font-size:12px; text-align:center; padding:0 0 20px 0; }
+#loginArea .forgot { font-size:12px; text-align:left; padding:0 0 10px 0; }
 #loginArea .error { width:425px; margin:0 auto; padding:0 0 10px 0; }
 #loginArea .error .title { font-size:22px; color:#c62828; font-weight:bold; padding-bottom:5px; float: none; width: auto; height: auto; }
 #loginArea .error .message { border-left:#c62828 4px solid; border-right:#c62828 4px solid; font-size:12px; font-weight:normal; padding:3px 10px; }
-#loginArea .remember-me {margin: 0;}
-.social { width: 500px; }
+#loginArea .remember-me {margin: 0 0 0 5px;}
+.social table td { width: 50%;}
+.social { margin-left: -5px; width: 500px;}
 
-#login-modal { margin: 0px auto; width: 300px; height: 295px; border: #878787 1px solid; padding: 4px; background: #141414; }
+#login-modal { margin: 0px auto; width: 300px; height: 280px; border: #ffffff 2px solid; padding: 4px; background: #141414; }
 #login-modal #redirect-url { display: none; }
 #login-modal .login-modal-content { height: 140px; }
 #login-modal .login-modal-content .tbl { min-width: 220px; margin: 0 auto; }
 #login-modal .login-modal-content .tbl th { padding: 0 5px 0 0; font-weight: normal; color: #ffffff; }
 #login-modal .login-modal-content .tbl td { color: #ffffff; }
 #login-modal .login-modal-content .tbl div { margin: 5px 0; }
-#login-modal .login-modal-content .tbl div input[type="text"] { height: 20px; width: 160px; background: #ffffff; color: #000000; border: none; padding: 0; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; padding: 1px; }
-#login-modal .login-modal-content .tbl div input[type="password"] { height: 20px; width: 160px; background: #ffffff; color: #000000; border: none; padding: 0; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; padding: 1px; font-size: 20px; }
+#login-modal .login-modal-content .tbl div input[type="text"] { height: 20px; width: 190px; background: #ffffff; color: #000000; border: none; padding: 0; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; padding: 1px; }
+#login-modal .login-modal-content .tbl div input[type="password"] { height: 20px; width: 190px; background: #ffffff; color: #000000; border: none; padding: 0; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; padding: 1px; font-size: 20px; }
 #login-modal .login-modal-title { font-size: 20px; color: #aaaaaa; margin: 0 0 7px 0; padding: 0 0 3px 0; text-align: left; }
-#login-modal .remember-me {margin: 0;}
+#login-modal .remember-me {margin: 0 0 0 5px;}
 #login-modal .modal-close button { width: 100px; min-width: 100px;}
 #login-modal a.login-modal-close-ne { background: url('/bundles/spoutlet/images/x.png') no-repeat; width: 25px; height: 29px; display: inline; z-index: 3200; position: absolute; top: -15px; right: 120px; cursor: pointer;}
-#login-modal .login-social-modal { width: 240px; margin: 0px auto;}
+#login-modal .login-social-modal { width: 298px; margin: 0px auto;}
 
 #row_military_status { display: none; }
 #row_military_type { display: none; }
