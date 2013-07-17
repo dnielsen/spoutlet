@@ -82,6 +82,11 @@ sub vcl_recv {
             error 404 "Page Not Found.";
         }
 
+        if (req.url ~ "^/esi/COUNTRY_SPECIFIC/") {
+            remove req.http.Cookie;
+            // force request to vary on country header
+        }
+
         if (req.url !~ "^/esi/USER_SPECIFIC/") { # drop the cookie for any non user specific esi
             remove req.http.Cookie;
         }

@@ -14,6 +14,10 @@ _gallery_media_show_user_data:
     pattern: /esi/USER_SPECIFIC/galleryMediaShowUserData/{id}
     defaults: { _controller: SpoutletBundle:Gallery:_galleryMediaShowUserData }
 
+_layout_footer:
+    pattern: /esi/COUNTRY_SPECIFIC/layoutFooter
+    defaults: { _controller: SpoutletBundle:Default:_layoutFooter }
+
 force_logout:
     pattern: /forceLogout/{returnUrl}
     defaults: { _controller: SpoutletBundle:Default:forceLogout, returnUrl: '/' }

@@ -55,6 +55,14 @@ class DefaultController extends Controller
         return $response;
     }
 
+    public function _layoutFooterAction() {
+        $response = $this->render('SpoutletBundle::_footer.html.twig');
+
+        $this->varnishCache($response, 120);
+
+        return $response;
+    }
+
     public function forceLogoutAction(Request $request, $returnUrl) {
 
         $request->getSession()->invalidate();

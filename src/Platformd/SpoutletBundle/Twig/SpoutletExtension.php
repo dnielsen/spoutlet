@@ -26,6 +26,7 @@ class SpoutletExtension extends Twig_Extension
     private $bucketName;
     private $currentSiteConfig = NULL;
     private $currentSiteFeatures = NULL;
+    private $currentSiteCountrySpecificItems = NULL;
     private $currentSite = NULL;
     private $currentUser = NULL;
     private $giveawayManager;
@@ -39,6 +40,7 @@ class SpoutletExtension extends Twig_Extension
     private $backgroundAdRepo;
     private $localAuth;
     private $siteRepo;
+    private $countryCode;
 
     public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager, $contentReportRepo, $siteRepo, $backgroundAdRepo, $localAuth)
     {
@@ -73,6 +75,9 @@ class SpoutletExtension extends Twig_Extension
         $this->currentSite         = $this->siteUtil->getCurrentSite();
         $this->currentSiteFeatures = $this->currentSite->getSiteFeatures();
         $this->currentSiteConfig   = $this->currentSite->getSiteConfig();
+
+        $countryCode               = $this->request->headers->get('X-Country-Code');
+        $this->countryCode         = $countryCode != 'GB' ? $countryCode : 'UK';
     }
 
     public function getFilters()
@@ -97,21 +102,22 @@ class SpoutletExtension extends Twig_Extension
             'cevo_account_link'              => new Twig_Function_Method($this, 'cevoAccountLink'),
             'cevo_account_giveaway_link'     => new Twig_Function_Method($this, 'cevoAccountGiveawayPageLink'),
             'current_user_cevo_account_link' => new Twig_Function_Method($this, 'currentUserCevoAccountLink'),
-            'can_user_apply_to_giveaway'   => new Twig_Function_Method($this, 'canUserApplyToGiveaway'),
-            'account_link'                 => new Twig_Function_Method($this, 'accountLink'),
-            'change_link_domain'           => new Twig_Function_Method($this, 'changeLinkDomain'),
-            'ends_with'                    => new Twig_Function_Method($this, 'endsWith'),
-            'get_avatar_url'               => new Twig_Function_Method($this, 'getAvatarUrl'),
-            'has_user_applied_to_giveaway' => new Twig_Function_Method($this, 'hasUserAppliedToGiveaway'),
-            'is_admin_page'                => new Twig_Function_Method($this, 'isAdminPage'),
-            'media_path_nice'              => new Twig_Function_Method($this, 'mediaPathNice'),
-            'site_link'                    => new Twig_Function_Method($this, 'siteLink', array('is_safe' => array('html'))),
-            'target_blank'                 => new Twig_Function_Method($this, 'getTargetBlank', array('is_safe' => array('html'))),
-            'can_user_report'              => new Twig_Function_Method($this, 'canReport'),
-            'login_link'                   => new Twig_Function_Method($this, 'getLoginUrl'),
-            'account_home_link'            => new Twig_Function_Method($this, 'getAccountHomeUrl'),
+            'can_user_apply_to_giveaway'     => new Twig_Function_Method($this, 'canUserApplyToGiveaway'),
+            'account_link'                   => new Twig_Function_Method($this, 'accountLink'),
+            'change_link_domain'             => new Twig_Function_Method($this, 'changeLinkDomain'),
+            'ends_with'                      => new Twig_Function_Method($this, 'endsWith'),
+            'get_avatar_url'                 => new Twig_Function_Method($this, 'getAvatarUrl'),
+            'has_user_applied_to_giveaway'   => new Twig_Function_Method($this, 'hasUserAppliedToGiveaway'),
+            'is_admin_page'                  => new Twig_Function_Method($this, 'isAdminPage'),
+            'media_path_nice'                => new Twig_Function_Method($this, 'mediaPathNice'),
+            'site_link'                      => new Twig_Function_Method($this, 'siteLink', array('is_safe' => array('html'))),
+            'target_blank'                   => new Twig_Function_Method($this, 'getTargetBlank', array('is_safe' => array('html'))),
+            'can_user_report'                => new Twig_Function_Method($this, 'canReport'),
+            'login_link'                     => new Twig_Function_Method($this, 'getLoginUrl'),
+            'account_home_link'              => new Twig_Function_Method($this, 'getAccountHomeUrl'),
             'current_background_ad_url'      => new Twig_Function_Method($this, 'getCurrentBackgroundUrl'),
             'current_background_ad_link'     => new Twig_Function_Method($this, 'getCurrentBackgroundLink'),
+            'country_specific'               => new Twig_Function_Method($this, 'countrySpecific', array('is_safe' => array('html'))),
         );
     }
 
@@ -595,6 +601,10 @@ class SpoutletExtension extends Twig_Extension
 
     private function GetAlienwareLinkAddress($locale) {
 
+        if ($link = $this->countrySpecific('alienware_link')) {
+            return $link;
+        }
+
         switch($locale) {
             case 'ja':      return 'http://alienware.jp/';
             case 'zh':      return 'http://alienware.com.cn/';
@@ -942,5 +952,27 @@ class SpoutletExtension extends Twig_Extension
     {
         $site = $this->siteRepo->find($siteId);
         return $site ? $site->getName() : '';
+    }
+
+    public function countrySpecific($key)
+    {
+        switch ($key) {
+            case "alienware_link": $default = null; break;
+            default: throw new \InvalidArgumentException(sprintf('Unknown country-specific key "%s"', $key));
+        }
+
+        $countrySpecificItems = $this->siteUtil->getCurrentSiteCached()->getCountrySpecificItems();
+
+        $items = array();
+
+        foreach ($countrySpecificItems as $item) {
+            $items[$item->getName()][$item->getCountryCode()] = $item->getValue();
+        }
+
+        if (!$this->countryCode) {
+            return isset($items[$key]['default']) ? $items[$key]['default'] : $default;
+        }
+
+        return isset($items[$key][$this->countryCode]) ? $items[$key][$this->countryCode] : ((isset($items[$key]['default']) ? $items[$key]['default'] : $default));
     }
 }
