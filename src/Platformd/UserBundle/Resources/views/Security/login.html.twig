@@ -58,16 +58,6 @@
                         <p>
                             {{ 'platformd.user.login.password_message' | pd_trans | format(path('contact')) | raw }}
                         </p>
-                        <div class="social">
-                            <table style="width:100%">
-                                <tbody>
-                                    <tr>
-                                        <td>{% include 'UserBundle:Security:_facebookLoginButton.html.twig' %}</td>
-                                        <td>{% include 'UserBundle:Security:_twitterLoginButton.html.twig' %}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
             </form>

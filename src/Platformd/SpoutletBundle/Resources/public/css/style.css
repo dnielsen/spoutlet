@@ -1221,7 +1221,7 @@ div.blockOverlay {
 .social table td { width: 50%;}
 .social { margin-left: -5px; width: 500px;}
 
-#login-modal { margin: 0px auto; width: 300px; height: 280px; border: #ffffff 2px solid; padding: 4px; background: #141414; }
+#login-modal { margin: 0px auto; width: 300px; height: 170px; border: #ffffff 2px solid; padding: 4px; background: #141414; }
 #login-modal #redirect-url { display: none; }
 #login-modal .login-modal-content { height: 140px; }
 #login-modal .login-modal-content .tbl { min-width: 220px; margin: 0 auto; }

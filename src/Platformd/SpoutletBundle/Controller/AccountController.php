@@ -367,16 +367,6 @@ class AccountController extends Controller
             if($form->isValid()) {
                 $this->get('fos_user.user_manager')->updateUser($form->getData());
 
-                $this->getFacebookProvider()->postToTimeline(array(
-                    'message'       => $this->trans('platformd.facebook.timeline.account_created_message'),
-                    'link'          => 'http://' . $this->getCurrentSite()->getFullDomain(),
-                    'name'          => $this->trans('platformd.layout.default_title'),
-                    'description'   => $this->trans('platformd.facebook.timeline.account_created_description'),
-                    'picture'       => 'http://na.alienwarearena.com/bundles/spoutlet/images/alienwarelogothumb-140x85.png',
-                ));
-
-                $this->getTwitterProvider()->tweet($this->trans('platformd.twitter.tweets.account_created_message'));
-
                 return $this->redirect($this->generateUrl('accounts_settings'));
             }
         }
