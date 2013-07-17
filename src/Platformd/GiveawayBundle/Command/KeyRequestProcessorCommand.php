@@ -210,10 +210,10 @@ EOT
                         $state->setUserHasSeenState(false);
                     }
 
-                    /*if ($promotion->getStatus() != 'active' && !($promotion->getTestOnly() && $user->getIsSuperAdmin())) {
+                    if ($promotion->getStatus() != 'active' && !($promotion->getTestOnly() && $user->getIsSuperAdmin())) {
                         $this->rejectRequestWithOutput(3, 'This promotion is not active. Additionally the promotion\'s settings and user\'s roles don\'t allow for admin testing.', $state, KeyRequestState::REASON_INACTIVE_PROMOTION, $message, true);
                         continue 2;
-                    }*/
+                    }
 
                     if (!$promotion->allowKeyFetch()) {
                         $this->rejectRequestWithOutput(3, 'This promotion does not allow key fetching (this most likely means that the promotion is a system tag promotion, which isn\'t currently not supported).', $state, KeyRequestState::REASON_KEY_FETCH_DISALLOWED, $message, true);

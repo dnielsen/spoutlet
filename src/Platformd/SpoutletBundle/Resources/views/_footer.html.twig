@@ -1,0 +1,43 @@
+{% set facebookLink     = site_link('FACEBOOK') %}
+{% set twitterLink      = site_link('TWITTER') %}
+{% set instagramLink    = site_link('INSTAGRAM') %}
+{% set socialMediaStrip = site_link('SOCIAL_MEDIA_STRIP') %}
+
+<div id="footer-wrapper">
+    <div id="footer-background">
+        <div class="wide-950">
+            <div id="footer">
+                <ul class="nav">
+                    <li><a href="{{ path('contact') }}">{{ 'platformd.layout.bottom_menu.contact_us' | trans }}</a></li>
+                    <li><a rel="nofollow" href="{{ path('privacy') }}">{{ 'platformd.layout.bottom_menu.privacy_policy' | trans }}</a></li>
+                    <li><a rel="nofollow" href="{{ path('terms_conditions') }}" target="_blank">{{ 'platformd.layout.bottom_menu.terms_and_conditions' | trans }}</a></li>
+                    {% if features.hasSteamXfireCommunities %}
+                    <li><a href="http://steamcommunity.com/groups/alienwarearena" target="_blank">{{ 'platformd.layout.bottom_menu.steam_community' | trans }}</a></li>
+                    <li><a href="http://www.xfire.com/communities/alienwarearena/" target="_blank">{{ 'platformd.layout.bottom_menu.xfire_community' | trans }}</a></li>
+                    {% endif %}
+                    {% if facebookLink or twitterLink or instagramLink %}
+                        <li style="border-right: none; padding-top: 3px;">
+                            {% if facebookLink %}{{ facebookLink | raw }}{% endif %}
+                            {% if twitterLink %}{{ twitterLink | raw }}{% endif %}
+                            {% if instagramLink %}{{ instagramLink | raw }}{% endif %}
+                        </li>
+                    {% endif %}
+
+                    {% if socialMediaStrip -%}
+                        <li style="border-right: none; padding-top: 3px;">
+                            {{ socialMediaStrip | raw }}
+                        </li>
+                    {%- endif %}
+                </ul>
+                <div class="right">
+                    {% if app.session.locale == 'zh' %}<ul class="nav"><li>{% endif %}{{ site_link('ALIENWARE_LINK_BOTTOM_RIGHT') }}{% if app.session.locale == 'zh' %}</li><li class="noborder"><a href="http://bbs.alienfans.net/" target="_blank">ALIENWARE官方粉丝站</a></li></ul>{% endif %}
+                </div>
+                <div style="clear:both;"></div>
+                <div class="legal">
+                    {{ 'platformd.layout.bottom_menu.copyright_2012' | trans | raw }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

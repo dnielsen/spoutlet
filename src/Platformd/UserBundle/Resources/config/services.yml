@@ -90,6 +90,7 @@ services:
             - '%platformd_user.mailer.parameters%'
             - '@platformd.util.site_util'
 
+<<<<<<< HEAD
     platformd.model.avatar_manager:
         class: Platformd\UserBundle\Model\AvatarManager
         arguments:
@@ -125,7 +126,7 @@ services:
             validator: "@validator"
             session: "@session"
             api: "@fos_twitter.service"
-            container: "#service_container"
+            container: "@service_container"
 
     platformd_user.authentication_handler:
         class: Platformd\UserBundle\Handler\AuthenticationHandler
@@ -133,3 +134,4 @@ services:
             - "@router"
             - "@fos_user.user_manager"
             - "@platformd.util.site_util"
+

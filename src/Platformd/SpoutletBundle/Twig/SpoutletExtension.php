@@ -26,6 +26,7 @@ class SpoutletExtension extends Twig_Extension
     private $bucketName;
     private $currentSiteConfig = NULL;
     private $currentSiteFeatures = NULL;
+    private $currentSiteCountrySpecificItems = NULL;
     private $currentSite = NULL;
     private $currentUser = NULL;
     private $giveawayManager;
@@ -40,6 +41,8 @@ class SpoutletExtension extends Twig_Extension
     private $localAuth;
     private $siteRepo;
     private $secureUrlScheme;
+    private $countryCode;
+
 
     public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager, $contentReportRepo, $siteRepo, $backgroundAdRepo, $localAuth, $secureUrlScheme)
     {
@@ -75,6 +78,9 @@ class SpoutletExtension extends Twig_Extension
         $this->currentSite         = $this->siteUtil->getCurrentSite();
         $this->currentSiteFeatures = $this->currentSite->getSiteFeatures();
         $this->currentSiteConfig   = $this->currentSite->getSiteConfig();
+
+        $countryCode               = $this->request->headers->get('X-Country-Code');
+        $this->countryCode         = $countryCode != 'GB' ? $countryCode : 'UK';
     }
 
     public function getFilters()
@@ -115,6 +121,7 @@ class SpoutletExtension extends Twig_Extension
             'account_home_link'              => new Twig_Function_Method($this, 'getAccountHomeUrl'),
             'current_background_ad_url'      => new Twig_Function_Method($this, 'getCurrentBackgroundUrl'),
             'current_background_ad_link'     => new Twig_Function_Method($this, 'getCurrentBackgroundLink'),
+            'country_specific'               => new Twig_Function_Method($this, 'countrySpecific', array('is_safe' => array('html'))),
         );
     }
 
@@ -598,6 +605,10 @@ class SpoutletExtension extends Twig_Extension
 
     private function GetAlienwareLinkAddress($locale) {
 
+        if ($link = $this->countrySpecific('alienware_link')) {
+            return $link;
+        }
+
         switch($locale) {
             case 'ja':      return 'http://alienware.jp/';
             case 'zh':      return 'http://alienware.com.cn/';
@@ -954,5 +965,27 @@ class SpoutletExtension extends Twig_Extension
     {
         $site = $this->siteRepo->find($siteId);
         return $site ? $site->getName() : '';
+    }
+
+    public function countrySpecific($key)
+    {
+        switch ($key) {
+            case "alienware_link": $default = null; break;
+            default: throw new \InvalidArgumentException(sprintf('Unknown country-specific key "%s"', $key));
+        }
+
+        $countrySpecificItems = $this->siteUtil->getCurrentSiteCached()->getCountrySpecificItems();
+
+        $items = array();
+
+        foreach ($countrySpecificItems as $item) {
+            $items[$item->getName()][$item->getCountryCode()] = $item->getValue();
+        }
+
+        if (!$this->countryCode) {
+            return isset($items[$key]['default']) ? $items[$key]['default'] : $default;
+        }
+
+        return isset($items[$key][$this->countryCode]) ? $items[$key][$this->countryCode] : ((isset($items[$key]['default']) ? $items[$key]['default'] : $default));
     }
 }

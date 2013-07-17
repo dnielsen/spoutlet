@@ -45,9 +45,9 @@ abstract class AbstractCodeRepository extends EntityRepository
     public function getUnassignedKey(Pool $pool = null)
     {
         // make sure this pool is active
-        /*if (!$this->shouldPoolExposeKeys($pool)) {
+        if (!$this->shouldPoolExposeKeys($pool)) {
             return null;
-        }*/
+        }
 
         return $this
             ->createQueryBuilder('k')

@@ -4,6 +4,7 @@ namespace Platformd\UserBundle\Controller;
 
 use FOS\UserBundle\Controller\SecurityController as BaseController;
 
+
 use Symfony\Component\HttpFoundation\RedirectResponse,
     Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\Request,
@@ -14,7 +15,9 @@ use Symfony\Component\HttpFoundation\RedirectResponse,
 use Platformd\UserBundle\Entity\User,
     Platformd\CEVOBundle\CEVOAuthManager,
     Platformd\UserBundle\Security\User\Provider\FacebookProvider,
-    Platformd\UserBundle\Form\Type\IncompleteAccountType;
+    Platformd\UserBundle\Form\Type\IncompleteAccountType,
+    Platformd\CEVOBundle\CEVOAuthManager;
+
 
 /**
  * Overrides controller for login actions
