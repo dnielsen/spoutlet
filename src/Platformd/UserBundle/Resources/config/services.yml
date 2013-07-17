@@ -22,6 +22,8 @@ services:
         class: Platformd\UserBundle\Model\ApiManager
         arguments:
             - '%api_base_url%'
+            - '%api_access_key%'
+            - '%api_secret_key%'
 
     platformd.security.user.provider.api:
         class: Platformd\UserBundle\Security\Provider\ApiUserProvider

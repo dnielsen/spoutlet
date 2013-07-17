@@ -7,9 +7,13 @@ use Platformd\UserBundle\Entity\User;
 class ApiManager
 {
     private $apiBaseUrl;
+    private $accessKey;
+    private $secretKey;
 
-    public function __construct($apiBaseUrl) {
+    public function __construct($apiBaseUrl, $accessKey, $secretKey) {
         $this->apiBaseUrl = $apiBaseUrl;
+        $this->accessKey = $accessKey;
+        $this->secretKey = $secretKey;
     }
 
     private function dummyAuth($user, $presentedPassword)
