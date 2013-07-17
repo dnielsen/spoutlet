@@ -416,7 +416,6 @@ EOT
                     $joinAction->setUser($user);
                     $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
 
-                    $group->getMembers()->add($user);
                     $group->getUserMembershipActions()->add($joinAction);
 
                     $dispatcher = $this->getContainer()->get('event_dispatcher');
@@ -427,7 +426,9 @@ EOT
 
                     if($group->getIsPublic()) {
                         try {
+                            $this->output(4, 'Assigning user ARP for joining group.');
                             $response = $this->getContainer()->get('pd.cevo.api.api_manager')->GiveUserXp('joingroup', $user->getCevoUserId());
+                            $this->output(4, 'Successfully assigned ARP.');
                         } catch (ApiException $e) {
 
                         }
