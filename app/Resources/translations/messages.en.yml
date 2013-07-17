@@ -131,8 +131,8 @@ platformd:
         top_menu:
             admin: Admin
             account: Account
-            sign_in: Sign in
-            sign_out: Sign out
+            sign_in: Sign In
+            sign_out: Sign Out
             join: Join
             about: About
             contact: Contact

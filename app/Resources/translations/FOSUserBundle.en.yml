@@ -145,7 +145,7 @@ resetted.email: |
 
 # Global strings
 layout.logout: Logout
-layout.login: Sign in
+layout.login: Sign In
 layout.register: Register
 
 # Form field labels
