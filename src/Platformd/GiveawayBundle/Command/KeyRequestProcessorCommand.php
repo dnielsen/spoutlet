@@ -148,11 +148,23 @@ EOT
 
         $this->output(0, 'Processing queue for the Key Requests.');
 
-        $iterationCount = 1;
+        $iterationCount = 0;
 
         while ($message = $queueUtil->retrieveFromQueue(new KeyRequestQueueMessage())) {
 
-            usleep(self::DELAY_BETWEEN_KEYS_MILLISECONDS);
+            $iterationCount++;
+
+            if ($iterationCount > self::ITERATION_COUNT) {
+                $this->output();
+                $this->output(0, 'Maximum iterations reached - exiting.');
+                exit;
+            }
+
+            if ($this->exitAfterCurrentItem) {
+                $this->output();
+                $this->output(0, 'Process terminated - exiting.');
+                exit;
+            }
 
             $this->output();
             $this->output(0, 'Iteration '.$iterationCount);
@@ -459,20 +471,6 @@ EOT
             $this->output(5, 'Email sent.');
 
             $this->deleteMessageWithOutput($message);
-
-            if ($this->exitAfterCurrentItem) {
-                $this->output();
-                $this->output(0, 'Process terminated - exiting.');
-                exit;
-            }
-
-            $iterationCount++;
-
-            if ($iterationCount > self::ITERATION_COUNT) {
-                $this->output();
-                $this->output(0, 'Maximum iterations reached - exiting.');
-                exit;
-            }
         }
 
         $this->output();
