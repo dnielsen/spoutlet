@@ -203,13 +203,11 @@
                         dataType: 'json',
                         async: false,
                         success: function(data) {
-                            if (data) {
-                                if (data.type && data.message) {
-                                    $('.session-flash #notice-type').html(data.type);
-                                    $('.session-flash #notice-message').html(data.message);
-                                    $('.session-flash .notice').addClass(data.type + 'Notice');
-                                    $('.session-flash').fadeIn();
-                                }
+                            if (data && data.type && data.message) {
+                                $('.session-flash #notice-type').html(data.type);
+                                $('.session-flash #notice-message').html(data.message);
+                                $('.session-flash .notice').addClass(data.type + 'Notice');
+                                $('.session-flash').fadeIn();
                             }
                         }
                     });

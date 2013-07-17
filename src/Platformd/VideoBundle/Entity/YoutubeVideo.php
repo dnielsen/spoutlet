@@ -221,8 +221,8 @@ class YoutubeVideo implements LinkableInterface, CommentableInterface, Reportabl
         $this->votes                = new ArrayCollection();
         $this->contentReports       = new ArrayCollection();
         $this->restrictionCountries = new ArrayCollection();
-        $this->groups               = new ArrayCollection();
-        $this->galleries            = new ArrayCollection();
+        $this->groups               = array();
+        $this->galleries            = array();
     }
 
     /**

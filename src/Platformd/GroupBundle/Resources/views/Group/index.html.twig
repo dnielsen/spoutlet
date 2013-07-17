@@ -21,7 +21,7 @@
                         <div class="group-list-item">
                             <a href="{{ path('group_show', { slug: group[0].slug}) }}">
                                 {% if group[0].thumbNail %}
-                                <img src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
+                                <img  class="lazy" src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" data-src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
                                 {% else %}
                                 <img src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
                                 {% endif %}
@@ -46,15 +46,16 @@
             <div class="scrollable" id="scrollable-topic-groups">
                 <div class="items">
                     {% for page in topicGroups %}
+                        {% set lazyImages = loop.index > 0 %}
                         <div class="items-wrapper">
                         {% for groupList in page %}
                             {% for group in groupList %}
                                 <div class="group-list-item">
                                     <a href="{{ path('group_show', { slug: group[0].slug}) }}">
                                         {% if group[0].thumbNail %}
-                                        <img src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
+                                        <img class="lazy" src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" data-src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
                                         {% else %}
-                                        <img src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
+                                        <img  src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
                                         {% endif %}
                                     </a>
                                     <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
@@ -90,7 +91,7 @@
                                 <div class="group-list-item">
                                     <a href="{{ path('group_show', { slug: group[0].slug}) }}">
                                         {% if group[0].thumbNail %}
-                                        <img src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
+                                        <img  class="lazy" src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" data-src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
                                         {% else %}
                                         <img src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
                                         {% endif %}
@@ -168,19 +169,30 @@
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.truncate.min.js"></script>
     <script type="text/javascript">
+
         $(function () {
-            $('#scrollable-location-groups').scrollable({
+            locationScrollable = $('#scrollable-location-groups').scrollable({
                 next: '#location-next',
-                prev: '#location-prev'
-            });
-            $('#scrollable-topic-groups').scrollable({
+                prev: '#location-prev',
+                onSeek: function() {
+                    this.getItems().eq(this.getIndex()).find('img.lazy').lazyLoad();
+                }
+            }).data('scrollable');
+            topicScrollable = $('#scrollable-topic-groups').scrollable({
                 next: '#topic-next',
-                prev: '#topic-prev'
-            });
+                prev: '#topic-prev',
+                onSeek: function() {
+                    this.getItems().eq(this.getIndex()).find('img.lazy').lazyLoad();
+                }
+            }).data('scrollable');
 
             $('.group-index-link').truncate();
             $('.item-detail').truncate({width:130});
             $('.widget-item .news-ellipse').truncate();
+
+            locationScrollable.getItems().eq(locationScrollable.getIndex()).find('img.lazy').lazyLoad();
+            topicScrollable.getItems().eq(topicScrollable.getIndex()).find('img.lazy').lazyLoad();
+            $('#featured-groups img.lazy').lazyLoad();
         });
     </script>
 
