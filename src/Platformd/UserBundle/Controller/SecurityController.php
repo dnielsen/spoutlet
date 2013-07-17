@@ -15,8 +15,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse,
 use Platformd\UserBundle\Entity\User,
     Platformd\CEVOBundle\CEVOAuthManager,
     Platformd\UserBundle\Security\User\Provider\FacebookProvider,
-    Platformd\UserBundle\Form\Type\IncompleteAccountType,
-    Platformd\CEVOBundle\CEVOAuthManager;
+    Platformd\UserBundle\Form\Type\IncompleteAccountType;
 
 
 /**
