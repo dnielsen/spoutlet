@@ -51,10 +51,7 @@ class SiteTakeoverListener
 
         if ($currentTakeover) {
 
-            $session = $request->getSession();
-            $session->set(self::TARGET_PATH_KEY, $request->getRequestUri());
-
-            $takeoverUrl    = $this->router->generate('takeover');
+            $takeoverUrl    = $this->router->generate('takeover', array('returnUrl' => urlencode($request->getRequestUri())));
             $response       = new RedirectResponse($takeoverUrl);
 
             $cookieName     = 'pd_site_takeover_viewed';

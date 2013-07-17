@@ -19,7 +19,7 @@ class ApiQueryForUpdatedUsersCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('pd:users:getUpdatedromApi')
+            ->setName('pd:users:getUpdatedFromApi')
             ->setDescription('Queries the user API endpoint for all updated users and updates local user records.')
             ->addOption('all', null, InputOption::VALUE_NONE, 'Updates all user records')
             ->setHelp(<<<EOT

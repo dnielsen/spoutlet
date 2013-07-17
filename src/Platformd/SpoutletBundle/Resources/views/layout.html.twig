@@ -290,7 +290,7 @@
                                 {{ block('legal_footer') }}
                             </div>
                         {% endif %}
-	                    {% include 'SpoutletBundle::footer.html.twig' %}
+                        {% render url('_layout_footer') with {}, {'standalone': true } %}
 	                </div>
 	            </div>
 	        </div>

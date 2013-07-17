@@ -26,7 +26,6 @@ class SecurityController extends BaseController
         return parent::loginAction();
     }
 
-
     // facebook security
     public function facebookSecurityCheckAction()
     {

@@ -160,18 +160,10 @@ class ApiManager
         {
             if (is_array($parameters)) {
                 $parameters = json_encode($parameters);
+
+                curl_setopt($curl2, CURLOPT_POST, true);
+                curl_setopt($curl2, CURLOPT_POSTFIELDS, $parameters);
             }
-
-            if ($this->isJson($parameters)) {
-
-                curl_setopt($curl2, CURLOPT_HTTPHEADER, array(
-                    'Content-Type: application/json',
-                    'Content-Length: ' . strlen($parameters))
-                );
-            }
-
-            curl_setopt($curl2, CURLOPT_POST, true);
-            curl_setopt($curl2, CURLOPT_POSTFIELDS, $parameters);
         }
 
         curl_setopt($curl2, CURLOPT_URL, $url);
@@ -180,10 +172,5 @@ class ApiManager
         $result = curl_exec($curl2);
 
         return json_decode($result, true);
-    }
-
-    private function isJson($string) {
-        json_decode($string);
-        return (json_last_error() == JSON_ERROR_NONE);
     }
 }

@@ -1,6 +1,6 @@
 takeover:
-    pattern: /
-    defaults: { _controller: SpoutletBundle:SiteTakeover:takeover }
+    pattern: /{returnUrl}
+    defaults: { _controller: SpoutletBundle:SiteTakeover:takeover, returnUrl: null }
 
 takeover_specified:
     pattern: /{id}

@@ -12,22 +12,20 @@ use Platformd\SpoutletBundle\Takeover\SiteTakeoverListener;
  */
 class SiteTakeoverController extends Controller
 {
-    public function takeoverAction()
+    public function takeoverAction($returnUrl = null)
     {
         $site           = $this->getCurrentSite();
         $em             = $this->getDoctrine()->getEntityManager();
         $takeover       = $em->getRepository('SpoutletBundle:SiteTakeover')->getCurrentTakeover($site);
         $session        = $this->get('session');
-        $continueUrl    = $session->get(SiteTakeoverListener::TARGET_PATH_KEY);
-        $session->remove(SiteTakeoverListener::TARGET_PATH_KEY);
 
-        if (!$continueUrl) {
-            $continueUrl = $this->generateUrl('default_index');
+        if (!$returnUrl) {
+            $returnUrl = $this->generateUrl('default_index');
         }
 
         return $this->render('SpoutletBundle:SiteTakeover:takeover.html.twig', array(
             'takeover'      => $takeover,
-            'continueUrl'   => $continueUrl,
+            'continueUrl'   => $returnUrl,
         ));
     }
 
