@@ -424,7 +424,7 @@ EOT
 
                     $groupManager->saveGroup($group);
 
-                    if($group->getIsPublic()) {
+                    /*if($group->getIsPublic()) {
                         try {
                             $this->output(4, 'Assigning user ARP for joining group.');
                             $response = $this->getContainer()->get('pd.cevo.api.api_manager')->GiveUserXp('joingroup', $user->getCevoUserId());
@@ -432,7 +432,7 @@ EOT
                         } catch (ApiException $e) {
 
                         }
-                    }
+                    }*/
 
                     $user->getPdGroups()->add($group);
                     $this->em->persist($user);
@@ -444,11 +444,13 @@ EOT
             $this->output(5, 'Key assigned successfully.');
 
             // give user arp for obtaining a key
-            try {
+            /*try {
+                $this->output(4, 'Assigning user ARP for redeeming key.');
                 $response = $this->getContainer()->get('pd.cevo.api.api_manager')->GiveUserXp('keygiveaway', $user->getCevoUserId());
+                $this->output(4, 'Successfully assigned ARP.');
             } catch (ApiException $e) {
 
-            }
+            }*/
 
             $this->output(5, 'Sending user email.');
 
