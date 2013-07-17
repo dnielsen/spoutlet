@@ -1233,7 +1233,7 @@ div.blockOverlay {
 #login-modal .login-modal-title { font-size: 20px; color: #aaaaaa; margin: 0 0 7px 0; padding: 0 0 3px 0; text-align: left; }
 #login-modal .remember-me {margin: 0 0 0 5px;}
 #login-modal .modal-close button { width: 100px; min-width: 100px;}
-#login-modal a.login-modal-close-ne { background: url('/bundles/spoutlet/images/x.png') no-repeat; width: 25px; height: 29px; display: inline; z-index: 3200; position: absolute; top: -15px; right: 120px; cursor: pointer;}
+#login-modal a.login-modal-close-ne { background: url('/bundles/spoutlet/images/x.png') no-repeat; width: 25px; height: 29px; display: inline; z-index: 3200; float:right; margin:-15px; cursor: pointer;}
 #login-modal .login-social-modal { width: 298px; margin: 0px auto;}
 
 #row_military_status { display: none; }
