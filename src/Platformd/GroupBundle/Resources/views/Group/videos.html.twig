@@ -1,23 +1,14 @@
 {% set reportContentType    = features.hasVideo ? 'YoutubeVideo' : 'GroupVideo' %}
-{% set canAdd               = groupManager.isAllowedTo(app.user, group, site, 'AddVideo') %}
-{% set canEdit              = groupManager.isAllowedTo(app.user, group, site, 'EditVideo') %}
-{% set canDelete            = groupManager.isAllowedTo(app.user, group, site, 'DeleteVideo') %}
 {% set addVideoUrl          = features.hasVideo ? path('youtube_submit') : path('group_add_video', { 'id': group.id }) %}
 
 <div>
     <div>
     {% if pages | length > 0 %}
-        {% if canAdd %}
-            <a href='{{ addVideoUrl }}'>{{ 'platformd.groups.videos.submit' | pd_trans }}</a>
-        {% else %}
-            {{ 'platformd.groups.videos.non_member_add' | pd_trans }}
-        {% endif %}
+        <div data-group-member="true"><a href='{{ addVideoUrl }}'>{{ 'platformd.groups.videos.submit' | pd_trans }}</a></div>
+        <div data-group-member="false">{{ 'platformd.groups.videos.non_member_add' | pd_trans }}</div>
     {% else %}
-        {% if canAdd %}
-            {{ 'platformd.groups.videos.member_no_videos' | pd_trans({ '%url%': addVideoUrl }) | raw }}
-        {% else %}
-            {{ 'platformd.groups.videos.non_member_no_videos' | pd_trans }}
-        {% endif %}
+        <div data-group-member="true">{{ 'platformd.groups.videos.member_no_videos' | pd_trans({ '%url%': addVideoUrl }) | raw }}</div>
+        <div data-group-member="false">{{ 'platformd.groups.videos.non_member_no_videos' | pd_trans }}</div>
     {% endif %}
     </div>
     {% if pages | length > 0 %}
@@ -72,82 +63,97 @@
 <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/video-js-3.2.0/youtube.js') }}"></script>
 <script type="text/javascript">
 
-    jQuery(document).ready(function() {
+    var canAdd     = (user_is_logged_in && (is_admin || user_is_group_member));
 
-        var scrollable = $("#scrollable-videos").scrollable();
-        var pageNumberForUpdating;
+    if (groupAdmin) {
+        $('[data-group-admin="true"]').show();
+        $('[data-group-admin="false"]').hide();
+    } else {
+        $('[data-group-admin="true"]').hide();
+        $('[data-group-admin="false"]').show();
+    }
 
-        $('#group-video-scroll-pagination a').click(function() {
-            $('#group-video-scroll-pagination a.current').removeClass('current');
+    if (canAdd) {
+        $('[data-group-member="true"]').show();
+        $('[data-group-member="false"]').hide();
+    } else {
+        $('[data-group-member="true"]').hide();
+        $('[data-group-member="false"]').show();
+    }
 
-            var page = parseInt($(this).attr('data-page'));
-            var numVariablePageButtons = {{ pages|length > 9 ? 7 : pages|length - 2 }};
-            var middleButton = Math.ceil(numVariablePageButtons / 2);
+    var scrollable = $("#scrollable-videos").scrollable();
+    var pageNumberForUpdating;
 
-            scrollable.data('scrollable').seekTo(page - 1);
+    $('#group-video-scroll-pagination a').click(function() {
+        $('#group-video-scroll-pagination a.current').removeClass('current');
 
-            updateButtons = page > 2 && page < ({{ pages|length }} - 1);
+        var page = parseInt($(this).attr('data-page'));
+        var numVariablePageButtons = {{ pages|length > 9 ? 7 : pages|length - 2 }};
+        var middleButton = Math.ceil(numVariablePageButtons / 2);
 
-            $('#group-video-scroll-pagination a').each(function(index) {
+        scrollable.data('scrollable').seekTo(page - 1);
 
-                if (index == 0) {
-                    if (page == 1) $(this).addClass('current');
-                    return;
+        updateButtons = page > 2 && page < ({{ pages|length }} - 1);
+
+        $('#group-video-scroll-pagination a').each(function(index) {
+
+            if (index == 0) {
+                if (page == 1) $(this).addClass('current');
+                return;
+            }
+
+            if (index == numVariablePageButtons + 1) {
+                if (page == {{ pages|length }}) $(this).addClass('current');
+                return;
+            }
+
+            if (index == 1) {
+                offset  = (index) - middleButton;
+                newPage = page + offset;
+
+                if (newPage < 2) {
+                    pageNumberForUpdating = 2;
+                } else if (newPage + numVariablePageButtons > {{ pages|length }}) {
+                    pageNumberForUpdating = {{ pages|length }} - numVariablePageButtons;
+                } else {
+                    pageNumberForUpdating = newPage;
                 }
+            }
 
-                if (index == numVariablePageButtons + 1) {
-                    if (page == {{ pages|length }}) $(this).addClass('current');
-                    return;
-                }
-
-                if (index == 1) {
-                    offset  = (index) - middleButton;
-                    newPage = page + offset;
-
-                    if (newPage < 2) {
-                        pageNumberForUpdating = 2;
-                    } else if (newPage + numVariablePageButtons > {{ pages|length }}) {
-                        pageNumberForUpdating = {{ pages|length }} - numVariablePageButtons;
-                    } else {
-                        pageNumberForUpdating = newPage;
-                    }
-                }
-
-                if (updateButtons == false) {
-                    if (pageNumberForUpdating == page) {
-                        $(this).addClass('current');
-                    }
-                    pageNumberForUpdating++;
-                    return;
-                }
-
-                $(this).attr('data-page', pageNumberForUpdating);
-                $(this).text(pageNumberForUpdating);
-
+            if (updateButtons == false) {
                 if (pageNumberForUpdating == page) {
                     $(this).addClass('current');
                 }
-
                 pageNumberForUpdating++;
-            });
+                return;
+            }
 
+            $(this).attr('data-page', pageNumberForUpdating);
+            $(this).text(pageNumberForUpdating);
+
+            if (pageNumberForUpdating == page) {
+                $(this).addClass('current');
+            }
+
+            pageNumberForUpdating++;
         });
 
-        _V_.options.flash.swf = '{{ asset("bundles/spoutlet/js/video-js-3.2.0/video-js.swf") }}';
-        $('.youtube-link').click(function () {
-           var youtubeId = $(this).attr('youtube-data');
-           $('.youtube-link').find('img').removeClass('active-video');
-           $(this).find('img').addClass('active-video');
-           _V_("group_video").src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v=' + youtubeId});
-           _V_("group_video").play();
-        });
-
-        if($('.youtube-link').length > 0) {
-            _V_("group_video", {techOrder: ["html5","flash","youtube"]}, function() {
-                this.src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v=' + $('.youtube-link').first().attr('youtube-data') });
-                this.play();
-            });
-        }
     });
+
+    _V_.options.flash.swf = '{{ asset("bundles/spoutlet/js/video-js-3.2.0/video-js.swf") }}';
+    $('.youtube-link').click(function () {
+       var youtubeId = $(this).attr('youtube-data');
+       $('.youtube-link').find('img').removeClass('active-video');
+       $(this).find('img').addClass('active-video');
+       _V_("group_video").src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v=' + youtubeId});
+       _V_("group_video").play();
+    });
+
+    if($('.youtube-link').length > 0) {
+        _V_("group_video", {techOrder: ["html5","flash","youtube"]}, function() {
+            this.src({type: 'video/youtube', src: 'http://www.youtube.com/watch?v=' + $('.youtube-link').first().attr('youtube-data') });
+            this.play();
+        });
+    }
 
 </script>

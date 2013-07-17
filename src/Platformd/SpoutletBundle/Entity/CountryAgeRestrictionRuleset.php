@@ -110,7 +110,7 @@ class CountryAgeRestrictionRuleset
 
     public function doesUserPassRules($user, $country) {
 
-        $age            = $user->getAge();
+        $age            = $user ? $user->getAge() : 0;
         $isAllowed      = null;
 
         foreach ($this->getRules() as $rule) {
@@ -132,22 +132,7 @@ class CountryAgeRestrictionRuleset
 
      public function doesCountryPassRules($country)
      {
-        $isAllowed      = null;
-        $age            = 0;
-
-        foreach ($this->getRules() as $rule) {
-            $isAllowed = $rule->isAllowed($age, $country) ;
-
-            if ($isAllowed == null) {
-                continue;
-            }
-
-            if ($isAllowed === false) return $isAllowed;
-
-            break;
-        }
-
-        return $isAllowed;
+        return $this->doesUserPassRules(null, $country);
      }
 
      public function getAllowedCountries()

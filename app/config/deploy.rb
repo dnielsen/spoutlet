@@ -8,10 +8,11 @@ default_run_options[:pty] = true
 
 set :awaProcessor1, "ec2-75-101-139-101.compute-1.amazonaws.com"
 
-set :awaWeb1, "ec2-54-224-7-205.compute-1.amazonaws.com"
-set :awaWeb2, "ec2-54-224-5-214.compute-1.amazonaws.com"
-set :awaWeb3, "ec2-23-20-55-80.compute-1.amazonaws.com"
-set :awaWeb4, "ec2-174-129-62-95.compute-1.amazonaws.com"
+set :awaWeb1, "ec2-54-227-65-32.compute-1.amazonaws.com"
+set :awaWeb2, "ec2-23-20-93-253.compute-1.amazonaws.com"
+set :awaWeb3, "ec2-54-227-94-218.compute-1.amazonaws.com"
+set :awaWeb4, "ec2-23-20-212-246.compute-1.amazonaws.com"
+set :awaWeb5, "ec2-50-16-39-141.compute-1.amazonaws.com"
 
 set :campWeb1, "ec2-54-235-26-82.compute-1.amazonaws.com"
 
@@ -20,10 +21,10 @@ set :repository,  "git@github.com:platformd/spoutlet.git"
 set :user,        "ubuntu"
 set :branch,      "master"
 
-role :web,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, campWeb1
-role :app,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, campWeb1
+role :web,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, awaWeb5, campWeb1
+role :app,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, awaWeb5, campWeb1
 
-role :db,         awaWeb1, :primary => true
+role :db,         awaProcessor1, :primary => true
 
 set :keep_releases,  3
 set :use_sudo,      false
@@ -31,7 +32,7 @@ set :update_vendors, true
 set :vendors_mode,   "install"
 set :dump_assetic_assets, true
 
-set :shared_children,     [app_path + "/logs", web_path + "/uploads", "vendor", web_path + "/media", app_path + "/data", web_path + "/video", web_path + "/media"]
+set :shared_children,     [app_path + "/logs", web_path + "/uploads", "vendor", web_path + "/media", app_path + "/data", web_path + "/media", "misc_scripts/flock_files"]
 set :shared_files,      ["app/config/parameters.ini", "app/config/config_server.yml"]
 
 # After finalizing update - update translations

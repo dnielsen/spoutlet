@@ -24,7 +24,7 @@
         {% endif %}
     </div>
 
-    {% if app.user == event.user or (app.user is not null and app.user.adminLevel == 'ROLE_SUPER_ADMIN') %}
+    <div data-can-admin-event="true">
         <div class="std_1col" style="padding: 0;">
             <div class="sub-nav-wrapper events-sub-nav-wrapper">
                <div class="sub-nav events-sub-nav">
@@ -39,7 +39,7 @@
                 </div>
             </div>
         </div>
-    {% endif %}
+    </div>
 
     <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
         <div class="left">
@@ -98,19 +98,20 @@
                             {% if (event.endsAtUtc | date('Y-m-d H:i:s')) < ('now' | date('Y-m-d H:i:s'))  %}
                                 <div id="event-registration-closed">{{ 'platformd.events.event_show.registration_closed' | pd_trans }}</div>
                             {% else %}
-                                {% if app.user is not null %}
-                                    <div id="event-registration-button"{% if isAttending %} style="display:none;"{% endif %}><a href="javascript:void(0);" id="register-link" data-route="{{ path("global_event_rsvp") }}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a></div>
+                                <div data-user-logged-in="true">
+                                    <div id="event-registration-button" data-user-attending="false"><a href="javascript:void(0);" id="register-link" data-route="{{ path("global_event_rsvp") }}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a></div>
 
                                     <div id="registration-response" style="display:none;"></div>
 
-                                    <div id="event-attending-message"{% if isAttending == false %} style="display:none;"{% endif %}>{{ 'platformd.events.event_show.im_attending' | pd_trans }}</div>
+                                    <div id="event-attending-message" data-user-attending="true">{{ 'platformd.events.event_show.im_attending' | pd_trans }}</div>
 
-                                    <div id="event-rsvp-link"{% if isAttending == false %} style="display:none;"{% endif %}><a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ path("global_event_rsvp") }}" data-contenttype="GlobalEvent">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | pd_trans }}</a></div>
-                                {% else %}
+                                    <div id="event-rsvp-link" data-user-attending="true"><a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ path("global_event_rsvp") }}" data-contenttype="GlobalEvent">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | pd_trans }}</a></div>
+                                </div>
+                                <div data-user-logged-in="false">
                                     <div id="event-registration-button">
                                         <a href="{{ path('global_event_register', { 'id': event.id }) }}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a>
                                     </div>
-                                {% endif %}
+                                </div>
                             {% endif %}
                         </div>
                     {% endif %}
@@ -148,48 +149,82 @@
 
 {% include 'EventBundle::_rsvpDialog.html.twig' %}
 
+{% render url('_global_event_user_info', { 'id': event.id }) with {}, {'standalone': true } %}
+
 <script type="text/javascript">
+
     $(function () {
 
-        $('#register-link').click(function () {
-            $('#register-link').block({
-                message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" style="top:-14px; position: absolute; left: 6px;" />',
-                css: {
-                    border: 'none',
-                    background: 'transparent'
-                }
+        if (user_can_admin_event) {
+            $('[data-can-admin-event="true"]').show();
+            $('[data-can-admin-event="false"]').hide();
+        } else {
+            $('[data-can-admin-event="true"]').hide();
+            $('[data-can-admin-event="false"]').show();
+        }
 
-            });
+        if (user_is_logged_in) {
+            $('[data-user-logged-in="true"]').show();
+            $('[data-user-logged-in="false"]').hide();
+        } else {
+            $('[data-user-logged-in="true"]').hide();
+            $('[data-user-logged-in="false"]').show();
+        }
 
-            $.ajax({
-                url: $(this).attr('data-route'),
-                type: 'post',
-                data: JSON.stringify({
-                    'id' : {{ event.id }},
-                    'rsvp' : 1
-                }),
-                contentType: 'json',
-                success: function(data) {
-                    $('#register-link').unblock();
-
-                    if (data.success) {
-                        $('#event-registration-button').hide();
-                        $('#event-attending-message').fadeIn();
-                        $('#event-rsvp-link').fadeIn();
-                        $('#event-attendee-count-{{ event.id }}').text(parseInt(data.attendeeCount));
-                    } else {
-                        $('#registration-response').text(data.errorMessage);
-                        $('.event-registration-button').fadeIn();
-                    }
-                    $('#registration-response').fadeIn();
-                }
-            })
-
-        });
+        if (user_is_attending) {
+            $('[data-user-attending="true"]').show();
+            $('[data-user-attending="false"]').hide();
+        } else {
+            $('[data-user-attending="true"]').hide();
+            $('[data-user-attending="false"]').show();
+        }
     });
-
 </script>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $(function () {
+
+            $('#register-link').click(function () {
+                $('#register-link').block({
+                    message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" style="top:-14px; position: absolute; left: 6px;" />',
+                    css: {
+                        border: 'none',
+                        background: 'transparent'
+                    }
+                });
+
+                $.ajax({
+                    url: $(this).attr('data-route'),
+                    type: 'post',
+                    data: JSON.stringify({
+                        'id' : {{ event.id }},
+                        'rsvp' : 1
+                    }),
+                    contentType: 'json',
+                    success: function(data) {
+                        $('#register-link').unblock();
+
+                        if (data.success) {
+                            $('#event-registration-button').hide();
+                            $('#event-attending-message').fadeIn();
+                            $('#event-rsvp-link').fadeIn();
+                            $('#event-attendee-count-{{ event.id }}').text(parseInt(data.attendeeCount));
+                        } else {
+                            $('#registration-response').text(data.errorMessage);
+                            $('.event-registration-button').fadeIn();
+                        }
+                        $('#registration-response').fadeIn();
+                    }
+                })
+            });
+        });
+
+    </script>
 {% endblock %}
 
 {% block stylesheets %}

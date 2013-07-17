@@ -70,7 +70,12 @@ class GalleryRepository extends EntityRepository
 
         foreach($results as $gallery) {
             $sitesPositions = $gallery->getSitesPositions();
-            $positions[$gallery->getId()] = $sitesPositions[$site->getId()];
+            if (count($sitesPositions) > 0) {
+                $positions[$gallery->getId()] = $sitesPositions[$site->getId()];
+            } else {
+                $positions[$gallery->getId()] = 0;
+            }
+
             $galleriesList[$gallery->getId()] = $gallery;
         }
 

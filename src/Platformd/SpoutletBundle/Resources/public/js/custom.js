@@ -18,6 +18,13 @@ Core = {
     }
 };
 
+$.fn.lazyLoad = function() {
+    this.each(function() {
+        $(this).attr("src", $(this).attr("data-src"));
+        $(this).removeAttr("data-src");
+    });
+}
+
 /**
  * The site's main on ready block
  */

@@ -1,21 +1,5 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
 
-{% block flash %}
-    {% if app.session.hasFlash('success') %}
-        <div class="alert alert-success">
-            <i class="icon-ok"></i>
-            {{ app.session.getflash('success') | raw }}
-        </div>
-    {% endif %}
-
-    {% if app.session.hasFlash('error') %}
-        <div class="alert alert-error">
-            <i class="icon-ok"></i>
-            {{ app.session.getflash('error') | raw }}
-        </div>
-    {% endif %}
-{% endblock %}
-
 {% block content %}
 
 <h1>

@@ -1,0 +1,57 @@
+<script type="text/javascript">
+    var user_can_vote_on_media  = {% if canVote %}true{% else %}false{% endif %};
+    var user_has_voted_on_media = {% if hasVoted %}true{% else %}false{% endif %};
+    var user_can_edit_media = {% if canEdit %}true{% else %}false{% endif %};
+    var user_can_delete_media = {% if canDelete %}true{% else %}false{% endif %};
+
+    if (user_can_vote_on_media) {
+        $('[data-user-can-vote="true"]').show();
+        $('[data-user-can-vote="false"]').hide();
+    } else {
+        $('[data-user-can-vote="true"]').hide();
+        $('[data-user-can-vote="false"]').show();
+    }
+
+    if (user_has_voted_on_media) {
+        $('[data-user-has-voted="true"]').show();
+        $('[data-user-has-voted="false"]').hide();
+        $('.media-voting-button').addClass('already-voted');
+    } else {
+        $('[data-user-has-voted="true"]').hide();
+        $('[data-user-has-voted="false"]').show();
+        $('.media-voting-button').addClass('quick-vote-link');
+    }
+
+    if (user_is_logged_in) {
+        $('[data-user-logged-in="true"]').show();
+        $('[data-user-logged-in="false"]').hide();
+    } else {
+        $('[data-user-logged-in="true"]').hide();
+        $('[data-user-logged-in="false"]').show();
+    }
+
+    if (user_can_edit_media) {
+        $('[data-user-can-edit-media="true"]').show();
+        $('[data-user-can-edit-media="false"]').hide();
+    } else {
+        $('[data-user-can-edit-media="true"]').hide();
+        $('[data-user-can-edit-media="false"]').show();
+    }
+
+    if (user_can_delete_media) {
+        $('[data-user-can-delete-media="true"]').show();
+        $('[data-user-can-delete-media="false"]').hide();
+    } else {
+        $('[data-user-can-delete-media="true"]').hide();
+        $('[data-user-can-delete-media="false"]').show();
+    }
+
+    if (is_admin) {
+        $('[data-user-is-admin="true"]').show();
+        $('[data-user-is-admin="false"]').hide();
+    } else {
+        $('[data-user-is-admin="true"]').hide();
+        $('[data-user-is-admin="false"]').show();
+    }
+
+</script>

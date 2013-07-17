@@ -1,13 +1,10 @@
 {% set reportContentType    = 'GroupNews' %}
-{% set canAdd               = groupManager.isAllowedTo(app.user, group, site, 'AddNews') %}
-{% set canEdit              = groupManager.isAllowedTo(app.user, group, site, 'EditNews') %}
-{% set canDelete            = groupManager.isAllowedTo(app.user, group, site, 'DeleteNews') %}
 
 <div id="news-content-scroll" style="height: 550px;">
 
-    {% if canAdd %}
+    <div class="group-news-add">
         <a href='{{ path('group_add_news', {'id' : group.id }) }}'>{{ 'platformd.groups.news.add' | pd_trans }}</a>
-    {% endif %}
+    </div>
 
     {% if groupNews is defined %}
 
@@ -15,12 +12,8 @@
 
             <div class="group-news-item" id="news-item-{{ article.id }}" style="margin: 20px;">
                 <div class="group-news-actions">
-                    {% if canDelete %}
-                        <a href="{{ path('group_delete_news', { 'id' : group.id, 'newsId' : article.id })}}" onclick="return confirm('Are you sure you want to delete this news article?');">{{ 'platformd.groups.news.delete' | pd_trans }}</a> |
-                    {% endif %}
-                    {% if canEdit %}
-                        <a href="{{ path('group_edit_news', { 'id' : group.id, 'newsId' : article.id })}}">{{ 'platformd.groups.news.edit' | pd_trans }}</a>
-                    {% endif %}
+                    <a href="{{ path('group_delete_news', { 'id' : group.id, 'newsId' : article.id })}}" onclick="return confirm('Are you sure you want to delete this news article?');">{{ 'platformd.groups.news.delete' | pd_trans }}</a> |
+                    <a href="{{ path('group_edit_news', { 'id' : group.id, 'newsId' : article.id })}}">{{ 'platformd.groups.news.edit' | pd_trans }}</a>
                 </div>
                 <h2>{{ article.title }}</h2>
                 <div class="group-news-date">
@@ -42,27 +35,34 @@
 {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
 
 <script type="text/javascript">
-    $(function () {
-        $('.group-news-article').expander({
-            slicePoint:       600,
-            expandText:       'Show More',
-            userCollapseText: 'Show Less',
-            afterExpand: function () {
-                $('#news-content-scroll').mCustomScrollbar('update');
-            },
-            onCollapse: function () {
-                $('#news-content-scroll').resize();
-            }
+
+    if (user_is_logged_in && (is_admin || user_is_group_owner)) {
+        $('.group-news-actions').show();
+        $('.group-news-add').show();
+    } else {
+        $('.group-news-actions').hide();
+        $('.group-news-add').hide();
+    }
+
+    $('.group-news-article').expander({
+        slicePoint:       600,
+        expandText:       'Show More',
+        userCollapseText: 'Show Less',
+        afterExpand: function () {
+            $('#news-content-scroll').mCustomScrollbar('update');
+        },
+        onCollapse: function () {
+            $('#news-content-scroll').resize();
+        }
+    });
+
+    $('.group-news-item').hover(
+        function () {
+            $('.report-content', this).show()
+        },
+        function () {
+            $('.report-content', this).hide()
         });
 
-        $('.group-news-item').hover(
-            function () {
-                $('.report-content', this).show()
-            },
-            function () {
-                $('.report-content', this).hide()
-            });
-
-        $('#news-content-scroll').mCustomScrollbar();
-    });
+    $('#news-content-scroll').mCustomScrollbar();
 </script>

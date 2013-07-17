@@ -7,16 +7,18 @@ probe healthcheck {
         "Connection: close";
 }
 
-backend awaWeb1  { .host = "ec2-54-224-7-205.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
-backend awaWeb2  { .host = "ec2-54-224-5-214.compute-1.amazonaws.com";   .port = "http"; .probe = healthcheck; }
-backend awaWeb3  { .host = "ec2-23-20-55-80.compute-1.amazonaws.com";    .port = "http"; .probe = healthcheck; }
-backend awaWeb4  { .host = "ec2-174-129-62-95.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb1  { .host = "ec2-54-227-65-32.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb2  { .host = "ec2-23-20-93-253.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb3  { .host = "ec2-54-227-94-218.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb4  { .host = "ec2-23-20-212-246.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb5  { .host = "ec2-50-16-39-141.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 
 director awaWeb random {
     { .backend = awaWeb1; .weight = 1; }
     { .backend = awaWeb2; .weight = 1; }
     { .backend = awaWeb3; .weight = 1; }
     { .backend = awaWeb4; .weight = 1; }
+    { .backend = awaWeb5; .weight = 1; }
 }
 
 sub vcl_recv {
@@ -117,6 +119,10 @@ sub vcl_recv {
         return (pass);
     }
 
+     if (req.url ~ "^/login[/]?$" || req.url ~ "^/account/register[/]?$") {
+        return (pass);
+    }
+
     if (req.url ~ "^/esi/USER_SPECIFIC/") {
         return (lookup);
     }
@@ -145,6 +151,46 @@ sub vcl_recv {
         remove req.http.Cookie;
     }
 
+    if (req.url ~ "^/groups[/]?$") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/events[/]?$" || req.url ~ "^/events/([^/]+)[/]?$") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/wallpapers[/]?$") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/microsoft[/]?$") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/contact[/]?$") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/about[/]?$") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/contests[/]?$") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/galleries/gallery-data\?") {
+        remove req.http.Cookie;
+    }
+
+    if ((req.url ~ "^/galleries[/]?$" || req.url ~ "^/galleries/photo/\d$") && req.url !~ "\?vote=\d$") {
+        remove req.http.Cookie;
+    }
+
+    if (req.url ~ "^/videos[/]?$" || req.url ~ "^/videos/view/" || req.url ~ "^/videos/category/([^/]+)[/]?$") {
+        remove req.http.Cookie;
+    }
+
     if (req.http.Cookie) {
         return (pass);
     }
@@ -154,7 +200,7 @@ sub vcl_recv {
 
 sub vcl_fetch {
 
-    if (req.url !~ "^/age/verify$" && req.url !~ "^/login(_check)?$") { # the only exceptions to the "remove all set-cookies rule"
+    if (req.url !~ "^/age/verify$" && req.url !~ "^/login(_check)?$" && req.url !~ "^/logout$" && req.url !~ "^/sessionCookie$" && req.url !~ "^/account/register[/]?$" && req.url !~ "^/register/confirm/") { # the only exceptions to the "remove all set-cookies rule"
         unset beresp.http.set-cookie;
     }
 
@@ -197,6 +243,10 @@ sub vcl_deliver {
     if (req.url ~ "^/forceLogout/") {
         set resp.http.set-cookie = "aw_session=0; Domain=.alienwarearena.com; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;";
     }
+
+    if (req.url ~ "^/logout") {
+        set resp.http.set-cookie = "PHPSESSID=0; Domain=.alienwarearena.com; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;";
+    }
 }
 
 sub vcl_hash {
@@ -204,8 +254,14 @@ sub vcl_hash {
     hash_data(req.url);
     hash_data(req.http.host);
 
-    if(req.url ~ "^/esi/USER_SPECIFIC/" && req.http.cookie) {
-        hash_data(req.http.cookie);
+    if (req.url ~ "^/esi/USER_SPECIFIC/") {
+        if (req.http.cookie) {
+            hash_data(req.http.cookie);
+        } else {
+            if (req.url ~ "^/esi/USER_SPECIFIC/(giveawayShowMainActions|dealShowMainActions)/") {
+                hash_data(req.http.X-Country-Code);
+            }
+        }
     }
 
     if(req.url ~ "^/esi/COUNTRY_SPECIFIC/") {

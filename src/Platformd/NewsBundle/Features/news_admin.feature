@@ -19,7 +19,7 @@ Feature: News Administration
             And I check the "Demo" option for "Sites"
             And I select "Skyrim" from "Game"
             And I press "Save news"
-        Then I should see "news item has been created"
+        Then I should see "news item has been created" in the flash message
 
     Scenario: Edit a news story
         Given there is a news item called "Skryim release"
@@ -27,4 +27,4 @@ Feature: News Administration
         When I select "Skyrim" from "Game"
             And I fill in "Title" with "Updated title"
             And I press "Save news"
-        Then I should see "news item has been modified"
+        Then I should see "news item has been modified" in the flash message

@@ -1,3 +1,7 @@
+_video_user_info:
+    pattern: /esi/USER_SPECIFIC/videoUserInfo/{id}
+    defaults: { _controller: VideoBundle:Youtube:_videoUserInfo }
+
 VideoBundle_youtube:
     resource: "@VideoBundle/Resources/config/routing/youtube.yml"
     prefix:   /videos

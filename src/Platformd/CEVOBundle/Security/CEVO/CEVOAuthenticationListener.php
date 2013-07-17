@@ -36,6 +36,7 @@ class CEVOAuthenticationListener implements ListenerInterface
     protected $debug;
     protected $loginRecordManager;
     protected $router;
+    protected $flashUtil;
 
     /**
      * This will be true in the test environment
@@ -52,7 +53,7 @@ class CEVOAuthenticationListener implements ListenerInterface
      */
     protected $logger;
 
-    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, $baseHost, LoginRecordManager $loginRecordManager, $router, $debug = false, $allowFakedAuth = false)
+    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, $baseHost, LoginRecordManager $loginRecordManager, $router, $flashUtil, $debug = false, $allowFakedAuth = false)
     {
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
@@ -61,6 +62,7 @@ class CEVOAuthenticationListener implements ListenerInterface
         $this->debug = $debug;
         $this->allowFakedAuth = $allowFakedAuth;
         $this->loginRecordManager = $loginRecordManager;
+        $this->flashUtil = $flashUtil;
     }
 
     /**
@@ -112,7 +114,7 @@ class CEVOAuthenticationListener implements ListenerInterface
         $token = new CEVOToken($sessionId, $userId);
 
         // start logging errors (just for verbosity) of we failed on the previous attempt
-        if ($request->getSession()->getFlash('cevo_auth_error')) {
+        if ($request->getSession()->get('cevo_auth_error')) {
             $this->logError('About to try authentication after failing on the previous request');
         }
 
@@ -237,11 +239,11 @@ class CEVOAuthenticationListener implements ListenerInterface
     private function getResponseForAuthError(Request $request, $msg)
     {
         if ($msg) {
-            $request->getSession()->setFlash('error', $msg);
+            $this->flashUtil->setFlash('error', $msg);
         }
 
         // set a flag that says that this authentication failed
-        $request->getSession()->setFlash('cevo_auth_error', true);
+        $request->getSession()->set('cevo_auth_error', true);
 
         $forceLogoutUrl = $this->router->generate('force_logout', array('returnUrl' => urlencode($request->getUri())));
 

@@ -12,14 +12,14 @@ Feature: Games Admin
             And I fill in "Game Name" with "Warcraft3"
             And I select "RPG" from "Genre"
             And I press "Create"
-        Then I should see "game was created"
+        Then I should see "game was created" in the flash message
 
     Scenario: List existing games
         Given there is a game called "Starcraft"
             And there is a game called "Warcraft"
         When I click on "Games"
         Then I should see 2 data rows
-            And I should see "Starcraft"
+            And I should see "Starcraft" in the flash message
 
     Scenario: Edit existing game
         Given there is a game called "Starcraft"
@@ -27,4 +27,4 @@ Feature: Games Admin
             And I click on "Starcraft"
             And I fill in "Game Name" with "Starcraft2"
             And I press "Save"
-        Then I should see "game was saved"
+        Then I should see "game was saved" in the flash message

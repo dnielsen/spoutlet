@@ -2,7 +2,7 @@
 
 include '/home/ubuntu/scripts/mu-sigma_automation/config.php';
 
-$ftpInfo        = array($ftpServer, $ftpUser, $ftpPassword);
+$ftpInfo        = array($ftpServer, $ftpUser, $ftpPassword, $remotePath);
 
 $week           = isset($argv[1]) ? str_pad($argv[1], 2, '0', STR_PAD_LEFT) : date('W');
 $weekDate       = date("Y-m-d H:i:s", strtotime("2013-W".$week."-1 23:59:59"));
@@ -251,13 +251,11 @@ function uploadFiles($filesArray, $ftpInfo)
 {
     $output = "\nUploading to FTP Server\n";
 
-    $remotePath = '[DO NOT DELETE]awa_automated_weekly_reports';
-
     foreach ($filesArray as $file) {
 
         $output .= " - Uploading ".$file."...\n";
 
-        exec('ftp-upload -h '.$ftpInfo[0].' -u '.$ftpInfo[1].' --password '.$ftpInfo[2].' --passive -d "'.$remotePath.'" '.$file);
+        exec('ftp-upload -h '.$ftpInfo[0].' -u '.$ftpInfo[1].' --password '.$ftpInfo[2].' --passive -d "'.$ftpInfo[3].'" '.$file);
         unlink($file);
     }
 

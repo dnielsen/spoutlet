@@ -1,27 +1,17 @@
 {% set reportContentType    = 'GroupDiscussion' %}
-{% set canAdd               = groupManager.isAllowedTo(app.user, group, site, 'AddDiscussion') %}
-{% set canEdit              = groupManager.isAllowedTo(app.user, group, site, 'EditDiscussion') %}
-{% set canDelete            = groupManager.isAllowedTo(app.user, group, site, 'DeleteDiscussion') %}
-{% set isAllowedToManageDiscussions = groupManager.isAllowedTo(app.user, group, site, "ManageDiscussions") %}
 
 <div id="discussion-content-scroll" style="height: 550px;">
     {% if results | length > 0 %}
-        {% if canAdd %}
-            {{ 'platformd.groups.discussions.submit' | pd_trans({ '%url%': ( path('group_add_discussion', {'id' : group.id }) ) }) | raw }}
-        {% else %}
-            {{ 'platformd.groups.discussions.non_member_add' | pd_trans }}
-        {% endif %}
+        <div data-group-member="true">{{ 'platformd.groups.discussions.submit' | pd_trans({ '%url%': ( path('group_add_discussion', {'id' : group.id }) ) }) | raw }}</div>
+        <div data-group-member="false">{{ 'platformd.groups.discussions.non_member_add' | pd_trans }}</div>
     {% else %}
-        {% if canAdd %}
-            {{ 'platformd.groups.discussions.member_no_discussions' | pd_trans({ '%url%': ( path('group_add_discussion', {'id' : group.id }) ) }) | raw }}
-        {% else %}
-            {{ 'platformd.groups.discussions.non_member_no_discussions' | pd_trans }}
-        {% endif %}
+        <div data-group-member="true">{{ 'platformd.groups.discussions.member_no_discussions' | pd_trans({ '%url%': ( path('group_add_discussion', {'id' : group.id }) ) }) | raw }}</div>
+        <div data-group-member="false">{{ 'platformd.groups.discussions.non_member_no_discussions' | pd_trans }}</div>
     {% endif %}
 
     {% if results | length > 0 %}
 
-        <div id="boardList" class="{% if canAdd %} can-add{% else %} cant-add{% endif %}">
+        <div id="boardList">
             <table>
                 <tbody>
                 {% for discussion in results %}
@@ -57,24 +47,42 @@
 
         {# Ajax Pager Widget #}
         <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.timeago.min.js') }}"></script>
-
-        <script type="text/javascript">
-
-            jQuery(document).ready(function() {
-                $('.last-update').timeago();
-                var content = $('.featured-content-category#content-group-news');
-
-                $('#pager').pagerUi({
-                    'target': content
-                });
-
-                $('.name.png > h3 > a').truncate({
-                    width: 480
-                });
-            });
-
-        </script>
     {% endif %}
+
+    <script type="text/javascript">
+
+        var canAdd     = (user_is_logged_in && (is_admin || user_is_group_member));
+
+        if (groupAdmin) {
+            $('[data-group-admin="true"]').show();
+            $('[data-group-admin="false"]').hide();
+        } else {
+            $('[data-group-admin="true"]').hide();
+            $('[data-group-admin="false"]').show();
+        }
+
+        if (canAdd) {
+            $('[data-group-member="true"]').show();
+            $('[data-group-member="false"]').hide();
+            $('#boardList').addClass('can-add');
+        } else {
+            $('[data-group-member="true"]').hide();
+            $('[data-group-member="false"]').show();
+            $('#boardList').addClass('cant-add');
+        }
+
+        $('.last-update').timeago();
+        var content = $('.featured-content-category#content-group-news');
+
+        $('#pager').pagerUi({
+            'target': content
+        });
+
+        $('.name.png > h3 > a').truncate({
+            width: 480
+        });
+
+    </script>
 
 </div>
 {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}

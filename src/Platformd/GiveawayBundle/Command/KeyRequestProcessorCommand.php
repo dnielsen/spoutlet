@@ -20,9 +20,12 @@ use Platformd\GiveawayBundle\Entity\KeyRequestState;
 class KeyRequestProcessorCommand extends ContainerAwareCommand
 {
     const DELAY_BETWEEN_KEYS_MILLISECONDS = 50;
+    const ITERATION_COUNT = 25;
 
     private $em;
     private $logger;
+
+    private $exitAfterCurrentItem = false;
 
     protected function getRepo($key) {
         return $this->em->getRepository($key);
@@ -94,6 +97,32 @@ EOT
         $this->output(2, ($queueUtil->deleteFromQueue($message) ? 'Message deleted successfully.' : 'Unable to delete message.'));
     }
 
+    public function signal_handler($signal)
+    {
+        switch($signal) {
+            case SIGTERM:
+                $signalType = 'SIGTERM';
+                break;
+            case SIGKILL:
+                $signalType = 'SIGKILL';
+                break;
+            case SIGINT:
+                $signalType = 'SIGINT';
+                break;
+            case SIGHUP:
+                $signalType = 'SIGHUP';
+                break;
+            default:
+                $signalType = 'UNKNOWN_SIGNAL';
+                break;
+        }
+
+        $this->output();
+        $this->output(0, 'Caught signal ['.$signalType.']. Finishing processing...');
+        $this->exitAfterCurrentItem = true;
+        $this->output();
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->em     = $this->getContainer()->get('doctrine.orm.entity_manager');
@@ -110,11 +139,24 @@ EOT
         $ipLookupUtil = $this->getContainer()->get('platformd.model.ip_lookup_util');
         $groupManager = $this->getContainer()->get('platformd.model.group_manager');
 
+        $this->output(0, 'Setting up signal handlers.');
+
+        declare(ticks = 1);
+        pcntl_signal(SIGTERM, array($this, 'signal_handler'));
+        pcntl_signal(SIGINT, array($this, 'signal_handler'));
+
+
         $this->output(0, 'Processing queue for the Key Requests.');
+
+        $iterationCount = 1;
 
         while ($message = $queueUtil->retrieveFromQueue(new KeyRequestQueueMessage())) {
 
             usleep(self::DELAY_BETWEEN_KEYS_MILLISECONDS);
+
+            $this->output();
+            $this->output(0, 'Iteration '.$iterationCount);
+            $this->output();
 
             $this->output();
             $this->output(1, 'Processing message.');
@@ -168,10 +210,10 @@ EOT
                         $state->setUserHasSeenState(false);
                     }
 
-                    if ($promotion->getStatus() != 'active' && !($promotion->getTestOnly() && $user->getIsSuperAdmin())) {
+                    /*if ($promotion->getStatus() != 'active' && !($promotion->getTestOnly() && $user->getIsSuperAdmin())) {
                         $this->rejectRequestWithOutput(3, 'This promotion is not active. Additionally the promotion\'s settings and user\'s roles don\'t allow for admin testing.', $state, KeyRequestState::REASON_INACTIVE_PROMOTION, $message, true);
                         continue 2;
-                    }
+                    }*/
 
                     if (!$promotion->allowKeyFetch()) {
                         $this->rejectRequestWithOutput(3, 'This promotion does not allow key fetching (this most likely means that the promotion is a system tag promotion, which isn\'t currently not supported).', $state, KeyRequestState::REASON_KEY_FETCH_DISALLOWED, $message, true);
@@ -390,6 +432,9 @@ EOT
 
                         }
                     }
+
+                    $user->getPdGroups()->add($group);
+                    $this->em->persist($user);
                 }
             }
 
@@ -411,6 +456,20 @@ EOT
             $this->output(5, 'Email sent.');
 
             $this->deleteMessageWithOutput($message);
+
+            if ($this->exitAfterCurrentItem) {
+                $this->output();
+                $this->output(0, 'Process terminated - exiting.');
+                exit;
+            }
+
+            $iterationCount++;
+
+            if ($iterationCount > self::ITERATION_COUNT) {
+                $this->output();
+                $this->output(0, 'Maximum iterations reached - exiting.');
+                exit;
+            }
         }
 
         $this->output();

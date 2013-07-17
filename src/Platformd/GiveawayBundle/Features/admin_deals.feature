@@ -23,7 +23,7 @@ Feature: Deal Admin
             # missing image uploads
             # missing the gradient details
             And I press "Create"
-        Then I should see "deal was created"
+        Then I should see "deal was created" in the flash message
 
     Scenario: List existing deals
         Given there is a deal called "Buy Diablo 3 and Get a Bonus Upgrade" in "en"
@@ -42,7 +42,7 @@ Feature: Deal Admin
             And I fill in the following:
                 | Name            | Updated!                         |
             And I press "Save"
-        Then I should see "deal was saved"
+        Then I should see "deal was saved" in the flash message
 
     Scenario: Preview the deal
         Given there is a deal called "Free Swag" in "en"

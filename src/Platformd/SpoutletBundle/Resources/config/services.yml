@@ -367,3 +367,10 @@ services:
             - "@doctrine.orm.entity_manager"
             - "Platformd\TagBundle\Entity\Tag"
             - "Platformd\TagBundle\Entity\Tagging"
+
+    platformd.util.flash_util:
+        class: Platformd\SpoutletBundle\Util\FlashUtil
+        arguments:
+            - "@platformd.util.cache_util"
+            - "@security.context"
+

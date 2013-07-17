@@ -14,6 +14,7 @@ services:
         - "%base_host%"
         - "@platformd.model.login_record_manager"
         - "@router"
+        - "@platformd.util.flash_util"
         - "%kernel.debug%"
         - "%allow_faked_auth%"
     calls:

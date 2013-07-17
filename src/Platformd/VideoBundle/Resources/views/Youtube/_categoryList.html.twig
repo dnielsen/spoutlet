@@ -5,7 +5,9 @@
             {% for video in result['videos'] %}
                 <div class="tiled">
                     <div class="video-thumb-wrapper">
-                        <a href="{{ path('youtube_view', {'slug' : video.slug}) }}"><img src="{{ video.thumbnailSq }}" alt="{{ video.title }}" /></a>
+                        <a href="{{ path('youtube_view', {'slug' : video.slug}) }}">
+                            <img class="lazy" src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" data-src="{{ video.thumbnailSq }}" alt="{{ video.title }}" />
+                        </a>
                         <span class="video-duration">{{ video.formattedDuration }}</span>
                     </div>
                     <div class="more-videos-link">{{ video | pd_link_full(video.title) }}</div>
@@ -18,3 +20,5 @@
         </div>
     {% endif %}
 {% endfor %}
+
+

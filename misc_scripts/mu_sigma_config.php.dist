@@ -13,3 +13,5 @@ $recipient      = '';
 $ftpServer      = '';
 $ftpUser        = '';
 $ftpPassword    = '';
+
+$remotePath     = 'path/to/destination/on/server';

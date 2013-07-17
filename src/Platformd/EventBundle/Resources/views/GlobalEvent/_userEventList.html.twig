@@ -1,0 +1,16 @@
+<script type="text/javascript">
+    var global_event_ids = "{{ globalEvents }}".split(',');
+    var group_event_ids  = "{{ groupEvents }}".split(',');
+
+    $(function () {
+
+        for (var i = 0; i < global_event_ids.length; i++) {
+            $('#global-event-attending-' + global_event_ids[i]).show();
+        }
+
+        for (var i = 0; i < group_event_ids.length; i++) {
+            $('#group-event-attending-' + group_event_ids[i]).show();
+        }
+
+    });
+</script>
