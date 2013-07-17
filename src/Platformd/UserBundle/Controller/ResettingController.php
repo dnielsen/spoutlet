@@ -35,10 +35,10 @@ class ResettingController extends BaseController
         $process = $formHandler->process($user);
 
         if ($process) {
-            $this->getFlashUtil()->setFlash('success', 'resetting.flash.success');
+
             $response = new RedirectResponse($this->getRedirectionUrl($user));
             $this->authenticateUser($user, $response);
-
+            $this->getFlashUtil()->setFlash('success', $this->trans('resetting.flash.success', array(), 'FOSUserBundle'));
             return $response;
         }
 
@@ -69,5 +69,16 @@ class ResettingController extends BaseController
     protected function getFlashUtil()
     {
         return $this->container->get('platformd.util.flash_util');
+    }
+
+    /**
+     * @param $key
+     * @param array $params
+     * @param string $domain
+     * @return mixed
+     */
+    protected function trans($key, $params = array(), $domain = 'messages', $locale = null)
+    {
+        return $this->container->get('platformd.model.translator')->trans($key, $params, $domain, $locale);
     }
 }
