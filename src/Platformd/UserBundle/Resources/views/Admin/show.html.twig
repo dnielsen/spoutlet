@@ -19,6 +19,13 @@
     <br />
     <br />
 
+    {% if user.expiredUntil %}
+        <div class="flash-message flash-error">
+            <i class="icon-ok"></i>
+            <span>User is suspended until {{ user.expiredUntil|date('F d, Y') }}</span>
+        </div>
+    {% endif %}
+
     <table class="table table-bordered">
         <tr>
             <th>Username</th>

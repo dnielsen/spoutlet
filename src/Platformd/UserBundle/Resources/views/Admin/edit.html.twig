@@ -7,6 +7,13 @@
 {% block content %}
     <h1>Edit User</h1>
 
+    {% if user.expiredUntil %}
+        <div class="flash-message flash-error">
+            <i class="icon-ok"></i>
+            <span>User is suspended until {{ user.expiredUntil|date('F d, Y') }}</span>
+        </div>
+    {% endif %}
+
     <form method="post" action="{{ path("Platformd_UserBundle_admin_update", { "id" : user.id }) }}" class="form-horizontal">
         <input type="hidden" name="_method" value="PUT" />
 
@@ -29,5 +36,6 @@
         <div class="form-actions">
             <input type="submit" value="{{ 'Suspend'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" />
         </div>
+        {{ form_rest(suspendForm) }}
     </form>
 {% endblock %}
