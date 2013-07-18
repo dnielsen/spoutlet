@@ -93,12 +93,8 @@
                 </script>
             {% endif %}
         </div>
-        <div class="widget-footer" style="height: 19px;">
-            {#
-                removed for now
-                <a href="http://www.tbd.com/photos/alienwarearena/" class="aw-link">{{ 'platformd.layout.page_content.view_all' | trans }}</a>
-                <div class="clear"></div>
-            #}
+        <div class="widget-footer">
+            <a href="{{ path('gallery_index') }}" class="aw-link" id="more-news-link">{{ 'platformd.layout.page_content.see_more' | trans }}</a>
         </div>
     </div>
 </div>
