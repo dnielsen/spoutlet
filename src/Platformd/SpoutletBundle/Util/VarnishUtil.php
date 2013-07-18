@@ -39,7 +39,7 @@ class VarnishUtil
                 }
 
                 if ($this->varnishDetected) {
-                    $url  = 'http://demo.alienwarearena.local:8080/' . ltrim($path, '/');
+                    $url  = 'http://' . $this->varnishServer. '/' . ltrim($path, '/');
                     $curl = curl_init();
 
                     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
