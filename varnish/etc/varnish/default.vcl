@@ -5,20 +5,19 @@ probe healthcheck {
         "GET /healthCheck HTTP/1.1"
         "Host: demo.alienwarearena.com"
         "Connection: close";
+    .timeout = 3s;
 }
 
 backend awaWeb1  { .host = "ec2-54-227-65-32.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 backend awaWeb2  { .host = "ec2-23-20-93-253.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 backend awaWeb3  { .host = "ec2-54-227-94-218.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 backend awaWeb4  { .host = "ec2-23-20-212-246.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
-backend awaWeb5  { .host = "ec2-50-16-39-141.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 
 director awaWeb random {
     { .backend = awaWeb1; .weight = 1; }
     { .backend = awaWeb2; .weight = 1; }
     { .backend = awaWeb3; .weight = 1; }
     { .backend = awaWeb4; .weight = 1; }
-    { .backend = awaWeb5; .weight = 1; }
 }
 
 sub vcl_recv {
