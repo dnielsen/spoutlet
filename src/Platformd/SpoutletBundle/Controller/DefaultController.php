@@ -102,7 +102,7 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        if (!$this->getCurrentSite()->getSiteFeatures()->gethasIndex()) {
+        if (!$this->getCurrentSite()->getSiteFeatures()->getHasIndex()) {
             throw $this->createNotFoundException();
         }
 

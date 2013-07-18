@@ -203,7 +203,6 @@
                         dataType: 'json',
                         async: false,
                         success: function(data) {
-                            console.log(data);
                             if (data && data.type && data.message) {
                                 $('.session-flash #notice-type').html(data.type);
                                 $('.session-flash #notice-message').html(data.message);

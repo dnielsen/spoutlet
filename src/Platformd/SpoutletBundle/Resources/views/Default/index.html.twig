@@ -14,8 +14,9 @@
 </div>
 <div id="row-2" class="std_2col">
     <div class="right">
-        {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
         {% render url('hot_stories') %}
+        {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
+
     </div>
     <div class="left">
         {% render url('featured_content') %}

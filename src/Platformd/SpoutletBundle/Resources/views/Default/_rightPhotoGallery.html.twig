@@ -1,4 +1,4 @@
-<div style="padding-top:0;" class="right_section">
+<div style="padding-top:15px;">
     <div class="widget-33" id="hs-widget" style="height: auto;">
         <div class="widget-header" style="height: 36px;">
             <div class="widget-title" style="width: 175px; float: left;">
@@ -64,7 +64,33 @@
                     });
                 </script>
             {% else %}
-                <img src="{{ asset('images/gallery/gallery.'~app.session.locale~'.jpg') }}" width="290" />
+                <div id="photoArray">
+
+                </div>
+                <script type="text/javascript">
+                    $(document).ready(function(){
+                        $.ajax({
+                            url: '{{ path('gallery_featured_media_feed') }}',
+                            method: 'GET',
+                            success: function (data, s, xhr) {
+                                if (data.success && data.media) {
+                                    for(var i = 0; i < data.media.length; i++) {
+                                        var item = data.media[i];
+                                        console.log(item);
+                                        $('#photoArray').append('<a href="' + item.url + '"><img src="' + item.thumbnail + '" /></a>')
+                                    }
+                                }
+                                $('#photoArray').cycle({
+                                    fx:     'fade',
+                                    speed:   300,
+                                    timeout: 3000,
+                                    next:   '#photoArray',
+                                    pause:   1
+                                });
+                            }
+                        });
+                    });
+                </script>
             {% endif %}
         </div>
         <div class="widget-footer" style="height: 19px;">
