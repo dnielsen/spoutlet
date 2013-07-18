@@ -378,11 +378,12 @@ class GlobalEventController extends Controller
                 }
 
                 if (count($recipients) < 1) {
+
+                    $this->setFlash('error', 'No valid recipients found.');
+
                     return $this->render('EventBundle:GlobalEvent:contact.html.twig', array(
                         'event' => $event,
                         'form'  => $form->createView(),
-                        'flash_type' => 'error',
-                        'flash' =>'No valid recipients found.',
                     ));
                 }
 

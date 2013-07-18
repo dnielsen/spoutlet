@@ -1,17 +1,3 @@
-<div class="xnotices">
-    <div class="{% block type %}{% endblock %}Notice notice">
-        <div class="pad">
-            <div class="pad2">
-                <div class="pad3">
-                    <div class="pad4">
-                        <h3>
-                            {% set title = 'platformd.flash.'~block('type')~'_title' %}
-                            {{ title | trans }}
-                        </h3>
-                        {% block body %}{% endblock %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{% extends "SpoutletBundle::_baseFlashMessage.html.twig" %}
+{% block flash_type %}{{ type }}{% endblock %}
+{% block flash %}<p>{{ message }}</p>{% endblock %}

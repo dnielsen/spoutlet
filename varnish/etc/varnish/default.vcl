@@ -1,4 +1,5 @@
 import geoip;
+import std;
 
 probe healthcheck {
     .request =
@@ -8,6 +9,7 @@ probe healthcheck {
     .timeout = 3s;
 }
 
+// Note: Hostnames are resolved at VCL compile time - if these change you will need to vcl.load the config again.
 backend awaWeb1  { .host = "ec2-54-227-65-32.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 backend awaWeb2  { .host = "ec2-23-20-93-253.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 backend awaWeb3  { .host = "ec2-54-227-94-218.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
@@ -18,6 +20,13 @@ director awaWeb random {
     { .backend = awaWeb2; .weight = 1; }
     { .backend = awaWeb3; .weight = 1; }
     { .backend = awaWeb4; .weight = 1; }
+}
+
+acl ban {
+    "ec2-54-227-65-32.compute-1.amazonaws.com";
+    "ec2-23-20-93-253.compute-1.amazonaws.com";
+    "ec2-54-227-94-218.compute-1.amazonaws.com";
+    "ec2-23-20-212-246.compute-1.amazonaws.com";
 }
 
 sub vcl_recv {
@@ -40,7 +49,7 @@ sub vcl_recv {
         error 404 "Page Not Found.";
     }
 
-    if (req.request != "GET" && req.request != "POST" && req.request != "PUT" && req.request != "DELETE") {
+    if (req.request != "GET" && req.request != "POST" && req.request != "PUT" && req.request != "DELETE" && req.request != "BAN") {
         error 404 "Page Not Found.";
     }
 
@@ -65,7 +74,7 @@ sub vcl_recv {
         error 404 "Page Not Found.";
     }
 
-    if (req.esi_level == 0 && req.url ~ "^/esi/") { # an external client is requesting an esi
+    if (req.esi_level == 0 && req.url ~ "^/esi/" && req.request != "BAN") { # an external client is requesting an esi
         error 404 "Page Not Found.";
     }
 
@@ -115,15 +124,40 @@ sub vcl_recv {
         }
     }
 
-    if (req.request != "GET") {
+    if (req.request != "GET" && req.request != "BAN") {
         return (pass);
+    }
+
+    if (req.request == "BAN") {
+        if (!client.ip ~ ban) {
+            error 404 "Page Not Found.";
+        }
+
+        set req.http.X-ban-by-user = "";
+        set req.http.X-ban-by-country = "";
+
+        if (req.http.x-ban-user-id) {
+            set req.http.X-ban-by-user = " && obj.http.x-user-id == " + req.http.x-ban-user-id;
+        }
+
+        if (req.http.x-ban-country-code) {
+            set req.http.X-ban-by-country = " && obj.http.X-Country-Code == " + req.http.x-ban-country-code;
+        }
+
+        std.log("Setting ban [ " + "obj.http.x-url == " + req.url + " " + req.http.X-ban-by-user + " " + req.http.X-ban-by-country + " ]");
+        ban("obj.http.x-url == " + req.url + " "  + req.http.X-ban-by-user + " "  + req.http.X-ban-by-country);
+
+        unset req.http.X-ban-by-user;
+        unset req.http.X-ban-by-country;
+
+        error 200 "Ban added.";
     }
 
     if (req.url ~ "^/admin/") {
         return (pass);
     }
 
-     if (req.url ~ "^/login[/]?$" || req.url ~ "^/account/register[/]?$") {
+    if (req.url ~ "^/login[/]?$" || req.url ~ "^/account/register[/]?$") {
         return (pass);
     }
 
@@ -195,6 +229,8 @@ sub vcl_recv {
         remove req.http.Cookie;
     }
 
+
+
     if (req.http.Cookie) {
         return (pass);
     }
@@ -203,6 +239,9 @@ sub vcl_recv {
 }
 
 sub vcl_fetch {
+
+    // set so that we can utilize the ban lurker to test against the url of cached items
+    set beresp.http.x-url = req.url;
 
     if (req.url !~ "^/age/verify$" && req.url !~ "^/login(_check)?$" && req.url !~ "^/logout$" && req.url !~ "^/sessionCookie$" && req.url !~ "^/account/register[/]?$" && req.url !~ "^/register/confirm/") { # the only exceptions to the "remove all set-cookies rule"
         unset beresp.http.set-cookie;
@@ -231,6 +270,10 @@ sub vcl_fetch {
 }
 
 sub vcl_deliver {
+
+    // initially set so that we can utilize the ban lurker to test against the url of cached items
+    unset resp.http.x-url;
+
     if (obj.hits > 0) {
         set resp.http.X-Cache = "HIT (TIMES: "+obj.hits+")";
     } else {

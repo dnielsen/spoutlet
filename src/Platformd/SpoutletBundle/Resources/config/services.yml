@@ -95,6 +95,7 @@ services:
             - "@platformd.repository.site"
             - "@platformd.repository.background_ads"
             - "%local_auth%"
+            - "@platformd.util.flash_util"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
             - { name: twig.extension }
@@ -153,6 +154,8 @@ services:
         class: Platformd\SpoutletBundle\Util\VarnishUtil
         arguments:
             - '@platformd.model.ip_lookup_util'
+            - '@security.context'
+            - '%varnish_server%'
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 250 }
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse, priority: 1 }
@@ -373,4 +376,6 @@ services:
         arguments:
             - "@platformd.util.cache_util"
             - "@security.context"
+            - "@platformd.util.varnish_util"
+            - "@router"
 

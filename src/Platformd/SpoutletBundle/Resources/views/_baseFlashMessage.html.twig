@@ -1,0 +1,17 @@
+<div class="xnotices">
+    <div class="{% block flash_type %}{% endblock %}Notice notice">
+        <div class="pad">
+            <div class="pad2">
+                <div class="pad3">
+                    <div class="pad4">
+                        <h3>
+                            {% set title = 'platformd.flash.'~block('flash_type')~'_title' %}
+                            {{ title | trans }}
+                        </h3>
+                        {% block flash %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
