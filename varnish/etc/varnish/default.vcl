@@ -41,7 +41,7 @@ sub vcl_recv {
 
     set req.http.X-Country-Code = geoip.country_code(req.http.X-Client-IP);
 
-    if (req.http.host !~ ".*.alienwarearena.(com|local:8080)$") {
+    if (req.http.host !~ ".*.alienwarearena.(com|local:8080)$" && client.ip !~ ban) {
         error 404 "Page Not Found.";
     }
 
