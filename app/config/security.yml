@@ -33,7 +33,6 @@ security:
 
         main:
             platformd-form-login:
-                check_path: /login_check
                 success_handler: platformd_user.authentication_handler
                 failure_handler: platformd_user.authentication_handler
                 use_referer: true

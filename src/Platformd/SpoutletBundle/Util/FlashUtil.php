@@ -8,12 +8,16 @@ use Platformd\UserBundle\Entity\User;
 class FlashUtil
 {
     private $cacheUtil;
+    private $varnishUtil;
     private $securityContext;
+    private $router;
 
-    public function __construct($cacheUtil, SecurityContextInterface $securityContext)
+    public function __construct($cacheUtil, SecurityContextInterface $securityContext, $varnishUtil, $router)
     {
         $this->cacheUtil       = $cacheUtil;
         $this->securityContext = $securityContext;
+        $this->varnishUtil     = $varnishUtil;
+        $this->router          = $router;
     }
 
     public function setFlash($key, $message)
@@ -25,9 +29,20 @@ class FlashUtil
         }
 
         $cacheKey    = 'FLASH_MESSAGE::'.$user->getId();
-        $flash[$key] = $message;
+        $flash       = array(
+            'type' => $key,
+            'message' => $message,
+        );
 
         $this->cacheUtil->addItem($cacheKey, $flash);
+
+        $path = $this->router->generate('_flash_message');
+
+        try {
+            $this->varnishUtil->banCachedObject($path, array('userId' => $user->getId()));
+        } catch (Exception $e) {
+            var_dump($e);
+        }
     }
 
     public function getFlash()

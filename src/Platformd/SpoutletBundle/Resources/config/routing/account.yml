@@ -47,8 +47,12 @@ accounts_settings:
 accounts_settings_update:
     pattern: /settings
     defaults: { _controller: SpoutletBundle:Account:updateSettings }
-    requirements: { _method: PUT }
+    requirements: { _method: POST }
 
 accounts_incomplete:
     pattern: /incomplete
     defaults: { _controller: SpoutletBundle:Account:incomplete }
+
+accounts_change_password:
+    pattern: /change-password
+    defaults: { _controller: SpoutletBundle:Account:settings }

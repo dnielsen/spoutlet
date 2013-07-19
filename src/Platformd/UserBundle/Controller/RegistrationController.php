@@ -61,4 +61,23 @@ class RegistrationController extends BaseRegistrationController
     {
         return $this->container->get('platformd.util.site_util')->getCurrentSite();
     }
+
+    public function confirmAction($token)
+    {
+        $user = $this->container->get('fos_user.user_manager')->findUserByConfirmationToken($token);
+
+        if (null === $user) {
+            throw new NotFoundHttpException(sprintf('The user with confirmation token "%s" does not exist', $token));
+        }
+
+        $user->setConfirmationToken(null);
+        $user->setEnabled(true);
+        $user->setLastLogin(new \DateTime());
+
+        $this->container->get('fos_user.user_manager')->updateUser($user);
+        $response = new RedirectResponse($this->container->get('router')->generate('fos_user_registration_confirmed'));
+        $this->authenticateUser($user, $response);
+
+        return $response;
+    }
 }

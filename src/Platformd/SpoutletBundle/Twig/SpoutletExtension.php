@@ -42,8 +42,9 @@ class SpoutletExtension extends Twig_Extension
     private $siteRepo;
     private $secureUrlScheme;
     private $countryCode;
+    private $flashUtil;
 
-    public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager, $contentReportRepo, $siteRepo, $backgroundAdRepo, $localAuth, $secureUrlScheme)
+    public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager, $contentReportRepo, $siteRepo, $backgroundAdRepo, $localAuth, $secureUrlScheme, $flashUtil)
     {
         $this->bucketName          = $bucketName;
         $this->giveawayManager     = $giveawayManager;
@@ -59,6 +60,7 @@ class SpoutletExtension extends Twig_Extension
         $this->siteRepo            = $siteRepo;
         $this->localAuth           = $localAuth;
         $this->secureUrlScheme     = $secureUrlScheme;
+        $this->flashUtil           = $flashUtil;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -121,6 +123,7 @@ class SpoutletExtension extends Twig_Extension
             'current_background_ad_url'      => new Twig_Function_Method($this, 'getCurrentBackgroundUrl'),
             'current_background_ad_link'     => new Twig_Function_Method($this, 'getCurrentBackgroundLink'),
             'country_specific'               => new Twig_Function_Method($this, 'countrySpecific', array('is_safe' => array('html'))),
+            'get_flash'                      => new Twig_Function_Method($this, 'getFlash'),
         );
     }
 
@@ -986,5 +989,10 @@ class SpoutletExtension extends Twig_Extension
         }
 
         return isset($items[$key][$this->countryCode]) ? $items[$key][$this->countryCode] : ((isset($items[$key]['default']) ? $items[$key]['default'] : $default));
+    }
+
+    public function getFlash()
+    {
+        return $this->flashUtil->getFlash();
     }
 }

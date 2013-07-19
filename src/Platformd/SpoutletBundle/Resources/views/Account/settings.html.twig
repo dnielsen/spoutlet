@@ -24,7 +24,7 @@
                             <a class="update-avatar">UPDATE</a>
                         </div>
                     </span>
-                    {%if not avatarUsable %}
+                    {%if get_avatar_url(user, 184) and not avatarUsable %}
                         <div id="avatar-awaiting-overlay-text">
                             <a class="awaiting-approval">AWAITING APPROVAL</a>
                         </div>
@@ -36,7 +36,6 @@
                 <div class="clear"></div>
 
                 <form action="{{ path('accounts_settings_update') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_password form form-horizontal">
-                    <input type="hidden" name="_method" value="PUT" />
                     <fieldset id="account-settings-password" class="account-settings-section">
                         <h3><span>{{ 'platformd.user.account_settings.password'|trans({}, 'FOSUserBundle') }}</h3></span>
                         {{ form_errors(form) }}

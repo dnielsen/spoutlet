@@ -11,9 +11,12 @@ use
 ;
 
 use Platformd\UserBundle\Entity\User;
+use Platformd\SpoutletBundle\Entity\ScriptLastRun;
 
 class ApiQueryForUpdatedUsersCommand extends ContainerAwareCommand
 {
+    const SCRIPT_ID = 'api_updated_users_command';
+
     private $stdOutput;
 
     protected function configure()
@@ -63,17 +66,32 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->stdOutput = $output;
-        $container       = $this->getContainer();
-        $em              = $container->get('doctrine')->getEntityManager();
-        $userManager     = $container->get('fos_user.user_manager');
-        $apiManager      = $container->get('platformd.user.api.manager');
+        $this->stdOutput   = $output;
+        $container         = $this->getContainer();
+        $em                = $container->get('doctrine')->getEntityManager();
+        $userManager       = $container->get('fos_user.user_manager');
+        $apiManager        = $container->get('platformd.user.api.manager');
+        $scriptLastRunRepo = $em->getRepository('SpoutletBundle:ScriptLastRun');
 
-        $response        = 200;
-        $upToDate        = false;
-        $offset          = 0;
-        $limit           = 100;
-        $since           = $input->getOption('all') ? null : new \DateTime('-1 hour');
+        $response          = 200;
+        $offset            = 0;
+        $limit             = 100;
+
+        $runDateTime       = new \DateTime();
+
+        if ($input->getOption('all')) {
+            $since = null;
+        } else {
+            $hasRun = $scriptLastRunRepo->find(self::SCRIPT_ID);
+
+            if (!$hasRun) {
+                $hasRun = new ScriptLastRun(self::SCRIPT_ID);
+                $em->persist($hasRun);
+                $em->flush;
+            }
+
+            $since  = $hasRun->getLastRun();
+        }
 
         $this->output();
         $this->output(0, 'PlatformD User Updater');
@@ -99,8 +117,8 @@ EOT
                     $dbUser = $userManager->findUserByUsername($username);
 
                     if (!$dbUser) {
-                        $this->output(4, 'User Not in database - importing...');
-                        $dbUser = $userManager()->createUser();
+                        $this->output(4, 'User not in database - skipping.');
+                        continue;
                     }
 
                     $dbUser->setUsername($username);
@@ -122,6 +140,10 @@ EOT
 
         $this->output();
         $this->output(2, 'No more users.');
+
+        $hasRun->setLastRun($runDateTime);
+        $em->persist($hasRun);
+        $em->flush();
 
         $this->output(0);
     }

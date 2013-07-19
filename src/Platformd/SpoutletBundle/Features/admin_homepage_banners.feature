@@ -13,4 +13,4 @@ Feature: Home Page Banner Administration
             And I attach the file "src/Platformd/SpoutletBundle/Features/Context/120x60.gif" to "Thumb file"
             And I attach the file "src/Platformd/SpoutletBundle/Features/Context/634x183.gif" to "Banner file"
             And I press "Save"
-        Then I should see "success" in the flash message
+        Then I should see "success"

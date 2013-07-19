@@ -63,21 +63,6 @@
 
         <script type="text/javascript">
             CKEDITOR.config.customConfig = 'ckeditor/config.admin.js';
-
-            $(function() {
-                $.ajax({
-                    url: '{{ path('_session_flash_message') }}',
-                    dataType: 'json',
-                    async: false,
-                    success: function(data) {
-                        if (data && data.type && data.message) {
-                            $('.flash-message span').html(data.message);
-                            $('.flash-message').addClass('alert-' + data.type);
-                            $('.flash-message').fadeIn();
-                        }
-                    }
-                });
-            });
         </script>
 	</head>
 	<body>
@@ -338,10 +323,15 @@
                 {{ knp_menu_render('admin_breadcrumbs', {}, "breadcrumbs") }}
                 {% block flash %}
 
-                    <div class="flash-message alert" style="display:none;">
-                        <i class="icon-ok"></i>
-                        <span></span>
-                    </div>
+                    {% set flash = get_flash() %}
+                    {% if flash %}
+
+                        <div class="alert alert-{{ flash.type }}">
+                            <i class="icon-ok"></i>
+                            {{ flash.message | trans }}
+                        </div>
+
+                    {% endif %}
 
                 {% endblock %}
 

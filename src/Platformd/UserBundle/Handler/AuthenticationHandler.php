@@ -33,6 +33,10 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
         $user = $token->getUser();
         $this->userManager->addLoginRecord($user, $request);
 
+        if (!$user->getApiSuccessfulLogin()) {
+            $this->userManager->updateUserAndApi($user);
+        }
+
         if ($request->isXmlHttpRequest()) {
             // handle ajax login success here
             $response   = new Response();

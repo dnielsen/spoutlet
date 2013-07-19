@@ -406,12 +406,13 @@ class GroupEventController extends Controller
                 }
 
                 if (count($recipients) < 1) {
+
+                    $this->setFlash('error', 'No valid recipients found.');
+
                     return $this->render('EventBundle:GroupEvent:contact.html.twig', array(
                         'group' => $group,
                         'event' => $groupEvent,
                         'form'  => $form->createView(),
-                        'flash_type' => 'error',
-                        'flash' =>'No valid recipients found.',
                     ));
                 }
 
