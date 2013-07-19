@@ -5,13 +5,13 @@
         <p>
             {{ 'platformd.user.request_reset.help_message' | trans | format(path('contact')) | raw }}
         </p>
-
+        {% if invalid_username is defined %}
+            <p style="color: #c62828;font-weight:bold;font-style:italic;">{{ 'resetting.request.invalid_username'|trans({'%username%': invalid_username}, 'FOSUserBundle')|raw }}</p>
+        {% endif %}
         <form action="{{ path('fos_user_resetting_send_email') }}" method="POST" class="form-horizontal fos_user_resetting_request">
 
                 <div class="control-group" style="margin-left: -100px;">
-                    {% if invalid_username is defined %}
-                        <p>{{ 'resetting.request.invalid_username'|trans({'%username%': invalid_username}, 'FOSUserBundle') }}</p>
-                    {% endif %}
+
                     <label class="control-label" for="username">{{ 'resetting.request.username'|trans({}, 'FOSUserBundle') }}</label>
                     <div class="controls">
                         <input type="text" id="username" name="username" required="required" class="form-txt" />

@@ -8,14 +8,13 @@
                     <div class="pad2">
                         <div class="pad3">
                             <div class="pad4">
-                                <h3 id="notice-type">{{ 'platformd.flash.action_required'|trans }}</h3>
-                                <p id="notice-message">{{ 'platformd.user.register.last_step'|trans|raw }}</p>
+                                <h3 id="notice-type">{{ 'resetting.request.submit'|trans({}, 'FOSUserBundle') }}</h3>
+                                <p id="notice-message">{{ 'resetting.check_email'|trans({}, 'FOSUserBundle') }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 {% endblock content %}

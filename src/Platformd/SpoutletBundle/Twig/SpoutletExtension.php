@@ -40,8 +40,8 @@ class SpoutletExtension extends Twig_Extension
     private $backgroundAdRepo;
     private $localAuth;
     private $siteRepo;
-    private $countryCode;
     private $secureUrlScheme;
+    private $countryCode;
 
     public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager, $contentReportRepo, $siteRepo, $backgroundAdRepo, $localAuth, $secureUrlScheme)
     {

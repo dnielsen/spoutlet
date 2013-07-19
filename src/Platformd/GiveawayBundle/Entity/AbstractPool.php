@@ -247,7 +247,7 @@ abstract class AbstractPool
 
     public function isEnabledForCountry($country)
     {
-        $allowed    = false;
+        $allowed = false;
 
         if ($country instanceof Country) {
             $country = $country->getCode();
@@ -263,19 +263,35 @@ abstract class AbstractPool
                 return true;
             }
 
-            foreach ($regions as $region) {
-                foreach ($region->getCountries() as $regionCountry) {
-                    if ($regionCountry->getCode() == $country) {
-                        $allowed = true;
-                        break 2;
+            $countryCodes = array();
+
+            if (count($regions) > 0) {
+                foreach ($regions as $region) {
+                    foreach ($region->getCountries() as $regionCountry) {
+
+                        $countryCode = $regionCountry->getCode();
+                        $countryCodes[$countryCode] = $countryCode;
                     }
                 }
             }
 
-            if ($rules) {
-                $ruleCheck = $rules->doesCountryPassRules($country);
-                $allowed = $ruleCheck === null ? $allowed : $ruleCheck;
+            if (count($allRules) > 0) {
+
+                foreach ($allRules as $rule) {
+
+                    $ruleCountry = $rule->getCountry()->getCode();
+
+                    if ($rule->getRuleType() != 'allow') {
+                        unset($countryCodes[$ruleCountry]);
+                    } else {
+                        if (!isset($countryCodes[$ruleCountry])) {
+                            $countryCodes[$ruleCountry] = $ruleCountry;
+                        }
+                    }
+                }
             }
+
+            $allowed = isset($countryCodes[$country]);
 
             return $allowed;
         } else {

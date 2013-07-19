@@ -148,11 +148,23 @@ EOT
 
         $this->output(0, 'Processing queue for the Key Requests.');
 
-        $iterationCount = 1;
+        $iterationCount = 0;
 
         while ($message = $queueUtil->retrieveFromQueue(new KeyRequestQueueMessage())) {
 
-            usleep(self::DELAY_BETWEEN_KEYS_MILLISECONDS);
+            $iterationCount++;
+
+            if ($iterationCount > self::ITERATION_COUNT) {
+                $this->output();
+                $this->output(0, 'Maximum iterations reached - exiting.');
+                exit;
+            }
+
+            if ($this->exitAfterCurrentItem) {
+                $this->output();
+                $this->output(0, 'Process terminated - exiting.');
+                exit;
+            }
 
             $this->output();
             $this->output(0, 'Iteration '.$iterationCount);
@@ -416,7 +428,6 @@ EOT
                     $joinAction->setUser($user);
                     $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
 
-                    $group->getMembers()->add($user);
                     $group->getUserMembershipActions()->add($joinAction);
 
                     $dispatcher = $this->getContainer()->get('event_dispatcher');
@@ -425,13 +436,15 @@ EOT
 
                     $groupManager->saveGroup($group);
 
-                    if($group->getIsPublic()) {
+                    /*if($group->getIsPublic()) {
                         try {
+                            $this->output(4, 'Assigning user ARP for joining group.');
                             $response = $this->getContainer()->get('pd.cevo.api.api_manager')->GiveUserXp('joingroup', $user->getCevoUserId());
+                            $this->output(4, 'Successfully assigned ARP.');
                         } catch (ApiException $e) {
 
                         }
-                    }
+                    }*/
 
                     $user->getPdGroups()->add($group);
                     $this->em->persist($user);
@@ -443,11 +456,13 @@ EOT
             $this->output(5, 'Key assigned successfully.');
 
             // give user arp for obtaining a key
-            try {
+            /*try {
+                $this->output(4, 'Assigning user ARP for redeeming key.');
                 $response = $this->getContainer()->get('pd.cevo.api.api_manager')->GiveUserXp('keygiveaway', $user->getCevoUserId());
+                $this->output(4, 'Successfully assigned ARP.');
             } catch (ApiException $e) {
 
-            }
+            }*/
 
             $this->output(5, 'Sending user email.');
 
@@ -456,20 +471,6 @@ EOT
             $this->output(5, 'Email sent.');
 
             $this->deleteMessageWithOutput($message);
-
-            if ($this->exitAfterCurrentItem) {
-                $this->output();
-                $this->output(0, 'Process terminated - exiting.');
-                exit;
-            }
-
-            $iterationCount++;
-
-            if ($iterationCount > self::ITERATION_COUNT) {
-                $this->output();
-                $this->output(0, 'Maximum iterations reached - exiting.');
-                exit;
-            }
         }
 
         $this->output();

@@ -480,7 +480,7 @@ class ContestAdminController extends Controller
                         $rule->setRuleset($ruleset);
                         $newRulesArray[] = $rule;
 
-                        $defaultAllow = $rule->getRuleType() == "allow" ? false : true;
+                        $defaultAllow = $rule->getRuleType() == "allow" ? false : $defaultAllow;
                     }
                 }
 

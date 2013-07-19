@@ -57,6 +57,7 @@ platformd:
     flash:
         error_title: ¡Error!
         success_title: ¡Exito!
+        action_required: Action Required!
 
     layout:
 
@@ -300,8 +301,12 @@ platformd:
             oops: ¡Error!
             cannot_process: No hemos podido completar su solicitud. Si cree que esto es un error o continua teniendo problemas de corregir por debajo de los temas, porfavor contacte a <a href="%s">soporte</a>.
             problems_found: Hemos encontrado los siguientes problemas:
-            last_step: Last Step! A confirmation has been send to your email address. Follow the instructions in the email to activate your Alienware Arena account. Once you have activated your account, you will be able to log in.
+            last_step: |
+                You’re almost there! A confirmation email has been sent. Follow the instructions in the email to activate your Alienware Arena account. If you do not receive an email within 15 minutes, please email <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a> for support.
+                <br /><br />
+                <strong>Important: Check Your Spam Folder!</strong>
             success: Your account has been created!
+            confirmed_success: You have activated your account.
 
         login:
             username: Nombre de usuario

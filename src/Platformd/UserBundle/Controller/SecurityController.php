@@ -27,7 +27,7 @@ class SecurityController extends BaseController
     }
 
     // facebook security
-    public function facebookSecurityCheckAction()
+    /*public function facebookSecurityCheckAction()
     {
         $user           = $this->getCurrentUser();
         $request        = $this->container->get('request');
@@ -84,10 +84,10 @@ class SecurityController extends BaseController
         $response = new Response();
         $response->headers->clearCookie('fbsr_'.$this->getCurrentSite()->getSiteConfig()->getFacebookAppId());
         return new RedirectResponse($this->container->get('router')->generate('_fos_user_security_logout'));
-    }
+    }*/
 
     // twitter security
-    public function twitterLoginAction()
+    /*public function twitterLoginAction()
     {
         $request = $this->container->get('request');
         $twitter = $this->container->get('fos_twitter.service');
@@ -131,7 +131,7 @@ class SecurityController extends BaseController
         $this->container->get('event_dispatcher')->dispatch('security.interactive_login', $event);
 
         return new RedirectResponse($this->container->get('router')->generate('default_index'));
-    }
+    }*/
 
     // helpers
     private function getCurrentUser()

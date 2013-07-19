@@ -3141,6 +3141,18 @@ input[type="submit"].btn.btn-mini {
           border-radius: 4px;
 }
 
+.flash-message.flash-error {
+  padding: 8px 35px 8px 14px;
+  margin-bottom: 18px;
+  color: #b94a48;
+  background-color: #f2dede;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  border: 1px solid #b94a48;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+}
+
 .alert-heading {
   color: inherit;
 }

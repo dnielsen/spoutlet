@@ -17,7 +17,6 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
         $site = new Site();
 
         $forwardedPaths = array(
-          '^/$',
           '^/arp',
           '^/forums',
           '^/contact',

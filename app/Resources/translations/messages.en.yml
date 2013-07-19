@@ -94,6 +94,7 @@ platformd:
         success_title: Success!
         info_title: Information!
         warning_title: Warning!
+        action_required: Action Required!
 
     cache:
        currently_under_heavy_load_title: Please try again shortly...
@@ -130,8 +131,8 @@ platformd:
         top_menu:
             admin: Admin
             account: Account
-            sign_in: Sign in
-            sign_out: Sign out
+            sign_in: Sign In
+            sign_out: Sign Out
             join: Join
             about: About
             contact: Contact
@@ -335,7 +336,7 @@ platformd:
             agree_to_terms: |
                 I have read and agreed to the
                 <a href="%terms_url%" target="_blank">Terms & Conditions</a> and
-                <a href="%privacy_url%" target="_blank">Privacy Policy</a>
+                <a href="%privacy_url%" target="_blank">Privacy Policy</a>.
             subscribe_me: Subscribe me to receive Alienware/Dell Gaming news and special offers via email. <a href="http://www.dell.com/learn/us/en/19/policies-privacy?c=us&l=en&s=gen&delphi:gr=true" target="_blank">View Dell Privacy Policy</a>.
 
     # used only in the admin area
@@ -409,11 +410,16 @@ platformd:
             oops: Error!
             cannot_process: We were unable to create your account. Please complete or correct the required fields below.
             problems_found: We found the following problems:
-            last_step: Last Step! A confirmation has been send to your email address. Follow the instructions in the email to activate your Alienware Arena account. Once you have activated your account, you will be able to log in.
+            last_step: |
+                You’re almost there! A confirmation email has been sent. Follow the instructions in the email to activate your Alienware Arena account. If you do not receive an email within 15 minutes, please email <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a> for support.
+                <br /><br />
+                <strong>Important: Check Your Spam Folder!</strong>
+
             success: Your account has been created!
+            confirmed_success: You have activated your account.
 
         login:
-            username: Username
+            username: Username/Email
             password: Password
             remember: Remember Me
             title: Login to your account
@@ -426,12 +432,12 @@ platformd:
             join: Join for free!
 
         reset:
-            title:  Forgot Your Password?
+            title:  Create a New Password
 
         request_reset:
             title: Forgot Your Password?
-            help_message: To reset your password, please provide the email address you used to create your Alienware Arena account. If you do not remember the email address you used, please contact <a href="%s">support</a>.
-            spam_message: Important: Check Your Spam Folders! - We try our best, but sometimes over zealous spam filters mistake our emails for "junk". Please allow for up to 30 minutes for your password to be reset. It typically only takes a few seconds, but sometimes emails get "stuck" along the way to your inbox.
+            help_message: To reset your password, please enter the email address used to create your Alienware Arena account to reset your password. If you do not remember the email address you used, please email <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a>.
+            spam_message: If you aren't receiving your password reset email, be sure to check your email account's spam folder. Please allow for up to 30 minutes for your password to be reset. It typically only takes a few seconds, but sometimes emails get "stuck" along the way to your inbox.
 
         account:
             account_home: Account Home

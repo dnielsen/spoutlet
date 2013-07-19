@@ -21,7 +21,7 @@ class Version20130513112643 extends AbstractMigration
 	    $this->addSql("ALTER TABLE pd_site_features ADD has_about TINYINT(1) NOT NULL, ADD has_contact TINYINT(1) NOT NULL");
         $this->addSql('UPDATE pd_site_features SET `has_forward_on_404` = 0, `has_index` = 1, `has_about` = 1 WHERE `site_id` IN (1,2,3)');
         $this->addSql('UPDATE pd_site_features SET `has_forward_on_404` = 1, `has_index` = 0, `has_about` = 0 WHERE `site_id` IN (4,5,6,7,8,9)');
-        $this->addSql('UPDATE pd_site_config SET `forward_base_url` = "http://www.alienwarearena.com", `forwarded_paths` = \'a:5:{i:0;s:3:"^/$";i:1;s:5:"^/arp";i:2;s:8:"^/forums";i:3;s:9:"^/contact";i:4;s:7:"^/about";}\' WHERE `site_id` IN (4,5,6,7,8,9)');
+        $this->addSql('UPDATE pd_site_config SET `forward_base_url` = "http://www.alienwarearena.com", `forwarded_paths` = \'a:4:{i:0;s:5:"^/arp";i:1;s:8:"^/forums";i:2;s:9:"^/contact";i:3;s:7:"^/about";}\' WHERE `site_id` IN (4,5,6,7,8,9)');
     }
 
     public function down(Schema $schema)
