@@ -325,7 +325,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 .widget-33 { background: url('/bundles/spoutlet/images/widget-33-bg.png') no-repeat top left; width: 302px; height: 360px; padding-top:1px;}
 .widget-33 .widget-header { padding: 0px 5px 0 5px; background-color: #131313; margin: 2px }
 .widget-33 .widget-footer { color: #c6c6c6; background: #131313; padding: 5px; width: 290px; margin: 0 auto; border-top: 1px solid #2d2d2d; border-bottom: 1px solid #2d2d2d; height: 15px; }
-.widget-33 .widget-content { color: #b3b3b3; padding: 5px; margin: 0 auto; background: #191919; }
+.widget-33 .widget-content { color: #b3b3b3; padding: 5px; margin: 0 auto; background: #191919; width: 290px;}
 .widget-33 .widget-title { font-size: 18.67px; font-weight: bold; color: #bfbfbf; padding: 7px 0 4px 5px; }
 .widget-33 .widget-icon { float: right; padding: 1px 0 0 0; }
 .widget-33 .widget-item { -moz-border-radius: 5px; -webkit-border-radius: 5px; margin: 3px 3px 3px 3px; background: #252525; padding: 2px 2px 2px 5px; }
@@ -335,7 +335,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 .widget-66 .widget-header { padding: 0px 5px 0 5px; background-color: #131313; margin: 2px }
 .widget-66 .widget-title { font-size: 18.67px; font-weight: bold; color: #bfbfbf; padding: 7px 0 4px 5px;  }
 .widget-66 .widget-footer { color: #c6c6c6; background: #131313; padding: 5px; width: 624px; margin: 0 auto; border-top: 1px solid #2d2d2d; border-bottom: 1px solid #2d2d2d; }
-.widget-66 .widget-content { padding: 5px; margin: 0 auto; background: #191919; overflow: hidden; }
+.widget-66 .widget-content { padding: 5px; margin: 0 auto; background: #191919; overflow: hidden; width: 624px;}
 .widget-66 .widget-icon { float: right; padding: 1px 0 0 0; }
 .widget-66 .widget-item { -moz-border-radius: 5px; -webkit-border-radius: 5px; margin: 3px; background: #252525; padding: 2px 2px 2px 5px; min-height: 20px; padding: 4px 0 0 5px; }
 .widget-66 .widget-item-subtext { font-size: 11px; color: #b3b3b3; }

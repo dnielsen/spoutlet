@@ -81,7 +81,7 @@ platformd.admin.avatars.unapproved.no_avatars: There are no unapproved avatars.
 platformd:
 
     homepage:
-        news_title: News
+        news_title: News & Articles
 
     alienware: Alienware
 

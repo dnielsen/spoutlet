@@ -7,7 +7,7 @@
         <div class="clear"></div>
     </div>
     {# height is a hack for positioning  - see featuredContent.html.twig #}
-    <div class="widget-content normalized" id="news-content" style="height: 256px;">
+    <div class="widget-content" id="news-content" style="height: 259px;">
         {% if news %}
             {% for news_item in news %}
                 <div class="widget-item">
@@ -18,5 +18,6 @@
     </div>
     <div class="widget-footer">
         <a href="{{ path('news') }}" class="aw-link" id="more-news-link">{{ 'platformd.layout.page_content.see_more' | trans }}</a>
+        <div class="clear"></div>
     </div>
 </div>

@@ -126,7 +126,7 @@ class DefaultController extends Controller
             ->findMostRecentForSite($this->getCurrentSite(), 13)
         ;
 
-        return $this->render('SpoutletBundle:Default:hotStories.html.twig', array(
+        return $this->render('SpoutletBundle:Default:_hotStories.html.twig', array(
             'news'     => $news,
         ));
     }

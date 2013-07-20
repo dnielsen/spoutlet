@@ -15,14 +15,25 @@
 <div id="row-2" class="std_2col">
     <div class="right">
         {% render url('hot_stories') %}
-        {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
-
     </div>
     <div class="left">
         {% render url('featured_content') %}
-        {% if app.session.locale == 'zh' or app.session.locale == 'ja' %}
-            {% render url('video_feed') %}
-        {% endif %}
+    </div>
+</div>
+<div id="row-3" class="std_2col">
+    <div class="right">
+        {% include "SpoutletBundle:Default:_forums.html.twig" %}
+    </div>
+    <div class="left">
+        {% include 'SpoutletBundle:Default:_groups.html.twig' %}
+    </div>
+</div>
+<div id="row-4" class="std_2col">
+    <div class="right">
+        {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
+    </div>
+    <div class="left">
+        {% include 'SpoutletBundle:Default:_videos.html.twig' %}
     </div>
 </div>
 {% endblock %}
