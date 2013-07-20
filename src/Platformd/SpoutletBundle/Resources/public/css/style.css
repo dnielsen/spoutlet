@@ -274,7 +274,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 
 #content-wrapper { width: 970px; margin:0px auto;}
 #content-background { width: 970px; float: left; background-color: #000; cursor: initial; margin-top: -5px;}
-#content {  width: 950px; float: left; margin-left: 10px; padding-top:20px;}
+#content {  width: 950px; float: left; margin-left: 10px; padding-top:20px; min-height: 500px;}
 .wide-950 { width: 950px; margin: 0 auto; }
 
 
@@ -366,7 +366,7 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 
 
 /** Rotator **/
-#rotator { width:634px; }
+#rotator { width:634px; height: 253px;}
 #mainAd { width:300px; height:250px; margin-bottom: 0px; border: 1px solid #4A4A4A; }
 
 /** Event Tabs **/
@@ -550,6 +550,7 @@ html body .lastBlurb { margin-bottom:0; }
 
 #photoArray { padding: 10px 0 0 0; margin: 15px auto; width: 250px; height: 200px; }
 #photoArray img { border: 1px solid #606060; }
+#caption { padding: 5px; }
 
 /* Recient Forum Posts */
 .recentForumPosts { margin: 20px 0 0 0; }
@@ -1205,7 +1206,7 @@ div.blockOverlay {
     max-height: 500px;
 }
 
-#loginArea { width: 595px; padding: 5px 20px 0 20px; background: url('/bundles/spoutlet/images/register-bg.png') top left no-repeat; }
+#loginArea { width: 595px; padding: 5px 20px 30px 20px; background: url('/bundles/spoutlet/images/register-bg.png') top left no-repeat; }
 #loginArea h2 { color: #e7e7e7; font-family: "verdana"; font-weight: normal; font-size: 24px; margin: 10px 0 10px 0; }
 #loginArea .tbl { margin: 0 auto; vertical-align: middle; padding: 5px 0 0px 0; }
 #loginArea .tbl { margin:0 auto; vertical-align:middle; padding:5px 0 0px 0; }

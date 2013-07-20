@@ -282,8 +282,9 @@ span.required {
     width: 120px;
     height: 60px;
 }
+
 #homepage-gallery .ad-thumbs li a.ad-active img {
-    border-color: #68bcd8;
+     border-color: #68bcd8;
 }
 #homepage-gallery .ad-controls {
     display: none;

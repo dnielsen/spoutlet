@@ -67,6 +67,7 @@
                 <div id="photoArray">
 
                 </div>
+                <div id="caption"></div>
                 <script type="text/javascript">
                     $(document).ready(function(){
                         $.ajax({
@@ -76,8 +77,9 @@
                                 if (data.success && data.media) {
                                     for(var i = 0; i < data.media.length; i++) {
                                         var item = data.media[i];
-                                        console.log(item);
-                                        $('#photoArray').append('<a href="' + item.url + '"><img src="' + item.thumbnail + '" /></a>')
+                                        $('#photoArray').append(
+                                            '<a href="' + item.url + '" alt="' + item.caption + '"><img src="' + item.thumbnail + '" /></a>'
+                                        );
                                     }
                                 }
                                 $('#photoArray').cycle({
@@ -85,7 +87,13 @@
                                     speed:   300,
                                     timeout: 3000,
                                     next:   '#photoArray',
-                                    pause:   1
+                                    pause:   1,
+                                    before: function() {
+                                        $('#caption').html('').fadeOut(300);
+                                    },
+                                    after: function() {
+                                        $('#caption').html(this.getAttribute('alt')).fadeIn(300);
+                                    }
                                 });
                             }
                         });
