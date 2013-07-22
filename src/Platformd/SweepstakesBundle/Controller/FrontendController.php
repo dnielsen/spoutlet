@@ -10,9 +10,34 @@ use Platformd\GroupBundle\Entity\GroupMembershipAction;
 use Platformd\GroupBundle\Event\GroupEvent;
 use Platformd\GroupBundle\GroupEvents;
 use Platformd\CEVOBundle\Api\ApiException;
+use Symfony\Component\HttpFoundation\Response;
 
 class FrontendController extends Controller
 {
+    public function _sweepstakesFlashMessageAction($slug, $entryId = null)
+    {
+        $sweepstakes = $this->findSweepstakes($slug, false);
+
+        if ($entryId) {
+            $assignedEntry = $this->getEntryRepo()->findOneByIdAndUser($entryId, $this->getUser());
+        } else {
+            $assignedEntry = null;
+        }
+
+        if ($assignedEntry) { # the user has a key, so let's display it for them
+
+            $response = $this->render('SweepstakesBundle:Frontend:_showKey.html.twig', array(
+                'sweepstakes' => $sweepstakes
+            ));
+
+            $this->varnishCache($response, 60);
+
+            return $response;
+        }
+
+        return new Response();
+    }
+
     public function indexAction()
     {
         $sweepstakess = $this->getSweepstakesRepo()->findPublished($this->getCurrentSite());
@@ -32,12 +57,6 @@ class FrontendController extends Controller
     {
         $sweepstakes = $this->findSweepstakes($slug, false);
 
-        if ($entryId) {
-            $assignedEntry = $this->getEntryRepo()->findOneByIdAndUser($entryId, $this->getUser());
-        } else {
-            $assignedEntry = null;
-        }
-
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $isEntered = false;
         } else {
@@ -48,10 +67,10 @@ class FrontendController extends Controller
 
         return array(
             'sweepstakes'   => $sweepstakes,
-            'assignedEntry' => $assignedEntry,
             'isEntered'     => $isEntered,
             'groupManager'  => $this->getGroupManager(),
             'permalink'     => $permalink,
+            'entryId'       => $entryId,
         );
     }
 

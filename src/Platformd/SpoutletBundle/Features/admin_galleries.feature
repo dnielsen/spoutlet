@@ -14,7 +14,7 @@ Feature: Gallery Admin
             And I check the "Demo" option for "Sites"
             And I select "Published" from "Status"
             And I press "Create"
-        Then I should see "The gallery was created!" in the flash message
+        Then I should see "The gallery was created!"
 
     Scenario: List existing galleries
         Given there is a gallery called "Demo Test Gallery" in "en"
@@ -35,4 +35,4 @@ Feature: Gallery Admin
             And I fill in the following:
                 | Gallery name  | Demo Test Gallery Updated! |
             And I press "Save"
-        Then I should see "The gallery was saved!" in the flash message
+        Then I should see "The gallery was saved!"

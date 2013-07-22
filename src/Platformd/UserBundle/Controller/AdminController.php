@@ -88,11 +88,13 @@ class AdminController extends Controller
         if ($form->isValid()) {
             $manager->updateUser($user);
 
-            $this->setFlash('success', $translator->trans('fos_user_admin_edit_success', array(
+            $this->setFlash('success', $this->trans('fos_user_admin_edit_success', array(
                 '%username%' => $user->getUsername()
             ), 'FOSUserBundle'));
 
-            return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
+            return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array(
+                'id' => $id,
+            )));
         }
 
         return $this->render('UserBundle:Admin:edit.html.twig', array(
@@ -111,12 +113,10 @@ class AdminController extends Controller
             throw $this->createNotFoundException(sprintf('Unable to retrieve user #%d', $id));
         }
 
-        // TODO : Use a confirm page and a DELETE HTTP Method
-
         $manager->deleteUser($user);
 
-        $this->setFlash('success', $translator->trans('fos_user_admin_delete_success', array(
-            '%username' => $user->getUsername()
+        $this->setFlash('success', $this->trans('fos_user_admin_delete_success', array(
+            '%username%' => $user->getUsername()
         ), 'FOSUserBundle'));
 
         return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
@@ -137,7 +137,7 @@ class AdminController extends Controller
         $user->setPasswordRequestedAt(new \DateTime());
         $manager->updateUser($user);
 
-        $this->setFlash('success', $translator->trans('fos_user_admin_resetted_password_success', array(
+        $this->setFlash('success', $this->trans('fos_user_admin_resetted_password_success', array(
             '%email%' => $user->getEmail()
         ), 'FOSUserBundle'));
 

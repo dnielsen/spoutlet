@@ -27,7 +27,7 @@ Feature: Groups Frontend
             And I select "Topic" from "Group Category"
             And I select the "Public Group" radio button
             And I press "Create"
-        Then I should see "The group was created!" in the flash message
+        Then I should see "The group was created!"
             And I should see "New test group" on "/groups/"
 
     Scenario: View group page
@@ -44,14 +44,14 @@ Feature: Groups Frontend
                 | Group Name                | New test group updated     |
                 | Group Description         | Some updated information   |
             And I press "Save"
-        Then I should see "The group was saved!" in the flash message
+        Then I should see "The group was saved!"
             And I should see "New test group updated" on "/groups/"
 
     Scenario: Apply to a public group
         Given I am on "/groups/"
         When I click on "Someone's Group"
             And I press "join-group-button"
-        Then I should see "You have successfully joined this group!" in the flash message
+        Then I should see "You have successfully joined this group!"
 
     Scenario: Apply to a private group
         Given I am on "/groups/"
@@ -60,7 +60,7 @@ Feature: Groups Frontend
             And I fill in "Reason" with "Because I want to join!"
             And I press "Apply"
         Then I should see "Waiting on Approval"
-            And I should see "You will receive an email if you are admitted into this group." in the flash message
+            And I should see "You will receive an email if you are admitted into this group."
 
     Scenario: View group applicants
         Given I am on "/groups/"
@@ -73,14 +73,14 @@ Feature: Groups Frontend
         When I click on "Other Group"
             And I click on "Member Approvals"
             And I accept an application to "Other Group"
-        Then I should see "You have successfully accepted" in the flash message
+        Then I should see "You have successfully accepted"
 
     Scenario: Disapprove unsuccessful applicant
         Given I am on "/groups/"
         When I click on "Other Group"
             And I click on "Member Approvals"
             And I reject an application to "Other Group"
-        Then I should see "You have successfully rejected" in the flash message
+        Then I should see "You have successfully rejected"
 
     Scenario: Add group news
         Given I am on "/group-1/"
@@ -89,7 +89,7 @@ Feature: Groups Frontend
             | Title   | News Title       |
             | Article | Article content |
             And I press "Post News"
-        Then I should see "New article posted successfully." in the flash message
+        Then I should see "New article posted successfully."
             And I should see "News Title" on the "news" page of "Group 1"
 
     # Commented out until Javascript testing is implemented
@@ -97,7 +97,7 @@ Feature: Groups Frontend
     #    Given I am on "/galleries/submit-image"
     #    When I attach the file "src/Platformd/SpoutletBundle/Features/Context/120x60.gif" to "galleryImages"
     #        And I click "Upload"
-    #    Then I should see "Your images were uploaded successfully." in the flash message
+    #    Then I should see "Your images were uploaded successfully."
     #
     #Scenario: Publish group image
     #    Given I am on "/galleries/submit-image"
@@ -106,7 +106,7 @@ Feature: Groups Frontend
     #        And fill in "Image Description" for "Description"
     #        And select "Group 1" from "Groups"
     #        And I click "Publish"
-    #    Then I should see "1 of 1 images are published." in the flash message
+    #    Then I should see "1 of 1 images are published."
     #        And I should see "120x60.gif" on "/groups/1/images/"
     #
     #Scenario: Add group video
@@ -118,7 +118,7 @@ Feature: Groups Frontend
     #        | Description     | Description      |
     #        And I check the "Group 1" option for "Groups"
     #        And I press "Save"
-    #    Then I should see "Your video is uploaded." in the flash message
+    #    Then I should see "Your video is uploaded."
     #        And I should see "Test Video" on the "videos" page of "Group 1"
 
     Scenario: Add group discussion topic
@@ -128,7 +128,7 @@ Feature: Groups Frontend
             | Discussion Name   | Test Discussion           |
             | Content           | Here is a test discussion |
             And I press "Post Discussion"
-        Then I should see "New discussion posted successfully." in the flash message
+        Then I should see "New discussion posted successfully."
             And I should see "Test Discussion" on the "discussions" page of "Group 1"
 
     Scenario: Add reply to group discussion

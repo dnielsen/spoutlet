@@ -1,4 +1,6 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
 {% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
 {% form_theme suspendForm 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
 
@@ -7,6 +9,12 @@
 {% block content %}
     <h1>Edit User</h1>
 
+    <div class="well">
+        <a href="{{ path("Platformd_UserBundle_admin_reset_password", { "id" : user.id }) }}" class="btn btn-primary">{{ "fos_user_admin_reset_password" | trans({}, "FOSUserBundle" ) }}</a>
+        <a class="confirm btn btn-primary" href="{{ path("Platformd_UserBundle_admin_delete", { "id" : user.id }) }}">{{ "fos_user_admin_delete" | trans({}, "FOSUserBundle" ) }}</a>
+        {% if user.loginRecords|length > 0 %}<a class="btn btn-primary" href="{{ path('Platformd_UserBundle_admin_logins', { 'id': user.id }) }}"></i> Logins</a>{% endif %}
+    </div>
+
     {% if user.expiredUntil %}
         <div class="flash-message flash-error">
             <i class="icon-ok"></i>
@@ -14,28 +22,65 @@
         </div>
     {% endif %}
 
-    <form method="post" action="{{ path("Platformd_UserBundle_admin_update", { "id" : user.id }) }}" class="form-horizontal">
-        <input type="hidden" name="_method" value="PUT" />
+    <div class="row-fluid">
+        <div class="span6 well">
+            <form method="post" action="{{ path("Platformd_UserBundle_admin_update", { "id" : user.id }) }}" class="form-horizontal">
+                <input type="hidden" name="_method" value="PUT" />
 
-        {{ form_errors(form) }}
+                {{ form_errors(form) }}
 
-        {{ form_row(form.username, { "attr" : {"label" : ""} }) }}
-        {{ form_row(form.firstname) }}
-        {{ form_row(form.lastname) }}
-        {{ form_row(form.email) }}
-        {{ form_row(form.admin_level) }}
+                {{ form_row(form.username, { "attr" : {"label" : ""} }) }}
+                {{ form_row(form.firstname) }}
+                {{ form_row(form.lastname) }}
+                {{ form_row(form.email) }}
+                {{ form_row(form.admin_level) }}
 
-        {{ form_rest(form) }}
-        <div class="form-actions">
-            <input type="submit" value="{{ 'Save'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" formnovalidate />
+                {{ form_rest(form) }}
+                <div class="form-actions">
+                    <input type="submit" value="{{ 'Save'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" formnovalidate />
+                </div>
+            </form>
         </div>
-    </form>
 
-    <form method="post" action="{{ path("Platformd_UserBundle_admin_suspend", { "id" : user.id}) }}" class="form-horizontal">
-        {{ form_row(suspendForm.expiredUntil) }}
-        <div class="form-actions">
-            <input type="submit" value="{{ 'Suspend'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" />
+        <div class="span6">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Last Seen</th>
+                    <td>{{ user.lastLogin|date }}</td>
+                </tr>
+                <tr>
+                    <th>Created</th>
+                    <td>{{ user.created|date }}</td>
+                </tr>
+                <tr>
+                    <th>IP Address at creation</th>
+                    <td>{{ user.ipAddress }}</td>
+                </tr>
+            </table>
+
+            <div class="well">
+                <legend>Suspension</legend>
+                <form method="post" action="{{ path("Platformd_UserBundle_admin_suspend", { "id" : user.id}) }}" class="form-horizontal">
+                    {{ form_row(suspendForm.expiredUntil) }}
+                    <div class="form-actions">
+                        <input type="submit" value="{{ 'Suspend'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" />
+                        <a class="confirm btn btn-primary" href="#" data-confirm="Are you sure you want to permanently ban this user?">Ban Forever</a>
+                    </div>
+                    {{ form_rest(suspendForm) }}
+                </form>
+            </div>
         </div>
-        {{ form_rest(suspendForm) }}
-    </form>
+
+    </div>
+
+    <script type="text/javascript">
+        $('a.confirm').click(function(event) {
+            var confirmMsg = $(this).attr('data-confirm') ? $(this).attr('data-confirm') : 'Delete this?';
+            if (!confirm(confirmMsg)) {
+                event.stopPropagation();
+                event.preventDefault();
+                return false;
+            }
+        });
+    </script>
 {% endblock %}

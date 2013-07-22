@@ -65,7 +65,6 @@
     liip_enabled_themes[] = default
     liip_enabled_themes[] = test_theme
 
-    admin_prod_url_scheme = https
     secure_url_scheme     = https
 
     queue_prefix          = https://sqs.us-east-1.amazonaws.com/042124576429/PD_TESTING_
@@ -73,3 +72,5 @@
     allow_caching         = true
 
     api_base_url          = https://api.alienwarearena.com/v1/
+
+    varnish_server        = http://demo.alienwarearena.local:8080

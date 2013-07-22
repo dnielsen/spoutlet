@@ -21,7 +21,7 @@ Feature: Giveaway keys display
             And I check "Show key count"
             And I select "Active" from "Status"
             And I press "Save Giveaway"
-        Then I should see "Giveaway has been saved" in the flash message
+        Then I should see "Giveaway has been saved"
         And Giveway "keygiveaway name" should display remaining keys
 
     Scenario: Add a key giveaway with non displayed key count
@@ -37,5 +37,5 @@ Feature: Giveaway keys display
             And I select "Skyrim" from "Game"
             And I uncheck "Show key count"
             And I press "Save Giveaway"
-        Then I should see "Giveaway has been saved" in the flash message
+        Then I should see "Giveaway has been saved"
         And Giveway "keygiveaway name" should not display remaining keys

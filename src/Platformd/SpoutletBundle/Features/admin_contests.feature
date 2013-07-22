@@ -33,7 +33,7 @@ Feature: Contest Admin
             And I select "image" from "Category"
             And I select "published" from "Status"
             And I press "Create"
-        Then I should see "The contest was created!" in the flash message
+        Then I should see "The contest was created!"
 
     Scenario: List existing contests
         Given I click on "Contests"
@@ -50,7 +50,7 @@ Feature: Contest Admin
             And I fill in the following:
                 | Contest name    | Diablo 3 Image Contest Updated!    |
             And I press "Save"
-        Then I should see "The contest was saved!" in the flash message
+        Then I should see "The contest was saved!"
 
     Scenario: Preview the contest
         Given I click on "Contests"

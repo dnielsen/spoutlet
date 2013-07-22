@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 
 class UserManager extends BaseUserManager
 {
-    const DEFAULT_SORTING_FIELD = 'email';
+    const DEFAULT_SORTING_FIELD = 'username';
 
     /**
      * @var \Gaufrette\Filesystem
@@ -72,7 +72,11 @@ class UserManager extends BaseUserManager
 
         if ($search) {
 
-            $where = $type == 'ip' ? 'u.ipAddress = :search' : 'u.username like :search OR u.email LIKE :search';
+            if ($type == 'ip') {
+                $qb->leftJoin('u.loginRecords', 'r');
+            }
+
+            $where = $type == 'ip' ? 'u.ipAddress = :search OR r.ipAddress = :search' : 'u.username like :search OR u.email LIKE :search';
             $search = $type == 'ip' ? $search : '%'.$search.'%';
 
             $qb

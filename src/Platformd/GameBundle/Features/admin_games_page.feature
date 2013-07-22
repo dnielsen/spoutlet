@@ -19,7 +19,7 @@ Feature: Games Page Admin
             And I check the "Demo" option for "Sites"
             And I select "published" from "Status"
             And I press "Create"
-        Then I should see "game page was created" in the flash message
+        Then I should see "game page was created"
 
     Scenario: List existing game pages
         Given there is a game page for "Starcraft" in "en"
@@ -41,7 +41,7 @@ Feature: Games Page Admin
                 | Recommended Laptop URL    | http://www.example.com/laptop     |
                 | Recommended Desktop URL   | http://www.example.com/desktop    |
             And I press "Save"
-        Then I should see "game page was saved" in the flash message
+        Then I should see "game page was saved"
 
     Scenario: Preview the games page
         Given there is a game page for "Starcraft" in "en"

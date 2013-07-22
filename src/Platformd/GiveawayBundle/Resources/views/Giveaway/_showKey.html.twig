@@ -1,6 +1,6 @@
-{% extends "SpoutletBundle::_flashMessage.html.twig" %}
-{% block type %}success{% endblock %}
-{% block body %}
+{% extends "SpoutletBundle::_baseFlashMessage.html.twig" %}
+{% block flash_type %}success{% endblock %}
+{% block flash %}
     <p class="notice-data">
         {{ 'platformd.giveaway.assigned.key' | trans }}: {{ data.promotion_assigned_key }}
     </p>

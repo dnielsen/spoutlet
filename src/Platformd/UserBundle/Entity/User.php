@@ -9,6 +9,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\ArrayCollection,
     Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
 use FOS\UserBundle\Validator\Password;
@@ -22,6 +23,8 @@ use  Platformd\UserBundle\Validator\User as ValidateUser;
  * @ORM\Entity(repositoryClass="Platformd\UserBundle\Entity\UserRepository")
  * @ORM\haslifecyclecallbacks
  * @ValidateUser()
+ * @UniqueEntity(fields={"username"})
+ * @UniqueEntity(fields={"email"})
  */
 class User extends BaseUser
 {
@@ -35,6 +38,16 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @Assert\NotBlank();
+     */
+    protected $username;
+
+    /**
+     * @Assert\NotBlank();
+     */
+    protected $email;
 
     /**
      * @var String $firstname

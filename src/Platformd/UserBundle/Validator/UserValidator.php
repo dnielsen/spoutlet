@@ -64,7 +64,7 @@ class UserValidator extends ConstraintValidator
             }
         }
 
-        if($entity->getHasAlienwareSystem() == null) {
+        if($entity->getHasAlienwareSystem() === null) {
                 // Set error message at top of form
                 if ($this->context->getViolations()->count() < 1) {
                     $this->context->addViolation(self::ERROR_MESSAGE_HAS_ALIENWARE, array(), $entity->getHasAlienwareSystem());

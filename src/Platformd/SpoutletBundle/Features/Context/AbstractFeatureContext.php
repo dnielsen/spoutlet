@@ -1824,17 +1824,4 @@ class AbstractFeatureContext extends MinkContext
             $counter++;
         }
     }
-
-    /**
-     * @Then /^I should see "([^"]*)" in the flash message$/
-     */
-    public function iShouldSeeInTheFlashMessage($string)
-    {
-        $route = '_session_flash_message';
-        $this->NavigateTo($route);
-        $responseBody = $this->getSession()->getDriver()->getClient()->getResponse()->getContent();
-
-        return false !== strpos($responseBody, $string);
-    }
-
 }
