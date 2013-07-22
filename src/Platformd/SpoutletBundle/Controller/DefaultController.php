@@ -126,9 +126,13 @@ class DefaultController extends Controller
             ->findMostRecentForSite($this->getCurrentSite(), 13)
         ;
 
-        return $this->render('SpoutletBundle:Default:_hotStories.html.twig', array(
+        $response = $this->render('SpoutletBundle:Default:_hotStories.html.twig', array(
             'news'     => $news,
         ));
+
+        $this->varnishCache($response, 30);
+
+        return $response;
     }
 
     # this function is just here to allow the use of path / router -> generate functions through the site... but ultimately this action isn't called, instead the site protection listener redirects the call to CEVOs server
@@ -198,12 +202,16 @@ class DefaultController extends Controller
 
         });
 
-        return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
+        $response = $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
             'all_events'     => $combined_list,
             'giveaways'      => $giveaways_list,
             'competitions'   => $competitions_list,
             'sweepstakes'    => $sweepstakes_list,
         ));
+
+        $this->varnishCache($response, 30);
+
+        return $response;
     }
 
     public function microsoftAction()
