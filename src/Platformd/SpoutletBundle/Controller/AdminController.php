@@ -72,7 +72,7 @@ class AdminController extends Controller
                 $data = $form->getData();
 
                 $emailsText = $data['emailsText'];
-                $emails  = $emailsText ? explode(',', $emailsText) : array();
+                $emails = $emailsText ? preg_split( "/[\s,]/", $emailsText, null, PREG_SPLIT_NO_EMPTY) : array();
 
                 foreach ($emails as $index => $email) {
                     $emails[$index] = trim($email);
