@@ -46,6 +46,11 @@
         {% render url('video_feed', {'height': '288'}) %}
     </div>
 </div>
+<div id="row-4" class="std_2col">
+    <div id="arp-widget">{% render url('_arp_index') %}</div>
+    <div id="photo-widget">{% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' with {'height' : '300px'} %}</div>
+    <div id="poll-widget">{% render url('_polls_index') %}</div>
+</div>
 {% endif %}
 
 {% endblock %}

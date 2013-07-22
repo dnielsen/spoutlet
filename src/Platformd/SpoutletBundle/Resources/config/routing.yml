@@ -22,6 +22,14 @@ _groups_index:
     pattern: /groups-index
     defaults: { _controller: SpoutletBundle:Default:_groups }
 
+_polls_index:
+    pattern: /polls-index
+    defaults: { _controller: SpoutletBundle:Default:_polls }
+
+_arp_index:
+    pattern: /arp-index
+    defaults: { _controller: SpoutletBundle:Default:_arp }
+
 force_logout:
     pattern: /forceLogout/{returnUrl}
     defaults: { _controller: SpoutletBundle:Default:forceLogout, returnUrl: '/' }

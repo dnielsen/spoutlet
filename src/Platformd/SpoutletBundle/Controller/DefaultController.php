@@ -75,6 +75,24 @@ class DefaultController extends Controller
         return $response;
     }
 
+    public function _pollsAction(Request $request)
+    {
+        $response = $this->render('SpoutletBundle:Default:_polls.html.twig');
+
+        $this->varnishCache($response, 30);
+
+        return $response;
+    }
+
+    public function _arpAction(Request $request)
+    {
+        $response = $this->render('SpoutletBundle:Default:_arp.html.twig');
+
+        $this->varnishCache($response, 30);
+
+        return $response;
+    }
+
     public function forceLogoutAction(Request $request, $returnUrl) {
 
         $request->getSession()->invalidate();
@@ -142,18 +160,6 @@ class DefaultController extends Controller
         $this->varnishCache($response, 30);
 
         return $response;
-    }
-
-    # this function is just here to allow the use of path / router -> generate functions through the site... but ultimately this action isn't called, instead the site protection listener redirects the call to CEVOs server
-    public function forumsAction()
-    {
-        throw $this->createNotFoundException();
-    }
-
-    # this function is just here to allow the use of path / router -> generate functions through the site... but ultimately this action isn't called, instead the site protection listener redirects the call to CEVOs server
-    public function arpAction()
-    {
-        throw $this->createNotFoundException();
     }
 
     /**
