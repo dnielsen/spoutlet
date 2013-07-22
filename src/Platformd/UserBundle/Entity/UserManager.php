@@ -72,6 +72,8 @@ class UserManager extends BaseUserManager
 
         if ($search) {
 
+            $search = trim($search);
+
             if ($type == 'ip') {
                 $qb->leftJoin('u.loginRecords', 'r');
             }
@@ -91,6 +93,8 @@ class UserManager extends BaseUserManager
                 ->setParameter('locale', $this->getLocale())
             ;
         }
+
+        $qb->distinct('u.id');
 
         return $qb->getQuery();
     }
