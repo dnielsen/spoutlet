@@ -20,12 +20,13 @@
         {% render url('featured_content') %}
     </div>
 </div>
+{% if features.hasGroups and features.hasVideo %}
 <div id="row-3" class="std_2col">
     <div class="right">
         {% include "SpoutletBundle:Default:_forums.html.twig" %}
     </div>
     <div class="left">
-        {% include 'SpoutletBundle:Default:_groups.html.twig' %}
+        {% render url('_groups_index') %}
     </div>
 </div>
 <div id="row-4" class="std_2col">
@@ -33,14 +34,26 @@
         {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
     </div>
     <div class="left">
-        {% include 'SpoutletBundle:Default:_videos.html.twig' %}
+        {% render url('video_feed') %}
     </div>
 </div>
+{% else %}
+<div id="row-3" class="std_2col">
+    <div class="right">
+        {% include "SpoutletBundle:Default:_forums.html.twig" %}
+    </div>
+    <div class="left">
+        {% render url('video_feed', {'height': '288'}) %}
+    </div>
+</div>
+{% endif %}
+
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/video/css/youtube.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/group/css/groups.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
@@ -56,10 +69,12 @@
             $('.news-ellipse').truncate({
                 width: '250'
             });
-            $('.more-videos-link a').truncate({
-                width: 280
+            $('.home-more-videos-link a').truncate({
+                width: '130'
             });
             $('.ellipse').qtip();
+
+            $('.group-index-link').truncate();
 
             $('#news-content').mCustomScrollbar();
 

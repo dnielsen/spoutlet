@@ -349,3 +349,41 @@
 #video-select-group-category {
     margin: 0 0 10px 160px;
 }
+
+/* home page thumbnail styles */
+.home-tiled {
+    float: left;
+    margin-left: 15px;
+    height: 130px;
+}
+
+.home-video-thumb-wrapper {
+    width: 135px;
+    height: 80px;
+    position: relative;
+    padding: 5px 0 5px 0;
+}
+
+.home-video-thumb-wrapper img {
+    width: 135px;
+    height: 80px;
+    border: 1px solid #4A4A4A;
+}
+
+.home-video-duration {
+    padding: 0 2px;
+    font-weight: bold;
+    font-size: 10px;
+    background-color: #000;
+    color: #fff!important;
+    height: 12px;
+    line-height: 12px;
+    opacity: 0.75;
+    right: 2px;
+    bottom: 6px;
+    position: absolute;
+}
+
+.home-more-videos-link {
+    width: 135px;
+}

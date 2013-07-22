@@ -6,6 +6,7 @@ use Platformd\GiveawayBundle\Entity\Giveaway;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Platformd\SpoutletBundle\Controller\Controller as Controller;
 
 class DefaultController extends Controller
 {
@@ -62,6 +63,25 @@ class DefaultController extends Controller
         $response = $this->render('SpoutletBundle::_footer.html.twig');
 
         $this->varnishCache($response, 120);
+
+        return $response;
+    }
+
+    public function _groupsAction(Request $request)
+    {
+        $em     = $this->getDoctrine()->getEntityManager();
+        $repo   = $em->getRepository('GroupBundle:Group');
+        $site   = $this->getCurrentSite();
+
+        $featured = $repo->findAllFeaturedGroupsForSite($site);
+        $popular  = $repo->findPopularGroupsForHomepage($site);
+
+        $response = $this->render('SpoutletBundle:Default:_groups.html.twig', array(
+            'featured' => $featured,
+            'popular'  => $popular,
+        ));
+
+        $this->varnishCache($response, 30);
 
         return $response;
     }
@@ -296,30 +316,18 @@ class DefaultController extends Controller
         return $this->render('SpoutletBundle:Default:military.html.twig');
     }
 
-    public function videoFeedAction(Request $request)
+    public function videoFeedAction(Request $request, $height='252')
     {
         $videos = $this->getYoutubeManager()->findFeaturedVideosForCountry($this->getCurrentSite(), $this->getCurrentCountry(), 6);
 
-        return $this->render('SpoutletBundle:Default:videoFeed.html.twig', array(
+        $response = $this->render('SpoutletBundle:Default:_videos.html.twig', array(
             'videos' => $videos,
+            'height' => $height,
         ));
-    }
 
-    private function getVideoFeedUrl($locale)
-    {
-        /*http://chinastaging.alienwarearena.com/video/ajax/apjxml
-        http://china.alienwarearena.com/video/ajax/apjxml
-        http://japanstaging.alienwarearena.com/video/ajax/apjxml
-        http://japan.alienwarearena.com/video/ajax/apjxml*/
-        switch($locale)
-        {
-            case 'zh':
-                return 'http://china.alienwarearena.com/video/ajax/apjxml';
-            case 'ja':
-                return 'http://japan.alienwarearena.com/video/ajax/apjxml';
-            default:
-                return 'http://video.alienwarearena.com/ajax/moviexml';
-        }
+        $this->varnishCache($response, 30);
+
+        return $response;
     }
 
     public function eventsAction()
