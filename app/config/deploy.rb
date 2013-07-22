@@ -13,15 +13,13 @@ set :awaWeb2, "ec2-23-20-93-253.compute-1.amazonaws.com"
 set :awaWeb3, "ec2-54-227-94-218.compute-1.amazonaws.com"
 set :awaWeb4, "ec2-23-20-212-246.compute-1.amazonaws.com"
 
-set :campWeb1, "ec2-54-235-26-82.compute-1.amazonaws.com"
-
 set :scm,         :git
 set :repository,  "git@github.com:platformd/spoutlet.git"
 set :user,        "ubuntu"
 set :branch,      "master"
 
-role :web,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, campWeb1
-role :app,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, campWeb1
+role :web,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4
+role :app,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4
 
 role :db,         awaProcessor1, :primary => true
 
