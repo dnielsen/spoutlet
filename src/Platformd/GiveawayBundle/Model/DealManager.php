@@ -30,8 +30,10 @@ class DealManager
     private $linkableManager;
     private $mediaPathResolver;
     private $commentManager;
+    private $varnishUtil;
+    private $router;
 
-    public function __construct(EntityManager $em, MediaUtil $mediaUtil, CacheUtil $cacheUtil, DealRepository $dealRepo, SiteUtil $siteUtil, DealCodeRepository $dealCodeRepo, ThreadRepository $threadRepo, LinkableManager $linkableManager, MediaPathResolver $mediaPathResolver, CommentManager $commentManager)
+    public function __construct(EntityManager $em, MediaUtil $mediaUtil, CacheUtil $cacheUtil, DealRepository $dealRepo, SiteUtil $siteUtil, DealCodeRepository $dealCodeRepo, ThreadRepository $threadRepo, LinkableManager $linkableManager, MediaPathResolver $mediaPathResolver, CommentManager $commentManager, $varnishUtil, $router)
     {
         $this->em                   = $em;
         $this->mediaUtil            = $mediaUtil;
@@ -43,6 +45,8 @@ class DealManager
         $this->linkableManager      = $linkableManager;
         $this->mediaPathResolver    = $mediaPathResolver;
         $this->commentManager       = $commentManager;
+        $this->varnishUtil          = $varnishUtil;
+        $this->router               = $router;
     }
 
     public function getAnonDealIndexData() {
@@ -57,6 +61,8 @@ class DealManager
         $expiredDeals     = $this->findExpiredDeals($siteId);
         $comments         = $this->commentManager->findMostRecentCommentsByThreadPrefixWithObjects(Deal::COMMENT_PREFIX, 5);
 
+        $nextExpiryIn     = null;
+
         foreach ($featuredDeals as $deal) {
             $featuredDealsArr[] = array(
                 'url'         => $this->linkableManager->link($deal),
@@ -64,6 +70,12 @@ class DealManager
                 'name'        => $deal->getName(),
                 'ends_at_utc' => $deal->getEndsAtUtc(),
             );
+
+            $endsIn = $deal->getEndsAtUtc()->format('U') - strtotime('now');
+
+            if (!$nextExpiryIn || $endsIn < $nextExpiryIn) {
+                $nextExpiryIn = $endsIn;
+            }
         }
 
         foreach ($allDeals as $deal) {
@@ -73,6 +85,12 @@ class DealManager
                 'name'        => $deal->getName(),
                 'ends_at_utc' => $deal->getEndsAtUtc(),
             );
+
+            $endsIn = $deal->getEndsAtUtc()->format('U') - strtotime('now');
+
+            if (!$nextExpiryIn || $endsIn < $nextExpiryIn) {
+                $nextExpiryIn = $endsIn;
+            }
         }
 
         foreach ($expiredDeals as $deal) {
@@ -109,6 +127,7 @@ class DealManager
         $data->all_deals          = empty($allDealsArr)     ? null : $allDealsArr;
         $data->expired_deals      = empty($expiredDealsArr) ? null : $expiredDealsArr;
         $data->comments           = $commentsArr;
+        $data->next_expiry_in     = $nextExpiryIn;
 
         return $data;
     }
@@ -122,6 +141,16 @@ class DealManager
 
         if ($flush) {
             $this->em->flush();
+        }
+
+        $indexPath = $this->router->generate('deal_list');
+        $dealPath  = $this->router->generate('deal_show', array('slug' => $deal->getSlug()));
+
+        try {
+            $this->varnishUtil->banCachedObject($indexPath);
+            $this->varnishUtil->banCachedObject($dealPath);
+        } catch (Exception $e) {
+            throw new \Exception('Could not ban.');
         }
     }
 

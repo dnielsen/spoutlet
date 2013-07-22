@@ -171,7 +171,9 @@ class DealController extends Controller
 
         $response = $this->render('GiveawayBundle:Deal:index.html.twig', array('data' => $data));
 
-        $this->varnishCache($response, 30, 30);
+        $cacheTime = ($data->next_expiry_in && $data->next_expiry_in < 86400) ? $data->next_expiry_in : 86400;
+
+        $this->varnishCache($response, $cacheTime, 30);
 
         return $response;
     }
@@ -229,7 +231,10 @@ class DealController extends Controller
 
         $response = $this->render('GiveawayBundle:Deal:show.html.twig', array('data' => $data));
 
-        $this->varnishCache($response, 30);
+        $expiresIn = $deal->getEndsAtUtc()->format('U') - strtotime('now');
+        $cacheTime = $expiresIn < 86400 ? $expiresIn : 86400;
+
+        $this->varnishCache($response, $cacheTime);
 
         return $response;
     }

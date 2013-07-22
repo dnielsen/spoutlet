@@ -172,6 +172,8 @@ class GiveawayController extends Controller
         $keyRepo   = $this->getKeyRepository();
         $site      = $this->getCurrentSite();
 
+        $cacheTime = 86400;
+
         foreach ($giveaways as $giveaway) {
             if($keyRepo->getTotalUnassignedKeysForPools($giveaway->getPools()) == 0) {
                 array_push($expired, $giveaway);
@@ -187,7 +189,7 @@ class GiveawayController extends Controller
             'headerImage' => $this->getHeaderImage($site),
         ));
 
-        $this->varnishCache($response, 30, 30);
+        $this->varnishCache($response, 86400, 30);
 
         return $response;
     }
@@ -202,7 +204,7 @@ class GiveawayController extends Controller
 
         $response = $this->render('GiveawayBundle:Giveaway:show.html.twig', array('data' => $data));
 
-        $this->varnishCache($response, 30);
+        $this->varnishCache($response, 86400);
 
         return $response;
     }

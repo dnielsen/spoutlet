@@ -25,7 +25,7 @@ use Symfony\Component\Validator\ExecutionContext;
  */
 abstract class AbstractPool
 {
-    const POOL_SIZE_QUEUE_THRESHOLD = 3145728; // Key files over 3MB in size will be passed to queue for processing
+    const POOL_SIZE_QUEUE_THRESHOLD = 1024; //3145728; // Key files over 3MB in size will be passed to queue for processing
     const POOL_FILE_S3_PREFIX = 'key_pool';
 
     /**

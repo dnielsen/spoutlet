@@ -138,6 +138,7 @@ EOT
         $stateRepo    = $this->getRepo('GiveawayBundle:KeyRequestState');
         $ipLookupUtil = $this->getContainer()->get('platformd.model.ip_lookup_util');
         $groupManager = $this->getContainer()->get('platformd.model.group_manager');
+        $varnishUtil  = $this->getContainer()->get('platformd.util.varnish_util');
 
         $this->output(0, 'Setting up signal handlers.');
 
@@ -239,7 +240,8 @@ EOT
                         continue 2;
                     }
 
-                    $urlToShowPage = $router->generate('giveaway_show', array('slug' => $promotion->getSlug()));
+                    $urlToIndexPage = $router->generate('giveaway_index');
+                    $urlToShowPage  = $router->generate('giveaway_show', array('slug' => $promotion->getSlug()));
 
                     break;
 
@@ -282,7 +284,8 @@ EOT
                         continue 2;
                     }
 
-                    $urlToShowPage = $router->generate('deal_show', array('slug' => $promotion->getSlug()));
+                    $urlToIndexPage = $router->generate('deal_list');
+                    $urlToShowPage  = $router->generate('deal_show', array('slug' => $promotion->getSlug()));
 
                     break;
 
@@ -403,6 +406,9 @@ EOT
 
                 continue;
             }
+
+            $varnishUtil->banCachedObject($urlToIndexPage);
+            $varnishUtil->banCachedObject($urlToShowPage);
 
             $lastReason = null;
 

@@ -135,6 +135,8 @@ class DealPoolAdminController extends Controller
         $manager->remove($pool);
         $manager->flush();
 
+        $this->banCaches($pool);
+
         return $this->redirect($this->generateUrl('admin_deal_pool_index', array(
             'dealId' => $dealId
         )));
@@ -191,9 +193,14 @@ class DealPoolAdminController extends Controller
                 $loader = new \Platformd\GiveawayBundle\Pool\PoolLoader($this->get('database_connection'));
                 $loader->loadKeysFromFile($pool->getKeysfile(), $pool, 'DEAL');
                 $this->setFlash('success', 'platformd.deal_pool.admin.saved');
+
+                $this->banCaches($pool);
+
                 return true;
             }
         }
+
+        $this->banCaches($pool);
     }
 
     /**
@@ -249,5 +256,19 @@ class DealPoolAdminController extends Controller
         ));
 
         return $this->getBreadcrumbs();
+    }
+
+    private function banCaches($pool)
+    {
+        $varnishUtil  = $this->getVarnishUtil();
+        $indexPath    = $this->generateUrl('deal_list');
+        $dealPath     = $this->generateUrl('deal_show', array('slug' => $pool->getDeal()->getSlug()));
+
+        try {
+            $varnishUtil->banCachedObject($indexPath);
+            $varnishUtil->banCachedObject($dealPath);
+        } catch (Exception $e) {
+            throw new \Exception('Could not ban.');
+        }
     }
 }
