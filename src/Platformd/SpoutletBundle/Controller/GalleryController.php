@@ -933,7 +933,9 @@ class GalleryController extends Controller
                 foreach($media as $mediaItem) {
                     $featuredMedia[$counter]['thumbnail']   = $liip->filter($mediaItem->getImage()->getFilename(), 'media_feed_thumbnail', true);
                     $featuredMedia[$counter]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId(), '_locale' => $site->getDefaultLocale()), true);
-                    $featuredMedia[$counter]['caption']     = substr($mediaItem->getDescription(), 0, 100) . '...';
+                    $caption = $mediaItem->getDescription();
+                    $caption = (strlen($caption) > 99) ? substr($caption, 0, 96) . '...' : $caption;
+                    $featuredMedia[$counter]['caption']     = $caption;
                     $counter++;
                 }
             } else {
