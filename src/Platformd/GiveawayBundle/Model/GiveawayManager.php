@@ -46,8 +46,9 @@ class GiveawayManager
     private $filesystem;
     private $countryRepo;
     private $commentManager;
+    private $varnishUtil;
 
-    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName, CacheUtil $cacheUtil, GiveawayRepository $giveawayRepo, SiteUtil $siteUtil, KeyCounterUtil $keyCounterUtil, GiveawayKeyRepository $giveawayKeyRepo, EntityManager $em, ThreadRepository $threadRepo, LinkableManager $linkableManager, Exposer $mediaExposer, Filesystem $filesystem, CountryRepository $countryRepo, $commentManager)
+    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName, CacheUtil $cacheUtil, GiveawayRepository $giveawayRepo, SiteUtil $siteUtil, KeyCounterUtil $keyCounterUtil, GiveawayKeyRepository $giveawayKeyRepo, EntityManager $em, ThreadRepository $threadRepo, LinkableManager $linkableManager, Exposer $mediaExposer, Filesystem $filesystem, CountryRepository $countryRepo, $commentManager, $varnishUtil)
     {
         $this->emailManager    = $emailManager;
         $this->em              = $em;
@@ -67,6 +68,7 @@ class GiveawayManager
         $this->filesystem      = $filesystem;
         $this->countryRepo     = $countryRepo;
         $this->commentManager  = $commentManager;
+        $this->varnishUtil     = $varnishUtil;
     }
 
     public function getAnonGiveawayIndexData() {
@@ -153,6 +155,7 @@ class GiveawayManager
 
         $data->giveaway_background_image_path      = $giveaway->getBackgroundImagePath() ? $this->mediaExposer->getPath($giveaway, array('type' => 'background')) : null;
         $data->giveaway_background_link            = $giveaway->getBackgroundLink();
+        $data->giveaway_expiry_datetime            = $giveaway->getEndsAt();
 
         return $data;
     }
@@ -513,6 +516,12 @@ class GiveawayManager
 
         $this->em->persist($giveaway);
         $this->em->flush();
+
+        $indexPath    = $this->router->generate('giveaway_index');
+        $giveawayPath = $this->router->generate('giveaway_show', array('slug' => $giveaway->getSlug()));
+
+        $this->varnishUtil->banCachedObject($indexPath);
+        $this->varnishUtil->banCachedObject($giveawayPath);
     }
 
     /**

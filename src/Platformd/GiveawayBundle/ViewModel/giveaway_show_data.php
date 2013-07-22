@@ -17,4 +17,5 @@ class giveaway_show_data
     public $giveaway_comment_permalink;
     public $giveaway_background_image_path;
     public $giveaway_background_link;
+    public $giveaway_expiry_datetime;
 }

@@ -9,4 +9,5 @@ class deal_index_data
     public $all_deals;
     public $expired_deals;
     public $comments;
+    public $next_expiry_in;
 }
