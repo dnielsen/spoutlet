@@ -319,3 +319,7 @@ table#avatar-approval {
 #avatar-actions {
     margin: 15px 0 0 0;
 }
+
+.birthday select {
+    width: 70px;
+}

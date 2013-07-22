@@ -6,7 +6,7 @@
     <h1>User "{{ user.username }}"</h1>
 
     <a
-        href="{{ path("Platformd_UserBundle_admin_rest_password", { "id" : user.id }) }}"
+        href="{{ path("Platformd_UserBundle_admin_reset_password", { "id" : user.id }) }}"
         class="btn btn-primary">
         {{ "fos_user_admin_reset_password" | trans({}, "FOSUserBundle" ) }}
     </a>

@@ -40,7 +40,7 @@ Platformd_UserBundle_admin_logins:
     pattern: /{id}/logins
     defaults: { _controller: UserBundle:Admin:logins }
 
-Platformd_UserBundle_admin_rest_password:
+Platformd_UserBundle_admin_reset_password:
     pattern: /{id}/password/reset
     defaults: { _controller: UserBundle:Admin:resetPassword }
     requirements:
