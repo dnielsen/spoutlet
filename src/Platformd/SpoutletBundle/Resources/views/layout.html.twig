@@ -194,24 +194,6 @@
                         $(this).removeClass('invalid');
                     }
                 });
-
-                {% if block('flash') %}
-                    $('.session-flash').fadeIn();
-                {% else %}
-                    $.ajax({
-                        url: '{{ path('_session_flash_message') }}',
-                        dataType: 'json',
-                        async: false,
-                        success: function(data) {
-                            if (data && data.type && data.message) {
-                                $('.session-flash #notice-type').html(data.type);
-                                $('.session-flash #notice-message').html(data.message);
-                                $('.session-flash .notice').addClass(data.type + 'Notice');
-                                $('.session-flash').fadeIn();
-                            }
-                        }
-                    });
-                {% endif %}
 			});
 		</script>
 
@@ -248,20 +230,7 @@
 
                                     {% block pre_content_nav %}{% endblock %}
 
-                                    <div class="xnotices session-flash" style="display: none;">
-                                        <div class="{% if block('flash_type') %}{{ block('flash_type') ~ 'Notice ' }}{% endif %}notice">
-                                            <div class="pad">
-                                                <div class="pad2">
-                                                    <div class="pad3">
-                                                        <div class="pad4">
-                                                            <h3 id="notice-type">{% if block('flash_type') %}{{ block('flash_type') }}{% endif %}</h3>
-                                                            <p id="notice-message">{% if block('flash') %}{{ block('flash') }}{% endif %}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {% render url('_flash_message') with {}, {'standalone': true } %}
 
                                     {% block content %}{% endblock %}
 

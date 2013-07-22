@@ -20,7 +20,7 @@ Feature: Sweepstake Admin
             And I select "Skyrim" from "Game"
             And I check the "Demo" option for "Sites"
             And I press "Save"
-        Then I should see "Sweepstakes Saved" in the flash message
+        Then I should see "Sweepstakes Saved"
 
     Scenario: I can export sweepstakes results
         Given there is a sweepstakes

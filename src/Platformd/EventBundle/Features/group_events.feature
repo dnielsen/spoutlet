@@ -29,7 +29,7 @@ Feature: Group Events
 #            And I select the "Online Event" radio button
 #            And I select the "Public Event" radio button
 #            And I press "Create"
-#        Then I should see "Your event has been successfully added." in the flash message
+#        Then I should see "Your event has been successfully added."
 #            And I should be on the "group" event called "Group Event" on "en"
 #
 #    Scenario: I can create a new event if I do not have any groups
@@ -38,14 +38,14 @@ Feature: Group Events
 #            And I fill in the following:
 #                | Group Name   | Group for event        |
 #            And I press "Create"
-#        Then I should see "Your group was created. Fill in the details below to list your upcoming event." in the flash message
+#        Then I should see "Your group was created. Fill in the details below to list your upcoming event."
 #        When I fill in the following:
 #                | Title          | Group Event         |
 #                | Event Details  | Group Event Details |
 #            And I select the "Online Event" radio button
 #            And I select the "Public Event" radio button
 #            And I press "Create"
-#        Then I should see "Your event has been successfully added." in the flash message
+#        Then I should see "Your event has been successfully added."
 #            And I should be on the "group" event called "Group Event" on "en"
 #
 #    Scenario: I can edit a group event
@@ -56,7 +56,7 @@ Feature: Group Events
 #                | Title         | Group Event Updated  |
 #                | Event Details | Description Updated |
 #            And I press "Update"
-#        Then I should see "Event has been saved successfully." in the flash message
+#        Then I should see "Event has been saved successfully."
 
 # Commented out pending javascript testing
 #    Scenario: I can cancel a group event
@@ -65,7 +65,7 @@ Feature: Group Events
 #            And I click on "Edit Event"
 #            And I press "Cancel Event"
 #            And I press "Yes"
-#        Then I should see "Event has been canceled successfully and attendees will be notified!" in the flash message
+#        Then I should see "Event has been canceled successfully and attendees will be notified!"
 
 # Commented out pending javascript testing
 #    Scenario: I can reactivate a group event
@@ -74,4 +74,4 @@ Feature: Group Events
 #            And I click on "Edit Event"
 #            And I press "Activate Event"
 #            And I press "Yes"
-#        Then I should see "Event has been canceled successfully and attendees will be notified!" in the flash message
+#        Then I should see "Event has been canceled successfully and attendees will be notified!"
