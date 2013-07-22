@@ -526,6 +526,11 @@ class GalleryController extends Controller
             throw $this->createNotFoundException('Media not found.');
         }
 
+        if (!$media->isAllowedTo($user, $this->getCurrentSite(), 'EditMedia')) {
+            $this->setFlash('error', 'Sorry, You are not allowed to do this.');
+            return $this->redirect($this->generateUrl('gallery_media_show', array( 'id' => $id )));
+        }
+
         $tagManager->loadTagging($media);
 
         $galleries = array();
@@ -587,6 +592,8 @@ class GalleryController extends Controller
 
     public function deleteMediaAction($id, Request $request)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         $user = $this->getCurrentUser();
 
         $media = $this->getGalleryMediaRepository()->find($id);
@@ -620,7 +627,7 @@ class GalleryController extends Controller
         $content  = $request->getContent();
         $params = json_decode($content, true);
 
-        if (empty($content) || !isset($params['id'])) {
+        if (!$this->isGranted('ROLE_USER') || empty($content) || !isset($params['id'])) {
             $response->setContent(json_encode(array("success" => false)));
             return $response;
         }
