@@ -55,6 +55,8 @@ EOT
         $connection     = $this->getContainer()->get('database_connection');
         $poolLoader     = new PoolLoader($connection);
         $em             = $this->getContainer()->get('doctrine')->getEntityManager();
+        $varnishUtil    = $this->getContainer()->get('platformd.util.varnish_util');
+        $router         = $this->getContainer()->get('router');
 
         $tick           = "<info>✔</info>";
         $cross          = "<fg=red>✘</fg=red>";
@@ -147,6 +149,20 @@ EOT
 
                             $output->writeLn($tick);
                             $this->sendSuccessEmail($user, $output, $pool);
+
+                            $output->write("Banning caches...");
+
+                            $indexRoute = $message->poolClass == 'GiveawayPool' ? 'giveaway_index' : 'deal_list';
+                            $showRoute  = $message->poolClass == 'GiveawayPool' ? 'giveaway_show' : 'deal_show';
+                            $promotion  = $message->poolClass == 'GiveawayPool' ? $pool->getGiveaway() : $pool->getDeal();
+
+                            $indexPath    = $router->generate($indexRoute);
+                            $showPath     = $router->generate($showRoute, array('slug' => $promotion->getSlug()));
+
+                            $varnishUtil->banCachedObject($indexPath, array(), true);
+                            $varnishUtil->banCachedObject($showPath, array(), true);
+
+                            $output->writeLn($tick);
 
                         } else {
 

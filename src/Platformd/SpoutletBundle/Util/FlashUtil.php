@@ -41,7 +41,7 @@ class FlashUtil
         try {
             $this->varnishUtil->banCachedObject($path, array('userId' => $user->getId()));
         } catch (Exception $e) {
-            var_dump($e);
+            throw new \Exception('Could not ban.');
         }
     }
 

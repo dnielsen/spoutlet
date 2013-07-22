@@ -31,8 +31,9 @@ class DealManager
     private $mediaPathResolver;
     private $commentManager;
     private $varnishUtil;
+    private $router;
 
-    public function __construct(EntityManager $em, MediaUtil $mediaUtil, CacheUtil $cacheUtil, DealRepository $dealRepo, SiteUtil $siteUtil, DealCodeRepository $dealCodeRepo, ThreadRepository $threadRepo, LinkableManager $linkableManager, MediaPathResolver $mediaPathResolver, CommentManager $commentManager, $varnishUtil)
+    public function __construct(EntityManager $em, MediaUtil $mediaUtil, CacheUtil $cacheUtil, DealRepository $dealRepo, SiteUtil $siteUtil, DealCodeRepository $dealCodeRepo, ThreadRepository $threadRepo, LinkableManager $linkableManager, MediaPathResolver $mediaPathResolver, CommentManager $commentManager, $varnishUtil, $router)
     {
         $this->em                   = $em;
         $this->mediaUtil            = $mediaUtil;
@@ -45,6 +46,7 @@ class DealManager
         $this->mediaPathResolver    = $mediaPathResolver;
         $this->commentManager       = $commentManager;
         $this->varnishUtil          = $varnishUtil;
+        $this->router               = $router;
     }
 
     public function getAnonDealIndexData() {
@@ -69,7 +71,7 @@ class DealManager
                 'ends_at_utc' => $deal->getEndsAtUtc(),
             );
 
-            $endsIn = $deal->getEndsAtUtc()->diff(new \DateTime(), true);
+            $endsIn = $deal->getEndsAtUtc()->format('U') - strtotime('now');
 
             if (!$nextExpiryIn || $endsIn < $nextExpiryIn) {
                 $nextExpiryIn = $endsIn;
@@ -84,7 +86,7 @@ class DealManager
                 'ends_at_utc' => $deal->getEndsAtUtc(),
             );
 
-            $endsIn = $deal->getEndsAtUtc()->diff(new \DateTime(), true);
+            $endsIn = $deal->getEndsAtUtc()->format('U') - strtotime('now');
 
             if (!$nextExpiryIn || $endsIn < $nextExpiryIn) {
                 $nextExpiryIn = $endsIn;
@@ -144,8 +146,12 @@ class DealManager
         $indexPath = $this->router->generate('deal_list');
         $dealPath  = $this->router->generate('deal_show', array('slug' => $deal->getSlug()));
 
-        $this->varnishUtil->banCachedObject($indexPath);
-        $this->varnishUtil->banCachedObject($dealPath);
+        try {
+            $this->varnishUtil->banCachedObject($indexPath);
+            $this->varnishUtil->banCachedObject($dealPath);
+        } catch (Exception $e) {
+            throw new \Exception('Could not ban.');
+        }
     }
 
     public function findAllForSiteNewestFirst($site)

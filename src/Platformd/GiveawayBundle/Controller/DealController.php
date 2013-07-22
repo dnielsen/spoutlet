@@ -231,7 +231,7 @@ class DealController extends Controller
 
         $response = $this->render('GiveawayBundle:Deal:show.html.twig', array('data' => $data));
 
-        $expiresIn = $deal->getEndsAtUtc()->diff(new \DateTime(), true);
+        $expiresIn = $deal->getEndsAtUtc()->format('U') - strtotime('now');
         $cacheTime = $expiresIn < 86400 ? $expiresIn : 86400;
 
         $this->varnishCache($response, $cacheTime);

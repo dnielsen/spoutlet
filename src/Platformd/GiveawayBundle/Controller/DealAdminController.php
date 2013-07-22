@@ -258,6 +258,8 @@ class DealAdminController extends Controller
 
                 $isEdit = $deal->getId();
 
+                $this->getDealManager()->saveDeal($deal);
+
                 $isEdit ? $tagManager->replaceTags($tags, $deal) : $tagManager->addTags($tags, $deal);
 
                 $tagManager->saveTagging($deal);

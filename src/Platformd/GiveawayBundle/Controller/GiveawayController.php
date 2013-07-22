@@ -179,12 +179,6 @@ class GiveawayController extends Controller
                 array_push($expired, $giveaway);
             } else {
                 array_push($active, $giveaway);
-
-                $endsIn = $giveaway->getEndsAt()->diff(new \DateTime(), true);
-
-                if ($endsIn < $cacheTime) {
-                    $soonestExpiry = $endsIn;
-                }
             }
         }
 
@@ -195,7 +189,7 @@ class GiveawayController extends Controller
             'headerImage' => $this->getHeaderImage($site),
         ));
 
-        $this->varnishCache($response, $cacheTime, 30);
+        $this->varnishCache($response, 86400, 30);
 
         return $response;
     }
@@ -210,10 +204,7 @@ class GiveawayController extends Controller
 
         $response = $this->render('GiveawayBundle:Giveaway:show.html.twig', array('data' => $data));
 
-        $expiresIn = $data->giveaway_expiry_datetime->diff(new \DateTime(), true);
-        $cacheTime = $expiresIn < 86400 ? $expiresIn : 86400;
-
-        $this->varnishCache($response, $cacheTime);
+        $this->varnishCache($response, 86400);
 
         return $response;
     }

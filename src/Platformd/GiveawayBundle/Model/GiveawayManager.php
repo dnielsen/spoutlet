@@ -155,7 +155,6 @@ class GiveawayManager
 
         $data->giveaway_background_image_path      = $giveaway->getBackgroundImagePath() ? $this->mediaExposer->getPath($giveaway, array('type' => 'background')) : null;
         $data->giveaway_background_link            = $giveaway->getBackgroundLink();
-        $data->giveaway_expiry_datetime            = $giveaway->getEndsAt();
 
         return $data;
     }
@@ -520,8 +519,12 @@ class GiveawayManager
         $indexPath    = $this->router->generate('giveaway_index');
         $giveawayPath = $this->router->generate('giveaway_show', array('slug' => $giveaway->getSlug()));
 
-        $this->varnishUtil->banCachedObject($indexPath);
-        $this->varnishUtil->banCachedObject($giveawayPath);
+        try {
+            $this->varnishUtil->banCachedObject($indexPath);
+            $this->varnishUtil->banCachedObject($giveawayPath);
+        } catch (Exception $e) {
+            throw new \Exception('Could not ban.');
+        }
     }
 
     /**
