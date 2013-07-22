@@ -62,6 +62,11 @@
     <script type="text/javascript">
         $(function () {
             $('.last-login-date').timeago();
+
+            $('.pagination a').click(function() {
+                var query = '&type=' + encodeURIComponent($('select[name="type"] option:selected').val()) + '&search=' + encodeURIComponent($('input[name="search"]').val());
+                $(this).attr('href', $(this).attr('href') + query );
+            });
         });
 
     </script>
