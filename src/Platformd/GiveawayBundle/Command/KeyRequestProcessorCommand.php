@@ -24,6 +24,8 @@ class KeyRequestProcessorCommand extends ContainerAwareCommand
 
     private $em;
     private $logger;
+    private $varnishUtil;
+    private $router;
 
     private $exitAfterCurrentItem = false;
 
@@ -87,6 +89,25 @@ EOT
 
         $this->deleteMessageWithOutput($sqsMessage);
 
+        if ($state) {
+            $promotionType = $state->getPromotionType();
+
+            switch ($promotionType) {
+                case KeyRequestState::PROMOTION_TYPE_GIVEAWAY:
+                    $promotionId = $state->getGiveaway()->getId();
+                    break;
+
+                case KeyRequestState::PROMOTION_TYPE_DEAL:
+                    $promotionId = $state->getDeal()->getId();
+                    break;
+
+                default:
+                    return;
+                    break;
+            }
+
+            $this->clearFlashMessageCache($promotionType, $promotionId, $state->getUser()->getId());
+        }
     }
 
     protected function deleteMessageWithOutput($message)
@@ -123,6 +144,12 @@ EOT
         $this->output();
     }
 
+    private function clearFlashMessageCache($type, $promotionId, $userId)
+    {
+        $path = $type == 'giveaway' ? $this->router->generate('_giveaway_flash_message', array('giveawayId' => $promotionId)) : $this->router->generate('_deal_flash_message', array('dealId' => $promotionId));
+        $this->varnishUtil->banCachedObject($path, array('userId' => $userId), true);
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->em     = $this->getContainer()->get('doctrine.orm.entity_manager');
@@ -139,6 +166,9 @@ EOT
         $ipLookupUtil = $this->getContainer()->get('platformd.model.ip_lookup_util');
         $groupManager = $this->getContainer()->get('platformd.model.group_manager');
         $varnishUtil  = $this->getContainer()->get('platformd.util.varnish_util');
+
+        $this->varnishUtil = $varnishUtil;
+        $this->router      = $router;
 
         $this->output(0, 'Setting up signal handlers.');
 
@@ -199,6 +229,7 @@ EOT
                 case KeyRequestQueueMessage::KEY_REQUEST_TYPE_GIVEAWAY:
 
                     $keyRepo   = $this->getRepo('GiveawayBundle:GiveawayKey');
+                    $promoType = 'giveaway';
 
                     $promotion = $this->findWithOutput(array(
                         'type'       => 'Giveaway',
@@ -248,6 +279,7 @@ EOT
                 case KeyRequestQueueMessage::KEY_REQUEST_TYPE_DEAL:
 
                     $keyRepo   = $this->getRepo('GiveawayBundle:DealCode');
+                    $promoType = 'deal';
 
                     $promotion = $this->findWithOutput(array(
                         'repo'       => $dealRepo,
@@ -420,6 +452,9 @@ EOT
             $this->em->persist($state);
 
             $this->output(5, 'New '.$state);
+
+            $this->output(5, 'Clearing flash message cache.');
+            $this->clearFlashMessageCache($promoType, $message->promotionId, $user->getId());
 
             if($linkToGroupIsValid) {
 

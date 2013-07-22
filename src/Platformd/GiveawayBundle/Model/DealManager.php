@@ -71,9 +71,9 @@ class DealManager
                 'ends_at_utc' => $deal->getEndsAtUtc(),
             );
 
-            $endsIn = $deal->getEndsAtUtc()->format('U') - strtotime('now');
+            $endsIn = $deal->getEndsAtUtc() ? $deal->getEndsAtUtc()->format('U') - strtotime('now') : 0;
 
-            if (!$nextExpiryIn || $endsIn < $nextExpiryIn) {
+            if ($endsIn && (!$nextExpiryIn || $endsIn < $nextExpiryIn)) {
                 $nextExpiryIn = $endsIn;
             }
         }
@@ -86,9 +86,9 @@ class DealManager
                 'ends_at_utc' => $deal->getEndsAtUtc(),
             );
 
-            $endsIn = $deal->getEndsAtUtc()->format('U') - strtotime('now');
+            $endsIn = $deal->getEndsAtUtc() ? $deal->getEndsAtUtc()->format('U') - strtotime('now') : 0;
 
-            if (!$nextExpiryIn || $endsIn < $nextExpiryIn) {
+            if ($endsIn && (!$nextExpiryIn || $endsIn < $nextExpiryIn)) {
                 $nextExpiryIn = $endsIn;
             }
         }
