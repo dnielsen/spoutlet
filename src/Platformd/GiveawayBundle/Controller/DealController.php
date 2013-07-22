@@ -156,7 +156,7 @@ class DealController extends Controller
             'data' => $data
         ));
 
-        $this->varnishCache($response, 30);
+        $this->varnishCache($response, 300);
 
         return $response;
     }
@@ -310,6 +310,9 @@ class DealController extends Controller
         $em->flush();
 
         $path = $this->generateUrl('_deal_flash_message', array('dealId' => $deal->getId()));
+        $this->getVarnishUtil()->banCachedObject($path, array('userId' => $userId), true);
+
+        $path = $this->generateUrl('_deal_show_actions', array('dealId' => $deal->getId()));
         $this->getVarnishUtil()->banCachedObject($path, array('userId' => $userId), true);
 
         return $this->redirect($this->generateUrl('deal_show', array('slug' => $slug)));

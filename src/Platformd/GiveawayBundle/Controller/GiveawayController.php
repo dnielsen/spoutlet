@@ -162,7 +162,7 @@ class GiveawayController extends Controller
             'data' => $data
         ));
 
-        $this->varnishCache($response, 30);
+        $this->varnishCache($response, 300);
 
         return $response;
     }
@@ -286,6 +286,9 @@ class GiveawayController extends Controller
         $em->flush();
 
         $path = $this->generateUrl('_giveaway_flash_message', array('giveawayId' => $giveaway->getId()));
+        $this->getVarnishUtil()->banCachedObject($path, array('userId' => $userId), true);
+
+        $path = $this->generateUrl('_giveaway_show_actions', array('giveawayId' => $giveaway->getId()));
         $this->getVarnishUtil()->banCachedObject($path, array('userId' => $userId), true);
 
         return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
