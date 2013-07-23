@@ -103,7 +103,7 @@ resetting.request.invalid_username: The email you entered, "%username%", does no
 resetting.request.username: "Email:"
 resetting.request.submit: Reset Password
 resetting.reset.submit: Change Password
-resetting.flash.success: The password has been reset successfully
+resetting.flash.success: Your password has been successfully changed.
 
 # the first line is the subject of the email
 resetting.email: |
@@ -135,7 +135,7 @@ resetted.email: |
     <p>If you did not request to have your password reset, please ignore this email.</p>
     <p>This is an automated message. Please do not respond to this email.</p>
 
-    <p>Alienware Arena Team.</p>
+    <p>Alienware Arena Team</p>
 
 
 # Global strings
