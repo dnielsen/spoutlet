@@ -4,7 +4,6 @@ namespace Platformd\UserBundle\Controller;
 
 use FOS\UserBundle\Controller\SecurityController as BaseController;
 
-
 use Symfony\Component\HttpFoundation\RedirectResponse,
     Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\Request,
@@ -17,7 +16,6 @@ use Platformd\UserBundle\Entity\User,
     Platformd\UserBundle\Security\User\Provider\FacebookProvider,
     Platformd\UserBundle\Form\Type\IncompleteAccountType;
 
-
 /**
  * Overrides controller for login actions
  */
@@ -27,7 +25,6 @@ class SecurityController extends BaseController
     {
         return parent::loginAction();
     }
-
 
     // facebook security
     /*public function facebookSecurityCheckAction()

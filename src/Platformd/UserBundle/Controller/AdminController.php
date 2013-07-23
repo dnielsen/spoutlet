@@ -10,6 +10,7 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Platformd\UserBundle\Form\Type\EditUserFormType;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\UserBundle\Form\Type\SuspendUserType;
+use Platformd\UserBundle\Exception\ApiRequestException;
 
 /**
  * Admin controller for users
@@ -86,15 +87,19 @@ class AdminController extends Controller
 
         $form->bindRequest($request);
         if ($form->isValid()) {
-            $manager->updateUser($user);
 
-            $this->setFlash('success', $this->trans('fos_user_admin_edit_success', array(
-                '%username%' => $user->getUsername()
-            ), 'FOSUserBundle'));
+            try {
+                $manager->updateUserAndApi($user);
+                $this->setFlash('success', $translator->trans('fos_user_admin_edit_success', array(
+                    '%username%' => $user->getUsername()
+                ), 'FOSUserBundle'));
 
-            return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array(
-                'id' => $id,
-            )));
+                return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array(
+                    'id' => $id,
+                )));
+            } catch (ApiRequestException $e) {
+                $this->setFlash('error', 'The system is currently unable to process your request. Please try again shortly.');
+            }
         }
 
         return $this->render('UserBundle:Admin:edit.html.twig', array(

@@ -114,6 +114,9 @@ fos_user:
     from_email:
         address:        %sender_email_address%
         sender_name:    %sender_email_name%
+    resetting:
+        form:
+            handler: platformd_user.resetting.form.handler
     registration:
         form:
             type: platformd_user_registration

@@ -24,7 +24,7 @@
                             <a class="update-avatar">UPDATE</a>
                         </div>
                     </span>
-                    {%if not avatarUsable %}
+                    {%if get_avatar_url(user, 184) and not avatarUsable %}
                         <div id="avatar-awaiting-overlay-text">
                             <a class="awaiting-approval">AWAITING APPROVAL</a>
                         </div>

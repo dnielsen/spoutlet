@@ -11,9 +11,12 @@ use
 ;
 
 use Platformd\UserBundle\Entity\User;
+use Platformd\SpoutletBundle\Entity\ScriptLastRun;
 
 class ApiQueryForNewUsersCommand extends ContainerAwareCommand
 {
+    const SCRIPT_ID = 'api_new_users_command';
+
     private $stdOutput;
 
     protected function configure()
@@ -23,7 +26,7 @@ class ApiQueryForNewUsersCommand extends ContainerAwareCommand
             ->setDescription('Queries the user API endpoint for all new users and creates local user records.')
             ->setHelp(<<<EOT
 The <info>%command.name%</info> makes a cURL call to the api endpoint asking for a list of users ordered most recently
-created first. It iterates around them, creating local database user entries for each until it finds one that exists.
+created first. It iterates around them, creating local database user entries for each.
 
   <info>php %command.full_name%</info>
 EOT
@@ -61,26 +64,38 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->stdOutput = $output;
-        $container       = $this->getContainer();
-        $em              = $container->get('doctrine')->getEntityManager();
-        $userManager     = $container->get('fos_user.user_manager');
-        $apiManager      = $container->get('platformd.user.api.manager');
+        $this->stdOutput   = $output;
+        $container         = $this->getContainer();
+        $em                = $container->get('doctrine')->getEntityManager();
+        $userManager       = $container->get('fos_user.user_manager');
+        $apiManager        = $container->get('platformd.user.api.manager');
+        $scriptLastRunRepo = $em->getRepository('SpoutletBundle:ScriptLastRun');
 
-        $response        = 200;
-        $upToDate        = false;
-        $offset          = 0;
-        $limit           = 100;
+        $response          = 200;
+        $offset            = 0;
+        $limit             = 100;
+
+        $runDateTime       = new \DateTime();
 
         $this->output();
         $this->output(0, 'PlatformD New User Import');
         $this->output();
 
+        $hasRun = $scriptLastRunRepo->find(self::SCRIPT_ID);
+
+        if (!$hasRun) {
+            $hasRun = new ScriptLastRun(self::SCRIPT_ID);
+            $em->persist($hasRun);
+            $em->flush;
+        }
+
+        $since  = $hasRun->getLastRun();
+
         while ($response == 200) {
 
             $this->output(2, 'Getting next ['.$limit.'] users...', false);
 
-            $apiResult = $apiManager->getUserList($offset, $limit);
+            $apiResult = $apiManager->getUserList($offset, $limit, 'created', $since);
             $response  = $apiResult['metaData']['status'];
 
             $this->tick();
@@ -96,8 +111,8 @@ EOT
                     $dbUser = $userManager->findUserByUsername($username);
 
                     if ($dbUser) {
-                        $this->output(4, 'User exists - database now in sync with API.');
-                        break 2;
+                        $this->output(4, 'User exists - skipping.');
+                        continue;
                     }
 
                     $dbUser = $userManager()->createUser();
@@ -121,6 +136,10 @@ EOT
 
         $this->output();
         $this->output(2, 'No more users.');
+
+        $hasRun->setLastRun($runDateTime);
+        $em->persist($hasRun);
+        $em->flush();
 
         $this->output(0);
     }

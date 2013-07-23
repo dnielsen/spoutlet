@@ -8,20 +8,28 @@ use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\Event\DataEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 class AccountSettingsType extends AbstractType
 {
-    private $encoder;
+    private $encoderFactory;
+    private $securityContext;
+    private $apiManager;
+    private $apiAuth;
 
-    public function __construct(PasswordEncoderInterface $encoder)
+    public function __construct($encoderFactory, $securityContext, $apiManager, $apiAuth)
     {
-        $this->encoder = $encoder;
+        $this->encoderFactory  = $encoderFactory;
+        $this->securityContext = $securityContext;
+        $this->apiManager      = $apiManager;
+        $this->apiAuth         = $apiAuth;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $encoder = $this->encoder;
+        $user       = $this->securityContext->getToken()->getUser();
+        $encoder    = $this->encoderFactory->getEncoder($user);
+        $apiManager = $this->apiManager;
+        $apiAuth    = $this->apiAuth;
 
         $builder
             ->add('currentPassword', 'password', array(
@@ -39,13 +47,17 @@ class AccountSettingsType extends AbstractType
                 'label' => 'Subscribe to Alienware Events',
             ))
             ->addEventListener(FormEvents::POST_BIND, function(DataEvent $event) use ($encoder) {
+            ->addEventListener(FormEvents::POST_BIND, function(DataEvent $event) use ($encoder, $user, $apiManager, $apiAuth) {
                 $data = $event->getData();
                 $form = $event->getForm();
                 $plainPassword = $data->getPlainPassword();
                 if (empty($plainPassword)) {
                     return;
                 }
-                if (!$encoder->isPasswordValid($data->getPassword(), $data->currentPassword, $data->getSalt())) {
+
+                $isPasswordValid = $apiAuth ? $apiManager->authenticate($user, $data->currentPassword) : $encoder->isPasswordValid($data->getPassword(), $data->currentPassword, $data->getSalt());
+
+                if (!$isPasswordValid) {
                     $form->get('currentPassword')->addError(new FormError('Current password doesn\'t match'));
                 }
             });

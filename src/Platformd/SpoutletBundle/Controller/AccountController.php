@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Platformd\UserBundle\Form\Type\AccountSettingsType;
 use Platformd\UserBundle\Entity\Avatar;
 use Platformd\UserBundle\Form\Type\AvatarType;
+use Platformd\UserBundle\Exception\ApiRequestException;
 
 class AccountController extends Controller
 {
@@ -280,11 +281,15 @@ class AccountController extends Controller
             $form->bindRequest($request);
 
             if ($form->isValid()) {
-                $this->get('fos_user.user_manager')->updateUser($form->getData());
 
-                $this->get('session')->setFlash('success', 'Your changes are saved.');
+                try {
+                    $this->getUserManager()->updateUserAndApi($form->getData());
+                    $this->setFlash('success', 'Your changes are saved.');
 
-                return $this->redirect($this->generateUrl('accounts_settings'));
+                    return $this->redirect($this->generateUrl('accounts_settings'));
+                } catch (ApiRequestException $e) {
+                    $this->setFlash('error', 'The system is currently unable to process your request. Please try again shortly.');
+                }
             }
         }
 
@@ -329,7 +334,7 @@ class AccountController extends Controller
 
     private function getFormType()
     {
-        return new AccountSettingsType($this->get('security.encoder_factory')->getEncoder($this->getUser()));
+        return $this->get('platformd_user.account_settings.form.type');
     }
 
     public function incompleteAction(Request $request)
@@ -346,9 +351,13 @@ class AccountController extends Controller
             $form->bindRequest($request);
 
             if($form->isValid()) {
-                $this->get('fos_user.user_manager')->updateUser($form->getData());
 
-                return $this->redirect($this->generateUrl('accounts_settings'));
+                try {
+                    $this->getUserManager()->updateUserAndApi($form->getData());
+                    return $this->redirect($this->generateUrl('accounts_settings'));
+                } catch (ApiRequestException $e) {
+                    $this->setFlash('error', 'The system is currently unable to process your request. Please try again shortly.');
+                }
             }
         }
 
