@@ -5,6 +5,7 @@ namespace Platformd\UserBundle\Controller;
 use FOS\UserBundle\Controller\RegistrationController as BaseRegistrationController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RegistrationController extends BaseRegistrationController
 {
@@ -82,7 +83,7 @@ class RegistrationController extends BaseRegistrationController
         $user = $this->container->get('fos_user.user_manager')->findUserByConfirmationToken($token);
 
         if (null === $user) {
-            throw new NotFoundHttpException(sprintf('The user with confirmation token "%s" does not exist', $token));
+            throw new NotFoundHttpException();
         }
 
         $user->setConfirmationToken(null);

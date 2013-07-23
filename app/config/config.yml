@@ -238,7 +238,7 @@ parameters:
     platformd.news_source:
         alienware: source_alienware
         cevo: CEVO
-        it_news_site: Tech News Site
+        it_news_site: News Site
         email: Email
         facebook: Facebook
         twitter: Twitter

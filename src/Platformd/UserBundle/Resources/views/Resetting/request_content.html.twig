@@ -3,15 +3,15 @@
 <div class="std_2col">
     <div class="left">
         <p>
-            {{ 'platformd.user.request_reset.help_message' | trans | format(path('contact')) | raw }}
+            {{ 'platformd.user.request_reset.help_message' | trans | raw }}
         </p>
         {% if invalid_username is defined %}
             <p style="color: #c62828;font-weight:bold;font-style:italic;">{{ 'resetting.request.invalid_username'|trans({'%username%': invalid_username}, 'FOSUserBundle')|raw }}</p>
         {% endif %}
         <form action="{{ path('fos_user_resetting_send_email') }}" method="POST" class="form-horizontal fos_user_resetting_request">
             <div class="control-group">
-                <label class="control-label" for="username">{{ 'resetting.request.username'|trans({}, 'FOSUserBundle') }}</label>
-                <div class="controls">
+                <label class="control-label" for="username" style="width:auto;">{{ 'resetting.request.username'|trans({}, 'FOSUserBundle') }}</label>
+                <div class="controls" style="margin-left:0;">
                     <input type="text" id="username" name="username" required="required" class="form-txt" />
                     <button class="btn btn-primary" type="submit" style="margin-left: 10px">{{ 'resetting.request.submit'|trans({}, 'FOSUserBundle') }}</button>
                 </div>
@@ -20,7 +20,7 @@
         </form>
 
         <p>
-            {{ 'platformd.user.request_reset.spam_message' | trans }}
+            {{ 'platformd.user.request_reset.spam_message' | trans | raw }}
         </p>
     </div>
     <div class="right">
