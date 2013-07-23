@@ -12,6 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Util\IpLookupUtil;
+use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
 
 class RegistrationFormHandler extends BaseRegistrationFormHandler
 {
@@ -44,6 +45,15 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
             $this->form->bindRequest($this->request);
 
             if ($this->form->isValid()) {
+
+                $ageManager = $this->container->get('platformd.age.age_manager');
+                $site       = $this->container->get('platformd.util.site_util')->getCurrentSite();
+
+                $ageManager->setUsersBirthday($this->form->getData()->getBirthdate());
+
+                if ($ageManager->getUsersAge() < $site->getSiteConfig()->getMinAgeRequirement()) {
+                    throw new InsufficientAgeException();
+                }
 
                 $ipAddress  = $this->request->getClientIp(true);
                 $user->setIpAddress($ipAddress);

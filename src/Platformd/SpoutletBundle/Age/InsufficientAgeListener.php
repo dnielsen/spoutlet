@@ -49,10 +49,12 @@ class InsufficientAgeListener
             return;
         }
 
-        $returnUrl = $event->getRequest()->getUri();
-        $verifyUrl = $this->router->generate('age_verification', array('returnUrl' => urlencode($returnUrl)));
-        $response  = new RedirectResponse($verifyUrl);
+        if ($event->getRequest()->get('_route') != 'fos_user_registration_register') {
+            $returnUrl = $event->getRequest()->getUri();
+            $verifyUrl = $this->router->generate('age_verification', array('returnUrl' => urlencode($returnUrl)));
+            $response  = new RedirectResponse($verifyUrl);
 
-        $event->setResponse($response);
+            $event->setResponse($response);
+        }
     }
 }

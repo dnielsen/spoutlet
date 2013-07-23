@@ -4,11 +4,14 @@ namespace Platformd\UserBundle\Controller;
 
 use FOS\UserBundle\Controller\RegistrationController as BaseRegistrationController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
 
 class RegistrationController extends BaseRegistrationController
 {
     public function registerAction()
     {
+        $this->enforceAgeProtection();
+
         $form                   = $this->container->get('fos_user.registration.form');
         $formHandler            = $this->container->get('fos_user.registration.form.handler');
         $confirmationEnabled    = $this->container->getParameter('fos_user.registration.confirmation.enabled');
@@ -60,5 +63,16 @@ class RegistrationController extends BaseRegistrationController
     private function getCurrentSite()
     {
         return $this->container->get('platformd.util.site_util')->getCurrentSite();
+    }
+
+    private function enforceAgeProtection()
+    {
+        $ageManager = $this->container->get('platformd.age.age_manager');
+
+        if($ageManager->getUsersAge()) {
+            if ($ageManager->getUsersAge() < $this->getCurrentSite()->getSiteConfig()->getMinAgeRequirement()) {
+                throw new InsufficientAgeException();
+            }
+        }
     }
 }

@@ -917,21 +917,6 @@ class User extends BaseUser
     }
 
     /**
-     * Determines whether or not this user is a "minor" (under 13)
-     *
-     * @Assert\False(message="You must be 13 years old to register", groups={"Registration"})
-     */
-    public function isAMinor()
-    {
-        // if we don't know, we don't know, sooooo not a minor
-        if (!$this->getBirthdate()) {
-            return false;
-        }
-
-        return ($this->getAge() < 13);
-    }
-
-    /**
      * @return int
      */
     public function getAge()
