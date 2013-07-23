@@ -42,12 +42,10 @@ accounts_videos:
 accounts_settings:
     pattern: /settings
     defaults: { _controller: SpoutletBundle:Account:settings }
-    requirements: { _method: GET }
 
-accounts_settings_update:
-    pattern: /settings
-    defaults: { _controller: SpoutletBundle:Account:updateSettings }
-    requirements: { _method: PUT }
+#accounts_settings_update:
+#    pattern: /settings
+#    defaults: { _controller: SpoutletBundle:Account:updateSettings }
 
 accounts_incomplete:
     pattern: /incomplete

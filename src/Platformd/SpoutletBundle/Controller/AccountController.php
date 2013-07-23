@@ -272,9 +272,21 @@ class AccountController extends Controller
         return $this->get('platformd.model.youtube_manager');
     }
 
-    public function settingsAction()
+    public function settingsAction(Request $request)
     {
         $form = $this->createForm($this->getFormType(), $this->getUser());
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $this->get('fos_user.user_manager')->updateUser($form->getData());
+
+                $this->get('session')->setFlash('success', 'Your changes are saved.');
+
+                return $this->redirect($this->generateUrl('accounts_settings'));
+            }
+        }
 
         $avatarManager = $this->getAvatarManager();
         $data          = $avatarManager->getAvatarListingData($this->getUser(), 184);
@@ -318,37 +330,6 @@ class AccountController extends Controller
     private function getFormType()
     {
         return new AccountSettingsType($this->get('security.encoder_factory')->getEncoder($this->getUser()));
-    }
-
-    public function updateSettingsAction(Request $request)
-    {
-        $form = $this->createForm($this->getFormType(), $this->getUser());
-
-        if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
-
-            if ($form->isValid()) {
-                $this->get('fos_user.user_manager')->updateUser($form->getData());
-
-                $this->get('session')->setFlash('success', 'Your changes are saved.');
-
-                return $this->redirect($this->generateUrl('accounts_settings'));
-            }
-        }
-
-        $avatarManager = $this->getAvatarManager();
-        $data          = $avatarManager->getAvatarListingData($this->getUser(), 184);
-        $newAvatar     = new Avatar();
-
-        $newAvatar->setUser($this->getUser());
-
-        $avatarForm = $this->createForm(new AvatarType(), $newAvatar);
-
-        return $this->render('SpoutletBundle:Account:settings.html.twig', array(
-            'form' => $form->createView(),
-            'avatarForm' => $avatarForm->createView(),
-            'data'       => $data,
-        ));
     }
 
     public function incompleteAction(Request $request)

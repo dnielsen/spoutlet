@@ -65,4 +65,5 @@ news_published: Published?
 account_settings_currentPassword: "Current password: "
 account_settings_plainPassword_first: "New password: "
 account_settings_plainPassword_second: "Confirm new password: "
-account_settings_subscribedGamingNews: "Yes, I would like to receive notifications from Alienware Arena about upcoming promotions and specific offers."
+account_settings_subscribedGamingNews: "Yes, I would like to receive Alienware/Dell Gaming news and special offers via email."
+account_settings_subscribedAlienwareEvents: "Yes, I would like to receive notifications from Alienware Arena about upcoming promotions and specific offers."

@@ -91,9 +91,13 @@ class UserRepository extends EntityRepository
         ;
     }
 
-    public function getArenaOptInForCountry($country)
+    public function getArenaOptInForCountry($country, $from=null, $to=null)
     {
         $qb = $this->createCountryQueryBuilder($country);
+
+        if ($from || $to) {
+            $qb = $this->addBetweenQuery($qb, $from, $to);
+        }
 
         return $this->addArenaOptQuery($qb, true)
             ->select('COUNT(u.id)')
@@ -103,9 +107,13 @@ class UserRepository extends EntityRepository
         ;
     }
 
-    public function getArenaOptInForCountries($countries)
+    public function getArenaOptInForCountries($countries, $from=null, $to=null)
     {
         $qb = $this->createCountriesQueryBuilder($countries);
+
+        if ($from || $to) {
+            $qb = $this->addBetweenQuery($qb, $from, $to);
+        }
 
         return $this->addArenaOptQuery($qb, true)
             ->select('COUNT(u.id)')
@@ -127,9 +135,13 @@ class UserRepository extends EntityRepository
         ;
     }
 
-    public function getDellOptInForCountry($country)
+    public function getDellOptInForCountry($country, $from=null, $to=null)
     {
         $qb = $this->createCountryQueryBuilder($country);
+
+        if ($from || $to) {
+            $qb = $this->addBetweenQuery($qb, $from, $to);
+        }
 
         return $this->addDellOptQuery($qb, true)
             ->select('COUNT(u.id)')
@@ -139,9 +151,13 @@ class UserRepository extends EntityRepository
         ;
     }
 
-    public function getDellOptInForCountries($countries)
+    public function getDellOptInForCountries($countries, $from=null, $to=null)
     {
         $qb = $this->createCountriesQueryBuilder($countries);
+
+        if ($from || $to) {
+            $qb = $this->addBetweenQuery($qb, $from, $to);
+        }
 
         return $this->addDellOptQuery($qb, true)
             ->select('COUNT(u.id)')
