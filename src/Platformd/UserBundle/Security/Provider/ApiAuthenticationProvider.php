@@ -12,18 +12,22 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authentication\Provider\UserAuthenticationProvider;
 
+use Platformd\CEVOBundle\Password\CEVOPasswordHandler;
+
 class ApiAuthenticationProvider extends UserAuthenticationProvider
 {
     private $encoderFactory;
     private $userProvider;
     private $apiManager;
+    private $cevoPasswordHandler;
 
-    public function __construct($apiManager, UserProviderInterface $userProvider, UserCheckerInterface $userChecker, $providerKey, EncoderFactoryInterface $encoderFactory, $hideUserNotFoundExceptions = true)
+    public function __construct($apiManager, UserProviderInterface $userProvider, UserCheckerInterface $userChecker, $providerKey, EncoderFactoryInterface $encoderFactory, $hideUserNotFoundExceptions = true, $cevoPasswordHandler)
     {
         parent::__construct($userChecker, $providerKey, $hideUserNotFoundExceptions);
-        $this->encoderFactory   = $encoderFactory;
-        $this->userProvider     = $userProvider;
-        $this->apiManager       = $apiManager;
+        $this->encoderFactory      = $encoderFactory;
+        $this->userProvider        = $userProvider;
+        $this->apiManager          = $apiManager;
+        $this->cevoPasswordHandler = $cevoPasswordHandler;
     }
 
     /**
@@ -34,7 +38,7 @@ class ApiAuthenticationProvider extends UserAuthenticationProvider
         $currentUser = $token->getUser();
 
         if ($currentUser instanceof UserInterface) {
-            if ($currentUser->getPassword() !== $user->getPassword()) {
+            if (!$this->apiManager->authenticate($currentUser, $presentedPassword)) {
                 throw new BadCredentialsException('The credentials were changed from another session.');
             }
         } else {
@@ -42,8 +46,27 @@ class ApiAuthenticationProvider extends UserAuthenticationProvider
                 throw new BadCredentialsException('The presented password cannot be empty.');
             }
 
-            if (! $this->apiManager->authenticate($user, $presentedPassword)) {
-                throw new BadCredentialsException('The presented password is invalid.');
+            if ($user->getApiSuccessfulLogin()) {
+                if (!$this->apiManager->authenticate($user, $presentedPassword)) {
+                    throw new BadCredentialsException('The presented password is invalid.');
+                }
+            } else {
+
+                // Check to see if we can log in via API
+                $apiLoginSuccess = $this->apiManager->authenticate($user, $presentedPassword);
+
+                if ($apiLoginSuccess) {
+                    $user->setApiSuccessfulLogin(new \DateTime());
+                } else {
+                    // Check to see if we have a CEVO-style password
+                    if (!$this->cevoPasswordHandler->authenticate($user, $presentedPassword)) {
+
+                        // Check to see if we have a "Platform D" style password
+                        if (!$this->encoderFactory->getEncoder($user)->isPasswordValid($user->getPassword(), $presentedPassword, $user->getSalt())) {
+                            throw new BadCredentialsException('The presented password is invalid.');
+                        }
+                    }
+                }
             }
         }
     }

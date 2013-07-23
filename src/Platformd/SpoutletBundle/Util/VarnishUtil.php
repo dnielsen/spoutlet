@@ -23,9 +23,13 @@ class VarnishUtil
         $this->varnishServer   = $varnishServer;
     }
 
-    public function banCachedObject($path, $parameters = array())
+    /**
+     *  $bestEffort - set to true if calling from a request-less section, e.g. a console command. This disables the
+     *  varnishDetected check and forgoes the exception that is thrown if unable to ban successfully.
+     */
+    public function banCachedObject($path, $parameters = array(), $bestEffort = false)
     {
-        if ($this->varnishDetected) {
+        if ($this->varnishDetected || $bestEffort) {
 
             try {
                 $headers = array();
@@ -38,19 +42,20 @@ class VarnishUtil
                     $headers[] = 'x-ban-country-code: '.$parameters['countryCode'];
                 }
 
-                if ($this->varnishDetected) {
-                    $url  = 'http://' . $this->varnishServer. '/' . ltrim($path, '/');
-                    $curl = curl_init();
+                $url  = 'http://' . $this->varnishServer. '/' . ltrim($path, '/');
+                $curl = curl_init();
 
-                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-                    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-                    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "BAN");
-                    curl_setopt($curl, CURLOPT_URL, $url);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "BAN");
+                curl_setopt($curl, CURLOPT_URL, $url);
 
-                    $result = curl_exec($curl);
-                }
+                $result = curl_exec($curl);
+
             } catch (Exception $e) {
-                throw new Exception('Could not ban');
+                if (!$bestEffort) {
+                    throw new Exception('Could not ban');
+                }
             }
         }
     }

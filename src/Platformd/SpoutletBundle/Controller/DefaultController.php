@@ -16,7 +16,7 @@ class DefaultController extends Controller
             'incompleteAccount' => $incompleteAccount,
         ));
 
-        $this->varnishCache($response, 120);
+        $this->varnishCache($response, 86400);
 
         return $response;
     }
@@ -25,7 +25,7 @@ class DefaultController extends Controller
     {
         if (!$this->isGranted('ROLE_USER')) {
             $response = new Response();
-            $this->varnishCache($response, 3600);
+            $this->varnishCache($response, 86400);
 
             return $response;
         }
@@ -34,7 +34,7 @@ class DefaultController extends Controller
 
         if (!$flashes) {
             $response = new Response();
-            $this->varnishCache($response, 3600);
+            $this->varnishCache($response, 86400);
 
             return $response;
         }
@@ -51,7 +51,7 @@ class DefaultController extends Controller
     public function _layoutFooterAction() {
         $response = $this->render('SpoutletBundle::_footer.html.twig');
 
-        $this->varnishCache($response, 120);
+        $this->varnishCache($response, 86400);
 
         return $response;
     }

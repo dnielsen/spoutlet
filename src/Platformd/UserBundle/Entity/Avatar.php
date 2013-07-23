@@ -33,7 +33,7 @@ class Avatar
     protected $uuid;
 
     /**
-     * @Assert\File()
+     * @Assert\File(mimeTypes={"image/png", "image/jpeg", "image/jpg", "image/gif"})
      */
     public $file;
 

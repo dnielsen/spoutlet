@@ -249,13 +249,10 @@ class AbstractFeatureContext extends MinkContext
         $user = $this->getCurrentUser();
 
         return array(
-            new When(sprintf('I am on "/?username=%s"', $user->getCevoUserId())),
-        );
-
-        // we go to /login, the stub API logs us in, we click Continue, done.
-        return array(
             new When('I am on "/login"'),
-            new When(sprintf('I follow "Continue"')),
+            new When('I fill in "login-username" with "user"'),
+            new When('I fill in "login-password" with "user"'),
+            new When(sprintf('I press "Sign In"')),
         );
     }
 

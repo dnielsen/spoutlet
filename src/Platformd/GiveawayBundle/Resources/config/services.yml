@@ -20,6 +20,7 @@ services:
             - @event_filesystem
             - "@platformd.repository.country"
             - "@platformd.model.comment_manager"
+            - "@platformd.util.varnish_util"
 
     platformd.model.deal_manager:
         class: Platformd\GiveawayBundle\Model\DealManager
@@ -34,6 +35,8 @@ services:
             - "@platformd.link.linkable_manager"
             - "@platformd.media_path_resolver"
             - "@platformd.model.comment_manager"
+            - "@platformd.util.varnish_util"
+            - "@router"
 
     pd_giveaway.util.key_counter_util:
         class: Platformd\GiveawayBundle\Util\KeyCounterUtil

@@ -10,6 +10,7 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Platformd\UserBundle\Form\Type\EditUserFormType;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\UserBundle\Form\Type\SuspendUserType;
+use Platformd\UserBundle\Exception\ApiRequestException;
 
 /**
  * Admin controller for users
@@ -86,15 +87,19 @@ class AdminController extends Controller
 
         $form->bindRequest($request);
         if ($form->isValid()) {
-            $manager->updateUser($user);
 
-            $this->setFlash('success', $this->trans('fos_user_admin_edit_success', array(
-                '%username%' => $user->getUsername()
-            ), 'FOSUserBundle'));
+            try {
+                $manager->updateUserAndApi($user);
+                $this->setFlash('success', $translator->trans('fos_user_admin_edit_success', array(
+                    '%username%' => $user->getUsername()
+                ), 'FOSUserBundle'));
 
-            return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array(
-                'id' => $id,
-            )));
+                return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array(
+                    'id' => $id,
+                )));
+            } catch (ApiRequestException $e) {
+                $this->setFlash('error', 'The system is currently unable to process your request. Please try again shortly.');
+            }
         }
 
         return $this->render('UserBundle:Admin:edit.html.twig', array(
@@ -149,12 +154,6 @@ class AdminController extends Controller
     public function unapprovedAvatarsAction(Request $request)
     {
         if ($request->getMethod() == 'POST') {
-            $ids = $request->request->get('selected', array());
-
-            if (count($ids) == 0) {
-                $this->setFlash('error', 'platformd.admin.avatars.unapproved.no_avatars_selected');
-                $this->redirect($this->generateUrl('admin_unapproved_avatars'));
-            }
 
             $processType = $request->request->get('process_type', null);
 
@@ -163,12 +162,28 @@ class AdminController extends Controller
                 $this->redirect($this->generateUrl('admin_unapproved_avatars'));
             }
 
-            $selectedIds = array();
+            switch ($processType) {
+                case 'approve':
+                    $selectedIds = $request->request->get('all', array());
+                    break;
 
-            foreach ($ids as $avatarId) {
-                if ($avatarId != '') {
-                    $selectedIds[] = $avatarId;
-                }
+                case 'reject':
+                    $ids = $request->request->get('selected', array());
+
+                    if (count($ids) == 0) {
+                        $this->setFlash('error', 'platformd.admin.avatars.unapproved.no_avatars_selected');
+                        $this->redirect($this->generateUrl('admin_unapproved_avatars'));
+                    }
+
+                    $selectedIds = array();
+
+                    foreach ($ids as $avatarId) {
+                        if ($avatarId != '') {
+                            $selectedIds[] = $avatarId;
+                        }
+                    }
+
+                    break;
             }
 
             if (count($selectedIds) == 0) {
@@ -189,6 +204,10 @@ class AdminController extends Controller
 
         $page    = $request->query->get('page', 1);
         $avatars = $this->getAvatarManager()->getUnapprovedAvatars(64, $page, $pager);
+
+        foreach ($avatars as $avatar) {
+
+        }
 
         return $this->render('UserBundle:Admin:unapprovedAvatars.html.twig', array(
             'avatars' => $avatars,

@@ -24,9 +24,13 @@
                             <a class="update-avatar">UPDATE</a>
                         </div>
                     </span>
-                    {%if not avatarUsable %}
+                    {% if data.unapprovedCount %}
                         <div id="avatar-awaiting-overlay-text">
                             <a class="awaiting-approval">AWAITING APPROVAL</a>
+                        </div>
+                    {% elseif data.processingCount %}
+                        <div id="avatar-awaiting-overlay-text">
+                            <a class="awaiting-processing">AWAITING PROCESSING</a>
                         </div>
                     {% endif %}
                 </div>
@@ -76,6 +80,7 @@
     <div id="avatar-modal" style="display:none;">
         <div class="modal-title">Choose Avatar</div>
         <div id="add-avatar-form">
+            <div class="avatar-restrictions form-error" style="display:none;"><p>Valid avatar filetypes are JPG, PNG, GIF.</p></div>
             <form action="{{ path('avatar_add') }}" method="post" {{ form_enctype(avatarForm) }}>
                 {{ form_row(avatarForm.file) }}
                 {{ form_rest(avatarForm) }}
@@ -162,6 +167,11 @@
             }
 
             $('#avatar-listings').mCustomScrollbar();
+
+            if ($('.xnotices p').html() == '{{ 'platformd.user.avatars.invalid_avatar' | pd_trans }}') {
+                $('#avatar-modal .avatar-restrictions').show();
+                $('.user-avatar').click();
+            }
         });
     </script>
 

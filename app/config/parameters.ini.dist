@@ -72,5 +72,7 @@
     allow_caching         = true
 
     api_base_url          = https://api.alienwarearena.com/v1/
+    api_access_key        = yourAccessKeyHere
+    api_secret_key        = yourSecretKeyHere
 
     varnish_server        = http://demo.alienwarearena.local:8080

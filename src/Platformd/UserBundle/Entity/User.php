@@ -344,6 +344,11 @@ class User extends BaseUser
      */
     protected $twitterId = '';
 
+    /**
+     * @ORM\Column(name="api_successful_login", type="datetime", nullable=true)
+     */
+    protected $apiSuccessfulLogin;
+
     public function __construct()
     {
         parent::__construct();
@@ -1155,5 +1160,15 @@ class User extends BaseUser
     public function setTwitterId($value)
     {
         $this->twitterId = $value;
+    }
+
+    public function getApiSuccessfulLogin()
+    {
+        return $this->apiSuccessfulLogin;
+    }
+
+    public function setApiSuccessfulLogin($value)
+    {
+        $this->apiSuccessfulLogin = $value;
     }
 }

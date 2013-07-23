@@ -12,6 +12,8 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Doctrine\ORM\AbstractQuery;
 use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 
+use Platformd\UserBundle\Exception\ApiRequestException;
+
 class UserManager extends BaseUserManager
 {
     const DEFAULT_SORTING_FIELD = 'username';
@@ -55,11 +57,19 @@ class UserManager extends BaseUserManager
     public function updateUser(UserInterface $user, $andFlush = true)
     {
         parent::updateUser($user, $andFlush);
+    }
 
+    public function updateUserAndApi(UserInterface $user, $andFlush = true)
+    {
         if ($this->container->getParameter('api_authentication')) {
             $apiManager = $this->container->get('platformd.user.api.manager');
-            $apiManager->updateRemoteUserData($user);
+
+            if (!$apiManager->updateRemoteUserData($user)) {
+                throw new ApiRequestException();
+            }
         }
+
+        parent::updateUser($user, $andFlush);
     }
 
     public function getFindUserQuery($search = null, $type='text', $locale=null, $sort_by = self::DEFAULT_SORTING_FIELD)

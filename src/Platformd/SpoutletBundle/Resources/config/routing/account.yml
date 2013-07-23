@@ -43,10 +43,10 @@ accounts_settings:
     pattern: /settings
     defaults: { _controller: SpoutletBundle:Account:settings }
 
-#accounts_settings_update:
-#    pattern: /settings
-#    defaults: { _controller: SpoutletBundle:Account:updateSettings }
-
 accounts_incomplete:
     pattern: /incomplete
     defaults: { _controller: SpoutletBundle:Account:incomplete }
+
+accounts_change_password:
+    pattern: /change-password
+    defaults: { _controller: SpoutletBundle:Account:settings }

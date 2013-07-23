@@ -17,3 +17,8 @@ services:
             - "%kernel.debug%"
         calls:
             - [ setLogger, [ @logger] ]
+
+    pd.cevo.password_handler:
+        class: Platformd\CEVOBundle\Password\CEVOPasswordHandler
+        arguments:
+            - "@fos_user.user_manager"

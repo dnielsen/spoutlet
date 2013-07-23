@@ -61,7 +61,7 @@ class GiveawayController extends Controller
                 'data' => $data
             ));
 
-            $this->varnishCache($response, 60);
+            $this->varnishCache($response, 86400);
 
             return $response;
         }
@@ -76,6 +76,8 @@ class GiveawayController extends Controller
             $data->current_state        = $state->getCurrentState();
             $data->current_state_reason = $state->getStateReason();
 
+            $cacheFor = 86400;
+
             if ($state->getCurrentState() != KeyRequestState::STATE_IN_QUEUE) {
 
                 $state->setUserHasSeenState(true);
@@ -83,13 +85,15 @@ class GiveawayController extends Controller
 
                 $em->persist($state);
                 $em->flush();
+
+                $cacheFor = 1;
             }
 
             $response = $this->render('GiveawayBundle:Giveaway:_showCurrentQueueState.html.twig', array(
                 'data' => $data
             ));
 
-            $this->varnishCache($response, 1);
+            $this->varnishCache($response, $cacheFor);
 
             return $response;
         }
@@ -97,7 +101,7 @@ class GiveawayController extends Controller
         # at this stage, there are no notifications for the user
 
         $response = new Response();
-        $this->varnishCache($response, 1);
+        $this->varnishCache($response, 86400);
 
         return $response;
     }
@@ -158,7 +162,7 @@ class GiveawayController extends Controller
             'data' => $data
         ));
 
-        $this->varnishCache($response, 30);
+        $this->varnishCache($response, 300);
 
         return $response;
     }
@@ -171,6 +175,8 @@ class GiveawayController extends Controller
         $featured  = $this->getRepository()->findActiveFeaturedForSite($this->getCurrentSite());
         $keyRepo   = $this->getKeyRepository();
         $site      = $this->getCurrentSite();
+
+        $cacheTime = 86400;
 
         foreach ($giveaways as $giveaway) {
             if($keyRepo->getTotalUnassignedKeysForPools($giveaway->getPools()) == 0) {
@@ -187,7 +193,7 @@ class GiveawayController extends Controller
             'headerImage' => $this->getHeaderImage($site),
         ));
 
-        $this->varnishCache($response, 30, 30);
+        $this->varnishCache($response, 86400, 30);
 
         return $response;
     }
@@ -202,7 +208,7 @@ class GiveawayController extends Controller
 
         $response = $this->render('GiveawayBundle:Giveaway:show.html.twig', array('data' => $data));
 
-        $this->varnishCache($response, 30);
+        $this->varnishCache($response, 86400);
 
         return $response;
     }
@@ -278,6 +284,12 @@ class GiveawayController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($state);
         $em->flush();
+
+        $path = $this->generateUrl('_giveaway_flash_message', array('giveawayId' => $giveaway->getId()));
+        $this->getVarnishUtil()->banCachedObject($path, array('userId' => $userId), true);
+
+        $path = $this->generateUrl('_giveaway_show_actions', array('giveawayId' => $giveaway->getId()));
+        $this->getVarnishUtil()->banCachedObject($path, array('userId' => $userId), true);
 
         return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
     }

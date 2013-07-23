@@ -19,7 +19,7 @@ class AvatarFileSystemActionsQueueMessage extends SqsMessageBase
     public $fileUuid;
 
     public function __toString() {
-        return 'AvatarResizeQueueMessage => { Action = "'.$this->action.'", User = "'.$this->userUuid.'", UUID = '.$this->fileUuid.'" }';
+        return 'AvatarResizeQueueMessage => { Action = "'.$this->action.'", User = "'.$this->userUuid.'", UUID = "'.$this->fileUuid.'" }';
     }
 
     public function getQueueName() {

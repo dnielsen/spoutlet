@@ -17,7 +17,6 @@ class AvatarRepository extends EntityRepository
             ->andWhere('a.user = :user')
             ->andWhere('a.approved = 0')
             ->andWhere('a.deleted = 0')
-            ->andWhere('a.resized = 1')
             ->andWhere('a.cropped = 1')
             ->andWhere('a.reviewed = 0')
             ->setParameters(array(
@@ -34,7 +33,9 @@ class AvatarRepository extends EntityRepository
             ->andWhere('a.user = :user')
             ->andWhere('a.deleted = 0')
             ->andWhere('a.cropped = 1')
-            ->andWhere('(a.approved = 1 AND a.reviewed = 1 AND a.processed = 0) OR a.resized = 0')
+            ->andWhere('a.reviewed = 1')
+            ->andWhere('a.processed = 0')
+            ->andWhere('a.approved = 1')
             ->setParameters(array(
                 'user' => $user,
             ))
