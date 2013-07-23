@@ -46,8 +46,9 @@ class GiveawayManager
     private $filesystem;
     private $countryRepo;
     private $commentManager;
+    private $varnishUtil;
 
-    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName, CacheUtil $cacheUtil, GiveawayRepository $giveawayRepo, SiteUtil $siteUtil, KeyCounterUtil $keyCounterUtil, GiveawayKeyRepository $giveawayKeyRepo, EntityManager $em, ThreadRepository $threadRepo, LinkableManager $linkableManager, Exposer $mediaExposer, Filesystem $filesystem, CountryRepository $countryRepo, $commentManager)
+    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName, CacheUtil $cacheUtil, GiveawayRepository $giveawayRepo, SiteUtil $siteUtil, KeyCounterUtil $keyCounterUtil, GiveawayKeyRepository $giveawayKeyRepo, EntityManager $em, ThreadRepository $threadRepo, LinkableManager $linkableManager, Exposer $mediaExposer, Filesystem $filesystem, CountryRepository $countryRepo, $commentManager, $varnishUtil)
     {
         $this->emailManager    = $emailManager;
         $this->em              = $em;
@@ -67,6 +68,7 @@ class GiveawayManager
         $this->filesystem      = $filesystem;
         $this->countryRepo     = $countryRepo;
         $this->commentManager  = $commentManager;
+        $this->varnishUtil     = $varnishUtil;
     }
 
     public function getAnonGiveawayIndexData() {
@@ -513,6 +515,16 @@ class GiveawayManager
 
         $this->em->persist($giveaway);
         $this->em->flush();
+
+        $indexPath    = $this->router->generate('giveaway_index');
+        $giveawayPath = $this->router->generate('giveaway_show', array('slug' => $giveaway->getSlug()));
+
+        try {
+            $this->varnishUtil->banCachedObject($indexPath);
+            $this->varnishUtil->banCachedObject($giveawayPath);
+        } catch (Exception $e) {
+            throw new \Exception('Could not ban.');
+        }
     }
 
     /**

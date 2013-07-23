@@ -1,3 +1,3 @@
 {% extends "SpoutletBundle::_baseFlashMessage.html.twig" %}
 {% block flash_type %}{{ type }}{% endblock %}
-{% block flash %}<p>{{ message }}</p>{% endblock %}
+{% block flash %}<p>{{ message | pd_trans }}</p>{% endblock %}

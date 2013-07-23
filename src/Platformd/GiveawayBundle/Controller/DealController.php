@@ -66,7 +66,7 @@ class DealController extends Controller
                 'data' => $data
             ));
 
-            $this->varnishCache($response, 60);
+            $this->varnishCache($response, 86400);
 
             return $response;
         }
@@ -81,6 +81,8 @@ class DealController extends Controller
             $data->current_state        = $state->getCurrentState();
             $data->current_state_reason = $state->getStateReason();
 
+            $cacheFor = 86400;
+
             if ($state->getCurrentState() != KeyRequestState::STATE_IN_QUEUE) {
 
                 $state->setUserHasSeenState(true);
@@ -88,13 +90,15 @@ class DealController extends Controller
 
                 $em->persist($state);
                 $em->flush();
+
+                $cacheFor = 1;
             }
 
             $response = $this->render('GiveawayBundle:Giveaway:_showCurrentQueueState.html.twig', array(
                 'data' => $data
             ));
 
-            $this->varnishCache($response, 1);
+            $this->varnishCache($response, $cacheFor);
 
             return $response;
         }
@@ -102,7 +106,7 @@ class DealController extends Controller
         # at this stage, there are no notifications for the user
 
         $response = new Response();
-        $this->varnishCache($response, 1);
+        $this->varnishCache($response, 86400);
 
         return $response;
     }
@@ -152,7 +156,7 @@ class DealController extends Controller
             'data' => $data
         ));
 
-        $this->varnishCache($response, 30);
+        $this->varnishCache($response, 300);
 
         return $response;
     }
@@ -171,7 +175,9 @@ class DealController extends Controller
 
         $response = $this->render('GiveawayBundle:Deal:index.html.twig', array('data' => $data));
 
-        $this->varnishCache($response, 30, 30);
+        $cacheTime = ($data->next_expiry_in && $data->next_expiry_in < 86400) ? $data->next_expiry_in : 86400;
+
+        $this->varnishCache($response, $cacheTime, 30);
 
         return $response;
     }
@@ -229,7 +235,10 @@ class DealController extends Controller
 
         $response = $this->render('GiveawayBundle:Deal:show.html.twig', array('data' => $data));
 
-        $this->varnishCache($response, 30);
+        $expiresIn = $deal->getEndsAtUtc() ? $deal->getEndsAtUtc()->format('U') - strtotime('now') : 86400;
+        $cacheTime = $expiresIn < 86400 ? $expiresIn : 86400;
+
+        $this->varnishCache($response, $cacheTime);
 
         return $response;
     }
@@ -299,6 +308,12 @@ class DealController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($state);
         $em->flush();
+
+        $path = $this->generateUrl('_deal_flash_message', array('dealId' => $deal->getId()));
+        $this->getVarnishUtil()->banCachedObject($path, array('userId' => $userId), true);
+
+        $path = $this->generateUrl('_deal_show_actions', array('dealId' => $deal->getId()));
+        $this->getVarnishUtil()->banCachedObject($path, array('userId' => $userId), true);
 
         return $this->redirect($this->generateUrl('deal_show', array('slug' => $slug)));
     }
