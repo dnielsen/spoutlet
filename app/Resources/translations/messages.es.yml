@@ -52,7 +52,7 @@ platformd:
 
     not_found:
         title: Page not found
-        body: We're sorry - but we can't find the page you're looking for
+        body: We're sorry, but this page does not exist. <a href="/">Click here</a> to return to the homepage.
 
     flash:
         error_title: ¡Error!

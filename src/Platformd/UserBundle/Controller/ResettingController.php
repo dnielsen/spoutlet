@@ -50,6 +50,26 @@ class ResettingController extends BaseController
     }
 
     /**
+     * Tell the user to check his email provider
+     */
+    public function checkEmailAction()
+    {
+        $session = $this->container->get('session');
+        $email = $session->get(static::SESSION_EMAIL);
+        $session->remove(static::SESSION_EMAIL);
+
+        if (empty($email)) {
+            // the user does not come from the sendEmail action
+            return new RedirectResponse($this->container->get('router')->generate('fos_user_resetting_request'));
+        }
+
+
+        $this->setFlash('success', $this->trans('resetting.check_email', array(), 'FOSUserBundle'));
+
+        return new RedirectResponse($this->container->get('router')->generate('fos_user_security_login'));
+    }
+
+    /**
      * Generate the redirection url when the resetting is completed.
      *
      * @param \FOS\UserBundle\Model\UserInterface $user

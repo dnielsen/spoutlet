@@ -12,8 +12,6 @@ security:
 
     factories:
             - "%kernel.root_dir%/../src/Platformd/UserBundle/Resources/config/security_factory.yml"
-            - "%kernel.root_dir%/../vendor/bundles/FOS/FacebookBundle/Resources/config/security_factories.xml"
-            - "%kernel.root_dir%/../vendor/bundles/FOS/TwitterBundle/Resources/config/security_factories.xml"
 
     providers:
         fos_userbundle:
@@ -21,9 +19,6 @@ security:
 
         api_provider:
             id: platformd.security.user.provider.api
-
-        platformd_fos_twitter:
-            id: platformd.twitter.provider
 
     firewalls:
         # turn security off entirely for the fake cevo site
@@ -42,28 +37,12 @@ security:
             logout:
                 path:     /logout
                 target:   default_index
-                handlers: ["fos_facebook.logout_handler"]
-                #success_handler: platformd_user.authentication_handler
             switch_user: ~
             remember_me:
                 key:      "%secret%"
                 lifetime: 604800 # 1 week (in seconds)
                 path:     /
                 domain:   ~ # Defaults to the current domain from $_SERVER
-            fos_facebook:
-                app_url: "http://apps.facebook.com/AlienwareArena/"
-                server_url: "http://alienwarearena.com/"
-                login_path: ^/login
-                check_path: security_check
-                default_target_path: /
-                provider: fos_userbundle
-        public:
-            fos_twitter:
-                login_path: /login
-                check_path: twitter_security_check
-                default_target_path: /
-                provider: platformd_fos_twitter
-                use_twitter_anywhere: true
 
     acl:
         connection: acl

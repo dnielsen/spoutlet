@@ -90,9 +90,33 @@ class RegistrationController extends BaseRegistrationController
         $user->setLastLogin(new \DateTime());
 
         $this->container->get('fos_user.user_manager')->updateUser($user);
-        $response = new RedirectResponse($this->container->get('router')->generate('fos_user_registration_confirmed'));
-        $this->authenticateUser($user, $response);
+
+        $this->setFlash('success', $this->trans('platformd.user.register.confirmed_success'));
+
+        $response = new RedirectResponse($this->container->get('router')->generate('fos_user_security_login'));
+        //$this->authenticateUser($user, $response);
 
         return $response;
+    }
+
+    protected function setFlash($key, $message)
+    {
+        $this->getFlashUtil()->setFlash($key, $message);
+    }
+
+    protected function getFlashUtil()
+    {
+        return $this->container->get('platformd.util.flash_util');
+    }
+
+    /**
+     * @param $key
+     * @param array $params
+     * @param string $domain
+     * @return mixed
+     */
+    protected function trans($key, $params = array(), $domain = 'messages', $locale = null)
+    {
+        return $this->container->get('platformd.model.translator')->trans($key, $params, $domain, $locale);
     }
 }

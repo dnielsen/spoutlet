@@ -87,7 +87,7 @@ platformd:
 
     not_found:
         title: Page Not Found
-        body: We're sorry, but this page does not exist.
+        body: We're sorry, but this page does not exist. <a href="/">Click here</a> to return to the homepage.
 
     flash:
         error_title: Error!
@@ -118,7 +118,7 @@ platformd:
             global: Global
             en_US: "USA/Canada"
             en: "USA/Canada"
-            en_SG: "Malasia/Singapore"
+            en_SG: "Malaysia"
             es: América Latina
             en_GB: Europe
             ja: Japan

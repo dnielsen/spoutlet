@@ -129,23 +129,23 @@ services:
         calls:
             - [ "setDirectory", [ "images/avatars"]]
 
-    platformd.facebook.provider:
-        class: Platformd\UserBundle\Security\User\Provider\FacebookProvider
-        arguments:
-            facebook: "@fos_facebook.api"
-            userManager: "@fos_user.user_manager"
-            validator: "@validator"
-            container: "@service_container"
+    # platformd.facebook.provider:
+    #     class: Platformd\UserBundle\Security\User\Provider\FacebookProvider
+    #     arguments:
+    #         facebook: "@fos_facebook.api"
+    #         userManager: "@fos_user.user_manager"
+    #         validator: "@validator"
+    #         container: "@service_container"
 
-    platformd.twitter.provider:
-        class: Platformd\UserBundle\Security\User\Provider\TwitterProvider
-        arguments:
-            twitter_oauth: "@fos_twitter.api"
-            userManager: "@fos_user.user_manager"
-            validator: "@validator"
-            session: "@session"
-            api: "@fos_twitter.service"
-            container: "@service_container"
+    # platformd.twitter.provider:
+    #     class: Platformd\UserBundle\Security\User\Provider\TwitterProvider
+    #     arguments:
+    #         twitter_oauth: "@fos_twitter.api"
+    #         userManager: "@fos_user.user_manager"
+    #         validator: "@validator"
+    #         session: "@session"
+    #         api: "@fos_twitter.service"
+    #         container: "@service_container"
 
     platformd_user.authentication_handler:
         class: Platformd\UserBundle\Handler\AuthenticationHandler

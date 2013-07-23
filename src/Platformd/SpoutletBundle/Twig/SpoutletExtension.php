@@ -615,7 +615,7 @@ class SpoutletExtension extends Twig_Extension
             case 'ja':      return 'http://alienware.jp/';
             case 'zh':      return 'http://alienware.com.cn/';
             case 'es':      return 'http://www.alienware.com/mx/';
-            case 'en_SG':   return 'http://allpowerful.com/asia';
+            case 'en_SG':   return 'http://www.alienware.com.my/';
             case 'en_AU':   return 'http://www.alienware.com.au/';
             case 'en_GB':   return 'http://www1.euro.dell.com/content/topics/segtopic.aspx/alienware?c=uk&cs=ukdhs1&l=en&s=dhs&~ck=mn';
             case 'en_IN':   return 'http://www.alienware.co.in/';
