@@ -79,6 +79,51 @@ class UserRepository extends EntityRepository
         ;
     }
 
+    public function getArenaOptInForAllCountries($from=null, $to=null)
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        if ($from || $to) {
+            $qb = $this->addBetweenQuery($qb, $from, $to);
+        }
+
+        return $this->addArenaOptQuery($qb, true)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
+    public function getDellOptInForAllCountries($from=null, $to=null)
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        if ($from || $to) {
+            $qb = $this->addBetweenQuery($qb, $from, $to);
+        }
+
+        return $this->addDellOptQuery($qb, true)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
+    public function countNewRegistrantsForAllCountries($from, $to)
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        return $this->addBetweenQuery($qb, $from, $to)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
+
     public function getArenaOptInForSite($site)
     {
         $qb = $this->createSiteQueryBuilder($site);

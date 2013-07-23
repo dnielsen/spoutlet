@@ -9,7 +9,8 @@
 <div style="height: 40px;">
     <div class="pull-left">
         {{ form_widget(form.country) }}
-        <button type="submit" class="btn btn-primary" formnovalidate>Add Country</button>
+        <input type="hidden" class="add-all" name="all-countries" value="false" />
+        <button type="submit" id="add-country" class="btn btn-primary add-row" formnovalidate>Add Country</button>
         <a href="{{ path('user_metric_by_country') }}" class="btn btn-primary">Reset</a>
     </div>
 
@@ -60,7 +61,8 @@
 <div style="height: 40px;">
     <div class="pull-left">
         {{ form_widget(form.region) }}
-        <button type="submit" class="btn btn-primary" formnovalidate>Add Region</button>
+        <input type="hidden" class="add-all" name="all-regions" value="false" />
+        <button type="submit" id="add-region" class="btn btn-primary add-row" formnovalidate>Add Region</button>
         <a href="{{ path('user_metric_by_country') }}" class="btn btn-primary">Reset</a>
     </div>
 
@@ -110,6 +112,12 @@
     jQuery(document).ready(function() {
         jQuery('#results_range').change(function() {
             window.location = '{{ path('user_metric_by_country') }}?results_range='+$(this).val();
+        });
+
+        $('.add-row').click(function(e) {
+            if (!$(this).siblings('select').find('option:selected').val()) {
+                $(this).prev('.add-all').val("true");
+            }
         });
     });
 </script>
