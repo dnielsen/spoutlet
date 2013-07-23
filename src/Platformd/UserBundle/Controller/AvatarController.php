@@ -36,9 +36,13 @@ class AvatarController extends Controller
                 $newAvatar = $form->getData();
                 $avatarManager->save($newAvatar);
 
-                return $this->redirect($this->generateUrl('avatar_crop', array(
-                    'uuid' => $newAvatar->getUuid(),
-                )));
+                if ($newAvatar->getUuid()) {
+                    return $this->redirect($this->generateUrl('avatar_crop', array(
+                        'uuid' => $newAvatar->getUuid(),
+                    )));
+                } else {
+                    $this->setFlash('error', 'platformd.user.avatars.invalid_avatar');
+                }
             }
         }
 
@@ -91,8 +95,11 @@ class AvatarController extends Controller
         $avatar->setCropped(true);
         $avatarManager->save($avatar);
 
-        $user->setAvatar($avatar);
-        $this->getUserManager()->updateUser($user, true);
+        if ($user->getAdminLevel()) {
+            $this->setFlash('success', 'platformd.user.avatars.admin_submit_success');
+        } else {
+            $this->setFlash('success', 'platformd.user.avatars.submit_success');
+        }
 
         return $this->redirect($this->generateUrl('accounts_settings'));
     }
@@ -151,12 +158,12 @@ class AvatarController extends Controller
 
         if (!$avatar) {
             $this->setFlash('error', 'platformd.user.avatars.switch_not_found');
-            return $this->redirect($this->generateUrl('avatars'));
+            return $this->redirect($this->generateUrl('accounts_settings'));
         }
 
-        if (!$avatar->isApproved() || !$avatar->isProcessed()) {
+        if (!$avatar->isApproved()) {
             $this->setFlash('error', 'platformd.user.avatars.switch_error');
-            return $this->redirect($this->generateUrl('avatars'));
+            return $this->redirect($this->generateUrl('accounts_settings'));
         }
 
         $avatarManager->addToFilesystemActionsQueue($avatar->getUuid(), $avatar->getUser(), AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_SWITCH);
@@ -164,8 +171,7 @@ class AvatarController extends Controller
         $avatar->setProcessed(false);
         $avatarManager->save($avatar);
 
-        $user->setAvatar($avatar);
-        $this->getUserManager()->updateUser($user, true);
+        $this->setFlash('success', 'platformd.user.avatars.switch_success');
 
         return $this->redirect($this->generateUrl('accounts_settings'));
     }

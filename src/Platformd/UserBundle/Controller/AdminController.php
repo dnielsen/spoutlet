@@ -154,12 +154,6 @@ class AdminController extends Controller
     public function unapprovedAvatarsAction(Request $request)
     {
         if ($request->getMethod() == 'POST') {
-            $ids = $request->request->get('selected', array());
-
-            if (count($ids) == 0) {
-                $this->setFlash('error', 'platformd.admin.avatars.unapproved.no_avatars_selected');
-                $this->redirect($this->generateUrl('admin_unapproved_avatars'));
-            }
 
             $processType = $request->request->get('process_type', null);
 
@@ -168,12 +162,28 @@ class AdminController extends Controller
                 $this->redirect($this->generateUrl('admin_unapproved_avatars'));
             }
 
-            $selectedIds = array();
+            switch ($processType) {
+                case 'approve':
+                    $selectedIds = $request->request->get('all', array());
+                    break;
 
-            foreach ($ids as $avatarId) {
-                if ($avatarId != '') {
-                    $selectedIds[] = $avatarId;
-                }
+                case 'reject':
+                    $ids = $request->request->get('selected', array());
+
+                    if (count($ids) == 0) {
+                        $this->setFlash('error', 'platformd.admin.avatars.unapproved.no_avatars_selected');
+                        $this->redirect($this->generateUrl('admin_unapproved_avatars'));
+                    }
+
+                    $selectedIds = array();
+
+                    foreach ($ids as $avatarId) {
+                        if ($avatarId != '') {
+                            $selectedIds[] = $avatarId;
+                        }
+                    }
+
+                    break;
             }
 
             if (count($selectedIds) == 0) {
@@ -194,6 +204,10 @@ class AdminController extends Controller
 
         $page    = $request->query->get('page', 1);
         $avatars = $this->getAvatarManager()->getUnapprovedAvatars(64, $page, $pager);
+
+        foreach ($avatars as $avatar) {
+
+        }
 
         return $this->render('UserBundle:Admin:unapprovedAvatars.html.twig', array(
             'avatars' => $avatars,

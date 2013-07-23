@@ -53,8 +53,11 @@ class AvatarManager
             $avatar->setUuid($this->upload($avatar->file, $avatar->getUser()));
         }
 
-        $this->em->persist($avatar);
-        $this->em->flush();
+        // Avatar is valid
+        if ($avatar->getUuid()) {
+            $this->em->persist($avatar);
+            $this->em->flush();
+        }
     }
 
     public function findOneBy(array $criteria = array())
@@ -70,7 +73,6 @@ class AvatarManager
             'deleted'   => false,
             'cropped'   => true,
             'resized'   => true,
-            'processed' => true,
         ));
     }
 
@@ -193,6 +195,9 @@ class AvatarManager
             $avatarArr[] = array(
                 'id' => $avatar->getId(),
                 'url' => $this->getSignedImageUrl($avatar->getUuid(), '100x100.png', $avatar->getUser()),
+                'userId' => $avatar->getUser()->getId(),
+                'username' => $avatar->getUser()->getUsername(),
+                'submitted' => $avatar->getCreatedAt(),
             );
         }
 

@@ -24,13 +24,12 @@
 <table class="table table-striped table-bordered tablesorter">
     <thead>
         <tr>
-            <th style="width: 10%;">Country</th>
-            <th style="width: 10%;">Count</th>
-            <th style="width: 10%;">Arena Opted In</th>
-            <th style="width: 10%;">%</th>
-            <th style="width: 10%;">Dell Opted in</th>
-            <th style="width: 10%;">%</th>
-            <th style="width: 10%;">New Users</th>
+            <th style="width: 12%;">Country</th>
+            <th style="width: 12%;">Users</th>
+            <th style="width: 12%;">Arena Opted In</th>
+            <th style="width: 12%;">%</th>
+            <th style="width: 12%;">Dell Opted in</th>
+            <th style="width: 12%;">%</th>
             <th>Time Range</th>
         </tr>
     </thead>
@@ -39,18 +38,17 @@
             {% for siteData in sitesData['country'] %}
             <tr>
                 <td>{{ siteData.name }}</td>
-                <td>{{ siteData.count }}</td>
+                <td>{{ siteData.newUsers }}</td>
                 <td>{{ siteData.arenaOptIn }}</td>
                 <td>{{ siteData.arenaOptInPercentage }}%</td>
                 <td>{{ siteData.dellOptIn }}</td>
                 <td>{{ siteData.dellOptInPercentage }}%</td>
-                <td>{{ siteData.newUsers }}</td>
                 <td>{% if countryRange %} {{ countryRange }} {% else %} All time {% endif %}</td>
             </tr>
             {% endfor %}
 
         {% else %}
-            <tr><td colspan=8>No Countries Selected!</td></tr>
+            <tr><td colspan=7>No Countries Selected!</td></tr>
         {% endif %}
     </tbody>
 </table>
@@ -77,13 +75,12 @@
 <table class="table table-striped table-bordered tablesorter">
     <thead>
         <tr>
-            <th style="width: 10%;">Region</th>
-            <th style="width: 10%;">Count</th>
-            <th style="width: 10%;">Arena Opted In</th>
-            <th style="width: 10%;">%</th>
-            <th style="width: 10%;">Dell Opted in</th>
-            <th style="width: 10%;">%</th>
-            <th style="width: 10%;">New Users</th>
+            <th style="width: 12%;">Region</th>
+            <th style="width: 12%;">Users</th>
+            <th style="width: 12%;">Arena Opted In</th>
+            <th style="width: 12%;">%</th>
+            <th style="width: 12%;">Dell Opted in</th>
+            <th style="width: 12%;">%</th>
             <th>Time Range</th>
         </tr>
     </thead>
@@ -92,18 +89,17 @@
             {% for siteData in sitesData['region'] %}
             <tr>
                 <td>{{ siteData.name }}</td>
-                <td>{{ siteData.count }}</td>
+                <td>{{ siteData.newUsers }}</td>
                 <td>{{ siteData.arenaOptIn }}</td>
                 <td>{{ siteData.arenaOptInPercentage }}%</td>
                 <td>{{ siteData.dellOptIn }}</td>
                 <td>{{ siteData.dellOptInPercentage }}%</td>
-                <td>{{ siteData.newUsers }}</td>
                 <td>{% if regionRange %} {{ regionRange }} {% else %} All time {% endif %}</td>
             </tr>
             {% endfor %}
 
         {% else %}
-            <tr><td colspan=8>No Countries Selected!</td></tr>
+            <tr><td colspan=7>No Regions Selected!</td></tr>
         {% endif %}
     </tbody>
 </table>

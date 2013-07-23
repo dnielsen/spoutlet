@@ -321,13 +321,18 @@ class AccountController extends Controller
             if ($form->isValid()) {
 
                 $newAvatar = $form->getData();
+
                 $this->getAvatarManager()->save($newAvatar);
 
-                return $this->redirect($this->generateUrl('avatar_crop', array(
-                    'uuid' => $newAvatar->getUuid(),
-                )));
+                if ($newAvatar->getUuid()) {
+                    return $this->redirect($this->generateUrl('avatar_crop', array(
+                        'uuid' => $newAvatar->getUuid(),
+                    )));
+                }
             }
         }
+
+        $this->setFlash('error', 'platformd.user.avatars.invalid_avatar');
 
         return $this->redirect($this->generateUrl('accounts_settings'));
     }

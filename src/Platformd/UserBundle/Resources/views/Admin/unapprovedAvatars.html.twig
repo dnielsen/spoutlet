@@ -36,6 +36,11 @@
                                     <img src="{{ avatar.url }}" id="{{ avatar.id }}">
                                     <span class="avatar-selected">&#10004;</span>
                                     <input id="input-{{ avatar.id }}" type="hidden" name="selected[]" value>
+                                    <input type="hidden" name="all[]" value="{{ avatar.id }}">
+                                </div>
+                                <div class="avatar-details">
+                                    <div class="avatar-user"><a target="_blank" href="{{ path('Platformd_UserBundle_admin_edit', { 'id': avatar.userId }) }}">{{ avatar.username }}</a></div>
+                                    <div class="avatar-submit-date">{{ avatar.submitted | date('Y-m-d') }}</div>
                                 </div>
                             </td>
                         {% if loop.index is divisibleby(numPerLine) %}</tr>{% endif %}
@@ -55,10 +60,12 @@
     {% endif %}
 
     {% if pager.haveToPaginate %}
-        {{ pagerfanta(avatars, 'twitter_bootstrap_translated', {'routeName' : 'admin_unapproced_avatars'}) }}
+        {{ pagerfanta(avatars, 'twitter_bootstrap_translated', {'routeName' : 'admin_unapproved_avatars'}) }}
     {% endif %}
 
     <script type="text/javascript">
+
+        $('.avatar-details a').truncate({width: 100});
 
         $('.avatar-wrapper > img').click(function() {
             $(this).toggleClass('selected');

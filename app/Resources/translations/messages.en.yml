@@ -59,7 +59,7 @@ platformd.user.avatars.admin_submit_success: Your image has been queued for proc
 platformd.user.avatars.submit_success: Your image has been listed for admin approval. It should be reviewed soon.
 platformd.user.avatars.switch_not_found: Unable to find the specified avatar.
 platformd.user.avatars.switch_error: Unable to switch to the specified avatar at this time. Please try again soon.
-platformd.user.avatars.switch_success: Your avatar change will be visible shortly.
+platformd.user.avatars.switch_success: Your avatar change will be visible shortly. Please allow up to 10 mins for the selected avatar to appear.
 platformd.user.avatars.unapproved: Unapproved - %count%
 platformd.user.avatars.processing: Processing - %count%
 platformd.user.avatars.confirm_delete: Are you sure you wish to delete this avatar?
@@ -72,9 +72,9 @@ platformd.admin.avatars.unapproved.process_success: %count% avatars were %proces
 platformd.admin.avatars.unapproved.flash_type_approve: approved
 platformd.admin.avatars.unapproved.flash_type_reject: rejected
 platformd.admin.avatars.unapproved.page_title: Avatar Approval
-platformd.admin.avatars.unapproved.title: Unapproved Avatars
-platformd.admin.avatars.unapproved.instructions: Select avatars by clicking them below and then either approve or reject those selected with the buttons below.
-platformd.admin.avatars.unapproved.approve: Approve Selected
+platformd.admin.avatars.unapproved.title: Approve Avatars
+platformd.admin.avatars.unapproved.instructions: 'Select avatars to reject by clicking them individually, or click "Approve All" to approve all visible avatars.'
+platformd.admin.avatars.unapproved.approve: Approve All
 platformd.admin.avatars.unapproved.reject: Reject Selected
 platformd.admin.avatars.unapproved.no_avatars: There are no unapproved avatars.
 
