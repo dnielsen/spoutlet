@@ -22,23 +22,33 @@
                             for(var i = 0; i < data.media.length; i++) {
                                 var item = data.media[i];
                                 $('#photoArray').append(
-                                    '<a href="' + item.url + '" alt="' + item.caption + '"><img src="' + item.thumbnail + '" /></a>'
+                                    '<a class="photo-item" href="' + item.url + '" alt="' + item.caption + '"><img src="' + item.thumbnail + '" /></a>'
                                 );
                             }
+
+                            var opts = {
+                                fx:     'fade',
+                                speed:   300,
+                                timeout: 3000,
+                                next: data.linkable ? '' : '#photoArray',
+                                allowPagerClickBubble: data.linkable,
+                                pagerAnchorBuilder: function(idx, slide) {
+                                    // return sel string for existing anchor
+                                    console.log(idx);
+                                    return '.photo-item';
+                                },
+                                pause:   1,
+                                before: function() {
+                                    $('#caption').html('').fadeOut(300);
+                                },
+                                after: function() {
+                                    $('#caption').html(this.getAttribute('alt')).fadeIn(300);
+                                }
+                            };
+
+                            $('#photoArray').cycle(opts);
                         }
-                        $('#photoArray').cycle({
-                            fx:     'fade',
-                            speed:   300,
-                            timeout: 3000,
-                            next:   '#photoArray',
-                            pause:   1,
-                            before: function() {
-                                $('#caption').html('').fadeOut(300);
-                            },
-                            after: function() {
-                                $('#caption').html(this.getAttribute('alt')).fadeIn(300);
-                            }
-                        });
+
                     }
                 });
             });

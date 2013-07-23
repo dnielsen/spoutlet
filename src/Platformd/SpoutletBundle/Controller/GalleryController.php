@@ -950,8 +950,9 @@ class GalleryController extends Controller
             }
 
             $response->setContent(json_encode(array(
-                "success" => true,
-                "media"   => $featuredMedia
+                "success"   => true,
+                "media"     => $featuredMedia,
+                "linkable"  => $site->getSiteFeatures()->getHasPhotos(),
             )));
 
             return $response;
@@ -959,6 +960,12 @@ class GalleryController extends Controller
             $em                 = $this->getEntityManager();
             $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
             $site               = $this->getCurrentSite();
+            $linkable           = $site->getSiteFeatures()->getHasPhotos();
+
+            if (!$site->getSiteFeatures()->getHasPhotos()) {
+                $site = $this->getEntityManager()->getRepository('SpoutletBundle:Site')->find(4);
+            }
+
             $media              = $galleryMediaRepo->findFeaturedMediaForSite($site);
 
             $featuredMedia = array();
@@ -979,8 +986,9 @@ class GalleryController extends Controller
             }
 
             $response->setContent(json_encode(array(
-                "success" => true,
-                "media"   => $featuredMedia
+                "success"   => true,
+                "media"     => $featuredMedia,
+                "linkable"  => $linkable,
             )));
 
             $this->varnishCache($response, 30);

@@ -444,6 +444,10 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 	-webkit-border-bottom-right-radius: 0px;
 }
 
+#news-content .title { font-size: 16px; font-weight: bold; float: none; height: auto; padding-bottom: 3px; }
+#news-content .image { text-align: center; overflow: hidden; }
+#news-content .image img { width: 284px;height: 92px;border: 1px solid #606060; }
+
 
 /** News & Updates **/
 #mainNews { background:url(/bundles/spoutlet/images/news-bg.gif) top left no-repeat; min-height:620px; }
