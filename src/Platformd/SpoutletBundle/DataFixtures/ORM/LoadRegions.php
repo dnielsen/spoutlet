@@ -26,7 +26,7 @@ class LoadRegions extends AbstractFixture implements OrderedFixtureInterface
         $this->resetAutoIncrementId();
 
         $con
-            ->prepare('INSERT IGNORE INTO `region` (`id`,`site_id`,`name`) VALUES (1,"1","Demo"), (2,"2","Japan"), (3,"3","China"), (4,"4","North America"), (5,"5","Europe"), (6,"6","Latin America"), (7,"7","India"), (8,"8","Singapore"), (9,"9","Australia / New Zealand"), (10,null,"Asia Pacific/Japan"), (11,null,"Western Europe"), (12,null,"Central Europe")')
+            ->prepare('INSERT IGNORE INTO `region` (`id`,`site_id`,`name`) VALUES (2,"2","Japan"), (3,"3","China"), (4,"4","North America"), (5,"5","Europe"), (6,"6","Latin America"), (7,"7","India"), (8,"8","Singapore"), (9,"9","Australia / New Zealand"), (10,null,"Asia Pacific/Japan"), (11,null,"Western Europe"), (12,null,"Central Europe")')
             ->execute();
 
         $con

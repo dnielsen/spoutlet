@@ -141,7 +141,9 @@ class AdminController extends Controller
             '%email%' => $user->getEmail()
         ), 'FOSUserBundle'));
 
-        return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
+        return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array(
+            'id' => $id,
+        )));
     }
 
     public function unapprovedAvatarsAction(Request $request)

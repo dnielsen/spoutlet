@@ -35,8 +35,7 @@
 
                 <div class="clear"></div>
 
-                <form action="{{ path('accounts_settings_update') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_password form form-horizontal">
-                    <input type="hidden" name="_method" value="PUT" />
+                <form action="{{ path('accounts_settings') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_password form form-horizontal">
                     <fieldset id="account-settings-password" class="account-settings-section">
                         <h3><span>{{ 'platformd.user.account_settings.password'|trans({}, 'FOSUserBundle') }}</h3></span>
                         {{ form_errors(form) }}
@@ -52,6 +51,9 @@
                             <tr>
                                 <td class="subscription-checkbox">{{ form_widget(form.subscribedGamingNews) }}</td>
                                 <td>{{ form_label(form.subscribedGamingNews) }}</td>
+                            </tr><tr>
+                                <td class="subscription-checkbox">{{ form_widget(form.subscribedAlienwareEvents) }}</td>
+                                <td>{{ form_label(form.subscribedAlienwareEvents) }}</td>
                             </tr>
                         </table>
                     </fieldset>

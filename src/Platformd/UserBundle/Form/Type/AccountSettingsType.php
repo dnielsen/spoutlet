@@ -35,6 +35,9 @@ class AccountSettingsType extends AbstractType
             ->add('subscribedGamingNews', null, array(
                 'label' => 'Subscribe to newsletter',
             ))
+            ->add('subscribedAlienwareEvents', null, array(
+                'label' => 'Subscribe to Alienware Events',
+            ))
             ->addEventListener(FormEvents::POST_BIND, function(DataEvent $event) use ($encoder) {
                 $data = $event->getData();
                 $form = $event->getForm();
