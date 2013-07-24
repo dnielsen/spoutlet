@@ -3,7 +3,6 @@
 namespace Platformd\UserBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Platformd\UserBundle\Form\Type\UserAvatarType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\Event\DataEvent;
 use Symfony\Component\Form\FormEvents;
