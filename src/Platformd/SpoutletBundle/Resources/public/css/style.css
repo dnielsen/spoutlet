@@ -1229,16 +1229,17 @@ div.blockOverlay {
 .social table td { width: 50%;}
 .social { margin-left: -5px; width: 500px;}
 
-#login-modal { margin: 0px auto; width: 300px; height: 170px; border: #ffffff 2px solid; padding: 4px; background: #141414; }
+#login-modal { margin: 0px auto; width: 250px; border: #ffffff 1px solid; padding: 4px; background: #141414; }
+#login-modal #login-form { margin: 0; }
 #login-modal #redirect-url { display: none; }
-#login-modal .login-modal-content { height: 140px; }
+#login-modal .login-modal-content { padding: 20px 10px 10px 10px;}
 #login-modal .login-modal-content .tbl { min-width: 220px; margin: 0 auto; }
 #login-modal .login-modal-content .tbl th { padding: 0 5px 0 0; font-weight: normal; color: #ffffff; }
 #login-modal .login-modal-content .tbl td { color: #ffffff; }
 #login-modal .login-modal-content .tbl div { margin: 5px 0; }
-#login-modal .login-modal-content .tbl div input[type="text"] { height: 20px; width: 190px; background: #ffffff; color: #000000; border: none; padding: 0; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; padding: 1px; }
-#login-modal .login-modal-content .tbl div input[type="password"] { height: 20px; width: 190px; background: #ffffff; color: #000000; border: none; padding: 0; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; padding: 1px; font-size: 20px; }
-#login-modal .login-modal-title { font-size: 20px; color: #aaaaaa; margin: 0 0 7px 0; padding: 0 0 3px 0; text-align: left; }
+#login-modal .login-modal-content .tbl div input[type="text"] { height: 20px; width: 190px; background: #ffffff; color: #000000; border: none; padding: 0; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; padding: 2px; }
+#login-modal .login-modal-content .tbl div input[type="password"] { height: 20px; width: 190px; background: #ffffff; color: #000000; border: none; padding: 0; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; padding: 2px; }
+#login-modal .login-modal-title { font-size: 20px; color: #aaaaaa; padding: 0px 5px 5px 5px; text-align: left; border-bottom: 1px solid #fff;}
 #login-modal .remember-me {margin: 0 0 0 5px;}
 #login-modal .modal-close button { width: 100px; min-width: 100px;}
 #login-modal a.login-modal-close-ne { background: url('/bundles/spoutlet/images/x.png') no-repeat; width: 25px; height: 29px; display: inline; z-index: 3200; float:right; margin:-15px; cursor: pointer;}
