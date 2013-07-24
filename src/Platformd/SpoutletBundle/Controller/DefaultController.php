@@ -3,6 +3,9 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\GiveawayBundle\Entity\Giveaway;
+use Platformd\GiveawayBundle\Entity\Deal;
+use Platformd\SweepstakesBundle\Entity\Sweepstakes;
+use Platformd\SpoutletBundle\Entity\Contest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -173,7 +176,7 @@ class DefaultController extends Controller
         $sweepstakes = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
-            ->getCurrentSweepstakes($this->getCurrentSite())
+            ->getCurrentSweepstakes($site)
         ;
 
         $sweepstakes_list = array();
@@ -195,14 +198,76 @@ class DefaultController extends Controller
             }
         }
 
-        $competitions = $this->getGlobalEventService()->findUpcomingEventsForSiteLimited($site);
+        $globalEvents = $this->getGlobalEventService()
+            ->findUpcomingEventsForSiteLimited($site)
+        ;
 
-        $competitions_list = array();
-        foreach($competitions as $competition) {
-            $competitions_list[] = $competition;
+        $events_list = array();
+        $all_list = array();
+        foreach($globalEvents as $globalEvent) {
+            $all_list[]     = $globalEvent;
+            $events_list[]  = $globalEvent;
         }
 
-        $combined_list = array_merge($competitions_list, $giveaways_list, $sweepstakes_list);
+        $groupEvents = $this->getGroupEventService()
+            ->findUpcomingEventsForSiteLimited($site)
+        ;
+
+        foreach ($groupEvents as $groupEvent) {
+            $events_list[] = $groupEvent;
+        }
+
+        $deals = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('GiveawayBundle:Deal')
+            ->findAllActiveDealsForSiteId($site->getId())
+        ;
+
+        $deals_list = array();
+        foreach ($deals as $deal) {
+            $deals_list[] = $deal;
+        }
+
+        $contests = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SpoutletBundle:Contest')
+            ->findAllForSiteByDate($site->getDefaultLocale())
+        ;
+
+        $contest_list = array();
+        foreach ($contests as $contest) {
+            $contest_list[] = $contest;
+        }
+
+        $combined_list  = array_merge($all_list, $giveaways_list, $sweepstakes_list, $deals_list);
+        $other          = array_merge($sweepstakes_list, $deals_list, $contest_list);
+
+        usort($other, function($a, $b) {
+            $aDate = $a instanceof Contest ? $a->getSubmissionStart() : $a->getStartsAt();
+            $bDate = $b instanceof Contest ? $b->getSubmissionStart() : $b->getStartsAt();
+
+            if ($aDate == $bDate) {
+                return 0;
+            }
+
+            return $aDate > $bDate ? -1 : 1;
+
+        });
+
+        $other_list = array();
+        foreach ($other as $item) {
+            if($item instanceof Sweepstakes) {
+                $other_list[] = array('name' => $item->getName(), 'target' => '', 'link' => $this->generateUrl('sweepstakes_show', array('slug' => $item->getSlug())));
+            }
+
+            if($item instanceof Deal) {
+                $other_list[] = array('name' => $item->getName(), 'target' => '', 'link' => $this->generateUrl('deal_show', array('slug' => $item->getSlug())));
+            }
+
+            if($item instanceof Contest) {
+                $other_list[] = array('name' => $item->getName(), 'target' => '', 'link' => $this->generateUrl('contest_show', array('slug' => $item->getSlug())));
+            }
+        }
 
         usort($combined_list, function($a, $b) {
 
@@ -220,8 +285,9 @@ class DefaultController extends Controller
         $response = $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
             'all_events'     => $combined_list,
             'giveaways'      => $giveaways_list,
-            'competitions'   => $competitions_list,
+            'competitions'   => $events_list,
             'sweepstakes'    => $sweepstakes_list,
+            'other'          => $other_list,
         ));
 
         $this->varnishCache($response, 30);

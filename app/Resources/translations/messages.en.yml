@@ -65,6 +65,10 @@ platformd.user.avatars.processing: Processing - %count%
 platformd.user.avatars.confirm_delete: Are you sure you wish to delete this avatar?
 platformd.user.avatars.crop: Crop Avatar
 platformd.user.avatars.submit: Submit
+platformd.user.avatars.awaiting_approval: AWAITING APPROVAL
+platformd.user.avatars.awaiting_processing: AWAITING PROCESSING
+platformd.user.avatars.update: UPDATE
+platformd.user.avatars.valid_filetypes: Valid avatar filetypes are JPG, PNG, GIF.
 
 platformd.admin.avatars.unapproved.no_avatars_selected: You did not select any avatars.
 platformd.admin.avatars.unapproved.form_error: Error when processing selected avatars. Please try again.
@@ -170,16 +174,17 @@ platformd:
             featured: Featured
             giveaways: Giveaways
             all: All
-            see_more: See More
+            see_more: More
             photo_gallery: Image Gallery
             view_all: View All
-            competitions: Competitions
+            competitions: Events
             hot_stories: Hot Stories
             videos: Videos
             view_more: View More
             views: Views
             rating: Rating
             all_news: All
+            other: Other
 
         bottom_menu:
             contact_us: Contact Us

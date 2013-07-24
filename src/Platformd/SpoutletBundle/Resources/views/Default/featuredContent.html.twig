@@ -3,6 +3,7 @@
         <a href="javascript:void(0);" class="active" id="featured-all">{{ 'platformd.layout.page_content.all_news' | trans }}</a>
         <a href="javascript:void(0);"id="featured-giveaways">{{ 'platformd.layout.page_content.giveaways' | trans }}</a>
         <a href="javascript:void(0);"id="featured-competition">{{ 'platformd.layout.page_content.competitions' | trans }}</a>
+        <a href="javascript:void(0);"id="featured-other">{{ 'platformd.layout.page_content.other' | trans }}</a>
 		<div style="clear: left;"></div>
 	</div>
     {# explicit height is to force the left and right sides of homepage to have the same height. Not a good long-term solution, but it's an unnatural thing to force... #}
@@ -34,6 +35,15 @@
             </div>
             {% endfor %}
         </div>
+        {% endif %}
+        {% if other %}
+            <div id="featured-content-featured-other" class="featured-content-category">
+            {% for item in other %}
+            <div class="widget-item">
+                <a class="widget-link" {{ item['target'] }} href="{{ item['link'] }}">{{ item['name'] }}</a>
+            </div>
+            {% endfor %}
+            </div>
         {% endif %}
     </div>
     <div class="widget-footer">

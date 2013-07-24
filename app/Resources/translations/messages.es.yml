@@ -44,6 +44,10 @@ platformd.user.account.gallery: Imágen
 platformd.user.account.images: Imágen
 platformd.user.account.videos: Vídeos
 platformd.user.account.avatars: Avatars
+platformd.user.avatars.awaiting_approval: AWAITING APPROVAL
+platformd.user.avatars.awaiting_processing: AWAITING PROCESSING
+platformd.user.avatars.update: Update
+platformd.user.avatars.valid_filetypes: Valid avatar filetypes are JPG, PNG, GIF.
 
 platformd.user.avatars.manage: Manage Avatars
 platformd.user.avatars.select_or_add: 'Select image to use, or <a href="javascript:void(0);" id="add-avatar">add a new image</a>.'
@@ -100,13 +104,14 @@ platformd:
             see_more: See More
             photo_gallery: Image Gallery
             view_all: View All
-            competitions: Competencias
+            competitions: Eventos
             hot_stories: Hot Stories
             videos: Videos
             view_more: View More
             views: Views
             rating: Rating
             all_news: All
+            other: Other
 
         bottom_menu:
             contact_us: Contáctenos

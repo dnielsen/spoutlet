@@ -115,13 +115,14 @@ platformd:
             see_more: 詳しくはこちら
             photo_gallery: フォトギャラリー
             view_all: すべて見る
-            competitions: トーナメント
+            competitions: イベント
             hot_stories: Hot Stories
             videos: ビデオ
             view_more: もっと見る
             views: ビュー
             rating: レートする
             all_news: すべてのニュース
+            other: Other
 
         bottom_menu:
             contact_us: "お問い合わせ"

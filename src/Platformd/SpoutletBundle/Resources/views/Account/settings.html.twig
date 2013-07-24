@@ -21,16 +21,16 @@
                     <span id="avatar-update-overlay-wrapper" style="display:none;">
                         <div id="avatar-update-overlay"></div>
                         <div id="avatar-update-overlay-text">
-                            <a class="update-avatar">UPDATE</a>
+                            <a class="update-avatar">{{ 'platformd.user.avatars.update'|trans }}</a>
                         </div>
                     </span>
                     {% if data.unapprovedCount %}
                         <div id="avatar-awaiting-overlay-text">
-                            <a class="awaiting-approval">AWAITING APPROVAL</a>
+                            <a class="awaiting-approval">{{ 'platformd.user.avatars.awaiting_approval'|trans }}</a>
                         </div>
                     {% elseif data.processingCount %}
                         <div id="avatar-awaiting-overlay-text">
-                            <a class="awaiting-processing">AWAITING PROCESSING</a>
+                            <a class="awaiting-processing">{{ 'platformd.user.avatars.awaiting_processing'|trans }}</a>
                         </div>
                     {% endif %}
                 </div>
@@ -80,7 +80,7 @@
     <div id="avatar-modal" style="display:none;">
         <div class="modal-title">Choose Avatar</div>
         <div id="add-avatar-form">
-            <div class="avatar-restrictions form-error" style="display:none;"><p>Valid avatar filetypes are JPG, PNG, GIF.</p></div>
+            <div class="avatar-restrictions form-error" style="display:none;"><p>{{ 'platformd.user.avatars.valid_filetypes'|trans }}</p></div>
             <form action="{{ path('avatar_add') }}" method="post" {{ form_enctype(avatarForm) }}>
                 {{ form_row(avatarForm.file) }}
                 {{ form_rest(avatarForm) }}
