@@ -69,6 +69,14 @@ Different size profiles can be added where needed but for this document we will 
 
 All avatars will be saved as PNGs.
 
+## Default avatars
+
+Default avatars can be accessed at the following path for use for users who do not have a custom avatar:
+
+```
+/images/avatars/default/{size_profile}.png
+```
+
 ## Other rules
 
 - Also note that the entire URL will always be lowercase.
