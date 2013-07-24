@@ -7,6 +7,9 @@ fos_user_registration_form_country: "País:"
 fos_user_registration_form_state: "Estado/Provincia:"
 fos_user_registration_form_email_first: "Correo electrónico:"
 fos_user_registration_form_email_second: "Confirme correo electrónico:"
+fos_user_registration_form_plainPassword_first: "Contraseña:"
+fos_user_registration_form_plainPassword_second: "Confirm Password:"
+fos_user_registration_form_plainPassword: "Contraseña:"
 fos_user_registration_form_hasAlienwareSystem_0: No
 fos_user_registration_form_hasAlienwareSystem_1: Si
 fos_user_registration_form_latestNewsSource: "¿Como es que escuchaste más recientemente de Alienware?"

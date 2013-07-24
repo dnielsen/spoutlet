@@ -9,6 +9,9 @@ fos_user_registration_form_hasAlienwareSystem_0: いいえ
 fos_user_registration_form_hasAlienwareSystem_1: はい
 fos_user_registration_form_email_first: "Eメールアドレス:"
 fos_user_registration_form_email_second: "確認のためもう一度ご入力ください:"
+fos_user_registration_form_plainPassword_first: "パスワード:"
+fos_user_registration_form_plainPassword_second: "Confirm Password:"
+fos_user_registration_form_plainPassword: "パスワード:"
 fos_user_registration_form_latestNewsSource: "どこでAlienwareArena を知りましたか？"
 fos_user_registration_form_recaptcha: "Verification:"
 fos_user_registration_form_subscribedAlienwareEvent: Subscribe me to the Alienware Arena email newsletter.

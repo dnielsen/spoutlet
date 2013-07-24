@@ -9,6 +9,7 @@ fos_user_registration_form_email_first: "E-mail:"
 fos_user_registration_form_email_second: "Confirm E-mail:"
 fos_user_registration_form_plainPassword_first: "Password:"
 fos_user_registration_form_plainPassword_second: "Confirm Password:"
+fos_user_registration_form_plainPassword: "Password:"
 fos_user_registration_form_hasAlienwareSystem_0: No
 fos_user_registration_form_hasAlienwareSystem_1: Yes
 fos_user_registration_form_latestNewsSource: "How did you hear about Alienware Arena?"

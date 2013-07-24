@@ -3,7 +3,20 @@
 {% block title 'platformd.user.login.title' | pd_trans %}
 
 {% block fos_user_content %}
-
+<div id="login-flash" class="xnotices session-flash" style="display:none;">
+    <div class="notice successNotice">
+        <div class="pad">
+            <div class="pad2">
+                <div class="pad3">
+                    <div class="pad4">
+                        <h3 id="notice-type">{{ 'platformd.flash.success_title'|trans }}</h3>
+                        <p id="notice-message"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="std_2col">
     <div class="left">
         <div id="loginArea">
@@ -67,4 +80,27 @@
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
     </div>
 </div>
+<script type="text/javascript">
+    $(function () {
+        var qs = location.search.substring(1);
+        var a = [];
+        var msg = '';
+        var params = qs.split("&");
+        for(var i = 0; i < params.length; i++) {
+            var p = params[i].split("=")[1];
+            if (p == 'reg') {
+                msg = "{{ 'platformd.user.register.confirmed_success'|trans|raw }}";
+            }
+
+            if (p == 'pr') {
+                msg = "{{ 'resetting.check_email'|trans({}, 'FOSUserBundle')| raw }}";
+            }
+        }
+        console.log(msg);
+        $('#notice-message').text(msg);
+        $('#login-flash').fadeIn();
+    });
+</script>
 {% endblock fos_user_content %}
+
+

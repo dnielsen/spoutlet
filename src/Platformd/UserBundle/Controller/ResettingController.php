@@ -66,7 +66,7 @@ class ResettingController extends BaseController
 
         $this->setFlash('success', $this->trans('resetting.check_email', array(), 'FOSUserBundle'));
 
-        return new RedirectResponse($this->container->get('router')->generate('fos_user_security_login'));
+        return new RedirectResponse($this->container->get('router')->generate('fos_user_security_login', array('f' => 'pr')));
     }
 
     /**

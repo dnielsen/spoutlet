@@ -85,15 +85,13 @@
                                 <span class="field-error">{{ email_error }}</span>
                             </td>
                         </tr>
-                        {% for plainPassword in form.plainPassword %}
                         <tr id="row_password">
-                            <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(plainPassword) }}</td>
+                            <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.plainPassword) }}</td>
                             <td class="form-element-cell" valign="top">
-                                {{ form_widget(plainPassword, {'attr' : {'class' : 'registration-text'}}) }}
+                                {{ form_widget(form.plainPassword, {'attr' : {'class' : 'registration-text'}}) }}
                                 <span class="field-error">{{ password_error }}</span>
                             </td>
                         </tr>
-                        {% endfor %}
                         <tr id="row_name_first">
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.firstname) }}</td>
                             <td class="form-element-cell" valign="top">

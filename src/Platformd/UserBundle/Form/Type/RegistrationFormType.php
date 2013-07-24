@@ -66,7 +66,7 @@ class RegistrationFormType extends BaseType
             ->add('firstname', null, array('required' => true, 'error_bubbling' => true))
             ->add('lastname', null, array('required' => true, 'error_bubbling' => true))
             ->add('email', 'email', array('required' => true, 'error_bubbling' => true))
-            ->add('plainPassword', 'repeated', array('type' => 'password', 'required' => true, 'error_bubbling' => true, 'invalid_message' => 'passwords_do_not_match'))
+            ->add('plainPassword', 'password', array('required' => true, 'error_bubbling' => true, 'invalid_message' => 'passwords_do_not_match'))
             ->add('birthdate', 'birthday', array(
                 'empty_value' => '--',
                 'required' => true,
