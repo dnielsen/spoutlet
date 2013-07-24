@@ -17,7 +17,7 @@ use  Platformd\UserBundle\Validator\User as ValidateUser;
 /**
  * Platformd\UserBundle\Entity\User
  *
- * @ORM\Table(name="fos_user")
+ * @ORM\Table(name="fos_user", indexes={@ORM\index(name="cevo_user_id_idx", columns={"cevoUserId"})})
  * @ORM\Entity(repositoryClass="Platformd\UserBundle\Entity\UserRepository")
  * @ORM\haslifecyclecallbacks
  * @ValidateUser()
@@ -130,13 +130,6 @@ class User extends BaseUser
     protected $termsAccepted;
 
     /**
-     * @var String $avatar
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    protected $avatar;
-
-    /**
      * @var string
      *
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -233,13 +226,6 @@ class User extends BaseUser
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $monitor;
-
-    /**
-     * @var Boolean $avatarApproved
-     *
-     * @ORM\Column(type="boolean")
-     */
-    protected $avatar_approved = false;
 
     /**
      * @var string The locale in which this user registered
@@ -342,38 +328,8 @@ class User extends BaseUser
      */
     public function isAvatarApproved()
     {
-
-        return $this->avatar_approved;
-    }
-
-    public function approveAvatar()
-    {
-        $this->avatar_approved = true;
-    }
-
-    public function disapproveAvatar()
-    {
-        $this->avatar_approved = false;
-    }
-
-    public function getAbsolutePath()
-    {
-        if (!$this->avatar) {
-
-            return null;
-        }
-
-        return $this->getUploadRootDir().'/'.$this->avatar;
-    }
-
-    /**
-     * @ORM\PostRemove()
-     */
-    public function removeUpload()
-    {
-        if ($file = $this->getAbsolutePath()) {
-            unlink($file);
-        }
+        // hard coded as we have removed the class property for this as a bridge to migration
+        return false;
     }
 
     /**
@@ -619,8 +575,8 @@ class User extends BaseUser
 
     public function getAvatar()
     {
-
-        return $this->avatar;
+        // hard coded as we have removed the class property for this as a bridge to migration
+        return null;
     }
 
     /**

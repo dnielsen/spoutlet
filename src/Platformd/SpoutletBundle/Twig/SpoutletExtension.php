@@ -553,10 +553,6 @@ class SpoutletExtension extends Twig_Extension
             return $user->getCevoAvatarUrl();
         }
 
-        if ($user->getAvatar() && $user->isAvatarApproved()) {
-            return $this->mediaExposer->getPath($user);
-        }
-
         return false;
     }
 

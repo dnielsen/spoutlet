@@ -142,21 +142,6 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
     }
 
-    public function approveAvatarAction($id)
-    {
-        $manager = $this->get('fos_user.user_manager');
-
-        if (!$user = $manager->findUserBy(array('id' => $id))) {
-
-            throw $this->createNotFoundException();
-        }
-
-        $user->approveAvatar();
-        $manager->updateUser($user);
-
-        return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
-    }
-
     public function loginsAction($id)
     {
         $this->addUserBreadcrumb()->addChild('User Logins');

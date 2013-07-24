@@ -54,10 +54,6 @@ class UserManager extends BaseUserManager
      */
     public function updateUser(UserInterface $user, $andFlush = true)
     {
-        if ($user instanceof User) {
-            $this->updateAvatar($user);
-        }
-
         parent::updateUser($user, $andFlush);
     }
 
@@ -125,27 +121,6 @@ class UserManager extends BaseUserManager
     public function setFilesystem(Filesystem $filesystem)
     {
         $this->filesystem = $filesystem;
-    }
-
-    /**
-     * Update a user's avatar
-     *
-     * @param \Platformd\UserBundle\Entity\User $user
-     */
-    protected function updateAvatar(User $user)
-    {
-        // User didn't upload a new avatar
-        if (is_null($user->file)) {
-
-            return;
-        }
-
-        // todo : use config
-        $filename = sha1($user->getUsername().'-'.uniqid()).'.'.$user->file->guessExtension();
-        $this->filesystem->write('avatar/'.$filename, file_get_contents($user->file->getPathname()));
-
-        $user->setAvatar($filename);
-        $user->disapproveAvatar();
     }
 
     private function getLocale()
