@@ -3,6 +3,9 @@
         <div id="nav-wrapper">
             <ul class="sf-menu sf-js-enabled sf-shadow sf-list" id="nav">
                 <li><a href="{{ path('default_index') }}">{{ 'platformd.layout.main_menu.home' | trans }}</a></li>
+                {% if features.hasGiveaways %}
+                    <li><a href="">{{ 'platformd.layout.main_menu.giveaways' | trans }}</a></li>
+                {% endif %}
 
                 {% if features.hasNews %}
                     <li><a href="{{ path('news') }}">{{ 'platformd.layout.main_menu.news' | trans }}</a></li>

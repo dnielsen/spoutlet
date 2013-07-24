@@ -173,6 +173,7 @@ class DefaultController extends Controller
 
         $site = $this->getCurrentSite();
 
+        // sweeps
         $sweepstakes = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
@@ -184,6 +185,7 @@ class DefaultController extends Controller
             $sweepstakes_list[] = $sweepstake;
         }
 
+        // giveaways
         $giveaways = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Giveaway')
@@ -198,6 +200,7 @@ class DefaultController extends Controller
             }
         }
 
+        // global events
         $globalEvents = $this->getGlobalEventService()
             ->findUpcomingEventsForSiteLimited($site)
         ;
@@ -209,6 +212,7 @@ class DefaultController extends Controller
             $events_list[]  = $globalEvent;
         }
 
+        // group events
         $groupEvents = $this->getGroupEventService()
             ->findUpcomingEventsForSiteLimited($site)
         ;
@@ -217,6 +221,7 @@ class DefaultController extends Controller
             $events_list[] = $groupEvent;
         }
 
+        // deals
         $deals = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Deal')
@@ -228,6 +233,7 @@ class DefaultController extends Controller
             $deals_list[] = $deal;
         }
 
+        // contests
         $contests = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:Contest')

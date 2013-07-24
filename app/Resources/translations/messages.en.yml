@@ -169,6 +169,7 @@ platformd:
             groups: Groups
             photos: Image Gallery
             contests: Contests
+            giveaways: Giveaways
 
         page_content:
             featured: Featured

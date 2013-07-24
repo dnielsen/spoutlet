@@ -107,6 +107,7 @@ platformd:
             news: ニュース
             microsoft: Microsoft
             media: メディア
+            giveaways: Giveaways
 
         page_content:
             featured: 新着
