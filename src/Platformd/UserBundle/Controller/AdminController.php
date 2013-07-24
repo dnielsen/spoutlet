@@ -246,9 +246,4 @@ class AdminController extends Controller
 
         return $this->getBreadcrumbs();
     }
-
-    public function getAvatarRepository()
-    {
-        return $this->get('doctrine')->getRepository('Platformd\UserBundle\Entity\UserAvatar');
-    }
 }

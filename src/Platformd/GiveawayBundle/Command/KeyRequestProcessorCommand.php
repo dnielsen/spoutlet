@@ -106,7 +106,7 @@ EOT
                     break;
             }
 
-            $this->clearFlashMessageCache($promotionType, $promotionId, $state->getUser()->getId());
+            $this->clearEsiCaches($promotionType, $promotionId, $state->getUser()->getId());
         }
     }
 
@@ -144,9 +144,32 @@ EOT
         $this->output();
     }
 
-    private function clearFlashMessageCache($type, $promotionId, $userId)
+    private function clearEsiCaches($type, $promotionId, $userId)
     {
-        $path = $type == 'giveaway' ? $this->router->generate('_giveaway_flash_message', array('giveawayId' => $promotionId)) : $this->router->generate('_deal_flash_message', array('dealId' => $promotionId));
+        switch ($type) {
+            case 'giveaway':
+                $flashRoute = '_giveaway_flash_message';
+                $flashParam = 'giveawayId';
+                $showRoute  = '_giveaway_show_actions';
+                $showParam  = 'giveawayId';
+                break;
+
+            case 'deal':
+                $flashRoute = '_deal_flash_message';
+                $flashParam = 'dealId';
+                $showRoute  = '_deal_show_actions';
+                $showParam  = 'dealId';
+                break;
+
+            default:
+                return;
+                break;
+        }
+
+        $path = $this->router->generate($flashRoute, array($flashParam => $promotionId));
+        $this->varnishUtil->banCachedObject($path, array('userId' => $userId), true);
+
+        $path = $this->router->generate($showRoute, array($showParam => $promotionId));
         $this->varnishUtil->banCachedObject($path, array('userId' => $userId), true);
     }
 
@@ -453,8 +476,8 @@ EOT
 
             $this->output(5, 'New '.$state);
 
-            $this->output(5, 'Clearing flash message cache.');
-            $this->clearFlashMessageCache($promoType, $message->promotionId, $user->getId());
+            $this->output(5, 'Clearing ESI caches.');
+            $this->clearEsiCaches($promoType, $message->promotionId, $user->getId());
 
             if($linkToGroupIsValid) {
 

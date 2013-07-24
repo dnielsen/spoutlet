@@ -19,7 +19,7 @@ use  Platformd\UserBundle\Validator\User as ValidateUser;
 /**
  * Platformd\UserBundle\Entity\User
  *
- * @ORM\Table(name="fos_user", indexes={@ORM\index(name="uuid_idx", columns={"uuid"})})
+ * @ORM\Table(name="fos_user", indexes={@ORM\index(name="uuid_idx", columns={"uuid"}), @ORM\index(name="cevo_user_id_idx", columns={"cevoUserId"})})
  * @ORM\Entity(repositoryClass="Platformd\UserBundle\Entity\UserRepository")
  * @ORM\haslifecyclecallbacks
  * @ValidateUser()
