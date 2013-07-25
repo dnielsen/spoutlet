@@ -2,11 +2,11 @@ first_name_not_blank: Por favor ingrese su nombre.
 last_name_not_blank: Por favor ingrese su apellido.
 birthdate_not_blank: "Por favor, introduzca una fecha de nacimiento válida."
 state_not_blank: Debe proporcionar un estado/provincia.
-country_not_blank: Please select a country.
-news_source_not_blank: Debes llenar como es que escuchaste más recientemente de Alienware.
-has_system_not_blank: Please choose whether or not you have an Alienware System.
-passwords_do_not_match: The passwords do not match.
-age_requirement_not_met: You must be %s years old to register.
+country_not_blank: Selecciona un País.
+news_source_not_blank: Por favor, responda a esta pregunta.
+has_system_not_blank: Por favor elije si tienes o no, un sistema de Alienware.
+passwords_do_not_match: Las contraseñas no coinciden.
+age_requirement_not_met: Debes ser %s de edad para registrar.
 
 fos_user.username.already_used: Lo sentimos, este nombre de usuario ya esta en uso.
 fos_user.email.already_used:  Lo sentimos, esta dirección de correo electrónico ya esta en uso.

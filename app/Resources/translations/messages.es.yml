@@ -5,22 +5,22 @@ cancel: Cancelar
 delete: Borrar
 
 recaptcha:
-    visual_challenge: Get a visual challenge
-    audio_challenge: Get an audio challenge
-    refresh_btn: Get a new challenge
-    instructions_visual: Type the two words:
-    instructions_context: Type the words in the boxes:
-    instructions_audio: Type what you hear:
-    help_btn: Help
-    play_again: Play sound again
-    cant_hear_this: Download sound as MP3
-    incorrect_try_again: Incorrect. Try again.
-    image_alt_text: reCAPTCHA challenge image
+    visual_challenge: Obtener un desafío visual
+    audio_challenge: Obtener un desafío de audio
+    refresh_btn: Obtener un nuevo desafío
+    instructions_visual: Introduzca las dos palabras:
+    instructions_context: Introduzca las palabras en la cajas:
+    instructions_audio: Introduzca lo que escucha:
+    help_btn: Ayuda
+    play_again: Reproducir sonido otra vez
+    cant_hear_this: Descarga sonido como MP3
+    incorrect_try_again: Incorrecto. Inténtelo de Nuevo.
+    image_alt_text: Desafío de imagen reCAPTCHA
 
 site_takeover.continue: Continuar a Alienware Arena
 
 platformd.user.account.account_home: Inicio de Cuenta
-platformd.user.account.edit_account: Edit Account
+platformd.user.account.edit_account: Editar Cuenta
 platformd.user.account.change_password: Contraseña
 platformd.user.account.profile: Perfíl
 platformd.user.account.registered_events: Mis Eventos
@@ -28,12 +28,12 @@ platformd.user.account.my_giveaways: Regalo
 platformd.user.account.my_videos: Videos
 platformd.user.account.my_events: Mis Eventos
 platformd.user.account.my_groups: Grupos
-platformd.user.account.help: Help
+platformd.user.account.help: Ayuda
 platformd.user.account.game_ids: IDs de Juego
 platformd.user.account.tournaments: Torneos
 platformd.user.account.media: Medios
-platformd.user.account.media_upload: Upload
-platformd.user.account.my_media: My Media
+platformd.user.account.media_upload: Subir
+platformd.user.account.my_media: Mis Medios
 platformd.user.account.sign_out: Cerrar sesión
 platformd.user.account.deals: Deals
 platformd.user.account.messages: Mensajes
@@ -43,25 +43,21 @@ platformd.user.account.match_lobby: Match Lobby
 platformd.user.account.gallery: Imágen
 platformd.user.account.images: Imágen
 platformd.user.account.videos: Vídeos
-platformd.user.account.avatars: Avatars
-platformd.user.avatars.awaiting_approval: AWAITING APPROVAL
-platformd.user.avatars.awaiting_processing: AWAITING PROCESSING
-platformd.user.avatars.update: Update
-platformd.user.avatars.valid_filetypes: Valid avatar filetypes are JPG, PNG, GIF.
+platformd.user.account.avatars: Avatares
 
-platformd.user.avatars.manage: Manage Avatars
-platformd.user.avatars.select_or_add: 'Select image to use, or <a href="javascript:void(0);" id="add-avatar">add a new image</a>.'
+platformd.user.avatars.manage: Administrar Avatares
+platformd.user.avatars.select_or_add: 'Selecciona la imagen para utilizar, or <a href="javascript:void(0);" id="add-avatar">agregar una imagen nueva</a>.'
 
 platformd:
 
     not_found:
-        title: Page not found
-        body: We're sorry, but this page does not exist. <a href="/">Click here</a> to return to the homepage.
+        title: Página no se encuentra
+        body: Lo sentimos – pero no podemos encontrar la página que buscas.
 
     flash:
         error_title: ¡Error!
         success_title: ¡Exito!
-        action_required: Action Required!
+        action_required: Acción requerida!
 
     layout:
 
@@ -96,23 +92,22 @@ platformd:
             microsoft: Microsoft
             photos: Galería de Fotos
             contests: Concursos
-            giveaways: Giveaways
 
         page_content:
-            featured: Featured
-            giveaways: Giveaways
-            all: All
-            see_more: See More
-            photo_gallery: Image Gallery
-            view_all: View All
-            competitions: Eventos
-            hot_stories: Hot Stories
+            featured: Destacado
+            giveaways: Regalos
+            all: Todos
+            see_more: Ver Más
+            photo_gallery: Galería de imágenes
+            view_all: Ver todos
+            competitions: Competencias
+            hot_stories: Relatos Calientes
             videos: Videos
-            view_more: View More
-            views: Views
-            rating: Rating
-            all_news: All
-            other: Other
+            view_more: Ver Más
+            views: Vistas
+            rating: Valuación
+            all_news: Todos
+            other: Otros
 
         bottom_menu:
             contact_us: Contáctenos
@@ -272,12 +267,17 @@ platformd:
 
     user:
         login_header: Iniciar Sesión
-        register:
-            please_wait: El sistema está procesando múltiples creaciones de cuenta y no puede procesar su solicitud de creación en este momento, por favor vuelve a intentarlo más tarde.
+
+        change_password_header: Cambiar Su Contraseña
+        edit_account_header: Editar información de su cuenta
+
+        register_title: Crear una cuenta de Alienware Arena
+
+        name_fields_order: %first_name% %last_name%
 
         account:
             account_home: Inicio de Cuenta
-            edit_account: Edit Account
+            edit_account: Editar Cuenta
             change_password: Contraseña
             profile: Perfíl
             registered_events: Mis Eventos
@@ -285,12 +285,12 @@ platformd:
             my_videos: Videos
             my_events: Mis Eventos
             my_groups: Grupos
-            help: Help
+            help: Ayuda
             game_ids: IDs de Juego
             tournaments: Torneos
             media: Medios
-            media_upload: Upload
-            my_media: My Media
+            media_upload: Subir
+            my_media: Mis Medios
             sign_out: Cerrar sesión
             deals: Deals
             messages: Mensajes
@@ -303,34 +303,40 @@ platformd:
             account_settings: Configuración de la cuenta
 
         register:
+            requirements: La participación en Alienware Arena requiere de una cuenta.
+            already: "¿Ya tiene una cuenta en Alienware Arena? <Iniciar>"
+            terms_label: Términos y Condiciones
+            dell_privacy_label: Ver la Protección de datos personales de Dell
+            country_label: Elija un país
+            underage_message: Lo sentimos, parece que usted no cumple con el requisito de edad mínima. No somos capaces de completar su registro en este momento.
             please_wait: El sistema está procesando múltiples creaciones de cuenta y no puede procesar su solicitud de creación en este momento, por favor vuelve a intentarlo más tarde.
             oops: ¡Error!
             cannot_process: No hemos podido completar su solicitud. Si cree que esto es un error o continua teniendo problemas de corregir por debajo de los temas, porfavor contacte a <a href="%s">soporte</a>.
             problems_found: Hemos encontrado los siguientes problemas:
             last_step: |
-                You’re almost there! A confirmation email has been sent. Follow the instructions in the email to activate your Alienware Arena account. If you do not receive an email within 15 minutes, please email <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a> for support.
+                Ya casi llegas! Un correo electrónico de confirmación ha sido enviado. Sigue las instrucciones en el correo electrónico para activar tu cuenta de Alienware Arena. Si no recibes un correo electrónico dentro de 15 minutos, Envíe un correo electrónico <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a> para el apoyo.
                 <br /><br />
-                <strong>Important: Check Your Spam Folder!</strong>
-            success: Your account has been created!
-            confirmed_success: You have activated your account.
+                <strong>Importante: Revisa tu carpeta de Spam!</strong>
+            success: Tu cuenta ha sido creada!
+            confirmed_success: Has activado tu cuenta.
 
         login:
             username: Nombre de usuario
             password: Contraseña
             remember: Acuérdate de mí
             title: Iniciar Sesión
-            title_login: Login
+            title_login: Iniciar sesión
             forgot_password: Olvidé mi contraseña
             need_help: ¿Necesita ayuda?
             not_a_member_join: ¡Regístrese gratis!
             password_message: Su contraseña es sensible a las mayúsculas. Asegúrese de que Bloq mayús no esté activado. Si ha olvidado su contraseña, puede restablecerla. Si no puede recordar qué dirección de correo electrónico usó, <a href="%s">contacte a soporte</a>.
             sign_in: Iniciar
-            join: Join for free!
+            join: Unete Gratis!
 
         request_reset:
-            title: Forgot Your Password?
-            help_message: To reset your password, please provide the email address you used to create your Alienware Arena account. If you do not remember the email address you used, please contact <a href="%s">support</a>.
-            spam_message: Important: Check Your Spam Folders! - We try our best, but sometimes over zealous spam filters mistake our emails for "junk". Please allow for up to 30 minutes for your password to be reset. It typically only takes a few seconds, but sometimes emails get "stuck" along the way to your inbox.
+            title: ¿Olvidaste tu contraseña?
+            help_message: Para restablecer tu contraseña, por favor proporciona la dirección de correo electrónico que utilizaste para crear tu cuenta de Alienware Arena. Si no recuerdas la dirección de correo electrónico que utilizaste, póngase en contacto con <a href="%s">soporte</a>.
+            spam_message: Importante: Revisa tu carpeta de Spam! - Hacemos todo lo posible, pero a veces filtros de spam confunden nuestros emails como "basura". Por favor permite hasta 30 minutos para que tu contraseña sea restauradaPor lo general sólo toma unos segundos, pero a veces los correos electrónicos quedan "atascados" en el camino a tu buzón.
 
     event:
         form:
@@ -569,7 +575,7 @@ content_reporting:
 
         Gracias por tu paciencia.  Si tienes cualquier pregunta, por favor contáctenos en contact@alienwarearena.com.
 
-        Equipo Alienware Arena
+        Equipo Web de Alienware Arena
     restored_email_title: Tu contenido ha sido restaurado
     restored_email: |
         Este es un mensaje automatizado para informarle que el contenido a continuación no viola los Términos de servicio y ha sido restaurado en Alienware Arena.
@@ -577,19 +583,20 @@ content_reporting:
         Tipo: %s
         Contenido: %s
 
-        Equipo Alienware Arena
+        Equipo Web de Alienware Arena
 
-    removed_email_title: Your Content Has Been Removed
+    removed_email_title: Tu contenido ha sido retirado.
     removed_email: |
-        The following content has been removed from Alienware Arena due to a violation of our Terms of Service.
+        El siguiente contenido ha sido retirado de Alienware Arena debido a una violación de nuestros Términos de Servicio.
 
-        Type: %s
-        Content: %s
-        Reason: %s
-        Link: %s
+        Tipo: %s
+        Contenido: %s
+        Razón: %s
+        Enlace: %s
 
-        Should you have any questions, please contact us at reports@alienwarearena.com.
-        Alienware Arena Team
+        Si tienes alguna pregunta, por favor, contáctenos a reports@alienwarearena.com.
+        Equipo Web de Alienware Arena
+
 
     staff_notification_title: New Content Reported
     staff_notification: |
@@ -844,11 +851,11 @@ platformd.key_request_processor_command.key_assigned_email_body: |
         <a href="%promotion_show_page%">%promotion_title%</a>.
         </p>
         %group_section%
-        <p>Equipo Alienware Arena</p>
+        <p>Equipo Web de Alienware Arena</p>
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_subject: Actualización de %promotion_title%
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body: |
     <p>
             Lo sentimos, se nos acabaron los códigos para <a href="%promotion_show_page%">%promotion_title%</a>.
             Por favor, visítanos más tarde ya que se pueden añadir más códigos!
         </p>
-        <p>Equipo Alienware Arena</p>
+        <p>Equipo Web de Alienware Arena</p>

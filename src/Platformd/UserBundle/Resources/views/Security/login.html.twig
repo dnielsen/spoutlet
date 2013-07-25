@@ -96,9 +96,10 @@
                 msg = "{{ 'resetting.check_email'|trans({}, 'FOSUserBundle')| raw }}";
             }
         }
-        console.log(msg);
-        $('#notice-message').text(msg);
-        $('#login-flash').fadeIn();
+        if(msg != '') {
+            $('#notice-message').text(msg);
+            $('#login-flash').fadeIn();
+        }
     });
 </script>
 {% endblock fos_user_content %}

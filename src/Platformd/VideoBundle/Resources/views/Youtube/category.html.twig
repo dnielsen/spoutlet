@@ -48,6 +48,7 @@
     {{ parent() }}
     <script type="text/javascript">
         $(function () {
+            $('img.lazy').lazyLoad();
             $('.more-videos-link a').truncate({width: 280});
             $(".featured-content-header a").click(function() {
                 var tab = $(this).attr("data-tab");

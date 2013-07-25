@@ -8,18 +8,18 @@ fos_user_registration_form_state: "Estado/Provincia:"
 fos_user_registration_form_email_first: "Correo electrónico:"
 fos_user_registration_form_email_second: "Confirme correo electrónico:"
 fos_user_registration_form_plainPassword_first: "Contraseña:"
-fos_user_registration_form_plainPassword_second: "Confirm Password:"
+fos_user_registration_form_plainPassword_second: "Confirme Contraseña:"
 fos_user_registration_form_plainPassword: "Contraseña:"
 fos_user_registration_form_hasAlienwareSystem_0: No
 fos_user_registration_form_hasAlienwareSystem_1: Si
 fos_user_registration_form_latestNewsSource: "¿Como es que escuchaste más recientemente de Alienware?"
-fos_user_registration_form_recaptcha: "Verification:"
-fos_user_registration_form_subscribedAlienwareEvent: Subscribe me to the Alienware Arena email newsletter.
+fos_user_registration_form_recaptcha: "Verificación:"
+fos_user_registration_form_subscribedAlienwareEvent: Subscribeme al boletín electrónico de Alienware Arena.
 
 fos_user_profile_form_user_lastname: "Apellido"
 fos_user_profile_form_user_firstname: "Nombre"
 fos_user_profile_form_user_file: "Avatar"
-fos_user_profile_form_current_avatar: "Your current avatar"
+fos_user_profile_form_current_avatar: "Tu Avatar actual"
 
 profile.show.title: '%username%'
 profile.show.firstname: "Nombre"

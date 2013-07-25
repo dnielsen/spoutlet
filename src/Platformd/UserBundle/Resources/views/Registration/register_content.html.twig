@@ -55,7 +55,7 @@
             <h2>{{ 'platformd.user.register_title' | pd_trans }}</h2>
             <div class="registration-requirements">
                 <p>
-                    {{ 'platformd.user.register.requirements' | trans }}&nbsp;{{ 'platformd.user.register.already' | trans({'<': '<a href="'~path('fos_user_security_login')~'">', '>': '</a>'})|raw }}
+                    {{ 'platformd.user.register.requirements' | pd_trans }}&nbsp;{{ 'platformd.user.register.already' | pd_trans({'<': '<a href="'~path('fos_user_security_login')~'">', '>': '</a>'})|raw }}
                 </p>
             </div>
             {% if errors | length %}

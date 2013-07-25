@@ -123,7 +123,7 @@ platformd:
             views: ビュー
             rating: レートする
             all_news: すべてのニュース
-            other: Other
+            other: その他
 
         bottom_menu:
             contact_us: "お問い合わせ"
