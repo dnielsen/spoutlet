@@ -67,7 +67,7 @@ $result = $this->dummyGetUser($username);
 
     public function updateRemoteUserData($user)
     {
-        $path           = 'user/'.$user->getUuid();
+        $path           = 'users/'.$user->getUuid();
         $postParameters = array(
             'action'   => 'update',
             'username' => $user->getUsername(),
@@ -78,6 +78,52 @@ $result = $this->dummyGetUser($username);
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
 $result = $this->dummyUpdateUserData();
         return $result ? $result['metaData']['success'] : false;
+    }
+
+    public function createRemoteUser($user)
+    {
+        $path           = 'users/'.$user->getUuid();
+        $postParameters = array(
+            'action'              => 'create',
+            'username'            => $user->getUsername(),
+            'email'               => $user->getEmail(),
+            'uuid'                => $user->getUuid(),
+            'banned'              => false,
+            'birth_date'          => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
+            'country'             => $user->getCountry(),
+            'created'             => $user->getCreated()->format('Y-m-d H:i:s'),
+            'creation_ip_address' => $user->getIpAddress(),
+            'custom_avatar'       => false,
+            'first_name'          => $user->getFirstName(),
+            'last_name'           => $user->getLastName(),
+            'last_updated'        => $user->getUpdated()->format('Y-m-d H:i:s'),
+            'state'               => 'Northern Ireland',
+        );
+
+        $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
+        return $result ? $result['metaData']['success'] : false;
+    }
+
+    public function banUser($user)
+    {
+        $path           = 'users/'.$user->getUuid();
+        $postParameters = array(
+            'action'   => 'ban',
+        );
+
+        $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
+        return $result ? $result['metaData']['status'] == 200 : false;
+    }
+
+    public function unbanUser($user)
+    {
+        $path           = 'users/'.$user->getUuid();
+        $postParameters = array(
+            'action'   => 'unban',
+        );
+
+        $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
+        return $result ? $result['metaData']['status'] == 200 : false;
     }
 
     public function getUserList($offset=0, $limit=100, $sortMethod='created', $since=null)
@@ -166,65 +212,5 @@ return;
                 'lastUpdated' => new \DateTime(),
             )
         );
-    }
-
-    private function dummyGetUserList()
-    {
-        $json = '
-            {
-                "metaData": {
-                    "status":       200,
-                    "generatedAt":  "2013-05-15T13:59:59Z",
-                    "limit":        50,
-                    "offset":       0,
-                    "orderBy":      "created",
-                    "since"         "2001-01-01T00:00:00Z"
-                },
-                "items": {
-                    "item": {
-                        "href":         "https://api.alienwarearena.com/v1/user/ae9bc14d-28b0-4547-9dae-090fc11da883",
-                        "uuid":         "ae9bc14d-28b0-4547-9dae-090fc11da883",
-                        "username":     "tangee",
-                        "email":        "example@email.com",
-                        "created":      "2013-07-01T20:06:46Z",
-                        "lastUpdated":  "2013-07-01T20:06:46Z",
-                        "banned":       false,
-                        "session":      "66c206f6-33d2-49c8-9618-c54d7c01939a"
-                    },
-                    "item": {
-                        "href":         "https://api.alienwarearena.com/v1/user/cc6f60be-7595-4174-ace7-d00937fe96c1",
-                        "uuid":         "cc6f60be-7595-4174-ace7-d00937fe96c1",
-                        "username":     "user",
-                        "email":        "user@user.com",
-                        "created":      "2013-07-01T15:40:01Z",
-                        "lastUpdated":  "2013-07-01T15:40:01Z",
-                        "banned":       true,
-                        "session":      null
-                    },
-                    "item": {
-                        "href":         "https://api.alienwarearena.com/v1/user/b5dfeb60-b2e3-4388-b82a-ec8f2bcf3097",
-                        "uuid":         "b5dfeb60-b2e3-4388-b82a-ec8f2bcf3097",
-                        "username":     "organizer",
-                        "email":        "organizer@organizer.com",
-                        "created":      "2013-07-01T15:40:01Z",
-                        "lastUpdated":  "2013-07-01T15:40:01Z",
-                        "banned":       true,
-                        "session":      null
-                    },
-                    "item": {
-                        "href":         "https://api.alienwarearena.com/v1/user/20149912-8272-4236-98fb-7a343abf1e33",
-                        "uuid":         "20149912-8272-4236-98fb-7a343abf1e33",
-                        "username":     "admin",
-                        "email":        "admin@admin.com",
-                        "created":      "2013-07-01T15:40:01Z",
-                        "lastUpdated":  "2013-07-01T15:40:01Z",
-                        "banned":       true,
-                        "session":      null
-                    }
-                }
-            }
-        ';
-
-        return json_decode($json, true);
     }
 }
