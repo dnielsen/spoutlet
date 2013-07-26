@@ -37,8 +37,8 @@ class GamePage implements LinkableInterface
     const STATUS_ARCHIVED       = 'archived';
 
     private static $validStatues = array(
-        self::STATUS_PUBLISHED,
         self::STATUS_UNPUBLISHED,
+        self::STATUS_PUBLISHED,
         self::STATUS_ARCHIVED,
     );
 
