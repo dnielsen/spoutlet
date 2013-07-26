@@ -12,46 +12,35 @@
         </div>
     </div>
 </div>
-<div id="row-2" class="std_2col">
-    <div class="right">
-        {% render url('hot_stories') %}
-    </div>
+<div class="std_2col">
     <div class="left">
-        {% render url('featured_content') %}
+            {% render url('featured_content') %}
+            {% if features.hasGroups %}
+                {% render url('_groups_index') %}
+            {% endif %}
+            {% if features.hasVideo %}
+                {% render url('video_feed', {'height': '287'}) %}
+            {% endif %}
+            {% if features.hasArp and features.hasPolls %}
+                <div id="arp-widget">{% render url('_arp_index') %}</div>
+                <div id="poll-widget">{% render url('_polls_index') %}</div>
+            {% endif %}
     </div>
-</div>
-{% if features.hasGroups and features.hasVideo %}
-<div id="row-3" class="std_2col">
     <div class="right">
-        {% include "SpoutletBundle:Default:_forums.html.twig" %}
-    </div>
-    <div class="left">
-        {% render url('_groups_index') %}
-    </div>
-</div>
-<div id="row-4" class="std_2col">
-    <div class="right">
-        {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
-    </div>
-    <div class="left">
-        {% render url('video_feed') %}
-    </div>
-</div>
-{% else %}
-<div id="row-3" class="std_2col">
-    <div class="right">
-        {% include "SpoutletBundle:Default:_forums.html.twig" %}
-    </div>
-    <div class="left">
-        {% render url('video_feed', {'height': '288'}) %}
+        {% if features.hasNews %}
+            {% render url('hot_stories') %}
+        {% endif %}
+        {% if features.hasPhotos and not features.hasStaticPhotoWidget %}
+            {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' with {'height': '288px'} %}
+        {% else %}
+            {% include 'SpoutletBundle:Default:_staticPhotoWidget.html.twig' with {'height': '288px'} %}
+        {% endif %}
+        {% if features.hasForums %}
+            {% include "SpoutletBundle:Default:_forums.html.twig" %}
+        {% endif %}
     </div>
 </div>
-<div id="row-4" class="std_2col">
-    <div id="arp-widget">{% render url('_arp_index') %}</div>
-    <div id="photo-widget">{% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' with {'height' : '300px'} %}</div>
-    <div id="poll-widget">{% render url('_polls_index') %}</div>
-</div>
-{% endif %}
+
 
 {% endblock %}
 

@@ -172,6 +172,16 @@ class SiteFeatures
     private $hasSearch = false;
 
     /**
+     * @ORM\Column(name="has_polls", type="boolean")
+     */
+    private $hasPolls = false;
+
+    /**
+     * @ORM\Column(name="has_static_photo_widget", type="boolean")
+     */
+    private $hasStaticPhotoWidget = false;
+
+    /**
      * Get id
      *
      * @return integer
@@ -508,6 +518,28 @@ class SiteFeatures
     public function setHasSearch($value = true)
     {
         $this->hasSearch = $value;
+        return $this;
+    }
+
+    public function getHasPolls()
+    {
+        return $this->hasPolls;
+    }
+
+    public function setHasPolls($value)
+    {
+        $this->hasPolls = $value;
+        return $this;
+    }
+
+    public function getHasStaticPhotoWidget()
+    {
+        return $this->hasStaticPhotoWidget;
+    }
+
+    public function setHasStaticPhotoWidget($value)
+    {
+        $this->hasStaticPhotoWidget = $value;
         return $this;
     }
 }
