@@ -81,6 +81,10 @@ sub vcl_recv {
 
     set req.backend = awaWeb;
 
+    if (req.http.host == "api.alienwarearena.com") {
+        return (pass);
+    }
+
     if (req.esi_level > 0) {
 
         if (req.url ~ "/https://" && req.url ~ "esi") { # this if block is a fix for symfony outputing the esi src with https... when it does this varnish thinks it is a relative link
