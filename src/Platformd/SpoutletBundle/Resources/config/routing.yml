@@ -2,6 +2,10 @@ _main_user_strip:
     pattern: /esi/USER_SPECIFIC/mainUserStrip
     defaults: { _controller: SpoutletBundle:Default:_mainUserStrip }
 
+_check_account_complete:
+    pattern: /esi/USER_SPECIFIC/checkAccountComplete
+    defaults: { _controller: SpoutletBundle:Default:_checkAccountComplete }
+
 _flash_message:
     pattern: /esi/USER_SPECIFIC/flashMessage
     defaults: { _controller: SpoutletBundle:Default:_flashMessage }

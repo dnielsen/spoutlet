@@ -1,0 +1,548 @@
+<?php
+
+if (!isset($argv[1])) {
+    echo 'Argument 1 passed to this script must be the path to the dump .csv file.'."\n";
+    exit;
+}
+
+$path = $argv[1];
+
+if (!file_exists($path)) {
+    echo 'Path [ '.$path.' ] is not a valid path'."\n";
+    exit;
+}
+
+$debug = false;
+
+if (isset($argv[2]) && $argv[2] == '--debug') {
+    $debug = true;
+}
+
+$cmd = new CevoUserImportCommand();
+$cmd->execute($path, $debug);
+
+class CevoUserImportCommand
+{
+    private $directory;
+    private $cevoIdUuidMap        = array();
+    private $avatarUserMap        = array();
+    private $debug                = false;
+    private $errors               = array();
+    private $begunIterations      = false;
+    private $exitAfterCurrentItem = false;
+
+    protected function output($indentationLevel = 0, $message = null, $withNewLine = true) {
+
+        if ($message === null) {
+            $message = '';
+        }
+
+        echo(str_repeat(' ', $indentationLevel).$message.($withNewLine ? "\n" : ''));
+    }
+
+    protected function tick()
+    {
+        $this->output(0, '✔');
+    }
+
+    protected function error($message, $exit = false)
+    {
+        $this->output(0);
+        $this->output(0, $message);
+        $this->output(0);
+
+        if ($exit) {
+            $this->outputErrors();
+            exit;
+        }
+
+        $this->errors[] = $message;
+    }
+
+    protected function uuidGen()
+    {
+        return str_replace("\n", '', `uuidgen -r`);
+    }
+
+    protected function writeCsvRow($filePath, $rowData)
+    {
+        $fp = fopen($filePath, 'a');
+        fputcsv($fp, $rowData);
+        fclose($fp);
+    }
+
+    protected function writeCevoCsvRow(array $rowData) {
+        $this->writeCsvRow(rtrim($this->directory, '/').'/../user_map_files/cevo_user_id_uuid_map.csv' , $rowData);
+        $this->cevoIdUuidMap[$rowData[0]] = $rowData[1];
+    }
+
+    protected function readCevoMapCsv()
+    {
+        $filepath = rtrim($this->directory, '/').'/../user_map_files/cevo_user_id_uuid_map.csv';
+
+        if (!file_exists($filepath)) {
+            return;
+        }
+
+        if (($handle = fopen($filepath, "r")) !== FALSE) {
+
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                if (isset($data[0]) && isset($data[1])) {
+                    $this->cevoIdUuidMap[$data[0]] = $data[1];
+                } else {
+                    $this->error('CEVO User CSV row ignored as all values were not present.');
+                }
+            }
+
+            fclose($handle);
+        }
+    }
+
+    protected function readAvatarMapCsv()
+    {
+        $filepath = rtrim($this->directory, '/').'/../user_map_files/user_avatar_map.csv';
+
+        if (!file_exists($filepath)) {
+            return;
+        }
+
+        if (($handle = fopen($filepath, "r")) !== FALSE) {
+
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                if (isset($data[0]) && isset($data[1]) && isset($data[2]) && isset($data[3])) {
+                    $this->avatarUserMap[$data[0]] = array(
+                        'userUuid'   => $data[1],
+                        'avatarUuid' => $data[2],
+                        'avatarId'   => $data[3],
+                    );
+                } else {
+                    $this->error('Avatar CSV row ignored as all values were not present.');
+                }
+            }
+
+            fclose($handle);
+        }
+    }
+
+    protected function outputUserData($userData)
+    {
+        $this->output();
+        $this->output(2, 'User => { ');
+        $this->output(8, 'cevoUserId         = '.$userData['cevoUserId']  );
+        $this->output(8, 'username           = '.$userData['username']    );
+        $this->output(8, 'username_canonical = '.$userData['username_canonical']);
+        $this->output(8, 'password           = '.$userData['password']    );
+        $this->output(8, 'email              = '.$userData['email']       );
+        $this->output(8, 'email_canonical    = '.$userData['email_canonical']);
+        $this->output(8, 'created            = '.$userData['created']);
+        $this->output(8, 'ipAddress          = '.$userData['ipAddress']   );
+        $this->output(8, 'firstName          = '.$userData['firstName']   );
+        $this->output(8, 'lastName           = '.$userData['lastName']    );
+        $this->output(8, 'birthDate          = '.$userData['birthDate']);
+        $this->output(8, 'phone              = '.$userData['phone']       );
+        $this->output(8, 'country            = '.$userData['country']     );
+        $this->output(8, 'state              = '.$userData['state']       );
+        $this->output(8, 'allowContact       = '.$userData['allowContact']);
+        $this->output(8, 'dellOptIn          = '.$userData['dellOptIn']);
+        $this->output(8, 'avatar             = '.$userData['avatar']      );
+        $this->output(8, 'aboutMe            = '.$userData['aboutMe']     );
+        $this->output(8, 'manufacturer       = '.$userData['manufacturer']);
+        $this->output(8, 'os                 = '.$userData['os']          );
+        $this->output(8, 'cpu                = '.$userData['cpu']         );
+        $this->output(8, 'ram                = '.$userData['ram']         );
+        $this->output(8, 'hardDrive          = '.$userData['hardDrive']   );
+        $this->output(8, 'videoCard          = '.$userData['videoCard']   );
+        $this->output(8, 'soundCard          = '.$userData['soundCard']   );
+        $this->output(8, 'headphones         = '.$userData['headphones']  );
+        $this->output(8, 'monitor            = '.$userData['monitor']     );
+        $this->output(8, 'mouse              = '.$userData['mouse']       );
+        $this->output(8, 'mousepad           = '.$userData['mousepad']    );
+        $this->output(8, 'keyboard           = '.$userData['keyboard']    );
+        $this->output(2, ' }');
+    }
+
+    protected function outputErrors()
+    {
+        if (count($this->errors) > 0) {
+            $this->output();
+            $this->output(0, 'Errors:');
+            $this->output();
+
+            foreach ($this->errors as $error) {
+                $this->output(2, $error);
+            }
+        }
+    }
+
+    protected function canonicalize($string)
+    {
+        return mb_convert_case($string, MB_CASE_LOWER, mb_detect_encoding($string));
+    }
+
+    public function signal_handler($signal)
+    {
+        switch($signal) {
+            case SIGTERM:
+                $signalType = 'SIGTERM';
+                break;
+            case SIGKILL:
+                $signalType = 'SIGKILL';
+                break;
+            case SIGINT:
+                $signalType = 'SIGINT';
+                break;
+            case SIGHUP:
+                $signalType = 'SIGHUP';
+                break;
+            default:
+                $signalType = 'UNKNOWN_SIGNAL';
+                break;
+        }
+
+        $this->output();
+        $this->output(0, 'Caught signal ['.$signalType.']. Finishing processing...');
+
+        if (!$this->begunIterations) {
+            exit;
+        }
+
+        $this->exitAfterCurrentItem = true;
+    }
+
+    public function execute($path, $debug = false)
+    {
+        declare(ticks = 1);
+        pcntl_signal(SIGTERM, array($this, 'signal_handler'));
+        pcntl_signal(SIGINT, array($this, 'signal_handler'));
+
+        $this->debug = $debug;
+
+        $dsn        = 'mysql:dbname=platformd;host=localhost';
+        $dbUser     = 'root';
+        $dbPassword = 'ilikerandompasswordsbutthiswilldo';
+        $db         = 'platformd';
+
+        $addedCount   = 0;
+        $updatedCount = 0;
+        $skippedCount = 0;
+
+        $this->output(0);
+        $this->output(0, 'PlatformD CEVO User Importer');
+        $this->output(0);
+
+        try {
+            $dbh = new PDO($dsn, $dbUser, $dbPassword);
+        } catch (PDOException $e) {
+            $this->error('Connection failed: ' . $e->getMessage(), true);
+        }
+
+        $this->directory = dirname($path);
+        $this->readCevoMapCsv();
+        $this->readAvatarMapCsv();
+
+        $this->output(0, 'Processing users in [ '.$path.' ].');
+
+        $findUserByIdSql       = 'SELECT `id`, `cevoUserId`, `uuid`, `username` FROM `'.$db.'`.`fos_user` WHERE `cevoUserId` = :cevoUserId';
+        $findUserByEmailSql    = 'SELECT `id`, `cevoUserId`, `uuid`, `username` FROM `'.$db.'`.`fos_user` WHERE `email_canonical` = :email';
+        $createUserSql = 'INSERT INTO `'.$db.'`.`fos_user` SET
+                        `username`                  = :username,
+                        `username_canonical`        = :username_canonical,
+                        `cevoUserId`                = :cevoUserId,
+                        `password`                  = :password,
+                        `uuid`                      = :uuid,
+                        `email`                     = :email,
+                        `email_canonical`           = :email_canonical,
+                        `created`                   = :created,
+                        `updated`                   = :updated,
+                        `ipAddress`                 = :ipAddress,
+                        `firstname`                 = :firstname,
+                        `lastname`                  = :lastname,
+                        `birthdate`                 = :birthdate,
+                        `phone_number`              = :phone_number,
+                        `country`                   = :country,
+                        `state`                     = :state,
+                        `about_me`                  = :about_me,
+                        `manufacturer`              = :manufacturer,
+                        `operatingSystem`           = :operatingSystem,
+                        `cpu`                       = :cpu,
+                        `memory`                    = :memory,
+                        `videoCard`                 = :videoCard,
+                        `soundCard`                 = :soundCard,
+                        `hardDrive`                 = :hardDrive,
+                        `headphones`                = :headphones,
+                        `mouse`                     = :mouse,
+                        `mousePad`                  = :mousePad,
+                        `keyboard`                  = :keyboard,
+                        `monitor`                   = :monitor,
+                        `avatar_id`                 = :avatar_id,
+                        `subscribed_gaming_news`    = :dell_optin,
+                        `subscribedAlienwareEvents` = :allow_contact,
+                        `roles`                     = "a:0:{}",
+                        `has_alienware_system`      = 0';
+
+        $updateUserSql = 'UPDATE `'.$db.'`.`fos_user` SET
+                        `password`                  = :password,
+                        `uuid`                      = :uuid,
+                        `email`                     = :email,
+                        `email_canonical`           = :email_canonical,
+                        `created`                   = :created,
+                        `updated`                   = :updated,
+                        `ipAddress`                 = :ipAddress,
+                        `firstname`                 = :firstname,
+                        `lastname`                  = :lastname,
+                        `birthdate`                 = :birthdate,
+                        `phone_number`              = :phone_number,
+                        `country`                   = :country,
+                        `state`                     = :state,
+                        `about_me`                  = :about_me,
+                        `manufacturer`              = :manufacturer,
+                        `operatingSystem`           = :operatingSystem,
+                        `cpu`                       = :cpu,
+                        `memory`                    = :memory,
+                        `videoCard`                 = :videoCard,
+                        `soundCard`                 = :soundCard,
+                        `hardDrive`                 = :hardDrive,
+                        `headphones`                = :headphones,
+                        `mouse`                     = :mouse,
+                        `mousePad`                  = :mousePad,
+                        `keyboard`                  = :keyboard,
+                        `monitor`                   = :monitor,
+                        `avatar_id`                 = :avatar_id,
+                        `subscribed_gaming_news`    = :dell_optin,
+                        `subscribedAlienwareEvents` = :allow_contact,
+                        `roles`                     = "a:0:{}",
+                        `has_alienware_system`      = 0
+                        WHERE `id`=:userId';
+
+        $updateAvatarSql = 'UPDATE `'.$db.'`.`pd_avatar` SET `user_id`=:userId WHERE `id`=:avatarId';
+
+        $iteration = -1;
+
+        if (($handle = fopen($path, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 100000, ",")) !== FALSE && !$this->exitAfterCurrentItem) {
+
+                $this->begunIterations = true;
+
+                try {
+
+                    $iteration++;
+
+                    // bypass header row
+                    if ($iteration == 0) {
+                        continue;
+                    }
+
+                    if ($this->debug) {
+                        $this->output();
+                    }
+
+                    $this->output(2, 'Row '.$iteration.' [ '.$addedCount.' added, '.$updatedCount.' updated, '.$skippedCount.' skipped ]');
+
+                    $createdDt   = \DateTime::createFromFormat('U', $data[6]);
+                    $birthdateDt = \DateTime::createFromFormat('Y-m-d', $data[13]);
+                    $fallbackDt  = new \DateTime();
+
+                    $userData['cevoUserId']         = $data[0];
+                    $userData['username']           = $data[1] != '' ? $data[1] : null;
+                    $userData['password']           = $data[2];
+                    $userData['email']              = $data[3];
+                    $userData['email_canonical']    = $this->canonicalize($data[3]);
+                    $userData['created']            = $createdDt ? $createdDt->format('Y-m-d') : $fallbackDt->format('Y-m-d');
+                    $userData['ipAddress']          = $data[7] != '' ? $data[7] : null;
+                    $userData['firstName']          = $data[11];
+                    $userData['lastName']           = $data[12];
+                    $userData['birthDate']          = $birthdateDt ? $birthdateDt->format('Y-m-d') : null;
+                    $userData['phone']              = $data[14] != '' ? $data[14] : null;
+                    $userData['country']            = $data[16] != '' ? $data[16] : null;
+                    $userData['state']              = $data[17] != '' ? $data[17] : null;
+                    $userData['allowContact']       = $data[25] != '' ? $data[25] : 0;
+                    $userData['dellOptIn']          = $data[26] != '' ? $data[26] : 0;
+                    $userData['avatar']             = $data[34] != '' ? $data[34] : null;
+                    $userData['aboutMe']            = $data[35] != '' ? $data[35] : null;
+                    $userData['manufacturer']       = $data[37] != '' ? $data[37] : null;
+                    $userData['os']                 = $data[38] != '' ? $data[38] : null;
+                    $userData['cpu']                = $data[39] != '' ? $data[39] : null;
+                    $userData['ram']                = $data[40] != '' ? $data[40] : null;
+                    $userData['hardDrive']          = $data[41] != '' ? $data[41] : null;
+                    $userData['videoCard']          = $data[42] != '' ? $data[42] : null;
+                    $userData['soundCard']          = $data[43] != '' ? $data[43] : null;
+                    $userData['headphones']         = $data[44] != '' ? $data[44] : null;
+                    $userData['monitor']            = $data[45] != '' ? $data[45] : null;
+                    $userData['mouse']              = $data[46] != '' ? $data[46] : null;
+                    $userData['mousepad']           = $data[47] != '' ? $data[47] : null;
+                    $userData['keyboard']           = $data[48] != '' ? $data[48] : null;
+
+                    if (empty($userData['email'])) {
+                        if ($this->debug) {
+                            $this->output(4, 'Email blank - skipping.');
+                        }
+
+                        $skippedCount++;
+                        continue;
+                    }
+
+                    $userData['username_canonical'] = $userData['username'] ? $this->canonicalize($userData['username']) : null;
+
+                    if ($this->debug) {
+                        $this->outputUserData($userData);
+                    }
+
+                    $query = $dbh->prepare($findUserByEmailSql);
+                    $query->execute(array(
+                        ':email' => $userData['email_canonical'],
+                    ));
+
+                    $userByUsername = $query->fetch();
+
+                    if ($userByUsername && $userByUsername['cevoUserId'] !== $userData['cevoUserId']) {
+                        $this->error('User => { Email = '.$userData['email_canonical'].' } matched an existing user, but with a different CEVO User ID.');
+                        $skippedCount++;
+                        continue;
+                    }
+
+                    $query = $dbh->prepare($findUserByIdSql);
+                    $query->execute(array(
+                        ':cevoUserId' => $userData['cevoUserId'],
+                    ));
+
+                    $user = $query->fetch();
+
+                    if ($user && !empty($user['uuid'])) {
+                        $userUuid = $user['uuid'];
+                    } elseif (isset($this->cevoIdUuidMap[$userData['cevoUserId']])) {
+                        $userUuid = $this->cevoIdUuidMap[$userData['cevoUserId']];
+                    } else {
+                        $userUuid = $this->uuidGen();
+                        $this->writeCevoCsvRow(array($userData['cevoUserId'], $userUuid));
+                    }
+
+                    $lastUpdated    = new \DateTime();
+                    $avatarId       = null;
+
+                    if (isset($this->avatarUserMap[$userData['avatar']])) {
+                        $avatarId = $this->avatarUserMap[$userData['avatar']]['avatarId'];
+                    }
+
+                    $sharedParams = array(
+                        ":password"        => $userData['password'],
+                        ":uuid"            => $userUuid,
+                        ":email"           => $userData['email'],
+                        ":email_canonical" => $userData['email_canonical'],
+                        ":created"         => $userData['created'],
+                        ":updated"         => $lastUpdated->format('Y-m-d'),
+                        ":ipAddress"       => $userData['ipAddress'],
+                        ":firstname"       => $userData['firstName'],
+                        ":lastname"        => $userData['lastName'],
+                        ":birthdate"       => $userData['birthDate'],
+                        ":phone_number"    => $userData['phone'],
+                        ":country"         => $userData['country'],
+                        ":state"           => $userData['state'],
+                        ":about_me"        => $userData['aboutMe'],
+                        ":manufacturer"    => $userData['manufacturer'],
+                        ":operatingSystem" => $userData['os'],
+                        ":cpu"             => $userData['cpu'],
+                        ":memory"          => $userData['ram'],
+                        ":videoCard"       => $userData['videoCard'],
+                        ":soundCard"       => $userData['soundCard'],
+                        ":hardDrive"       => $userData['hardDrive'],
+                        ":headphones"      => $userData['headphones'],
+                        ":mouse"           => $userData['mouse'],
+                        ":mousePad"        => $userData['mousepad'],
+                        ":keyboard"        => $userData['keyboard'],
+                        ":monitor"         => $userData['monitor'],
+                        ":avatar_id"       => $avatarId,
+                        ":allow_contact"   => $userData['allowContact'],
+                        ":dell_optin"      => $userData['dellOptIn'],
+                    );
+
+                    if (!$user) {
+                        if ($this->debug) {
+                            $this->output();
+                            $this->output(2, 'User not found - creating.');
+                        }
+
+                        $params = array_merge($sharedParams, array(
+                            ":username"           => $userData['username'],
+                            ":username_canonical" => $userData['username_canonical'],
+                            ":cevoUserId"         => $userData['cevoUserId'],
+                        ));
+
+                        $query = $dbh->prepare($createUserSql);
+                        $success = $query->execute($params);
+
+                        if (!$success) {
+                            var_dump($query->errorInfo());
+                            exit;
+                        }
+
+                        $addedCount++;
+
+                    } else {
+
+                        if ($user['username'] !== $userData['username'])  {
+                            $this->error('User => { Cevo User ID = '.$userData['cevoUserId'].' } matched an existing user, but with a different username');
+                            $skippedCount++;
+                            continue;
+                        }
+
+                        if ($this->debug) {
+                            $this->output();
+                            $this->output(2, 'User found - updating records.');
+                        }
+
+                        $params = array_merge($sharedParams, array(':userId' => $user['id']));
+
+                        $query = $dbh->prepare($updateUserSql);
+                        $success = $query->execute($params);
+
+                        if (!$success) {
+                            var_dump($query->errorInfo());
+                            exit;
+                        }
+
+                        $updatedCount++;
+                    }
+
+                    if (!$user) {
+                        $query = $dbh->prepare($findUserByIdSql);
+                        $query->execute(array(
+                            ':cevoUserId' => $userData['cevoUserId'],
+                        ));
+
+                        $user = $query->fetch();
+
+                        if (!$user) {
+                            $this->error('Unable to add user [ '.$userData['email'].' ] to database.', true);
+                        }
+                    }
+
+                    if ($avatarId) {
+
+                        if ($this->debug) {
+                            $this->output();
+                            $this->output(2, 'Setting user avatar.');
+                        }
+
+                        $avatarId = $this->avatarUserMap[$userData['avatar']]['avatarId'];
+
+                        $query = $dbh->prepare($updateAvatarSql);
+                        $query->execute(array(':userId' => $user['id'], ':avatarId' => $avatarId));
+                    }
+
+                } catch (Exception $e) {
+                    var_dump($data);
+                    $this->outputErrors();
+                    $this->error($e->getMessage());
+                    exit;
+                }
+            }
+        }
+
+        $this->output();
+        $this->output(2, 'No more users.');
+
+        $this->outputErrors();
+
+        $this->output(0);
+    }
+}

@@ -228,7 +228,7 @@ class SpoutletExtension extends Twig_Extension
             return $this->currentUserCevoAccountLink();
         }
 
-        $user = $user instanceof User ? $user : $this->userManager->loadUserByUsername($user);
+        $user = $user instanceof User ? $user : $this->userManager->findUserByUsername($user);
 
         return $this->cevoAccountLinkFromCevoUserId($user->getCevoUserId());
     }
@@ -282,7 +282,7 @@ class SpoutletExtension extends Twig_Extension
 
     public function accountLink($username)
     {
-        $user           = $this->userManager->loadUserByUsername($username);
+        $user = $this->userManager->findUserByUsername($username);
 
         if (!$this->localAuth) {
             $cevoUserId     = $user->getCevoUserId();

@@ -24,6 +24,7 @@ class Avatar
 
     /**
      * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", inversedBy="avatars")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      **/
     protected $user;
 

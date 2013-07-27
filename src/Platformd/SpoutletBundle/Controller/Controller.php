@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Form;
 
 /**
  * Our custom base controller
@@ -358,5 +359,28 @@ class Controller extends BaseController
     protected function getTwitterProvider()
     {
         return $this->container->get('platformd.twitter.provider');
+    }
+
+    protected function getErrorMessages(Form $form) {
+        $errors = array();
+        foreach ($form->getErrors() as $key => $error) {
+            $template = $error->getMessageTemplate();
+            $parameters = $error->getMessageParameters();
+
+            foreach($parameters as $var => $value){
+                $template = str_replace($var, $value, $template);
+            }
+
+            $errors[$key] = $template;
+        }
+        if ($form->hasChildren()) {
+            foreach ($form->getChildren() as $child) {
+                if (!$child->isValid()) {
+                    $errors[$child->getName()] = $this->getErrorMessages($child);
+                }
+            }
+        }
+
+        return $errors;
     }
 }

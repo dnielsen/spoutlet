@@ -379,5 +379,7 @@ services:
 
     platformd_user.account.incomplete_form.type:
         class: Platformd\SpoutletBundle\Form\Type\IncompleteAccountType
+        arguments:
+            - '@platformd.util.site_util'
         tags:
             - { name: form.type, alias: platformd_incomplete_account }

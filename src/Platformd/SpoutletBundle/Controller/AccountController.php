@@ -275,6 +275,8 @@ class AccountController extends Controller
 
     public function settingsAction(Request $request)
     {
+        $this->checkSecurity();
+
         $form = $this->createForm($this->getFormType(), $this->getUser());
 
         if ($request->getMethod() == 'POST') {
@@ -310,6 +312,8 @@ class AccountController extends Controller
 
     public function addAvatarAction(Request $request)
     {
+        $this->checkSecurity();
+
         $newAvatar     = new Avatar();
         $newAvatar->setUser($this->getUser());
 
@@ -344,19 +348,29 @@ class AccountController extends Controller
 
     public function incompleteAction(Request $request)
     {
+        $this->checkSecurity();
+
         $user = $this->getCurrentUser();
 
-        if($user->getPassword()) {
+        if ($this->getUserManager()->isUserAccountComplete($user)) {
             return $this->redirect($this->generateUrl('accounts_settings'));
         }
 
-        $form = $this->createForm('platformd_incomplete_account', $user);
+        $form        = $this->createForm('platformd_incomplete_account', $user);
+        $childErrors = false;
 
         if($request->getMethod() == 'POST') {
             $form->bindRequest($request);
 
-            if($form->isValid()) {
+            if ($form->hasChildren()) {
+                foreach ($form->getChildren() as $child) {
+                    if (!$child->isValid()) {
+                        $childErrors = true;
+                    }
+                }
+            }
 
+            if($form->isValid()) {
                 try {
                     $this->getUserManager()->updateUserAndApi($form->getData());
                     return $this->redirect($this->generateUrl('accounts_settings'));
@@ -367,8 +381,9 @@ class AccountController extends Controller
         }
 
         return $this->render('SpoutletBundle:Account:incomplete.html.twig', array(
-            'form'      => $form->createView(),
-            'errors'    => $form->getErrors(),
+            'form'        => $form->createView(),
+            'errors'      => $form->getErrors(),
+            'childErrors' => $childErrors,
         ));
     }
 }

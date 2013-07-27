@@ -1305,7 +1305,7 @@ class AbstractFeatureContext extends MinkContext
 
         if ($group) {
 
-            if (!$applicant = $this->getUserManager()->loadUserByUsername($username)) {
+            if (!$applicant = $this->getUserManager()->findUserByUsername($username)) {
                 $applicant = $this->getUserManager()->createUser();
                 $applicant->setUsername($username);
                 $applicant->setPassword("password");
@@ -1455,7 +1455,7 @@ class AbstractFeatureContext extends MinkContext
 
             foreach ($table->getHash() as $data) {
 
-                if (!$member = $this->getUserManager()->loadUserByUsername($data['username'])) {
+                if (!$member = $this->getUserManager()->findUserByUsername($data['username'])) {
                     $member = $this->getUserManager()->createUser();
                     $member->setUsername($data['username']);
                     $member->setPassword("password");
@@ -1510,7 +1510,7 @@ class AbstractFeatureContext extends MinkContext
 
             foreach ($table->getHash() as $data) {
 
-                $user = $this->getUserManager()->loadUserByUsername($data['username']);
+                $user = $this->getUserManager()->findUserByUsername($data['username']);
 
                 $comment = new Comment();
                 $comment->setThread($thread);

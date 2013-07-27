@@ -153,7 +153,7 @@
                             <td class="form-element-cell" valign="top">
                                 {{ form_widget(form.termsAccepted) }}
 
-                                {{ 'fos_user_registration_form_termsAccepted' | trans(
+                                {{ 'fos_user_registration_form_termsAccepted' | pd_trans(
                                     {
                                         '%terms_url%': path('terms_conditions'),
                                         '%privacy_url%': path('privacy')
@@ -168,7 +168,7 @@
                             <td class="form-title-cell" width="33%" align="right" valign="top"></td>
                             <td class="form-element-cell" valign="top">
                                 {{ form_widget(form.subscribedGamingNews) }}
-                                {{ 'fos_user_registration_form_subscribedGamingNews' | trans({}, 'forms') | raw }}
+                                {{ 'fos_user_registration_form_subscribedGamingNews' | pd_trans({}, 'forms') | raw }}
                             </td>
                         </tr>
                         {% if form.subscribedAlienwareEvents is defined %}
@@ -176,7 +176,7 @@
                             <td class="form-title-cell" width="33%" align="right" valign="top"></td>
                             <td class="form-element-cell" valign="top">
                                 {{ form_widget(form.subscribedAlienwareEvents) }}
-                                {{ 'fos_user_registration_form_subscribedAlienwareEvent' | trans([], 'FOSUserBundle') | raw }}
+                                {{ 'fos_user_registration_form_subscribedAlienwareEvent' | pd_trans([], 'FOSUserBundle') | raw }}
                             </td>
                         </tr>
                         {% endif %}

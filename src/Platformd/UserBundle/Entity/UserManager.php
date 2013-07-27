@@ -28,6 +28,22 @@ class UserManager extends BaseUserManager
      */
     protected $container;
 
+    public function isUserAccountComplete($user)
+    {
+        if (!$user instanceof UserInterface) {
+            return true;
+        }
+
+        $birthDateRequired = $this->container->get('platformd.util.site_util')->getCurrentSite()->getSiteConfig()->getBirthdateRequired();
+        $birthDateCheck = $birthDateRequired ? $user->getBirthdate() : true;
+
+        $userAccountComplete = $user->getUsername() && $user->getPassword() && $user->getFirstname() && $user->getLastname()
+        && $user->getEmail() && ($user->getHasAlienwareSystem() !== null) && ($user->getSubscribedGamingNews() !== null)
+        && ($user->getSubscribedAlienwareEvents() !== null) && $birthDateCheck;
+
+        return $userAccountComplete;
+    }
+
     /**
      * {@inheritDoc}
      */

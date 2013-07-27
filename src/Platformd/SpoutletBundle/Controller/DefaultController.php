@@ -24,6 +24,30 @@ class DefaultController extends Controller
         return $response;
     }
 
+    public function _checkAccountCompleteAction(Request $request)
+    {
+        if (!$this->isGranted('ROLE_USER')) {
+            $response = new Response();
+            $this->varnishCache($response, 86400);
+
+            return $response;
+        }
+
+        $user = $this->getCurrentUser();
+        $accountComplete = $this->getUserManager()->isUserAccountComplete($user);
+
+        if ($accountComplete) {
+            $response = new Response();
+            $this->varnishCache($response, 86400);
+
+            return $response;
+        }
+
+        $response = $this->render('SpoutletBundle::_checkAccountComplete.html.twig');
+        $this->varnishCache($response, 0);
+        return $response;
+    }
+
     public function _flashMessageAction(Request $request)
     {
         if (!$this->isGranted('ROLE_USER')) {

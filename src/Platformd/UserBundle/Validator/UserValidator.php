@@ -37,9 +37,7 @@ class UserValidator extends ConstraintValidator
         if ($config->getBirthdateRequired() && (!$entity->getBirthdate() || $entity->getBirthdate() == "")) {
 
             // Set error message at top of form
-            if ($this->context->getViolations()->count() < 1) {
-                $this->context->addViolation($constraint->message, array(), $entity->getBirthdate());
-            }
+            $this->context->addViolation(self::ERROR_MESSAGE_BIRTHDATE_REQUIRED, array(), $entity->getBirthdate());
 
             // Set field error
             $oldPath = $this->context->getPropertyPath();
@@ -48,11 +46,23 @@ class UserValidator extends ConstraintValidator
             $this->context->setPropertyPath($oldPath);
         }
 
+        if($config->getBirthdateRequired() && $entity->getBirthdate()) {
+            // figure out if they meet the age requirement
+            if($entity->getAge() <= $config->getMinAgeRequirement()) {
+                // Set error message at top of form
+                $this->context->addViolation(self::ERROR_MESSAGE_AGE_REQUIREMENT, array(), $entity->getBirthdate());
+
+                // Set field error
+                $oldPath = $this->context->getPropertyPath();
+                $this->context->setPropertyPath(empty($oldPath) ? 'birthdate' : $oldPath.'.birthdate');
+                $this->context->addViolation(self::ERROR_MESSAGE_AGE_REQUIREMENT, array(), $entity->getBirthdate());
+                $this->context->setPropertyPath($oldPath);
+            }
+        }
+
         if($entity->getHasAlienwareSystem() === null) {
                 // Set error message at top of form
-                if ($this->context->getViolations()->count() < 1) {
-                    $this->context->addViolation(self::ERROR_MESSAGE_HAS_ALIENWARE, array(), $entity->getHasAlienwareSystem());
-                }
+                $this->context->addViolation(self::ERROR_MESSAGE_HAS_ALIENWARE, array(), $entity->getHasAlienwareSystem());
 
                 // Set field error
                 $oldPath = $this->context->getPropertyPath();

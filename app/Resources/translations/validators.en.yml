@@ -4,7 +4,7 @@ birthdate_not_blank: Please enter a valid birthdate.
 state_not_blank: Please enter a state.
 country_not_blank: Please select a country.
 news_source_not_blank: Please select how you heard about Alienware Arena.
-has_system_not_blank: Please answer this question.
+has_system_not_blank: Please tell us if you have an Alienware system.
 passwords_do_not_match: The passwords do not match.
 age_requirement_not_met: You must be %s years old to register.
 

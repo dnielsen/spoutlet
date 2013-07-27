@@ -2,7 +2,7 @@
 
 namespace Platformd\UserBundle\Entity;
 
-use FOS\UserBundle\Entity\User as BaseUser;
+use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -41,22 +41,94 @@ class User extends BaseUser
 
     /**
      * @Assert\NotBlank();
+     * @ORM\Column(type="string", length="255", nullable=true)
      */
     protected $username;
 
     /**
+     * @ORM\Column(name="username_canonical", type="string", length="255", nullable=true, unique=true)
+     */
+    protected $usernameCanonical;
+
+    /**
      * @Assert\NotBlank();
+     * @ORM\Column(type="string", length="255")
      */
     protected $email;
+
+    /**
+     * @ORM\Column(name="email_canonical", type="string", length="255", unique=true)
+     */
+    protected $emailCanonical;
+
+    /**
+     * @ORM\Column(name="enabled", type="boolean")
+     */
+    protected $enabled;
+
+    /**
+     * @ORM\Column(name="salt", type="string")
+     */
+    protected $salt;
+
+    /**
+     * @ORM\Column(name="password", type="string")
+     */
+    protected $password;
+
+    /**
+     * @ORM\Column(name="last_login", type="datetime", nullable=true)
+     */
+    protected $lastLogin;
+
+    /**
+     * @ORM\Column(name="locked", type="boolean")
+     */
+    protected $locked;
+
+    /**
+     * @ORM\Column(name="expired", type="boolean")
+     */
+    protected $expired;
+
+    /**
+     * @ORM\Column(name="expires_at", type="datetime", nullable=true)
+     */
+    protected $expiresAt;
+
+    /**
+     * @ORM\Column(name="confirmation_token", type="string", nullable=true)
+     */
+    protected $confirmationToken;
+
+    /**
+     * @ORM\Column(name="password_requested_at", type="datetime", nullable=true)
+     */
+    protected $passwordRequestedAt;
+
+    /**
+     * @ORM\Column(name="roles", type="array")
+     */
+    protected $roles;
+
+    /**
+     * @ORM\Column(name="credentials_expired", type="boolean")
+     */
+    protected $credentialsExpired;
+
+    /**
+     * @ORM\Column(name="credentials_expire_at", type="datetime", nullable=true)
+     */
+    protected $credentialsExpireAt;
 
     /**
      * @var String $firstname
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration"}, message="first_name_not_blank")
-     * @Assert\MinLength(limit="1", groups={"Registration"})
-     * @Assert\MaxLength(limit="255", groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration", "IncompleteUser"}, message="first_name_not_blank")
+     * @Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser"})
+     * @Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser"})
      */
     protected $firstname;
 
@@ -65,9 +137,9 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration"}, message="last_name_not_blank")
-     * @Assert\MinLength(limit="1", groups={"Registration"})
-     * @Assert\MaxLength(limit="255", groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration", "IncompleteUser"}, message="last_name_not_blank")
+     * @Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser"})
+     * @Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser"})
      */
     protected $lastname;
 
@@ -76,7 +148,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="date", nullable=true)
      *
-     * @Assert\Date(groups={"Registration"})
+     * @Assert\Date(groups={"Registration", "IncompleteUser"})
      */
     protected $birthdate;
 
@@ -141,7 +213,7 @@ class User extends BaseUser
     /**
      * @var Boolean $terms_accepted
      *
-     * @Assert\True(message="You must accept the terms and conditions and the privacy policy", groups={"Registration"})
+     * @Assert\True(message="You must accept the terms and conditions and the privacy policy", groups={"Registration", "IncompleteUser"})
      */
     protected $termsAccepted;
 
@@ -348,6 +420,11 @@ class User extends BaseUser
      * @ORM\Column(name="api_successful_login", type="datetime", nullable=true)
      */
     protected $apiSuccessfulLogin;
+
+    /**
+     * @ORM\Column(name="about_me", type="text", nullable=true)
+     */
+    protected $aboutMe;
 
     public function __construct()
     {
@@ -1170,5 +1247,15 @@ class User extends BaseUser
     public function setApiSuccessfulLogin($value)
     {
         $this->apiSuccessfulLogin = $value;
+    }
+
+    public function getAboutMe()
+    {
+        return $this->aboutMe;
+    }
+
+    public function setAboutMe($value)
+    {
+        $this->aboutMe = $value;
     }
 }
