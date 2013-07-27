@@ -55,6 +55,8 @@ class VarnishUtil
             } catch (Exception $e) {
                 if (!$bestEffort) {
                     throw new Exception('Could not ban');
+                } else {
+                    return false;
                 }
             }
         }

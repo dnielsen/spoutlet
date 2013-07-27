@@ -23,6 +23,7 @@ director awaWeb random {
 }
 
 acl ban {
+    "75.101.139.101";
     "ec2-54-227-65-32.compute-1.amazonaws.com";
     "ec2-23-20-93-253.compute-1.amazonaws.com";
     "ec2-54-227-94-218.compute-1.amazonaws.com";
