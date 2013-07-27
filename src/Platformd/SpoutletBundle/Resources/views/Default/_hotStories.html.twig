@@ -1,13 +1,13 @@
 <div class="widget-33" id="hs-widget" style="height: auto;">
     <div class="widget-header" style="height: 36px;">
-        <div class="widget-title" style="width: 175px; float: left;">
+        <div class="widget-title" style="width: 200px; float: left;">
             {{ 'platformd.homepage.news_title' | trans }}<br />
         </div>
         <div class="widget-icon"><img src="/bundles/spoutlet/images/article-icon.png" /></div>
         <div class="clear"></div>
     </div>
     {# height is a hack for positioning  - see featuredContent.html.twig #}
-    <div class="widget-content" id="news-content" style="height: 261px;">
+    <div class="widget-content" id="news-content" style="height: 288px;">
         {% if news %}
             {% for news_item in news %}
                 {% if loop.first and news_item.image %}

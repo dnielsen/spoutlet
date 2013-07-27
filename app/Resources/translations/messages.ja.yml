@@ -5,17 +5,17 @@ cancel: キャンセル
 delete: 消去
 
 recaptcha:
-    visual_challenge: Get a visual challenge
-    audio_challenge: Get an audio challenge
-    refresh_btn: Get a new challenge
-    instructions_visual: Type the two words:
-    instructions_context: Type the words in the boxes:
-    instructions_audio: Type what you hear:
-    help_btn: Help
-    play_again: Play sound again
-    cant_hear_this: Download sound as MP3
-    incorrect_try_again: Incorrect. Try again.
-    image_alt_text: reCAPTCHA challenge image
+    visual_challenge: 画像認証を行う
+    audio_challenge: 音声認証を行う
+    refresh_btn: 新たなチャレンジを取得
+    instructions_visual: 2つの単語を入力:
+    instructions_context: ボックスに単語を入力してください:
+    instructions_audio: あなたが聞こえたものを入力してください:
+    help_btn: ヘルプ
+    play_again: 再び音を再生する
+    cant_hear_this: 音をMP3でダウンロードする
+    incorrect_try_again: 確認コードが一致しませんでした。もう一度やり直してください。
+    image_alt_text: 再度画像認証を行う
 
 site_takeover.continue: Alienware Arenaを続行する
 
@@ -33,10 +33,12 @@ platformd.user.account.tournaments: トーナメント
 platformd.user.account.sign_out: ログアウト
 platformd.user.account.videos: マイビデオ
 platformd.user.account.media: メディア
-platformd.user.account.avatars: Avatars
+platformd.user.account.avatars: アバターを
+platformd.user.account.incomplete.title: Complete Registration
+platformd.user.account.incomplete.description: Your registration is missing several key pieces of information. Please complete the form below to complete it.
 
-platformd.user.avatars.manage: Manage Avatars
-platformd.user.avatars.select_or_add: 'Select image to use, or <a href="javascript:void(0);" id="add-avatar">add a new image</a>.'
+platformd.user.avatars.manage: アバターを設定する
+platformd.user.avatars.select_or_add: '使用する画像を選択する、または <a href="javascript:void(0);" id="add-avatar">新しい画像を追加する</a>.'
 
 platformd:
 
@@ -50,7 +52,7 @@ platformd:
     flash:
         error_title: エラー！
         success_title: 登録完了
-        action_required: Action Required!
+        action_required: アクションが必要です！
 
     layout:
         # title used by default (if not overridden)
@@ -107,7 +109,6 @@ platformd:
             news: ニュース
             microsoft: Microsoft
             media: メディア
-            giveaways: Giveaways
 
         page_content:
             featured: 新着
@@ -116,14 +117,14 @@ platformd:
             see_more: 詳しくはこちら
             photo_gallery: フォトギャラリー
             view_all: すべて見る
-            competitions: イベント
+            competitions: トーナメント
             hot_stories: Hot Stories
             videos: ビデオ
             view_more: もっと見る
             views: ビュー
             rating: レートする
             all_news: すべてのニュース
-            other: その他
+            other: "その他"
 
         bottom_menu:
             contact_us: "お問い合わせ"
@@ -181,14 +182,14 @@ platformd:
             online: オンライン
             no_past_events: 現在、過去のイベントはありません。
             no_current_events: 現在、現在のイベントはありません。
-            no_active_giveaways: There are no active giveaways at this moment.
+            no_active_giveaways: 現在配布できるコードはありません。
             create_event_message: To add an event, you must <a href="%1">select a group</a> or <a href="%2">create a new group</a>.
             legend_registered: あなたはこのイベントに出席するため、登録されています。
             legend_sponsored: ALIENWARE ARENAスポンサードイベント
             legend_group: Group Event
         event_show:
             register_event: イベントに登録
-            unregister_event: Unregister for event
+            unregister_event: イベントの登録を解除
             register:       登録
             organizer: 主催者
             attending: 随伴者
@@ -344,24 +345,24 @@ platformd:
             cannot_process: リクエストを完了することができませんでした。もしおかしいと思われ、以下の問題が改善されない場合は <a href="%s">こちらまでご連絡ください</a>。
             problems_found: よくある問題:
             last_step: |
-                You’re almost there! A confirmation email has been sent. Follow the instructions in the email to activate your Alienware Arena account. If you do not receive an email within 15 minutes, please email <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a> for support.
+                まもなく完了です。確認メールを送信しました。あなたのALIENWARE ARENAアカウントをアクティブにするため、メールの指示に従ってください。15分以内にメールが届かない場合は、 <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a> にご連絡をお願いします。
                 <br /><br />
-                <strong>Important: Check Your Spam Folder!</strong>
-            success: Your account has been created!
-            confirmed_success: You have activated your account.
+                <strong>重要：あなたのスパムメールフォルダをご確認ください。</strong>
+            success: あなたのアカウントは作成されました。
+            confirmed_success: あなたのアカウントをアクティベートしてください。
 
         login:
             username: メールアドレス
             password: パスワード
             remember: 記録しておく
             title: ログイン
-            title_login: Login
+            title_login: ログイン
             forgot_password: パスワードをお忘れですか?
             need_help: ヘルプ？
             not_a_member_join: 非会員？参加無料です！
             password_message: パスワードは大小文字が区別されます。Caps-Lockがオフになっていることを確認してください。パスワードをお忘れの場合は、リセットを依頼できます。ご登録のメールアドレスをお忘れの場合は、<a href="%s">サポートまでご連絡ください</a>。
             sign_in: ログイン
-            join: Join for free!
+            join: 無料で参加いただけます！
 
         reset:
             title:  パスワードをお忘れですか?
@@ -764,7 +765,7 @@ age_confirm:
 confirm: 確認
 
 forms:
-    required_fields: required fields
+    required_fields: 必須記入欄
 
 content_reporting:
     report: レポート
@@ -813,17 +814,17 @@ content_reporting:
 
         ALIENWARE ARENA チーム
 
-    removed_email_title: Your Content Has Been Removed
+    removed_email_title: あなたのコンテンツは削除されました。
     removed_email: |
-        The following content has been removed from Alienware Arena due to a violation of our Terms of Service.
+        以下の内容は、ALIENWARE ARENA利用規約違反のため、削除されました。
 
         Type: %s
         Content: %s
         Reason: %s
         Link: %s
 
-        Should you have any questions, please contact us at reports@alienwarearena.com.
-        Alienware Arena Team
+        質問があれば、reports@alienwarearena.com にご連絡ください。
+        ALIENWARE ARENAチーム
 
     staff_notification_title: New Content Reported
     staff_notification: |

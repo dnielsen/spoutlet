@@ -44,11 +44,16 @@ platformd.user.account.gallery: Imágen
 platformd.user.account.images: Imágen
 platformd.user.account.videos: Vídeos
 platformd.user.account.avatars: Avatares
+platformd.user.account.incomplete.title: Complete Registration
+platformd.user.account.incomplete.description: Your registration is missing several key pieces of information. Please complete the form below to complete it.
 
 platformd.user.avatars.manage: Administrar Avatares
 platformd.user.avatars.select_or_add: 'Selecciona la imagen para utilizar, or <a href="javascript:void(0);" id="add-avatar">agregar una imagen nueva</a>.'
 
 platformd:
+
+    homepage:
+        news_title: Noticias y Artículos
 
     not_found:
         title: Página no se encuentra
