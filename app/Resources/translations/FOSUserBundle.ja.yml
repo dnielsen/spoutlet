@@ -112,6 +112,19 @@ resetting.email: |
     チーム一同より
     </p>
 
+# Password resetted by admin
+resetted.email: |
+    Alienware Arena パスワードのリセット
+    <h3>%username%様、こんにちは。</h3>
+
+    <p>
+        パスワードをリセットするには、<a href="%confirmationUrl%">%confirmationUrl%</a> にアクセスしてください。
+    </p>
+
+    <p>
+    よろしくお願いします。<br/>
+    チーム一同より
+    </p>
 
 # Global strings
 layout.logout: ログアウト
