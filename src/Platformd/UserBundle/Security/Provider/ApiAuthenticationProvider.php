@@ -55,7 +55,7 @@ class ApiAuthenticationProvider extends UserAuthenticationProvider
                 // Check to see if we can log in via API
                 $apiLoginSuccess = $this->apiManager->authenticate($user, $presentedPassword);
 
-                if ($apiLoginSuccess) {
+                if ($apiLoginSuccess && !$user->getApiSuccessfulLogin()) {
                     $user->setApiSuccessfulLogin(new \DateTime());
                 } else {
                     // Check to see if we have a CEVO-style password

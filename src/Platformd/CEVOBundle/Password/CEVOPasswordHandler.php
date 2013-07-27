@@ -16,14 +16,6 @@ class CEVOPasswordHandler
         $this->userManager = $userManager;
     }
 
-    private function onSuccessfulLogin($user)
-    {
-        try {
-            $this->userManager->updateUserAndApi($user);
-        } catch (ApiRequestException $e) {
-        }
-    }
-
     public function authenticate(UserInterface $user, $presentedPassword)
     {
         $dbPassword = $user->getPassword();
@@ -54,10 +46,6 @@ class CEVOPasswordHandler
         // CEVO
         else {
             $success = $dbPassword == $this->hashPassword($presentedPassword);
-        }
-
-        if ($success) {
-            $this->onSuccessfulLogin($user);
         }
 
         return $success;
