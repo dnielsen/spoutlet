@@ -363,7 +363,7 @@ class CevoUserImportCommand
                     $userData['state']              = $data[17] != '' ? $data[17] : null;
                     $userData['allowContact']       = $data[25] != '' ? $data[25] : 0;
                     $userData['dellOptIn']          = $data[26] != '' ? $data[26] : 0;
-                    $userData['avatar']             = $data[35] != '' ? $data[35] : null;
+                    $userData['avatar']             = $data[35] != '' && $data[35] !== '0' ? $data[35] : null;
                     $userData['aboutMe']            = $data[36] != '' ? $data[36] : null;
                     $userData['manufacturer']       = $data[38] != '' ? $data[38] : null;
                     $userData['os']                 = $data[39] != '' ? $data[39] : null;
@@ -425,7 +425,7 @@ class CevoUserImportCommand
                     $lastUpdated    = new \DateTime();
                     $avatarId       = null;
 
-                    if (isset($this->avatarUserMap[$userData['avatar']])) {
+                    if ($userData['avatar'] && isset($this->avatarUserMap[$userData['avatar']])) {
                         $avatarId = $this->avatarUserMap[$userData['avatar']]['avatarId'];
                     }
 

@@ -81,6 +81,7 @@ $result = $this->dummyGetUser($username);
                 'last_name' => ,
                 'country' => $user->getCountry(),
                 'state' => $user->getState(),
+                'roles' => $user->getRoles(),
             );
         } elseif (is_array($user)) {
             if (!isset($user['uuid'])) {
