@@ -289,6 +289,7 @@ class CevoUserImportCommand
                         `subscribed_gaming_news`    = :dell_optin,
                         `subscribedAlienwareEvents` = :allow_contact,
                         `roles`                     = "a:0:{}",
+                        `locale`                    = "en",
                         `has_alienware_system`      = 0';
 
         $updateUserSql = 'UPDATE `'.$db.'`.`fos_user` SET
