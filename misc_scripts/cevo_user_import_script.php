@@ -355,6 +355,7 @@ class CevoUserImportCommand
                     $userData['email_canonical']    = $this->canonicalize($data[3]);
                     $userData['created']            = $createdDt ? $createdDt->format('Y-m-d') : $fallbackDt->format('Y-m-d');
                     $userData['ipAddress']          = $data[7] != '' ? $data[7] : null;
+                    $userData['origin']             = $data[8];
                     $userData['firstName']          = $data[11];
                     $userData['lastName']           = $data[12];
                     $userData['birthDate']          = $birthdateDt ? $birthdateDt->format('Y-m-d') : null;
@@ -387,7 +388,7 @@ class CevoUserImportCommand
                         continue;
                     }
 
-                    if (substr($userData['username'], -4) == '_new') {
+                    if (substr($userData['username'], -4) == '_new' && $userData['origin'] == 'cnjp') {
                         $this->error('User has "_new" in username - skipping. User => { Email = "'.$userData['email'].'" }');
                         $this->writeNonImportedUserCsvRow($data);
                         $skippedCount++;
