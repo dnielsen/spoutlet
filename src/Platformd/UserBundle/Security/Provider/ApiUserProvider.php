@@ -23,7 +23,13 @@ class ApiUserProvider implements UserProviderInterface
     public function loadUserByUsername($username)
     {
         // Do we have a local record?
-        if ($user = $this->findUserBy(array('username' => $username))) {
+        $user = $this->findUserBy(array('usernameCanonical' => $this->canonicalizeUsername($username)));
+
+        if (!$user) {
+            $user = $this->findUserBy(array('emailCanonical' => $this->canonicalizeEmail($username)));
+        }
+
+        if ($user) {
             return $user;
         }
 
@@ -61,5 +67,10 @@ class ApiUserProvider implements UserProviderInterface
     {
         $repository = $this->em->getRepository('UserBundle:User');
         return $repository->findOneBy($criteria);
+    }
+
+    protected function canonicalize($string)
+    {
+        return mb_convert_case($string, MB_CASE_LOWER, mb_detect_encoding($string));
     }
 }

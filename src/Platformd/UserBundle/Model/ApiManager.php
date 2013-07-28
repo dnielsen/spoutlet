@@ -67,13 +67,37 @@ $result = $this->dummyGetUser($username);
 
     public function updateRemoteUserData($user)
     {
-        $path           = 'users/'.$user->getUuid();
-        $postParameters = array(
-            'action'   => 'update',
-            'username' => $user->getUsername(),
-            'email'    => $user->getEmail(),
-            'uuid'     => $user->getUuid(),
-        );
+        if ($user instanceof User) {
+            $uuid = $user->getUuid();
+
+            $postParameters = array(
+                'action'   => 'update',
+                'username' => $user->getUsername(),
+                'email'    => $user->getEmail(),
+                'uuid'     => $uuid,
+                'custom_avatar' => $user->getAvatar() && $user->getAvatar()->isUsable(),
+                'birth_date' => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
+                'first_name' => ,
+                'last_name' => ,
+                'country' => $user->getCountry(),
+                'state' => $user->getState(),
+            );
+        } elseif (is_array($user)) {
+            if (!isset($user['uuid'])) {
+                throw new \Exception('updateRemoteUserData - User UUID not set.');
+            }
+
+            $uuid = $user['uuid'];
+            unset($user['uuid']);
+            unset($user['action']);
+
+            $postParameters = $user;
+        } else {
+            throw new \Exception('updateRemoteUserData - Unexpected user type - not User entity or array.');
+        }
+
+        $path           = 'users/'.$uuid;
+        $postParameters = array_merge($postParameters, array('action'   => 'update'));
 
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
 $result = $this->dummyUpdateUserData();
@@ -97,7 +121,7 @@ $result = $this->dummyUpdateUserData();
             'first_name'          => $user->getFirstName(),
             'last_name'           => $user->getLastName(),
             'last_updated'        => $user->getUpdated()->format('Y-m-d H:i:s'),
-            'state'               => 'Northern Ireland',
+            'state'               => $user->getState(),
         );
 
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));

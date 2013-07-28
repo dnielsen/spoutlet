@@ -97,6 +97,8 @@ EOT
         $privateBucket   = $container->getParameter('s3_private_bucket_name');
         $userRepo        = $em->getRepository('UserBundle:User');
         $userManager     = $container->get('fos_user.user_manager');
+        $apiAuth         = $container->getParameter('api_authentication');
+        $apiManager      = $container->get('platformd.user.api.manager');
 
         $this->output(0);
         $this->output(0, 'PlatformD Avatar Filesystem Actions Queue Processor');
@@ -205,6 +207,14 @@ EOT
                 $this->output(4, 'Settings user\' avatar...', false);
                 $user->setAvatar($avatar);
                 $userManager->updateUser($user);
+
+                if ($apiAuth) {
+                    $apiUpdated = $apiManager->updateRemoteUserData(array('uuid' => $user->getUuid(), 'custom_avatar' => true));
+                    if (!$apiUpdated) {
+                        $this->error('Unable to notify API of custom_avatar state.');
+                    }
+                }
+
                 $this->tick();
             }
 

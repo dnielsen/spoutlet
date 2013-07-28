@@ -20,12 +20,14 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     private $router;
     private $userManager;
     private $siteUtil;
+    private $apiAuth;
 
-    public function __construct(Router $router, $userManager, SiteUtil $siteUtil)
+    public function __construct(Router $router, $userManager, SiteUtil $siteUtil, $apiAuth)
     {
         $this->router      = $router;
         $this->userManager = $userManager;
-        $this->siteUtil = $siteUtil;
+        $this->siteUtil    = $siteUtil;
+        $this->apiAuth     = $apiAuth;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
@@ -33,7 +35,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
         $user = $token->getUser();
         $this->userManager->addLoginRecord($user, $request);
 
-        if (!$user->getApiSuccessfulLogin()) {
+        if ($this->apiAuth && !$user->getApiSuccessfulLogin()) {
             $this->userManager->updateUserAndApi($user);
         }
 

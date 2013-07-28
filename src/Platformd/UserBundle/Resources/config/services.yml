@@ -153,4 +153,5 @@ services:
             - "@router"
             - "@fos_user.user_manager"
             - "@platformd.util.site_util"
+            - "%api_authentication%"
 
