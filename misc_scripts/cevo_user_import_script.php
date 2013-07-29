@@ -581,29 +581,6 @@ class CevoUserImportCommand
                         $updatedCount++;
                     }
 
-                    if (isset($this->usersAvatars[$userUuid])) {
-
-                        if ($this->debug) {
-                            $this->output();
-                            $this->output(2, 'Setting user avatars.');
-                        }
-
-                        $ids = '';
-
-                        foreach ($this->usersAvatars[$userUuid] as $id) {
-                            $ids .= ','.$id;
-                        }
-
-                        if (!empty($ids)) {
-                            $ids = ltrim($ids, ',');
-
-                            $updateAvatarSql = 'UPDATE `'.$db.'`.`pd_avatar` SET `user_id`=:userId WHERE `id` IN ('.$ids.')';
-
-                            $query = $dbh->prepare($updateAvatarSql);
-                            $query->execute(array(':userId' => $user['id']));
-                        }
-                    }
-
                 } catch (PDOException $e) {
                     $this->error('Connection failed at iteration ['.$iteration.']: ' . $e->getMessage());
                     $this->writeNonImportedUserCsvRow('PDOException caught', $data);
