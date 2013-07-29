@@ -82,7 +82,7 @@ class RegistrationFormType extends BaseType
             ->add('latestNewsSource', 'choice', array(
                 'empty_value' => 'Select one',
                 'choices' => $this->sources,
-                'required' => true,
+                'required' => false,
                 'error_bubbling' => true,
             ))
             ->add('subscribedGamingNews')

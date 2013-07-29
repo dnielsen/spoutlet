@@ -189,7 +189,6 @@ class User extends BaseUser
      * @var String $latest_news_source
      *
      * @ORM\Column(name="latest_news_source", type="string", length="255", nullable=true)
-     * @Assert\NotBlank(groups={"Registration"}, message="news_source_not_blank")
      */
     protected $latestNewsSource;
 

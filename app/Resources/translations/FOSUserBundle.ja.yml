@@ -13,8 +13,8 @@ fos_user_registration_form_plainPassword: "パスワード:"
 fos_user_registration_form_plainPassword_first: "パスワード:"
 fos_user_registration_form_plainPassword_second: "確認のためもう一度ご入力ください:"
 fos_user_registration_form_latestNewsSource: "どこでAlienwareArena を知りましたか？"
-fos_user_registration_form_recaptcha: "検証:"
-fos_user_registration_form_subscribedAlienwareEvent: ALIENWARE ARENAのニュースレターを購読する。
+fos_user_registration_form_recaptcha: "確認コー:"
+fos_user_registration_form_subscribedAlienwareEvent: 最新の景品、コンテスト、イベント、その他に関してのお知らせをALIENWARE ARENA からE-メールで受け取ります。
 
 fos_user_profile_form_user_lastname: "姓"
 fos_user_profile_form_user_firstname: "名"

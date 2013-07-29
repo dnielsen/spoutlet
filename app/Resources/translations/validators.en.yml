@@ -1,7 +1,7 @@
 first_name_not_blank: Please enter your first name.
 last_name_not_blank: Please enter your last name.
 birthdate_not_blank: Please enter a valid birthdate.
-state_not_blank: Please enter a state.
+state_not_blank: Please enter your state/province.
 country_not_blank: Please select a country.
 news_source_not_blank: Please select how you heard about Alienware Arena.
 has_system_not_blank: Please tell us if you have an Alienware system.
