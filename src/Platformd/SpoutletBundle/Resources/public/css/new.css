@@ -47,18 +47,11 @@ ul.normal-margin, ol.normal-margin {
     width: 100%;
 }
 .form-msg-error {
-    padding: 6px 10px 5px;
-    display: block;
-    height: auto;
-    margin: -0.3em 0 0.5em;
-    margin-left: 110px;
-    padding-left: 27px;
+
     font-size:0.9em;
-    border-bottom: 1px solid #ccc;
-    background: #fad0d0 url(../images/form-ic-error.png) no-repeat 5px 4px;
-    border-color:#f6abab;
+    list-style: none;
     color:#b01717;
-    width: 170px;
+
 }
 
 /* login page */
@@ -84,7 +77,7 @@ ul.normal-margin, ol.normal-margin {
     margin-left: 0px;
 }
 .fos_user_change_password ul.form-msg-error {
-    margin-left: 150px;
+    margin-left: 155px;
 }
 
 fieldset.label-full label {

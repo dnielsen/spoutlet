@@ -27,7 +27,7 @@ class SuspendController extends Controller
             }
         }
 
-        return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_show', array('id' => $id)));
+        return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array('id' => $id)));
     }
 
     private function getUserRepository()

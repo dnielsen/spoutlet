@@ -43,8 +43,18 @@
                     <fieldset id="account-settings-password" class="account-settings-section">
                         <h3><span>{{ 'platformd.user.account_settings.password'|trans({}, 'FOSUserBundle') }}</h3></span>
                         {{ form_errors(form) }}
-                        {{ form_row(form.currentPassword) }}
-                        {{ form_row(form.plainPassword) }}
+                        <div class="form_row">
+                            {{ form_label(form.currentPassword) }}
+                            {{ form_widget(form.currentPassword) }}
+                            {{ form_errors(form.currentPassword) }}
+                        </div>
+                        {% for plainPassword in form.plainPassword %}
+                        <div class="form_row">
+                            {{ form_label(plainPassword) }}
+                            {{ form_widget(plainPassword) }}
+                            {{ form_errors(plainPassword) }}
+                        </div>
+                        {% endfor %}
                     </fieldset>
 
                     <div class="clear"></div>

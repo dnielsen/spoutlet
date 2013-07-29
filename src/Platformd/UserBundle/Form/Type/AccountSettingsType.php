@@ -32,22 +32,22 @@ class AccountSettingsType extends AbstractType
 
         $builder
             ->add('currentPassword', 'password', array(
-                'required' => false,
+                'required' => true,
             ))
             ->add('plainPassword', 'repeated', array(
                 'type' => 'password',
-                'required' => false,
-                'options' => array('label' => 'New password'),
+                'required' => true,
+                'invalid_message' => 'passwords_do_not_match',
+                'error_bubbling' => true
             ))
-            ->add('subscribedAlienwareEvents', null, array(
-                'label' => 'Subscribe to Alienware Events',
-            ))
+            ->add('subscribedAlienwareEvents')
             ->addEventListener(FormEvents::POST_BIND, function(DataEvent $event) use ($encoder, $user, $apiManager, $apiAuth) {
                 $data = $event->getData();
                 $form = $event->getForm();
                 $plainPassword = $data->getPlainPassword();
+
                 if (empty($plainPassword)) {
-                    return;
+                    $form->get('plainPassword')->addError(new FormError('You must enter a new password.'));
                 }
 
                 $isPasswordValid = $apiAuth ? $apiManager->authenticate($user, $data->currentPassword) : $encoder->isPasswordValid($data->getPassword(), $data->currentPassword, $data->getSalt());
