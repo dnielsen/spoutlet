@@ -63,6 +63,7 @@ security.login.username: "Nombre de usuario:"
 security.login.password: "Password:"
 security.login.remember_me: Acuérdate de mí
 security.login.submit: Iniciar Sesión
+security.login.problem_logging_in: "We're sorry, but there was a problem logging in:"
 
 # Profile
 profile.edit.submit: Actualizar
@@ -185,3 +186,9 @@ platformd.user.account_settings.password: "Cambiar contraseña"
 platformd.user.account_settings.newsletter: "Suscripciones a boletines"
 
 invalid_username_password: Combinación nombre de usuario/contraseña incorrecta
+
+"Bad credentials": "Combinación nombre de usuario/contraseña incorrecta"
+"The presented password is invalid.": "Combinación nombre de usuario/contraseña incorrecta"
+"The presented password cannot be empty.": "Combinación nombre de usuario/contraseña incorrecta"
+"User account is disabled.": "User account is disabled."
+"Invalid username or password": "Combinación nombre de usuario/contraseña incorrecta"

@@ -67,7 +67,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
         if ($request->isXmlHttpRequest()) {
             // sup bros, ajax login failure here.
             $response   = new Response();
-            $error      = $exception->getMessage();//$this->transUtil->trans('invalid_username_password', array(), 'FOSUserBundle', $this->siteUtil->getCurrentSite()->getDefaultLocale());
+            $error      = $this->transUtil->trans($exception->getMessage(), array(), 'FOSUserBundle', $this->siteUtil->getCurrentSite()->getDefaultLocale());
             $result     = array('success' => false, 'error' => $error);
 
             $response->headers->set('Content-type', 'text/json; charset=utf-8');

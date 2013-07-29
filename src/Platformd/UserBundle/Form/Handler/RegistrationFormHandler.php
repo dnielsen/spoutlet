@@ -44,16 +44,16 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
         if ('POST' == $this->request->getMethod()) {
             $this->form->bindRequest($this->request);
 
+            $ageManager = $this->container->get('platformd.age.age_manager');
+            $site       = $this->container->get('platformd.util.site_util')->getCurrentSite();
+
+            $ageManager->setUsersBirthday($this->form->getData()->getBirthdate());
+
+            if ($ageManager->getUsersAge() < $site->getSiteConfig()->getMinAgeRequirement()) {
+                throw new InsufficientAgeException();
+            }
+
             if ($this->form->isValid()) {
-
-                $ageManager = $this->container->get('platformd.age.age_manager');
-                $site       = $this->container->get('platformd.util.site_util')->getCurrentSite();
-
-                $ageManager->setUsersBirthday($this->form->getData()->getBirthdate());
-
-                if ($ageManager->getUsersAge() < $site->getSiteConfig()->getMinAgeRequirement()) {
-                    throw new InsufficientAgeException();
-                }
 
                 $ipAddress  = $this->request->getClientIp(true);
                 $user->setIpAddress($ipAddress);

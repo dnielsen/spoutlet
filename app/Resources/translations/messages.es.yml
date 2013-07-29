@@ -670,6 +670,13 @@ wallpapers: Fondo de pantalla
 exclusive_designs: Diseños Exclusivos
 click_to_download: Hacer clic para descargar
 
+# I'm not sure how we have two different potential "wrong password messages"...
+"Bad credentials": "Combinación nombre de usuario/contraseña incorrecta"
+"The presented password is invalid.": "Combinación nombre de usuario/contraseña incorrecta"
+"The presented password cannot be empty.": "Combinación nombre de usuario/contraseña incorrecta"
+"User account is disabled.": "User account is disabled."
+"Invalid username or password": "Combinación nombre de usuario/contraseña incorrecta"
+
 galleries:
     image: Foto
     navigation_label: Galería de Fotos

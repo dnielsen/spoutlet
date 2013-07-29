@@ -62,6 +62,7 @@ security.login.username: "Username:"
 security.login.password: "Password:"
 security.login.remember_me: Remember me
 security.login.submit: Login
+security.login.problem_logging_in: "We're sorry, but there was a problem logging in:"
 
 # Profile
 profile.edit.submit: Update
@@ -186,3 +187,8 @@ platformd.user.account_settings.password: "Update Password"
 platformd.user.account_settings.newsletter: "Notifications"
 
 invalid_username_password: Invalid username or password
+
+"Bad credentials": "Invalid email or password"
+"The presented password is invalid.": "Invalid email or password"
+"The presented password cannot be empty.": "Please enter a password"
+"User account is disabled.": Your account is disabled - check your email for an activation link

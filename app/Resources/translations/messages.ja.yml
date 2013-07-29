@@ -363,7 +363,7 @@ platformd:
             not_a_member_join: 非会員？参加無料です！
             password_message: パスワードは大小文字が区別されます。Caps-Lockがオフになっていることを確認してください。パスワードをお忘れの場合は、リセットを依頼できます。ご登録のメールアドレスをお忘れの場合は、<a href="%s">サポートまでご連絡ください</a>。
             sign_in: ログイン
-            join: 無料で参加いただけます！
+            join: 参加無料です！
 
         reset:
             title:  パスワードをお忘れですか?
@@ -632,6 +632,7 @@ platformd:
 "The presented password is invalid.": "パスワードまたはメールアドレスが無効です"
 "The presented password cannot be empty.": "パスワードを入力してください"
 "User account is disabled.": アカウントが無効です
+"Invalid username or password": "パスワードまたはメールアドレスが無効です"
 
 # registration drop-down choices
 "Select one": "----お選びください ----"

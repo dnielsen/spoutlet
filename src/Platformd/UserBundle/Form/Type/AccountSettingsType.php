@@ -39,6 +39,9 @@ class AccountSettingsType extends AbstractType
                 'required' => false,
                 'options' => array('label' => 'New password'),
             ))
+            ->add('subscribedAlienwareEvents', null, array(
+                'label' => 'Subscribe to Alienware Events',
+            ))
             ->addEventListener(FormEvents::POST_BIND, function(DataEvent $event) use ($encoder, $user, $apiManager, $apiAuth) {
                 $data = $event->getData();
                 $form = $event->getForm();
