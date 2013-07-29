@@ -35,7 +35,7 @@ fos_user_registration_form_termsAccepted: |
     <a href="%terms_url%" target="_blank">Términos y Condiciones</a> y la
     <a href="%privacy_url%" target="_blank">Política de Privacidad</a>.
 fos_user_registration_form_subscribedAlienwareEvents: "Subscribe me to receive news on the latest giveaways, contests, events and more from Alienware Arena via email."
-fos_user_registration_form_subscribedGamingNews: Subscribeme para recibir noticias y ofertas de Alienware/Dell Gaming por correo electrónico. <a href="http://www.dell.com/learn/us/en/19/policies-privacy?c=us&l=en&s=gen&delphi:gr=true" target="_blank">Ver la Protección de datos personales de Dell</a>.
+fos_user_registration_form_subscribedGamingNews: Subscribeme para recibir noticias y ofertas de Alienware/Dell Gaming por correo electrónico. <a href="http://www1.la.dell.com/content/topics/segtopic.aspx/policy/policy?c=mx&l=es&s=gen&~section=000&redirect=1" target="_blank">Ver la Protección de datos personales de Dell</a>.
 
 giveaway_name: "Nombre"
 giveaway_slug: "URL string - /giveaways/"

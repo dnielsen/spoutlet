@@ -167,7 +167,7 @@
 
                             {% endif %}
 
-                            {% if features.hasWallpapers %}
+                            {% if features.hasWallpapers and not is_granted('ROLE_PARTNER') %}
 
                                 <li>
                                     <a href="{{ path('admin_wallpaper') }}">Wallpapers</a>
@@ -212,6 +212,7 @@
                             </li>
                             {% endif %}
 
+                            {% if not is_granted ('ROLE_PARTNER') %}
                             <li>
                                 <a href="{{ path('admin_takeover_index') }}">Site Takeovers</a>
                                 <ul>
@@ -220,6 +221,7 @@
                                     </li>
                                 </ul>
                             </li>
+                            {% endif %}
 
                             {% if is_granted('ROLE_ADMIN_TRANSLATIONS') %}
                                 <li>
@@ -241,6 +243,7 @@
                                 <li><a href="{{ path('admin_tags_index') }}">Tags</a></li>
                             {% endif %}
 
+                            {% if not is_granted('ROLE_PARTNER') %}
                             <li>
                                 <a href="{{ path('admin_background_ads_index') }}">Background Ads</a>
                                 <ul>
@@ -249,6 +252,8 @@
                                     </li>
                                 </ul>
                             </li>
+                            {% endif %}
+                            {% if not is_granted('ROLE_PARTNER') %}
                             <li>
                                 <a href="{{ path('admin_rsvp_index') }}">RSVP Events</a>
                                 <ul>
@@ -257,6 +262,7 @@
                                     </li>
                                 </ul>
                             </li>
+                            {% endif %}
 
                             {% if features.hasHtmlWidgets %}
                                 <li>
@@ -270,9 +276,11 @@
                                 </li>
                             {% endif %}
 
+                            {% if not is_granted('ROLE_PARTNER') %}
                             <li>
                                 <a href="{{ path('admin_timeline_index') }}">Timelines</a>
                             </li>
+                            {% endif %}
 
                         </ul>
                     {% endif %}

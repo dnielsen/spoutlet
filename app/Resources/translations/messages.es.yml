@@ -674,8 +674,10 @@ click_to_download: Hacer clic para descargar
 "Bad credentials": "Combinación nombre de usuario/contraseña incorrecta"
 "The presented password is invalid.": "Combinación nombre de usuario/contraseña incorrecta"
 "The presented password cannot be empty.": "Combinación nombre de usuario/contraseña incorrecta"
-"User account is disabled.": "User account is disabled."
+"User account is disabled.": "Your account is not activated. You must confirm your account by clicking on the link in the Activate Account Email."
 "Invalid username or password": "Combinación nombre de usuario/contraseña incorrecta"
+
+"Select one": "----Select one----"
 
 galleries:
     image: Foto

@@ -48,7 +48,7 @@ class UserValidator extends ConstraintValidator
 
         if($config->getBirthdateRequired() && $entity->getBirthdate()) {
             // figure out if they meet the age requirement
-            if($entity->getAge() <= $config->getMinAgeRequirement()) {
+            if($entity->getAge() < $config->getMinAgeRequirement()) {
                 // Set error message at top of form
                 $this->context->addViolation(self::ERROR_MESSAGE_AGE_REQUIREMENT, array(), $entity->getBirthdate());
 

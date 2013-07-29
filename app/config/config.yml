@@ -150,7 +150,7 @@ parameters:
     doctrine.orm.validator.unique.class: Knp\Validator\UniqueEntityValidator
 
     # false = CEVO login, true = local login
-    local_auth: true
+    local_auth: false
 
     # Used by ReCAPTCHA bundle
     kernel.default_locale: en

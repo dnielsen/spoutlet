@@ -54,7 +54,7 @@ class AccountController extends Controller
             }
 
             if ($user) {
-                $cevoUserId = $user->getCevoUserId();
+                $cevoUserId = $user->getUuid();
 
                 if ($cevoUserId && $cevoUserId > 0) {
                     return $this->redirect(sprintf('http://www.alienwarearena.com/%s/member/%d', $subdomain , $cevoUserId));

@@ -217,7 +217,7 @@ class SpoutletExtension extends Twig_Extension
             return null;
         }
 
-        return $this->cevoAccountLinkFromCevoUserId($this->currentUser->getCevoUserId());
+        return $this->cevoAccountLinkFromCevoUserId($this->currentUser->getUuid());
     }
 
     public function cevoAccountLink($user)
@@ -230,7 +230,7 @@ class SpoutletExtension extends Twig_Extension
 
         $user = $user instanceof User ? $user : $this->userManager->findUserByUsername($user);
 
-        return $this->cevoAccountLinkFromCevoUserId($user->getCevoUserId());
+        return $this->cevoAccountLinkFromCevoUserId($user->getUuid());
     }
 
     public function cevoAccountGiveawayPageLink($site = null) {
@@ -274,7 +274,7 @@ class SpoutletExtension extends Twig_Extension
         }
 
         if ($cevoUserId && $cevoUserId > 0) {
-            return sprintf('http://www.alienwarearena.com%s/member/%d', $subdomain , $cevoUserId);
+            return sprintf('http://www.alienwarearena.com%s/member/%s', $subdomain , $cevoUserId);
         }
 
         return 'http://www.alienwarearena.com/account/profile';
@@ -285,7 +285,7 @@ class SpoutletExtension extends Twig_Extension
         $user = $this->userManager->findUserByUsername($username);
 
         if (!$this->localAuth) {
-            $cevoUserId     = $user->getCevoUserId();
+            $cevoUserId     = $user->getUuid();
             $locale         = $this->session->getLocale();
 
             switch ($locale) {
@@ -306,8 +306,8 @@ class SpoutletExtension extends Twig_Extension
                     break;
             }
 
-            if ($cevoUserId && $cevoUserId > 0) {
-                return sprintf('http://www.alienwarearena.com%s/member/%d', $subdomain , $cevoUserId);
+            if ($cevoUserId) {
+                return sprintf('http://www.alienwarearena.com%s/member/%s', $subdomain , $cevoUserId);
             }
 
             return 'http://www.alienwarearena.com/account/profile';

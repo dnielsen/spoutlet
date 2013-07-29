@@ -30,14 +30,17 @@
         {% if features.hasNews %}
             {% render url('hot_stories') %}
         {% endif %}
+
+        {% if features.hasForums %}
+            {% include "SpoutletBundle:Default:_forums.html.twig" %}
+        {% endif %}
+
         {% if features.hasPhotos and not features.hasStaticPhotoWidget %}
             {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' with {'height': '288px'} %}
         {% else %}
             {% include 'SpoutletBundle:Default:_staticPhotoWidget.html.twig' with {'height': '288px'} %}
         {% endif %}
-        {% if features.hasForums %}
-            {% include "SpoutletBundle:Default:_forums.html.twig" %}
-        {% endif %}
+
     </div>
 </div>
 

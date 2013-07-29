@@ -324,8 +324,9 @@ html body.staff { background:url(/bundles/spoutlet/images/bg_staff_body.gif) top
 #arp-widget { float: left; }
 #poll-widget { float: left; margin: 0 0 0 30px; }
 #featured-content { padding-bottom: 15px; }
-#groups-widget { padding-bottom: 15px;}
+#groups-widget { padding-bottom: 15px; }
 #video-widget { padding-bottom: 15px; }
+#forums-widget { padding-bottom: 15px; }
 
 /** Widget Stuff **/
 .widget-33 { background: url('/bundles/spoutlet/images/widget-33-bg.png') no-repeat top left; width: 302px; height: 360px; padding-top:1px;}

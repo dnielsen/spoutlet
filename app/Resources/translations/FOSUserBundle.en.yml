@@ -191,4 +191,4 @@ invalid_username_password: Invalid username or password
 "Bad credentials": "Invalid email or password"
 "The presented password is invalid.": "Invalid email or password"
 "The presented password cannot be empty.": "Please enter a password"
-"User account is disabled.": Your account is disabled - check your email for an activation link
+"User account is disabled.": Your account is not activated. You must confirm your account by clicking on the link in the Activate Account Email.
