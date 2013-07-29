@@ -90,7 +90,7 @@ class AdminController extends Controller
 
             try {
                 $manager->updateUserAndApi($user);
-                $this->setFlash('success', $translator->trans('fos_user_admin_edit_success', array(
+                $this->setFlash('success', $this->trans('fos_user_admin_edit_success', array(
                     '%username%' => $user->getUsername()
                 ), 'FOSUserBundle'));
 

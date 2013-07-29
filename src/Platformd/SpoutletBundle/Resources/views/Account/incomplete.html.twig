@@ -46,7 +46,7 @@
         {% if form.email is defined %}{{ form_row(form.email) }}{% endif %}
 
         {% if form.birthdate is defined %}
-            <div class="control-group{% if birthdateError %} error{% endif %}">
+            <div class="control-group{% if birthdateError is defined %} error{% endif %}">
                 {{ form_label(form.birthdate) }}
                 <div class="controls">
                     {{ form_widget(form.birthdate.year, {'attr' : {'class' : 'dob-select'}}) }}

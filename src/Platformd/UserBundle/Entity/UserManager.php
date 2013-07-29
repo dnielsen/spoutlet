@@ -4,6 +4,7 @@ namespace Platformd\UserBundle\Entity;
 
 use FOS\UserBundle\Entity\UserManager as BaseUserManager;
 use FOS\UserBundle\Model\UserInterface;
+use FOS\UserBundle\Util\CanonicalizerInterface;
 
 use Gaufrette\Filesystem;
 
@@ -11,8 +12,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Doctrine\ORM\AbstractQuery;
 use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
-
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Platformd\UserBundle\Exception\ApiRequestException;
+use Doctrine\ORM\EntityManager;
 
 class UserManager extends BaseUserManager
 {
@@ -27,6 +29,25 @@ class UserManager extends BaseUserManager
      * @var \Symfony\Component\DependencyInjection\ContainerInterface $container
      */
     protected $container;
+
+    protected $translator;
+
+    /**
+     * Constructor.
+     *
+     * @param EncoderFactoryInterface $encoderFactory
+     * @param CanonicalizerInterface  $usernameCanonicalizer
+     * @param CanonicalizerInterface  $emailCanonicalizer
+     * @param EntityManager           $em
+     * @param string                  $class
+     * @param translator              $translator
+     */
+    public function __construct(EncoderFactoryInterface $encoderFactory, CanonicalizerInterface $usernameCanonicalizer, CanonicalizerInterface $emailCanonicalizer, EntityManager $em, $class, $translator)
+    {
+        parent::__construct($encoderFactory, $usernameCanonicalizer, $emailCanonicalizer, $em, $class);
+
+        $this->translator = $translator;
+    }
 
     public function isUserAccountComplete($user)
     {
@@ -58,8 +79,8 @@ class UserManager extends BaseUserManager
         if ($this->isExpired($user)) {
             throw new CredentialsExpiredException(
                 sprintf(
-                    'This account has been suspended until %s. If you believe this to be an error, please email contact@alienwarearena.com.',
-                    $user->getExpiredUntil() ? $user->getExpiredUntil()->format('Y-m-s') : 'infinity'
+                    $this->translator->trans('fos_user.account_banned', array(), 'validators'),
+                    $user->getExpiredUntil() ? $user->getExpiredUntil()->format($this->translator->trans('date_format')) : 'infinity'
                 )
             );
         }

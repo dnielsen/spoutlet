@@ -4,7 +4,7 @@
             <ul class="sf-menu sf-js-enabled sf-shadow sf-list" id="nav">
                 <li><a href="{{ path('default_index') }}">{{ 'platformd.layout.main_menu.home' | trans }}</a></li>
                 {% if features.hasGiveaways %}
-                    <li><a href="">{{ 'platformd.layout.main_menu.giveaways' | trans }}</a></li>
+                    <li><a href="{{ path('giveaway_index') }}">{{ 'platformd.layout.main_menu.giveaways' | trans }}</a></li>
                 {% endif %}
 
                 {% if features.hasNews %}
@@ -28,13 +28,7 @@
                 {% endif %}
 
                 {% if features.hasGroups %}
-                    <li class="more">
-                        <a class="blue">{{ 'platformd.layout.main_menu.groups' | trans }}</a>
-                        <ul>
-                            <li><a href="{{ path('groups') }}">All Groups</a></li>
-                            <li><a href="{{ path('group_new') }}">Create Group</a></li>
-                        </ul>
-                    </li>
+                    <li><a href="{{ path('groups') }}">{{ 'platformd.layout.main_menu.groups' | trans }}</a></li>
                 {% endif %}
 
                 {% if features.hasGamesNavDropDown %}

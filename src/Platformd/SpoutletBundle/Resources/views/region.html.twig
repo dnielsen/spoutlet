@@ -33,11 +33,4 @@
             <a href="{{ path('default_index', {'_locale': 'zh'}) }}">{{ 'platformd.layout.region.zh' | trans }}&nbsp;<img src="/bundles/spoutlet/images/cn.png" /></a>
         </li>#}
     </ul>
-    {% if app.session.locale != 'ja' and app.session.locale != 'zh' %}
-    <p>{{ 'platformd.layout.region.change_language' | trans }}</p>
-    <ul>
-        <li><a href="http://www.alienwarearena.com/cmd/default/set-language/1/?return=%2F">{{ 'platformd.layout.region.english' | trans }}</a></li>
-        <li><a href="http://www.alienwarearena.com/cmd/default/set-language/2/?return=%2F">{{ 'platformd.layout.region.espanol' | trans }}</a></li>
-    </ul>
-    {% endif %}
 </div>

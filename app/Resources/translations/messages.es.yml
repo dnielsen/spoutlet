@@ -97,6 +97,7 @@ platformd:
             microsoft: Microsoft
             photos: Galería de Fotos
             contests: Concursos
+            giveaways: Regalos
 
         page_content:
             featured: Destacado

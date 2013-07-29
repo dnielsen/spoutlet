@@ -21,13 +21,15 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     private $userManager;
     private $siteUtil;
     private $apiAuth;
+    private $transUtil;
 
-    public function __construct(Router $router, $userManager, SiteUtil $siteUtil, $apiAuth)
+    public function __construct(Router $router, $userManager, SiteUtil $siteUtil, $apiAuth, $transUtil)
     {
         $this->router      = $router;
         $this->userManager = $userManager;
         $this->siteUtil    = $siteUtil;
         $this->apiAuth     = $apiAuth;
+        $this->transUtil   = $transUtil;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
@@ -65,7 +67,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
         if ($request->isXmlHttpRequest()) {
             // sup bros, ajax login failure here.
             $response   = new Response();
-            $error      = $exception->getMessage();
+            $error      = $exception->getMessage();//$this->transUtil->trans('invalid_username_password', array(), 'FOSUserBundle', $this->siteUtil->getCurrentSite()->getDefaultLocale());
             $result     = array('success' => false, 'error' => $error);
 
             $response->headers->set('Content-type', 'text/json; charset=utf-8');

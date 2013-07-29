@@ -34,7 +34,7 @@ Platformd_UserBundle_admin_delete:
     pattern: /{id}/delete
     defaults: { _controller: UserBundle:Admin:delete }
     requirements:
-        _method: POST|DELETE
+        _method: POST|DELETE|GET
 
 Platformd_UserBundle_admin_logins:
     pattern: /{id}/logins

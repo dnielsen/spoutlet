@@ -185,4 +185,4 @@ platformd.user.account_settings.avatars: "Avatars"
 platformd.user.account_settings.password: "Update Password"
 platformd.user.account_settings.newsletter: "Notifications"
 
-"Bad credentials": Invalid username or password
+invalid_username_password: Invalid username or password

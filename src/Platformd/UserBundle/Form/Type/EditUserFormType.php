@@ -34,12 +34,12 @@ class EditUserFormType extends AbstractType
             $builder->add('admin_level', 'choice', array(
                 // these are supported by a number of odd methods in User
                 'choices' => array(
+                    '' => 'No admin',
                     'ROLE_ORGANIZER' => 'Limited admin',
                     'ROLE_SUPER_ADMIN' => 'Full admin',
                     'ROLE_PARTNER'   => 'Dell Contact',
                     'ROLE_JAPAN_ADMIN' => 'Japan Regional Admin',
                 ),
-                'empty_value' => 'No admin',
                 'label' => 'Admin Level',
             ));
         }

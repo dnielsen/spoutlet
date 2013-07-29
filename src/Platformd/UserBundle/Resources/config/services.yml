@@ -86,6 +86,8 @@ services:
     # User
     platformd_user.manager:
         class: Platformd\UserBundle\Entity\UserManager
+        arguments:
+            - "@platformd.model.translator"
         parent: fos_user.user_manager.default
         calls:
             - [ setContainer, ['@service_container'] ]
@@ -154,4 +156,5 @@ services:
             - "@fos_user.user_manager"
             - "@platformd.util.site_util"
             - "%api_authentication%"
+            - "@platformd.model.translator"
 

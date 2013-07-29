@@ -32,3 +32,5 @@ fos_user.password.blank:  Introduce una contraseña.
 
 error:
     select_status: Por favor, elija un estado de.
+
+fos_user.account_banned: This account has been suspended until %s. If you believe this to be an error, please email contact@alienwarearena.com.

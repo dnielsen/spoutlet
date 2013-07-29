@@ -34,3 +34,5 @@ fos_user.password.blank: パスワードを入力してください
 
 error:
     select_status: Please choose a status
+
+fos_user.account_banned: This account has been suspended until %s. If you believe this to be an error, please email contact@alienwarearena.com

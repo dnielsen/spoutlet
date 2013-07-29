@@ -58,7 +58,7 @@ platformd.user.avatars.file_instructions: |
 platformd.user.avatars.already_cropped: This image has already been processed and cropped.
 platformd.user.avatars.invalid_avatar: Invalid avatar specified.
 platformd.user.avatars.admin_submit_success: Your image has been queued for processing and will be available soon.
-platformd.user.avatars.submit_success: Your image has been listed for admin approval. It should be reviewed soon.
+platformd.user.avatars.submit_success: Your image has been uploaded and will be reviewed within 72 hours.
 platformd.user.avatars.switch_not_found: Unable to find the specified avatar.
 platformd.user.avatars.switch_error: Unable to switch to the specified avatar at this time. Please try again soon.
 platformd.user.avatars.switch_success: Your avatar change will be visible shortly. Please allow up to 10 mins for the selected avatar to appear.
@@ -124,7 +124,7 @@ platformd:
             global: Global
             en_US: "USA/Canada"
             en: "USA/Canada"
-            en_SG: "Malaysia"
+            en_SG: "Southeast Asia"
             es: América Latina
             en_GB: Europe
             ja: Japan
@@ -157,7 +157,7 @@ platformd:
         main_menu:
             home: Home
             alienware: Alienware
-            events: Events <span class="beta">BETA</span>
+            events: Events
             video: Videos
             news: News
             articles: Articles

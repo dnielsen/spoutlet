@@ -5,6 +5,7 @@ fos_user_registration_form_lastname: "Apellido:"
 fos_user_registration_form_phoneNumber: "Teléfono:"
 fos_user_registration_form_country: "País:"
 fos_user_registration_form_state: "Estado/Provincia:"
+fos_user_registration_form_email: "Correo electrónico:"
 fos_user_registration_form_email_first: "Correo electrónico:"
 fos_user_registration_form_email_second: "Confirme correo electrónico:"
 fos_user_registration_form_plainPassword_first: "Contraseña:"
@@ -97,7 +98,7 @@ registration.email: |
 resetting.password_already_requested: La contraseña para este usuario ya ha sido solicitada en las últimas 24 horas.
 resetting.check_email: Un correo electrónico ha sido enviado a %email%. Contiene un enlace que debe hacer clic para restablecer tu contraseña.
 resetting.request.invalid_username: La dirección de correo electrónico no existe "%username%".
-resetting.request.username: "Email:"
+resetting.request.username: "Correo electrónico:"
 resetting.request.submit: Cambiar mi Contraseña
 resetting.reset.submit: Cambiar Contraseña
 resetting.flash.success: La contraseña se ha restablecido correctamente
@@ -162,8 +163,8 @@ fos_user_profile_form_user_mousepad: "Alfombrilla de Ratón:"
 fos_user_profile_form_user_keyboard: "Teclado:"
 fos_user_profile_form_user_monitor: "Monitor:"
 
-security.login.username_or_email: "Email:"
-fos_user_registration_form_email: "Email:"
+security.login.username_or_email: "Correo electrónico:"
+fos_user_registration_form_email: "Correo electrónico:"
 fos_user_registration_form_plainPassword_first: "Contraseña:"
 fos_user_registration_form_plainPassword_second: "Confirme contraseña:"
 
@@ -182,3 +183,5 @@ account_settings_userAvatars: "Avatares"
 platformd.user.account_settings.avatars: "Avatares"
 platformd.user.account_settings.password: "Cambiar contraseña"
 platformd.user.account_settings.newsletter: "Suscripciones a boletines"
+
+invalid_username_password: Combinación nombre de usuario/contraseña incorrecta

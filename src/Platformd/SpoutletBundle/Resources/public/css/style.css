@@ -63,7 +63,7 @@ a { color:#009cda; text-decoration:none; outline:none; font-weight: bold; }
 a:hover { color:#17b8f8; }
 a.btn:hover { color:#FFF; }
 a:focus, a:hover, a:active { outline:none; }
-a.aw-link { display: inline; background: url('/bundles/spoutlet/images/link-icon.png') bottom right no-repeat; padding: 0 17px 0 0; text-transform: capitalize; }
+a.aw-link { display: inline; background: url('/bundles/spoutlet/images/link-icon-2.png') bottom right no-repeat; padding: 0 17px 0 0; text-transform: capitalize; }
 
 .link-inactive { color: #b3b3b3; border-bottom: 1px dashed #009cda; padding-bottom: 0; }
 .link-inactive:hover { cursor: pointer; }
@@ -1103,6 +1103,7 @@ div.blockOverlay {
     height: 184px;
     border: 2px solid #b3b3b3;
     margin: 0 10px 10px 0;
+    cursor: pointer;
 }
 
 #user-settings-page #avatar-update-overlay-text {
