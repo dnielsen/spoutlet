@@ -50,3 +50,7 @@ accounts_incomplete:
 accounts_change_password:
     pattern: /change-password
     defaults: { _controller: SpoutletBundle:Account:settings }
+
+subscription_settings:
+    pattern: /subscription-settings
+    defaults: { _controller: SpoutletBundle:Account:subscriptionSettings }

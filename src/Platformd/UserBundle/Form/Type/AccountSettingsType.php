@@ -41,7 +41,6 @@ class AccountSettingsType extends AbstractType
                 'invalid_message' => 'passwords_do_not_match',
                 'error_bubbling' => true
             ))
-            ->add('subscribedAlienwareEvents')
             ->addEventListener(FormEvents::POST_BIND, function(DataEvent $event) use ($encoder, $user, $apiManager, $apiAuth) {
                 $data = $event->getData();
                 $form = $event->getForm();

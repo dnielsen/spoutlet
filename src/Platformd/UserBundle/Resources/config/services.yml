@@ -66,6 +66,17 @@ services:
         tags:
             - { name: form.type, alias: platformd_user_profile }
 
+    platformd_user.subscription_settings.form.type:
+        class: Platformd\UserBundle\Form\Type\SubscriptionSettingsType
+        arguments:
+            - '@security.encoder_factory'
+            - '@security.context'
+            - '@platformd.user.api.manager'
+            - '%api_authentication%'
+        tags:
+            - { name: form.type, alias: platformd_user_profile }
+
+
     platformd_user.registration.form.handler:
         class: Platformd\UserBundle\Form\Handler\RegistrationFormHandler
         arguments:

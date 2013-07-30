@@ -303,11 +303,21 @@ class AccountController extends Controller
 
         $avatarForm = $this->createForm(new AvatarType(), $newAvatar);
 
+        $subscriptionForm = $this->createForm($this->getSubscriptionFormType(), $this->getUser());
+
         return $this->render('SpoutletBundle:Account:settings.html.twig', array(
-            'form'       => $form->createView(),
-            'avatarForm' => $avatarForm->createView(),
-            'data'       => $data,
+            'form'              => $form->createView(),
+            'avatarForm'        => $avatarForm->createView(),
+            'data'              => $data,
+            'subscriptionForm'  => $subscriptionForm->createView(),
         ));
+    }
+
+    public function subscriptionSettingsAction(Request $request)
+    {
+        $this->checkSecurity();
+
+
     }
 
     public function addAvatarAction(Request $request)
@@ -344,6 +354,11 @@ class AccountController extends Controller
     private function getFormType()
     {
         return $this->get('platformd_user.account_settings.form.type');
+    }
+
+    private function getSubscriptionFormType()
+    {
+        return $this->get('platformd_user.subscription_settings.form.type');
     }
 
     public function incompleteAction(Request $request)

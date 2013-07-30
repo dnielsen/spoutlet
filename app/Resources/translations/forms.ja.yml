@@ -74,4 +74,4 @@ account_settings_currentPassword: "旧パスワード "
 account_settings_plainPassword_first: "新パスワード"
 account_settings_plainPassword_second: "新パスワード（確認）"
 account_settings_subscribedGamingNews: "Alienware/Dell ゲーム情報やキャンペーン情報をE-メールで受け取ります。"
-account_settings_subscribedAlienwareEvents: 最新の景品、コンテスト、イベント、その他に関してのお知らせをALIENWARE ARENA からE-メールで受け取ります。
+subscription_settings_subscribedAlienwareEvents: 最新の景品、コンテスト、イベント、その他に関してのお知らせをALIENWARE ARENA からE-メールで受け取ります。

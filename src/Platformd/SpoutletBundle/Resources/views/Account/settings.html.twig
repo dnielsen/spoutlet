@@ -38,7 +38,6 @@
                 <div id="user-username">{{ user.username }}</div>
 
                 <div class="clear"></div>
-
                 <form action="{{ path('accounts_settings') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_password form form-horizontal">
                     <fieldset id="account-settings-password" class="account-settings-section">
                         <h3><span>{{ 'platformd.user.account_settings.password'|trans({}, 'FOSUserBundle') }}</h3></span>
@@ -57,15 +56,7 @@
 
                     <div class="clear"></div>
 
-                    <fieldset class="label-full account-settings-section" id="account-settings-newsletter">
-                        <h3><span>{{ 'platformd.user.account_settings.newsletter'|trans({}, 'FOSUserBundle') }}</h3></span>
-                        <table>
-                            <tr>
-                                <td class="subscription-checkbox">{{ form_widget(form.subscribedAlienwareEvents) }}</td>
-                                <td>{{ form_label(form.subscribedAlienwareEvents) }}</td>
-                            </tr>
-                        </table>
-                    </fieldset>
+
 
                     {{ form_rest(form) }}
 
@@ -73,6 +64,19 @@
                         <button type="submit" class="btn btn-primary">{{ 'submit'|trans }}</button>
                         <a href="{{ path('accounts_index') }}" class="btn">{{ 'cancel' | pd_trans }}</a>
                     </div>
+                </form>
+                <div class="clear"></div>
+                <form action="{{ path('subscription_settings') }}" {{ form_enctype(subscriptionForm) }} method="POST" class="fos_user_change_password form form-horizontal">
+                    <fieldset class="label-full account-settings-section" id="account-settings-newsletter">
+                        <h3><span>{{ 'platformd.user.account_settings.newsletter'|trans({}, 'FOSUserBundle') }}</h3></span>
+                        <table>
+                            <tr>
+                                <td class="subscription-checkbox">{{ form_widget(subscriptionForm.subscribedAlienwareEvents) }}</td>
+                                <td>{{ form_label(subscriptionForm.subscribedAlienwareEvents) }}</td>
+                            </tr>
+                        </table>
+                    </fieldset>
+
                 </form>
             </div>
         </div>
