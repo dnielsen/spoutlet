@@ -58,7 +58,7 @@ platformd.user.avatars.file_instructions: |
 platformd.user.avatars.already_cropped: This image has already been processed and cropped.
 platformd.user.avatars.invalid_avatar: Invalid avatar specified.
 platformd.user.avatars.admin_submit_success: Your image has been queued for processing and will be available soon.
-platformd.user.avatars.submit_success: Your image has been uploaded and will be reviewed within 72 hours.
+platformd.user.avatars.submit_success: Your avatar has been uploaded and will be reviewed within 72 hours. If approved your avatar will be automatically displayed.
 platformd.user.avatars.switch_not_found: Unable to find the specified avatar.
 platformd.user.avatars.switch_error: Unable to switch to the specified avatar at this time. Please try again soon.
 platformd.user.avatars.switch_success: Your avatar change will be visible shortly. Please allow up to 10 mins for the selected avatar to appear.

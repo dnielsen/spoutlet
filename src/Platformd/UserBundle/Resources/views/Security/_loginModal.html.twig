@@ -2,7 +2,7 @@
     <a class="login-modal-close-ne" title="Close" onclick="$($.unblockUI());"></a>
     <div class="login-modal-title">{{ 'platformd.user.login.title_login' | pd_trans }}</div>
     <div class="login-modal-content">
-        <form id="login-form" action="{{ path('fos_user_security_login') }}" method="post" class="form form-horizontal">
+        <form id="login-form" action="{{ login_check_path() }}" method="post" class="form form-horizontal">
             <table class="tbl">
                 <tbody>
                     <tr>

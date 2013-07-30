@@ -7,6 +7,7 @@ news_source_not_blank: Por favor, responda a esta pregunta.
 has_system_not_blank: Por favor elije si tienes o no, un sistema de Alienware.
 passwords_do_not_match: Las contraseñas no coinciden.
 age_requirement_not_met: Debes ser %s de edad para registrar.
+must_enter_new_password: Debe introducir una nueva contraseña
 
 fos_user.username.already_used: Lo sentimos, este nombre de usuario ya esta en uso.
 fos_user.email.already_used:  Lo sentimos, esta dirección de correo electrónico ya esta en uso.

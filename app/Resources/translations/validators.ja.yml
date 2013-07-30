@@ -7,6 +7,7 @@ news_source_not_blank: ALIENWARE ARENA を直近で聞いた時期を入力し�
 has_system_not_blank: Please choose whether or not you have an Alienware System.
 passwords_do_not_match: 古いパスワードが承認されません
 age_requirement_not_met: You must be %s years old to register.
+must_enter_new_password: 新しいパスワードを入力するか再入力してください
 
 fos_user.username.already_used: ユーザー名が既に使用されています
 fos_user.email.already_used: メールアドレスが既に使用されています
