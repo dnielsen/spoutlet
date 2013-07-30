@@ -60,7 +60,10 @@ class ApiAuthenticationProvider extends UserAuthenticationProvider
                 } else {
                     // Check to see if we have a CEVO-style password
                     if (!$this->cevoPasswordHandler->authenticate($user, $presentedPassword)) {
-                        throw new BadCredentialsException('The presented password is invalid.');
+                        // Check to see if we have a "Platform D" style password
+                        if (!$this->encoderFactory->getEncoder($user)->isPasswordValid($user->getPassword(), $presentedPassword, $user->getSalt())) {
+                            throw new BadCredentialsException('The presented password is invalid.');
+                        }
                     }
                 }
             }

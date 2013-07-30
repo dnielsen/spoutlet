@@ -24,6 +24,7 @@ $cmd->execute($path, $debug);
 class CevoFailedUserImportCommand
 {
     private $directory;
+    private $importFile;
     private $cevoIdUuidMap        = array();
     private $avatarUserMap        = array();
     private $usersAvatars         = array();
@@ -157,9 +158,14 @@ class CevoFailedUserImportCommand
         }
     }
 
+    protected function writeUserModificationLogCsvRow($rowData)
+    {
+        $this->writeCsvRow(rtrim($this->directory, '/').'/user_modifications.csv' , $rowData);
+    }
+
     protected function readFailedUsersCsv()
     {
-        $filepath = rtrim($this->directory, '/').'/non_imported_users.csv';
+        $filepath = $this->importFile;
 
         if (!file_exists($filepath)) {
             $this->error('Failed users file [ '.$filepath.' ] does not exist.', true);
@@ -175,6 +181,13 @@ class CevoFailedUserImportCommand
                 $username = ($data[1] != '' ? $data[1] : null);
 
                 if (false !== strpos($username, '?')) {
+                    $this->writeUserModificationLogCsvRow(array(
+                        $data[0],
+                        $username,
+                        $data[3],
+                        'Username contained ? - set to null',
+                    ));
+
                     $username = null;
                 }
 
@@ -213,6 +226,7 @@ class CevoFailedUserImportCommand
                     'mousepad'           => $data[48] != '' ? $data[48] : null,
                     'keyboard'           => $data[49] != '' ? $data[49] : null,
                     'reason'             => $data[50],
+                    'dataRow'            => $data,
                 );
 
                 if ($data[8] == 'cnjp' && substr($username, -4) == '_new') {
@@ -330,7 +344,8 @@ class CevoFailedUserImportCommand
         $this->output(0, 'PlatformD Failed CEVO User Importer');
         $this->output(0);
 
-        $this->directory = dirname($path);
+        $this->importFile = $path;
+        $this->directory  = dirname($path);
 
         $this->output(0, 'Reading CEVO user UUID map data.');
         $this->readCevoMapCsv();
@@ -354,13 +369,13 @@ class CevoFailedUserImportCommand
 
         $this->output(0, 'Processing users in [ '.$path.' ].');
 
-        $findUserByCevoUserIdSql       = 'SELECT `id`, `cevoUserId`, `uuid`, `username`, `username_canonical` FROM `'.$db.'`.`fos_user` WHERE `cevoUserId` = :cevoUserId';
+        $findUserByCevoUserIdSql       = 'SELECT `id`, `cevoUserId`, `uuid`, `username`, `username_canonical`, `email` FROM `'.$db.'`.`fos_user` WHERE `cevoUserId` = :cevoUserId';
         $findUserByCevoUserIdQuery     = $dbh->prepare($findUserByCevoUserIdSql);
 
-        $findUserByUsernameSql         = 'SELECT `id`, `cevoUserId`, `uuid`, `username`, `username_canonical` FROM `'.$db.'`.`fos_user` WHERE `username_canonical` = :username_canonical';
+        $findUserByUsernameSql         = 'SELECT `id`, `cevoUserId`, `uuid`, `username`, `username_canonical`, `email` FROM `'.$db.'`.`fos_user` WHERE `username_canonical` = :username_canonical';
         $findUserByUsernameQuery       = $dbh->prepare($findUserByUsernameSql);
 
-        $findUserByEmailSql            = 'SELECT `id`, `cevoUserId`, `uuid`, `username` FROM `'.$db.'`.`fos_user` WHERE `email_canonical` = :email';
+        $findUserByEmailSql            = 'SELECT `id`, `cevoUserId`, `uuid`, `username`, `username_canonical`, `email` FROM `'.$db.'`.`fos_user` WHERE `email_canonical` = :email';
         $findUserByEmailQuery          = $dbh->prepare($findUserByEmailSql);
 
         $updateUsernameByUsernameSql   = 'UPDATE `'.$db.'`.`fos_user` SET `username` = :username, `username_canonical` = :username_canonical WHERE `username_canonical` = :old_username_canonical';
@@ -404,6 +419,8 @@ class CevoFailedUserImportCommand
                         `has_alienware_system`      = 0';
 
         $updateUserSql = 'UPDATE `'.$db.'`.`fos_user` SET
+                        `username`                  = :username,
+                        `username_canonical`        = :username_canonical,
                         `password`                  = :password,
                         `uuid`                      = :uuid,
                         `email`                     = :email,
@@ -437,7 +454,7 @@ class CevoFailedUserImportCommand
         $createUserQuery = $dbh->prepare($createUserSql);
         $updateUserQuery = $dbh->prepare($updateUserSql);
 
-        $iteration             = -1;
+        $iteration             = 0;
         $this->begunIterations = true;
 
         foreach ($this->failedUsers as $userData) {
@@ -467,6 +484,7 @@ class CevoFailedUserImportCommand
                         $this->error('[ '.$iteration.' ] - '.'Email blank - skipping.');
                     }
 
+                    $this->writeNonImportedUserCsvRow('Email blank - skipping.', $userData['dataRow']);
                     $skippedCount++;
                     continue;
                 }
@@ -478,18 +496,25 @@ class CevoFailedUserImportCommand
 
                     // update original users who were converted to "_new" on cevo import so that we can go ahead and
                     // insert the original CEVO user with the previously conflicting username
-                    if ($username && in_array($username.'_new', $this->newUsernames)) {
+                    if (in_array($username.'_new', $this->newUsernames)) {
 
                         $newUsername          = $username.'_new';
                         $newCanonicalUsername = $this->canonicalize($newUsername);
 
-                        $this->output(6, '[ ACTION ] => Renaming DB user "'.$username.'" to "'.$newUsername.'"');
+                        $this->output(6, '[ ACTION ][ '.$iteration.' ] => Renaming DB user "'.$username.'" to "'.$newUsername.'"');
 
-                        /*$updateUsernameByUsernameQuery->execute(array(
+                        $this->writeUserModificationLogCsvRow(array(
+                            $userData['cevoUserId'],
+                            $userData['username'],
+                            $userData['email'],
+                            'Username conflicted with CNJP user - renamed to '.$userData['username'].'_new',
+                        ));
+
+                        $updateUsernameByUsernameQuery->execute(array(
                             'old_username_canonical' => $usernameCanonical,
                             'username'               => $newUsername,
                             'username_canonical'     => $newCanonicalUsername,
-                        ));*/
+                        ));
                     }
 
                     $findUserByUsernameQuery->execute(array(
@@ -501,11 +526,22 @@ class CevoFailedUserImportCommand
                     // fix for diacritic conflicts, e.g. Thorn and Thörn
                     if ($dbUserByUsername && $dbUserByUsername['username_canonical'] != $usernameCanonical) {
 
-                        $this->output(6, '[ ACTION ] => Setting username to null for "'.$username.'" ( conflicts with "'.$dbUserByUsername['username_canonical'].'" )');
+                        //$this->output(6, '[ ACTION ][ '.$iteration.' ] => Setting username to null for "'.$username.'" ( conflicts with "'.$dbUserByUsername['username_canonical'].'" )');
+
+                        //$this->error('Diacritical conflict for users "'.$dbUserByUsername['username_canonical'].'" and "'.$userData['username'].'"');
+                        $this->writeNonImportedUserCsvRow('Diacritical conflict for users "'.$dbUserByUsername['username_canonical'].'" and "'.$userData['username'].'"', $userData['dataRow']);
+                        $skippedCount++;
+                        continue;
+
+                        $this->writeUserModificationLogCsvRow(array(
+                            $userData['cevoUserId'],
+                            $userData['username'],
+                            $userData['email'],
+                            'Diacritical username conflict - username set to null',
+                        ));
 
                         $userData['username']           = null;
                         $userData['username_canonical'] = null;
-
                     }
 
                 } else {
@@ -519,7 +555,14 @@ class CevoFailedUserImportCommand
                     // if we have a username but CEVO don't, keep ours
                     if ($dbUserByCevoId && $dbUserByCevoId['username']) {
 
-                        $this->output(6, '[ ACTION ] => Keeping our username "'.$username.'" for CEVO user without one ( CEVO User ID [ '.$userData['cevoUserId'].' ] )');
+                        $this->output(6, '[ ACTION ][ '.$iteration.' ] => Keeping our username "'.$dbUserByCevoId['username'].'" for CEVO user without one ( CEVO User ID [ '.$userData['cevoUserId'].' ] )');
+
+                        $this->writeUserModificationLogCsvRow(array(
+                            $userData['cevoUserId'],
+                            $dbUserByCevoId['username'],
+                            $userData['email'],
+                            'CEVO data contained no username - kept '.$dbUserByCevoId['username'].' from DB record',
+                        ));
 
                         $userData['username']           = $dbUserByCevoId['username'];
                         $userData['username_canonical'] = $this->canonicalize($dbUserByCevoId['username']);
@@ -537,7 +580,8 @@ class CevoFailedUserImportCommand
                 $user = $findUserByEmailQuery->fetch();
 
                 if ($user && $user['cevoUserId'] && $user['cevoUserId'] !== $userData['cevoUserId']) {
-                    $this->error('[ '.$iteration.' ] - '.'User => { Email = '.$userData['email_canonical'].' } matched an existing user, but with a different CEVO User ID.');
+                    $this->error('[ '.$iteration.' ] - '.'User => { Username = "'.$userData['username'].'", CEVO User ID = '.$userData['cevoUserId'].', Email = '.$userData['email_canonical'].' } matched an existing user, but with a different CEVO User ID('.$user['cevoUserId'].')');
+                    $this->writeNonImportedUserCsvRow('Matched an existing user ('.$user['username'].'), but with a different CEVO User ID ('.$user['cevoUserId'].').', $userData['dataRow']);
                     $skippedCount++;
                     continue;
                 }
@@ -548,7 +592,7 @@ class CevoFailedUserImportCommand
                     $userUuid = $this->cevoIdUuidMap[$userData['cevoUserId']];
                 } else {
                     $userUuid = $currentUuid;
-                    //$this->writeCevoCsvRow(array($userData['cevoUserId'], $userUuid));
+                    $this->writeCevoCsvRow(array($userData['cevoUserId'], $userUuid));
                 }
 
                 $lastUpdated    = new \DateTime();
@@ -559,34 +603,36 @@ class CevoFailedUserImportCommand
                 }
 
                 $sharedParams = array(
-                    ":password"        => $userData['password'],
-                    ":uuid"            => $userUuid,
-                    ":email"           => $userData['email'],
-                    ":email_canonical" => $userData['email_canonical'],
-                    ":updated"         => $lastUpdated->format('Y-m-d'),
-                    ":ipAddress"       => $userData['ipAddress'],
-                    ":firstname"       => $userData['firstName'],
-                    ":lastname"        => $userData['lastName'],
-                    ":birthdate"       => $userData['birthDate'],
-                    ":phone_number"    => $userData['phone'],
-                    ":country"         => $userData['country'],
-                    ":state"           => $userData['state'],
-                    ":about_me"        => $userData['aboutMe'],
-                    ":manufacturer"    => $userData['manufacturer'],
-                    ":operatingSystem" => $userData['os'],
-                    ":cpu"             => $userData['cpu'],
-                    ":memory"          => $userData['ram'],
-                    ":videoCard"       => $userData['videoCard'],
-                    ":soundCard"       => $userData['soundCard'],
-                    ":hardDrive"       => $userData['hardDrive'],
-                    ":headphones"      => $userData['headphones'],
-                    ":mouse"           => $userData['mouse'],
-                    ":mousePad"        => $userData['mousepad'],
-                    ":keyboard"        => $userData['keyboard'],
-                    ":monitor"         => $userData['monitor'],
-                    ":avatar_id"       => $avatarId !== null ? (int)$avatarId : null,
-                    ":allow_contact"   => $userData['allowContact'],
-                    ":dell_optin"      => $userData['dellOptIn'],
+                    ":username"           => $userData['username'],
+                    ":username_canonical" => $userData['username_canonical'],
+                    ":password"           => $userData['password'],
+                    ":uuid"               => $userUuid,
+                    ":email"              => $userData['email'],
+                    ":email_canonical"    => $userData['email_canonical'],
+                    ":updated"            => $lastUpdated->format('Y-m-d'),
+                    ":ipAddress"          => $userData['ipAddress'],
+                    ":firstname"          => $userData['firstName'],
+                    ":lastname"           => $userData['lastName'],
+                    ":birthdate"          => $userData['birthDate'],
+                    ":phone_number"       => $userData['phone'],
+                    ":country"            => $userData['country'],
+                    ":state"              => $userData['state'],
+                    ":about_me"           => $userData['aboutMe'],
+                    ":manufacturer"       => $userData['manufacturer'],
+                    ":operatingSystem"    => $userData['os'],
+                    ":cpu"                => $userData['cpu'],
+                    ":memory"             => $userData['ram'],
+                    ":videoCard"          => $userData['videoCard'],
+                    ":soundCard"          => $userData['soundCard'],
+                    ":hardDrive"          => $userData['hardDrive'],
+                    ":headphones"         => $userData['headphones'],
+                    ":mouse"              => $userData['mouse'],
+                    ":mousePad"           => $userData['mousepad'],
+                    ":keyboard"           => $userData['keyboard'],
+                    ":monitor"            => $userData['monitor'],
+                    ":avatar_id"          => $avatarId !== null ? (int)$avatarId : null,
+                    ":allow_contact"      => $userData['allowContact'],
+                    ":dell_optin"         => $userData['dellOptIn'],
                 );
 
                 if (!$user) {
@@ -596,13 +642,11 @@ class CevoFailedUserImportCommand
                     }
 
                     $params = array_merge($sharedParams, array(
-                        ":username"           => $userData['username'],
-                        ":username_canonical" => $userData['username_canonical'],
                         ":cevoUserId"         => $userData['cevoUserId'],
                         ":created"            => $userData['created'],
                     ));
 
-                    /*$success = $createUserQuery->execute($params);
+                    $success = $createUserQuery->execute($params);
 
                     if (!$success) {
 
@@ -612,25 +656,36 @@ class CevoFailedUserImportCommand
 
                         if (!$createUserQuery->errorCode() == "23000" || false === strpos($errorInfo[2], 'Duplicate entry')) {
                             $this->error('[ '.$iteration.' ] - '.'Error importing User => { Username="'.$userData['username'].'", Email = "'.$userData['email'].'" }');
-                            file_put_contents(rtrim($this->directory, '/').'/user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$errorInfo[2]."\n", FILE_APPEND);
+                            file_put_contents(rtrim($this->directory, '/').'/failed_user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$errorInfo[2]."\n", FILE_APPEND);
+                            $this->writeNonImportedUserCsvRow($errorInfo[2], $userData['dataRow']);
                             $skippedCount++;
                             continue;
                         } else {
                             $this->error('[ '.$iteration.' ] - '.'Integrity constraint violation for User => { Username="'.$userData['username'].'", Email = "'.$userData['email'].'" }');
-                            file_put_contents(rtrim($this->directory, '/').'/user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$errorInfo[2]."\n", FILE_APPEND);
+                            file_put_contents(rtrim($this->directory, '/').'/failed_user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$errorInfo[2]."\n", FILE_APPEND);
+                            $this->writeNonImportedUserCsvRow($errorInfo[2], $userData['dataRow']);
                             $skippedCount++;
                             continue;
                         }
-                    }*/
+                    }
 
                     $addedCount++;
 
                 } else {
 
                     if (strtolower($user['username']) !== strtolower($userData['username']))  {
-                        $this->error('[ '.$iteration.' ] - '.'User => { Cevo User ID = '.$userData['cevoUserId'].', Username = "'.$userData['username'].'" } matched an existing user, but with a different username [ "'.$user['username'].'" ]');
-                        $skippedCount++;
-                        continue;
+
+                        $this->output(6, '[ ACTION ][ '.$iteration.' ] => Keeping CEVO username "'.$userData['username'].'" for user with different DB username ( Our username [ '.$user['username'].' ] )');
+
+                        $this->writeUserModificationLogCsvRow(array(
+                            $userData['cevoUserId'],
+                            $userData['username'],
+                            $userData['email'],
+                            'CEVO username did not match ours ('.$user['username'].') - kept CEVO username',
+                        ));
+
+                        $userData['username']           = $userData['username'];
+                        $userData['username_canonical'] = $this->canonicalize($userData['username']);
                     }
 
                     if ($this->debug) {
@@ -640,7 +695,7 @@ class CevoFailedUserImportCommand
 
                     $params = array_merge($sharedParams, array(':userId' => $user['id']));
 
-                    /*$success = $updateUserQuery->execute($params);
+                    $success = $updateUserQuery->execute($params);
 
                     if (!$success) {
                         $errorInfo = $updateUserQuery->errorInfo();
@@ -649,16 +704,18 @@ class CevoFailedUserImportCommand
 
                         if (!$updateUserQuery->errorCode() == "23000" || false === strpos($errorInfo[2], 'Duplicate entry')) {
                             $this->error('[ '.$iteration.' ] - '.'Error importing User => { Username="'.$userData['username'].'", Email = "'.$userData['email'].'" }');
-                            file_put_contents(rtrim($this->directory, '/').'/user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$errorInfo[2]."\n", FILE_APPEND);
+                            file_put_contents(rtrim($this->directory, '/').'/failed_user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$errorInfo[2]."\n", FILE_APPEND);
+                            $this->writeNonImportedUserCsvRow($errorInfo[2], $userData['dataRow']);
                             $skippedCount++;
                             continue;
                         } else {
                             $this->error('[ '.$iteration.' ] - '.'Integrity constraint violation for User => { Username="'.$userData['username'].'", Email = "'.$userData['email'].'" }');
-                            file_put_contents(rtrim($this->directory, '/').'/user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$errorInfo[2]."\n", FILE_APPEND);
+                            file_put_contents(rtrim($this->directory, '/').'/failed_user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$errorInfo[2]."\n", FILE_APPEND);
+                            $this->writeNonImportedUserCsvRow($errorInfo[2], $userData['dataRow']);
                             $skippedCount++;
                             continue;
                         }
-                    }*/
+                    }
 
                     $updatedCount++;
                 }
@@ -669,6 +726,7 @@ class CevoFailedUserImportCommand
                 sleep(5);
             } catch (Exception $e) {
                 $this->error('[ '.$iteration.' ] - '.$e->getMessage());
+                $this->writeNonImportedUserCsvRow($e->getMessage(), $userData['dataRow']);
                 $skippedCount++;
             }
         }
