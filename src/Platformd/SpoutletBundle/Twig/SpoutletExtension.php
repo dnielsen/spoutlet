@@ -659,6 +659,7 @@ class SpoutletExtension extends Twig_Extension
             case 'es':      return sprintf($format, 'AlienwareLatinoamerica', $enAltText);
             case 'en_IN':   return sprintf($format, 'alienwareindia', $enAltText);
             case 'en_US':   return sprintf($format, $enLink, $enAltText);
+            case 'en_GB':   return sprintf($format, $enLink, $enAltText);
 
             default:        return false;
         }
@@ -673,6 +674,7 @@ class SpoutletExtension extends Twig_Extension
             case 'ja':      return sprintf($format, 'Alienware_JP', $enAltText);
             case 'es':      return sprintf($format, 'AlienwareLatAm', $enAltText);
             case 'en_US':   return sprintf($format, $enLink, $enAltText);
+            case 'en_GB':   return sprintf($format, $enLink, $enAltText);
 
             default:        return false;
         }

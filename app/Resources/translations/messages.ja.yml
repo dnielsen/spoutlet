@@ -34,7 +34,8 @@ platformd.user.account.sign_out: ログアウト
 platformd.user.account.videos: マイビデオ
 platformd.user.account.media: メディア
 platformd.user.account.avatars: アバターを
-platformd.user.account.incomplete.title: Complete Registration
+platformd.user.account.account_settings: アカウント設定
+platformd.user.account.incomplete.title: 変更完了
 platformd.user.account.incomplete.description: Your registration is missing several key pieces of information. Please complete the form below to complete it.
 
 platformd.user.avatars.manage: アバターを設定する

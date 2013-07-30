@@ -23,6 +23,9 @@ class SecurityController extends BaseController
 {
     public function loginAction()
     {
+        $request = $this->container->get('request');
+        $session = $request->getSession();
+        $session->set('_security.target_path', $request->headers->get('referer'));
         return parent::loginAction();
     }
 
