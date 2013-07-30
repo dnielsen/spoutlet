@@ -33,6 +33,7 @@ class AccountSettingsType extends AbstractType
         $builder
             ->add('currentPassword', 'password', array(
                 'required' => true,
+                'error_bubbling' => true,
             ))
             ->add('plainPassword', 'repeated', array(
                 'type' => 'password',
@@ -47,13 +48,13 @@ class AccountSettingsType extends AbstractType
                 $plainPassword = $data->getPlainPassword();
 
                 if (empty($plainPassword)) {
-                    $form->get('plainPassword')->addError(new FormError('You must enter a new password.'));
+                    return;
                 }
 
                 $isPasswordValid = $apiAuth ? $apiManager->authenticate($user, $data->currentPassword) : $encoder->isPasswordValid($data->getPassword(), $data->currentPassword, $data->getSalt());
 
                 if (!$isPasswordValid) {
-                    $form->get('currentPassword')->addError(new FormError('Current password doesn\'t match'));
+                    $form->get('currentPassword')->addError(new FormError('passwords_do_not_match'));
                 }
             });
         ;

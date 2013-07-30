@@ -49,6 +49,30 @@ platformd.user.account.incomplete.description: Your registration is missing seve
 
 platformd.user.avatars.manage: Administrar Avatares
 platformd.user.avatars.select_or_add: 'Selecciona la imagen para utilizar, or <a href="javascript:void(0);" id="add-avatar">agregar una imagen nueva</a>.'
+platformd.user.avatars.add: '<a href="javascript:void(0);" id="add-avatar">Add a new image</a>'
+platformd.user.avatars.file_label: "File:"
+platformd.user.avatars.file_instructions: |
+    You can upload any size image file from your hard drive. We will automatically resize large images so you may upload the best quality version you have.
+
+    You will have a chance to crop this image in the next step.
+platformd.user.avatars.already_cropped: This image has already been processed and cropped.
+platformd.user.avatars.invalid_avatar: Invalid avatar specified.
+platformd.user.avatars.admin_submit_success: Your image has been queued for processing and will be available soon.
+platformd.user.avatars.submit_success: Your image has been uploaded and will be reviewed within 72 hours.
+platformd.user.avatars.switch_not_found: Unable to find the specified avatar.
+platformd.user.avatars.switch_error: Unable to switch to the specified avatar at this time. Please try again soon.
+platformd.user.avatars.switch_success: Your avatar change will be visible shortly. Please allow up to 10 mins for the selected avatar to appear.
+platformd.user.avatars.unapproved: Unapproved - %count%
+platformd.user.avatars.processing: Processing - %count%
+platformd.user.avatars.confirm_delete: Are you sure you wish to delete this avatar?
+platformd.user.avatars.crop: Crop Avatar
+platformd.user.avatars.submit: Submit
+platformd.user.avatars.awaiting_approval: AWAITING APPROVAL
+platformd.user.avatars.awaiting_processing: AWAITING PROCESSING
+platformd.user.avatars.update: ACTUALIZAR
+platformd.user.avatars.valid_filetypes: Valid avatar filetypes are JPG, PNG, GIF.
+
+
 
 platformd:
 

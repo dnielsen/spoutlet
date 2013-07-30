@@ -2,7 +2,7 @@
     <a class="login-modal-close-ne" title="Close" onclick="$($.unblockUI());"></a>
     <div class="login-modal-title">{{ 'platformd.user.login.title_login' | pd_trans }}</div>
     <div class="login-modal-content">
-        <form id="login-form" action="{{ login_check_path() }}" method="post" class="form form-horizontal">
+        <form id="login-form" action="{{ path('fos_user_security_login') }}" method="post" class="form form-horizontal">
             <table class="tbl">
                 <tbody>
                     <tr>
@@ -17,7 +17,7 @@
                         <td></td>
                         <td style="vertical-align:bottom;text-align:left;padding-left:15px">
                             <div>
-                                <input type="submit" id="_submit" class="button btn btn-primary login-button" name="_submit" value="{{ 'platformd.user.login.sign_in' | pd_trans }}" />
+                                <input type="submit" id="_login" class="button btn btn-primary login-button" name="_login" value="{{ 'platformd.user.login.sign_in' | pd_trans }}" />
                                 <input name="cookie_login" id="cookie_login" type="checkbox" class="remember-me">
                                 <label style="font-weight:bold;vertical-align:bottom;width:auto;" for="cookie_login">{{ 'platformd.user.login.remember' | pd_trans }}</label>
                             </div>
