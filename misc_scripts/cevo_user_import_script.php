@@ -32,6 +32,9 @@ class CevoUserImportCommand
     private $begunIterations      = false;
     private $exitAfterCurrentItem = false;
     private $uuids                = array();
+    private $runTime;
+    private $runTimeString;
+    private $logDir;
 
     protected function output($indentationLevel = 0, $message = null, $withNewLine = true) {
 
@@ -55,7 +58,7 @@ class CevoUserImportCommand
 
         $dt = new \DateTime();
 
-        file_put_contents(rtrim($this->directory, '/').'/../user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$message."\n", FILE_APPEND);
+        file_put_contents($this->logDir.'/user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$message."\n", FILE_APPEND);
 
         if ($exit) {
             $this->outputErrors();
@@ -65,9 +68,16 @@ class CevoUserImportCommand
         $this->errors[] = $message;
     }
 
+    protected function dirCheck($path)
+    {
+        if(!file_exists($path)) {
+            mkdir($path, 0775, true);
+        }
+    }
+
     protected function loadUuids()
     {
-        $filepath = rtrim($this->directory, '/').'/../user_map_files/uuid_stash.csv';
+        $filepath = rtrim($this->directory, '/').'/uuid_stash.csv';
 
         if (!file_exists($filepath)) {
             return;
@@ -94,20 +104,21 @@ class CevoUserImportCommand
         fclose($fp);
     }
 
-    protected function writeCevoCsvRow(array $rowData) {
-        $this->writeCsvRow(rtrim($this->directory, '/').'/../user_map_files/cevo_user_id_uuid_map.csv' , $rowData);
+    protected function writeCevoCsvRow(array $rowData)
+    {
+        $this->writeCsvRow(rtrim($this->directory, '/').'/cevo_user_id_uuid_map.csv' , $rowData);
         $this->cevoIdUuidMap[$rowData[0]] = $rowData[1];
     }
 
     protected function writeNonImportedUserCsvRow($reason, array $rowData)
     {
         $rowData[] = $reason;
-        $this->writeCsvRow(rtrim($this->directory, '/').'/../non_imported_users.csv' , $rowData);
+        $this->writeCsvRow($this->logDir.'/non_imported_users.csv' , $rowData);
     }
 
     protected function readCevoMapCsv()
     {
-        $filepath = rtrim($this->directory, '/').'/../user_map_files/cevo_user_id_uuid_map.csv';
+        $filepath = rtrim($this->directory, '/').'/user_map_files/cevo_user_id_uuid_map.csv';
 
         if (!file_exists($filepath)) {
             return;
@@ -129,7 +140,7 @@ class CevoUserImportCommand
 
     protected function readAvatarMapCsv()
     {
-        $filepath = rtrim($this->directory, '/').'/../user_map_files/user_avatar_map.csv';
+        $filepath = rtrim($this->directory, '/').'/user_avatar_map.csv';
 
         if (!file_exists($filepath)) {
             return;
@@ -246,7 +257,14 @@ class CevoUserImportCommand
         pcntl_signal(SIGTERM, array($this, 'signal_handler'));
         pcntl_signal(SIGINT, array($this, 'signal_handler'));
 
+        $this->directory = dirname($path);
         $this->debug = $debug;
+
+        $this->runTime       = new \DateTime()
+        $this->runTimeString = $this->runTime->format('YmdHis');
+
+        $this->logDir = rtrim($this->directory, '/').'/logs_'.$this->runTimeString;
+        $this->dirCheck($this->logDir);
 
         $dsn        = 'mysql:dbname=;host=';
         $dbUser     = '';
@@ -260,8 +278,6 @@ class CevoUserImportCommand
         $this->output(0);
         $this->output(0, 'PlatformD CEVO User Importer');
         $this->output(0);
-
-        $this->directory = dirname($path);
 
         $this->output(0, 'Reading CEVO user UUID map data.');
         $this->readCevoMapCsv();
@@ -281,6 +297,9 @@ class CevoUserImportCommand
         }
 
         $this->output(0, 'Processing users in [ '.$path.' ].');
+
+        $findUserByCevoUserIdSql   = 'SELECT `id`, `cevoUserId`, `uuid`, `username`, `username_canonical`, `email` FROM `'.$db.'`.`fos_user` WHERE `cevoUserId` = :cevoUserId';
+        $findUserByCevoUserIdQuery = $dbh->prepare($findUserByCevoUserIdSql);
 
         $findUserByEmailSql    = 'SELECT `id`, `cevoUserId`, `uuid`, `username` FROM `'.$db.'`.`fos_user` WHERE `email_canonical` = :email';
         $findUserByEmailQuery  = $dbh->prepare($findUserByEmailSql);
@@ -429,6 +448,17 @@ class CevoUserImportCommand
                         continue;
                     }
 
+                    if (false !== strpos($userData['username'], '?')) {
+                        $this->writeUserModificationLogCsvRow(array(
+                            $userData['cevoUserId'],
+                            $userData['username'],
+                            $userData['email'],
+                            'Username contained ? - set to null',
+                        ));
+
+                        $userData['username'] = null;
+                    }
+
                     if (substr($userData['username'], -4) == '_new' && $userData['origin'] == 'cnjp') {
                         $this->error('User has "_new" in username - skipping. User => { Email = "'.$userData['email'].'" }');
                         $this->writeNonImportedUserCsvRow('CNJP _new user', $data);
@@ -442,17 +472,25 @@ class CevoUserImportCommand
                         $this->outputUserData($userData);
                     }
 
-                    $findUserByEmailQuery->execute(array(
-                        ':email' => $userData['email_canonical'],
+                    $findUserByCevoUserIdQuery->execute(array(
+                        'cevoUserId' => $userData['cevoUserId'],
                     ));
 
-                    $user = $findUserByEmailQuery->fetch();
+                    $user = $findUserByCevoUserIdQuery->fetch();
 
-                    if ($user && $user['cevoUserId'] && $user['cevoUserId'] !== $userData['cevoUserId']) {
-                        $this->error('User => { Email = '.$userData['email_canonical'].' } matched an existing user, but with a different CEVO User ID.');
-                        $this->writeNonImportedUserCsvRow('User matched existing with different CEVO User ID', $data);
-                        $skippedCount++;
-                        continue;
+                    if (!$user) {
+                        $findUserByEmailQuery->execute(array(
+                            ':email' => $userData['email_canonical'],
+                        ));
+
+                        $user = $findUserByEmailQuery->fetch();
+
+                        if ($user && $user['cevoUserId'] && $user['cevoUserId'] !== $userData['cevoUserId']) {
+                            $this->error('[ '.$iteration.' ] - '.'User => { Username = "'.$userData['username'].'", CEVO User ID = '.$userData['cevoUserId'].', Email = '.$userData['email_canonical'].' } matched an existing user, but with a different CEVO User ID('.$user['cevoUserId'].')');
+                            $this->writeNonImportedUserCsvRow('Matched an existing user ('.$user['username'].'), but with a different CEVO User ID ('.$user['cevoUserId'].').', $userData['dataRow']);
+                            $skippedCount++;
+                            continue;
+                        }
                     }
 
                     if ($user && !empty($user['uuid'])) {
@@ -526,13 +564,13 @@ class CevoUserImportCommand
                             if (!$createUserQuery->errorCode() == "23000" || false === strpos($errorInfo[2], 'Duplicate entry')) {
                                 $this->error('Error importing User => { Username="'.$userData['username'].'", Email = "'.$userData['email'].'" }');
                                 $this->writeNonImportedUserCsvRow('MySQL error [ '.$createUserQuery->errorCode().' ]', $data);
-                                file_put_contents(rtrim($this->directory, '/').'/../user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$errorInfo[2]."\n", FILE_APPEND);
+                                file_put_contents($this->logDir.'/user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$errorInfo[2]."\n", FILE_APPEND);
                                 $skippedCount++;
                                 continue;
                             } else {
                                 $this->error('Integrity constraint violation for User => { Username="'.$userData['username'].'", Email = "'.$userData['email'].'" }');
                                 $this->writeNonImportedUserCsvRow('MySQL error [ '.$createUserQuery->errorCode().' ]', $data);
-                                file_put_contents(rtrim($this->directory, '/').'/../user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$errorInfo[2]."\n", FILE_APPEND);
+                                file_put_contents($this->logDir.'/user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$errorInfo[2]."\n", FILE_APPEND);
                                 $skippedCount++;
                                 continue;
                             }
@@ -566,13 +604,13 @@ class CevoUserImportCommand
                             if (!$updateUserQuery->errorCode() == "23000" || false === strpos($errorInfo[2], 'Duplicate entry')) {
                                 $this->error('Error importing User => { Username="'.$userData['username'].'", Email = "'.$userData['email'].'" }');
                                 $this->writeNonImportedUserCsvRow('MySQL error [ '.$updateUserQuery->errorCode().' ]', $data);
-                                file_put_contents(rtrim($this->directory, '/').'/../user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$errorInfo[2]."\n", FILE_APPEND);
+                                file_put_contents($this->logDir.'/user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$errorInfo[2]."\n", FILE_APPEND);
                                 $skippedCount++;
                                 continue;
                             } else {
                                 $this->error('Integrity constraint violation for User => { Username="'.$userData['username'].'", Email = "'.$userData['email'].'" }');
                                 $this->writeNonImportedUserCsvRow('MySQL error [ '.$updateUserQuery->errorCode().' ]', $data);
-                                file_put_contents(rtrim($this->directory, '/').'/../user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$errorInfo[2]."\n", FILE_APPEND);
+                                file_put_contents($this->logDir.'/user_import_errors.log', '[ '.$dt->format('Y-m-d H:i:s').' ] - '.$errorInfo[2]."\n", FILE_APPEND);
                                 $skippedCount++;
                                 continue;
                             }

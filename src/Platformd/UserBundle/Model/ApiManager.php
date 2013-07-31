@@ -71,17 +71,17 @@ $result = $this->dummyGetUser($username);
             $uuid = $user->getUuid();
 
             $postParameters = array(
-                'action'   => 'update',
-                'username' => $user->getUsername(),
-                'email'    => $user->getEmail(),
-                'uuid'     => $uuid,
+                'action'        => 'update',
+                'username'      => $user->getUsername(),
+                'email'         => $user->getEmail(),
+                'uuid'          => $uuid,
                 'custom_avatar' => $user->getAvatar() && $user->getAvatar()->isUsable(),
-                'birth_date' => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
-                'first_name' => '',
-                'last_name' => '',
-                'country' => $user->getCountry(),
-                'state' => $user->getState(),
-                'roles' => $user->getRoles(),
+                'birth_date'    => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
+                'first_name'    => '',
+                'last_name'     => '',
+                'country'       => $user->getCountry(),
+                'state'         => $user->getState(),
+                'roles'         => $user->getRoles(),
             );
         } elseif (is_array($user)) {
             if (!isset($user['uuid'])) {

@@ -249,8 +249,7 @@ class AvatarManager
     private function checkUserUuid($user)
     {
         if (!$user->getUuid()) {
-            $user->setUuid($this->uuidGen());
-            $this->userManager->updateUser($user);
+            throw new \Exception('User [ ID => '.$user->getId().' ] tried to create an avatar but does not have a UUID set.');
         }
     }
 }
