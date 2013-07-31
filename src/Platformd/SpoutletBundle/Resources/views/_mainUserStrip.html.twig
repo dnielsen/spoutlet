@@ -20,8 +20,6 @@
 
     <script type="text/javascript">
         $(function () {
-            $('#_username').watermark("{{ 'platformd.user.login.username' | pd_trans }}");
-            $('#_password').watermark("{{ 'platformd.user.login.password' | pd_trans }}");
             $('#header-login-link').click(function () {
                 $.blockUI({
                     message: $('#login-modal-wrapper'),

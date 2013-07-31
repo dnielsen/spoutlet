@@ -7,11 +7,21 @@
                 <tbody>
                     <tr>
                         <td></td>
-                        <td style="text-align:left;padding-left:15px"><div><input id="_username" name="_username" type="text" maxlength="255" value="" /></div></td>
+                        <td style="text-align:left;padding-left:15px">
+                            <div>
+                                <label for="_username">{{ 'platformd.user.login.username' | pd_trans }}</label>
+                                <input id="_username" name="_username" type="text" maxlength="255" value="" />
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td></td>
-                        <td style="text-align:left;padding-left:15px"><div><input id="_password" name="_password" type="password" maxlength="255" value="" class="form-txt" /></div></td>
+                        <td style="text-align:left;padding-left:15px">
+                            <div>
+                                <label for="_password">{{ 'platformd.user.login.password' | pd_trans }}</label>
+                                <input id="_password" name="_password" type="password" maxlength="255" value="" class="form-txt" />
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <td></td>

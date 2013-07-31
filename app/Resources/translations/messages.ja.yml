@@ -37,6 +37,8 @@ platformd.user.account.avatars: アバターを
 platformd.user.account.account_settings: アカウント設定
 platformd.user.account.incomplete.title: 変更完了
 platformd.user.account.incomplete.description: Your registration is missing several key pieces of information. Please complete the form below to complete it.
+platformd.user.account.changes_saved: Your changes are saved.
+platformd.user.account.error: The system is currently unable to process your request. Please try again shortly.
 
 platformd.user.avatars.manage: アバターを設定する
 platformd.user.avatars.select_or_add: '使用する画像を選択する、または <a href="javascript:void(0);" id="add-avatar">新しい画像を追加する</a>.'

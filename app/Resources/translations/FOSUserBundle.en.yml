@@ -188,7 +188,7 @@ platformd.user.account_settings.newsletter: "Notifications"
 
 invalid_username_password: Invalid username or password
 
-"Bad credentials": "Invalid email or password"
-"The presented password is invalid.": "Invalid email or password"
+"Bad credentials": "Incorrect username/email or password"
+"The presented password is invalid.": "Incorrect username/email or password"
 "The presented password cannot be empty.": "Please enter a password"
 "User account is disabled.": Your account is not activated. You must confirm your account by clicking on the link in the Activate Account Email.

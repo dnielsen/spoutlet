@@ -113,11 +113,26 @@ class DefaultController extends Controller
 
     public function _arpAction(Request $request)
     {
-        $response = $this->render('SpoutletBundle:Default:_arp.html.twig');
+        # keeping this here until we take over arp. for now we redirect to cevos
+        #$response = $this->render('SpoutletBundle:Default:_arp.html.twig');
+        #
+        #$this->varnishCache($response, 30);
+        $baseUrl    = 'http://www.alienwarearena.com%s/arp';
+        $subDomain  = $this->getCurrentSite()->getSubDomain() == 'latam' ? '/'.$this->getCurrentSite()->getSubDomain() : '/';
+        $url        = sprintf($baseUrl, $subDomain);
 
-        $this->varnishCache($response, 30);
+        $response = new RedirectResponse($url);
 
         return $response;
+    }
+
+    public function forumsAction(Request $request)
+    {
+        $baseUrl    = 'http://www.alienwarearena.com/%s/forums';
+        $subDomain  = $this->getCurrentSite()->getSubDomain();
+        $url        = sprintf($baseUrl, $subDomain);
+
+        return new RedirectResponse($url);
     }
 
     public function forceLogoutAction(Request $request, $returnUrl) {

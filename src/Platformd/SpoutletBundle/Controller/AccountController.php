@@ -286,7 +286,7 @@ class AccountController extends Controller
 
                 try {
                     $this->getUserManager()->updateUserAndApi($form->getData());
-                    $this->setFlash('success', 'Your changes are saved.');
+                    $this->setFlash('success', 'platformd.user.account.changes_saved');
 
                     return $this->redirect($this->generateUrl('accounts_settings'));
                 } catch (ApiRequestException $e) {
@@ -301,9 +301,8 @@ class AccountController extends Controller
 
         $newAvatar->setUser($this->getUser());
 
-        $avatarForm = $this->createForm(new AvatarType(), $newAvatar);
-
-        $subscriptionForm = $this->createForm($this->getSubscriptionFormType(), $this->getUser());
+        $avatarForm         = $this->createForm(new AvatarType(), $newAvatar);
+        $subscriptionForm   = $this->createForm($this->getSubscriptionFormType(), $this->getUser());
 
         return $this->render('SpoutletBundle:Account:settings.html.twig', array(
             'form'              => $form->createView(),
@@ -317,7 +316,20 @@ class AccountController extends Controller
     {
         $this->checkSecurity();
 
+        $form = $this->createForm($this->getSubscriptionFormType(), $this->getUser());
 
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            try {
+                $this->getUserManager()->updateUserAndApi($form->getData());
+                $this->setFlash('success', 'platformd.user.account.changes_saved');
+            } catch (ApiRequestException $e) {
+                $this->setFlash('error', 'The system is currently unable to process your request. Please try again shortly.');
+            }
+        }
+
+        return $this->redirect($this->generateUrl('accounts_settings'));
     }
 
     public function addAvatarAction(Request $request)
