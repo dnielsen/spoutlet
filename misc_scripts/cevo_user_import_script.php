@@ -260,7 +260,7 @@ class CevoUserImportCommand
         $this->directory = dirname($path);
         $this->debug = $debug;
 
-        $this->runTime       = new \DateTime()
+        $this->runTime       = new \DateTime();
         $this->runTimeString = $this->runTime->format('YmdHis');
 
         $this->logDir = rtrim($this->directory, '/').'/logs_'.$this->runTimeString;

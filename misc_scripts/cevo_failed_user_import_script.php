@@ -182,7 +182,11 @@ class CevoFailedUserImportCommand
         }
 
         if (($handle = fopen($filepath, "r")) !== FALSE) {
-            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            while (($data = fgetcsv($handle, 100000, ",")) !== FALSE) {
+
+                if ($data[0] == 'id' && $data[1] = 'username') {
+                    continue;
+                }
 
                 $createdDt   = \DateTime::createFromFormat('U', $data[6]);
                 $birthdateDt = \DateTime::createFromFormat('Y-m-d', $data[13]);
@@ -203,7 +207,7 @@ class CevoFailedUserImportCommand
 
                 $usernameCanonical = $username ? $this->canonicalize($username) : null;
 
-                $this->failedUsers[] = array(
+                $user = array(
                     'cevoUserId'         => $data[0],
                     'username'           => $username,
                     'username_canonical' => $usernameCanonical,
@@ -238,6 +242,8 @@ class CevoFailedUserImportCommand
                     'reason'             => isset($data[50]) ? $data[50] : null,
                     'dataRow'            => $data,
                 );
+
+                $this->failedUsers[] = $user;
 
                 if ($data[8] == 'cnjp' && substr($username, -4) == '_new') {
                     $this->newUsernames[] = $username;
@@ -343,7 +349,7 @@ class CevoFailedUserImportCommand
         $this->importFile = $path;
         $this->directory  = dirname($path);
 
-        $this->runTime       = new \DateTime()
+        $this->runTime       = new \DateTime();
         $this->runTimeString = $this->runTime->format('YmdHis');
 
         $this->logDir = rtrim($this->directory, '/').'/logs_'.$this->runTimeString;
@@ -361,8 +367,6 @@ class CevoFailedUserImportCommand
         $this->output(0);
         $this->output(0, 'PlatformD Failed CEVO User Importer');
         $this->output(0);
-
-
 
         $this->output(0, 'Reading CEVO user UUID map data.');
         $this->readCevoMapCsv();
@@ -527,11 +531,11 @@ class CevoFailedUserImportCommand
                             'Username conflicted with CNJP user - renamed to '.$userData['username'].'_new',
                         ));
 
-                        /*$updateUsernameByUsernameQuery->execute(array(
+                        $updateUsernameByUsernameQuery->execute(array(
                             'old_username_canonical' => $usernameCanonical,
                             'username'               => $newUsername,
                             'username_canonical'     => $newCanonicalUsername,
-                        ));*/
+                        ));
                     }
 
                     $findUserByUsernameQuery->execute(array(
@@ -617,7 +621,7 @@ class CevoFailedUserImportCommand
                     $userUuid = $this->cevoIdUuidMap[$userData['cevoUserId']];
                 } else {
                     $userUuid = $currentUuid;
-                    //$this->writeCevoCsvRow(array($userData['cevoUserId'], $userUuid));
+                    $this->writeCevoCsvRow(array($userData['cevoUserId'], $userUuid));
                 }
 
                 $lastUpdated    = new \DateTime();
@@ -671,7 +675,7 @@ class CevoFailedUserImportCommand
                         ":created"            => $userData['created'],
                     ));
 
-                    /*$success = $createUserQuery->execute($params);
+                    $success = $createUserQuery->execute($params);
 
                     if (!$success) {
 
@@ -692,7 +696,7 @@ class CevoFailedUserImportCommand
                             $skippedCount++;
                             continue;
                         }
-                    }*/
+                    }
 
                     $addedCount++;
 
@@ -720,7 +724,7 @@ class CevoFailedUserImportCommand
 
                     $params = array_merge($sharedParams, array(':userId' => $user['id']));
 
-                    /*$success = $updateUserQuery->execute($params);
+                    $success = $updateUserQuery->execute($params);
 
                     if (!$success) {
                         $errorInfo = $updateUserQuery->errorInfo();
@@ -740,7 +744,7 @@ class CevoFailedUserImportCommand
                             $skippedCount++;
                             continue;
                         }
-                    }*/
+                    }
 
                     $updatedCount++;
                 }
