@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Util\IpLookupUtil;
 use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
+use Platformd\UserBundle\Exception\UserRegistrationTimeoutException;
 
 class RegistrationFormHandler extends BaseRegistrationFormHandler
 {
@@ -61,8 +62,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
                 $user->setIpAddress($ipAddress);
 
                 if ($this->checkRegistrationTimeoutPassed() === false) {
-                    $this->container->get('platformd.util.flash_util')->setFlash('error', 'platformd.user.register.please_wait');
-                    return false;
+                    throw new UserRegistrationTimeoutException();
                 }
 
                 $this->onSuccess($user, $confirmation);

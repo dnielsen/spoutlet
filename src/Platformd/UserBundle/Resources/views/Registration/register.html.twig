@@ -1,6 +1,26 @@
 {% extends "SpoutletBundle::layout.html.twig" %}
 
 {% block content %}
+
+{% if timedout %}
+<div class="std_2col">
+    <div class="xnotices session-flash">
+        <div class="notice errorNotice">
+            <div class="pad">
+                <div class="pad2">
+                    <div class="pad3">
+                        <div class="pad4">
+                            <h3 id="notice-type">{{ 'platformd.flash.error_title'|trans }}</h3>
+                            <p id="notice-message">{{ 'platformd.user.register.please_wait'|trans|raw }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 {% include "FOSUserBundle:Registration:register_content.html.twig" %}
 {% endblock content %}
 

@@ -16,6 +16,7 @@ class RegistrationController extends BaseRegistrationController
         $form                   = $this->container->get('fos_user.registration.form');
         $formHandler            = $this->container->get('fos_user.registration.form.handler');
         $confirmationEnabled    = $this->container->getParameter('fos_user.registration.confirmation.enabled');
+        $timedout               = $this->container->get('request')->get('timedout') ? true : false;
 
         $process = $formHandler->process($confirmationEnabled);
         if ($process) {
@@ -47,6 +48,7 @@ class RegistrationController extends BaseRegistrationController
             'errors'    => $form->getErrors(),
             'config'    => $this->getCurrentSite()->getSiteConfig(),
             'locale'    => $this->getCurrentSite()->getDefaultLocale(),
+            'timedout'  => $timedout,
         ));
     }
 
