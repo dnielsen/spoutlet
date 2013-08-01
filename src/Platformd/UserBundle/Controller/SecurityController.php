@@ -23,9 +23,21 @@ class SecurityController extends BaseController
 {
     public function loginAction()
     {
-        $request = $this->container->get('request');
-        $session = $request->getSession();
-        $session->set('_security.target_path', $request->headers->get('referer'));
+        $request        = $this->container->get('request');
+        $session        = $request->getSession();
+        $referer        = $request->headers->get('referer');
+        $loginPath      = $this->container->get('router')->generate('fos_user_security_login', array(), true);
+        $loginCheckPath = $this->container->get('router')->generate('_fos_user_security_check', array(), true);
+
+        $doesRefererMatchLoginStuff = ($referer == $loginPath || $referer == $loginCheckPath);
+
+        if (!$doesRefererMatchLoginStuff) {
+            $session->set('_security.target_path', $referer);
+            $session->set('_security.temp_target_path', $referer);
+        } else {
+            $session->set('_security.target_path', $session->get('_security.temp_target_path'));
+        }
+
         return parent::loginAction();
     }
 
