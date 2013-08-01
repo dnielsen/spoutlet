@@ -59,7 +59,7 @@ class UserManager extends BaseUserManager
         $birthDateCheck = $birthDateRequired ? $user->getBirthdate() : true;
 
         $userAccountComplete = $user->getUsername() && $user->getPassword() && $user->getFirstname() && $user->getLastname()
-        && $user->getEmail() && ($user->getHasAlienwareSystem() !== null) && ($user->getSubscribedGamingNews() !== null)
+        && $user->getEmail() && ($user->getSubscribedGamingNews() !== null)
         && ($user->getSubscribedAlienwareEvents() !== null) && $birthDateCheck;
 
         return $userAccountComplete;

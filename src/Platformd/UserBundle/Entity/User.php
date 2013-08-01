@@ -197,7 +197,7 @@ class User extends BaseUser
      *
      * @ORM\Column(name="subscribed_gaming_news", type="boolean", nullable=true)
      */
-    protected $subscribedGamingNews;
+    protected $subscribedGamingNews = false;
 
     /**
      * This is the checkbox for:
@@ -207,7 +207,7 @@ class User extends BaseUser
      * @var bool
      * @ORM\Column(type="boolean", nullable=true)
      */
-    protected $subscribedAlienwareEvents;
+    protected $subscribedAlienwareEvents = false;
 
     /**
      * @var Boolean $terms_accepted
