@@ -43,8 +43,17 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
 
         if ($request->isXmlHttpRequest()) {
             // handle ajax login success here
-            $response   = new Response();
-            $result     = array('success' => true, 'referer' => $request->headers->get('referer'));
+            $response       = new Response();
+            $referer        = $request->headers->get('referer');
+            $homePath       = $this->router->generate('default_index', array(), true);
+            $checkEmailPath = $this->router->generate('fos_user_registration_check_email', array(), true);
+
+            // to avoid confusion for people who hang out on /check-email after clicking the confirm email link, we need to just send them to the homepage :|
+            if ($referer == $checkEmailPath) {
+                $referer = $homePath;
+            }
+
+            $result     = array('success' => true, 'referer' => $referer);
 
             $response->headers->set('Content-type', 'text/json; charset=utf-8');
             $response->setContent(json_encode($result));
