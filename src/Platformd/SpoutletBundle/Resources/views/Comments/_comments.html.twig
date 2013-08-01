@@ -89,7 +89,7 @@
                                     {% endif %}
                                 </a>
                                 <div class="reply-body">
-                                    <a href="{{ account_link(comment.author.username) }}">{{ reply.author.username }}</a>
+                                    <a href="{{ account_link(reply.author.username) }}">{{ reply.author.username }}</a>
                                     <div class="editable" id="comment-body-{{ reply.id }}" style="display: inline;">{{ reply.body | nl2br }}</div>
                                 </div>
                                 <div class="comment-footer">
