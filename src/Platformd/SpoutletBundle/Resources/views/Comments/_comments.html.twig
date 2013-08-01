@@ -12,7 +12,7 @@
                             {% if get_avatar_url(comment.author) != false %}
                                 <img src="{{ asset(get_avatar_url(comment.author)) }}" alt="{{ comment.author.username }}" />
                             {% else %}
-                                <div class="default-avatar avatar32"></div>
+                                <div class="default-avatar avatar84"></div>
                             {% endif %}
                         </a>
 
@@ -82,10 +82,10 @@
                             {% set replyCounter = replyCounter + 1 %}
                             <div class="comment-reply{% if replyCounter > 3 %} hidden{% endif %}{% if replyCounter == 1 %} first{% endif %}" id="post-id-{{ reply.id }}">
                                 <a href="{{ account_link(reply.author.username) }}">
-                                    {% if get_avatar_url(comment.author, 32) != false %}
+                                    {% if get_avatar_url(reply.author, 32) != false %}
                                         <img src="{{ asset(get_avatar_url(reply.author, 32)) }}" alt="{{ reply.author.username }}" />
                                     {% else %}
-                                        <div class="default-avatar avatar84"></div>
+                                        <div class="default-avatar avatar32"></div>
                                     {% endif %}
                                 </a>
                                 <div class="reply-body">
