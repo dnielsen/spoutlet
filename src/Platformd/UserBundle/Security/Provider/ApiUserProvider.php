@@ -23,10 +23,10 @@ class ApiUserProvider implements UserProviderInterface
     public function loadUserByUsername($username)
     {
         // Do we have a local record?
-        $user = $this->findUserBy(array('usernameCanonical' => $this->canonicalizeUsername($username)));
+        $user = $this->findUserBy(array('usernameCanonical' => $this->canonicalize($username)));
 
         if (!$user) {
-            $user = $this->findUserBy(array('emailCanonical' => $this->canonicalizeEmail($username)));
+            $user = $this->findUserBy(array('emailCanonical' => $this->canonicalize($username)));
         }
 
         if ($user) {
