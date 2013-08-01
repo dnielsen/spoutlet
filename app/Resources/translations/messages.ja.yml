@@ -40,8 +40,32 @@ platformd.user.account.incomplete.description: Your registration is missing seve
 platformd.user.account.changes_saved: Your changes are saved.
 platformd.user.account.error: The system is currently unable to process your request. Please try again shortly.
 
-platformd.user.avatars.manage: アバターを設定する
+platformd.user.avatars.manage: アバター管理
 platformd.user.avatars.select_or_add: '使用する画像を選択する、または <a href="javascript:void(0);" id="add-avatar">新しい画像を追加する</a>.'
+platformd.user.avatars.add: '<a href="javascript:void(0);" id="add-avatar">新しい画像を追加する</a>'
+platformd.user.avatars.file_label: "ファイル:"
+platformd.user.avatars.file_instructions: |
+    ハードドライブから様々なサイズの画像ファイルがアップロードできます。
+
+    容量の大きな画像は自動的にリサイズされますので品質の高い画像をアップロードしても問題ありません。次のステップでは、画像を切り取ることができます。
+platformd.user.avatars.already_cropped: このアバターはすでに切り取り処理が行われています。
+platformd.user.avatars.invalid_avatar: 無効なアバターが指定されました。
+platformd.user.avatars.admin_submit_success: Your image has been queued for processing and will be available soon.
+platformd.user.avatars.submit_success: あなたのアバターはアップロードされており、72時間以内に調査されます。
+platformd.user.avatars.switch_not_found: 指定されたアバターを見つけることができません。
+platformd.user.avatars.switch_error: Unable to switch to the specified avatar at this time. Please try again soon.
+platformd.user.avatars.switch_success: あなたのアバターは10分以内に表示されます。
+platformd.user.avatars.unapproved: 認証されていません - %count%
+platformd.user.avatars.processing: 処理中 - %count%
+platformd.user.avatars.confirm_delete: 本当にこのアバターを削除してよろしいですか？
+platformd.user.avatars.crop: アバターを切り取る
+platformd.user.avatars.submit: 実行
+platformd.user.avatars.awaiting_approval: 認証待ち
+platformd.user.avatars.awaiting_processing: 処理待ち
+platformd.user.avatars.update: アップデート
+platformd.user.avatars.valid_filetypes: 有効なアバターの拡張子はJPG、PNG、GIFです。
+platformd.user.avatars.upload: アップロード
+platformd.user.avatars.choose_avatar: Choose Avatar
 
 platformd:
 
@@ -343,7 +367,7 @@ platformd:
             terms_label: サービス規約
             dell_privacy_label: デルのプライバシーポリシー
             country_label: 国の選択
-            underage_message: 申し訳ありませんが年齢制限によりお客様の登録を完了することができません。
+            underage_message: 申し訳ございません。現在登録が行えません。
             please_wait: 現在アクセスが集中しているため、作成要求を処理することができませんでした。時間を置いてからもう一度試してください。
             oops: 申し訳ありません
             cannot_process: リクエストを完了することができませんでした。もしおかしいと思われ、以下の問題が改善されない場合は <a href="%s">こちらまでご連絡ください</a>。
@@ -631,11 +655,11 @@ platformd:
                     ALIENWAREARENAチーム
 
 # I'm not sure how we have two different potential "wrong password messages"...
-"Bad credentials": "パスワードまたはメールアドレスが無効です"
-"The presented password is invalid.": "パスワードまたはメールアドレスが無効です"
+"Bad credentials": "ユーザー名/メールアドレスあるいはパスワードが間違っています。"
+"The presented password is invalid.": "ユーザー名/メールアドレスあるいはパスワードが間違っています。"
 "The presented password cannot be empty.": "パスワードを入力してください"
 "User account is disabled.": アカウントが無効です
-"Invalid username or password": "パスワードまたはメールアドレスが無効です"
+"Invalid username or password": "ユーザー名/メールアドレスあるいはパスワードが間違っています。"
 
 # registration drop-down choices
 "Select one": "----お選びください ----"

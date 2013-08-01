@@ -164,10 +164,13 @@ fos_user_change_password_form_new_first: "新規パスワード:"
 fos_user_change_password_form_new_second: "新規パスワード（確認）:"
 fos_user_change_password_form_current: "現在のパスワード:"
 
+platformd.user.account_settings.password: "パスワード変更"
+platformd.user.account_settings.newsletter: "お知らせ"
+
 invalid_username_password: 無効なユーザー名/パスワードです。
 
-"Bad credentials": "パスワードまたはメールアドレスが無効です"
-"The presented password is invalid.": "パスワードまたはメールアドレスが無効です"
+"Bad credentials": "ユーザー名/メールアドレスあるいはパスワードが間違っています。"
+"The presented password is invalid.": "ユーザー名/メールアドレスあるいはパスワードが間違っています。"
 "The presented password cannot be empty.": "パスワードを入力してください"
 "User account is disabled.": アカウントが無効です
-"Invalid username or password": "パスワードまたはメールアドレスが無効です"
+"Invalid username or password": "ユーザー名/メールアドレスあるいはパスワードが間違っています。"

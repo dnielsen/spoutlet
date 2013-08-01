@@ -91,13 +91,13 @@
     </div>
 
     <div id="avatar-modal" style="display:none;">
-        <div class="modal-title">Choose Avatar</div>
+        <div class="modal-title">{{ 'platformd.user.avatars.choose_avatar'|trans }}</div>
         <div id="add-avatar-form">
             <div class="avatar-restrictions form-error" style="display:none;"><p>{{ 'platformd.user.avatars.valid_filetypes'|trans }}</p></div>
             <form action="{{ path('avatar_add') }}" method="post" {{ form_enctype(avatarForm) }}>
                 {{ form_row(avatarForm.file) }}
                 {{ form_rest(avatarForm) }}
-                <button id="submit-avatar" type="submit" class="btn btn-primary" formnovalidate>Upload</button>
+                <button id="submit-avatar" type="submit" class="btn btn-primary" formnovalidate>{{ 'platformd.user.avatars.upload'|trans }}</button>
             </form>
         </div>
 

@@ -51,30 +51,30 @@ platformd.user.account.error: The system is currently unable to process your req
 
 platformd.user.avatars.manage: Administrar Avatares
 platformd.user.avatars.select_or_add: 'Selecciona la imagen para utilizar, or <a href="javascript:void(0);" id="add-avatar">agregar una imagen nueva</a>.'
-platformd.user.avatars.add: '<a href="javascript:void(0);" id="add-avatar">Add a new image</a>'
-platformd.user.avatars.file_label: "File:"
+platformd.user.avatars.add: '<a href="javascript:void(0);" id="add-avatar">Agregar una imagen nueva</a>'
+platformd.user.avatars.file_label: "Archivo:"
 platformd.user.avatars.file_instructions: |
-    You can upload any size image file from your hard drive. We will automatically resize large images so you may upload the best quality version you have.
+        Puedes subir archivo de imagen de cualquier tamaño de tu disco duro.
 
-    You will have a chance to crop this image in the next step.
-platformd.user.avatars.already_cropped: This image has already been processed and cropped.
-platformd.user.avatars.invalid_avatar: Invalid avatar specified.
+        Vamos a redimensionar las imágenes ampliadas automáticamente por lo que puedes subir la versión de mejor calidad que tienes. Tendrás la oportunidad de recortar la imagen en el siguiente paso.
+platformd.user.avatars.already_cropped: Este avatar ya fue procesado y recortado.
+platformd.user.avatars.invalid_avatar: Avatar inválido especificado.
 platformd.user.avatars.admin_submit_success: Your image has been queued for processing and will be available soon.
-platformd.user.avatars.submit_success: Your image has been uploaded and will be reviewed within 72 hours.
-platformd.user.avatars.switch_not_found: Unable to find the specified avatar.
+platformd.user.avatars.submit_success: Tu avatar se ha cargado y se revisará dentro de 72 horas. Si se aprueba, aparecerá automáticamente tu avatar.
+platformd.user.avatars.switch_not_found: No se encuentra el avatar especificado.
 platformd.user.avatars.switch_error: Unable to switch to the specified avatar at this time. Please try again soon.
-platformd.user.avatars.switch_success: Your avatar change will be visible shortly. Please allow up to 10 mins for the selected avatar to appear.
-platformd.user.avatars.unapproved: Unapproved - %count%
-platformd.user.avatars.processing: Processing - %count%
-platformd.user.avatars.confirm_delete: Are you sure you wish to delete this avatar?
-platformd.user.avatars.crop: Crop Avatar
-platformd.user.avatars.submit: Submit
-platformd.user.avatars.awaiting_approval: AWAITING APPROVAL
-platformd.user.avatars.awaiting_processing: AWAITING PROCESSING
-platformd.user.avatars.update: ACTUALIZAR
-platformd.user.avatars.valid_filetypes: Valid avatar filetypes are JPG, PNG, GIF.
-
-
+platformd.user.avatars.switch_success: Tu avatar aparecerá dentro de 10 minutos.
+platformd.user.avatars.unapproved: No aprobados - %count%
+platformd.user.avatars.processing: Procesando - %count%
+platformd.user.avatars.confirm_delete: ¿Estás seguro que deseas eliminar este avatar?
+platformd.user.avatars.crop: Recortar Avatar
+platformd.user.avatars.submit: Someter
+platformd.user.avatars.awaiting_approval: ESPERANDO LA AROBACIÓN
+platformd.user.avatars.awaiting_processing: ESPERANDO PROCESAMIENTO
+platformd.user.avatars.update: ACTUALIZACIÓN
+platformd.user.avatars.valid_filetypes: Tipo de archivos válidos para avatar son JPG, PNG, GIF.
+platformd.user.avatars.upload: Subir
+platformd.user.avatars.choose_avatar: Choose Avatar
 
 platformd:
 
@@ -272,7 +272,7 @@ platformd:
             hello_user: Hola %firstname%! Registrado como: %username%.
             ready_to_game: ""
             warning: Advertencia: Nunca des tu contraseña a nadie!
-            under_construction: "Nota: Alienware Arena se encuentra en construcción, por lo tanto regrese más tarde si una característica no está habilitada todavía."
+            under_construction: "Lo sentimos, pero no podemos aceptar tu inscripción en este momento."
             change_your_password: Contraseña
 
     comment:
@@ -697,11 +697,11 @@ exclusive_designs: Diseños Exclusivos
 click_to_download: Hacer clic para descargar
 
 # I'm not sure how we have two different potential "wrong password messages"...
-"Bad credentials": "Combinación nombre de usuario/contraseña incorrecta"
-"The presented password is invalid.": "Combinación nombre de usuario/contraseña incorrecta"
+"Bad credentials": "Usuario/correo electrónico o contraseña incorrecto."
+"The presented password is invalid.": "Usuario/correo electrónico o contraseña incorrecto."
 "The presented password cannot be empty.": "Combinación nombre de usuario/contraseña incorrecta"
 "User account is disabled.": "Your account is not activated. You must confirm your account by clicking on the link in the Activate Account Email."
-"Invalid username or password": "Combinación nombre de usuario/contraseña incorrecta"
+"Invalid username or password": "Usuario/correo electrónico o contraseña incorrecto."
 
 "Select one": "----Select one----"
 

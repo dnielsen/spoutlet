@@ -186,7 +186,7 @@ platformd.user.account_settings.avatars: "Avatars"
 platformd.user.account_settings.password: "Update Password"
 platformd.user.account_settings.newsletter: "Notifications"
 
-invalid_username_password: Invalid username or password
+invalid_username_password: Incorrect username/email or password
 
 "Bad credentials": "Incorrect username/email or password"
 "The presented password is invalid.": "Incorrect username/email or password"
