@@ -43,7 +43,7 @@ class ApiManager
         if (!$user instanceof User) {
             return false;
         }
-
+return false;
         $authResult    = $this->dummyAuth($user, $presentedPassword);
         $path          = 'authenticate';
         $getParameters = array(
@@ -52,21 +52,24 @@ class ApiManager
         );
 
         $result = $this->makeRequest($path, 'GET', array('get' => $getParameters));
-$result = $this->dummyAuth($presentedPassword);
+
         return $result ? $result['metaData']['success'] : false;
     }
 
     public function getUserByUsername($username)
     {
+return null;
         $path          = 'username';
         $getParameters = array('username' => $username);
         $result        = $this->makeRequest($path, 'GET', array('get' => $getParameters));
-$result = $this->dummyGetUser($username);
+
         return $result ?: null;
     }
 
     public function updateRemoteUserData($user)
     {
+return true;
+
         if ($user instanceof User) {
             $uuid = $user->getUuid();
 
@@ -101,12 +104,14 @@ $result = $this->dummyGetUser($username);
         $postParameters = array_merge($postParameters, array('action'   => 'update'));
 
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
-$result = $this->dummyUpdateUserData();
+
         return $result ? $result['metaData']['success'] : false;
     }
 
     public function createRemoteUser($user)
     {
+return false;
+
         $path           = 'users/'.$user->getUuid();
         $postParameters = array(
             'action'              => 'create',
@@ -131,6 +136,8 @@ $result = $this->dummyUpdateUserData();
 
     public function banUser($user)
     {
+return false;
+
         $path           = 'users/'.$user->getUuid();
         $postParameters = array(
             'action'   => 'ban',
@@ -142,6 +149,8 @@ $result = $this->dummyUpdateUserData();
 
     public function unbanUser($user)
     {
+return false;
+
         $path           = 'users/'.$user->getUuid();
         $postParameters = array(
             'action'   => 'unban',
@@ -153,6 +162,8 @@ $result = $this->dummyUpdateUserData();
 
     public function getUserList($offset=0, $limit=100, $sortMethod='created', $since=null)
     {
+return array();
+
         $getParameters = array(
             'limit' => $limit,
             'offset' => $offset,
