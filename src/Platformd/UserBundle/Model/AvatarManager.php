@@ -73,6 +73,7 @@ class AvatarManager
             'deleted'   => false,
             'cropped'   => true,
             'resized'   => true,
+            'processed' => true,
         ));
     }
 
