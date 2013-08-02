@@ -28,10 +28,10 @@
                     {% endif %}
                 </div>
                 <div class="group-event-actions">
-                    <div data-group-admin="true">
+                    <span data-group-admin="true">
                         <a href="{{ path('group_event_edit', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">{{ 'platformd.groups.events.edit' | pd_trans }}</a> |
                         <a href="{{ path('group_event_delete', { 'groupSlug' : group.slug, 'eventId' : event.id })}}" onclick="return confirm('{{ 'platformd.groups.events.delete_confirmation' | pd_trans }}');">{{ 'platformd.groups.events.delete' | pd_trans }}</a> |
-                    </div>
+                    </span>
                     <a href="javascript:void(0)" class="report-content" report-data="{{ event.id }}"> {{ 'platformd.groups.events.report' | pd_trans }}</a>
                 </div>
             </div>
