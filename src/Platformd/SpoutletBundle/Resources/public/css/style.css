@@ -1159,7 +1159,6 @@ html body.staff {
     padding-top: 4px;
     margin-bottom: 6px;
 }
-
 .newsBlurb {
     margin-bottom: 15px;
 }
@@ -1167,14 +1166,33 @@ html body.staff {
     font-size: 21px;
     font-weight: normal;
 }
+.newsBlurb h2 {
+    margin: 20px 0 10px 0;
+}
 .newsBlurb h6 {
     font-size: 9px;
 }
-
+.newsBlurb .article-blurb-text {
+    
+}
+.article-image {
+    width: 200px;
+    float: left;
+    margin-right: 12px;
+}
+.article-image img {
+    width: 200px;
+    height: 113px;
+}
+.article-actions a {
+    float: right;
+}
+.article-image-large img {
+    width: 634px;
+}
 html body .lastBlurb {
     margin-bottom: 0;
 }
-
 .newsPost h1 {
     font-size: 24px;
     font-weight: normal;
@@ -1186,7 +1204,6 @@ html body .lastBlurb {
     padding-left: 25px;
     margin: 10px 0;
 }
-
 .twitter {
     text-align: center;
     padding-bottom: 12px;
@@ -1194,9 +1211,6 @@ html body .lastBlurb {
 #eventOverview h3 {
     margin: 0;
 }
-
-
-
 
 /*** Ads ***/
 .ad a img {

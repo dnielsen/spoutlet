@@ -462,20 +462,6 @@ ul.list-normal {
     background-color: #fcb3b3;
 }
 
-.article-image {
-    width: 200px;
-    float: left;
-    margin-right: 12px;
-}
-.article-image img {
-    width: 200px;
-}
-.article-actions a {
-    float: right;
-}
-.article-image-large img {
-    width: 634px;
-}
 .age-wrapper {
     text-align: center;
 }
