@@ -1189,6 +1189,7 @@ html body.staff {
 }
 .article-image-large img {
     width: 634px;
+    padding-top: 5px;
 }
 html body .lastBlurb {
     margin-bottom: 0;
