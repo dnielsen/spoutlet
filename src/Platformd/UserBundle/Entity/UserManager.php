@@ -88,6 +88,47 @@ class UserManager extends BaseUserManager
         return $user;
     }
 
+    public function findByUuidOrCreate($uuid, array $userDetails = array())
+    {
+        if (!$uuid) {
+            return null;
+        }
+
+        $user = $this->repository->findOneByUuid($uuid);
+
+        if (!$user) {
+            $username            = isset($userDetails['username'])              ? $userDetails['username']                                                          : null;
+            $birth_date          = isset($userDetails['birth_date'])            ? \DateTime::createFromFormat(\DateTime::ISO8601, $userDetails['birth_date'])       : null;
+            $country             = isset($userDetails['country'])               ? $userDetails['country']                                                           : null;
+            $created             = isset($userDetails['created'])               ? \DateTime::createFromFormat(\DateTime::ISO8601, $userDetails['created'])          : null;
+            $creation_ip_address = isset($userDetails['creation_ip_address'])   ? $userDetails['creation_ip_address']                                               : null;
+            $email               = isset($userDetails['email'])                 ? $userDetails['email']                                                             : null;
+            $first_name          = isset($userDetails['first_name'])            ? $userDetails['first_name']                                                        : null;
+            $last_name           = isset($userDetails['last_name'])             ? $userDetails['last_name']                                                         : null;
+            $last_updated        = isset($userDetails['last_updated'])          ? \DateTime::createFromFormat(\DateTime::ISO8601, $userDetails['last_updated'])     : null;
+            $state               = isset($userDetails['state'])                 ? $userDetails['state']                                                             : null;
+            $expired             = isset($userDetails['banned'])                ? $userDetails['banned']                                                            : null;
+            $suspended_until     = isset($userDetails['suspended_until'])       ? \DateTime::createFromFormat(\DateTime::ISO8601, $userDetails['suspended_until'])  : null;
+
+            $user = parent::createUser();
+            $user->setUuid($uuid);
+            $user->setUsername($username);
+            $user->setBirthdate($birth_date);
+            $user->setCountry($country);
+            $user->setCreated($created);
+            $user->setIpAddress($creation_ip_address);
+            $user->setEmail($email);
+            $user->setFirstname($first_name);
+            $user->setLastname($last_name);
+            $user->setUpdated($last_updated);
+            $user->setState($state);
+            $user->setExpired($expired);
+            $user->setExpiredUntil($suspended_until);
+        }
+
+        return $user;
+    }
+
     /**
      * {@inheritDoc}
      */

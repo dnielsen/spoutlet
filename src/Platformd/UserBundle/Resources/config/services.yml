@@ -1,5 +1,6 @@
 imports:
     - { resource: "validation.yml" }
+    - { resource: "listeners.yml" }
 
 parameters:
     platformd_user.mailer.parameters:
@@ -168,13 +169,4 @@ services:
             - "@platformd.util.site_util"
             - "%api_authentication%"
             - "@platformd.model.translator"
-
-    platformd_user.registration.timeout_listener:
-        class: Platformd\UserBundle\Listener\UserRegistrationTimeoutListener
-        arguments:
-            - "@router"
-            - "@templating"
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception }
-        scope: request
-
+            - '%base_host%'

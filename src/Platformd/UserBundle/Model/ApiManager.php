@@ -20,6 +20,28 @@ class ApiManager
         $this->logger     = $logger;
     }
 
+    /* TODO
+
+    Hook in updatePassword
+
+    POST: /v1/session
+    {
+      action: login
+      data: {
+        usernameOrEmail: asdjklfha
+        OR username: asdaf
+        OR email: askjdaskld
+        password: ajknsdfjkn
+      }
+    }
+
+    200 also get back the session details
+    404 means not valid
+    DELETE: /v1/session/9720345-234590-2345-2345-345345
+    200 or 404
+
+    */
+
     private function logInfo($message) {
         $this->logger->info(sprintf(self::LOG_MESSAGE_PREFIX, $message));
     }
@@ -28,14 +50,47 @@ class ApiManager
     {
         ksort($getParameters);
 
-        $queryString = http_build_query($getParameters) . '&accesskey=' . $this->accessKey;
+        $unsignedUrl = rtrim($this->apiBaseUrl, '/') . '/' . trim($path, '/');
+        $query       = http_build_query($getParameters);
 
-        $unsignedUrl = strtolower(rtrim($this->apiBaseUrl, '/') . '/' . trim($path, '/') . '?' . $queryString);
+        if ($query) {
+            $unsignedUrl .= '?' . $query;
+        }
+
+        $unsignedUrl = $unsignedUrl . ( $query ? '&' : '?' ) . 'access_key=' . $this->accessKey;
+        $unsignedUrl = strtolower($unsignedUrl);
         $signature   = '&sig='.hash_hmac('sha1', $unsignedUrl, $this->secretKey);
 
         $this->logInfo('Unsigned URL generated - [ '. $unsignedUrl .' ]');
 
         return $unsignedUrl . $signature;
+    }
+
+    public function getSessionInfo($uuid)
+    {
+        $path   = 'sessions/'.$uuid;
+        $result = $this->makeRequest($path, 'GET');
+        return $result;
+    }
+
+    public function deleteSession($uuid)
+    {
+        $path   = 'sessions/'.$uuid;
+        $result = $this->makeRequest($path, 'DELETE');
+        return $result;
+    }
+
+    // Password is the plaintext password presented at login
+    public function updatePassword($user, $password)
+    {
+        $path           = 'users/'.$user->getUuid();
+        $postParameters = array(
+            'action'   => 'update',
+            'password' => $password,
+        );
+
+        $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
+        return $result ? $result['metaData']['success'] : false;
     }
 
     public function authenticate($user, $presentedPassword)
@@ -188,7 +243,6 @@ return array();
 
         $url = $this->getSignedUrl($relativeUrl, $getParameters);
 
-return;
         $curl2 = curl_init();
 
         if (strtolower($method) == "post")

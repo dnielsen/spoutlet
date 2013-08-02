@@ -41,8 +41,8 @@ class ApiSecurityFactory extends FormLoginFactory
 
         $node
             ->children()
-                ->scalarNode('api_authentication')->defaultValue(false)
-            ->end()
+                ->scalarNode('api_authentication')->defaultValue(false)->end()
         ;
     }
+
 }

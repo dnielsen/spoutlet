@@ -22,14 +22,16 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     private $siteUtil;
     private $apiAuth;
     private $transUtil;
+    private $baseHost;
 
-    public function __construct(Router $router, $userManager, SiteUtil $siteUtil, $apiAuth, $transUtil)
+    public function __construct(Router $router, $userManager, SiteUtil $siteUtil, $apiAuth, $transUtil, $baseHost)
     {
         $this->router      = $router;
         $this->userManager = $userManager;
         $this->siteUtil    = $siteUtil;
         $this->apiAuth     = $apiAuth;
         $this->transUtil   = $transUtil;
+        $this->baseHost    = $baseHost;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
@@ -93,11 +95,12 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     public function onLogoutSuccess(Request $request)
     {
         $site       = $this->siteUtil->getCurrentSite();
-        $response   = new Response();
+        $response   = new RedirectResponse($this->router->generate('default_index'));
 
-        $response->headers->clearCookie('fbsr_'.$site->getSiteConfig()->getFacebookAppId());
+        $response->headers->clearCookie('fbsr_'.$site->getSiteConfig()->getFacebookAppId(), '/', $this->baseHost);
+        $response->headers->clearCookie('awa_session_key', '/', $this->baseHost);
 
-        return new RedirectResponse($this->router->generate('default_index'));
+        return $response;
     }
 
 }

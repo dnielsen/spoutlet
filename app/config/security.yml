@@ -1,6 +1,6 @@
 parameters:
     # Default set here - override on a per-server basis in config_server.yml
-    api_authentication: false
+    api_authentication: true
 
 security:
 
@@ -37,6 +37,7 @@ security:
             logout:
                 path:     /logout
                 target:   default_index
+                success_handler: platformd_user.authentication_handler
             switch_user: ~
             remember_me:
                 key:      "%secret%"
