@@ -4,8 +4,30 @@
 
 {% set avatarUsable = user.avatar and user.avatar.isUsable %}
 
-{% block content %}
+{% set current_pwd_error    = '' %}
+{% set new_pwd_error        = '' %}
+{% set new_conf_error       = '' %}
 
+{% for error in form.vars.errors %}
+    {% set msg = error.messageTemplate|trans({}, 'validators') %}
+    {% if error.messageTemplate == 'must_enter_new_password'  %}
+        {% set new_pwd_error = msg %}
+        {% set new_conf_error = 'must_reenter_new_password'|trans({}, 'validators') %}
+    {% endif %}
+
+    {% if error.messageTemplate == 'current_passwords_do_not_match' %}
+        {% set current_pwd_error = msg %}
+    {% endif %}
+
+    {% if error.messageTemplate == 'passwords_do_not_match' %}
+        {% set new_pwd_error = msg %}
+        {% set new_conf_error = msg %}
+    {% endif %}
+{% endfor %}
+
+
+
+{% block content %}
     <div class="std_2col" id="user-settings-page">
         <div class="left">
             <div id="user-settings">
@@ -41,22 +63,24 @@
                 <form action="{{ path('accounts_settings') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_password form form-horizontal">
                     <fieldset id="account-settings-password" class="account-settings-section">
                         <h3><span>{{ 'platformd.user.account_settings.password'|trans({}, 'FOSUserBundle') }}</h3></span>
-                        {{ form_errors(form) }}
                         <div class="form_row">
                             {{ form_label(form.currentPassword) }}
                             {{ form_widget(form.currentPassword) }}
+                            <span class="form-msg-error">{{ current_pwd_error }}</span>
                         </div>
-                        {% for plainPassword in form.plainPassword %}
                         <div class="form_row">
-                            {{ form_label(plainPassword) }}
-                            {{ form_widget(plainPassword) }}
+                            {{ form_label(form.plainPassword.first) }}
+                            {{ form_widget(form.plainPassword.first) }}
+                            <span class="form-msg-error">{{ new_pwd_error }}</span>
                         </div>
-                        {% endfor %}
+                        <div class="form_row">
+                            {{ form_label(form.plainPassword.second) }}
+                            {{ form_widget(form.plainPassword.second) }}
+                            <span class="form-msg-error">{{ new_conf_error }}</span>
+                        </div>
                     </fieldset>
 
                     <div class="clear"></div>
-
-
 
                     {{ form_rest(form) }}
 

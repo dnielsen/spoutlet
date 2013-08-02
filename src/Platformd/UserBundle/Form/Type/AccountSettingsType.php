@@ -32,28 +32,34 @@ class AccountSettingsType extends AbstractType
 
         $builder
             ->add('currentPassword', 'password', array(
-                'required' => true,
-                'error_bubbling' => true,
+                'required'          => true,
+                'error_bubbling'    => true,
             ))
             ->add('plainPassword', 'repeated', array(
-                'type' => 'password',
-                'required' => true,
-                'invalid_message' => 'passwords_do_not_match',
-                'error_bubbling' => true
+                'type'              => 'password',
+                'required'          => true,
+                'invalid_message'   => 'passwords_do_not_match',
+                'error_bubbling'    => true
             ))
             ->addEventListener(FormEvents::POST_BIND, function(DataEvent $event) use ($encoder, $user, $apiManager, $apiAuth) {
-                $data = $event->getData();
-                $form = $event->getForm();
-                $plainPassword = $data->getPlainPassword();
+                $data           = $event->getData();
+                $form           = $event->getForm();
+                $plainPassword  = $data->getPlainPassword();
+                $first          = $form->get('plainPassword')->get('first')->getData();
+                $second         = $form->get('plainPassword')->get('second')->getData();
 
-                if (empty($plainPassword)) {
-                    return;
+                if ($first != $second) {
+                    $form->get('plainPassword')->addError(new FormError('passwords_do_not_match'));
+                }
+
+                if (empty($first) && empty($second)) {
+                    $form->get('currentPassword')->addError(new FormError('must_enter_new_password'));
                 }
 
                 $isPasswordValid = $apiAuth ? $apiManager->authenticate($user, $data->currentPassword) : $encoder->isPasswordValid($data->getPassword(), $data->currentPassword, $data->getSalt());
 
                 if (!$isPasswordValid) {
-                    $form->get('currentPassword')->addError(new FormError('passwords_do_not_match'));
+                    $form->get('currentPassword')->addError(new FormError('current_passwords_do_not_match'));
                 }
             });
         ;
