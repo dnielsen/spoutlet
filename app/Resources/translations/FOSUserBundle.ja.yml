@@ -77,19 +77,12 @@ registration.flash.user_created: ユーザーが正常に作成されました
 
 # the first line is the subject of the email
 registration.email: |
-    ALIENWAREARENA - パスワード変更
-    <h3>こんにちは！ %username%さん</h3>
-
-    <p>ALIENWAREARENA アカウントのパスワード変更リクエストを受け取りました。</p>
+    Alienware Arena 登録確認
+    <h3>%username%様ようこそ。</h3>
 
     <p>
-        パスワードをリセットするには、下記のリンクをクリックしてください。<br />
-        <a href=""%confirmationUrl%"">%confirmationUrl%</a>
+        アカウントの認証を完了するため、<a href="%confirmationUrl%">%confirmationUrl%</a> にアクセスしてください。
     </p>
-
-    <p>※このメールに覚えがない場合は、何もせずにこのメールを破棄していただくようお願いいたします。</p>
-
-    <p>※このメールはシステムより自動配信されています。返信は受付できませんので、ご了承ください。</p>
 
     <p>ALIENWAREARENA Team</p>
 
@@ -104,31 +97,39 @@ resetting.flash.success: パスワードが正常にリセットされました
 
 # the first line is the subject of the email
 resetting.email: |
-    Alienware Arena パスワードのリセット
-    <h3>%username%様、こんにちは。</h3>
+    ALIENWAREARENA - パスワード変更
+    <h3>こんにちは！ %username%さん</h3>
+
+    <p>ALIENWAREARENA アカウントのパスワード変更リクエストを受け取りました。</p>
 
     <p>
-        パスワードをリセットするには、<a href="%confirmationUrl%">%confirmationUrl%</a> にアクセスしてください。
+        パスワードをリセットするには、下記のリンクをクリックしてください。<br />
+        <a href="%confirmationUrl%">%confirmationUrl%</a>
     </p>
 
-    <p>
-    よろしくお願いします。<br/>
-    チーム一同より
-    </p>
+    <p>※このメールに覚えがない場合は、何もせずにこのメールを破棄していただくようお願いいたします。</p>
+
+    <p>※このメールはシステムより自動配信されています。返信は受付できませんので、ご了承ください。</p>
+
+    <p>ALIENWAREARENA Team</p>
 
 # Password resetted by admin
 resetted.email: |
-    Alienware Arena パスワードのリセット
-    <h3>%username%様、こんにちは。</h3>
+    ALIENWAREARENA - パスワード変更
+    <h3>こんにちは！ %username%さん</h3>
+
+    <p>ALIENWAREARENA アカウントのパスワード変更リクエストを受け取りました。</p>
 
     <p>
-        パスワードをリセットするには、<a href="%confirmationUrl%">%confirmationUrl%</a> にアクセスしてください。
+        パスワードをリセットするには、下記のリンクをクリックしてください。<br />
+        <a href="%confirmationUrl%">%confirmationUrl%</a>
     </p>
 
-    <p>
-    よろしくお願いします。<br/>
-    チーム一同より
-    </p>
+    <p>※このメールに覚えがない場合は、何もせずにこのメールを破棄していただくようお願いいたします。</p>
+
+    <p>※このメールはシステムより自動配信されています。返信は受付できませんので、ご了承ください。</p>
+
+    <p>ALIENWAREARENA Team</p>
 
 # Global strings
 layout.logout: ログアウト

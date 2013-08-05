@@ -5,8 +5,8 @@ state_not_blank: 都道府県を選択してください
 country_not_blank: Please select a country
 news_source_not_blank: ALIENWARE ARENA を直近で聞いた時期を入力してください
 has_system_not_blank: Please choose whether or not you have an Alienware System.
-passwords_do_not_match: 古いパスワードが承認されません
-current_passwords_do_not_match: 古いパスワードが承認されません
+passwords_do_not_match: 古いパスワードが承認されません。
+current_passwords_do_not_match: 古いパスワードが承認されません。
 age_requirement_not_met: You must be %s years old to register.
 must_enter_new_password: 新しいパスワードを入力するか再入力してください
 must_reenter_new_password: 新しいパスワードを入力するか再入力してください

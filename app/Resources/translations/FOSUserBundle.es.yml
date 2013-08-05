@@ -123,22 +123,21 @@ resetting.email: |
     <p>Equipo Alienware Arena</p>
 # Password resetted by admin
 resetted.email: |
-    Alienware Arena - Password Reset
+    Alienware Arena - Restablecer Contraseña
     <h3>Hola %username%!</h3>
 
+    <p>Hemos recibido una solicitud de cambio de contraseña para tu cuenta Alienware Arena.</p>
+
     <p>
-        Su contraseña se ha restablecido en nuestra web. Para restablecer la contraseña - por favor visite
+        Para restablecer tu contraseña - por favor haz clic en el enlace de abajo <br />
         <a href="%confirmationUrl%">%confirmationUrl%</a>
     </p>
 
-    <p>
-        ** NOTA: Nuestros empleados nunca le pedirá su contraseña.
-    </p>
+    <p>Si no solicitaste el restablecimiento de contraseña, por favor ignora este mensaje.</p>
 
-    <p>
-        Gracias,<br />
-        Alienware Arena Web Team.
-    </p>
+    <p>Este es un mensaje automático. Por favor no respondas a este correo electrónico.</p>
+
+    <p>Equipo Alienware Arena</p>
 
 
 # Global strings

@@ -5,8 +5,8 @@ state_not_blank: Please enter your state/province.
 country_not_blank: Please select a country.
 news_source_not_blank: Please select how you heard about Alienware Arena.
 has_system_not_blank: Please tell us if you have an Alienware system.
-passwords_do_not_match: The passwords do not match
-current_passwords_do_not_match: Current password does not match.
+passwords_do_not_match: The passwords do not match.
+current_passwords_do_not_match: Current password is incorrect.
 age_requirement_not_met: You must be %s years old to register.
 must_enter_new_password: You must enter a new password.
 must_reenter_new_password: You must re-enter the new password.
