@@ -339,6 +339,20 @@ sub vcl_error {
         return(deliver);
     }
 
+    // AWA-themed error page
+    if (obj.status == 888) {
+        if (req.http.host ~ "(japan|japanstaging|japanmigration).alienwarearena.(com|local:8080)") {
+            set obj.http.Location = "http://media.alienwarearena.com/error/maintenance_ja.html";
+        } else if (req.http.host ~ "(latam|latamstaging|latammigration).alienwarearena.(com|local:8080)") {
+            set obj.http.Location = "http://media.alienwarearena.com/error/maintenance_es.html";
+        } else {
+            set obj.http.Location = "http://media.alienwarearena.com/error/maintenance.html";
+        }
+
+        set obj.status = 302;
+        return(deliver);
+    }
+
     synthetic {"
     <?xml version="1.0" encoding="utf-8"?>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
