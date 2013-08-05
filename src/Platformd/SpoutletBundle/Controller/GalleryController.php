@@ -269,11 +269,6 @@ class GalleryController extends Controller
                         $groupImage->setAuthor($user);
 
                         $em->persist($groupImage);
-                        try {
-                            $cevoResponse = $this->getCEVOApiManager()->GiveUserXp('addcontent', $media->getAuthor()->getCevoUserId());
-                        } catch(ApiException $e) {
-
-                        }
                     }
                 }
             }
