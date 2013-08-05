@@ -33,7 +33,7 @@ class ResettingFormHandler extends BaseHandler
         $user->setEnabled(true);
 
         try {
-            $this->userManager->updateUserAndApi($user);
+            $this->userManager->updateApiPassword($user, $this->getNewPassword());
             return true;
         } catch (ApiRequestException $e) {
             return false;

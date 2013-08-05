@@ -285,7 +285,7 @@ class AccountController extends Controller
             if ($form->isValid()) {
 
                 try {
-                    $this->getUserManager()->updateUserAndApi($form->getData());
+                    $this->getUserManager()->updateApiPassword($form->getData(), $form->get('plainPassword')->getData());
                     $this->setFlash('success', 'platformd.user.account.changes_saved');
 
                     return $this->redirect($this->generateUrl('accounts_settings'));

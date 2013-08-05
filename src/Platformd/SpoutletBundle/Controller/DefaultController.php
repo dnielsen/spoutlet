@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Controller\Controller as Controller;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class DefaultController extends Controller
 {
@@ -157,6 +158,31 @@ class DefaultController extends Controller
     public function sessionCookieAction()
     {
         return new Response('');
+    }
+
+    public function setApiSessionCookieAction($uuid)
+    {
+        $info = $this->getApiManager()->getSessionInfo($uuid);
+        $response = new Response('');
+
+        if (!$info) {
+            return $response;
+        }
+
+        if (isset($info['metaData']) && $info['metaData']['success'] == false) {
+            return $response;
+        }
+
+        $cookieName     = 'awa_session_key';
+        $cookieValue    = $uuid;
+        $cookieExpiry   = new \DateTime($info['data']['expires']);
+        $cookiePath     = '/';
+        $cookieHost     = $this->baseHost;
+
+        $cookie = new Cookie($cookieName, $cookieValue, $cookieExpiry, $cookiePath, $cookieHost, false, false);
+        $response->headers->setCookie($cookie);
+
+        return $response;
     }
 
     /**

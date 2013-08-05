@@ -121,16 +121,18 @@ return true;
             $postParameters = array(
                 'action' => 'update',
                 'data'   => array(
-                    'username'      => $user->getUsername(),
-                    'email'         => $user->getEmail(),
-                    'uuid'          => $uuid,
-                    'custom_avatar' => $user->getAvatar() && $user->getAvatar()->isUsable(),
-                    'birth_date'    => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
-                    'first_name'    => $user->getFirstname(),
-                    'last_name'     => $user->getLastname(),
-                    'country'       => $user->getCountry(),
-                    'state'         => $user->getState(),
-                    'roles'         => $user->getRoles(),
+                    'username'        => $user->getUsername(),
+                    'email'           => $user->getEmail(),
+                    'uuid'            => $uuid,
+                    'custom_avatar'   => $user->getAvatar() && $user->getAvatar()->isUsable(),
+                    'birth_date'      => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
+                    'first_name'      => $user->getFirstname(),
+                    'last_name'       => $user->getLastname(),
+                    'country'         => $user->getCountry(),
+                    'state'           => $user->getState(),
+                    'roles'           => $user->getRoles(),
+                    'banned'          => $user->getExpired(),
+                    'suspended_until' => $user->getExpiredUntil(),
                 ),
             );
         } elseif (is_array($user)) {
@@ -182,7 +184,7 @@ return false;
         return $result ? $result['metaData']['success'] : false;
     }
 
-    public function banUser($user)
+    public function banUser($user, $until=null)
     {
 return false;
         $path           = 'users/'.$user->getUuid();

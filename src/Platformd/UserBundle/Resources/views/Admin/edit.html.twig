@@ -64,7 +64,7 @@
                     {{ form_row(suspendForm.expiredUntil) }}
                     <div class="form-actions">
                         <input type="submit" value="{{ 'Suspend'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" />
-                        <a class="confirm btn btn-primary" href="#" data-confirm="Are you sure you want to permanently ban this user?">Ban Forever</a>
+                        <a class="confirm btn btn-primary" href="{{ path('Platformd_UserBundle_admin_ban', { 'id': user.id }) }}" data-confirm="Are you sure you want to permanently ban this user?">Ban Forever</a>
                     </div>
                     {{ form_rest(suspendForm) }}
                 </form>

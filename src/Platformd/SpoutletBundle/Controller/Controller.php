@@ -340,6 +340,11 @@ class Controller extends BaseController
         return $this->get('platformd.user.api.manager');
     }
 
+    protected function getApiAuth()
+    {
+        return $this->getParameter('api_authentication');
+    }
+
     protected function uuidGen()
     {
         return str_replace("\n", '', `uuidgen -r`);

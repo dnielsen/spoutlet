@@ -53,11 +53,7 @@ class ApiAuthenticationProvider extends UserAuthenticationProvider
             } else {
 
                 // Check to see if we can log in via API
-                $apiLoginSuccess = $this->apiManager->authenticate($user, $presentedPassword);
-
-                if ($apiLoginSuccess && !$user->getApiSuccessfulLogin()) {
-                    $user->setApiSuccessfulLogin(new \DateTime());
-                } else {
+                if ($this->tryApiAuthentication($user, $presentedPassword) == false) {
                     // Check to see if we have a CEVO-style password
                     if (!$this->cevoPasswordHandler->authenticate($user, $presentedPassword)) {
                         // Check to see if we have a "Platform D" style password
@@ -65,8 +61,30 @@ class ApiAuthenticationProvider extends UserAuthenticationProvider
                             throw new BadCredentialsException('The presented password is invalid.');
                         }
                     }
+
+                    // Notify API of updated password or throw exception
+                    if ($this->apiManager->updatePassword($user, $presentedPassword) == false) {
+                        throw new BadCredentialsException('The presented password is invalid.');
+                    }
+
+                    // Auth with API now that password has been updated.
+                    if ($this->tryApiAuthentication($user, $presentedPassword) == false) {
+                        //throw new BadCredentialsException('The presented password is invalid.');
+                    }
                 }
             }
+        }
+    }
+
+    protected function tryApiAuthentication($user, $presentedPassword)
+    {
+        $apiLoginSuccess = $this->apiManager->authenticate($user, $presentedPassword);
+
+        if ($apiLoginSuccess && !$user->getApiSuccessfulLogin()) {
+            $user->setApiSuccessfulLogin(new \DateTime());
+            return true;
+        } else {
+            return false;
         }
     }
 

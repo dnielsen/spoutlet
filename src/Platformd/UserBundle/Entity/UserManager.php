@@ -150,6 +150,20 @@ class UserManager extends BaseUserManager
         parent::updateUser($user, $andFlush);
     }
 
+    public function updateApiPassword(UserInterface $user, $password, $andFlush = true)
+    {
+        if ($this->container->getParameter('api_authentication')) {
+            $apiManager = $this->container->get('platformd.user.api.manager');
+
+            if (!$apiManager->updatePassword($user, $password)) {
+                throw new ApiRequestException();
+            }
+        }
+
+        parent::updateUser($user, $andFlush);
+    }
+
+
     public function getFindUserQuery($search = null, $type='text', $locale=null, $sort_by = self::DEFAULT_SORTING_FIELD)
     {
         $qb = $this
