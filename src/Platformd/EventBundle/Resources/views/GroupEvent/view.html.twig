@@ -132,13 +132,13 @@
                                             </div>
                                         </div>
                                         <div data-group-applicant="false">
-                                            <div id="event-registration-private-group-button" data-user-attending="false"><a href="{{ path('group_apply_with_event', { 'id': group.id, 'eventId': event.id }) }}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a></div>
+                                            <div id="event-registration-private-group-button" data-user-attending="false"><a href="{{ path('group_apply_with_event', { 'slug': group.slug, 'eventId': event.id }) }}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a></div>
                                         </div>
                                     </div>
                                 </div>
                                 <div data-user-logged-in="false">
                                     <div id="event-registration-button">
-                                        <a href="{% if group.isPublic %}{{ path('group_event_register_and_join', { 'groupSlug': group.slug, 'eventId': event.id }) }}{% else %}{{ path('group_apply_with_event', { 'id': group.id, 'eventId': event.id }) }}{% endif %}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a>
+                                        <a href="{% if group.isPublic %}{{ path('group_event_register_and_join', { 'groupSlug': group.slug, 'eventId': event.id }) }}{% else %}{{ path('group_apply_with_event', { 'slug': group.slug, 'eventId': event.id }) }}{% endif %}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a>
                                     </div>
                                 </div>
                             {% endif %}
