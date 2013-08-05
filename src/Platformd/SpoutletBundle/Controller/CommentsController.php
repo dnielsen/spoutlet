@@ -416,7 +416,7 @@ class CommentsController extends Controller
     private function removeUserArp($comment)
     {
         try {
-            $response = $this->getCEVOApiManager()->GiveUserXp('removecontent', $comment->getAuthor()->getCevoUserId());
+            $response = $this->getCEVOApiManager()->GiveUserXp('removecomment', $comment->getAuthor()->getCevoUserId());
         } catch (ApiException $e) {
 
         }
