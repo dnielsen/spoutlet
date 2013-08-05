@@ -1,6 +1,6 @@
 parameters:
     # Default set here - override on a per-server basis in config_server.yml
-    api_authentication: true
+    api_authentication: false
 
 security:
 

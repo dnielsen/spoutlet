@@ -170,3 +170,4 @@ services:
             - "%api_authentication%"
             - "@platformd.model.translator"
             - '%base_host%'
+            - '@platformd.user.api.manager'

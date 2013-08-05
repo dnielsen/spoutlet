@@ -21,25 +21,10 @@ class ApiManager
     }
 
     /* TODO
-
-    Hook in updatePassword
-
-    POST: /v1/session
-    {
-      action: login
-      data: {
-        usernameOrEmail: asdjklfha
-        OR username: asdaf
-        OR email: askjdaskld
-        password: ajknsdfjkn
-      }
-    }
-
-    200 also get back the session details
-    404 means not valid
-    DELETE: /v1/session/9720345-234590-2345-2345-345345
-    200 or 404
-
+        Hook in updatePassword
+        Get session details back from authenticate and set cookie
+        When checking session expiry in listener, extend browser cookie
+        Varnish allow awa_session_key cookie
     */
 
     private function logInfo($message) {
@@ -75,14 +60,16 @@ class ApiManager
 
     public function deleteSession($uuid)
     {
+return true;
         $path   = 'sessions/'.$uuid;
         $result = $this->makeRequest($path, 'DELETE');
-        return $result;
+        return $result ? $result['metaData']['success'] : false;
     }
 
     // Password is the plaintext password presented at login
     public function updatePassword($user, $password)
     {
+return true;
         $path           = 'users/'.$user->getUuid();
         $postParameters = array(
             'action'   => 'update',
@@ -95,19 +82,22 @@ class ApiManager
 
     public function authenticate($user, $presentedPassword)
     {
+return false;
         if (!$user instanceof User) {
             return false;
         }
-return false;
-        $authResult    = $this->dummyAuth($user, $presentedPassword);
-        $path          = 'authenticate';
-        $getParameters = array(
-            'username' => $user->getUsername(),
-            'password' => $presentedPassword,
+
+        $path   = 'sessions';
+
+        $postParameters = array(
+            'action' => 'login',
+            'data'   => array(
+                'usernameOrEmail' => $user->getEmail(),
+                'password'        => $password,
+            ),
         );
 
-        $result = $this->makeRequest($path, 'GET', array('get' => $getParameters));
-
+        $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
         return $result ? $result['metaData']['success'] : false;
     }
 
@@ -129,17 +119,19 @@ return true;
             $uuid = $user->getUuid();
 
             $postParameters = array(
-                'action'        => 'update',
-                'username'      => $user->getUsername(),
-                'email'         => $user->getEmail(),
-                'uuid'          => $uuid,
-                'custom_avatar' => $user->getAvatar() && $user->getAvatar()->isUsable(),
-                'birth_date'    => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
-                'first_name'    => '',
-                'last_name'     => '',
-                'country'       => $user->getCountry(),
-                'state'         => $user->getState(),
-                'roles'         => $user->getRoles(),
+                'action' => 'update',
+                'data'   => array(
+                    'username'      => $user->getUsername(),
+                    'email'         => $user->getEmail(),
+                    'uuid'          => $uuid,
+                    'custom_avatar' => $user->getAvatar() && $user->getAvatar()->isUsable(),
+                    'birth_date'    => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
+                    'first_name'    => $user->getFirstname(),
+                    'last_name'     => $user->getLastname(),
+                    'country'       => $user->getCountry(),
+                    'state'         => $user->getState(),
+                    'roles'         => $user->getRoles(),
+                ),
             );
         } elseif (is_array($user)) {
             if (!isset($user['uuid'])) {
@@ -166,23 +158,24 @@ return true;
     public function createRemoteUser($user)
     {
 return false;
-
         $path           = 'users/'.$user->getUuid();
         $postParameters = array(
             'action'              => 'create',
-            'username'            => $user->getUsername(),
-            'email'               => $user->getEmail(),
-            'uuid'                => $user->getUuid(),
-            'banned'              => false,
-            'birth_date'          => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
-            'country'             => $user->getCountry(),
-            'created'             => $user->getCreated()->format('Y-m-d H:i:s'),
-            'creation_ip_address' => $user->getIpAddress(),
-            'custom_avatar'       => false,
-            'first_name'          => $user->getFirstName(),
-            'last_name'           => $user->getLastName(),
-            'last_updated'        => $user->getUpdated()->format('Y-m-d H:i:s'),
-            'state'               => $user->getState(),
+            'data' => array(
+                'username'            => $user->getUsername(),
+                'email'               => $user->getEmail(),
+                'uuid'                => $user->getUuid(),
+                'banned'              => false,
+                'birth_date'          => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
+                'country'             => $user->getCountry(),
+                'created'             => $user->getCreated()->format('Y-m-d H:i:s'),
+                'creation_ip_address' => $user->getIpAddress(),
+                'custom_avatar'       => false,
+                'first_name'          => $user->getFirstName(),
+                'last_name'           => $user->getLastName(),
+                'last_updated'        => $user->getUpdated()->format('Y-m-d H:i:s'),
+                'state'               => $user->getState(),
+            ),
         );
 
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
@@ -192,7 +185,6 @@ return false;
     public function banUser($user)
     {
 return false;
-
         $path           = 'users/'.$user->getUuid();
         $postParameters = array(
             'action'   => 'ban',
@@ -205,7 +197,6 @@ return false;
     public function unbanUser($user)
     {
 return false;
-
         $path           = 'users/'.$user->getUuid();
         $postParameters = array(
             'action'   => 'unban',
@@ -218,7 +209,6 @@ return false;
     public function getUserList($offset=0, $limit=100, $sortMethod='created', $since=null)
     {
 return array();
-
         $getParameters = array(
             'limit' => $limit,
             'offset' => $offset,
@@ -261,46 +251,5 @@ return array();
         $result = curl_exec($curl2);
 
         return json_decode($result, true);
-    }
-
-    private function dummyAuth($presentedPassword)
-    {
-        $result = array('metaData'=>array(
-            'status'  => 200,
-            'success' => false,
-        ));
-
-        if ($presentedPassword == 'correctpassword') {
-            $result['metaData']['success'] = true;
-        }
-
-        return $result;
-    }
-
-    private function dummyUpdateUserData()
-    {
-        $result = array('metaData'=>array(
-            'status'  => 200,
-            'success' => true,
-        ));
-
-        return $result;
-    }
-
-    private function dummyGetUser($username)
-    {
-        return array(
-            'metaData' => array(
-                'status'  => 200,
-                'success' => true,
-            ),
-            'user' => array(
-                'username'    => $username,
-                'email'       => 'example@email.com',
-                'uuid'        => str_replace("\n", '', `uuidgen -r`),
-                'created'     => new \DateTime(),
-                'lastUpdated' => new \DateTime(),
-            )
-        );
     }
 }
