@@ -127,6 +127,7 @@
                 $('a[href^="http://"]').not('a[href*=alienwarearena]').attr('target','_blank');
                 $('a[href*="alienwarearena"]').attr('target','');
 
+                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                 $.ajax({
                     url: 'http://alienwarearena.com/arp/getuserarp/' + '{{ user.uuid }}',
                     method: 'get',
@@ -134,6 +135,7 @@
                         $('#arp-total').text('ARP:' + data.arp);
                     }
                 });
+                {% endif %}
 
 		        $("ul.sf-list").supersubs({
 		            minWidth:   12,
