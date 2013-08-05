@@ -336,7 +336,7 @@ class YoutubeController extends Controller
         $messageForUser = $featured ? "Video was featured successfully." : "Video was unfeatured successfully.";
 
         try {
-            $response = $this->getCEVOApiManager()->GiveUserXp('contentfeatured', $comment->getAuthor()->getCevoUserId());
+            $response = $this->getCEVOApiManager()->GiveUserXp('contentfeatured', $video->getAuthor()->getCevoUserId());
         } catch (ApiException $e) {
 
         }        
