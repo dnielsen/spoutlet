@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\AbstractVote;
 use Platformd\SpoutletBundle\Entity\CommentVote;
+use Platformd\CEVOBundle\Api\ApiException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -75,7 +76,18 @@ class VoteController extends Controller
                 throw $this->createNotFoundException('Something went wrong.');
         }
 
+        try {
+            $response = $this->getCEVOApiManager()->GiveUserXp('contentvote', $comment->getAuthor()->getCevoUserId());
+        } catch (ApiException $e) {
+
+        }
+
         $response->setContent(json_encode(array("success" => true, "messageForUser" => $votes)));
         return $response;
+    }
+
+    private function getCEVOApiManager()
+    {
+        return $this->get('pd.cevo.api.api_manager');
     }
 }

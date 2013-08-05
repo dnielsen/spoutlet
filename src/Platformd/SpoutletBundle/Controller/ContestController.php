@@ -12,6 +12,7 @@ use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule;
 use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset;
 use Platformd\SpoutletBundle\Form\Type\ContestType;
 use Platformd\SpoutletBundle\Form\Type\SubmitImageType;
+use Platformd\CEVOBundle\Api\ApiException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
@@ -152,6 +153,13 @@ class ContestController extends Controller
 
             $em->persist($entry);
             $em->flush();
+
+            // arp - enteredsweepstakes
+            try {
+                $response = $this->getCEVOApiManager()->GiveUserXp('enteredsweepstakes', $user->getCevoUserId());
+            } catch (ApiException $e) {
+
+            }
 
             return $this->redirect($this->generateUrl('contest_submit', array('slug' => $slug)));
         }
@@ -397,5 +405,10 @@ class ContestController extends Controller
     private function getContestEntryRepository()
     {
         return $this->getEntityManager()->getRepository('SpoutletBundle:ContestEntry');
+    }
+
+    private function getCEVOApiManager()
+    {
+        return $this->get('pd.cevo.api.api_manager');
     }
 }

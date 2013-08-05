@@ -15,6 +15,7 @@ services:
             - @platformd.model.email_manager
             - @router
             - @platformd.model.translator
+            - @pd.cevo.api.api_manager
 
     platformd_event.service.group_event:
         class: Platformd\EventBundle\Service\GroupEventService
@@ -26,6 +27,7 @@ services:
             - @platformd.model.email_manager
             - @router
             - @platformd.model.translator
+            - @pd.cevo.api.api_manager
 
     platformd_event.service.global_event:
         class: Platformd\EventBundle\Service\GlobalEventService
@@ -37,3 +39,4 @@ services:
             - @platformd.model.email_manager
             - @router
             - @platformd.model.translator
+            - @pd.cevo.api.api_manager

@@ -215,6 +215,7 @@ class ContentReportAdminController extends Controller
         $groupDiscussionPost    = $report->getGroupDiscussionPost();
         $groupEvent             = $report->getGroupEvent();
         $youtubeVideo           = $report->getYoutubeVideo();
+        $arpType                = 'removecontent';
 
         if ($groupVideo) {
 
@@ -252,12 +253,6 @@ class ContentReportAdminController extends Controller
             $id = $galleryMedia->getId();
             $type = "GalleryMedia";
 
-            try {
-                $response = $this->getCEVOApiManager()->GiveUserXp('nukephoto', $galleryMedia->getAuthor()->getCevoUserId());
-            } catch (ApiException $e) {
-
-            }
-
         } else if ($group) {
 
             $group->setDeleted(true);
@@ -267,20 +262,15 @@ class ContentReportAdminController extends Controller
             $id = $group->getId();
             $type = "Group";
 
-            try {
-                $response = $this->getCEVOApiManager()->GiveUserXp('groupnuke', $group->getOwner()->getCevoUserId());
-            } catch (ApiException $e) {
-
-            }
-
         } else if ($comment) {
 
             $comment->setDeleted(true);
             $comment->setDeletedReason('REPORTED_AND_REMOVED_BY_ADMIN');
             $em->persist($comment);
             $repo->deleteAllContentReportsForComment($comment);
-            $id = $comment->getId();
-            $type = "Comment";
+            $id         = $comment->getId();
+            $type       = "Comment";
+            $arpType    = 'removecomment';
 
         } else if ($groupDiscussion) {
 
@@ -324,6 +314,13 @@ class ContentReportAdminController extends Controller
         $this->sendUserNotificationEmail($id, $type, true, $report);
 
         $this->setFlash('success', 'Content has been confirmed as removed.');
+
+        try {
+            $response = $this->getCEVOApiManager()->GiveUserXp($arpType, $galleryMedia->getAuthor()->getCevoUserId());
+        } catch (ApiException $e) {
+
+        }
+
         return $this->redirect($this->generateUrl('admin_content_reports'));
     }
 

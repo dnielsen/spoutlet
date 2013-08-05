@@ -20,9 +20,9 @@ class YoutubeManager
     private $apiManager;
 
     const YOUTUBE_ID_REGEX      = '%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i';
-    const API_ARP_ADD_VIDEO     = 'videosubmit';
-    const API_ARP_NUKE_VIDEO    = 'videonuke';
-    const API_ARP_VOTE_VIDEO    = 'videovote';
+    const API_ARP_ADD_VIDEO     = 'addcontent';
+    const API_ARP_NUKE_VIDEO    = 'removecontent';
+    const API_ARP_VOTE_VIDEO    = 'contentvote';
 
     public function __construct(EntityManager $entityManager, AclProvider $aclProvider, ApiManager $apiManager)
     {
@@ -82,7 +82,7 @@ class YoutubeManager
         $this->em->persist($vote);
         $this->em->flush();
 
-        //$this->arp($vote->getUser(), self::API_ARP_VOTE_VIDEO);
+        $this->arp($vote->getUser(), self::API_ARP_VOTE_VIDEO);
     }
 
     public function getVideoInfo($youtubeId)
