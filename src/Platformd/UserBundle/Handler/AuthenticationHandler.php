@@ -47,17 +47,16 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
 
         if ($request->isXmlHttpRequest()) {
             // handle ajax login success here
+            $locale         = $this->siteUtil->getCurrentSite()->getDefaultLocale();
             $response       = new Response();
             $referer        = $request->headers->get('referer');
-            $homePath       = $this->router->generate('default_index', array(), true);
-            $checkEmailPath = $this->router->generate('fos_user_registration_check_email', array(), true);
+            $homePath       = $this->router->generate(sprintf('%s_default_index', $locale), array(), true);
+            $checkEmailPath = $this->router->generate(sprintf('%s_fos_user_registration_check_email', $locale), array(), true);
+            $registerPath   = $this->router->generate(sprintf('%s_fos_user_registration_register', $locale), array(), true);
 
             // to avoid confusion for people who hang out on /check-email after clicking the confirm email link, we need to just send them to the homepage :|
-            if ($referer == $checkEmailPath) {
-                $referer = $homePath;
-            }
-
-            $result     = array('success' => true, 'referer' => $referer);
+            $targetPath = ($referer == $checkEmailPath || $referer == $registerPath) ? $homePath : $referer;
+            $result     = array('success' => true, 'referer' => $targetPath, 'r' => $request->headers->get('referer'), 'cep' => $checkEmailPath, 'rp' => $registerPath);
 
             $response->headers->set('Content-type', 'text/json; charset=utf-8');
             $response->setContent(json_encode($result));

@@ -90,6 +90,12 @@ services:
             - @platformd.model.ip_lookup_util
         scope: request
 
+    platformd_user.resetting.form.type:
+        class: Platformd\UserBundle\Form\Type\ResettingFormType
+        parent: fos_user.resetting.form.type
+        tags:
+            - { name: form.type, alias: platformd_user_resetting }
+
     platformd_user.resetting.form.handler:
         class: Platformd\UserBundle\Form\Handler\ResettingFormHandler
         parent: fos_user.resetting.form.handler.default

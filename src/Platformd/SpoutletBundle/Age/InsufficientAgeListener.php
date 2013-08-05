@@ -39,9 +39,14 @@ class InsufficientAgeListener
             return;
         }
 
+        $referer = $event->getRequest()->headers->get('referer');
+        $regPath = $this->router->generate('fos_user_registration_register', array(), true);
+
+        $template = $referer == $regPath ? 'UserBundle:Registration:tooYoung.html.twig' : 'SpoutletBundle:Age:insufficientAge.html.twig';
+
         if ($this->ageManager->isUsersAgeVerified()) {
             $content = $this->templating->render(
-                'SpoutletBundle:Age:insufficientAge.html.twig'
+                $template
             );
 
             $event->setResponse(new Response($content));

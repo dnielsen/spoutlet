@@ -30,7 +30,7 @@ class ResettingController extends BaseController
             return new RedirectResponse($this->container->get('router')->generate('fos_user_resetting_request'));
         }
 
-        $form = $this->container->get('fos_user.resetting.form');
+        $form = $this->container->get('platformd_user.resetting.form.type');
         $formHandler = $this->container->get('fos_user.resetting.form.handler');
         $process = $formHandler->process($user);
 

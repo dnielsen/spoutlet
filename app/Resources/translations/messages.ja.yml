@@ -37,7 +37,7 @@ platformd.user.account.avatars: アバターを
 platformd.user.account.account_settings: アカウント設定
 platformd.user.account.incomplete.title: 変更完了
 platformd.user.account.incomplete.description: Your registration is missing several key pieces of information. Please complete the form below to complete it.
-platformd.user.account.changes_saved: Your changes are saved.
+platformd.user.account.changes_saved: 変更を保存
 platformd.user.account.error: The system is currently unable to process your request. Please try again shortly.
 
 platformd.user.avatars.manage: アバター管理

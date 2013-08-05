@@ -91,7 +91,7 @@ platformd.admin.avatars.unapproved.no_avatars: There are no unapproved avatars.
 platformd:
 
     homepage:
-        news_title: News & Articles
+        news_title: News & Article
 
     alienware: Alienware
 
@@ -107,6 +107,7 @@ platformd:
         action_required: Action Required!
 
     cache:
+
        currently_under_heavy_load_title: Please try again shortly...
        currently_under_heavy_load_body: Our servers are currently experiencing a high volume of traffic and cannot process your request at this time. Please try again shortly. We apologize for any inconvenience.
 

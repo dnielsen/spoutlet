@@ -100,7 +100,7 @@ registration.email: |
 
 # Password resetting
 resetting.password_already_requested: The password for this user has already been requested within the last 24 hours.
-resetting.check_email: Please check your email for the link to reset your password.
+resetting.check_email: A password reset email has been sent. Please click the link provided in the email to complete your password reset.
 resetting.request.invalid_username: The email you entered, "%username%", does not appear to be in our system. If you believe this is an error, please email <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a> for support.
 resetting.request.username: "Email:"
 resetting.request.submit: Reset Password
@@ -109,7 +109,7 @@ resetting.flash.success: Your password has been successfully changed.
 
 # the first line is the subject of the email
 resetting.email: |
-    Reset Password
+    Alienware Arena - Reset Password
     <h3>Hello %username%!</h3>
 
     <p>We have received a password change request for your Alienware Arena account.</p>

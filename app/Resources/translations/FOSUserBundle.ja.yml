@@ -77,18 +77,21 @@ registration.flash.user_created: ユーザーが正常に作成されました
 
 # the first line is the subject of the email
 registration.email: |
-    Alienware Arena 登録確認
-    <h3>%username%様ようこそ。</h3>
+    ALIENWAREARENA - パスワード変更
+    <h3>こんにちは！ %username%さん</h3>
+
+    <p>ALIENWAREARENA アカウントのパスワード変更リクエストを受け取りました。</p>
 
     <p>
-        アカウントの認証を完了するため、<a href="%confirmationUrl%">%confirmationUrl%</a> にアクセスしてください。
+        パスワードをリセットするには、下記のリンクをクリックしてください。<br />
+        <a href=""%confirmationUrl%"">%confirmationUrl%</a>
     </p>
 
-    <p>
-    よろしくお願いします。<br/>
-    チーム一同より
-    </p>
+    <p>※このメールに覚えがない場合は、何もせずにこのメールを破棄していただくようお願いいたします。</p>
 
+    <p>※このメールはシステムより自動配信されています。返信は受付できませんので、ご了承ください。</p>
+
+    <p>ALIENWAREARENA Team</p>
 
 # Password resetting
 resetting.password_already_requested: このユーザーのパスワードは、過去24時間以内に既に求められました。

@@ -46,7 +46,7 @@ platformd.user.account.videos: Vídeos
 platformd.user.account.avatars: Avatares
 platformd.user.account.incomplete.title: Complete Registration
 platformd.user.account.incomplete.description: Your registration is missing several key pieces of information. Please complete the form below to complete it.
-platformd.user.account.changes_saved: Your changes are saved.
+platformd.user.account.changes_saved: Tus cambios se guardaron.
 platformd.user.account.error: The system is currently unable to process your request. Please try again shortly.
 
 platformd.user.avatars.manage: Administrar Avatares
@@ -340,7 +340,7 @@ platformd:
             terms_label: Términos y Condiciones
             dell_privacy_label: Ver la Protección de datos personales de Dell
             country_label: Elija un país
-            underage_message: Lo sentimos, parece que usted no cumple con el requisito de edad mínima. No somos capaces de completar su registro en este momento.
+            underage_message: Lo sentimos, pero no podemos aceptar tu inscripción en este momento.
             please_wait: El sistema está procesando múltiples creaciones de cuenta y no puede procesar su solicitud de creación en este momento, por favor vuelve a intentarlo más tarde.
             oops: ¡Error!
             cannot_process: No hemos podido completar su solicitud. Si cree que esto es un error o continua teniendo problemas de corregir por debajo de los temas, porfavor contacte a <a href="%s">soporte</a>.
@@ -364,6 +364,9 @@ platformd:
             password_message: Su contraseña es sensible a las mayúsculas. Asegúrese de que Bloq mayús no esté activado. Si ha olvidado su contraseña, puede restablecerla. Si no puede recordar qué dirección de correo electrónico usó, <a href="%s">contacte a soporte</a>.
             sign_in: Iniciar
             join: Unete Gratis!
+
+        reset:
+            title:  Nueva Contraseña
 
         request_reset:
             title: ¿Olvidaste tu contraseña?
@@ -703,7 +706,7 @@ click_to_download: Hacer clic para descargar
 "User account is disabled.": "Your account is not activated. You must confirm your account by clicking on the link in the Activate Account Email."
 "Invalid username or password": "Usuario/correo electrónico o contraseña incorrecto."
 
-"Select one": "----Select one----"
+"Select one": "----Selecciona Uno----"
 
 galleries:
     image: Foto

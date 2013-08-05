@@ -106,19 +106,21 @@ resetting.flash.success: La contraseña se ha restablecido correctamente
 
 # the first line is the subject of the email
 resetting.email: |
-    Restablecer Contraseña
+    Alienware Arena - Restablecer Contraseña
     <h3>Hola %username%!</h3>
 
+    <p>Hemos recibido una solicitud de cambio de contraseña para tu cuenta Alienware Arena.</p>
+
     <p>
-        Para restablecer la contraseña - por favor visite
+        Para restablecer tu contraseña - por favor haz clic en el enlace de abajo <br />
         <a href="%confirmationUrl%">%confirmationUrl%</a>
     </p>
 
-    <p>
-    Saludos,<br/>
-    the Team.
-    </p>
+    <p>Si no solicitaste el restablecimiento de contraseña, por favor ignora este mensaje.</p>
 
+    <p>Este es un mensaje automático. Por favor no respondas a este correo electrónico.</p>
+
+    <p>Equipo Alienware Arena</p>
 # Password resetted by admin
 resetted.email: |
     Alienware Arena - Password Reset
