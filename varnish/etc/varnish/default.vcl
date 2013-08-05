@@ -13,13 +13,11 @@ probe healthcheck {
 backend awaWeb1  { .host = "ec2-54-227-65-32.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 backend awaWeb2  { .host = "ec2-23-20-93-253.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 backend awaWeb3  { .host = "ec2-54-227-94-218.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
-backend awaWeb4  { .host = "ec2-23-20-212-246.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 
 director awaWeb random {
     { .backend = awaWeb1; .weight = 1; }
     { .backend = awaWeb2; .weight = 1; }
     { .backend = awaWeb3; .weight = 1; }
-    { .backend = awaWeb4; .weight = 1; }
 }
 
 acl ban {
@@ -27,7 +25,6 @@ acl ban {
     "ec2-54-227-65-32.compute-1.amazonaws.com";
     "ec2-23-20-93-253.compute-1.amazonaws.com";
     "ec2-54-227-94-218.compute-1.amazonaws.com";
-    "ec2-23-20-212-246.compute-1.amazonaws.com";
 }
 
 sub vcl_recv {
@@ -248,6 +245,9 @@ sub vcl_fetch {
     // set so that we can utilize the ban lurker to test against the url of cached items
     set beresp.http.x-url = req.url;
 
+    // set so that we can utilize the ban lurker to test against the host of cached items
+    set beresp.http.x-host = req.http.host;
+    
     if (req.url !~ "^/age/verify$" && req.url !~ "^/login(_check)?$" && req.url !~ "^/logout$" && req.url !~ "^/sessionCookie$" && req.url !~ "^/account/register[/]?$" && req.url !~ "^/register/confirm/" && req.url !~ "^/reset/") { # the only exceptions to the "remove all set-cookies rule"
         unset beresp.http.set-cookie;
     }
