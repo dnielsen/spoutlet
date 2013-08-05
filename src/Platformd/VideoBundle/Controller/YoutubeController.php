@@ -335,6 +335,12 @@ class YoutubeController extends Controller
 
         $messageForUser = $featured ? "Video was featured successfully." : "Video was unfeatured successfully.";
 
+        try {
+            $response = $this->getCEVOApiManager()->GiveUserXp('contentfeatured', $comment->getAuthor()->getCevoUserId());
+        } catch (ApiException $e) {
+
+        }        
+
         $response->setContent(json_encode(array("success" => true, "messageForUser" => $messageForUser, "featured" => $featured ? 1 : 0)));
         return $response;
     }
@@ -441,4 +447,9 @@ class YoutubeController extends Controller
     {
         return $this->get('platformd.tags.model.tag_manager');
     }
+
+    private function getCEVOApiManager()
+    {
+        return $this->get('pd.cevo.api.api_manager');
+    }    
 }
