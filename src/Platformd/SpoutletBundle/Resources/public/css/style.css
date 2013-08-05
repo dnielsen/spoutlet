@@ -3422,3 +3422,7 @@ hr.faded:before {
 .dob-select {
     width: 80px;
 }
+
+#contact-table {
+    width: 500px;
+}
