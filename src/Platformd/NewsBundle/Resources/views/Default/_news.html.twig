@@ -2,8 +2,13 @@
     <h2>
         <a class="controlled-spacing" href="{{ item | pd_link }}" {{ item is external ? 'target="_blank"' : '' }}>{{ item.title }}</a>
     </h2>
-
+    <h6>
+            {{ 'announced_date' | pd_trans({
+                '%posted_date%': ('sweepstakes_date_format' | pd_trans(item.postedAtArray))
+            })}}
+        </h6>
     <div class="article-content">
+
         {% if item.image %}
         <div class="article-image">
             <a href="{{ item | pd_link }}"{{ item is external ? ' target="_blank"' : '' }}>
@@ -13,11 +18,7 @@
         {% endif %}
 
         <div class="article-blurb">
-            <h6>
-                {{ 'announced_date' | pd_trans({
-                    '%posted_date%': ('sweepstakes_date_format' | pd_trans(item.postedAtArray))
-                })}}
-            </h6>
+
 
             <p class="article-blurb-text">
                 {{ item.blurb | nl2br }}

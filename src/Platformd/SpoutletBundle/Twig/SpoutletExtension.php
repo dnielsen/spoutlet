@@ -282,40 +282,12 @@ class SpoutletExtension extends Twig_Extension
 
     public function accountLink($username)
     {
+        // http://www.alienwarearena.com/member/9672b289-ec1b-4127-b8a7-a837d9ed0050/
+        // http://www.alienwarearena.com/member/2126643/
+        // http://www.alienwarearena.com/member/playitcool2/
         $user = $this->userManager->findUserByUsername($username);
 
-        if (!$this->localAuth) {
-            $cevoUserId     = $user->getUuid();
-            $locale         = $this->session->getLocale();
-
-            switch ($locale) {
-                case 'ja':
-                    $subdomain = '/japan';
-                    break;
-
-                case 'zh':
-                    $subdomain = '/china';
-                    break;
-
-                case 'es':
-                    $subdomain = '/latam';
-                    break;
-
-                default:
-                    $subdomain = '';
-                    break;
-            }
-
-            if ($cevoUserId) {
-                return sprintf('http://www.alienwarearena.com%s/member/%s', $subdomain , $cevoUserId);
-            }
-
-            return 'http://www.alienwarearena.com/account/profile';
-        } else {
-            return $this->router->generate('accounts_profile', array(
-                'username' => $user ? $username : null,
-            ));
-        }
+        return sprintf('http://www.alienwarearena.com/member/%s', $user->getUuid());
     }
 
     public function endsWith($haystack, $needle) {
