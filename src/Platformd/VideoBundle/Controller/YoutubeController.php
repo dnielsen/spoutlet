@@ -7,6 +7,7 @@ use Platformd\VideoBundle\Entity\YoutubeVideo;
 use Platformd\VideoBundle\Entity\YoutubeVote;
 use Platformd\VideoBundle\Form\Type\YoutubeType;
 use Platformd\GroupBundle\Entity\GroupVideo;
+use Platformd\CEVOBundle\Api\ApiException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Symfony\Component\HttpFoundation\Request,
@@ -339,7 +340,7 @@ class YoutubeController extends Controller
             $response = $this->getCEVOApiManager()->GiveUserXp('contentfeatured', $video->getAuthor()->getCevoUserId());
         } catch (ApiException $e) {
 
-        }        
+        }
 
         $response->setContent(json_encode(array("success" => true, "messageForUser" => $messageForUser, "featured" => $featured ? 1 : 0)));
         return $response;
@@ -451,5 +452,5 @@ class YoutubeController extends Controller
     private function getCEVOApiManager()
     {
         return $this->get('pd.cevo.api.api_manager');
-    }    
+    }
 }
