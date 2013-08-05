@@ -81,11 +81,13 @@ class SiteUtil extends Event
 
                 foreach ($sites as $site) {
 
-                    if (false === strpos($site->getFullDomain(), 'migration')) {
+                    $migrationDomain = $site->getFullDomain();
+
+                    /*if (false === strpos($site->getFullDomain(), 'migration')) {
                         $migrationDomain = str_replace('.alienwarearena', 'migration.alienwarearena', $site->getFullDomain());
                     } else {
                         $migrationDomain = $site->getFullDomain();
-                    }
+                    }*/
 
                     $arr[$migrationDomain] = $site;
                 }
