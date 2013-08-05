@@ -24,8 +24,6 @@ class SiteRepository extends EntityRepository
                 ->getQuery()
                 ->getOneOrNullResult();
 
-            $site->setFullDomain($originalFullDomain);
-
             return $site;
         }
 
