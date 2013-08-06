@@ -9,22 +9,42 @@ probe healthcheck {
     .timeout = 3s;
 }
 
-// Note: Hostnames are resolved at VCL compile time - if these change you will need to vcl.load the config again.
-backend awaWeb1  { .host = "ec2-54-227-65-32.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
-backend awaWeb2  { .host = "ec2-23-20-93-253.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
-backend awaWeb3  { .host = "ec2-54-227-94-218.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb1  { .host = "ec2-23-22-229-200.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb2  { .host = "ec2-54-226-103-0.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb3  { .host = "ec2-50-19-47-216.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb4  { .host = "ec2-54-227-50-4.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb5  { .host = "ec2-50-16-16-111.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb6  { .host = "ec2-54-227-123-57.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb7  { .host = "ec2-54-227-180-151.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb8  { .host = "ec2-54-227-149-154.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb9  { .host = "ec2-23-22-31-120.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb10  { .host = "ec2-54-227-58-146.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 
 director awaWeb random {
     { .backend = awaWeb1; .weight = 1; }
     { .backend = awaWeb2; .weight = 1; }
     { .backend = awaWeb3; .weight = 1; }
+    { .backend = awaWeb4; .weight = 1; }
+    { .backend = awaWeb5; .weight = 1; }
+    { .backend = awaWeb6; .weight = 1; }
+    { .backend = awaWeb7; .weight = 1; }
+    { .backend = awaWeb8; .weight = 1; }
+    { .backend = awaWeb9; .weight = 1; }
+    { .backend = awaWeb10; .weight = 1; }
 }
 
 acl ban {
     "ec2-75-101-139-101.compute-1.amazonaws.com";
-    "ec2-54-227-65-32.compute-1.amazonaws.com";
-    "ec2-23-20-93-253.compute-1.amazonaws.com";
-    "ec2-54-227-94-218.compute-1.amazonaws.com";
+    "ec2-23-22-229-200.compute-1.amazonaws.com";
+    "ec2-54-226-103-0.compute-1.amazonaws.com";
+    "ec2-50-19-47-216.compute-1.amazonaws.com";
+    "ec2-54-227-50-4.compute-1.amazonaws.com";
+    "ec2-50-16-16-111.compute-1.amazonaws.com";
+    "ec2-54-227-123-57.compute-1.amazonaws.com";
+    "ec2-54-227-180-151.compute-1.amazonaws.com";
+    "ec2-54-227-149-154.compute-1.amazonaws.com";
+    "ec2-23-22-31-120.compute-1.amazonaws.com";
+    "ec2-54-227-58-146.compute-1.amazonaws.com";
 }
 
 sub vcl_recv {
