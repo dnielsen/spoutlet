@@ -11,7 +11,6 @@ class ResettingFormType extends BaseType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder->add('new', 'repeated', array('type' => 'password', 'invalid_message' => 'passwords_do_not_match'));
-        $builder->add('new', 'repeated', array('type' => 'password', 'invalid_message' => 'passwords_do_not_match'));
     }
 
     public function getName()

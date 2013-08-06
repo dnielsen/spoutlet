@@ -117,6 +117,7 @@ fos_user:
     resetting:
         form:
             handler: platformd_user.resetting.form.handler
+            type: platformd_user_resetting
     registration:
         form:
             type: platformd_user_registration

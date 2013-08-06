@@ -96,15 +96,6 @@ services:
         tags:
             - { name: form.type, alias: platformd_user_resetting }
 
-    platformd_user.resetting.form:
-        class: Symfony\Component\Form\Form
-        arguments:
-            - platformd_user.resetting.form.type
-            - platformd_user_resetting
-        factory_method: createNamed
-        factory_service: form.factory
-
-
     platformd_user.resetting.form.handler:
         class: Platformd\UserBundle\Form\Handler\ResettingFormHandler
         parent: fos_user.resetting.form.handler.default

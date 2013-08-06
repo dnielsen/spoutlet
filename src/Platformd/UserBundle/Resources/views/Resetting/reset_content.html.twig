@@ -3,7 +3,15 @@
 <h1>{{ 'platformd.user.reset.title' | trans }}</h1>
 
 <form action="{{ path('fos_user_resetting_reset', {'token': token}) }}" {{ form_enctype(form) }} method="POST" class="fos_user_resetting_reset">
-    {{ form_widget(form) }}
+    {{ form_label(form.new.first) }}
+    {{ form_widget(form.new.first) }}
+    <span class="form-msg-error">{{ form_errors(form.new) }}</span>
+
+    {{ form_label(form.new.second) }}
+    {{ form_widget(form.new.second) }}
+    <span class="form-msg-error">{{ form_errors(form.new) }}</span>
+
+
     <div>
         <input type="submit" class="button btn btn-primary" value="{{ 'resetting.reset.submit'|trans({}, 'FOSUserBundle') }}" />
     </div>
