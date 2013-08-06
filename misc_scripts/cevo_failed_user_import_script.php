@@ -437,6 +437,7 @@ class CevoFailedUserImportCommand
                         `subscribedAlienwareEvents` = :allow_contact,
                         `roles`                     = "a:0:{}",
                         `locale`                    = "en",
+                        `enabled`                   = 1,
                         `has_alienware_system`      = 0';
 
         $updateUserSql = 'UPDATE `'.$db.'`.`fos_user` SET
@@ -469,7 +470,8 @@ class CevoFailedUserImportCommand
                         `monitor`                   = :monitor,
                         `avatar_id`                 = :avatar_id,
                         `subscribed_gaming_news`    = :dell_optin,
-                        `subscribedAlienwareEvents` = :allow_contact
+                        `subscribedAlienwareEvents` = :allow_contact,
+                        `enabled`                   = 1
                         WHERE `id`=:userId';
 
         $createUserQuery = $dbh->prepare($createUserSql);

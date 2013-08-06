@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Util\IpLookupUtil;
 use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
 use Platformd\UserBundle\Exception\UserRegistrationTimeoutException;
+use Platformd\UserBundle\Exception\ApiRequestException;
 
 class RegistrationFormHandler extends BaseRegistrationFormHandler
 {
@@ -24,8 +25,9 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
     protected $em;
     protected $container;
     protected $ipLookupUtil;
+    protected $apiManager;
 
-    public function __construct(Form $form, Request $request, UserManagerInterface $userManager, MailerInterface $mailer, EntityManager $em, ContainerInterface $container, IpLookupUtil $ipLookupUtil)
+    public function __construct(Form $form, Request $request, UserManagerInterface $userManager, MailerInterface $mailer, EntityManager $em, ContainerInterface $container, IpLookupUtil $ipLookupUtil, $apiManager)
     {
         $this->form         = $form;
         $this->request      = $request;
@@ -34,6 +36,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
         $this->em           = $em;
         $this->container    = $container;
         $this->ipLookupUtil = $ipLookupUtil;
+        $this->apiManager   = $apiManager;
     }
 
     public function process($confirmation = false)
@@ -63,6 +66,12 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
 
                 if ($this->checkRegistrationTimeoutPassed() === false) {
                     throw new UserRegistrationTimeoutException();
+                }
+
+                if ($this->container->getParameter('api_authentication')) {
+                    if (false === $this->apiManager->createRemoteUser($user, $user->getPlainPassword())) {
+                        throw new UserRegistrationTimeoutException();
+                    }
                 }
 
                 $this->onSuccess($user, $confirmation);

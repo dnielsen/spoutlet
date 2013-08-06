@@ -12,6 +12,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerI
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
+use Symfony\Component\HttpFoundation\Cookie;
 
 use Platformd\SpoutletBundle\Util\SiteUtil;
 
@@ -57,6 +58,21 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
             $response->headers->set('Content-type', 'text/json; charset=utf-8');
             $response->setContent(json_encode($result));
 
+            $cookieInfo = $this->apiManager->getSessionInfo($user->sessionUuid);
+
+            if (!$cookieInfo || (isset($cookieInfo['metaData']) && $cookieInfo['metaData']['status'] != 200)) {
+                return $response;
+            }
+
+            $cookieName     = 'awa_session_key';
+            $cookieValue    = $user->sessionUuid;
+            $cookieExpiry   = new \DateTime($cookieInfo['data']['expires']);
+            $cookiePath     = '/';
+            $cookieHost     = $this->baseHost;
+
+            $cookie = new Cookie($cookieName, $cookieValue, $cookieExpiry, $cookiePath, $cookieHost, false, false);
+            $response->headers->setCookie($cookie);
+
             return $response;
         } else {
 
@@ -66,7 +82,12 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
                 $url = $this->router->generate('default_index');
             }
 
-            return new RedirectResponse($url);
+            $interimUrl = $this->router->generate('api_session_cookie', array(
+                'uuid' => $user->sessionUuid,
+                'return' => urlencode($url),
+            ));
+
+            return new RedirectResponse($interimUrl);
         }
     }
 

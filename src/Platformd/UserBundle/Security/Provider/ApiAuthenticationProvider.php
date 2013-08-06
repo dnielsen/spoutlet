@@ -38,7 +38,7 @@ class ApiAuthenticationProvider extends UserAuthenticationProvider
         $currentUser = $token->getUser();
 
         if ($currentUser instanceof UserInterface) {
-            if (!$this->apiManager->authenticate($currentUser, $presentedPassword)) {
+            if ($sessionUuid = $this->tryApiAuthentication($currentUser, $presentedPassword) == false) {
                 throw new BadCredentialsException('The credentials were changed from another session.');
             }
         } else {
@@ -47,13 +47,13 @@ class ApiAuthenticationProvider extends UserAuthenticationProvider
             }
 
             if ($user->getApiSuccessfulLogin()) {
-                if (!$this->apiManager->authenticate($user, $presentedPassword)) {
+                if (false === $sessionUuid = $this->apiManager->authenticate($user, $presentedPassword)) {
                     throw new BadCredentialsException('The presented password is invalid.');
                 }
             } else {
 
                 // Check to see if we can log in via API
-                if ($this->tryApiAuthentication($user, $presentedPassword) == false) {
+                if ($sessionUuid = $this->tryApiAuthentication($user, $presentedPassword) == false) {
                     // Check to see if we have a CEVO-style password
                     if (!$this->cevoPasswordHandler->authenticate($user, $presentedPassword)) {
                         // Check to see if we have a "Platform D" style password
@@ -68,21 +68,23 @@ class ApiAuthenticationProvider extends UserAuthenticationProvider
                     }
 
                     // Auth with API now that password has been updated.
-                    if ($this->tryApiAuthentication($user, $presentedPassword) == false) {
-                        //throw new BadCredentialsException('The presented password is invalid.');
+                    if ($sessionUuid = $this->tryApiAuthentication($user, $presentedPassword) == false) {
+                        throw new BadCredentialsException('The presented password is invalid.');
                     }
                 }
             }
         }
+
+        $user->sessionUuid = $sessionUuid;
     }
 
     protected function tryApiAuthentication($user, $presentedPassword)
     {
-        $apiLoginSuccess = $this->apiManager->authenticate($user, $presentedPassword);
+        $sessionUuid = $this->apiManager->authenticate($user, $presentedPassword);
 
-        if ($apiLoginSuccess && !$user->getApiSuccessfulLogin()) {
+        if ($sessionUuid && !$user->getApiSuccessfulLogin()) {
             $user->setApiSuccessfulLogin(new \DateTime());
-            return true;
+            return $sessionUuid;
         } else {
             return false;
         }

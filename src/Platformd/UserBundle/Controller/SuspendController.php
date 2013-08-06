@@ -21,7 +21,7 @@ class SuspendController extends Controller
         if ($form->isValid()) {
 
             try {
-                $this->getApiManager()->updateUserAndApi($user);
+                $this->getUserManager()->updateUserAndApi($user);
 
                 if ($user->getExpiredUntil()) {
                     $this->setFlash('success', 'This user is suspended through '.$user->getExpiredUntil()->format('Y-m-d H:i:s'));
@@ -46,7 +46,7 @@ class SuspendController extends Controller
         if ($this->getApiAuth()) {
             try {
                 $user->setExpired(true);
-                $this->getApiManager()->updateUserAndApi($user);
+                $this->getUserManager()->updateUserAndApi($user);
                 $this->setFlash('success', 'This user is suspended indefinitely.');
             } catch (ApiRequestException $e) {
                 $this->setFlash('error', 'There was a problem suspending this user. Please try again soon.');

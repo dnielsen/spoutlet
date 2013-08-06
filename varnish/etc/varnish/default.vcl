@@ -275,8 +275,8 @@ sub vcl_fetch {
 
     // set so that we can utilize the ban lurker to test against the host of cached items
     set beresp.http.x-host = req.http.host;
-    
-    if (req.url !~ "^/allowMigrationTesting$" && req.url !~ "^/age/verify$" && req.url !~ "^/login(_check)?$" && req.url !~ "^/logout$" && req.url !~ "^/sessionCookie$" && req.url !~ "^/account/register[/]?$" && req.url !~ "^/register/confirm/" && req.url !~ "^/reset/") { # the only exceptions to the "remove all set-cookies rule"
+
+    if (req.url !~ "^/allowMigrationTesting$" && req.url !~ "^/setApiSessionCookie/" && req.url !~ "^/age/verify$" && req.url !~ "^/login(_check)?$" && req.url !~ "^/logout$" && req.url !~ "^/sessionCookie$" && req.url !~ "^/account/register[/]?$" && req.url !~ "^/register/confirm/" && req.url !~ "^/reset/") { # the only exceptions to the "remove all set-cookies rule"
         unset beresp.http.set-cookie;
     }
 

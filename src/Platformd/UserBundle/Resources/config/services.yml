@@ -33,6 +33,7 @@ services:
         arguments:
             - '@platformd.user.api.manager'
             - '@doctrine.orm.entity_manager'
+            - '@platformd_user.manager'
 
     # Forms
     platformd_user.registration.form.type:
@@ -88,6 +89,7 @@ services:
             - @doctrine.orm.entity_manager
             - @service_container
             - @platformd.model.ip_lookup_util
+            - @platformd.user.api.manager
         scope: request
 
     platformd_user.resetting.form.type:

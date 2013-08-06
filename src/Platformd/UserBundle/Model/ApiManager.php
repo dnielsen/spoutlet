@@ -63,7 +63,7 @@ class ApiManager
 return true;
         $path   = 'sessions/'.$uuid;
         $result = $this->makeRequest($path, 'DELETE');
-        return $result ? $result['metaData']['success'] : false;
+        return $result ? $result['metaData']['status'] == 200 : false;
     }
 
     // Password is the plaintext password presented at login
@@ -79,12 +79,11 @@ return true;
         );
 
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
-        return $result ? $result['metaData']['success'] : false;
+        return $result ? $result['metaData']['status'] == 200 : false;
     }
 
     public function authenticate($user, $presentedPassword)
     {
-return false;
         if (!$user instanceof User) {
             return false;
         }
@@ -92,18 +91,23 @@ return false;
         $path   = 'sessions';
 
         $postParameters = array(
-            'action' => 'login',
+            'action' => 'authenticate',
             'data'   => array(
                 'usernameOrEmail' => $user->getEmail(),
-                'password'        => $password,
+                'password'        => $presentedPassword,
             ),
         );
 
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
-        return $result ? $result['data']['uuid'] : false;
+
+        if ($result) {
+            return $result['metaData']['status'] == 200 ? $result['data']['uuid'] : false;
+        }
+
+        return false;
     }
 
-    public function getUserByUsername($username)
+    public function getUserByUsernameOrEmail($usernameOrEmail)
     {
 return null;
         $path          = 'username';
@@ -157,17 +161,18 @@ return true;
         $path   = 'users/'.$uuid;
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
 
-        return $result ? $result['metaData']['success'] : false;
+        return $result ? $result['metaData']['status'] == 200 : false;
     }
 
-    public function createRemoteUser($user)
+    public function createRemoteUser($user, $password)
     {
 return false;
-        $path           = 'users/'.$user->getUuid();
+        $path           = 'users';
         $postParameters = array(
             'action' => 'create',
             'data'   => array(
                 'username'            => $user->getUsername(),
+                'password'            => $password,
                 'email'               => $user->getEmail(),
                 'uuid'                => $user->getUuid(),
                 'banned'              => false,
@@ -184,7 +189,7 @@ return false;
         );
 
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
-        return $result ? $result['metaData']['success'] : false;
+        return $result ? $result['metaData']['status'] == 200 : false;
     }
 
     public function banUser($user, $until=null)
@@ -246,7 +251,12 @@ return array();
                 $parameters = json_encode($postParameters);
 
                 curl_setopt($curl2, CURLOPT_POST, true);
-                curl_setopt($curl2, CURLOPT_POSTFIELDS, $postParameters);
+                curl_setopt($curl2, CURLOPT_POSTFIELDS, $parameters);
+
+                curl_setopt($curl2, CURLOPT_HTTPHEADER, array(
+                    'Content-Type: application/json',
+                    'Content-Length: ' . strlen($parameters))
+                );
             }
         }
 

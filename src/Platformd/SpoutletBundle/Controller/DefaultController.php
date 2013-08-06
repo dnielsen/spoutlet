@@ -160,7 +160,7 @@ class DefaultController extends Controller
         return new Response('');
     }
 
-    public function setApiSessionCookieAction($uuid)
+    public function setApiSessionCookieAction($uuid, Request $request)
     {
         $info = $this->getApiManager()->getSessionInfo($uuid);
         $response = new Response('');
@@ -169,15 +169,18 @@ class DefaultController extends Controller
             return $response;
         }
 
-        if (isset($info['metaData']) && $info['metaData']['success'] == false) {
+        if (isset($info['metaData']) && $info['metaData']['status'] != 200) {
             return $response;
         }
+
+        $return   = $request->get('return') ? urldecode($request->get('return')) : $this->generateUrl('default_index');
+        $response = new RedirectResponse($return);
 
         $cookieName     = 'awa_session_key';
         $cookieValue    = $uuid;
         $cookieExpiry   = new \DateTime($info['data']['expires']);
         $cookiePath     = '/';
-        $cookieHost     = $this->baseHost;
+        $cookieHost     = $this->getParameter('base_host');
 
         $cookie = new Cookie($cookieName, $cookieValue, $cookieExpiry, $cookiePath, $cookieHost, false, false);
         $response->headers->setCookie($cookie);
