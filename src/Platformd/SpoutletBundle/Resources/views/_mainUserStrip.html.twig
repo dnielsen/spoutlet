@@ -2,7 +2,7 @@
 {{ 'platformd.layout.top_menu.logged_in_as' | trans({
     '%username%': user.username,
     '%route%': account_link(user.username)
-}) | raw }}{% if features.hasArp %}&nbsp;(<a style="color: #01A2D2;" id="arp-total" href="{{ path('arp') }}"></a>){% endif %}
+}) | raw }}
 	<li class="separator"><a id="logout" href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | trans }}</a></li>
 	<li class="separator"><a href="{{ path('accounts_index') }}">{{ 'platformd.layout.top_menu.account' | trans }}</a></li>
     {% if is_granted("ROLE_ADMIN") %}

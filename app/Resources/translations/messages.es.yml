@@ -74,7 +74,7 @@ platformd.user.avatars.awaiting_processing: ESPERANDO PROCESAMIENTO
 platformd.user.avatars.update: ACTUALIZACIÓN
 platformd.user.avatars.valid_filetypes: Tipo de archivos válidos para avatar son JPG, PNG, GIF.
 platformd.user.avatars.upload: Subir
-platformd.user.avatars.choose_avatar: Choose Avatar
+platformd.user.avatars.choose_avatar: Administrar Avatares
 
 platformd:
 
@@ -274,6 +274,8 @@ platformd:
             warning: Advertencia: Nunca des tu contraseña a nadie!
             under_construction: "Lo sentimos, pero no podemos aceptar tu inscripción en este momento."
             change_your_password: Contraseña
+        giveaway:
+            your_giveaway_keys: Mis Claves para Regalos
 
     comment:
         add_your_comment: Añada tu comentario
@@ -678,8 +680,8 @@ featured_deals: Featured Deals
 expired_deals: Expired Deals
 
 platformd.deal.deal: Deal
-platformd.deal.assigned.key: Code
-platformd.deal.assigned.assigned_at: Assigned
+platformd.deal.assigned.key: Mi Clave
+platformd.deal.assigned.assigned_at: Assignado
 platformd.deal.assigned.view_deal: View Deal
 platformd.deal.view_deal_site: Go to Site
 platformd.account_page.deal.your_deal_keys: My Deals
@@ -853,6 +855,8 @@ timeline.not_found: No timeline found.
 
 platformd.create_account_or_login: Crear una cuenta Alienware Arena  (Si no tienes una)
 
+platformd.giveaway.view_giveaway_site: Mirar sitio de sorteo
+platformd.giveaway.giveaway: Regalo
 platformd.giveaway.click_for_past_giveaways: Haz clic <a href="%cevo_user_account_giveaway_page%">aquí</a> para ver las claves de regalos anteriores.
 platformd.giveaway.get_key:  Obten tu Código
 platformd.giveaway.featured_giveaways: Regalos Destacados de Alienware Arena
@@ -861,6 +865,9 @@ platformd.giveaway.previous_giveaways: Regalos Previos
 platformd.giveaway.latest_comments: Últimos Comentarios
 platformd.giveaway.in_process: Si te has registrado para un sistema tag para regalo de clave y su estado es "Pendiente", por favor, deja transcurrir al menos 2 semanas para su sistema tag sea revisados​​. Si no hay cambio despues de dos semanas, favor de mandar un correo electronico a <a href="mailto:%contact_email%">%contact_email%</a>.
 platformd.giveaway.assigned.message: Por favor, sigue las siguientes instrucciones para activar tu clave. Si necesitas ayuda adicional, envía un correo electrónico a <a href="mailto:%contact_email%">%contact_email%</a>.
+platformd.giveaway.assigned.key: Mi Clave
+platformd.giveaway.assigned.assigned_at: Assignado
+platformd.giveaway.assigned.view_giveaway: Informacíon
 platformd.giveaway.show.availaible_keys: Códigos Disponibles %%count%%
 platformd.giveaway.queue.you_are_queued: Estás en la cola!
 platformd.giveaway.queue.queue_explanation: |
