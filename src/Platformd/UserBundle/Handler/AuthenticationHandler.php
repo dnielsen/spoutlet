@@ -102,6 +102,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
         }
 
         $response->headers->clearCookie('fbsr_'.$site->getSiteConfig()->getFacebookAppId(), '/', $this->baseHost);
+        $response->headers->clearCookie('PHPSESSID', '/', $this->baseHost);
 
         return $response;
     }
