@@ -82,18 +82,16 @@ registration.flash.user_created: El usuario ha sido creado con éxito
 
 # the first line is the subject of the email
 registration.email: |
-    ¡Bienvenido! %username%!
+    Activa tu cuenta Alienware Arena
     <h3>Hola %username%!</h3>
-
     <p>
-        Para terminar de validar su cuenta - por favor haga clic en el siguiente enlace
+        Gracias por registrarte para una cuenta de Alienware Arena. Por favor, activa tu cuenta haciendo clic en el enlace de abajo<br />
         <a href="%confirmationUrl%">%confirmationUrl%</a>
     </p>
 
-    <p>
-    Saludos,<br/>
-    the Team.
-    </p>
+    <p>Este es un mensaje automático. Por favor no responda a este correo electrónico.</p>
+
+    <p>Equipo Alienware Arena</p>
 
 # Password resetting
 resetting.password_already_requested: La contraseña para este usuario ya ha sido solicitada en las últimas 24 horas.

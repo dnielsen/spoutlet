@@ -39,6 +39,8 @@ platformd.user.account.incomplete.title: 変更完了
 platformd.user.account.incomplete.description: Your registration is missing several key pieces of information. Please complete the form below to complete it.
 platformd.user.account.changes_saved: 変更を保存
 platformd.user.account.error: The system is currently unable to process your request. Please try again shortly.
+platformd.user.avatars.preview_large: ラージプレビュー
+platformd.user.avatars.preview_small: スモールプレビュー
 
 platformd.user.avatars.manage: アバター管理
 platformd.user.avatars.select_or_add: '使用する画像を選択する、または <a href="javascript:void(0);" id="add-avatar">新しい画像を追加する</a>.'
@@ -74,7 +76,7 @@ platformd:
 
     not_found:
         title: ページが見つかりません
-        body: お探しのページが見つかりません
+        body: 申し訳ございません。このページは存在しておりません。<a href="/">ここ</a>をクリックしてホームページに戻ってください。
 
     flash:
         error_title: エラー！
@@ -670,6 +672,8 @@ CEVO: "ゲーム系ニュースサイト"
 "Friends or Family": 友人・知人から聞いた
 "Blog": 個人ブログ・サイト
 "Other": "その他"
+"Live Event": "ライブイベント"
+"Search Engine": "検索エンジン"
 
 avatar_awaiting_approval: あなたのアバターが正常にアップロードされましたが、それが表示される前に承認する必要があります
 

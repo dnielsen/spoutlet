@@ -48,6 +48,8 @@ platformd.user.account.incomplete.title: Complete Registration
 platformd.user.account.incomplete.description: Your registration is missing several key pieces of information. Please complete the form below to complete it.
 platformd.user.account.changes_saved: Tus cambios se guardaron.
 platformd.user.account.error: The system is currently unable to process your request. Please try again shortly.
+platformd.user.avatars.preview_large: Avance Grande
+platformd.user.avatars.preview_small: Avance Chico
 
 platformd.user.avatars.manage: Administrar Avatares
 platformd.user.avatars.select_or_add: 'Selecciona la imagen para utilizar, or <a href="javascript:void(0);" id="add-avatar">agregar una imagen nueva</a>.'
@@ -83,7 +85,7 @@ platformd:
 
     not_found:
         title: Página no se encuentra
-        body: Lo sentimos – pero no podemos encontrar la página que buscas.
+        body: Lo sentimos, pero esta pagina no exsiste. <a hef="/">Haz Cliq</a> para regresar a la paagina de inicio.
 
     flash:
         error_title: ¡Error!
@@ -374,6 +376,9 @@ platformd:
             title: ¿Olvidaste tu contraseña?
             help_message: Para restablecer tu contraseña, por favor proporciona la dirección de correo electrónico que utilizaste para crear tu cuenta de Alienware Arena. Si no recuerdas la dirección de correo electrónico que utilizaste, póngase en contacto con <a href="%s">soporte</a>.
             spam_message: Importante: Revisa tu carpeta de Spam! - Hacemos todo lo posible, pero a veces filtros de spam confunden nuestros emails como "basura". Por favor permite hasta 30 minutos para que tu contraseña sea restauradaPor lo general sólo toma unos segundos, pero a veces los correos electrónicos quedan "atascados" en el camino a tu buzón.
+
+    about:
+        title: Acerca de Alienware Arena&trade;
 
     event:
         form:
@@ -709,6 +714,13 @@ click_to_download: Hacer clic para descargar
 "Invalid username or password": "Usuario/correo electrónico o contraseña incorrecto."
 
 "Select one": "----Selecciona Uno----"
+"News Site": "Sitio de Noticias"
+"Email": "Correo Electrónico"
+"Friends or Family": "Amigos o Familia"
+"Blog": "Blog"
+"Search Engine": "Motor de Búsqueda"
+"Live Event": "Evento en Vivo"
+"Other": "Otro"
 
 galleries:
     image: Foto

@@ -77,12 +77,19 @@ registration.flash.user_created: ユーザーが正常に作成されました
 
 # the first line is the subject of the email
 registration.email: |
-    Alienware Arena 登録確認
+    あなたの ALIENWAREARENAアカウント をアクティブにします。
     <h3>%username%様ようこそ。</h3>
 
     <p>
-        アカウントの認証を完了するため、<a href="%confirmationUrl%">%confirmationUrl%</a> にアクセスしてください。
+        この度は ALIENWAREARENA に登録いただき、ありがとうございます。下記のリンクをクリックしてアカウントをアクティブにしてください。<br />
+        <a href="%confirmationUrl%">%confirmationUrl%</a>
     </p>
+
+    <p>
+        このメッセージは自動送信されています。<br />
+        この電子メールに返信しないでください。
+    </p>
+
 
     <p>ALIENWAREARENA Team</p>
 

@@ -75,6 +75,8 @@ platformd.user.avatars.update: UPDATE
 platformd.user.avatars.valid_filetypes: Valid avatar filetypes are JPG, PNG, GIF.
 platformd.user.avatars.upload: Upload
 platformd.user.avatars.choose_avatar: Choose Avatar
+platformd.user.avatars.preview_large: Large Preview
+platformd.user.avatars.preview_small: Small Preview
 
 platformd.admin.avatars.unapproved.no_avatars_selected: You did not select any avatars.
 platformd.admin.avatars.unapproved.form_error: Error when processing selected avatars. Please try again.
