@@ -63,7 +63,6 @@ class ApiManager
 
     public function deleteSession($uuid)
     {
-return true;
         $path   = 'sessions/'.$uuid;
         $result = $this->makeRequest($path, 'DELETE');
         return $result ? $result['metaData']['status'] == 200 : false;
@@ -141,9 +140,16 @@ return true;
     public function getUserByUsernameOrEmail($usernameOrEmail)
     {
 return null;
-        $path          = 'username';
-        $getParameters = array('username' => $username);
-        $result        = $this->makeRequest($path, 'GET', array('get' => $getParameters));
+        $path          = 'users';
+
+        $postParameters = array(
+            'action' => 'findByUsernameOrEmail',
+            'data'   => array(
+                'usernameOrEmail' => $usernameOrEmail,
+            ),
+        );
+
+        $result        = $this->makeRequest($path, 'POST', array('post' => $postParameters));
 
         return $result ?: null;
     }
