@@ -72,8 +72,10 @@ return true;
 return true;
         $path           = 'users/'.$user->getUuid();
         $postParameters = array(
-            'action'   => 'update',
-            'password' => $password,
+            'action'   => 'updatePassword',
+            'data'     => array(
+                'password' => $password,
+            ),
         );
 
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
@@ -98,7 +100,7 @@ return false;
         );
 
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
-        return $result ? $result['metaData']['success'] : false;
+        return $result ? $result['data']['uuid'] : false;
     }
 
     public function getUserByUsername($username)
@@ -120,17 +122,19 @@ return true;
 
             $postParameters = array(
                 'action' => 'update',
-                'data'   => array(
-                    'username'      => $user->getUsername(),
-                    'email'         => $user->getEmail(),
-                    'uuid'          => $uuid,
-                    'custom_avatar' => $user->getAvatar() && $user->getAvatar()->isUsable(),
-                    'birth_date'    => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
-                    'first_name'    => $user->getFirstname(),
-                    'last_name'     => $user->getLastname(),
-                    'country'       => $user->getCountry(),
-                    'state'         => $user->getState(),
-                    'roles'         => $user->getRoles(),
+                'user'   => array(
+                    'username'        => $user->getUsername(),
+                    'email'           => $user->getEmail(),
+                    'uuid'            => $uuid,
+                    'custom_avatar'   => $user->getAvatar() && $user->getAvatar()->isUsable(),
+                    'birth_date'      => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
+                    'first_name'      => $user->getFirstname(),
+                    'last_name'       => $user->getLastname(),
+                    'country'         => $user->getCountry(),
+                    'state'           => $user->getState(),
+                    'roles'           => $user->getRoles(),
+                    'banned'          => $user->getExpired(),
+                    'suspended_until' => $user->getExpiredUntil(),
                 ),
             );
         } elseif (is_array($user)) {
@@ -142,14 +146,15 @@ return true;
             unset($user['uuid']);
             unset($user['action']);
 
-            $postParameters = $user;
+            $postParameters = array(
+                'action' => 'update',
+                'user' => $user,
+            );
         } else {
             throw new \Exception('updateRemoteUserData - Unexpected user type - not User entity or array.');
         }
 
-        $path           = 'users/'.$uuid;
-        $postParameters = array_merge($postParameters, array('action'   => 'update'));
-
+        $path   = 'users/'.$uuid;
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
 
         return $result ? $result['metaData']['success'] : false;
@@ -160,8 +165,8 @@ return true;
 return false;
         $path           = 'users/'.$user->getUuid();
         $postParameters = array(
-            'action'              => 'create',
-            'data' => array(
+            'action' => 'create',
+            'data'   => array(
                 'username'            => $user->getUsername(),
                 'email'               => $user->getEmail(),
                 'uuid'                => $user->getUuid(),
@@ -182,7 +187,7 @@ return false;
         return $result ? $result['metaData']['success'] : false;
     }
 
-    public function banUser($user)
+    public function banUser($user, $until=null)
     {
 return false;
         $path           = 'users/'.$user->getUuid();

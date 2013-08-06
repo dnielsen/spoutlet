@@ -41,10 +41,6 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
         $user = $token->getUser();
         $this->userManager->addLoginRecord($user, $request);
 
-        if ($this->apiAuth && !$user->getApiSuccessfulLogin()) {
-            $this->userManager->updateUserAndApi($user);
-        }
-
         if ($request->isXmlHttpRequest()) {
             // handle ajax login success here
             $locale         = $this->siteUtil->getCurrentSite()->getDefaultLocale();
@@ -106,6 +102,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
         }
 
         $response->headers->clearCookie('fbsr_'.$site->getSiteConfig()->getFacebookAppId(), '/', $this->baseHost);
+        $response->headers->clearCookie('PHPSESSID', '/', $this->baseHost);
 
         return $response;
     }
