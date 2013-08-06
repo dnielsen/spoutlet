@@ -3426,3 +3426,31 @@ hr.faded:before {
 #contact-table {
     width: 500px;
 }
+
+.unsubscribe-wrapper {
+    width: 595px;
+    min-height: 250px;
+    padding: 5px 20px 50px 20px;
+    background: url('/bundles/spoutlet/images/register-bg.png') top left no-repeat;
+}
+
+.unsubscribe-wrapper h2 {
+    color: #e7e7e7;
+    font-family: "verdana";
+    font-weight: normal;
+    font-size: 24px;
+    margin: 10px 0 10px 0;
+}
+
+.unsubscribe-wrapper label {
+    margin: 0 0 0 5px;
+}
+
+.unsubscribe-wrapper .unsubscribe-email {
+    font-weight: bold;
+}
+
+.unsubscribe-wrapper .unsubscribe-note {
+    font-size: 11px;
+    font-style: italic;
+}

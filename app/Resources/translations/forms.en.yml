@@ -67,3 +67,11 @@ account_settings_plainPassword_first: "New password: "
 account_settings_plainPassword_second: "Confirm new password: "
 account_settings_subscribedGamingNews: "Yes, I would like to receive Alienware/Dell Gaming news and special offers via email."
 subscription_settings_subscribedAlienwareEvents: "Subscribe me to the Alienware Arena email newsletter."
+
+# unsubscribe stuff
+platformd.unsubscribe.title: Edit Your Email Subscription Preferences
+platformd.unsubscribe.your_email: "Your email address:"
+platformd_unsubscribe_form_unsubscribe: Please unsubscribe me from receiving Alienware Arena news and announcements.
+platformd.unsubscribe.note: Please note that you will continue to receive event-specific notices for any events you are registered to participate in for the duration of the respective events.
+platformd.unsubscribe.user_not_found: Your email address was not found.
+platformd.unsubscribe.success: Your email preferences have been updated.

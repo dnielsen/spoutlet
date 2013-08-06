@@ -1,0 +1,48 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+{% if success %}
+<div id="unsubscribe-flash" class="xnotices session-flash">
+    <div class="notice successNotice">
+        <div class="pad">
+            <div class="pad2">
+                <div class="pad3">
+                    <div class="pad4">
+                        <h3 id="notice-type">{{ 'platformd.flash.success_title'|trans }}</h3>
+                        <p id="notice-message">{{ 'platformd.unsubscribe.success'|trans({}, 'forms') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="std_2col">
+    <div class="left">
+        <div class="unsubscribe-wrapper">
+            <h2>{{ 'platformd.unsubscribe.title'|trans({}, 'forms') }}</h2>
+            {% if userIsValid and form is defined %}
+            <form action="{{ path('accounts_unsubscribe', {'email': email|url_encode}) }}" {{ form_enctype(form) }} method="POST">
+            <p class="unsubscribe-your-email">{{ 'platformd.unsubscribe.your_email'|trans({}, 'forms') }}&nbsp;<span class="unsubscribe-email">{{ email }}</span></p>
+            <table>
+                <tr>
+                    <td>{{ form_widget(form.unsubscribe) }}</td>
+                    <td>{{ form_label(form.unsubscribe) }}</td>
+                </tr>
+            </table>
+            <p class="unsubscribe-note">{{ 'platformd.unsubscribe.note'|trans({}, 'forms') }}</p>
+            <p>
+                <button type="submit">{{ 'submit'|trans }}</button>
+            </p>
+            {{ form_rest(form) }}
+            </form>
+            {% endif %}
+
+            {% if not userIsValid and not success %}
+            <p>{{ 'platformd.unsubscribe.user_not_found'|trans({}, 'forms') }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

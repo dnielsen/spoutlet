@@ -54,3 +54,7 @@ accounts_change_password:
 subscription_settings:
     pattern: /subscription-settings
     defaults: { _controller: SpoutletBundle:Account:subscriptionSettings }
+
+accounts_unsubscribe:
+    pattern: /unsubscribe/{email}
+    defaults: { _controller: SpoutletBundle:Account:unsubscribe, email: null }

@@ -7,10 +7,12 @@ use Platformd\UserBundle\Entity\User;
 use Platformd\EventBundle\Service\GroupEventService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Platformd\UserBundle\Form\Type\AccountSettingsType;
 use Platformd\UserBundle\Entity\Avatar;
 use Platformd\UserBundle\Form\Type\AvatarType;
 use Platformd\UserBundle\Exception\ApiRequestException;
+use Platformd\UserBundle\Form\Type\UnsubscribeFormType;
 
 class AccountController extends Controller
 {
@@ -412,5 +414,57 @@ class AccountController extends Controller
             'errors'      => $form->getErrors(),
             'childErrors' => $childErrors,
         ));
+    }
+
+    public function unsubscribeAction(Request $request, $email)
+    {
+        if ($email) {
+            try {
+                $user = $this->getUserManager()->loadUserByUsername(urldecode($email));
+
+                if ($user) {
+
+                    $form = $this->createForm(new UnsubscribeFormType(), array('unsubscribe' => false, 'email' => $email));
+
+                    if ($request->getMethod() == 'POST') {
+                        $form->bindRequest($request);
+
+                        $data = $form->getData();
+
+                        if ($data['unsubscribe']) {
+                            $user->setSubscribedAlienwareEvents(false);
+                            $this->getUserManager()->updateUserAndApi($user);
+                        }
+
+                        return $this->render('SpoutletBundle:Account:unsubscribe.html.twig', array(
+                            'success'      => true,
+                            'userIsValid'  => true,
+                        ));
+                    }
+
+                    return $this->render('SpoutletBundle:Account:unsubscribe.html.twig', array(
+                        'form'          => $form->createView(),
+                        'email'         => $email,
+                        'userIsValid'   => true,
+                        'success'       => false,
+                    ));
+                }
+            } catch (UsernameNotFoundException $e) {
+                return $this->render('SpoutletBundle:Account:unsubscribe.html.twig', array(
+                    'userIsValid' => false,
+                    'success'     => false,
+                ));
+            }
+        }
+
+        return $this->render('SpoutletBundle:Account:unsubscribe.html.twig', array(
+            'userIsValid' => false,
+            'success'     => false,
+        ));
+    }
+
+    public function unsubscribeFormAction(Request $request)
+    {
+
     }
 }
