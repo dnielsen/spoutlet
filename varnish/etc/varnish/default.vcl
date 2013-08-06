@@ -29,6 +29,14 @@ acl ban {
 
 sub vcl_recv {
 
+    /*if (req.url ~ "^/allowMigrationTesting$") {
+        error 418 "http://" + req.http.host + "/login";
+    }
+
+    if (req.http.Cookie !~ "migration_test_allowed=1") {
+        error 888 "Testing error.";
+    }*/
+
     if (req.http.X-Forwarded-For) {
         set req.http.X-Client-IP = regsuball(req.http.X-Forwarded-For, "^.*(, |,| )(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$", "\2");
         #set req.http.X-Forwarded-For = req.http.X-Forwarded-For + ", " + client.ip;
@@ -117,7 +125,7 @@ sub vcl_recv {
     if (req.http.Cookie) {
         set req.http.Cookie = ";" + req.http.Cookie;
         set req.http.Cookie = regsuball(req.http.Cookie, "; +", ";");
-        set req.http.Cookie = regsuball(req.http.Cookie, ";(PHPSESSID|aw_session)=", "; \1=");
+        set req.http.Cookie = regsuball(req.http.Cookie, ";(PHPSESSID|aw_session|awa_session_key|migration_test_allowed)=", "; \1=");
         set req.http.Cookie = regsuball(req.http.Cookie, ";[^ ][^;]*", "");
         set req.http.Cookie = regsuball(req.http.Cookie, "^[; ]+|[; ]+$", "");
 
@@ -248,7 +256,7 @@ sub vcl_fetch {
     // set so that we can utilize the ban lurker to test against the host of cached items
     set beresp.http.x-host = req.http.host;
     
-    if (req.url !~ "^/age/verify$" && req.url !~ "^/login(_check)?$" && req.url !~ "^/logout$" && req.url !~ "^/sessionCookie$" && req.url !~ "^/account/register[/]?$" && req.url !~ "^/register/confirm/" && req.url !~ "^/reset/") { # the only exceptions to the "remove all set-cookies rule"
+    if (req.url !~ "^/allowMigrationTesting$" && req.url !~ "^/age/verify$" && req.url !~ "^/login(_check)?$" && req.url !~ "^/logout$" && req.url !~ "^/sessionCookie$" && req.url !~ "^/account/register[/]?$" && req.url !~ "^/register/confirm/" && req.url !~ "^/reset/") { # the only exceptions to the "remove all set-cookies rule"
         unset beresp.http.set-cookie;
     }
 
@@ -336,6 +344,13 @@ sub vcl_error {
     // our generic way to deliver a blank response
     if (obj.status == 999) {
         synthetic "";
+        return(deliver);
+    }
+
+    if (obj.status == 418) {
+        set obj.http.Set-Cookie = "migration_test_allowed=1; Expires: Thu, 08 Aug 2013 23:59:59 GMT; Path=/; Domain=.alienwarearena.com;";
+        set obj.http.Location = obj.response;
+        set obj.status = 302;
         return(deliver);
     }
 
