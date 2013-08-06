@@ -9,7 +9,6 @@ default_run_options[:pty] = true
 set :awaProcessor1, "ec2-75-101-139-101.compute-1.amazonaws.com"
 
 set :awaWeb1, "ec2-54-227-65-32.compute-1.amazonaws.com"
-set :awaWeb2, "ec2-23-20-93-253.compute-1.amazonaws.com"
 set :awaWeb3, "ec2-54-227-94-218.compute-1.amazonaws.com"
 
 set :scm,         :git
@@ -17,8 +16,8 @@ set :repository,  "git@github.com:platformd/spoutlet.git"
 set :user,        "ubuntu"
 set :branch,      "master"
 
-role :web,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3
-role :app,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3
+role :web,        awaProcessor1, awaWeb1, awaWeb3
+role :app,        awaProcessor1, awaWeb1, awaWeb3
 
 role :db,         awaProcessor1, :primary => true
 
