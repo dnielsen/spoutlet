@@ -303,10 +303,6 @@ sub vcl_deliver {
     if (req.url ~ "^/forceLogout/") {
         set resp.http.set-cookie = "aw_session=0; Domain=.alienwarearena.com; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;";
     }
-
-    if (req.url ~ "^/logout") {
-        set resp.http.set-cookie = "PHPSESSID=0; Domain=.alienwarearena.com; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;";
-    }
 }
 
 sub vcl_hash {
