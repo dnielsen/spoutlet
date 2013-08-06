@@ -27,6 +27,7 @@ services:
             - '%api_access_key%'
             - '%api_secret_key%'
             - "@logger"
+            - @platformd.model.translator
 
     platformd.security.user.provider.api:
         class: Platformd\UserBundle\Security\Provider\ApiUserProvider

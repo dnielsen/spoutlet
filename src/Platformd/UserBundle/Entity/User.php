@@ -1258,4 +1258,17 @@ class User extends BaseUser
     {
         $this->aboutMe = $value;
     }
+
+    public function isAccountNonExpired()
+    {
+        if (true === $this->expired) {
+            return false;
+        }
+
+        if (null !== $this->expiresAt && $this->expiresAt->getTimestamp() > time()) {
+            return false;
+        }
+
+        return true;
+    }
 }

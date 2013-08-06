@@ -3,6 +3,7 @@
 namespace Platformd\UserBundle\Model;
 
 use Platformd\UserBundle\Entity\User;
+use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 
 class ApiManager
 {
@@ -12,12 +13,14 @@ class ApiManager
     private $accessKey;
     private $secretKey;
     private $logger;
+    private $translator;
 
-    public function __construct($apiBaseUrl, $accessKey, $secretKey, $logger) {
+    public function __construct($apiBaseUrl, $accessKey, $secretKey, $logger, $translator) {
         $this->apiBaseUrl = $apiBaseUrl;
         $this->accessKey  = $accessKey;
         $this->secretKey  = $secretKey;
         $this->logger     = $logger;
+        $this->translator = $translator;
     }
 
     /* TODO
@@ -101,6 +104,34 @@ return true;
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
 
         if ($result) {
+
+            if ($result['metaData']['status'] == 404) {
+                $banned = $result['metaData']['errorCode'] == 40451;
+                $suspended = $result['metaData']['errorCode'] == 40452;
+
+                if ($banned) {
+                    throw new CredentialsExpiredException(
+                        sprintf(
+                            $this->translator->trans('fos_user.account_banned', array(), 'validators'),
+                            'infinity'
+                        )
+                    );
+                }
+
+                if ($suspended) {
+                    $errorParts = explode('`', $result['metaData']['errorMessage']);
+                    $expiry = $errorParts[1];
+                    $expiryDt = new \DateTime($expiry);
+
+                    throw new CredentialsExpiredException(
+                        sprintf(
+                            $this->translator->trans('fos_user.account_banned', array(), 'validators'),
+                            $expiryDt->format($this->translator->trans('date_format'))
+                        )
+                    );
+                }
+            }
+
             return $result['metaData']['status'] == 200 ? $result['data']['uuid'] : false;
         }
 
