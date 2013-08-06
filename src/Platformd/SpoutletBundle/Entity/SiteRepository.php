@@ -14,7 +14,7 @@ class SiteRepository extends EntityRepository
 {
     public function findOneByFullDomain($fullDomain=null)
     {
-        //$fullDomain         = str_replace('migration', '', $fullDomain);
+        $fullDomain = str_replace('migration', '', $fullDomain);
 
         if ($fullDomain) {
             $site = $this->createQueryBuilder('s')
