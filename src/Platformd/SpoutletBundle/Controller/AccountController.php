@@ -462,9 +462,4 @@ class AccountController extends Controller
             'success'     => false,
         ));
     }
-
-    public function unsubscribeFormAction(Request $request)
-    {
-
-    }
 }

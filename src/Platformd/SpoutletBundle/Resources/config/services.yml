@@ -383,3 +383,8 @@ services:
             - '@platformd.util.site_util'
         tags:
             - { name: form.type, alias: platformd_incomplete_account }
+
+    platformd.model.export_query_manager:
+        class: Platformd\SpoutletBundle\Model\ExportQueryManager
+        arguments:
+            - "@fos_user.user_manager"

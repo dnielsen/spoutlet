@@ -283,5 +283,14 @@ class UserManager extends BaseUserManager
         $loginRecordManager = $this->container->get('platformd.model.login_record_manager');
         $loginRecordManager->recordLogin($user, $request);
     }
+
+    public function getOptedInUsers($fromDate, $thruDate)
+    {
+        return $this->repository->createQueryBuilder('u')
+            ->where('u.created >= :fromDate')
+            ->andWhere('u.created <= :thruDate')
+            ->andWhere('u.subscribedAlienwareEvents = 1')
+        ;
+    }
 }
 
