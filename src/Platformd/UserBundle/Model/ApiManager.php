@@ -311,7 +311,7 @@ class ApiManager
 
         curl_setopt($curl2, CURLOPT_URL, $url);
         curl_setopt($curl2, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl2, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl2, CURLOPT_CAINFO, __DIR__.'/../../../../external_data/ssl/RapidSSL.pem');
 
         $result = curl_exec($curl2);
 
