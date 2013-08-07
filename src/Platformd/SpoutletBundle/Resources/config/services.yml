@@ -384,7 +384,20 @@ services:
         tags:
             - { name: form.type, alias: platformd_incomplete_account }
 
+    # export query manager stuff
     platformd.model.export_query_manager:
         class: Platformd\SpoutletBundle\Model\ExportQueryManager
         arguments:
-            - "@fos_user.user_manager"
+            - "@doctrine.orm.entity_manager"
+            - "@platformd.csv.response_factory"
+
+    platformd.export_query_form.type:
+        class: Platformd\SpoutletBundle\Form\Type\ExportQueryType
+        arguments:
+            - "@platformd.model.export_query_manager"
+        tags:
+            - { name: form.type, alias: 'platformd_export_query_type' }
+
+    # csv factory
+    platformd.csv.response_factory:
+        class: Platformd\SpoutletBundle\Util\CsvResponseFactory

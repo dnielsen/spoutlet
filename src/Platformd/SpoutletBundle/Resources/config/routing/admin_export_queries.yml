@@ -1,0 +1,3 @@
+admin_export_queries_reports:
+    pattern: /reports
+    defaults: { _controller: SpoutletBundle:ExportQuery:reports }

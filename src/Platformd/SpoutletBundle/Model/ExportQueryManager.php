@@ -2,21 +2,80 @@
 
 namespace Platformd\SpoutletBundle\Model;
 
-use Platformd\UserBundle\Entity\UserManager;
+use Doctrine\ORM\EntityManager;
+use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 
 class ExportQueryManager
 {
-    public const REPORT_USER_OPTIN = 'report_user_optin';
+    const REPORT_USER_OPTIN = 'report_user_optin';
 
-    protected $userManager;
+    static private $reportTypes = array(
+        self::REPORT_USER_OPTIN,
+    );
 
-    public function __construct(UserManager $userManager)
+    protected $em;
+    protected $csv;
+
+    public function __construct(EntityManager $entityManager, CsvResponseFactory $csv)
     {
-        $this->userManager = $userManager;
+        $this->em   = $entityManager;
+        $this->csv  = $csv;
     }
 
-    public function getUserOptIns($fromDate, $thruDate)
+    public function getReport($reportType, array $options)
     {
-        return $this->userManager->getOptedInUsers($fromDate, $thruDate);
+        switch ($reportType) {
+            case self::REPORT_USER_OPTIN:
+                return $this->getUserOptIns($options['fromDate'], $options['thruDate']);
+
+            default:
+                return false;
+        }
+    }
+
+    private function getUserOptIns($fromDate, $thruDate)
+    {
+        $query = $this->em->getRepository('UserBundle:User')->getOptedInUserQuery($fromDate, $thruDate);
+        $results = $query->iterate();
+
+        $this->csv->addRow(array(
+            'User ID',
+            'Username',
+            'Email',
+            'Creation Date',
+            'Last Seen',
+            'First Name',
+            'Last Name',
+            'State/Province',
+            'Country'
+        ));
+
+        foreach ($results as $result) {
+            # build csv file
+
+            $lastLogin = $result[0]->getLastLogin() ? $result[0]->getLastLogin()->format('d/m/Y') : '';
+            $created   = $result[0]->getCreated() ? $result[0]->getCreated()->format('d/m/Y') : '';
+
+            $this->csv->addRow(array(
+                $result[0]->getId(),
+                $result[0]->getUsername(),
+                $result[0]->getEmail(),
+                $created,
+                $lastLogin,
+                $result[0]->getFirstname(),
+                $result[0]->getLastname(),
+                $result[0]->getState(),
+                $result[0]->getCountry()
+            ));
+
+            $this->em->detach($result[0]);
+        }
+
+        return $this->csv->createResponse('optin_report.csv');
+    }
+
+    public function getReportTypes()
+    {
+        return self::$reportTypes;
     }
 }
