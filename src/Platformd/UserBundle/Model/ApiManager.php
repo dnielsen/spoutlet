@@ -3,6 +3,8 @@
 namespace Platformd\UserBundle\Model;
 
 use Platformd\UserBundle\Entity\User;
+use Platformd\UserBundle\Exception\ApiRequestException;
+
 use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 
 class ApiManager
@@ -63,7 +65,6 @@ class ApiManager
 
     public function deleteSession($uuid)
     {
-return true;
         $path   = 'sessions/'.$uuid;
         $result = $this->makeRequest($path, 'DELETE');
         return $result ? $result['metaData']['status'] == 200 : false;
@@ -72,7 +73,6 @@ return true;
     // Password is the plaintext password presented at login
     public function updatePassword($user, $password)
     {
-return true;
         $path           = 'users/'.$user->getUuid();
         $postParameters = array(
             'action'   => 'updatePassword',
@@ -85,14 +85,14 @@ return true;
         return $result ? $result['metaData']['status'] == 200 : false;
     }
 
-    public function authenticate($user, $presentedPassword)
+    public function authenticate($user, $presentedPassword, $returnSession=true)
     {
         if (!$user instanceof User) {
             return false;
         }
 
-        $path   = 'sessions';
-
+        $path           = 'sessions';
+        $getParameters  = $returnSession ? array() : array('authenticateonly' => 'true');
         $postParameters = array(
             'action' => 'authenticate',
             'data'   => array(
@@ -101,7 +101,7 @@ return true;
             ),
         );
 
-        $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
+        $result = $this->makeRequest($path, 'POST', array('get' => $getParameters, 'post' => $postParameters));
 
         if ($result) {
 
@@ -132,7 +132,11 @@ return true;
                 }
             }
 
-            return $result['metaData']['status'] == 200 ? $result['data']['uuid'] : false;
+            if ($returnSession) {
+                return $result['metaData']['status'] == 200 ? $result['data']['uuid'] : false;
+            } else {
+                return $result['metaData']['status'] == 200;
+            }
         }
 
         return false;
@@ -140,18 +144,21 @@ return true;
 
     public function getUserByUsernameOrEmail($usernameOrEmail)
     {
-return null;
-        $path          = 'username';
-        $getParameters = array('username' => $username);
-        $result        = $this->makeRequest($path, 'GET', array('get' => $getParameters));
+        $path           = 'users';
+        $postParameters = array(
+            'action' => 'findByUsernameOrEmail',
+            'data'   => array(
+                'usernameOrEmail' => $usernameOrEmail,
+            ),
+        );
+
+        $result        = $this->makeRequest($path, 'POST', array('post' => $postParameters));
 
         return $result ?: null;
     }
 
     public function updateRemoteUserData($user)
     {
-return true;
-
         if ($user instanceof User) {
             $uuid = $user->getUuid();
 
@@ -167,26 +174,24 @@ return true;
                     'last_name'       => $user->getLastname(),
                     'country'         => $user->getCountry(),
                     'state'           => $user->getState(),
-                    'roles'           => $user->getRoles(),
                     'banned'          => $user->getExpired(),
-                    'suspended_until' => $user->getExpiredUntil(),
+                    'suspended_until' => $user->getExpiredUntil() ? $user->getExpiredUntil()->format('Y-m-d H:i:s') : null,
                 ),
             );
         } elseif (is_array($user)) {
             if (!isset($user['uuid'])) {
-                throw new \Exception('updateRemoteUserData - User UUID not set.');
+                throw new ApiRequestException('updateRemoteUserData - User UUID not set.');
             }
 
             $uuid = $user['uuid'];
             unset($user['uuid']);
-            unset($user['action']);
 
             $postParameters = array(
                 'action' => 'update',
                 'user' => $user,
             );
         } else {
-            throw new \Exception('updateRemoteUserData - Unexpected user type - not User entity or array.');
+            throw new ApiRequestException('updateRemoteUserData - Unexpected user type - not User entity or array.');
         }
 
         $path   = 'users/'.$uuid;
@@ -197,7 +202,6 @@ return true;
 
     public function createRemoteUser($user, $password)
     {
-return false;
         $path           = 'users';
         $postParameters = array(
             'action' => 'create',
@@ -216,6 +220,8 @@ return false;
                 'last_name'           => $user->getLastName(),
                 'last_updated'        => $user->getUpdated()->format('Y-m-d H:i:s'),
                 'state'               => $user->getState(),
+                'banned'              => $user->getExpired(),
+                'suspended_until'     => $user->getExpiredUntil() ? $user->getExpiredUntil()->format('Y-m-d H:i:s') : null,
             ),
         );
 
@@ -223,36 +229,45 @@ return false;
         return $result ? $result['metaData']['status'] == 200 : false;
     }
 
-    public function banUser($user, $until=null)
+    public function banUser($user)
     {
-return false;
         $path           = 'users/'.$user->getUuid();
         $postParameters = array(
             'action'   => 'ban',
         );
 
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
-        return $result ? $result['metaData']['status'] == 200 : false;
+        $success = $result ? $result['metaData']['status'] == 200 : false;
+
+        if (!$success) {
+            throw new ApiRequestException();
+        }
+
+        return $success;
     }
 
     public function unbanUser($user)
     {
-return false;
         $path           = 'users/'.$user->getUuid();
         $postParameters = array(
             'action'   => 'unban',
         );
 
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
-        return $result ? $result['metaData']['status'] == 200 : false;
+        $success = $result ? $result['metaData']['status'] == 200 : false;
+
+        if (!$success) {
+            throw new ApiRequestException();
+        }
+
+        return $success;
     }
 
     public function getUserList($offset=0, $limit=100, $sortMethod='created', $since=null)
     {
-return array();
         $getParameters = array(
-            'limit' => $limit,
-            'offset' => $offset,
+            'limit'   => $limit,
+            'offset'  => $offset,
             'orderby' => 'created',
         );
 
@@ -260,8 +275,7 @@ return array();
             $getParameters['since'] = $since->format('Y-m-d');
         }
 
-        $path = 'users';
-
+        $path   = 'users';
         $result = $this->makeRequest($path. 'GET', array('get' => $getParameters));
 
         return $result ?: array();
@@ -291,8 +305,13 @@ return array();
             }
         }
 
+        if (strtolower($method) != "post" && strtolower($method) != "get") {
+            curl_setopt($curl2, CURLOPT_CUSTOMREQUEST, $method);
+        }
+
         curl_setopt($curl2, CURLOPT_URL, $url);
         curl_setopt($curl2, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl2, CURLOPT_SSL_VERIFYPEER, false);
 
         $result = curl_exec($curl2);
 

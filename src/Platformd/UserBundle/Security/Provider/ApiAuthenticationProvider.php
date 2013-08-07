@@ -35,42 +35,34 @@ class ApiAuthenticationProvider extends UserAuthenticationProvider
      */
     protected function checkAuthentication(UserInterface $user, UsernamePasswordToken $token)
     {
-        $currentUser = $token->getUser();
+        if ("" === ($presentedPassword = $token->getCredentials())) {
+            throw new BadCredentialsException('The presented password cannot be empty.');
+        }
 
-        if ($currentUser instanceof UserInterface) {
-            if ($sessionUuid = $this->tryApiAuthentication($currentUser, $presentedPassword) == false) {
-                throw new BadCredentialsException('The credentials were changed from another session.');
+        if ($user->getApiSuccessfulLogin()) {
+            if (false === $sessionUuid = $this->apiManager->authenticate($user, $presentedPassword)) {
+                throw new BadCredentialsException('The presented password is invalid.');
             }
         } else {
-            if ("" === ($presentedPassword = $token->getCredentials())) {
-                throw new BadCredentialsException('The presented password cannot be empty.');
-            }
 
-            if ($user->getApiSuccessfulLogin()) {
-                if (false === $sessionUuid = $this->apiManager->authenticate($user, $presentedPassword)) {
+            // Check to see if we can log in via API
+            if ($sessionUuid = $this->tryApiAuthentication($user, $presentedPassword) == false) {
+                // Check to see if we have a CEVO-style password
+                if (!$this->cevoPasswordHandler->authenticate($user, $presentedPassword)) {
+                    // Check to see if we have a "Platform D" style password
+                    if (!$this->encoderFactory->getEncoder($user)->isPasswordValid($user->getPassword(), $presentedPassword, $user->getSalt())) {
+                        throw new BadCredentialsException('The presented password is invalid.');
+                    }
+                }
+
+                // Notify API of updated password or throw exception
+                if ($this->apiManager->updatePassword($user, $presentedPassword) == false) {
                     throw new BadCredentialsException('The presented password is invalid.');
                 }
-            } else {
 
-                // Check to see if we can log in via API
+                // Auth with API now that password has been updated.
                 if ($sessionUuid = $this->tryApiAuthentication($user, $presentedPassword) == false) {
-                    // Check to see if we have a CEVO-style password
-                    if (!$this->cevoPasswordHandler->authenticate($user, $presentedPassword)) {
-                        // Check to see if we have a "Platform D" style password
-                        if (!$this->encoderFactory->getEncoder($user)->isPasswordValid($user->getPassword(), $presentedPassword, $user->getSalt())) {
-                            throw new BadCredentialsException('The presented password is invalid.');
-                        }
-                    }
-
-                    // Notify API of updated password or throw exception
-                    if ($this->apiManager->updatePassword($user, $presentedPassword) == false) {
-                        throw new BadCredentialsException('The presented password is invalid.');
-                    }
-
-                    // Auth with API now that password has been updated.
-                    if ($sessionUuid = $this->tryApiAuthentication($user, $presentedPassword) == false) {
-                        throw new BadCredentialsException('The presented password is invalid.');
-                    }
+                    throw new BadCredentialsException('The presented password is invalid.');
                 }
             }
         }

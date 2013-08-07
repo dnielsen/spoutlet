@@ -56,7 +56,7 @@ class AccountSettingsType extends AbstractType
                     $form->get('currentPassword')->addError(new FormError('must_enter_new_password'));
                 }
 
-                $isPasswordValid = $apiAuth ? $apiManager->authenticate($user, $data->currentPassword) : $encoder->isPasswordValid($data->getPassword(), $data->currentPassword, $data->getSalt());
+                $isPasswordValid = $apiAuth ? $apiManager->authenticate($user, $data->currentPassword, false) : $encoder->isPasswordValid($data->getPassword(), $data->currentPassword, $data->getSalt());
 
                 if (!$isPasswordValid) {
                     $form->get('currentPassword')->addError(new FormError('current_passwords_do_not_match'));

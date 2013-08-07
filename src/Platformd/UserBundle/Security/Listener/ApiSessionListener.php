@@ -83,6 +83,13 @@ class ApiSessionListener
                 return;
             }
 
+            $suspendedUntil     = $response['data']['user']['suspended_until'] ? new \DateTime($response['data']['user']['suspended_until']) : null;
+            $currentlySuspended = $suspendedUntil ? ($suspendedUntil > new \DateTime()) : false;
+
+            if ($response['data']['user']['banned'] || $currentlySuspended) {
+                return;
+            }
+
             $user = $this->userManager->findByUuidOrCreate($response['data']['user']['uuid']);
             $token = new UsernamePasswordToken($user, null, $this->firewallName, $user->getRoles());
 

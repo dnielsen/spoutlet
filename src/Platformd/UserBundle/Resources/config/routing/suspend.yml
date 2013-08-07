@@ -1,9 +1,0 @@
-Platformd_UserBundle_admin_suspend:
-    pattern: /{id}
-    defaults: { _controller: UserBundle:Suspend:suspend }
-    requirements: { _method: POST }
-
-Platformd_UserBundle_admin_ban:
-    pattern: /{id}
-    defaults: { _controller: UserBundle:Suspend:ban }
-    requirements: { _method: POST }
