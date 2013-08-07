@@ -68,7 +68,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
             $cookieValue    = $user->sessionUuid;
             $cookieExpiry   = new \DateTime($cookieInfo['data']['expires']);
             $cookiePath     = '/';
-            $cookieHost     = $this->baseHost;
+            $cookieHost     = '.'.$this->baseHost;
 
             $cookie = new Cookie($cookieName, $cookieValue, $cookieExpiry, $cookiePath, $cookieHost, false, false);
             $response->headers->setCookie($cookie);

@@ -46,6 +46,10 @@ api_session_cookie:
     pattern: /setApiSessionCookie/{uuid}
     defaults: { _controller: SpoutletBundle:Default:setApiSessionCookie, uuid: ~ }
 
+api_session_cookie_refresh:
+    pattern: /refreshApiSessionCookie/{uuid}
+    defaults: { _controller: SpoutletBundle:Default:refreshApiSessionCookie, uuid: ~ }
+
 default_index:
     pattern:  /
     defaults: { _controller: SpoutletBundle:Default:index }

@@ -183,10 +183,45 @@ class DefaultController extends Controller
         $cookieValue    = $uuid;
         $cookieExpiry   = new \DateTime($info['data']['expires']);
         $cookiePath     = '/';
-        $cookieHost     = $this->getParameter('base_host');
+        $cookieHost     = '.'.$this->getParameter('base_host');
 
         $cookie = new Cookie($cookieName, $cookieValue, $cookieExpiry, $cookiePath, $cookieHost, false, false);
         $response->headers->setCookie($cookie);
+
+        return $response;
+    }
+
+    public function refreshApiSessionCookieAction($uuid, Request $request)
+    {
+        $response = new Response('');
+
+        if (!$uuid) {
+            $this->varnishCache($response, 86400);
+            return $response;
+        }
+
+        $info = $this->getApiManager()->getSessionInfo($uuid);
+
+        if (!$info) {
+            $this->varnishCache($response, 3600);
+            return $response;
+        }
+
+        if (isset($info['metaData']) && $info['metaData']['status'] != 200) {
+            $this->varnishCache($response, 3600);
+            return $response;
+        }
+
+        $cookieName     = 'awa_session_key';
+        $cookieValue    = $uuid;
+        $cookieExpiry   = new \DateTime($info['data']['expires']);
+        $cookiePath     = '/';
+        $cookieHost     = '.'.$this->getParameter('base_host');
+
+        $cookie = new Cookie($cookieName, $cookieValue, $cookieExpiry, $cookiePath, $cookieHost, false, false);
+        $response->headers->setCookie($cookie);
+
+        $this->varnishCache($response, 3600);
 
         return $response;
     }
