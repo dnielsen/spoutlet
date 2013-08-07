@@ -12,6 +12,19 @@ admin_unapproved_avatars:
     pattern: /avatars
     defaults: { _controller: UserBundle:Admin:unapprovedAvatars }
 
+Platformd_UserBundle_admin_suspend:
+    pattern: /suspend/{id}
+    defaults: { _controller: UserBundle:Suspend:suspend }
+    requirements: { _method: POST }
+
+Platformd_UserBundle_admin_ban:
+    pattern: /ban/{id}
+    defaults: { _controller: UserBundle:Suspend:ban }
+
+Platformd_UserBundle_admin_unban:
+    pattern: /unban/{id}
+    defaults: { _controller: UserBundle:Suspend:unban }
+
 Platformd_UserBundle_admin_show:
     pattern: /{id}
     requirements:

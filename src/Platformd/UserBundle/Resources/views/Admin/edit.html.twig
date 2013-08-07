@@ -15,6 +15,13 @@
         {% if user.loginRecords|length > 0 %}<a class="btn btn-primary" href="{{ path('Platformd_UserBundle_admin_logins', { 'id': user.id }) }}"></i> Logins</a>{% endif %}
     </div>
 
+    {% if user.expired %}
+        <div class="flash-message flash-error">
+            <i class="icon-ok"></i>
+            <span>User is banned</span>
+        </div>
+    {% endif %}
+
     {% if user.expiredUntil %}
         <div class="flash-message flash-error">
             <i class="icon-ok"></i>
@@ -64,7 +71,15 @@
                     {{ form_row(suspendForm.expiredUntil) }}
                     <div class="form-actions">
                         <input type="submit" value="{{ 'Suspend'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" />
-                        <a class="confirm btn btn-primary" href="{{ path('Platformd_UserBundle_admin_ban', { 'id': user.id }) }}" data-confirm="Are you sure you want to permanently ban this user?">Ban Forever</a>
+
+                        {% if not user.expired %}
+                            <a class="confirm btn btn-danger" href="{{ path('Platformd_UserBundle_admin_ban', { 'id': user.id }) }}" data-confirm="Are you sure you want to permanently ban this user?">Ban Forever</a>
+                        {% endif %}
+
+                        {% if user.expired or (user.expiredUntil and user.expiredUntil > date()) %}
+                            <a class="confirm btn btn-primary" href="{{ path('Platformd_UserBundle_admin_unban', { 'id': user.id }) }}" data-confirm="Are you sure you want to unban this user?">Unban</a>
+                        {% endif %}
+
                     </div>
                     {{ form_rest(suspendForm) }}
                 </form>

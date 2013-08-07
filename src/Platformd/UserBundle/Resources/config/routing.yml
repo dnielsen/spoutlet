@@ -26,10 +26,6 @@ fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /account
 
-fos_user_suspend:
-    resource: "@FOSUserBundle/Resources/config/routing/suspend.yml"
-    prefix: /admin/users/suspend
-
 platformd_avatars:
     resource: "@FOSUserBundle/Resources/config/routing/avatars.yml"
     prefix: /account/profile/avatars

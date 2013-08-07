@@ -321,12 +321,8 @@ class AccountController extends Controller
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
 
-            try {
-                $this->getUserManager()->updateUserAndApi($form->getData());
-                $this->setFlash('success', 'platformd.user.account.changes_saved');
-            } catch (ApiRequestException $e) {
-                $this->setFlash('error', 'The system is currently unable to process your request. Please try again shortly.');
-            }
+            $this->getUserManager()->updateUser($form->getData());
+            $this->setFlash('success', 'platformd.user.account.changes_saved');
         }
 
         return $this->redirect($this->generateUrl('accounts_settings'));

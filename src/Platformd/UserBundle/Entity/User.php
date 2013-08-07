@@ -1175,6 +1175,16 @@ class User extends BaseUser
         return $this->ipAddress === $ipAddress;
     }
 
+    public function getExpired()
+    {
+        return $this->expired;
+    }
+
+    public function setExpired($value)
+    {
+        $this->expired = $value;
+    }
+
     public function getExpiredUntil()
     {
         return $this->expiresAt;
@@ -1187,6 +1197,10 @@ class User extends BaseUser
 
     public function isExpired()
     {
+        if (true === $this->expired) {
+            return true;
+        }
+
         if (null !== $this->expiresAt && $this->expiresAt->getTimestamp() > time()) {
             return true;
         }

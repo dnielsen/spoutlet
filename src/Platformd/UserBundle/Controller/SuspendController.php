@@ -20,17 +20,24 @@ class SuspendController extends Controller
 
         if ($form->isValid()) {
 
-            try {
-                $this->getUserManager()->updateUserAndApi($user);
+            if ($this->getApiAuth()) {
+                $apiSuccess = $this->getApiManager()->updateRemoteUserData(array(
+                    'uuid'            => $user->getUuid(),
+                    'suspended_until' => $user->getExpiredUntil() ? $user->getExpiredUntil()->format('Y-m-d H:i:s') : null,
+                ));
 
-                if ($user->getExpiredUntil()) {
-                    $this->setFlash('success', 'This user is suspended through '.$user->getExpiredUntil()->format('Y-m-d H:i:s'));
+                if (!$apiSuccess) {
+                    $this->setFlash('error', 'There was a problem suspending this user. Please try again soon.');
+                    return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array('id' => $id)));
                 }
-                else {
-                    $this->setFlash('success', 'This user is not suspended anymore');
-                }
-            } catch (ApiRequestException $e) {
-                $this->setFlash('error', 'There was a problem suspending this user. Please try again soon.');
+            }
+
+            $this->getUserManager()->updateUser($user);
+
+            if ($user->getExpiredUntil()) {
+                $this->setFlash('success', 'This user is suspended through '.$user->getExpiredUntil()->format('Y-m-d H:i:s'));
+            } else {
+                $this->setFlash('success', 'This user is not suspended anymore');
             }
         }
 
@@ -45,13 +52,43 @@ class SuspendController extends Controller
 
         if ($this->getApiAuth()) {
             try {
-                $user->setExpired(true);
-                $this->getUserManager()->updateUserAndApi($user);
-                $this->setFlash('success', 'This user is suspended indefinitely.');
+                $this->getApiManager()->banUser($user);
             } catch (ApiRequestException $e) {
                 $this->setFlash('error', 'There was a problem suspending this user. Please try again soon.');
+                return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array('id' => $id)));
             }
         }
+
+        $user->setExpired(true);
+        $this->getUserManager()->updateUser($user);
+        $this->setFlash('success', 'This user is suspended indefinitely.');
+
+        return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array('id' => $id)));
+    }
+
+    public function unbanAction($id, Request $request)
+    {
+        if (! $user = $this->getUserRepository()->find($id)) {
+            throw $this->createNotFoundException();
+        }
+
+        if ($this->getApiAuth()) {
+            $apiSuccess = $this->getApiManager()->updateRemoteUserData(array(
+                'uuid'            => $user->getUuid(),
+                'suspended_until' => null,
+                'banned'          => false,
+            ));
+
+            if (!$apiSuccess) {
+                $this->setFlash('error', 'There was a problem unbanning this user. Please try again soon.');
+                return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array('id' => $id)));
+            }
+        }
+
+        $user->setExpired(false);
+        $user->setExpiredUntil(null);
+        $this->getUserManager()->updateUser($user);
+        $this->setFlash('success', 'This user is unbanned.');
 
         return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array('id' => $id)));
     }
