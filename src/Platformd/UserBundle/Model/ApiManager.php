@@ -276,7 +276,7 @@ class ApiManager
         }
 
         $path   = 'users';
-        $result = $this->makeRequest($path. 'GET', array('get' => $getParameters));
+        $result = $this->makeRequest($path, 'GET', array('get' => $getParameters));
 
         return $result ?: array();
     }

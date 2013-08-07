@@ -37,6 +37,6 @@ class ScriptLastRun
 
     public function getLastRun()
     {
-        return $lastRun->code;
+        return $this->lastRun;
     }
 }

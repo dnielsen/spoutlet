@@ -88,6 +88,15 @@ class UserManager extends BaseUserManager
         return $user;
     }
 
+    public function findByUuid($uuid)
+    {
+        if (!$uuid) {
+            return null;
+        }
+
+        return $this->repository->findOneByUuid($uuid);
+    }
+
     public function findByUuidOrCreate($uuid, array $userDetails = array())
     {
         if (!$uuid) {

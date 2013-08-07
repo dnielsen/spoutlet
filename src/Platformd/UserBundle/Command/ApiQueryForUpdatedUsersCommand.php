@@ -72,6 +72,14 @@ EOT
         $userManager       = $container->get('fos_user.user_manager');
         $apiManager        = $container->get('platformd.user.api.manager');
         $scriptLastRunRepo = $em->getRepository('SpoutletBundle:ScriptLastRun');
+        $apiAuth           = $container->getParameter('api_authentication');
+
+        if (!$apiAuth) {
+            $this->output();
+            $this->output(0, 'API authentication is disabled.');
+            $this->output();
+            exit;
+        }
 
         $response          = 200;
         $offset            = 0;
@@ -111,26 +119,34 @@ EOT
 
                 foreach ($userList as $user) {
 
-                    $username = $user['username'];
-
-                    $this->output(4, 'Looking up user "'.$username.'" in database...');
-                    $dbUser = $userManager->findUserByUsername($username);
+                    $this->output(4, 'Looking up user "'.$user['uuid'].'" in database...');
+                    $dbUser = $userManager->findByUuid($user['uuid']);
 
                     if (!$dbUser) {
                         $this->output(4, 'User not in database - skipping.');
                         continue;
                     }
 
-                    $dbUser->setUsername($username);
+                    $created   = $user['created'] ? new \DateTime($user['created']) : null;
+                    $updated   = $user['last_updated'] ? new \DateTime($user['last_updated']) : null;
+                    $suspendedUntil = $user['suspended_until'] ? new \DateTime($user['suspended_until']) : null;
+
+                    $dbUser->setUsername($user['username']);
                     $dbUser->setEmail($user['email']);
-                    $dbUser->setUuid($user['uuid']);
-                    $dbUser->setCreated($user['created']);
-                    $dbUser->setUpdated($user['lastUpdated']);
+                    $dbUser->setCreated($created);
+                    $dbUser->setUpdated($updated);
                     $dbUser->setEnabled(true);
                     $dbUser->setPassword('no_longer_used');
+                    $dbUser->setCountry($user['country']);
+                    $dbUser->setState($user['state']);
+                    $dbUser->setIpAddress($user['creation_ip_address']);
+                    $dbUser->setBirthdate($user['birth_date']);
+                    $dbUser->setFirstname($user['first_name']);
+                    $dbUser->setLastname($user['last_name']);
+                    $dbUser->setExpired($user['banned']);
+                    $dbUser->setExpiredUntil($suspendedUntil);
 
-                    $em->persist($dbUser);
-                    $em->flush();
+                    $userManager->updateUser($dbUser);
                 }
             }
 
