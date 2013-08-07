@@ -43,7 +43,9 @@ class ApiUserProvider implements UserProviderInterface
                     // Set some fields
                     $user = new User();
                     $user->setUsername($record['data']['username']);
+                    $user->setUsernameCanonical($this->canonicalize($record['data']['username']));
                     $user->setEmail($record['data']['email']);
+                    $user->setEmailCanonical($this->canonicalize($record['data']['email']));
                     $user->setUuid($record['data']['uuid']);
                     $user->setCreated($record['data']['created']);
                     $user->setUpdated($record['data']['last_updated']);
