@@ -15,6 +15,7 @@ use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Platformd\UserBundle\Exception\ApiRequestException;
 use Doctrine\ORM\EntityManager;
+use DateTime;
 
 class UserManager extends BaseUserManager
 {
@@ -310,6 +311,19 @@ class UserManager extends BaseUserManager
     {
         $loginRecordManager = $this->container->get('platformd.model.login_record_manager');
         $loginRecordManager->recordLogin($user, $request);
+    }
+
+    public function getOptedInUsersQuery($fromDate, $thruDate)
+    {
+        return $this->repository->createQueryBuilder('u')
+            ->select('u.id, u.username, u.email, u.created, u.lastLogin, u.firstname, u.lastname, u.state, u.country')
+            ->where('u.created >= :fromDate')
+            ->andWhere('u.created <= :thruDate')
+            ->andWhere('u.subscribedAlienwareEvents = 1')
+            ->setParameter('fromDate', $fromDate)
+            ->setParameter('thruDate', $thruDate)
+            ->getQuery()
+        ;
     }
 }
 

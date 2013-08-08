@@ -199,3 +199,7 @@ TagBundle_admin:
 TagBundle_frontend:
     resource: "@SpoutletBundle/Resources/config/routing/tags.yml"
     prefix: /tags
+
+SpoutletBundle_export_queries:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_export_queries.yml"
+    prefix: /admin

@@ -323,8 +323,14 @@
                             <li><a href="{{ path('admin_unapproved_avatars') }}">Approve Avatars</a></li>
 
                             <li><a href="{{ path('admin_mass_unsubscribe') }}">Mass Unsubscribe</a></li>
+
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            <li><a href="{{ path('admin_export_queries_reports') }}">Reports</a></li>
+                            {% endif %}
                         </ul>
                     {% endif %}
+
+
                 </div>
             </div>
             <div class="content span9">

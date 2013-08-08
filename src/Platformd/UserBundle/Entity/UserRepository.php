@@ -346,4 +346,16 @@ class UserRepository extends EntityRepository
             ->setParameter('optIn', $optIn)
         ;
     }
+
+    public function getOptedInUserQuery($fromDate, $thruDate)
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.created >= :fromDate')
+            ->andWhere('u.created <= :thruDate')
+            ->andWhere('u.subscribedAlienwareEvents = 1')
+            ->setParameter('fromDate', $fromDate)
+            ->setParameter('thruDate', $thruDate)
+            ->getQuery()
+        ;
+    }
 }
