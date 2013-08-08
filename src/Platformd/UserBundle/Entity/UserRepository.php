@@ -347,15 +347,40 @@ class UserRepository extends EntityRepository
         ;
     }
 
-    public function getOptedInUserQuery($fromDate, $thruDate)
+    /**
+     * @param \DateTime $fromDate
+     * @param \DateTime $thruDate
+     * @return \Doctrine\ORM\Query
+     * returning the query here so that it can be iterated in ExportQueryManager while building the csv file.
+     */
+    public function getOptedInUserQuery($fromDate, $thruDate, $sites)
     {
-        return $this->createQueryBuilder('u')
+        $qb = $this->createQueryBuilder('u')
             ->where('u.created >= :fromDate')
             ->andWhere('u.created <= :thruDate')
             ->andWhere('u.subscribedAlienwareEvents = 1')
             ->setParameter('fromDate', $fromDate)
             ->setParameter('thruDate', $thruDate)
-            ->getQuery()
         ;
+
+        // users dont really belong to sites or regions, but countries. so yeah ...
+        // and sites may or may not have a region. fun stuff!
+        if ($sites) {
+            $countries = array();
+            foreach ($sites as $site) {
+                $region = $site->getRegion();
+                if ($region) {
+                    foreach ($region->getCountries() as $country) {
+                        $countries[] = $country->getCode();
+                    }
+                }
+            }
+
+            if(count($countries) > 0) {
+                $qb->andWhere($qb->expr()->in('u.country', $countries));
+            }
+        }
+
+        return $qb->getQuery();
     }
 }

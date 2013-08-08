@@ -74,6 +74,11 @@ class Site
      */
     private $theme = self::DEFAULT_THEME;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\Region", mappedBy="site")
+     */
+    private $region;
+
     public function __construct() {
         $this->siteFeatures = new SiteFeatures();
         $this->siteFeatures->setSite($this);
@@ -184,5 +189,15 @@ class Site
     public function getCountrySpecificItems()
     {
         return $this->countrySpecificItems;
+    }
+
+    public function setRegion($value)
+    {
+        $this->region = $value;
+    }
+
+    public function getRegion()
+    {
+        return $this->region;
     }
 }

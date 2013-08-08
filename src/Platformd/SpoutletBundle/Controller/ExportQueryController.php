@@ -16,7 +16,11 @@ class ExportQueryController extends Controller
             $form->bindRequest($request);
 
             $data   = $form->getData();
-            $csv    = $this->getReportResults($data['reportTypes'], array('fromDate' => $data['fromDate'], 'thruDate' => $data['thruDate']));
+            $csv    = $this->getReportResults($data['reportTypes'], array(
+                'fromDate' => $data['fromDate'], 
+                'thruDate' => $data['thruDate'],
+                'sites'    => $data['sites']
+            ));
 
             return $csv;
         }

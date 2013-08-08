@@ -26,16 +26,16 @@ class ExportQueryManager
     {
         switch ($reportType) {
             case self::REPORT_USER_OPTIN:
-                return $this->getUserOptIns($options['fromDate'], $options['thruDate']);
+                return $this->getUserOptIns($options['fromDate'], $options['thruDate'], $options['sites']);
 
             default:
                 return false;
         }
     }
 
-    private function getUserOptIns($fromDate, $thruDate)
+    private function getUserOptIns($fromDate, $thruDate, $sites)
     {
-        $query = $this->em->getRepository('UserBundle:User')->getOptedInUserQuery($fromDate, $thruDate);
+        $query   = $this->em->getRepository('UserBundle:User')->getOptedInUserQuery($fromDate, $thruDate, $sites);
         $results = $query->iterate();
 
         $this->csv->addRow(array(
