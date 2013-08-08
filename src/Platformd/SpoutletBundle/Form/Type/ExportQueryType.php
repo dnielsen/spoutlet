@@ -41,6 +41,13 @@ class ExportQueryType extends AbstractType
             ),
             'required'  => false,
         ));
+
+        $builder->add('sites', 'entity', array(
+            'class'    => 'SpoutletBundle:Site',
+            'multiple' => true,
+            'expanded' => true,
+            'property' => 'name',
+        ));
     }
 
     public function getName()

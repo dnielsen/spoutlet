@@ -20,7 +20,8 @@ class Region
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\Site", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\Site", cascade={"persist"}, inversedBy="region")
+     * @ORM\JoinColumn(name="site_id", referencedColumnName="id")
      */
     private $site;
 
