@@ -1,6 +1,6 @@
 <div class="group-image-item">
     <div class="group-image-image">
-        <a href="{{ path('group_image_show', { id: image.id }) }}" title="{{ image.title }}" img-data="{{ image.image.id }}" style="border:none;">
+        <a href="{{ path('gallery_media_show', { id: image.id }) }}" title="{{ image.title }}" img-data="{{ image.image.id }}" style="border:none;">
             <img src="{{ image.image.filename | imagine_filter('image_thumb_small') }}" alt="{{ image.title }}" />
         </a>
     </div>

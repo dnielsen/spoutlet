@@ -413,10 +413,9 @@ class GalleryController extends Controller
 
     public function showAction($id, Request $request)
     {
-        $media          = $this->getGalleryMediaRepository()->find($id);
+        $media = $this->getGalleryMediaRepository()->find($id);
 
-        if(!$media)
-        {
+        if(!$media) {
             throw $this->createNotFoundException('No media found.');
         }
 

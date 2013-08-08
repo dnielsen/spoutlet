@@ -466,6 +466,14 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface, Tag
             }
         }
 
+        foreach ($this->groups as $group) {
+            $isAllowedForSite = $group->getSites()->contains($site);
+
+            if ($isAllowedForSite) {
+                break;
+            }
+        }
+
         return $isAllowedForSite;
     }
 
