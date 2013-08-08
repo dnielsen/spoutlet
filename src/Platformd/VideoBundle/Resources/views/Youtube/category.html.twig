@@ -69,9 +69,11 @@
                         $('#video-content').html(a);
                         $('.more-videos-link a').truncate({width: 280});
                         $('.videos-wrapper').unblock();
+                        $('img.lazy').lazyLoad();
                     },
                     error: function (a, b, c) {
                         $('.videos-wrapper').unblock();
+                        $('img.lazy').lazyLoad();
                     }
                 });
             });
