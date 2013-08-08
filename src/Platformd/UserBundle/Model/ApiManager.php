@@ -202,6 +202,8 @@ class ApiManager
 
     public function createRemoteUser($user, $password)
     {
+        $dt = new \DateTime();
+
         $path           = 'users';
         $postParameters = array(
             'action' => 'create',
@@ -213,12 +215,12 @@ class ApiManager
                 'banned'              => false,
                 'birth_date'          => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
                 'country'             => $user->getCountry(),
-                'created'             => $user->getCreated()->format('Y-m-d H:i:s'),
+                'created'             => $user->getCreated() ? $user->getCreated()->format('Y-m-d H:i:s') : $dt->format('Y-m-d H:i:s'),
                 'creation_ip_address' => $user->getIpAddress(),
                 'custom_avatar'       => false,
                 'first_name'          => $user->getFirstName(),
                 'last_name'           => $user->getLastName(),
-                'last_updated'        => $user->getUpdated()->format('Y-m-d H:i:s'),
+                'last_updated'        => $user->getUpdated() ? $user->getUpdated()->format('Y-m-d H:i:s') : $dt->format('Y-m-d H:i:s'),
                 'state'               => $user->getState(),
                 'banned'              => $user->getExpired(),
                 'suspended_until'     => $user->getExpiredUntil() ? $user->getExpiredUntil()->format('Y-m-d H:i:s') : null,
