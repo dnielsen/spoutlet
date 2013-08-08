@@ -132,6 +132,7 @@ services:
             - '@templating'
             - '%platformd_user.mailer.parameters%'
             - '@platformd.util.site_util'
+            - '@fos_user.user_manager'
 
     platformd.model.avatar_manager:
         class: Platformd\UserBundle\Model\AvatarManager

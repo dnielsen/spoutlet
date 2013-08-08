@@ -49,6 +49,25 @@ class UserManager extends BaseUserManager
         $this->translator = $translator;
     }
 
+    public function getCountryLocaleForUser($user)
+    {
+        $countryRepo = $this->em->getRepository('SpoutletBundle:Country');
+        $country     = $countryRepo->findOneByCode($user->getCountry());
+
+        if (!$country) {
+            return 'en';
+        }
+
+        $regionRepo = $this->em->getRepository('SpoutletBundle:Region');
+        $site       = $regionRepo->findSiteByCountry($country);
+
+        if (!$site) {
+            return 'en';
+        }
+
+        return $site->getDefaultLocale() ?: 'en';
+    }
+
     public function isUserAccountComplete($user)
     {
         if (!$user instanceof UserInterface) {
