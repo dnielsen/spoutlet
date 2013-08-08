@@ -364,15 +364,21 @@ class UserRepository extends EntityRepository
         ;
 
         // users dont really belong to sites or regions, but countries. so yeah ...
+        // and sites may or may not have a region. fun stuff!
         if ($sites) {
             $countries = array();
             foreach ($sites as $site) {
                 $region = $site->getRegion();
-                foreach ($region->getCountries() as $country) {
-                    $countries[] = $country->getCode();
+                if ($region) {
+                    foreach ($region->getCountries() as $country) {
+                        $countries[] = $country->getCode();
+                    }
                 }
             }
-            $qb->leftJoin('u.country in :countries');
+
+            if(count($countries) > 0) {
+                $qb->andWhere($qb->expr()->in('u.country', $countries));
+            }
         }
 
         return $qb->getQuery();
