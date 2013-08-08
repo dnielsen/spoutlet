@@ -789,11 +789,7 @@ Alienware Arena Team
         $site = $this->getCurrentSite();
         $features = $site->getSiteFeatures();
 
-        if ($features->getHasPhotos()) {
-            $groupImage = $this->getGalleryMediaRepository()->findImagesForGroup($group);
-        } else {
-            $groupImage = $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
-        }
+        $groupImage = $site->getSiteFeatures()->getHasPhotos() ? $this->getGalleryMediaRepository()->findImagesForGroup($group) : $this->getGroupImageRepository()->getImagesForGroupMostRecentFirst($group);
 
         // 16 images per page
         $itemsPerPage = 16;
