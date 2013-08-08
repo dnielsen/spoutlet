@@ -127,6 +127,40 @@ class DefaultController extends Controller
         return $response;
     }
 
+    public function _userArpAction(Request $request, $uuid)
+    {
+        if ($uuid) {
+            $response = new Response();
+            $response->headers->set('Content-type', 'text/json; charset=utf-8');
+
+            $url = sprintf("http://alienwarearena.com/arp/getuserarp/%s/", $uuid);
+        
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 0);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+            $result = curl_exec($ch);
+
+            curl_close($ch);
+
+            $data = json_decode($result, true);
+
+            if (isset($data['arp'])) {
+                $response->setContent(json_encode(array('arp' => $data['arp'])));
+            } else {
+                $response->setContent(json_encode(array('arp' => 0)));
+            }
+
+            $this->varnishCache($response, 600);
+
+            return $response;
+        }
+    }
+
     public function forumsAction(Request $request)
     {
         $baseUrl    = 'http://www.alienwarearena.com/%s/forums';

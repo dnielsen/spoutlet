@@ -198,6 +198,15 @@
                         $(this).removeClass('invalid');
                     }
                 });
+
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and features.hasArp %}
+                $.ajax({
+                    url: '{{ path('_user_arp', {'uuid': user.uuid}) }}',
+                    success: function (data) {
+                        $('#arp-total').text('ARP: ' + data.arp);
+                    }
+                });
+                {% endif %}
 			});
 		</script>
 
