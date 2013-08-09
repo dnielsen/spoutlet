@@ -559,7 +559,7 @@ html body.staff {
     width: 970px;
     float: left;
     background-color: #000;
-    cursor: initial;
+    cursor: default;
     margin-top: -5px;
 }
 #content {
