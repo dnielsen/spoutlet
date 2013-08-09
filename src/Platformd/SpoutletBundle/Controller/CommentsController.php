@@ -471,4 +471,37 @@ class CommentsController extends Controller
     {
         return $this->get('pd.cevo.api.api_manager');
     }
+
+    public function metricsAction(Request $request)
+    {
+        $metricManager = $this->container->get('platformd.metric_manager');
+        $filterForm    = $metricManager->createFilterFormBuilder($this->get('form.factory'))->getForm();
+        $from          = null;
+        $to            = null;
+        $requestData   = $request->query->get($filterForm->getName());
+        $rangeString   = '';
+
+        if (!empty($requestData)) {
+            $filterForm->bindRequest($request);
+            if ($filterForm->isValid()) {
+                $data   = $filterForm->getData();
+
+                $from   = $data['startDate'] ? : null;
+                $to     = $data['endDate'] ? : null;
+
+                $rangeString .= $from ? 'From '.$from->format('Y-m-d').' ' : '';
+                $rangeString .= $to ? 'Until '.$to->format('Y-m-d') : '';
+            }
+        }
+
+        $rangeString = $rangeString == '' ? 'All Time' : $rangeString;
+
+        $stats = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Comment')->getMetricsStats($from, $to);
+
+        return $this->render('SpoutletBundle:CommentsAdmin:metrics.html.twig', array(
+            'data' => $stats,
+            'form' => $filterForm->createView(),
+            'rangeString' => $rangeString,
+        ));
+    }
 }
