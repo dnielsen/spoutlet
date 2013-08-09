@@ -17,12 +17,55 @@ use Platformd\TagBundle\Model\TaggableInterface;
 
 /**
  * Platformd\SweepstakesBundle\Entity\Sweepstakes
- *
+ * @ORM\Table(name="pd_sweepstakes", uniqueConstraints={@ORM\UniqueConstraint(name="slug_unique", columns={"slug"})})
  * @ORM\Entity(repositoryClass="Platformd\SweepstakesBundle\Entity\SweepstakesRepository")
  */
-class Sweepstakes extends AbstractEvent implements TaggableInterface
+class Sweepstakes implements TaggableInterface
 {
     const COMMENT_PREFIX  = 'sweepstake-';
+
+    /**
+     * @var integer $id
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var DateTime $entryBeginsAt
+     * @ORM\Column(name="entry_begins_at", type="datetime")
+     */
+    private $entryBeginsAt;
+
+    /**
+     * @var DateTime $entryEndsAt
+     * @ORM\Column(name="entry_ends_at", type="datetime")
+     */
+    private $entryEndsAt;
+
+    /**
+     * @var boolean $hidden
+     * @ORM\Column(name="hidden", type="boolean")
+     */
+    private $hidden = false;
+
+    /**
+     * @var text $content
+     * @ORM\Column(name="content", type="text", nullable=true)
+     */
+    private $content;
+
+    /**
+     * @Assert\File(
+     *   maxSize="6000000",
+     *   mimeTypes={"image/png", "image/jpeg", "image/jpg", "image/gif"}
+     * )
+     */
+    private $backgroundImage;
+
+
 
     /**
      * A list of countries that *are* eligible for this sweeps
@@ -30,25 +73,25 @@ class Sweepstakes extends AbstractEvent implements TaggableInterface
      * @var array
      * @ORM\Column(type="array")
      */
-    protected $allowedCountries = array();
+    private $allowedCountries = array();
 
     /**
      * @var int
      * @ORM\Column(type="integer", nullable=true)
      */
-    protected $minimumAgeRequirement = 13;
+    private $minimumAgeRequirement = 13;
 
     /**
      * @var string
      * @ORM\Column(type="text", nullable=true)
      */
-    protected $officialRules;
+    private $officialRules;
 
     /**
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\OneToMany(targetEntity="Platformd\SweepstakesBundle\Entity\Entry", mappedBy="sweepstakes")
      */
-    protected $entries;
+    private $entries;
 
     /**
      * @var Platformd\TagBundle\Entity\Tag[]
