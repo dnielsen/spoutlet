@@ -85,7 +85,7 @@ platformd:
 
     not_found:
         title: Página no se encuentra
-        body: Lo sentimos, pero esta pagina no exsiste. <a hef="/">Haz Cliq</a> para regresar a la paagina de inicio.
+        body: Lo sentimos, pero esta pagina no exsiste. <a href="/">Haz Cliq</a> para regresar a la paagina de inicio.
 
     flash:
         error_title: ¡Error!
