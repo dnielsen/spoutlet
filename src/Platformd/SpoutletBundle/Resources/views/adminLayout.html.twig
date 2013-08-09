@@ -168,7 +168,7 @@
 
                             {% endif %}
 
-                            {% if features.hasWallpapers and not is_granted('ROLE_PARTNER') %}
+                            {% if features.hasWallpapers and is_granted('ROLE_SUPER_ADMIN') %}
 
                                 <li>
                                     <a href="{{ path('admin_wallpaper') }}">Wallpapers</a>
@@ -213,7 +213,7 @@
                             </li>
                             {% endif %}
 
-                            {% if not is_granted ('ROLE_PARTNER') %}
+                            {% if is_granted ('ROLE_SUPER_ADMIN') %}
                             <li>
                                 <a href="{{ path('admin_takeover_index') }}">Site Takeovers</a>
                                 <ul>
@@ -244,7 +244,7 @@
                                 <li><a href="{{ path('admin_tags_index') }}">Tags</a></li>
                             {% endif %}
 
-                            {% if not is_granted('ROLE_PARTNER') %}
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
                             <li>
                                 <a href="{{ path('admin_background_ads_index') }}">Background Ads</a>
                                 <ul>
@@ -254,7 +254,7 @@
                                 </ul>
                             </li>
                             {% endif %}
-                            {% if not is_granted('ROLE_PARTNER') %}
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
                             <li>
                                 <a href="{{ path('admin_rsvp_index') }}">RSVP Events</a>
                                 <ul>
@@ -277,7 +277,7 @@
                                 </li>
                             {% endif %}
 
-                            {% if not is_granted('ROLE_PARTNER') %}
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
                             <li>
                                 <a href="{{ path('admin_timeline_index') }}">Timelines</a>
                             </li>
