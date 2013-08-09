@@ -76,7 +76,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
 
                 $this->onSuccess($user, $confirmation);
 
-                $this->apiManager->updateRemoteUser(array(
+                $this->apiManager->updateRemoteUserData(array(
                     'uuid' => $user->getUuid(),
                     'created' => $user->getCreated()->format('Y-m-d H:i:s'),
                     'updated' => $user->getUpdated()->format('Y-m-d H:i:s'),
