@@ -80,14 +80,7 @@ class SiteUtil extends Event
                 $arr   = array();
 
                 foreach ($sites as $site) {
-
-                    $migrationDomain = $site->getFullDomain();
-
-                    if (false === strpos($site->getFullDomain(), 'migration')) {
-                        $migrationDomain = str_replace('.alienwarearena', 'migration.alienwarearena', $site->getFullDomain());
-                    }
-
-                    $arr[$migrationDomain] = $site;
+                    $arr[$site->getFullDomain()] = $site;
                 }
 
                 return $arr;
