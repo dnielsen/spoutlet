@@ -79,7 +79,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
                 $this->apiManager->updateRemoteUserData(array(
                     'uuid' => $user->getUuid(),
                     'created' => $user->getCreated()->format('Y-m-d H:i:s'),
-                    'updated' => $user->getUpdated()->format('Y-m-d H:i:s'),
+                    'last_updated' => $user->getUpdated()->format('Y-m-d H:i:s'),
                 ));
 
                 return true;
