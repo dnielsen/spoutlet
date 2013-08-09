@@ -4,7 +4,7 @@ birthdate_not_blank: 生年月日を選択してください
 state_not_blank: 都道府県を選択してください
 country_not_blank: Please select a country
 news_source_not_blank: ALIENWARE ARENA を直近で聞いた時期を入力してください
-has_system_not_blank: Please choose whether or not you have an Alienware System.
+has_system_not_blank: あなたがALIENWAREを所有しているかどうか記入してください。
 passwords_do_not_match: 古いパスワードが承認されません。
 current_passwords_do_not_match: 古いパスワードが承認されません。
 age_requirement_not_met: You must be %s years old to register.
