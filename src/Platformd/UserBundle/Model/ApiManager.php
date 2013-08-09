@@ -25,15 +25,12 @@ class ApiManager
         $this->translator = $translator;
     }
 
-    /* TODO
-        Hook in updatePassword
-        Get session details back from authenticate and set cookie
-        When checking session expiry in listener, extend browser cookie
-        Varnish allow awa_session_key cookie
-    */
-
     private function logInfo($message) {
         $this->logger->info(sprintf(self::LOG_MESSAGE_PREFIX, $message));
+    }
+
+    private function logDebug($message) {
+        $this->logger->debug(sprintf(self::LOG_MESSAGE_PREFIX, $message));
     }
 
     private function getSignedUrl($path, $getParameters=array())
@@ -87,6 +84,8 @@ class ApiManager
 
     public function authenticate($user, $presentedPassword, $returnSession=true)
     {
+        $this->logDebug('Authenticate started');
+
         if (!$user instanceof User) {
             return false;
         }
@@ -104,6 +103,8 @@ class ApiManager
         $result = $this->makeRequest($path, 'POST', array('get' => $getParameters, 'post' => $postParameters));
 
         if ($result) {
+
+            $this->logDebug('Got API result - analyzing');
 
             if ($result['metaData']['status'] == 404) {
                 $banned = $result['metaData']['errorCode'] == 40451;
@@ -131,6 +132,8 @@ class ApiManager
                     );
                 }
             }
+
+            $this->logDebug('Returning API result info');
 
             if ($returnSession) {
                 return $result['metaData']['status'] == 200 ? array('uuid' => $result['data']['uuid'], 'expires' => new \DateTime($result['data']['expires'])) : false;

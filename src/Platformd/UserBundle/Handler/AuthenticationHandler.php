@@ -58,18 +58,20 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
             $response->headers->set('Content-type', 'text/json; charset=utf-8');
             $response->setContent(json_encode($result));
 
-            if (!$user->sessionUuid || !$user->sessionExpires) {
-                return $response;
+            if ($this->apiAuth) {
+                if (!$user->sessionUuid || !$user->sessionExpires) {
+                    return $response;
+                }
+
+                $cookieName     = 'awa_session_key';
+                $cookieValue    = $user->sessionUuid;
+                $cookieExpiry   = $user->sessionExpires;
+                $cookiePath     = '/';
+                $cookieHost     = '.'.$this->baseHost;
+
+                $cookie = new Cookie($cookieName, $cookieValue, $cookieExpiry, $cookiePath, $cookieHost, false, false);
+                $response->headers->setCookie($cookie);
             }
-
-            $cookieName     = 'awa_session_key';
-            $cookieValue    = $user->sessionUuid;
-            $cookieExpiry   = $user->sessionExpires;
-            $cookiePath     = '/';
-            $cookieHost     = '.'.$this->baseHost;
-
-            $cookie = new Cookie($cookieName, $cookieValue, $cookieExpiry, $cookiePath, $cookieHost, false, false);
-            $response->headers->setCookie($cookie);
 
             return $response;
         } else {
@@ -80,13 +82,17 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
                 $url = $this->router->generate('default_index');
             }
 
-            $interimUrl = $this->router->generate('api_session_cookie', array(
-                'uuid'    => $user->sessionUuid,
-                'expires' => $user->sessionExpires->format('U'),
-                'return'  => urlencode($url),
-            ));
+            if ($this->apiAuth) {
+                $interimUrl = $this->router->generate('api_session_cookie', array(
+                    'uuid'    => $user->sessionUuid,
+                    'expires' => $user->sessionExpires ? $user->sessionExpires->format('U') : null,
+                    'return'  => urlencode($url),
+                ));
 
-            return new RedirectResponse($interimUrl);
+                return new RedirectResponse($interimUrl);
+            }
+
+            return new RedirectResponse($url);
         }
     }
 
@@ -116,7 +122,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
 
         $sessionKey = $request->cookies->get('awa_session_key');
 
-        if ($sessionKey) {
+        if ($sessionKey && $this->apiAuth) {
             $response->headers->clearCookie('awa_session_key', '/', $this->baseHost);
             $this->apiManager->deleteSession($sessionKey);
         }
