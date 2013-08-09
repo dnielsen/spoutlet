@@ -95,7 +95,7 @@ registration.email: |
 
 # Password resetting
 resetting.password_already_requested: このユーザーのパスワードは、過去24時間以内に既に求められました。
-resetting.check_email: %email%指定のアドレスにメールが送信されました。同メールにはパスワード再設定用のリンクが含まれています。
+resetting.check_email: パスワード変更手続きに必要なURLをメールでお送りしました。
 resetting.request.invalid_username:  %username% のユーザー名またはメールアドレスは存在しません。
 resetting.request.username: "メールアドレス:"
 resetting.request.submit: パスワードのリセット

@@ -95,7 +95,7 @@ registration.email: |
 
 # Password resetting
 resetting.password_already_requested: La contraseña para este usuario ya ha sido solicitada en las últimas 24 horas.
-resetting.check_email: Un correo electrónico ha sido enviado a %email%. Contiene un enlace que debe hacer clic para restablecer tu contraseña.
+resetting.check_email: Por favor, consulta tu correo electrónico con el enlace para restablecer tu contraseña.
 resetting.request.invalid_username: La dirección de correo electrónico no existe "%username%".
 resetting.request.username: "Correo electrónico:"
 resetting.request.submit: Cambiar mi Contraseña
