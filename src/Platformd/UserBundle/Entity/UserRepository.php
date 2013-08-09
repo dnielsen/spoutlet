@@ -259,7 +259,7 @@ class UserRepository extends EntityRepository
         return $this->createQueryBuilder('u')
             ->select('COUNT(u.id)')
             ->andWhere('u.ipAddress = :ipAddress')
-            ->andWhere('u.username != :username')
+            ->andWhere('u.usernameCanonical != :username')
             ->andWhere('u.expiresAt > :now')
             ->setParameter('ipAddress', $ipAddress)
             ->setParameter('username', $username)
