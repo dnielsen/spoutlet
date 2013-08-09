@@ -37,8 +37,10 @@ class ApiUserProvider implements UserProviderInterface
             if ($record = $this->apiManager->getUserByUsernameOrEmail($usernameOrEmail)) {
                 if ($record['metaData']['status'] == 200) {
 
-                    $birthdate = $record['data']['birth_date'] ? new \DateTime($record['data']['birth_date']) : null;
+                    $birthdate    = $record['data']['birth_date'] ? new \DateTime($record['data']['birth_date']) : null;
                     $expiredUntil = $record['data']['suspended_until'] ? new \DateTime($record['data']['suspended_until']) : null;
+                    $created      = $record['data']['created'] ? new \DateTime($record['data']['created']) : null;
+                    $updated      = $record['data']['last_updated'] ? new \DateTime($record['data']['last_updated']) : null;
 
                     // Set some fields
                     $user = new User();
@@ -47,8 +49,8 @@ class ApiUserProvider implements UserProviderInterface
                     $user->setEmail($record['data']['email']);
                     $user->setEmailCanonical($this->canonicalize($record['data']['email']));
                     $user->setUuid($record['data']['uuid']);
-                    $user->setCreated($record['data']['created']);
-                    $user->setUpdated($record['data']['last_updated']);
+                    $user->setCreated($created);
+                    $user->setUpdated($updated);
                     $user->setEnabled(true);
                     $user->setPassword('no_longer_used');
                     $user->setFirstname($record['data']['first_name']);

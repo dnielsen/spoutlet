@@ -58,15 +58,13 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
             $response->headers->set('Content-type', 'text/json; charset=utf-8');
             $response->setContent(json_encode($result));
 
-            $cookieInfo = $this->apiManager->getSessionInfo($user->sessionUuid);
-
-            if (!$cookieInfo || (isset($cookieInfo['metaData']) && $cookieInfo['metaData']['status'] != 200)) {
+            if (!$user->sessionUuid || !$user->sessionExpires) {
                 return $response;
             }
 
             $cookieName     = 'awa_session_key';
             $cookieValue    = $user->sessionUuid;
-            $cookieExpiry   = new \DateTime($cookieInfo['data']['expires']);
+            $cookieExpiry   = $user->sessionExpires;
             $cookiePath     = '/';
             $cookieHost     = '.'.$this->baseHost;
 
@@ -83,8 +81,9 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
             }
 
             $interimUrl = $this->router->generate('api_session_cookie', array(
-                'uuid' => $user->sessionUuid,
-                'return' => urlencode($url),
+                'uuid'    => $user->sessionUuid,
+                'expires' => $user->sessionExpires->format('U'),
+                'return'  => urlencode($url),
             ));
 
             return new RedirectResponse($interimUrl);

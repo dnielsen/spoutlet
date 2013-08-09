@@ -133,7 +133,7 @@ class ApiManager
             }
 
             if ($returnSession) {
-                return $result['metaData']['status'] == 200 ? $result['data']['uuid'] : false;
+                return $result['metaData']['status'] == 200 ? array('uuid' => $result['data']['uuid'], 'expires' => new \DateTime($result['data']['expires'])) : false;
             } else {
                 return $result['metaData']['status'] == 200;
             }

@@ -47,8 +47,8 @@ session_cookie:
     defaults: { _controller: SpoutletBundle:Default:sessionCookie }
 
 api_session_cookie:
-    pattern: /setApiSessionCookie/{uuid}
-    defaults: { _controller: SpoutletBundle:Default:setApiSessionCookie, uuid: ~ }
+    pattern: /setApiSessionCookie/{uuid}/{expires}
+    defaults: { _controller: SpoutletBundle:Default:setApiSessionCookie, uuid: ~, expires: ~ }
 
 api_session_cookie_refresh:
     pattern: /refreshApiSessionCookie/{uuid}
@@ -111,7 +111,7 @@ forums:
 
 arp:
     pattern: /arp
-    defaults: { _controller: SpoutletBundle:Default:arp }
+    defaults: { _controller: SpoutletBundle:Default:_arp }
 
 _spoutlet_admin:
     resource: routing/admin.yml

@@ -134,7 +134,7 @@ class DefaultController extends Controller
             $response->headers->set('Content-type', 'text/json; charset=utf-8');
 
             $url = sprintf("http://alienwarearena.com/arp/getuserarp/%s/", $uuid);
-        
+
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -194,28 +194,18 @@ class DefaultController extends Controller
         return new Response('');
     }
 
-    public function setApiSessionCookieAction($uuid, Request $request)
+    public function setApiSessionCookieAction($uuid, $expires, Request $request)
     {
         $return   = $request->get('return') ? urldecode($request->get('return')) : $this->generateUrl('default_index');
         $response = new RedirectResponse($return);
 
-        if (!$uuid) {
-            return $response;
-        }
-
-        $info = $this->getApiManager()->getSessionInfo($uuid);
-
-        if (!$info) {
-            return $response;
-        }
-
-        if (isset($info['metaData']) && $info['metaData']['status'] != 200) {
+        if (!$uuid || !$expires) {
             return $response;
         }
 
         $cookieName     = 'awa_session_key';
         $cookieValue    = $uuid;
-        $cookieExpiry   = new \DateTime($info['data']['expires']);
+        $cookieExpiry   = \DateTime::createFromFormat('U', $expires);
         $cookiePath     = '/';
         $cookieHost     = '.'.$this->getParameter('base_host');
 

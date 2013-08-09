@@ -19,6 +19,8 @@ services:
             - '@security.encoder_factory'
             - '%security.authentication.hide_user_not_found%'
             - '@pd.cevo.password_handler'
+        calls:
+            - [ setLogger, [ @logger ] ]
 
     platformd.user.api.manager:
         class: Platformd\UserBundle\Model\ApiManager

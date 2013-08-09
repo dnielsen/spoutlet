@@ -30,6 +30,7 @@ class User extends BaseUser
 {
     public $currentPassword;
     public $sessionUuid;
+    public $sessionExpires;
 
     /**
      * @var integer $id
