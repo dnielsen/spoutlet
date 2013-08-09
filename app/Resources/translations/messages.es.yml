@@ -922,3 +922,6 @@ platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body
             Por favor, visítanos más tarde ya que se pueden añadir más códigos!
         </p>
         <p>Equipo Web de Alienware Arena</p>
+
+# export query types
+report_user_optin: Arena Opt In Summary

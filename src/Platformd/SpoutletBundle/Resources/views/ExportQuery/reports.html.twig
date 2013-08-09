@@ -8,8 +8,8 @@
 {% block content %}
 <h1>Reports</h1>
 <div class="row-fluid">
-    <div class="span6 well">
-        <form method="post" action="{{ path('admin_export_queries_reports') }}" class="form-horizontal">
+    <div class="span8 well">
+        <form id="frm-export" method="post" action="{{ path('admin_export_queries_reports') }}" class="form-horizontal">
             {{ form_errors(form) }}
 
             {{ form_row(form.reportTypes) }}
@@ -20,9 +20,30 @@
             {{ form_rest(form) }}
 
             <div class="form-actions">
-                <input type="submit" value="Generate Report" class="btn btn-primary" formnovalidate />
+                <input id="btn-export" type="submit" value="Generate Report" class="btn btn-primary" formnovalidate />
             </div>
         </form>
     </div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+<script type="text/javascript">
+$(function () {
+    $('#btn-export').click(function () {
+        $(this).prop('disabled', true);
+        $(this).text('Loading...');
+        $('#frm-export').submit();
+    });
+
+    $(window).bind('beforeunload', function (e) {
+        $('#btn-export').prop('disabled', false);
+        $('#btn-export').val('Generate Report');
+        alert('hi');
+    });
+});
+</script>
+
 {% endblock %}

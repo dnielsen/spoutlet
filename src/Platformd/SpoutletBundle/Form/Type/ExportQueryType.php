@@ -17,11 +17,13 @@ class ExportQueryType extends AbstractType
 
     public function buildForm(FormBuilder $builder, array $options)
     {
+        $reportTypes = $this->getReportTypes();
         $builder->add('reportTypes', 'choice', array(
             'label'     => 'Report',
             'help'      => 'Please be aware that running certain reports may take a long time depending on what is being asked for.',
-            'choices'   => $this->getReportTypes(),
+            'choices'   => $reportTypes,
             'required'  => false,
+            'data'      => key($reportTypes),
         ));
 
         $builder->add('fromDate', 'datetime', array(
@@ -47,6 +49,7 @@ class ExportQueryType extends AbstractType
             'multiple' => true,
             'expanded' => true,
             'property' => 'name',
+            'required' => false,
         ));
     }
 

@@ -356,12 +356,15 @@ class UserRepository extends EntityRepository
     public function getOptedInUserQuery($fromDate, $thruDate, $sites)
     {
         $qb = $this->createQueryBuilder('u')
-            ->where('u.created >= :fromDate')
-            ->andWhere('u.created <= :thruDate')
-            ->andWhere('u.subscribedAlienwareEvents = 1')
-            ->setParameter('fromDate', $fromDate)
-            ->setParameter('thruDate', $thruDate)
-        ;
+            ->where('u.subscribedAlienwareEvents = 1');
+
+        if ($fromDate) {
+            $qb->andWhere('u.created >= :fromDate')->setParameter('fromDate', $fromDate);
+        }
+
+        if ($thruDate) {
+            $qb->andWhere('u.created <= :thruDate')->setParameter('thruDate', $thruDate);
+        }
 
         // users dont really belong to sites or regions, but countries. so yeah ...
         // and sites may or may not have a region. fun stuff!

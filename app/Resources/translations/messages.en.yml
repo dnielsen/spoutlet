@@ -1381,3 +1381,6 @@ platformd.twitter.tweets.group_event_added: "I just created an event - %s. %s"
 platformd.twitter.tweets.group_event_register: I am attending %s %s.
 platformd.twitter.tweets.image_added: I just added %s image(s) on Alienware Arena. %s
 platformd.twitter.tweets.entered_contest: I entered the %s %s.
+
+# export query types
+report_user_optin: Arena Opt In Summary
