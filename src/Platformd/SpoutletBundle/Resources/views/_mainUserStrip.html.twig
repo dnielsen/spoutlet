@@ -2,7 +2,7 @@
 {{ 'platformd.layout.top_menu.logged_in_as' | trans({
     '%username%': user.username,
     '%route%': account_link(user.username)
-}) | raw }}{% if features.hasArp %}&nbsp;<a style="color: #01A2D2;" id="arp-total" href="{{ path('arp') }}"></a>{% endif %}
+}) | raw }}
 	<li class="separator"><a id="logout" href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | trans }}</a></li>
 	<li class="separator"><a href="{{ path('accounts_index') }}">{{ 'platformd.layout.top_menu.account' | trans }}</a></li>
     {% if is_granted("ROLE_ADMIN") %}
@@ -13,15 +13,6 @@
         var user_id = {{ user.id }};
         var is_admin = {% if user.adminLevel == 'ROLE_SUPER_ADMIN' %}true{% else %}false{% endif %};
         var can_report = {% if can_user_report() %}true{% else %}false{% endif %};
-
-        {% if features.hasArp %}
-            $.ajax({
-                url: '{{ path('_user_arp', {'uuid': user.uuid}) }}',
-                success: function (data) {
-                    $('#arp-total').text('(ARP: ' + data.arp + ')');
-                }
-            });
-        {% endif %}
     </script>
 {% else %}
 	<li class="separator"><a id="header-login-link" href="javascript:void(0);">{{ 'platformd.layout.top_menu.sign_in' | trans }}</a></li>
