@@ -149,9 +149,9 @@ class DefaultController extends Controller
 
             $data = json_decode($result, true);
 
-            if (isset($data['arp'])) {
+            try {
                 $response->setContent(json_encode(array('arp' => $data['arp'])));
-            } else {
+            } catch (Exception $e) {
                 $response->setContent(json_encode(array('arp' => 0)));
             }
 

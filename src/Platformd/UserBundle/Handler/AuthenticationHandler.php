@@ -53,7 +53,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
 
             // to avoid confusion for people who hang out on /check-email after clicking the confirm email link, we need to just send them to the homepage :|
             $targetPath = ($referer == $checkEmailPath || $referer == $registerPath) ? $homePath : $referer;
-            $result     = array('success' => true, 'referer' => $targetPath, 'r' => $request->headers->get('referer'), 'cep' => $checkEmailPath, 'rp' => $registerPath);
+            $result     = array('success' => true, 'referer' => $targetPath);
 
             $response->headers->set('Content-type', 'text/json; charset=utf-8');
             $response->setContent(json_encode($result));

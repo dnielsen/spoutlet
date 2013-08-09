@@ -25,7 +25,7 @@ class SecurityController extends BaseController
     {
         $request        = $this->container->get('request');
         $session        = $request->getSession();
-        $referer        = $request->headers->get('referer');
+        $referer        = $request->get('return') ? urldecode($request->get('return')) : $request->headers->get('referer');
         $loginPath      = $this->container->get('router')->generate('fos_user_security_login', array(), true);
         $loginCheckPath = $this->container->get('router')->generate('_fos_user_security_check', array(), true);
 
