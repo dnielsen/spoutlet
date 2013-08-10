@@ -23,6 +23,11 @@
         {% set new_pwd_error = msg %}
         {% set new_conf_error = msg %}
     {% endif %}
+
+    {% if error.messageTemplate == 'password_too_short' %}
+        {% set new_pwd_error = msg %}
+        {% set new_conf_error = msg %}
+    {% endif %}
 {% endfor %}
 
 

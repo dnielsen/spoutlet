@@ -79,6 +79,12 @@ class User extends BaseUser
     protected $password;
 
     /**
+     * Plain password. Used for model validation. Must not be persisted.
+     * @Assert\MinLength(limit="5", groups={"Default", "Registration"}, message="password_too_short")
+     */
+    protected $plainPassword;
+
+    /**
      * @ORM\Column(name="last_login", type="datetime", nullable=true)
      */
     protected $lastLogin;
