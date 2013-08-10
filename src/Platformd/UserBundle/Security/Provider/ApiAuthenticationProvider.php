@@ -49,7 +49,7 @@ class ApiAuthenticationProvider extends UserAuthenticationProvider
         if ($user->getApiSuccessfulLogin()) {
             $this->logger->debug(self::LOG_MESSAGE_PREFIX.'User "'.$user->getUuid().'" has previously authed with API - sending API auth request');
 
-            if (false === $sessionInfo = $this->apiManager->authenticate($user, $presentedPassword)) {
+            if (false === ($sessionInfo = $this->apiManager->authenticate($user, $presentedPassword))) {
                 $this->logger->debug(self::LOG_MESSAGE_PREFIX.'API auth failed for previously API authed user "'.$user->getUuid().'" - stopping auth process');
                 throw new BadCredentialsException('The presented password is invalid.');
             }
@@ -57,7 +57,7 @@ class ApiAuthenticationProvider extends UserAuthenticationProvider
 
             $this->logger->debug(self::LOG_MESSAGE_PREFIX.'User "'.$user->getUuid().'" has not previously authed with API - sending API auth request');
             // Check to see if we can log in via API
-            if ($sessionInfo = $this->tryApiAuthentication($user, $presentedPassword) === false) {
+            if (false === ($sessionInfo = $this->tryApiAuthentication($user, $presentedPassword))) {
                 $this->logger->debug(self::LOG_MESSAGE_PREFIX.'API auth attempt for user "'.$user->getUuid().'" failed - falling back to CEVO check');
 
                 // Check to see if we have a CEVO-style password
@@ -82,7 +82,7 @@ class ApiAuthenticationProvider extends UserAuthenticationProvider
                 $this->logger->debug(self::LOG_MESSAGE_PREFIX.'API password updated for user "'.$user->getUuid().'" - trying API auth');
 
                 // Auth with API now that password has been updated.
-                if ($sessionInfo = $this->tryApiAuthentication($user, $presentedPassword) === false) {
+                if (false === ($sessionInfo = $this->tryApiAuthentication($user, $presentedPassword))) {
                     $this->logger->debug(self::LOG_MESSAGE_PREFIX.'API authentication failed for user "'.$user->getUuid().'" after updating API password - stopping auth process');
                     throw new BadCredentialsException('The presented password is invalid.');
                 }
@@ -100,8 +100,11 @@ class ApiAuthenticationProvider extends UserAuthenticationProvider
     {
         $sessionInfo = $this->apiManager->authenticate($user, $presentedPassword);
 
-        if ($sessionInfo && !$user->getApiSuccessfulLogin()) {
-            $user->setApiSuccessfulLogin(new \DateTime());
+        if ($sessionInfo) {
+            if (!$user->getApiSuccessfulLogin()) {
+                $user->setApiSuccessfulLogin(new \DateTime());
+            }
+
             return $sessionInfo;
         } else {
             return false;
