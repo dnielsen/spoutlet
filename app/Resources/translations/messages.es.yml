@@ -61,7 +61,7 @@ platformd.user.avatars.file_instructions: |
         Vamos a redimensionar las imágenes ampliadas automáticamente por lo que puedes subir la versión de mejor calidad que tienes. Tendrás la oportunidad de recortar la imagen en el siguiente paso.
 platformd.user.avatars.already_cropped: Este avatar ya fue procesado y recortado.
 platformd.user.avatars.invalid_avatar: Avatar inválido especificado.
-platformd.user.avatars.admin_submit_success: Your image has been queued for processing and will be available soon.
+platformd.user.avatars.admin_submit_success: Tu avatar se ha cargado y se revisará dentro de 72 horas. Si se aprueba, aparecerá automáticamente tu avatar.
 platformd.user.avatars.submit_success: Tu avatar se ha cargado y se revisará dentro de 72 horas. Si se aprueba, aparecerá automáticamente tu avatar.
 platformd.user.avatars.switch_not_found: No se encuentra el avatar especificado.
 platformd.user.avatars.switch_error: Unable to switch to the specified avatar at this time. Please try again soon.

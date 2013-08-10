@@ -52,7 +52,7 @@ platformd.user.avatars.file_instructions: |
     容量の大きな画像は自動的にリサイズされますので品質の高い画像をアップロードしても問題ありません。次のステップでは、画像を切り取ることができます。
 platformd.user.avatars.already_cropped: このアバターはすでに切り取り処理が行われています。
 platformd.user.avatars.invalid_avatar: 無効なアバターが指定されました。
-platformd.user.avatars.admin_submit_success: Your image has been queued for processing and will be available soon.
+platformd.user.avatars.admin_submit_success: あなたのアバターはアップロードされており、72時間以内に調査されます。
 platformd.user.avatars.submit_success: あなたのアバターはアップロードされており、72時間以内に調査されます。
 platformd.user.avatars.switch_not_found: 指定されたアバターを見つけることができません。
 platformd.user.avatars.switch_error: Unable to switch to the specified avatar at this time. Please try again soon.
@@ -67,7 +67,7 @@ platformd.user.avatars.awaiting_processing: 処理待ち
 platformd.user.avatars.update: アップデート
 platformd.user.avatars.valid_filetypes: 有効なアバターの拡張子はJPG、PNG、GIFです。
 platformd.user.avatars.upload: アップロード
-platformd.user.avatars.choose_avatar: Choose Avatar
+platformd.user.avatars.choose_avatar: アバター管理
 
 platformd:
 
