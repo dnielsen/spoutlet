@@ -42,8 +42,13 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
     public function process($confirmation = false)
     {
         $user = $this->userManager->createUser();
-        $user->setCountry($this->getUserCountry());
+        $country = $this->getUserCountry();
+        $user->setCountry($country);
         $this->form->setData($user);
+
+        if ($country == 'US') {
+            $user->setSubscribedAlienwareEvents(true);
+        }
 
         if ('POST' == $this->request->getMethod()) {
             $this->form->bindRequest($this->request);
