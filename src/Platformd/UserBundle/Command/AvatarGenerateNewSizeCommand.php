@@ -130,7 +130,7 @@ EOT
         $response = $this->s3->create_object($bucket, $basePath.'/'.$newFilename, array(
             'fileUpload' => $resizedFile,
             'contentType' => 'image/png',
-            'headers' => array('Cache-Control' => 'max-age=300'),
+            'headers' => array('Cache-Control' => 'max-age=0'),
         ));
 
         if (!$response->isOk()) {
