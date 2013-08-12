@@ -389,6 +389,12 @@ Alienware Arena Team
 
         $this->setFlash('success', 'You have successfully left this group!');
 
+        try {
+            $response = $this->getCEVOApiManager()->GiveUserXp('leavegroup', $user->getCevoUserId());
+        } catch (ApiException $e) {
+
+        }
+
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
     }
 
@@ -611,6 +617,12 @@ Alienware Arena Team
         $groupManager->saveGroup($group);
 
         $this->setFlash('success', sprintf('%s is no longer in this group.', $user->getUsername()));
+
+        try {
+            $response = $this->getCEVOApiManager()->GiveUserXp('leavegroup', $user->getCevoUserId());
+        } catch (ApiException $e) {
+
+        }
 
         return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
     }
