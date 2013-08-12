@@ -15,11 +15,13 @@ class SiteRepository extends EntityRepository
     public function findOneByFullDomain($fullDomain=null)
     {
         if ($fullDomain) {
-            return $this->createQueryBuilder('s')
+            $site = $this->createQueryBuilder('s')
                 ->andWhere('s.fullDomain = :fullDomain')
                 ->setParameter('fullDomain', $fullDomain)
                 ->getQuery()
                 ->getOneOrNullResult();
+
+            return $site;
         }
 
         // Required for instances where e.g. GiveawayListener asks for current site when a giveaway is loaded.

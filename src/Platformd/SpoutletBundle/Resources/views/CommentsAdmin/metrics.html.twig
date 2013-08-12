@@ -1,0 +1,46 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% set total = 0 %}
+
+{% block title 'Comment Metrics' %}
+
+{% block content %}
+<h1>Comment Metrics</h1>
+
+<div class="pull-left filter-form-wrapper">
+    <form action="{{ path('admin_comment_metrics') }}" method="GET">
+        From {{ form_widget(form.startDate) }}
+        To {{ form_widget(form.endDate) }}
+        <button type="submit" class="btn btn-primary" formnovalidate style="margin-top:-9px;">Filter</button>
+    </form>
+</div>
+
+<table class="table table-striped tablesorter">
+    <thead>
+        <tr>
+            <th>Method</th>
+            <th>Total</th>
+            <th>Date Range</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for header, count in data %}
+            <tr>
+                <td>{{ header }}</td>
+                <td>{{ count }}</td>
+                <td>{{ rangeString }}</td>
+            </tr>
+
+            {% set total = total + count %}
+
+        {% endfor %}
+
+        <tr>
+            <td>Total</td>
+            <td>{{ total }}</td>
+            <td>&nbsp;</td>
+        </tr>
+
+    </tbody>
+</table>
+
+{% endblock %}

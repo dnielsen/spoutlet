@@ -3,7 +3,7 @@
         <div style="height: 120px;">
             {{ 'content_reporting.must_be_logged_in' | pd_trans }}
         </div>
-        <button id="close-dialog-Group" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
+        <button id="close-dialog-Group" onclick="$('#report-content-dialog-Group').dialog('close');" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
     </div>
 
     <div data-logged-in="true">
@@ -11,7 +11,7 @@
             <div style="height: 120px;">
                 {{ 'content_reporting.once_per_hour' | pd_trans }}
             </div>
-            <button id="close-dialog-Group" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
+            <button id="close-dialog-Group" onclick="$('#report-content-dialog-Group').dialog('close');" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
         </div>
 
         <div data-can-report="true">
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <button class="btn btn-primary" id="submit-report-Group">Submit</button>
-            <button class="btn btn-primary" id="close-dialog-Group" style="float: right;">Cancel</button>
+            <button class="btn btn-primary close-dialog" id="close-dialog-Group" onclick="$('#report-content-dialog-Group').dialog('close');" style="float: right;">Cancel</button>
         </div>
     </div>
 </div>
@@ -75,7 +75,7 @@
             $('.report-group-option').prop('checked', false);
             $('#report-group-response').hide();
             $('#report-group-options').show();
-            $('#close-dialog-Group').text('Cancel');
+            $('.btn.btn-primary.close-dialog').text('Cancel');
             $('#submit-report-Group').show();
             reportGroupDialog.dialog('open');
         });
@@ -98,7 +98,7 @@
                     } else {
                         $('#report-group-response').fadeIn();
                     }
-                    $('#close-dialog-Group').text('OK');
+                    $('.btn.btn-primary.close-dialog').text('OK');
                     $('#submit-report-Group').hide();
                     groupDeleted = true;
                 }
@@ -106,7 +106,7 @@
 
         });
 
-        $('#close-dialog-Group').click(function () {
+        $('#close-dialog-Group').bind('click', function () {
             reportGroupDialog.dialog('close');
             if(groupDeleted) {
                 window.location = '{{ path('groups') }}';

@@ -1,0 +1,193 @@
+# some labels are on the "forms" domain
+fos_user_registration_form_username: "Nombre de usuario:"
+fos_user_registration_form_firstname: "Nombre:"
+fos_user_registration_form_lastname: "Apellido:"
+fos_user_registration_form_phoneNumber: "Teléfono:"
+fos_user_registration_form_country: "País:"
+fos_user_registration_form_state: "Estado/Provincia:"
+fos_user_registration_form_email: "Correo electrónico:"
+fos_user_registration_form_email_first: "Correo electrónico:"
+fos_user_registration_form_email_second: "Confirme correo electrónico:"
+fos_user_registration_form_plainPassword_first: "Contraseña:"
+fos_user_registration_form_plainPassword_second: "Confirme Contraseña:"
+fos_user_registration_form_plainPassword: "Contraseña:"
+fos_user_registration_form_hasAlienwareSystem_0: No
+fos_user_registration_form_hasAlienwareSystem_1: Si
+fos_user_registration_form_latestNewsSource: "¿Como es que escuchaste más recientemente de Alienware?"
+fos_user_registration_form_recaptcha: "Verificación:"
+fos_user_registration_form_subscribedAlienwareEvent: Subscribeme al boletín electrónico de Alienware Arena.
+
+fos_user_profile_form_user_lastname: "Apellido"
+fos_user_profile_form_user_firstname: "Nombre"
+fos_user_profile_form_user_file: "Avatar"
+fos_user_profile_form_current_avatar: "Tu Avatar actual"
+
+profile.show.title: '%username%'
+profile.show.firstname: "Nombre"
+profile.show.lastname: "Apellido"
+profile.show.my_rig: "My Rig"
+profile.show.update: "Update"
+profile.show.signature: "Signature"
+profile.show.edit: "Edit"
+profile.show.type: "Tipo"
+profile.show.manufacturer: "Fabricante"
+profile.show.operating_system: "Sistema Operativo"
+profile.show.cpu: "CPU"
+profile.show.memory: "Memoria"
+profile.show.video_card: "Tarjeta de Video"
+profile.show.sound_card: "Tarjeta de Sonido"
+profile.show.hard_drive: "Disco Duro"
+profile.show.headphones: "Audifonos"
+profile.show.mouse: "Ratón"
+profile.show.mousepad: "Alfombrilla de Ratón"
+profile.show.keyboard: "Teclado"
+profile.show.monitor: "Monitor"
+
+fos_user_admin_user_edit_title: 'Edit user "%username%"'
+fos_user_admin_user_show_title: 'Show user "%username%"'
+fos_user_admin_index_firstname: Nombre
+fos_user_admin_index_lastname: Apellido
+fos_user_admin_delete: Borrar
+fos_user_admin_edit: Editar
+
+fos_user_admin_reset_password: Restablecer contraseña
+fos_user_admin_user_edit: Editar
+fos_user_admin_edit_success: El usuario "%username%" se ha actualizado con éxito!
+fos_user_admin_delete_success: El usuario "%username%" se ha eliminado correctamente!
+fos_user_admin_approve_avatar: Aprobar avatar
+fos_user_admin_resetted_password_success: "La contraseña del usuario se ha restablecido y se ha enviado a %email%."
+fos_user_admin_disapprove_avatar: Desaprueba avatar
+
+# Security
+security.login.username: "Nombre de usuario:"
+security.login.password: "Password:"
+security.login.remember_me: Acuérdate de mí
+security.login.submit: Iniciar Sesión
+security.login.problem_logging_in: "Lo sentimos, pero hubo un problema al iniciar sesión:"
+
+# Profile
+profile.edit.submit: Actualizar
+profile.flash.updated: El perfil ha sido actualizado
+
+# Password change
+change_password.submit: Cambiar contraseña
+change_password.flash.success: La contraseña se ha cambiado
+
+# Registration
+registration.check_email: Un correo electrónico ha sido enviado a %email%. Contiene un enlace de activación que debe hacer clic para activar tu cuenta.
+registration.confirmed: Enhorabuena %username%, se confirma ahora su cuenta.
+registration.back: Realice una copia de la página de origen.
+registration.submit: Registrar
+registration.flash.user_created: El usuario ha sido creado con éxito
+
+# the first line is the subject of the email
+registration.email: |
+    Activa tu cuenta Alienware Arena
+    <h3>Hola %username%!</h3>
+    <p>
+        Gracias por registrarte para una cuenta de Alienware Arena. Por favor, activa tu cuenta haciendo clic en el enlace de abajo<br />
+        <a href="%confirmationUrl%">%confirmationUrl%</a>
+    </p>
+
+    <p>Este es un mensaje automático. Por favor no responda a este correo electrónico.</p>
+
+    <p>Equipo Alienware Arena</p>
+
+# Password resetting
+resetting.password_already_requested: La contraseña para este usuario ya ha sido solicitada en las últimas 24 horas.
+resetting.check_email: Por favor, consulta tu correo electrónico con el enlace para restablecer tu contraseña.
+resetting.request.invalid_username: La dirección de correo electrónico no existe "%username%".
+resetting.request.username: "Correo electrónico:"
+resetting.request.submit: Cambiar mi Contraseña
+resetting.reset.submit: Cambiar Contraseña
+resetting.flash.success: La contraseña se ha restablecido correctamente
+
+# the first line is the subject of the email
+resetting.email: |
+    Alienware Arena - Restablecer Contraseña
+    <h3>Hola %username%!</h3>
+
+    <p>Hemos recibido una solicitud de cambio de contraseña para tu cuenta Alienware Arena.</p>
+
+    <p>
+        Para restablecer tu contraseña - por favor haz clic en el enlace de abajo <br />
+        <a href="%confirmationUrl%">%confirmationUrl%</a>
+    </p>
+
+    <p>Si no solicitaste el restablecimiento de contraseña, por favor ignora este mensaje.</p>
+
+    <p>Este es un mensaje automático. Por favor no respondas a este correo electrónico.</p>
+
+    <p>Equipo Alienware Arena</p>
+# Password resetted by admin
+resetted.email: |
+    Alienware Arena - Restablecer Contraseña
+    <h3>Hola %username%!</h3>
+
+    <p>Hemos recibido una solicitud de cambio de contraseña para tu cuenta Alienware Arena.</p>
+
+    <p>
+        Para restablecer tu contraseña - por favor haz clic en el enlace de abajo <br />
+        <a href="%confirmationUrl%">%confirmationUrl%</a>
+    </p>
+
+    <p>Si no solicitaste el restablecimiento de contraseña, por favor ignora este mensaje.</p>
+
+    <p>Este es un mensaje automático. Por favor no respondas a este correo electrónico.</p>
+
+    <p>Equipo Alienware Arena</p>
+
+
+# Global strings
+layout.logout: Salir
+layout.login: Iniciar
+layout.register: Registrar
+
+# Form field labels
+fos_user_group_form_name: "Nombre del Grupo:"
+
+fos_user_profile_form_user_username: "Nombre de Usuario:"
+fos_user_profile_form_user_email: "Email:"
+fos_user_profile_form_current: "Contraseña Actual:"
+fos_user_profile_form_user_type: "Tipo:"
+fos_user_profile_form_user_manufacturer: "Fabricante:"
+fos_user_profile_form_user_operating_system: "Sistema Operativo:"
+fos_user_profile_form_user_cpu: "CPU:"
+fos_user_profile_form_user_memory: "Memoria:"
+fos_user_profile_form_user_video_card: "Tarjeta de Video:"
+fos_user_profile_form_user_sound_card: "Tarjeta de Sonido:"
+fos_user_profile_form_user_hard_drive: "Disco Duro:"
+fos_user_profile_form_user_headphones: "Audifonos:"
+fos_user_profile_form_user_mouse: "Ratón:"
+fos_user_profile_form_user_mousepad: "Alfombrilla de Ratón:"
+fos_user_profile_form_user_keyboard: "Teclado:"
+fos_user_profile_form_user_monitor: "Monitor:"
+
+security.login.username_or_email: "Correo electrónico:"
+fos_user_registration_form_email: "Correo electrónico:"
+fos_user_registration_form_plainPassword_first: "Contraseña:"
+fos_user_registration_form_plainPassword_second: "Confirme contraseña:"
+
+fos_user_resetting_form_new_first: "Nueva contraseña:"
+fos_user_resetting_form_new_second: "Confirmar contraseña:"
+
+fos_user_change_password_form_new_first: "Nueva contraseña:"
+fos_user_change_password_form_new_second: "Confirmar contraseña:"
+fos_user_change_password_form_current: "Contraseña actual:"
+platformd.user.account_settings: "Configuración de la cuenta"
+platformd.user.account_settings.change_avatar.submit: "Guardar"
+account_settings_userAvatars: "Avatares"
+"platformd.user.account_settings.Add an avatar": "Añade un avatar"
+"platformd.user.account_settings.Select avatar": "Elija esta avatar"
+"platformd.user.account_settings.waiting for approval": "Esperando aprobación"
+platformd.user.account_settings.avatars: "Avatares"
+platformd.user.account_settings.password: "Cambiar contraseña"
+platformd.user.account_settings.newsletter: "Suscripciones a boletines"
+
+invalid_username_password: Combinación nombre de usuario/contraseña incorrecta
+
+"Bad credentials": "Usuario/correo electrónico o contraseña incorrecto."
+"The presented password is invalid.": "Usuario/correo electrónico o contraseña incorrecto."
+"The presented password cannot be empty.": "Combinación nombre de usuario/contraseña incorrecta"
+"User account is disabled.": "Your account is not activated. You must confirm your account by clicking on the link in the Activate Account Email."
+"Invalid username or password": "Usuario/correo electrónico o contraseña incorrecto."

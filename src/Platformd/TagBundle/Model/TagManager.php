@@ -19,6 +19,7 @@ class TagManager
         'platformd_news'             => 'NewsBundle:News',
         'platformd_group_discussion' => 'GroupBundle:GroupDiscussion',
         'platformd_group'            => 'GroupBundle:Group',
+        'platformd_group_news'       => 'GroupBundle:GroupNews',
         'platformd_giveaway'         => 'GiveawayBundle:Giveaway',
         'platformd_deal'             => 'GiveawayBundle:Deal',
         'platformd_global_event'     => 'EventBundle:GlobalEvent',

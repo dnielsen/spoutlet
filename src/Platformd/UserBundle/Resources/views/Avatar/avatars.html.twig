@@ -1,0 +1,125 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+{% extends 'UserBundle::accountLayout.html.twig' %}
+
+{% block title %}{{ "platformd.user.account.avatars" | pd_trans }}{% endblock %}
+
+{% block content %}
+
+    <div class="widget-100" id="avatar-panel">
+        <div class="widget-header">
+            <div class="widget-title">
+                <h2 style="float:left;">{{ 'platformd.user.avatars.manage' | pd_trans }}</h2>
+            </div>
+            {% if data.unapprovedCount > 0 or data.processingCount > 0 %}
+                <div id="non-displayed-avatars">
+                    {% if data.unapprovedCount > 0 %}<div>{{ 'platformd.user.avatars.unapproved' | pd_trans({ '%count%': data.unapprovedCount }) }}</div>{% endif %}
+                    {% if data.processingCount > 0 %}<div>{{ 'platformd.user.avatars.processing' | pd_trans({ '%count%': data.processingCount }) }}</div>{% endif %}
+                </div>
+            {% endif %}
+            <div class="clear"></div>
+        </div>
+        <div class="widget-content">
+
+            {% if data.activeAvatar or data.avatars|length > 0 %}
+                <div>{{ 'platformd.user.avatars.select_or_add' | pd_trans | raw }}</div>
+
+                {% if data.activeAvatar %}
+                    <div class="avatar-wrapper" id="avatar-{{ data.activeAvatar.id }}">
+                        <div class="avatar-image"><img src="{{ data.activeAvatar.url }}" class="active" /></div>
+                    </div>
+                {% endif %}
+
+                {% for avatar in data.avatars %}
+                    <div class="avatar-wrapper" id="avatar-{{ avatar.id }}">
+                        <a class="avatar-image" href="{{ path('avatar_switch', ({ 'uuid': avatar.uuid })) }}"><img src="{{ avatar.url }}" /></a>
+                        <a class="delete" id="{{ avatar.id }}">&times;</a>
+                    </div>
+                {% endfor %}
+
+                <div class="clear"></div>
+
+            {% else %}
+                <div>{{ 'platformd.user.avatars.add' | pd_trans | raw }}</div>
+            {% endif %}
+
+            <div id="add-avatar-panel">
+
+                <hr class="faded" />
+
+                <div>{{ 'platformd.user.avatars.file_instructions' | pd_trans | nl2br }}</div>
+
+                <div id="add-avatar-form">
+                    <form action="{{ path('avatars') }}" method="post" class="form-horizontal" {{ form_enctype(form) }}>
+                        {{ form_row(form.file) }}
+                        {{ form_rest(form) }}
+                        <div class="form-actions">
+                            <button id="submit-avatar" type="submit" class="btn btn-primary" formnovalidate>Upload</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="widget-footer">
+            &nbsp;
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        var ajaxRequestSent;
+
+        $('#submit-avatar').click(function () {
+            $('#avatar-panel').block({
+                    message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />',
+                    css: {
+                        border: 'none',
+                        background: 'transparent'
+                    }
+                });
+        });
+
+        $('#add-avatar').click(function() {
+            $('#add-avatar-panel').slideDown();
+        });
+
+        $('div.avatar-wrapper').each(function() {
+            $(this).bind( "mouseover", function() {
+                $('#' + this.id + ' > .delete').show();
+            });
+
+            $(this).bind( "mouseout", function() {
+                $( '#' + this.id + '> .delete').hide();
+            });
+        });
+
+        $('.avatar-wrapper > .delete').click(function() {
+            if (!confirm("{{ 'platformd.user.avatars.confirm_delete' | pd_trans }}") || ajaxRequestSent) {
+                return false;
+            }
+
+            var id = this.id;
+            ajaxRequestSent = true;
+
+            $.ajax({
+                url: '{{ path('avatar_delete') }}',
+                type: 'post',
+                data: JSON.stringify({'id' : this.id}),
+                controlstentType: 'application/json',
+                success: function (data) {
+                    if (data.success) $('#avatar-' + id).fadeOut();
+                    ajaxRequestSent = false;
+                }
+            });
+        });
+
+    </script>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.Jcrop.min.js"></script>
+{% endblock %}

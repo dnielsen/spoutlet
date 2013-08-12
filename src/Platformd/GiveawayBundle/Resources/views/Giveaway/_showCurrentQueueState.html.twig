@@ -1,6 +1,6 @@
-{% extends "SpoutletBundle::_flashMessage.html.twig" %}
-{% block type %}{{ data.success }}{% endblock %}
-{% block body %}
+{% extends "SpoutletBundle::_baseFlashMessage.html.twig" %}
+{% block flash_type %}{{ data.success }}{% endblock %}
+{% block flash %}
 
 {% if (data.current_state == 'in_queue')  %}
     <p>{{ 'platformd.giveaway.queue.you_are_queued' | trans }}</p>

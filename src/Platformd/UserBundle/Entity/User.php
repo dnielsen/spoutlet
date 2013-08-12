@@ -2,28 +2,36 @@
 
 namespace Platformd\UserBundle\Entity;
 
-use FOS\UserBundle\Entity\User as BaseUser;
+use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 use Doctrine\Common\Collections\ArrayCollection,
     Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
+use FOS\UserBundle\Validator\Password;
 
 use  Platformd\UserBundle\Validator\User as ValidateUser;
 
 /**
  * Platformd\UserBundle\Entity\User
  *
- * @ORM\Table(name="fos_user")
+ * @ORM\Table(name="fos_user", indexes={@ORM\index(name="uuid_idx", columns={"uuid"}), @ORM\index(name="cevo_user_id_idx", columns={"cevoUserId"})})
  * @ORM\Entity(repositoryClass="Platformd\UserBundle\Entity\UserRepository")
  * @ORM\haslifecyclecallbacks
  * @ValidateUser()
+ * @UniqueEntity(fields={"username"})
+ * @UniqueEntity(fields={"email"})
  */
 class User extends BaseUser
 {
+    public $currentPassword;
+    public $sessionUuid;
+    public $sessionExpires;
+
     /**
      * @var integer $id
      *
@@ -33,15 +41,102 @@ class User extends BaseUser
      */
     protected $id;
 
+    /**
+     * @Assert\NotBlank();
+     * @ORM\Column(type="string", length="255", nullable=true)
+     */
+    protected $username;
+
+    /**
+     * @ORM\Column(name="username_canonical", type="string", length="255", nullable=true, unique=true)
+     */
+    protected $usernameCanonical;
+
+    /**
+     * @Assert\NotBlank();
+     * @ORM\Column(type="string", length="255")
+     */
+    protected $email;
+
+    /**
+     * @ORM\Column(name="email_canonical", type="string", length="255", unique=true)
+     */
+    protected $emailCanonical;
+
+    /**
+     * @ORM\Column(name="enabled", type="boolean")
+     */
+    protected $enabled;
+
+    /**
+     * @ORM\Column(name="salt", type="string")
+     */
+    protected $salt;
+
+    /**
+     * @ORM\Column(name="password", type="string")
+     */
+    protected $password;
+
+    /**
+     * Plain password. Used for model validation. Must not be persisted.
+     * @Assert\MinLength(limit="5", groups={"Default", "Registration"}, message="password_too_short")
+     */
+    protected $plainPassword;
+
+    /**
+     * @ORM\Column(name="last_login", type="datetime", nullable=true)
+     */
+    protected $lastLogin;
+
+    /**
+     * @ORM\Column(name="locked", type="boolean")
+     */
+    protected $locked;
+
+    /**
+     * @ORM\Column(name="expired", type="boolean")
+     */
+    protected $expired;
+
+    /**
+     * @ORM\Column(name="expires_at", type="datetime", nullable=true)
+     */
+    protected $expiresAt;
+
+    /**
+     * @ORM\Column(name="confirmation_token", type="string", nullable=true)
+     */
+    protected $confirmationToken;
+
+    /**
+     * @ORM\Column(name="password_requested_at", type="datetime", nullable=true)
+     */
+    protected $passwordRequestedAt;
+
+    /**
+     * @ORM\Column(name="roles", type="array")
+     */
+    protected $roles;
+
+    /**
+     * @ORM\Column(name="credentials_expired", type="boolean")
+     */
+    protected $credentialsExpired;
+
+    /**
+     * @ORM\Column(name="credentials_expire_at", type="datetime", nullable=true)
+     */
+    protected $credentialsExpireAt;
 
     /**
      * @var String $firstname
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration"}, message="first_name_not_blank")
-     * @Assert\MinLength(limit="1", groups={"Registration"})
-     * @Assert\MaxLength(limit="255", groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration", "IncompleteUser"}, message="first_name_not_blank")
+     * @Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser"})
+     * @Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser"})
      */
     protected $firstname;
 
@@ -50,9 +145,9 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration"}, message="last_name_not_blank")
-     * @Assert\MinLength(limit="1", groups={"Registration"})
-     * @Assert\MaxLength(limit="255", groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration", "IncompleteUser"}, message="last_name_not_blank")
+     * @Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser"})
+     * @Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser"})
      */
     protected $lastname;
 
@@ -61,7 +156,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="date", nullable=true)
      *
-     * @Assert\Date(groups={"Registration"})
+     * @Assert\Date(groups={"Registration", "IncompleteUser"})
      */
     protected $birthdate;
 
@@ -77,7 +172,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration"})
+     * @Assert\NotBlank(groups={"Registration"}, message="country_not_blank")
      */
     protected $country;
 
@@ -94,9 +189,9 @@ class User extends BaseUser
      * @var boolean $has_alienware_system
      *
      * @ORM\Column(name="has_alienware_system", type="boolean", nullable=true)
-     * @Assert\NotNull
+     * @Assert\NotNull(groups={"Registration"}, message="has_system_not_blank")
      */
-    protected $hasAlienwareSystem = false;
+    protected $hasAlienwareSystem;
 
     /**
      * @var String $latest_news_source
@@ -110,7 +205,7 @@ class User extends BaseUser
      *
      * @ORM\Column(name="subscribed_gaming_news", type="boolean", nullable=true)
      */
-    protected $subscribedGamingNews;
+    protected $subscribedGamingNews = false;
 
     /**
      * This is the checkbox for:
@@ -120,19 +215,20 @@ class User extends BaseUser
      * @var bool
      * @ORM\Column(type="boolean", nullable=true)
      */
-    protected $subscribedAlienwareEvents;
+    protected $subscribedAlienwareEvents = false;
 
     /**
      * @var Boolean $terms_accepted
      *
-     * @Assert\True(message="You must accept the terms and conditions and the privacy policy", groups={"Registration"})
+     * @Assert\True(message="You must accept the terms and conditions and the privacy policy", groups={"Registration", "IncompleteUser"})
      */
     protected $termsAccepted;
 
     /**
      * @var String $avatar
      *
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\OneToOne(targetEntity="Platformd\UserBundle\Entity\Avatar")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $avatar;
 
@@ -235,13 +331,6 @@ class User extends BaseUser
     protected $monitor;
 
     /**
-     * @var Boolean $avatarApproved
-     *
-     * @ORM\Column(type="boolean")
-     */
-    protected $avatar_approved = false;
-
-    /**
      * @var string The locale in which this user registered
      * @ORM\Column(type="string", length=2, nullable=true)
      */
@@ -277,13 +366,6 @@ class User extends BaseUser
     public $file;
 
     /**
-     * Little flag so we know if the avatar was changed on this request
-     *
-     * @var bool
-     */
-    protected $avatarChanged = false;
-
-    /**
      * The id for this user in CEVO's database
      *
      * @var string
@@ -317,9 +399,39 @@ class User extends BaseUser
     private $ipAddress;
 
     /**
+     * @ORM\OneToMany(targetEntity="Platformd\UserBundle\Entity\Avatar", mappedBy="user", cascade={"persist"}, orphanRemoval=true)
+     */
+    protected $avatars;
+
+    /**
+     * @ORM\Column(type="string", length=36, nullable=true)
+     */
+    protected $uuid;
+
+    /**
      * @Recaptcha\True
      */
     public $recaptcha;
+
+    /**
+     * @ORM\Column(name="facebook_id", type="string")
+     */
+    protected $facebookId = '';
+
+    /**
+     * @ORM\Column(name="twitter_id", type="string")
+     */
+    protected $twitterId = '';
+
+    /**
+     * @ORM\Column(name="api_successful_login", type="datetime", nullable=true)
+     */
+    protected $apiSuccessfulLogin;
+
+    /**
+     * @ORM\Column(name="about_me", type="text", nullable=true)
+     */
+    protected $aboutMe;
 
     public function __construct()
     {
@@ -329,6 +441,7 @@ class User extends BaseUser
         $this->groupMembershipActions   = new ArrayCollection();
         $this->loginRecords             = new ArrayCollection();
         $this->pdGroups                 = new ArrayCollection();
+        $this->avatars                  = new ArrayCollection();
     }
 
     public function __toString() {
@@ -342,38 +455,7 @@ class User extends BaseUser
      */
     public function isAvatarApproved()
     {
-
-        return $this->avatar_approved;
-    }
-
-    public function approveAvatar()
-    {
-        $this->avatar_approved = true;
-    }
-
-    public function disapproveAvatar()
-    {
-        $this->avatar_approved = false;
-    }
-
-    public function getAbsolutePath()
-    {
-        if (!$this->avatar) {
-
-            return null;
-        }
-
-        return $this->getUploadRootDir().'/'.$this->avatar;
-    }
-
-    /**
-     * @ORM\PostRemove()
-     */
-    public function removeUpload()
-    {
-        if ($file = $this->getAbsolutePath()) {
-            unlink($file);
-        }
+        return $this->avatar->isApproved();
     }
 
     /**
@@ -619,38 +701,16 @@ class User extends BaseUser
 
     public function getAvatar()
     {
-
-        return $this->avatar;
-    }
-
-    /**
-     * Returns the avatar path, with respect to it being approved or not.
-     *
-     * If the avatar is not approved, false is returned.
-     * This logic here is repeated elsewhere, but should use this.
-     *
-     * @return string
-     */
-    public function getApprovedAvatar()
-    {
-        if (!$this->isAvatarApproved()) {
+        if (!$this->avatar || !$this->avatar->isUsable()) {
             return false;
         }
 
-        return $this->getAvatar();
+        return $this->avatar;
     }
 
     public function setAvatar($avatar)
     {
         $this->avatar = $avatar;
-
-        // set a flag so we can give the user a message
-        $this->avatarChanged = true;
-    }
-
-    public function getWebPath()
-    {
-        return null === $this->avatar ? null : $this->getUploadDir().'/'.$this->avatar;
     }
 
     public function getType()
@@ -946,21 +1006,6 @@ class User extends BaseUser
     }
 
     /**
-     * Determines whether or not this user is a "minor" (under 13)
-     *
-     * @Assert\False(message="You must be 13 years old to register", groups={"Registration"})
-     */
-    public function isAMinor()
-    {
-        // if we don't know, we don't know, sooooo not a minor
-        if (!$this->getBirthdate()) {
-            return false;
-        }
-
-        return ($this->getAge() < 13);
-    }
-
-    /**
      * @return int
      */
     public function getAge()
@@ -1108,7 +1153,143 @@ class User extends BaseUser
         return $this->loginRecords;
     }
 
+    public function getAvatars()
+    {
+        return $this->avatars;
+    }
+
+    public function setAvatars($value)
+    {
+        $this->avatars = $value;
+    }
+
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid($value)
+    {
+        $this->uuid = $value;
+    }
+
     public function eraseCredentials()
     {
+    }
+
+    public function hasSameIpAddress($ipAddress)
+    {
+        return $this->ipAddress === $ipAddress;
+    }
+
+    public function getExpired()
+    {
+        return $this->expired;
+    }
+
+    public function setExpired($value)
+    {
+        $this->expired = $value;
+    }
+
+    public function getExpiredUntil()
+    {
+        return $this->expiresAt;
+    }
+
+    public function setExpiredUntil(\DateTime $dateTime = null)
+    {
+        $this->expiresAt = $dateTime;
+    }
+
+    public function isExpired()
+    {
+        if (true === $this->expired) {
+            return true;
+        }
+
+        if (null !== $this->expiresAt && $this->expiresAt->getTimestamp() > time()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getFacebookId()
+    {
+        return $this->facebookId;
+    }
+
+    public function setFacebookId($value)
+    {
+        $this->facebookId = $value;
+    }
+
+    /**
+     * @param Array
+     *
+     * Always set the facebook id and facebook role; if there is no first/last name, email or birthdate, set those from fb data
+     */
+    public function setFBData($fbdata)
+    {
+        if (isset($fbdata['id'])) {
+            $this->setFacebookId($fbdata['id']);
+            $this->addRole('ROLE_FACEBOOK');
+        }
+        if (isset($fbdata['first_name']) && !$this->firstname) {
+            $this->setFirstname($fbdata['first_name']);
+        }
+        if (isset($fbdata['last_name']) && !$this->lastname) {
+            $this->setLastname($fbdata['last_name']);
+        }
+        if (isset($fbdata['email']) && !$this->email) {
+            $this->setEmail($fbdata['email']);
+        }
+        if (isset($fbdata['birthday']) && !$this->birthdate) {
+            $this->setBirthdate(new \DateTime($fbdata['birthday']));
+        }
+    }
+
+    public function getTwitterId()
+    {
+        return $this->twitterId;
+    }
+
+    public function setTwitterId($value)
+    {
+        $this->twitterId = $value;
+    }
+
+    public function getApiSuccessfulLogin()
+    {
+        return $this->apiSuccessfulLogin;
+    }
+
+    public function setApiSuccessfulLogin($value)
+    {
+        $this->apiSuccessfulLogin = $value;
+    }
+
+    public function getAboutMe()
+    {
+        return $this->aboutMe;
+    }
+
+    public function setAboutMe($value)
+    {
+        $this->aboutMe = $value;
+    }
+
+    public function isAccountNonExpired()
+    {
+        if (true === $this->expired) {
+            return false;
+        }
+
+        if (null !== $this->expiresAt && $this->expiresAt->getTimestamp() > time()) {
+            return false;
+        }
+
+        return true;
     }
 }

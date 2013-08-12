@@ -1,31 +1,42 @@
-first_name_not_blank: Please enter your first name
-last_name_not_blank: Please enter your last name
-birthdate_not_blank: Please enter your birthdate
-state_not_blank: Please enter a state
+first_name_not_blank: Please enter your first name.
+last_name_not_blank: Please enter your last name.
+birthdate_not_blank: Please enter a valid birthdate.
+state_not_blank: Please enter your state/province.
+country_not_blank: Please select a country.
+news_source_not_blank: Please select how you heard about Alienware Arena.
+has_system_not_blank: Please tell us if you have an Alienware system.
+passwords_do_not_match: The passwords do not match.
+current_passwords_do_not_match: Current password is incorrect.
+age_requirement_not_met: You must be %s years old to register.
+must_enter_new_password: You must enter a new password.
+must_reenter_new_password: You must re-enter the new password.
+password_too_short: Your new password must be a minimum of 5 characters.
 
-"The username is already used": The username is already used
-"The email is already used":  The email is already used
-"Please enter a username":  Please enter a username
-"The username is too short":  The username is too short
-"The username is too long":  The username is too long
-"Please enter an email":  Please enter an email
-"The email is too short":  The email is too short
-"The email is too long":  The email is too long
-"The email is not valid":  The email is not valid
-"Please enter a password":  Please enter a password
-"The password is too short":  The password is too short
-"Please enter a new password":  Please enter a new password
-"The new password is too short":  The new password is too short
-"Please enter a new password":  Please enter a new password
-"The new password is too short":  The new password is too short
-"Please enter a name":  Please enter a name
-"The name is too short":  The name is too short
-"The name is too long":  The name is too long
-"This value is not a valid captcha":  This value is not a valid captcha
+fos_user.username.already_used: The username is already used.
+fos_user.email.already_used:  "The email is already used."
+fos_user.username.blank: "Please enter a username."
+fos_user.username.short:  The username is too short.
+"The username is too long":  The username is too long.
+fos_user.email.blank:  Please enter an email.
+"The email is too short":  The email is too short.
+"The email is too long":  The email is too long.
+fos_user.email.invalid:  The email is not valid.
+fos_user.password.blank:  Please enter a password.
+"The password is too short":  The password is too short.
+"Please enter a new password":  Please enter a new password.
+"The new password is too short":  The new password is too short.
+"Please enter a new password":  Please enter a new password.
+"The new password is too short":  The new password is too short.
+"Please enter a name":  Please enter a name.
+"The name is too short":  The name is too short.
+"The name is too long":  The name is too long.
+"This value is not a valid captcha":  Your verification code did not match. Please try again.
 
-"You must accept the terms and conditions and the privacy policy": You must accept the terms and conditions and the privacy policy
+"You must accept the terms and conditions and the privacy policy": You must accept the Terms and Conditions and the Privacy Policy.
 
 "The entered password is invalid.": The entered password is invalid.
 
 error:
-    select_status: Please choose a status
+    select_status: Please choose a status.
+
+fos_user.account_banned: This account has been suspended until %s. If you believe this to be an error, please email contact@alienwarearena.com.

@@ -127,6 +127,8 @@ class GiveawayPoolAdminController extends Controller
         $manager->remove($pool);
         $manager->flush();
 
+        $this->banCaches($pool);
+
         return $this->redirect($this->generateUrl('admin_giveaway_pool_index', array(
             'giveaway' => $giveaway
         )));
@@ -153,7 +155,7 @@ class GiveawayPoolAdminController extends Controller
                 $rule->setRuleset($ruleset);
                 $newRulesArray[] = $rule;
 
-                $defaultAllow = $rule->getRuleType() == "allow" ? false : true;
+                $defaultAllow = $rule->getRuleType() == "allow" ? false : $defaultAllow;
             }
         }
 
@@ -218,9 +220,14 @@ class GiveawayPoolAdminController extends Controller
                 $loader = new \Platformd\GiveawayBundle\Pool\PoolLoader($this->get('database_connection'));
                 $loader->loadKeysFromFile($pool->getKeysfile(), $pool);
                 $this->setFlash('success', 'platformd.giveaway_pool.admin.saved');
+
+                $this->banCaches($pool);
+
                 return true;
             }
         }
+
+        $this->banCaches($pool);
 
         return true;
     }
@@ -278,5 +285,19 @@ class GiveawayPoolAdminController extends Controller
         ));
 
         return $this->getBreadcrumbs();
+    }
+
+    private function banCaches($pool)
+    {
+        $varnishUtil  = $this->getVarnishUtil();
+        $indexPath    = $this->generateUrl('giveaway_index');
+        $giveawayPath = $this->generateUrl('giveaway_show', array('slug' => $pool->getGiveaway()->getSlug()));
+
+        try {
+            $varnishUtil->banCachedObject($indexPath);
+            $varnishUtil->banCachedObject($giveawayPath);
+        } catch (Exception $e) {
+            throw new \Exception('Could not ban.');
+        }
     }
 }

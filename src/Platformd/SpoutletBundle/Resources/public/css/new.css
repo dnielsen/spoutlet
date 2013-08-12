@@ -36,37 +36,22 @@ ul.normal-margin, ol.normal-margin {
     margin: auto;
 }
 
-/* generic form stuff - ugly, but quick */
-.form input.form-txt {
-    border: none;
-    padding: 4px 4px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-    font-size: 12px;
-    width: 200px;
-}
-.form div.form_row {
-    margin-bottom: 10px;
-}
 .form label {
     display: -moz-inline-box;
     display: inline-block;
     width: 110px;
+    vertical-align: top;
+}
+
+.form label.radio {
+    width: 100%;
 }
 .form-msg-error {
-    padding: 6px 10px 5px;
-    display: block;
-    height: auto;
-    margin: -0.3em 0 0.5em;
-    margin-left: 110px;
-    padding-left: 27px;
+
     font-size:0.9em;
-    border-bottom: 1px solid #ccc;
-    background: #fad0d0 url(../images/form-ic-error.png) no-repeat 5px 4px;
-    border-color:#f6abab;
+    list-style: none;
     color:#b01717;
-    width: 170px;
+
 }
 
 /* login page */
@@ -76,18 +61,28 @@ ul.normal-margin, ol.normal-margin {
     width: 400px;
 }
 .login_page_interstitial input.button {
-    margin-left: 110px;
+    margin-left: 0px;
 }
 
 /* change password */
 .fos_user_change_password label {
-    width: 150px;
+    width: 170px;
+    text-align: right;
+    margin-right: 20px;
 }
+
+.fos_user_change_password input[type="checkbox"] { margin: 0; }
+
 .fos_user_change_password input.button {
-    margin-left: 150px;
+    margin-left: 0px;
 }
 .fos_user_change_password ul.form-msg-error {
-    margin-left: 150px;
+    margin-left: 155px;
+}
+
+fieldset.label-full label {
+    width: 100%;
+    text-align: left;
 }
 
 /* comments */
@@ -151,12 +146,9 @@ ul.normal-margin, ol.normal-margin {
     text-align: right;
     margin-right: 10px;
 }
-.fos_user_registration_register input.button {
-    margin-left: 310px;
-    margin-top: 10px;
-}
+
 .fos_user_registration_register ul.form-msg-error, .fos_user_registration_register #recaptcha_widget_div {
-    margin-left: 310px;
+
 }
 .floating_form_container {
     margin-left: 313px;
@@ -283,8 +275,9 @@ span.required {
     width: 120px;
     height: 60px;
 }
+
 #homepage-gallery .ad-thumbs li a.ad-active img {
-    border-color: #68bcd8;
+     border-color: #68bcd8;
 }
 #homepage-gallery .ad-controls {
     display: none;
@@ -469,20 +462,6 @@ ul.list-normal {
     background-color: #fcb3b3;
 }
 
-.article-image {
-    width: 200px;
-    float: left;
-    margin-right: 12px;
-}
-.article-image img {
-    width: 200px;
-}
-.article-actions a {
-    float: right;
-}
-.article-image-large img {
-    width: 634px;
-}
 .age-wrapper {
     text-align: center;
 }

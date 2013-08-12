@@ -93,9 +93,11 @@ class YoutubeController extends Controller
             $form->bindRequest($request);
 
             if($form->isValid()) {
+                $video = $form->getData();
                 $this->processForm($form, $user);
 
                 $this->setFlash('success', $this->trans('youtube.flash.submit_success'));
+
                 return $this->redirect($this->generateUrl('youtube_view', array('slug' => $youtube->getSlug())));
             } else {
                 $this->setFlash('error', $this->trans('youtube.form.general_error'));
@@ -142,7 +144,12 @@ class YoutubeController extends Controller
             if($form->isValid()) {
                 $this->processForm($form, $user, true);
 
-                $referer = $form['referer']->getData() ? $form['referer']->getData() : $this->generateUrl('youtube_view', array('slug' => $youtube->getSlug()));
+                $referer    = $form['referer']->getData();
+                $videoUrl   = $this->generateUrl('youtube_view', array('slug' => $youtube->getSlug()), true);
+
+                if ($referer && $referer != $videoUrl) {
+                    $referer = $videoUrl;
+                }
 
                 $this->setFlash('success', $this->trans('youtube.flash.edit_success'));
                 return $this->redirect($referer);

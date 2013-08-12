@@ -1,4 +1,4 @@
-div.tagsinput { border:1px solid #aaa; background: #000; padding:5px; width:300px; height:100px; overflow-y: auto; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px;}
+div.tagsinput { border:1px solid #aaa; background: #000; padding:5px; width:300px; height:100px; overflow-y: auto; overflow-x: hidden; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px;}
 div.tagsinput span.tag, div.tagslist span.tag { border: 1px solid #00596e; border-radius: 4px; -moz-border-radius:4px; -webkit-border-radius:4px; display: block; float: left; padding: 5px; text-decoration:none; background: #0094B4; color: #ffffff; margin-right: 5px; margin-bottom:5px;font-family: helvetica;  font-size:13px;}
 div.tagsinput span.tag a { font-weight: bold; color: #ffffff; text-decoration:none; font-size: 11px;  }
 div.tagsinput input { width:80px; margin:0px; font-size: 13px; border:1px solid transparent; padding:5px; background: transparent; color: #aaa; outline:0px;  margin-right:5px; margin-bottom:5px; }

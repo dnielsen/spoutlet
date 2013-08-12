@@ -357,3 +357,60 @@ table.uploadedFiles td {
     background:url('/images/profile-default.png') top left no-repeat;
     border: none;
 }
+
+#add-avatar-panel {
+    display: none;
+}
+
+#add-avatar-form {
+    margin: 15px 0 0 0;
+}
+
+#avatar-crop-wrapper {
+    float: left;
+    width: 610px;
+    margin-left: 50px;
+}
+
+#avatar-previews {
+    float: left;
+    width: 192px;
+    text-align: center;
+}
+
+#submit-crop {
+    margin-top: 10px;
+}
+
+.avatar-wrapper {
+    width: 124px;
+    display: inline-block;
+    margin: 10px 0 10px 0;
+}
+
+.avatar-wrapper .avatar-image {
+    float: left;
+    cursor: pointer;
+}
+
+.avatar-wrapper img {
+    width: 84px;
+    height: 84px;
+}
+
+.avatar-wrapper .delete {
+    float: left;
+    width: 24px;
+    margin-left: 10px;
+    font-size: 16px;
+    display: none;
+    cursor: pointer;
+}
+
+#non-displayed-avatars {
+    float: right;
+    font-size: 11px;
+    color: #AAA;
+    margin-top: -9px;
+    text-align: right;
+}

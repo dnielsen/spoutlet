@@ -8,6 +8,23 @@ Platformd_UserBundle_admin_filter:
         _method: POST
     defaults: { _controller: UserBundle:Admin:filter }
 
+admin_unapproved_avatars:
+    pattern: /avatars
+    defaults: { _controller: UserBundle:Admin:unapprovedAvatars }
+
+Platformd_UserBundle_admin_suspend:
+    pattern: /suspend/{id}
+    defaults: { _controller: UserBundle:Suspend:suspend }
+    requirements: { _method: POST }
+
+Platformd_UserBundle_admin_ban:
+    pattern: /ban/{id}
+    defaults: { _controller: UserBundle:Suspend:ban }
+
+Platformd_UserBundle_admin_unban:
+    pattern: /unban/{id}
+    defaults: { _controller: UserBundle:Suspend:unban }
+
 Platformd_UserBundle_admin_show:
     pattern: /{id}
     requirements:
@@ -30,14 +47,26 @@ Platformd_UserBundle_admin_delete:
     pattern: /{id}/delete
     defaults: { _controller: UserBundle:Admin:delete }
     requirements:
-        _method: POST|DELETE
+        _method: POST|DELETE|GET
 
 Platformd_UserBundle_admin_logins:
     pattern: /{id}/logins
     defaults: { _controller: UserBundle:Admin:logins }
 
-Platformd_UserBundle_admin_rest_password:
+Platformd_UserBundle_admin_reset_password:
     pattern: /{id}/password/reset
     defaults: { _controller: UserBundle:Admin:resetPassword }
     requirements:
         _method: GET
+
+Platformd_UserBundle_admin_avatar_list_remaining:
+    pattern: /avatars/remaining
+    defaults: { _controller: UserBundle:Admin\Avatar:listRemaining }
+    requirements:
+        _method: GET
+
+Platformd_UserBundle_admin_avatar_disapprove_batch:
+    pattern: /avatars/approve/batch
+    defaults: { _controller: UserBundle:Admin\Avatar:batchSetApprove }
+    requirements:
+        _method: POST

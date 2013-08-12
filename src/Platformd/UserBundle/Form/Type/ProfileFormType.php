@@ -8,7 +8,6 @@ use FOS\UserBundle\Form\Type\ProfileFormType as BaseProfileFormType;
 
 class ProfileFormType extends BaseProfileFormType
 {
-
     protected function buildUserForm(FormBuilder $builder, array $options)
     {
         parent::buildUserForm($builder, $options);
@@ -16,7 +15,6 @@ class ProfileFormType extends BaseProfileFormType
         $builder
             ->add('firstname', null, array('required' => true))
             ->add('lastname', null, array('required' => true))
-            ->add('file', null, array('required' => false))
             // My rig
             ->add('type', null, array('required' => false))
             ->add('manufacturer', null, array('required' => false))

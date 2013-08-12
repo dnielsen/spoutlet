@@ -223,7 +223,7 @@ class GalleryController extends Controller
             $description = $submission['description'];
             $gals        = $submission['galleries'];
             $groups      = $submission['groups'];
-            $tagNames    = $submission['tags'];
+            $tagNames    = isset($submission['tags']) ? $submission['tags'] : '';
 
             $errors      = $this->validateMediaPublish($id, $title, $description, $gals, $groups);
 
@@ -520,6 +520,11 @@ class GalleryController extends Controller
             throw $this->createNotFoundException('Media not found.');
         }
 
+        if (!$media->isAllowedTo($user, $this->getCurrentSite(), 'EditMedia')) {
+            $this->setFlash('error', 'Sorry, You are not allowed to do this.');
+            return $this->redirect($this->generateUrl('gallery_media_show', array( 'id' => $id )));
+        }
+
         $tagManager->loadTagging($media);
 
         $galleries = array();
@@ -599,6 +604,8 @@ class GalleryController extends Controller
 
     public function deleteMediaAction($id, Request $request)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         $user = $this->getCurrentUser();
 
         $media = $this->getGalleryMediaRepository()->find($id);
@@ -632,7 +639,7 @@ class GalleryController extends Controller
         $content  = $request->getContent();
         $params = json_decode($content, true);
 
-        if (empty($content) || !isset($params['id'])) {
+        if (!$this->isGranted('ROLE_USER') || empty($content) || !isset($params['id'])) {
             $response->setContent(json_encode(array("success" => false)));
             return $response;
         }
@@ -945,6 +952,9 @@ class GalleryController extends Controller
                 foreach($media as $mediaItem) {
                     $featuredMedia[$counter]['thumbnail']   = $liip->filter($mediaItem->getImage()->getFilename(), 'media_feed_thumbnail', true);
                     $featuredMedia[$counter]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId(), '_locale' => $site->getDefaultLocale()), true);
+                    $caption = $mediaItem->getTitle();
+                    $caption = (strlen($caption) > 99) ? substr($caption, 0, 96) . '...' : $caption;
+                    $featuredMedia[$counter]['caption']     = $caption;
                     $counter++;
                 }
             } else {
@@ -952,8 +962,9 @@ class GalleryController extends Controller
             }
 
             $response->setContent(json_encode(array(
-                "success" => true,
-                "media"   => $featuredMedia
+                "success"   => true,
+                "media"     => $featuredMedia,
+                "linkable"  => $site->getSiteFeatures()->getHasPhotos(),
             )));
 
             return $response;
@@ -961,6 +972,12 @@ class GalleryController extends Controller
             $em                 = $this->getEntityManager();
             $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
             $site               = $this->getCurrentSite();
+            $linkable           = $site->getSiteFeatures()->getHasPhotos();
+
+            if (!$site->getSiteFeatures()->getHasPhotos()) {
+                $site = $this->getEntityManager()->getRepository('SpoutletBundle:Site')->find(4);
+            }
+
             $media              = $galleryMediaRepo->findFeaturedMediaForSite($site);
 
             $featuredMedia = array();
@@ -971,6 +988,9 @@ class GalleryController extends Controller
                 foreach($media as $mediaItem) {
                     $featuredMedia[$counter]['thumbnail']   = $liip->filter($mediaItem->getImage()->getFilename(), 'media_feed_thumbnail', true);
                     $featuredMedia[$counter]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId(), '_locale' => $site->getDefaultLocale()), true);
+                    $caption = $mediaItem->getTitle();
+                    $caption = (strlen($caption) > 99) ? substr($caption, 0, 96) . '...' : $caption;
+                    $featuredMedia[$counter]['caption']     = $caption;
                     $counter++;
                 }
             } else {
@@ -978,8 +998,9 @@ class GalleryController extends Controller
             }
 
             $response->setContent(json_encode(array(
-                "success" => true,
-                "media"   => $featuredMedia
+                "success"   => true,
+                "media"     => $featuredMedia,
+                "linkable"  => $linkable,
             )));
 
             $this->varnishCache($response, 30);

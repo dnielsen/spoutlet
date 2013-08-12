@@ -5,7 +5,7 @@ html { overflow-y: scroll; }
 #featured-content { overflow: hidden; }
 #featured-content .widget-content { overflow: auto; }
 .featured-content-header { margin: 0 0 0 1px; }
-.featured-content-header  a { border-bottom: 1px solid #2a2a2a; display: block; float: left; border-right: 1px solid #2a2a2a; height: 27px; text-align: center; padding: 8px 10px 0px 10px; font-size: 18.67px; }
+.featured-content-header  a { border-bottom: 1px solid #2a2a2a; display: block; float: left; border-right: 1px solid #2a2a2a; height: 28px; text-align: center; padding: 8px 10px 0px 10px; font-size: 18.67px; }
 .featured-content-header a.active { color: #bfbfbf; background: url('/bundles/spoutlet/images/widget-item-selected.png') bottom center no-repeat;  border-bottom: none; padding-bottom: 1px; }
 #featured-content .active { display: block;}
 .featured-content-category { display: none; margin: 5px 0 0 0; }

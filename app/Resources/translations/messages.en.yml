@@ -19,24 +19,97 @@ recaptcha:
 
 site_takeover.continue: Continue to Alienware Arena
 
+platformd.user.account.account_home: Account Home
+platformd.user.account.edit_account: Edit Account
+platformd.user.account.change_password: Change Pass
+platformd.user.account.profile: Profile
+platformd.user.account.registered_events: Registered Events
+platformd.user.account.my_giveaways: Giveaways
+platformd.user.account.my_videos: Videos
+platformd.user.account.my_events: Events
+platformd.user.account.my_groups: Groups
+platformd.user.account.help: Help
+platformd.user.account.game_ids: Game IDs
+platformd.user.account.tournaments: Tournaments
+platformd.user.account.media: Media
+platformd.user.account.media_upload: Upload
+platformd.user.account.my_media: My Media
+platformd.user.account.sign_out: Sign Out
+platformd.user.account.deals: Deals
+platformd.user.account.messages: Messages
+platformd.user.account.gameids: Game IDs
+platformd.user.account.match_client: Match Client
+platformd.user.account.match_lobby: Match Lobby
+platformd.user.account.gallery: Gallery
+platformd.user.account.images: Images
+platformd.user.account.videos: Videos
+platformd.user.account.avatars: Avatars
+platformd.user.account.incomplete.title: Complete Registration
+platformd.user.account.incomplete.description: Your registration is missing several key pieces of information. Please complete the form below to complete it.
+platformd.user.account.changes_saved: Your changes are saved.
+platformd.user.account.error: The system is currently unable to process your request. Please try again shortly.
+
+platformd.user.avatars.manage: Manage Avatars
+platformd.user.avatars.select_or_add: 'Select image to use, or <a href="javascript:void(0);" id="add-avatar">add a new image</a>.'
+platformd.user.avatars.add: '<a href="javascript:void(0);" id="add-avatar">Add a new image</a>'
+platformd.user.avatars.file_label: File:
+platformd.user.avatars.file_instructions: |
+    You can upload any size image file from your hard drive. We will automatically resize large images so you may upload the best quality version you have.
+
+    You will have a chance to crop this image in the next step.
+platformd.user.avatars.already_cropped: This image has already been processed and cropped.
+platformd.user.avatars.invalid_avatar: Invalid avatar specified.
+platformd.user.avatars.admin_submit_success: Your image has been queued for processing and will be available soon.
+platformd.user.avatars.submit_success: Your avatar has been uploaded and will be reviewed within 72 hours. If approved your avatar will be automatically displayed.
+platformd.user.avatars.switch_not_found: Unable to find the specified avatar.
+platformd.user.avatars.switch_error: Unable to switch to the specified avatar at this time. Please try again soon.
+platformd.user.avatars.switch_success: Your avatar will be displayed within 10 minutes.
+platformd.user.avatars.unapproved: Unapproved - %count%
+platformd.user.avatars.processing: Processing - %count%
+platformd.user.avatars.confirm_delete: Are you sure you wish to delete this avatar?
+platformd.user.avatars.crop: Crop Avatar
+platformd.user.avatars.submit: Submit
+platformd.user.avatars.awaiting_approval: AWAITING APPROVAL
+platformd.user.avatars.awaiting_processing: AWAITING PROCESSING
+platformd.user.avatars.update: UPDATE
+platformd.user.avatars.valid_filetypes: Valid avatar filetypes are JPG, PNG, GIF.
+platformd.user.avatars.upload: Upload
+platformd.user.avatars.choose_avatar: Choose Avatar
+platformd.user.avatars.preview_large: Large Preview
+platformd.user.avatars.preview_small: Small Preview
+
+platformd.admin.avatars.unapproved.no_avatars_selected: You did not select any avatars.
+platformd.admin.avatars.unapproved.form_error: Error when processing selected avatars. Please try again.
+platformd.admin.avatars.unapproved.process_success: %count% avatars were %processType%
+platformd.admin.avatars.unapproved.flash_type_approve: approved
+platformd.admin.avatars.unapproved.flash_type_reject: rejected
+platformd.admin.avatars.unapproved.page_title: Avatar Approval
+platformd.admin.avatars.unapproved.title: Approve Avatars
+platformd.admin.avatars.unapproved.instructions: 'Select avatars to reject by clicking them individually, or click "Approve All" to approve all visible avatars.'
+platformd.admin.avatars.unapproved.approve: Approve All
+platformd.admin.avatars.unapproved.reject: Reject Selected
+platformd.admin.avatars.unapproved.no_avatars: There are no unapproved avatars.
+
 platformd:
 
     homepage:
-        news_title: News
+        news_title: News & Article
 
     alienware: Alienware
 
     not_found:
         title: Page Not Found
-        body: We're sorry, but this page does not exist.
+        body: We're sorry, but this page does not exist. <a href="/">Click here</a> to return to the homepage.
 
     flash:
         error_title: Error!
         success_title: Success!
         info_title: Information!
         warning_title: Warning!
+        action_required: Action Required!
 
     cache:
+
        currently_under_heavy_load_title: Please try again shortly...
        currently_under_heavy_load_body: Our servers are currently experiencing a high volume of traffic and cannot process your request at this time. Please try again shortly. We apologize for any inconvenience.
 
@@ -58,7 +131,7 @@ platformd:
             global: Global
             en_US: "USA/Canada"
             en: "USA/Canada"
-            en_SG: "Malasia/Singapore"
+            en_SG: "Southeast Asia"
             es: América Latina
             en_GB: Europe
             ja: Japan
@@ -71,8 +144,8 @@ platformd:
         top_menu:
             admin: Admin
             account: Account
-            sign_in: Sign in
-            sign_out: Sign out
+            sign_in: Sign In
+            sign_out: Sign Out
             join: Join
             about: About
             contact: Contact
@@ -91,7 +164,7 @@ platformd:
         main_menu:
             home: Home
             alienware: Alienware
-            events: Events <span class="beta">BETA</span>
+            events: Events
             video: Videos
             news: News
             articles: Articles
@@ -105,21 +178,23 @@ platformd:
             groups: Groups
             photos: Image Gallery
             contests: Contests
+            giveaways: Giveaways
 
         page_content:
             featured: Featured
             giveaways: Giveaways
             all: All
-            see_more: See More
+            see_more: More
             photo_gallery: Image Gallery
             view_all: View All
-            competitions: Competitions
+            competitions: Events
             hot_stories: Hot Stories
             videos: Videos
             view_more: View More
             views: Views
             rating: Rating
             all_news: All
+            other: Other
 
         bottom_menu:
             contact_us: Contact Us
@@ -190,7 +265,7 @@ platformd:
             organizer: Organizer
             attending: Attending
             registration_closed: Registration is no longer open for this event.
-            im_attending: Yes, I'm attending!
+            im_attending: "Yes, I'm attending!"
             event_details: Event Details
             location: Location
             online_event: This is an online event.
@@ -263,6 +338,22 @@ platformd:
             change_your_password: Change your password
         giveaway:
             your_giveaway_keys: My Giveaway Keys
+        incomplete_form:
+            username: "Username:"
+            first_name: "First name:"
+            last_name: "Last name:"
+            email: "E-mail:"
+            password: "Password:"
+            password_confirm: "Confirm Password:"
+            has_alienware: "Do you own an Alienware system?"
+            yes: "Yes"
+            no: "No"
+            agree_to_terms: |
+                I have read and agreed to the
+                <a href="%terms_url%" target="_blank">Terms & Conditions</a> and
+                <a href="%privacy_url%" target="_blank">Privacy Policy</a>.
+            subscribe_dell: Subscribe me to receive Alienware/Dell gaming news and special offers via email. <a href="http://www.dell.com/learn/us/en/19/policies-privacy?c=us&l=en&s=gen&delphi:gr=true" target="_blank">View Dell Privacy Policy</a>.
+            subscribe_alienware_arena: "Subscribe me to receive news on the latest giveaways, contests, events and more from Alienware Arena via email."
 
     # used only in the admin area
     homepage_banner:
@@ -326,27 +417,47 @@ platformd:
 
         register:
             requirements: Participation in the Alienware Arena requires an account.
-            already: "Already have an Alienware Arena Account? Skip this step and <login now>."
+            already: "Already have an Alienware Arena Account? <Sign In>"
             terms_label: Terms & Conditions
             dell_privacy_label: Dell Privacy Policy
             country_label: Choose a country
-            underage_message: Sorry, it appears that you do not meet the minimum age requirement.  We are unable to complete your registration at this time.
+            underage_message: Sorry, we are not able to accept your registration at this time.
             please_wait: The system is currently processing multiple account creations and cannot process your creation request at this time, please try again later.
+            oops: Error!
+            cannot_process: We were unable to create your account. Please complete or correct the required fields below.
+            problems_found: We found the following problems:
+            last_step: |
+                You’re almost there! A confirmation email has been sent. Follow the instructions in the email to activate your Alienware Arena account. If you do not receive an email within 15 minutes, please email <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a> for support.
+                <br /><br />
+                <strong>Important: Check Your Spam Folder!</strong>
+
+            success: Your account has been created!
+            confirmed_success: You have activated your account.
+
+        incomplete:
+            title: Complete Registration
+            description: Your registration is missing several key pieces of information. Please complete the form below to complete it.
 
         login:
+            username: Username/Email
+            password: Password
+            remember: Remember Me
             title: Login to your account
+            title_login: Login
             forgot_password: Forgot Password?
             need_help: Need Help?
             not_a_member_join: Not a Member? Join for Free!
-            password_message: Your password is case sensitive. Please make sure CAPS-LOCK is off. If you've forgotten your password you can have it reset. If you can't remember which email address you used please contact support.
+            password_message: Your password is case sensitive. Please make sure CAPS-LOCK is off. If you've forgotten your password you can have it reset. If you can't remember which email address you used <a href="%s">please contact support</a>.
+            sign_in: Sign In
+            join: Join for free!
 
         reset:
-            title:  Forgot Your Password?
+            title:  Create a New Password
 
         request_reset:
             title: Forgot Your Password?
-            help_message: If you've forgotten your password, thats okay. Fill out the information below and we will send you a new password to your email account. If you don't remember which username and/or email you used, please contact support.
-            spam_message: Important: Check Your Spam Folders! - We try our best, but sometimes over zealous spam filters mistake our emails for "junk". Please allow for up to 30 minutes for your password to be reset. It typically only takes a few seconds, but sometimes emails get "stuck" along the way to your inbox.
+            help_message: To reset your password, please enter the email address used to create your Alienware Arena account.
+            spam_message: If you can’t find the password reset email, be sure to check your email’s spam folder. It can take up to 30 minutes before a password reset email is received. If you haven’t received your password reset email after 30 minutes or you require additional support, please email <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a>.
 
         account:
             account_home: Account Home
@@ -373,6 +484,8 @@ platformd:
             gallery: Gallery
             images: Images
             videos: Videos
+            account_settings: Account Settings
+
     giveaway:
         admin:
             title: Giveaway admin
@@ -724,10 +837,10 @@ platformd:
             show_more_past: Show More Past Events
             delete_confirmation: Are you sure you want to delete this event?
 
-"Bad credentials": "Invalid email or password"
-"The presented password is invalid.": "Invalid email or password"
+"Bad credentials": "Incorrect username/email or password"
+"The presented password is invalid.": "Incorrect username/email or password"
 "The presented password cannot be empty.": "Please enter a password"
-"User account is disabled.": Your account is disabled - check your email for an activation link
+"User account is disabled.": Your account is not activated. You must confirm your account by clicking on the link in the Activate Account Email.
 
 # for sources drop-down on registration
 source_alienware: Alienware
@@ -852,7 +965,7 @@ age_confirm:
     headline: Please Confirm Your Date of Birth
     message: The content is intended for mature audiences. Please confirm your age below
     content_for_mature_audiences: Content Intended for Mature Audiences
-    too_young_message: Sorry, we are unable to provide you with access at this time
+    too_young_message: Sorry, it appears that you do not meet the minimum age requirement. We are unable to complete your request at this time.
     date_format: %month% %day% %year%
 confirm: Confirm
 
@@ -1177,6 +1290,9 @@ contests:
     entry_success: Your group is entered into the contest.
     contest_finished_you_can_still_like: This contest has ended. You may still like the images, but your vote will not count for the contest.
 
+
+platformd.users.avatar_listings.title: User Avatars
+
 timeline.title: The History of Alienware
 timeline.not_found: No timeline found.
 
@@ -1242,3 +1358,30 @@ platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body
         <p>Alienware Arena Team</p>
 platformd.key_request_processor_command.key_not_assigned_group_section: 'Please join the <a href="%promotion_group_show_page%">%promotion_group_name%</a> group to be notified when new keys and activities are available.'
 platformd.key_request_processor_command.key_not_assigned_no_group_extra_info: Please check back later as more codes may be added!
+
+platformd.facebook.login_label: Login with Facebook
+platformd.facebook.connect: Add Facebook Login
+platformd.facebook.account_created: Your account has been created, however you must update your password before doing anything on the site.
+platformd.facebook.timeline.account_created_message: I just joined Alienware Arena!
+platformd.facebook.timeline.account_created_description: Access exclusive closed betas, in-game items, and discounts on your favorite video games. Become a part of the most helpful PC gaming community today!
+platformd.facebook.timeline.create_group_message: I just created the group %s.
+platformd.facebook.timeline.joined_group_message: I joined the group %s.
+platformd.facebook.timeline.video_added: "I just added a video - %s."
+platformd.facebook.timeline.group_event_added: "I just created an event - %s."
+platformd.facebook.timeline.group_event_register: I am attending %s.
+platformd.facebook.timeline.image_added: I just added %s image(s) on Alienware Arena.
+platformd.facebook.timeline.entered_contest: I entered the %s.
+
+platformd.twitter.login_label: Login with Twitter
+platformd.twitter.connect: Add Twitter Login
+platformd.twitter.tweets.account_created_message: "I just joined Alienwarea Arena! http://alienwarearena.com"
+platformd.twitter.tweets.create_group_message: I just created the group %s %s.
+platformd.twitter.tweets.joined_group_message: I just joined the group %s %s.
+platformd.twitter.tweets.video_added: "I just added a video - %s. %s"
+platformd.twitter.tweets.group_event_added: "I just created an event - %s. %s"
+platformd.twitter.tweets.group_event_register: I am attending %s %s.
+platformd.twitter.tweets.image_added: I just added %s image(s) on Alienware Arena. %s
+platformd.twitter.tweets.entered_contest: I entered the %s %s.
+
+# export query types
+report_user_optin: Arena Opt In Summary

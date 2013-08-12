@@ -1,0 +1,20 @@
+{% extends "SpoutletBundle::layout.html.twig" %}
+
+{% block content %}
+    <div class="std_2col">
+        <div class="xnotices session-flash">
+            <div class="notice successNotice">
+                <div class="pad">
+                    <div class="pad2">
+                        <div class="pad3">
+                            <div class="pad4">
+                                <h3 id="notice-type">{{ 'resetting.request.submit'|trans({}, 'FOSUserBundle') }}</h3>
+                                <p id="notice-message">{{ 'resetting.check_email'|trans({}, 'FOSUserBundle') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

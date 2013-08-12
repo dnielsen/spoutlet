@@ -3,9 +3,6 @@
 
 {% block title event.name %}
 
-{% block flash %}{% if flash is defined %}<p>{{ flash }}</p>{% endif %}{% endblock %}
-{% block flash_type %}{% if flash_type is defined %}{{ flash_type }}{% endif %}{% endblock %}
-
 {% block content %}
 
     <div id="event-contact-page">
@@ -68,10 +65,10 @@
                             <hr class="faded" />
                             <div class="event-attendee">
                                 <div class="event-hover-div"></div>
-                                {% if get_avatar_url(event.user) != false %}
-                                    <img src="{{ asset(get_avatar_url(event.user)) }}" alt="{{ event.user.username }}" />
+                                {% if get_avatar_url(event.user, 48) != false %}
+                                    <img src="{{ asset(get_avatar_url(event.user, 48)) }}" alt="{{ event.user.username }}" />
                                 {% else %}
-                                    <div class="default-avatar"></div>
+                                    <div class="default-avatar avatar48"></div>
                                 {% endif %}
                                 <a href="javascript:void(0);"><span class="username">{{ event.user.username }}</span></a>
                                 <span id="event-host-tag">Event Host</span>
@@ -81,10 +78,10 @@
                                     <hr class="faded" />
                                     <div class="event-attendee">
                                         <div class="event-hover-div"></div>
-                                        {% if get_avatar_url(attendee) != false %}
-                                            <img src="{{ asset(get_avatar_url(attendee)) }}" alt="{{ attendee.username }}" />
+                                        {% if get_avatar_url(attendee, 48) != false %}
+                                            <img src="{{ asset(get_avatar_url(attendee, 48)) }}" alt="{{ attendee.username }}" />
                                         {% else %}
-                                            <div class="default-avatar"></div>
+                                            <div class="default-avatar avatar48"></div>
                                         {% endif %}
                                         <a href="javascript:void(0);"><span class="username">{{ attendee.username }}</span></a>
                                     </div>

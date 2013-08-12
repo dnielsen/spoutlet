@@ -9,7 +9,8 @@
 <div style="height: 40px;">
     <div class="pull-left">
         {{ form_widget(form.country) }}
-        <button type="submit" class="btn btn-primary" formnovalidate>Add Country</button>
+        <input type="hidden" class="add-all" name="all-countries" value="false" />
+        <button type="submit" id="add-country" class="btn btn-primary add-row" formnovalidate>Add Country</button>
         <a href="{{ path('user_metric_by_country') }}" class="btn btn-primary">Reset</a>
     </div>
 
@@ -24,13 +25,13 @@
 <table class="table table-striped table-bordered tablesorter">
     <thead>
         <tr>
-            <th>Country</th>
-            <th>Count</th>
-            <th>Arena Opted In</th>
-            <th>%</th>
-            <th>Dell Opted in</th>
-            <th>%</th>
-            <th>New Users ( {% if countryRange %} {{ countryRange }} {% else %} All time {% endif %} ) </th>
+            <th style="width: 12%;">Country</th>
+            <th style="width: 12%;">Users</th>
+            <th style="width: 12%;">Arena Opted In</th>
+            <th style="width: 12%;">%</th>
+            <th style="width: 12%;">Dell Opted in</th>
+            <th style="width: 12%;">%</th>
+            <th>Time Range</th>
         </tr>
     </thead>
     <tbody>
@@ -38,12 +39,12 @@
             {% for siteData in sitesData['country'] %}
             <tr>
                 <td>{{ siteData.name }}</td>
-                <td>{{ siteData.count }}</td>
+                <td>{{ siteData.newUsers }}</td>
                 <td>{{ siteData.arenaOptIn }}</td>
                 <td>{{ siteData.arenaOptInPercentage }}%</td>
                 <td>{{ siteData.dellOptIn }}</td>
                 <td>{{ siteData.dellOptInPercentage }}%</td>
-                <td>{{ siteData.newUsers }}</td>
+                <td>{% if countryRange %} {{ countryRange }} {% else %} All time {% endif %}</td>
             </tr>
             {% endfor %}
 
@@ -60,7 +61,8 @@
 <div style="height: 40px;">
     <div class="pull-left">
         {{ form_widget(form.region) }}
-        <button type="submit" class="btn btn-primary" formnovalidate>Add Region</button>
+        <input type="hidden" class="add-all" name="all-regions" value="false" />
+        <button type="submit" id="add-region" class="btn btn-primary add-row" formnovalidate>Add Region</button>
         <a href="{{ path('user_metric_by_country') }}" class="btn btn-primary">Reset</a>
     </div>
 
@@ -75,13 +77,13 @@
 <table class="table table-striped table-bordered tablesorter">
     <thead>
         <tr>
-            <th>Region</th>
-            <th>Count</th>
-            <th>Arena Opted In</th>
-            <th>%</th>
-            <th>Dell Opted in</th>
-            <th>%</th>
-            <th>New Users ( {% if regionRange %} {{ regionRange }} {% else %} All time {% endif %} )</th>
+            <th style="width: 12%;">Region</th>
+            <th style="width: 12%;">Users</th>
+            <th style="width: 12%;">Arena Opted In</th>
+            <th style="width: 12%;">%</th>
+            <th style="width: 12%;">Dell Opted in</th>
+            <th style="width: 12%;">%</th>
+            <th>Time Range</th>
         </tr>
     </thead>
     <tbody>
@@ -89,17 +91,17 @@
             {% for siteData in sitesData['region'] %}
             <tr>
                 <td>{{ siteData.name }}</td>
-                <td>{{ siteData.count }}</td>
+                <td>{{ siteData.newUsers }}</td>
                 <td>{{ siteData.arenaOptIn }}</td>
                 <td>{{ siteData.arenaOptInPercentage }}%</td>
                 <td>{{ siteData.dellOptIn }}</td>
                 <td>{{ siteData.dellOptInPercentage }}%</td>
-                <td>{{ siteData.newUsers }}</td>
+                <td>{% if regionRange %} {{ regionRange }} {% else %} All time {% endif %}</td>
             </tr>
             {% endfor %}
 
         {% else %}
-            <tr colspan=7>No Countries Selected!</td>
+            <tr><td colspan=7>No Regions Selected!</td></tr>
         {% endif %}
     </tbody>
 </table>
@@ -110,6 +112,12 @@
     jQuery(document).ready(function() {
         jQuery('#results_range').change(function() {
             window.location = '{{ path('user_metric_by_country') }}?results_range='+$(this).val();
+        });
+
+        $('.add-row').click(function(e) {
+            if (!$(this).siblings('select').find('option:selected').val()) {
+                $(this).prev('.add-all').val("true");
+            }
         });
     });
 </script>

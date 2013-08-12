@@ -265,6 +265,7 @@ class EventRepository extends EntityRepository
             ->leftJoin('e.sites', 's')
             ->where('e.endsAt >= :now')
             ->andWhere('e.published = :published')
+            ->andWhere('e.active = :published')
             ->andWhere('s = :site')
             ->orderBy('e.startsAt', 'ASC')
             ->setParameter('now', new DateTime())

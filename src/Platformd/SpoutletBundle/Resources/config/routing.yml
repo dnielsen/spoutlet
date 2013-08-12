@@ -2,8 +2,16 @@ _main_user_strip:
     pattern: /esi/USER_SPECIFIC/mainUserStrip
     defaults: { _controller: SpoutletBundle:Default:_mainUserStrip }
 
-_session_flash_message:
-    pattern: /flashMessage
+_user_arp:
+    pattern: /user/arp/{uuid}
+    defaults: { _controller: SpoutletBundle:Default:_userArp, uuid: null}
+
+_check_account_complete:
+    pattern: /esi/USER_SPECIFIC/checkAccountComplete
+    defaults: { _controller: SpoutletBundle:Default:_checkAccountComplete }
+
+_flash_message:
+    pattern: /esi/USER_SPECIFIC/flashMessage
     defaults: { _controller: SpoutletBundle:Default:_flashMessage }
 
 _gallery_media_user_votes:
@@ -14,9 +22,37 @@ _gallery_media_show_user_data:
     pattern: /esi/USER_SPECIFIC/galleryMediaShowUserData/{id}
     defaults: { _controller: SpoutletBundle:Gallery:_galleryMediaShowUserData }
 
+_layout_footer:
+    pattern: /esi/COUNTRY_SPECIFIC/layoutFooter
+    defaults: { _controller: SpoutletBundle:Default:_layoutFooter }
+
+_groups_index:
+    pattern: /groups-index
+    defaults: { _controller: SpoutletBundle:Default:_groups }
+
+_polls_index:
+    pattern: /polls-index
+    defaults: { _controller: SpoutletBundle:Default:_polls }
+
+_arp_index:
+    pattern: /arp-index
+    defaults: { _controller: SpoutletBundle:Default:_arp }
+
 force_logout:
     pattern: /forceLogout/{returnUrl}
     defaults: { _controller: SpoutletBundle:Default:forceLogout, returnUrl: '/' }
+
+session_cookie:
+    pattern: /sessionCookie
+    defaults: { _controller: SpoutletBundle:Default:sessionCookie }
+
+api_session_cookie:
+    pattern: /setApiSessionCookie/{uuid}/{expires}
+    defaults: { _controller: SpoutletBundle:Default:setApiSessionCookie, uuid: ~, expires: ~ }
+
+api_session_cookie_refresh:
+    pattern: /refreshApiSessionCookie/{uuid}
+    defaults: { _controller: SpoutletBundle:Default:refreshApiSessionCookie, uuid: ~ }
 
 default_index:
     pattern:  /
@@ -59,8 +95,8 @@ featured_content:
     defaults: { _controller: SpoutletBundle:Default:featuredContent }
 
 video_feed:
-    pattern: /video-feed
-    defaults: { _controller: SpoutletBundle:Default:videoFeed }
+    pattern: /video-feed/{height}
+    defaults: { _controller: SpoutletBundle:Default:videoFeed, height: 252 }
 
 content_reporting:
     pattern:  /report
@@ -75,7 +111,7 @@ forums:
 
 arp:
     pattern: /arp
-    defaults: { _controller: SpoutletBundle:Default:arp }
+    defaults: { _controller: SpoutletBundle:Default:_arp }
 
 _spoutlet_admin:
     resource: routing/admin.yml
@@ -167,3 +203,7 @@ TagBundle_admin:
 TagBundle_frontend:
     resource: "@SpoutletBundle/Resources/config/routing/tags.yml"
     prefix: /tags
+
+SpoutletBundle_export_queries:
+    resource: "@SpoutletBundle/Resources/config/routing/admin_export_queries.yml"
+    prefix: /admin

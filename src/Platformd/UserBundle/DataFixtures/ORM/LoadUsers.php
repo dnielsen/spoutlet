@@ -70,6 +70,11 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface, OrderedFix
         return $this->container->get('fos_user.util.user_manipulator');
     }
 
+    private function getUserManager()
+    {
+        return $this->container->get('fos_user.user_manager');
+    }
+
     public function getOrder()
     {
         return 1;

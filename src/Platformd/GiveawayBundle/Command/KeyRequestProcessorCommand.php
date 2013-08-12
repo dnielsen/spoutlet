@@ -24,6 +24,8 @@ class KeyRequestProcessorCommand extends ContainerAwareCommand
 
     private $em;
     private $logger;
+    private $varnishUtil;
+    private $router;
 
     private $exitAfterCurrentItem = false;
 
@@ -87,6 +89,25 @@ EOT
 
         $this->deleteMessageWithOutput($sqsMessage);
 
+        if ($state) {
+            $promotionType = $state->getPromotionType();
+
+            switch ($promotionType) {
+                case KeyRequestState::PROMOTION_TYPE_GIVEAWAY:
+                    $promotionId = $state->getGiveaway()->getId();
+                    break;
+
+                case KeyRequestState::PROMOTION_TYPE_DEAL:
+                    $promotionId = $state->getDeal()->getId();
+                    break;
+
+                default:
+                    return;
+                    break;
+            }
+
+            $this->clearEsiCaches($promotionType, $promotionId, $state->getUser()->getId());
+        }
     }
 
     protected function deleteMessageWithOutput($message)
@@ -123,6 +144,35 @@ EOT
         $this->output();
     }
 
+    private function clearEsiCaches($type, $promotionId, $userId)
+    {
+        switch ($type) {
+            case 'giveaway':
+                $flashRoute = '_giveaway_flash_message';
+                $flashParam = 'giveawayId';
+                $showRoute  = '_giveaway_show_actions';
+                $showParam  = 'giveawayId';
+                break;
+
+            case 'deal':
+                $flashRoute = '_deal_flash_message';
+                $flashParam = 'dealId';
+                $showRoute  = '_deal_show_actions';
+                $showParam  = 'dealId';
+                break;
+
+            default:
+                return;
+                break;
+        }
+
+        $path = $this->router->generate($flashRoute, array($flashParam => $promotionId));
+        $this->varnishUtil->banCachedObject($path, array('userId' => $userId), true);
+
+        $path = $this->router->generate($showRoute, array($showParam => $promotionId));
+        $this->varnishUtil->banCachedObject($path, array('userId' => $userId), true);
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->em     = $this->getContainer()->get('doctrine.orm.entity_manager');
@@ -138,6 +188,10 @@ EOT
         $stateRepo    = $this->getRepo('GiveawayBundle:KeyRequestState');
         $ipLookupUtil = $this->getContainer()->get('platformd.model.ip_lookup_util');
         $groupManager = $this->getContainer()->get('platformd.model.group_manager');
+        $varnishUtil  = $this->getContainer()->get('platformd.util.varnish_util');
+
+        $this->varnishUtil = $varnishUtil;
+        $this->router      = $router;
 
         $this->output(0, 'Setting up signal handlers.');
 
@@ -148,11 +202,23 @@ EOT
 
         $this->output(0, 'Processing queue for the Key Requests.');
 
-        $iterationCount = 1;
+        $iterationCount = 0;
 
         while ($message = $queueUtil->retrieveFromQueue(new KeyRequestQueueMessage())) {
 
-            usleep(self::DELAY_BETWEEN_KEYS_MILLISECONDS);
+            $iterationCount++;
+
+            if ($iterationCount > self::ITERATION_COUNT) {
+                $this->output();
+                $this->output(0, 'Maximum iterations reached - exiting.');
+                exit;
+            }
+
+            if ($this->exitAfterCurrentItem) {
+                $this->output();
+                $this->output(0, 'Process terminated - exiting.');
+                exit;
+            }
 
             $this->output();
             $this->output(0, 'Iteration '.$iterationCount);
@@ -186,6 +252,7 @@ EOT
                 case KeyRequestQueueMessage::KEY_REQUEST_TYPE_GIVEAWAY:
 
                     $keyRepo   = $this->getRepo('GiveawayBundle:GiveawayKey');
+                    $promoType = 'giveaway';
 
                     $promotion = $this->findWithOutput(array(
                         'type'       => 'Giveaway',
@@ -210,10 +277,10 @@ EOT
                         $state->setUserHasSeenState(false);
                     }
 
-                    /*if ($promotion->getStatus() != 'active' && !($promotion->getTestOnly() && $user->getIsSuperAdmin())) {
+                    if ($promotion->getStatus() != 'active' && !($promotion->getTestOnly() && $user->getIsSuperAdmin())) {
                         $this->rejectRequestWithOutput(3, 'This promotion is not active. Additionally the promotion\'s settings and user\'s roles don\'t allow for admin testing.', $state, KeyRequestState::REASON_INACTIVE_PROMOTION, $message, true);
                         continue 2;
-                    }*/
+                    }
 
                     if (!$promotion->allowKeyFetch()) {
                         $this->rejectRequestWithOutput(3, 'This promotion does not allow key fetching (this most likely means that the promotion is a system tag promotion, which isn\'t currently not supported).', $state, KeyRequestState::REASON_KEY_FETCH_DISALLOWED, $message, true);
@@ -227,13 +294,15 @@ EOT
                         continue 2;
                     }
 
-                    $urlToShowPage = $router->generate('giveaway_show', array('slug' => $promotion->getSlug()));
+                    $urlToIndexPage = $router->generate('giveaway_index');
+                    $urlToShowPage  = $router->generate('giveaway_show', array('slug' => $promotion->getSlug()));
 
                     break;
 
                 case KeyRequestQueueMessage::KEY_REQUEST_TYPE_DEAL:
 
                     $keyRepo   = $this->getRepo('GiveawayBundle:DealCode');
+                    $promoType = 'deal';
 
                     $promotion = $this->findWithOutput(array(
                         'repo'       => $dealRepo,
@@ -270,7 +339,8 @@ EOT
                         continue 2;
                     }
 
-                    $urlToShowPage = $router->generate('deal_show', array('slug' => $promotion->getSlug()));
+                    $urlToIndexPage = $router->generate('deal_list');
+                    $urlToShowPage  = $router->generate('deal_show', array('slug' => $promotion->getSlug()));
 
                     break;
 
@@ -392,6 +462,9 @@ EOT
                 continue;
             }
 
+            $varnishUtil->banCachedObject($urlToIndexPage);
+            $varnishUtil->banCachedObject($urlToShowPage);
+
             $lastReason = null;
 
             $this->output(5, 'Old '.$state);
@@ -402,6 +475,9 @@ EOT
             $this->em->persist($state);
 
             $this->output(5, 'New '.$state);
+
+            $this->output(5, 'Clearing ESI caches.');
+            $this->clearEsiCaches($promoType, $message->promotionId, $user->getId());
 
             if($linkToGroupIsValid) {
 
@@ -416,7 +492,6 @@ EOT
                     $joinAction->setUser($user);
                     $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
 
-                    $group->getMembers()->add($user);
                     $group->getUserMembershipActions()->add($joinAction);
 
                     $dispatcher = $this->getContainer()->get('event_dispatcher');
@@ -425,13 +500,15 @@ EOT
 
                     $groupManager->saveGroup($group);
 
-                    if($group->getIsPublic()) {
+                    /*if($group->getIsPublic()) {
                         try {
+                            $this->output(4, 'Assigning user ARP for joining group.');
                             $response = $this->getContainer()->get('pd.cevo.api.api_manager')->GiveUserXp('joingroup', $user->getCevoUserId());
+                            $this->output(4, 'Successfully assigned ARP.');
                         } catch (ApiException $e) {
 
                         }
-                    }
+                    }*/
 
                     $user->getPdGroups()->add($group);
                     $this->em->persist($user);
@@ -443,11 +520,13 @@ EOT
             $this->output(5, 'Key assigned successfully.');
 
             // give user arp for obtaining a key
-            try {
+            /*try {
+                $this->output(4, 'Assigning user ARP for redeeming key.');
                 $response = $this->getContainer()->get('pd.cevo.api.api_manager')->GiveUserXp('keygiveaway', $user->getCevoUserId());
+                $this->output(4, 'Successfully assigned ARP.');
             } catch (ApiException $e) {
 
-            }
+            }*/
 
             $this->output(5, 'Sending user email.');
 
@@ -456,20 +535,6 @@ EOT
             $this->output(5, 'Email sent.');
 
             $this->deleteMessageWithOutput($message);
-
-            if ($this->exitAfterCurrentItem) {
-                $this->output();
-                $this->output(0, 'Process terminated - exiting.');
-                exit;
-            }
-
-            $iterationCount++;
-
-            if ($iterationCount > self::ITERATION_COUNT) {
-                $this->output();
-                $this->output(0, 'Maximum iterations reached - exiting.');
-                exit;
-            }
         }
 
         $this->output();

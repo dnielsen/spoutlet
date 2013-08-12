@@ -41,9 +41,9 @@ class SiteTakeoverListener
         $hasCookie          = $cookies->has('pd_site_takeover_viewed');
         $isRouteTakeover    = ($route == 'takeover' || $route == 'takeover_specified');
         $isExternalReferer  = $this->isRefererExternal($referer);
-        $isAdminRoute       = $pathParts[1] == 'admin';
+        $isAllowedRoute     = $pathParts[1] == 'admin' || $pathParts[1] == 'healthCheck';
 
-        if (!$isExternalReferer || ($isExternalReferer && $hasCookie) || $isRouteTakeover || $isAdminRoute) {
+        if (!$isExternalReferer || ($isExternalReferer && $hasCookie) || $isRouteTakeover || $isAllowedRoute) {
             return;
         }
 
@@ -51,10 +51,7 @@ class SiteTakeoverListener
 
         if ($currentTakeover) {
 
-            $session = $request->getSession();
-            $session->set(self::TARGET_PATH_KEY, $request->getRequestUri());
-
-            $takeoverUrl    = $this->router->generate('takeover');
+            $takeoverUrl    = $this->router->generate('takeover', array('returnUrl' => urlencode($request->getRequestUri())));
             $response       = new RedirectResponse($takeoverUrl);
 
             $cookieName     = 'pd_site_takeover_viewed';

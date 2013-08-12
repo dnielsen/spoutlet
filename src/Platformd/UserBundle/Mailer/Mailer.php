@@ -16,20 +16,29 @@ class Mailer implements MailerInterface
     private $templating;
     private $parameters;
     private $siteUtil;
+    private $userManager;
 
-    function __construct(EmailManager $emailManager, RouterInterface $router, EngineInterface $templating, array $parameters, SiteUtil $siteUtil) {
+    function __construct(EmailManager $emailManager, RouterInterface $router, EngineInterface $templating, array $parameters, SiteUtil $siteUtil, $userManager) {
         $this->emailManager = $emailManager;
         $this->router       = $router;
         $this->templating   = $templating;
         $this->parameters   = $parameters;
         $this->siteUtil     = $siteUtil;
+        $this->userManager  = $userManager;
     }
 
     public function sendResettedPasswordMessage(UserInterface $user)
     {
+        $url = $this->router->generate('fos_user_resetting_reset', array(
+            'token'   => $user->getConfirmationToken(),
+            '_locale' => $this->userManager->getCountryLocaleForUser($user),
+        ), true);
+
         $rendered = $this->templating->render(
-            'FOSUserBundle:Admin/Resetted:resetted_email.txt.twig',
-            array('user' => $user)
+            'FOSUserBundle:Admin/Resetted:resetted_email.txt.twig', array(
+                'user'            => $user,
+                'confirmationUrl' => $url
+            )
         );
 
         $this->sendEmailMessage(
@@ -42,9 +51,9 @@ class Mailer implements MailerInterface
     public function sendResettingEmailMessage(UserInterface $user)
     {
         $template = $this->parameters['resetting.template'];
-        $url = $this->router->generate('fos_user_resetting_reset', array('token' => $user->getConfirmationToken()), true);
+        $url      = $this->router->generate('fos_user_resetting_reset', array('token' => $user->getConfirmationToken()), true);
         $rendered = $this->templating->render($template, array(
-            'user' => $user,
+            'user'            => $user,
             'confirmationUrl' => $url
         ));
         $this->sendEmailMessage($rendered, $user->getEmail(), 'Password Reset Email');
@@ -53,9 +62,9 @@ class Mailer implements MailerInterface
     public function sendConfirmationEmailMessage(UserInterface $user)
     {
         $template = $this->parameters['confirmation.template'];
-        $url = $this->router->generate('fos_user_registration_confirm', array('token' => $user->getConfirmationToken()), true);
+        $url      = $this->router->generate('fos_user_registration_confirm', array('token' => $user->getConfirmationToken()), true);
         $rendered = $this->templating->render($template, array(
-            'user' => $user,
+            'user'            => $user,
             'confirmationUrl' =>  $url
         ));
         $this->sendEmailMessage($rendered, $user->getEmail(), 'Registration Email');
@@ -75,10 +84,10 @@ class Mailer implements MailerInterface
     {
         // Render the email, use the first line as the subject, and the rest as the body
         $renderedLines = explode("\n", trim($renderedTemplate));
-        $subject = $renderedLines[0];
-        $body = implode("\n", array_slice($renderedLines, 1));
+        $subject       = $renderedLines[0];
+        $body          = implode("\n", array_slice($renderedLines, 1));
+        $site          = $this->siteUtil->getCurrentSite() ? $this->siteUtil->getCurrentSite()->getFullDomain() : 'unknown';
 
-        $site       = $this->siteUtil->getCurrentSite() ? $this->siteUtil->getCurrentSite()->getFullDomain() : 'unknown';
         $this->emailManager->sendHtmlEmail($toEmail, $subject, $body, $type, $site);
     }
 }

@@ -3,10 +3,18 @@
 namespace Platformd\UserBundle\Controller;
 
 use FOS\UserBundle\Controller\SecurityController as BaseController;
-use Symfony\Component\HttpFoundation\Request;
-use Platformd\UserBundle\EventListener\AwaVideoLoginRedirectListener;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Platformd\CEVOBundle\CEVOAuthManager;
+
+use Symfony\Component\HttpFoundation\RedirectResponse,
+    Symfony\Component\HttpFoundation\Response,
+    Symfony\Component\HttpFoundation\Request,
+    Symfony\Component\EventDispatcher\EventDispatcher,
+    Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken,
+    Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+
+use Platformd\UserBundle\Entity\User,
+    Platformd\CEVOBundle\CEVOAuthManager,
+    Platformd\UserBundle\Security\User\Provider\FacebookProvider,
+    Platformd\UserBundle\Form\Type\IncompleteAccountType;
 
 /**
  * Overrides controller for login actions
@@ -15,102 +23,159 @@ class SecurityController extends BaseController
 {
     public function loginAction()
     {
-        //$this->processAlienwareVideoReturnUrlParameter($this->container->get('request'));
+        $request        = $this->container->get('request');
+        $session        = $request->getSession();
+        $referer        = $request->get('return') ? urldecode($request->get('return')) : $request->headers->get('referer');
+        $loginPath      = $this->container->get('router')->generate('fos_user_security_login', array(), true);
+        $loginCheckPath = $this->container->get('router')->generate('_fos_user_security_check', array(), true);
 
-        /*
-         * The real functionality of this method has been removed - login is at CEVO
-         */
-        //return $this->redirectToCevoLogin();
+        $doesRefererMatchLoginStuff = ($referer == $loginPath || $referer == $loginCheckPath);
+
+        if (!$doesRefererMatchLoginStuff) {
+            $session->set('_security.target_path', $referer);
+            $session->set('_security.temp_target_path', $referer);
+        } else {
+            $session->set('_security.target_path', $session->get('_security.temp_target_path'));
+        }
 
         return parent::loginAction();
     }
 
-    /**
-     * The Alienware video site expects to send us a ?return=, and we'll go
-     * back to that URL afterwards.
-     *
-     * We use this to store it on the session.
-     *
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     */
-    private function processAlienwareVideoReturnUrlParameter(Request $request)
+    // facebook security
+    /*public function facebookSecurityCheckAction()
     {
-        if ($returnUrl = $request->query->get('return')) {
-            $request->getSession()->set(
-                AwaVideoLoginRedirectListener::RETURN_SESSION_PARAMETER_NAME,
-                $returnUrl
-            );
+        $user           = $this->getCurrentUser();
+        $request        = $this->container->get('request');
+        $fbProvider     = $this->getFacebookProvider();
+
+        // not logged into facebook or platformd, redirect them to login page
+        if(!$fbProvider->isUserAuthenticated() && !$user) {
+            return new RedirectResponse($this->container->get('router')->generate('fos_user_security_login'));
         }
+
+        // user is logged in with platformd and are joining their facebook account with their platformd account
+        if($user instanceof User) {
+            $user = $fbProvider->loadUserByUsername($user->getUsername());
+
+            return new RedirectResponse($this->container->get('router')->generate('accounts_settings'));
+        }
+
+        // this user has authenticated our facebook app and is not logged into platformd, so we create the user using facebook data and log them in
+        $facebookId = $user ? $user->getFacebookId() : $fbProvider->getFacebookId();
+        $context    = $this->container->get('security.context');
+        $user       = $fbProvider->loadUserByFacebookId($facebookId);
+        $token      = new UsernamePasswordToken($user, $user->getPassword(), 'main', $user->getRoles());
+
+        $context->setToken($token);
+
+        $event = new InteractiveLoginEvent($request, $token);
+        $this->container->get('event_dispatcher')->dispatch('security.interactive_login', $event);
+
+        return new RedirectResponse($this->container->get('router')->generate('default_index'));
+    }
+
+    public function facebookDeauthorizeAction()
+    {
+        $fbProvider = $this->getFacebookProvider();
+
+        $fbProvider->deauthorize();
+
+        return new Response(json_encode(array('message' => 'success')));
+    }
+
+    public function facebookLoginAction()
+    {
+        // use this action when you don't want to use the javascript SDK login button
+        $api        = $this->container->get('fos_facebook.api');
+        $scope      = implode(',', $this->container->getParameter('fos_facebook.permissions'));
+        $callback   = $this->container->get('router')->generate('_security_check', array(), true);
+        $url        = $api->getLoginUrl(array('scope' => $scope, 'redirect_uri' => $callback));
+
+        return new RedirectResponse($url);
+    }
+
+    public function facebookLogoutAction()
+    {
+        $response = new Response();
+        $response->headers->clearCookie('fbsr_'.$this->getCurrentSite()->getSiteConfig()->getFacebookAppId());
+        return new RedirectResponse($this->container->get('router')->generate('_fos_user_security_logout'));
+    }*/
+
+    // twitter security
+    /*public function twitterLoginAction()
+    {
+        $request = $this->container->get('request');
+        $twitter = $this->container->get('fos_twitter.service');
+
+        $url = $twitter->getLoginUrl($request);
+
+        $response = new RedirectResponse($url);
+
+        return $response;
+    }
+
+    public function twitterSecurityCheckAction()
+    {
+        $user               = $this->getCurrentUser();
+        $request            = $this->container->get('request');
+        $twitterProvider    = $this->getTwitterProvider();
+
+        $this->container->get('fos_twitter.service')->getAccessToken($this->container->get('request'));
+
+        // not logged into twitter or platformd, redirect them to login page
+        if(!$twitterProvider->isUserAuthenticated() && !$user) {
+            return new RedirectResponse($this->container->get('router')->generate('fos_user_security_login'));
+        }
+
+        // user is logged in with platformd and are joining their twitter account with their platformd account
+        if($user instanceof User) {
+            $user = $twitterProvider->loadUserByUsername($user->getUsername());
+
+            return new RedirectResponse($this->container->get('router')->generate('accounts_settings'));
+        }
+
+        // this user has authenticated our facebook app and is not logged into platformd, so we create the user using facebook data and log them in
+        $twitterId  = $user ? $user->getTwitterId() : $twitterProvider->getTwitterId();
+        $context    = $this->container->get('security.context');
+        $user       = $twitterProvider->loadUserByTwitterId($twitterId);
+        $token      = new UsernamePasswordToken($user, $user->getPassword(), 'main', $user->getRoles());
+
+        $context->setToken($token);
+
+        $event = new InteractiveLoginEvent($request, $token);
+        $this->container->get('event_dispatcher')->dispatch('security.interactive_login', $event);
+
+        return new RedirectResponse($this->container->get('router')->generate('default_index'));
+    }*/
+
+    // helpers
+    private function getCurrentUser()
+    {
+        $token = $this->container->get('security.context')->getToken();
+        $user  = $token === null ? null : $token->getUser();
+
+        if ($user === 'anon.') {
+            return null;
+        }
+
+        return $user;
     }
 
     /**
-     * Redirects to CEVO's login page
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return \Platformd\UserBundle\Security\User\Provider\FacebookProvider
      */
-    private function redirectToCevoLogin()
+    protected function getFacebookProvider()
     {
-        $request = $this->container->get('request');
+        return $this->container->get('platformd.facebook.provider');
+    }
 
-        // todo - duplicated in entry point and registration controller (this type of idea) - centralize this
-        $targetPath = $request->getSession()->get(
-            AwaVideoLoginRedirectListener::RETURN_SESSION_PARAMETER_NAME,
-            $return = $request->getUriForPath('/')
-        );
-        // I don't know if this happens in practice (http seems to be there), but just in case
-        if (strpos($targetPath, 'http') !== 0) {
-            $targetPath = $request->getUriForPath($targetPath);
-        }
+    protected function getTwitterProvider()
+    {
+        return $this->container->get('platformd.twitter.provider');
+    }
 
-        /*
-         * Ok, bear with me :). First, let me describe how the login process from
-         * the video site works once again:
-         *
-         *   a) You're on the video site, you click "login"
-         *   b) This sends you to japan.aa.com/login?return=/video (which is this page)
-         *   c) The ?return= value is stored in the session (see processAlienwareVideoReturnUrlParameter above)
-         *   d) We redirect to CEVO with ?return=XXXX. The value of XXXX is important (stay tuned)
-         *   e) When we finish login at CEVO, they redirect to back to XXXX, which is some page on our site
-         *   f) Arriving back on our site, the magic authentication takes place.
-         *          i) We watch for a cookie set by CEVO on the base domain (e.g. .aa.com) - see CEVOAuthenticationListener
-         *          ii) That cookie contains the username, we make an API request to CEVO to get
-         *              user details, create a new User record in our DB if necessary, and authenticate
-         *              the user (see CEVOAuthenticationProvider)
-         *   g) At this point, we're on our site and we're authenticated. Now, one of 2 things happen:
-         *          i) If we came from the video site with a ?return=/video (step b), then we now
-         *              redirect to that URL. Remember that this return URL was stored in the session.
-         *              We're basically sitting, and if we see a request with that session variable,
-         *              we always redirect there - see AwaVideoLoginRedirectListener
-         *          ii) If we didn't come from the video site, then nothing is set on the session and
-         *              we just let the homepage load
-         *   h) Assuming we're redirected back to the video site, *it* now looks for a cookie that *we*
-         *      set and makes an API call back to us to get user details and then authenticate. This is
-         *      identical to step (f), except that we're the authentication "server" (instead of CEVO)
-         *      and the video site is the client (instead of us).
-         *
-         * This process is always important, but especially more important/confusing for the video site.
-         * Remember step d where we redirected to CEVO with ?return=XXXX? This value is very important.
-         * If XXXX is japan.aa.com/video, then CEVO will redirect to the video site. This is BAD, as it
-         * means that we never authenticate on *this* site, and the video site depends on that (see h).
-         *
-         * SO, if the $targetPath is to the video site, we need to change it to point to *this* site.
-         * This should be fine, as when CEVO redirects back to our homepage, step (g) will guarantee
-         * that the user ends up on the video site.
-         *
-         * Actually, we could *always* change the $targetPath to the homepage - since step (g) would always
-         * handle the page that we should return to. But, this was originally changed just to be a little
-         * bit more direct (i.e. remove one of the redirects).
-         */
-
-        if (strpos($targetPath, '/video') !== false) {
-            $targetPath = $this->container->get('router')->generate('default_index', array(), true);
-        }
-
-        $cevoManager = $this->container->get('pd.cevo.cevo_auth_manager');
-
-        return new RedirectResponse($cevoManager->generateCevoUrl(
-            CEVOAuthManager::LOGIN_PATH,
-            $targetPath
-        ));
+    protected function getCurrentSite()
+    {
+        return $this->container->get('platformd.util.site_util')->getCurrentSite();
     }
 }

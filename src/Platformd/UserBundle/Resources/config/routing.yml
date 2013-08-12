@@ -25,3 +25,16 @@ fos_user_resetting:
 fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /account
+
+platformd_avatars:
+    resource: "@FOSUserBundle/Resources/config/routing/avatars.yml"
+    prefix: /account/profile/avatars
+
+# not releasing facebook and twitter integration with migration
+# fos_facebook:
+#     resource: "@UserBundle/Resources/config/routing/facebook.yml"
+#     prefix:   /facebook
+
+# fos_twitter:
+#     resource: "@UserBundle/Resources/config/routing/twitter.yml"
+#     prefix: /twitter

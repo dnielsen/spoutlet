@@ -1,0 +1,89 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% set numPerLine = 6 %}
+
+{% block title %}{{ "platformd.admin.avatars.unapproved.page_title" | pd_trans }}{% endblock %}
+
+{% block content %}
+
+    <h1>{{ 'platformd.admin.avatars.unapproved.title' | pd_trans }}</h1>
+
+    {% if pager.nbResults > 0 %}
+
+        <div>{{ 'platformd.admin.avatars.unapproved.instructions' | pd_trans }}</div>
+
+        <form action="{{ path('admin_unapproved_avatars') }}" method="post" id="avatar-approval-form">
+
+            <input type="hidden" name="process_type" id="process_type" />
+
+            <div id="avatar-actions">
+                <a class="btn btn-primary" id="approve">{{ 'platformd.admin.avatars.unapproved.approve' | pd_trans }}</a>
+                <a class="btn btn-danger" id="reject">{{ 'platformd.admin.avatars.unapproved.reject' | pd_trans }}</a>
+            </div>
+
+            <table class="table table-bordered" id="avatar-approval">
+                <thead>
+                    <tr>
+                        {% for i in 1..(pager.nbResults >= numPerLine ? pager.nbResults : numPerLine) %}
+                            <th></th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for avatar in avatars %}
+                        {% if (loop.index - 1) is divisibleby(numPerLine) %}<tr>{% endif %}
+                            <td style="text-align:center;width:{{ (100 / numPerLine) | number_format(2) }}%;">
+                                <div class="avatar-wrapper">
+                                    <img src="{{ avatar.url }}" id="{{ avatar.id }}">
+                                    <span class="avatar-selected">&#10004;</span>
+                                    <input id="input-{{ avatar.id }}" type="hidden" name="selected[]" value>
+                                    <input type="hidden" name="all[]" value="{{ avatar.id }}">
+                                </div>
+                                <div class="avatar-details">
+                                    <div class="avatar-user"><a target="_blank" href="{{ path('Platformd_UserBundle_admin_edit', { 'id': avatar.userId }) }}">{{ avatar.username }}</a></div>
+                                    <div class="avatar-submit-date">{{ avatar.submitted | date('Y-m-d') }}</div>
+                                </div>
+                            </td>
+                        {% if loop.index is divisibleby(numPerLine) %}</tr>{% endif %}
+                    {% endfor %}
+
+                    {% for i in 1..(numPerLine - (pager.nbResults % numPerLine)) %}
+                        <td style="width:{{ (100 / numPerLine) | number_format(2) }}%;"></td>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </form>
+    {% else %}
+        <p class="alert alert-info help"><i class="icon-info-sign"></i>
+            {{ 'platformd.admin.avatars.unapproved.no_avatars' | pd_trans }}
+        </p>
+    {% endif %}
+
+    {% if pager.haveToPaginate %}
+        {{ pagerfanta(avatars, 'twitter_bootstrap_translated', {'routeName' : 'admin_unapproved_avatars'}) }}
+    {% endif %}
+
+    <script type="text/javascript">
+
+        $('.avatar-details a').truncate({width: 100});
+
+        $('.avatar-wrapper > img').click(function() {
+            $(this).toggleClass('selected');
+            $(this).next('.avatar-selected').toggle();
+
+            if ($('input#input-' + this.id).val() == '')
+                $('input#input-' + this.id).val(this.id);
+            else
+                $('input#input-' + this.id).val('');
+
+        });
+
+        $('#avatar-actions > a').click(function(e) {
+            $('#process_type').val(this.id);
+            $('#avatar-approval-form').submit();
+        });
+
+    </script>
+
+{% endblock %}
+

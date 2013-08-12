@@ -1,0 +1,24 @@
+{% if locale == 'en' or locale == 'en_US' %}
+    {{ form_widget(form.birthdate.month, {'attr' : {'class' : 'dob-select'}}) }}
+    {{ form_widget(form.birthdate.day, {'attr' : {'class' : 'dob-select'}}) }}
+    {{ form_widget(form.birthdate.year, {'attr' : {'class' : 'dob-select'}}) }}
+{% elseif locale == 'en_GB' or locale == 'en_AU' %}
+    {{ form_widget(form.birthdate.day, {'attr' : {'class' : 'dob-select'}}) }}
+    {{ form_widget(form.birthdate.month, {'attr' : {'class' : 'dob-select'}}) }}
+    {{ form_widget(form.birthdate.year, {'attr' : {'class' : 'dob-select'}}) }}
+{% elseif locale == 'es' %}
+    {{ form_widget(form.birthdate.year, {'attr' : {'class' : 'dob-select'}}) }}
+    {{ form_widget(form.birthdate.month, {'attr' : {'class' : 'dob-select'}}) }}
+    {{ form_widget(form.birthdate.day, {'attr' : {'class' : 'dob-select'}}) }}
+{% elseif locale == 'ja' or locale == 'zh' or locale == 'en_SG'%}
+    {{ form_widget(form.birthdate.year, {'attr' : {'class' : 'dob-select'}}) }}
+    {{ form_widget(form.birthdate.month, {'attr' : {'class' : 'dob-select'}}) }}
+    {{ form_widget(form.birthdate.day, {'attr' : {'class' : 'dob-select'}}) }}
+{% else %}
+    {{ form_widget(form.birthdate.day, {'attr' : {'class' : 'dob-select'}}) }}
+    {{ form_widget(form.birthdate.month, {'attr' : {'class' : 'dob-select'}}) }}
+    {{ form_widget(form.birthdate.year, {'attr' : {'class' : 'dob-select'}}) }}
+{% endif %}
+
+<br />
+<span class="field-error-np">{{ birthdate_error }}</span>

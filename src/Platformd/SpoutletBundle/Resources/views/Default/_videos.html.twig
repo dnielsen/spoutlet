@@ -1,0 +1,25 @@
+<div class="widget-66" id="video-widget">
+    <div class="widget-header">
+        <div class="widget-title">{{ 'platformd.layout.main_menu.video'|trans }}</div>
+        <div class="clear"></div>
+    </div>
+    <div class="widget-content" style="height: {{ height }}px;">
+        {% for video in videos %}
+            <div class="home-tiled">
+                <div class="home-video-thumb-wrapper">
+                    <a href="{{ path('youtube_view', {'slug' : video.slug}) }}"><img src="{{ video.thumbnailSq }}" alt="{{ video.title }}" /></a>
+                    <span class="home-video-duration">{{ video.formattedDuration }}</span>
+                </div>
+                <div class="home-more-videos-link">{{ video | pd_link_full(video.title) }}</div>
+                <div class="video-details">
+                    <span class="views">{{ video.views}} {{ 'youtube.views' | trans }}</span>
+                    <span class="points">{{ video.votes | length }} {{ 'youtube.points' | trans }}</span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="widget-footer">
+        <a href="#" class="aw-link" id="more-news-link">{{ 'platformd.layout.page_content.see_more' | trans }}</a>
+        <div class="clear"></div>
+    </div>
+</div>

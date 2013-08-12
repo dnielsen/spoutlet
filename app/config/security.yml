@@ -1,7 +1,8 @@
+parameters:
+    # Default set here - override on a per-server basis in config_server.yml
+    api_authentication: true
+
 security:
-    # import our CEVO security system
-    factories:
-        - "%kernel.root_dir%/../src/Platformd/CEVOBundle/Resources/config/security_factory.yml"
 
     encoders:
         "FOS\UserBundle\Model\UserInterface":
@@ -9,9 +10,15 @@ security:
             encode_as_base64: false
             iterations: 1
 
+    factories:
+            - "%kernel.root_dir%/../src/Platformd/UserBundle/Resources/config/security_factory.yml"
+
     providers:
         fos_userbundle:
             id: fos_user.user_manager
+
+        api_provider:
+            id: platformd.security.user.provider.api
 
     firewalls:
         # turn security off entirely for the fake cevo site
@@ -20,21 +27,31 @@ security:
             security: false
 
         main:
+            platformd-form-login:
+                success_handler: platformd_user.authentication_handler
+                failure_handler: platformd_user.authentication_handler
+                use_referer: true
+                api_authentication: %api_authentication%
             pattern: ^/
-            cevo-auth: true
             anonymous:    true
             logout:
                 path:     /logout
                 target:   default_index
-                success_handler: platformd_user.security_logout_handler
+                success_handler: platformd_user.authentication_handler
             switch_user: ~
+            remember_me:
+                key:      "%secret%"
+                lifetime: 604800 # 1 week (in seconds)
+                path:     /
+                domain:   ~ # Defaults to the current domain from $_SERVER
 
     acl:
         connection: acl
 
     access_control:
+
+
         # the "([\w]+\/)?" pattern allows for the optional locale prefix (e.g. /jp/comments/new or just /comments/new)
-        - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
         - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
 
         # protects games and game pages
@@ -48,13 +65,18 @@ security:
 
         - { path: ^/([\w]+\/)?admin/users, role: ROLE_SUPER_ADMIN }
         # admin is the lowest admin role - catch all for admin routes
-        - { path: ^/([\w]+\/)?admin, role: ROLE_ADMIN, requires_channel: %admin_url_scheme% }
+        - { path: ^/([\w]+\/)?admin, role: ROLE_ADMIN, requires_channel: %secure_url_scheme% }
+        - { path: ^/([\w]+\/)?account/settings, role: IS_AUTHENTICATED_FULLY }
+
+        # facebook protection
+        - { path: ^/secured/.*, role: [IS_AUTHENTICATED_FULLY] } # This is the route secured with fos_facebook
+        - { path: ^/.*, role: [IS_AUTHENTICATED_ANONYMOUSLY] }
 
     role_hierarchy:
         # generic "admin" role - you don't really get to do anything, but you can see the admin page
         ROLE_ADMIN:       [ROLE_USER]
         # the dell contacts role
-        ROLE_PARTNER:     [ROLE_ADMIN, ROLE_ADMIN_GAME, ROLE_ADMIN_DEAL]
+        ROLE_PARTNER:     [ROLE_ADMIN, ROLE_ADMIN_GAME]
         ROLE_ORGANIZER:   [ROLE_PARTNER]
         ROLE_JAPAN_ADMIN: [ROLE_ORGANIZER, ROLE_STATS_ADMIN, ROLE_ADMIN_TRANSLATIONS]
-        ROLE_SUPER_ADMIN: [ROLE_ORGANIZER, ROLE_STATS_ADMIN, ROLE_USER_ADMIN, ROLE_ADMIN_TRANSLATIONS, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_SUPER_ADMIN: [ROLE_ORGANIZER, ROLE_STATS_ADMIN, ROLE_USER_ADMIN, ROLE_ADMIN_TRANSLATIONS, ROLE_ALLOWED_TO_SWITCH, ROLE_ADMIN_DEAL]

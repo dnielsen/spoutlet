@@ -2,10 +2,6 @@ admin_index:
     pattern: /admin
     defaults: { _controller: SpoutletBundle:Admin:index }
 
-admin_user_approve_avatar:
-    pattern: /admin/user/{id}/avatar/approve
-    defaults: { _controller: UserBundle:Admin:approveAvatar }
-
 # banner admin
 
 admin_homepage_banner_index:
@@ -47,3 +43,7 @@ admin_upload_media:
 admin_mass_unsubscribe:
     pattern: /admin/mass-unsubscribe
     defaults: { _controller: SpoutletBundle:Admin:massUnsubscribe }
+
+admin_comment_metrics:
+    pattern: /admin/metrics/comments
+    defaults: { _controller: SpoutletBundle:Comments:metrics }

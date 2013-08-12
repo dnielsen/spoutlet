@@ -9,7 +9,12 @@ fos_user_registration_form_hasAlienwareSystem_0: いいえ
 fos_user_registration_form_hasAlienwareSystem_1: はい
 fos_user_registration_form_email_first: "Eメールアドレス:"
 fos_user_registration_form_email_second: "確認のためもう一度ご入力ください:"
+fos_user_registration_form_plainPassword: "パスワード:"
+fos_user_registration_form_plainPassword_first: "パスワード:"
+fos_user_registration_form_plainPassword_second: "確認のためもう一度ご入力ください:"
 fos_user_registration_form_latestNewsSource: "どこでAlienwareArena を知りましたか？"
+fos_user_registration_form_recaptcha: "確認コー:"
+fos_user_registration_form_subscribedAlienwareEvent: 最新の景品、コンテスト、イベント、その他に関してのお知らせをALIENWARE ARENA からE-メールで受け取ります。
 
 fos_user_profile_form_user_lastname: "姓"
 fos_user_profile_form_user_firstname: "名"
@@ -53,6 +58,7 @@ security.login.username: "ユーザー名:"
 security.login.password: "パスワード:"
 security.login.remember_me: ログイン情報を記憶する
 security.login.submit: ログイン
+security.login.problem_logging_in: "申し訳ありません。ログイン時に問題がおきました:"
 
 # Profile
 profile.edit.submit: 更新
@@ -71,22 +77,25 @@ registration.flash.user_created: ユーザーが正常に作成されました
 
 # the first line is the subject of the email
 registration.email: |
-    Alienware Arena 登録確認
+    あなたの ALIENWAREARENAアカウント をアクティブにします。
     <h3>%username%様ようこそ。</h3>
 
     <p>
-        アカウントの認証を完了するため、<a href="%confirmationUrl%">%confirmationUrl%</a> にアクセスしてください。
+        この度は ALIENWAREARENA に登録いただき、ありがとうございます。下記のリンクをクリックしてアカウントをアクティブにしてください。<br />
+        <a href="%confirmationUrl%">%confirmationUrl%</a>
     </p>
 
     <p>
-    よろしくお願いします。<br/>
-    チーム一同より
+        このメッセージは自動送信されています。<br />
+        この電子メールに返信しないでください。
     </p>
 
 
+    <p>ALIENWAREARENA Team</p>
+
 # Password resetting
 resetting.password_already_requested: このユーザーのパスワードは、過去24時間以内に既に求められました。
-resetting.check_email: %email%指定のアドレスにメールが送信されました。同メールにはパスワード再設定用のリンクが含まれています。
+resetting.check_email: パスワード変更手続きに必要なURLをメールでお送りしました。
 resetting.request.invalid_username:  %username% のユーザー名またはメールアドレスは存在しません。
 resetting.request.username: "メールアドレス:"
 resetting.request.submit: パスワードのリセット
@@ -95,18 +104,39 @@ resetting.flash.success: パスワードが正常にリセットされました
 
 # the first line is the subject of the email
 resetting.email: |
-    Alienware Arena パスワードのリセット
-    <h3>%username%様、こんにちは。</h3>
+    ALIENWAREARENA - パスワード変更
+    <h3>こんにちは！ %username%さん</h3>
+
+    <p>ALIENWAREARENA アカウントのパスワード変更リクエストを受け取りました。</p>
 
     <p>
-        パスワードをリセットするには、<a href="%confirmationUrl%">%confirmationUrl%</a> にアクセスしてください。
+        パスワードをリセットするには、下記のリンクをクリックしてください。<br />
+        <a href="%confirmationUrl%">%confirmationUrl%</a>
     </p>
+
+    <p>※このメールに覚えがない場合は、何もせずにこのメールを破棄していただくようお願いいたします。</p>
+
+    <p>※このメールはシステムより自動配信されています。返信は受付できませんので、ご了承ください。</p>
+
+    <p>ALIENWAREARENA Team</p>
+
+# Password resetted by admin
+resetted.email: |
+    ALIENWAREARENA - パスワード変更
+    <h3>こんにちは！ %username%さん</h3>
+
+    <p>ALIENWAREARENA アカウントのパスワード変更リクエストを受け取りました。</p>
 
     <p>
-    よろしくお願いします。<br/>
-    チーム一同より
+        パスワードをリセットするには、下記のリンクをクリックしてください。<br />
+        <a href="%confirmationUrl%">%confirmationUrl%</a>
     </p>
 
+    <p>※このメールに覚えがない場合は、何もせずにこのメールを破棄していただくようお願いいたします。</p>
+
+    <p>※このメールはシステムより自動配信されています。返信は受付できませんので、ご了承ください。</p>
+
+    <p>ALIENWAREARENA Team</p>
 
 # Global strings
 layout.logout: ログアウト
@@ -144,3 +174,14 @@ fos_user_resetting_form_new_second: "認証:"
 fos_user_change_password_form_new_first: "新規パスワード:"
 fos_user_change_password_form_new_second: "新規パスワード（確認）:"
 fos_user_change_password_form_current: "現在のパスワード:"
+
+platformd.user.account_settings.password: "パスワード変更"
+platformd.user.account_settings.newsletter: "お知らせ"
+
+invalid_username_password: 無効なユーザー名/パスワードです。
+
+"Bad credentials": "ユーザー名/メールアドレスあるいはパスワードが間違っています。"
+"The presented password is invalid.": "ユーザー名/メールアドレスあるいはパスワードが間違っています。"
+"The presented password cannot be empty.": "パスワードを入力してください"
+"User account is disabled.": アカウントが無効です
+"Invalid username or password": "ユーザー名/メールアドレスあるいはパスワードが間違っています。"

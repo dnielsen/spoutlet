@@ -1,4 +1,7 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
 {% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+{% form_theme suspendForm 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
 
 {% block title %}{{ "fos_user_admin_user_edit_title" | trans({ "%username%" : user.username }, "FOSUserBundle") }}{% endblock %}
@@ -6,18 +9,93 @@
 {% block content %}
     <h1>Edit User</h1>
 
-    <form method="post" action="{{ path("Platformd_UserBundle_admin_update", { "id" : user.id }) }}" class="form">
-        <input type="hidden" name="_method" value="PUT" />
+    <div class="well">
+        <a href="{{ path("Platformd_UserBundle_admin_reset_password", { "id" : user.id }) }}" class="btn btn-primary">{{ "fos_user_admin_reset_password" | trans({}, "FOSUserBundle" ) }}</a>
+        <a class="confirm btn btn-primary" href="{{ path("Platformd_UserBundle_admin_delete", { "id" : user.id }) }}">{{ "fos_user_admin_delete" | trans({}, "FOSUserBundle" ) }}</a>
+        {% if user.loginRecords|length > 0 %}<a class="btn btn-primary" href="{{ path('Platformd_UserBundle_admin_logins', { 'id': user.id }) }}"></i> Logins</a>{% endif %}
+    </div>
 
-        {{ form_errors(form) }}
+    {% if user.expired %}
+        <div class="flash-message flash-error">
+            <i class="icon-ok"></i>
+            <span>User is banned</span>
+        </div>
+    {% endif %}
 
-        {{ form_row(form.username, { "attr" : {"label" : ""} }) }}
-        {{ form_row(form.firstname) }}
-        {{ form_row(form.lastname) }}
-        {{ form_row(form.email) }}
-        {{ form_row(form.admin_level) }}
+    {% if user.expiredUntil %}
+        <div class="flash-message flash-error">
+            <i class="icon-ok"></i>
+            <span>User is suspended until {{ user.expiredUntil|date('F d, Y') }}</span>
+        </div>
+    {% endif %}
 
-        {{ form_rest(form) }}
-        <input type="submit" value="{{ 'save'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" formnovalidate />
-    </form>
+    <div class="row-fluid">
+        <div class="span6 well">
+            <form method="post" action="{{ path("Platformd_UserBundle_admin_update", { "id" : user.id }) }}" class="form-horizontal">
+                <input type="hidden" name="_method" value="PUT" />
+
+                {{ form_errors(form) }}
+
+                {{ form_row(form.username, { "attr" : {"label" : ""} }) }}
+                {{ form_row(form.firstname) }}
+                {{ form_row(form.lastname) }}
+                {{ form_row(form.email) }}
+                {{ form_row(form.admin_level) }}
+
+                {{ form_rest(form) }}
+                <div class="form-actions">
+                    <input type="submit" value="{{ 'Save'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" formnovalidate />
+                </div>
+            </form>
+        </div>
+
+        <div class="span6">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Last Seen</th>
+                    <td>{{ user.lastLogin|date }}</td>
+                </tr>
+                <tr>
+                    <th>Created</th>
+                    <td>{{ user.created|date }}</td>
+                </tr>
+                <tr>
+                    <th>IP Address at creation</th>
+                    <td>{{ user.ipAddress }}</td>
+                </tr>
+            </table>
+
+            <div class="well">
+                <legend>Suspension</legend>
+                <form method="post" action="{{ path("Platformd_UserBundle_admin_suspend", { "id" : user.id}) }}" class="form-horizontal">
+                    {{ form_row(suspendForm.expiredUntil) }}
+                    <div class="form-actions">
+                        <input type="submit" value="{{ 'Suspend'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" />
+
+                        {% if not user.expired %}
+                            <a class="confirm btn btn-danger" href="{{ path('Platformd_UserBundle_admin_ban', { 'id': user.id }) }}" data-confirm="Are you sure you want to permanently ban this user?">Ban Forever</a>
+                        {% endif %}
+
+                        {% if user.expired or (user.expiredUntil and user.expiredUntil > date()) %}
+                            <a class="confirm btn btn-primary" href="{{ path('Platformd_UserBundle_admin_unban', { 'id': user.id }) }}" data-confirm="Are you sure you want to unban this user?">Unban</a>
+                        {% endif %}
+
+                    </div>
+                    {{ form_rest(suspendForm) }}
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        $('a.confirm').click(function(event) {
+            var confirmMsg = $(this).attr('data-confirm') ? $(this).attr('data-confirm') : 'Delete this?';
+            if (!confirm(confirmMsg)) {
+                event.stopPropagation();
+                event.preventDefault();
+                return false;
+            }
+        });
+    </script>
 {% endblock %}

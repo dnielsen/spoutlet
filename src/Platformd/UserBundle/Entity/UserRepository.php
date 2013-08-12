@@ -49,7 +49,6 @@ class UserRepository extends EntityRepository
         ;
     }
 
-
 	public function getTotalUsersForSite($site)
     {
         return $this->createSiteQueryBuilder($site)
@@ -80,6 +79,51 @@ class UserRepository extends EntityRepository
         ;
     }
 
+    public function getArenaOptInForAllCountries($from=null, $to=null)
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        if ($from || $to) {
+            $qb = $this->addBetweenQuery($qb, $from, $to);
+        }
+
+        return $this->addArenaOptQuery($qb, true)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
+    public function getDellOptInForAllCountries($from=null, $to=null)
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        if ($from || $to) {
+            $qb = $this->addBetweenQuery($qb, $from, $to);
+        }
+
+        return $this->addDellOptQuery($qb, true)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
+    public function countNewRegistrantsForAllCountries($from, $to)
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        return $this->addBetweenQuery($qb, $from, $to)
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
+
     public function getArenaOptInForSite($site)
     {
         $qb = $this->createSiteQueryBuilder($site);
@@ -92,9 +136,13 @@ class UserRepository extends EntityRepository
         ;
     }
 
-    public function getArenaOptInForCountry($country)
+    public function getArenaOptInForCountry($country, $from=null, $to=null)
     {
         $qb = $this->createCountryQueryBuilder($country);
+
+        if ($from || $to) {
+            $qb = $this->addBetweenQuery($qb, $from, $to);
+        }
 
         return $this->addArenaOptQuery($qb, true)
             ->select('COUNT(u.id)')
@@ -104,9 +152,13 @@ class UserRepository extends EntityRepository
         ;
     }
 
-    public function getArenaOptInForCountries($countries)
+    public function getArenaOptInForCountries($countries, $from=null, $to=null)
     {
         $qb = $this->createCountriesQueryBuilder($countries);
+
+        if ($from || $to) {
+            $qb = $this->addBetweenQuery($qb, $from, $to);
+        }
 
         return $this->addArenaOptQuery($qb, true)
             ->select('COUNT(u.id)')
@@ -128,9 +180,13 @@ class UserRepository extends EntityRepository
         ;
     }
 
-    public function getDellOptInForCountry($country)
+    public function getDellOptInForCountry($country, $from=null, $to=null)
     {
         $qb = $this->createCountryQueryBuilder($country);
+
+        if ($from || $to) {
+            $qb = $this->addBetweenQuery($qb, $from, $to);
+        }
 
         return $this->addDellOptQuery($qb, true)
             ->select('COUNT(u.id)')
@@ -140,9 +196,13 @@ class UserRepository extends EntityRepository
         ;
     }
 
-    public function getDellOptInForCountries($countries)
+    public function getDellOptInForCountries($countries, $from=null, $to=null)
     {
         $qb = $this->createCountriesQueryBuilder($countries);
+
+        if ($from || $to) {
+            $qb = $this->addBetweenQuery($qb, $from, $to);
+        }
 
         return $this->addDellOptQuery($qb, true)
             ->select('COUNT(u.id)')
@@ -191,6 +251,21 @@ class UserRepository extends EntityRepository
             ->getQuery()
             ->setMaxResults(1)
             ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
+        ;
+    }
+
+    public function countOtherExpiredUsersByIpAddress($ipAddress, $username)
+    {
+        return $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->andWhere('u.ipAddress = :ipAddress')
+            ->andWhere('u.usernameCanonical != :username')
+            ->andWhere('u.expiresAt > :now')
+            ->setParameter('ipAddress', $ipAddress)
+            ->setParameter('username', $username)
+            ->setParameter('now', new \DateTime)
+            ->getQuery()
+            ->getSingleScalarResult()
         ;
     }
 
@@ -270,5 +345,45 @@ class UserRepository extends EntityRepository
         return $qb->andWhere('u.subscribedGamingNews = :optIn')
             ->setParameter('optIn', $optIn)
         ;
+    }
+
+    /**
+     * @param \DateTime $fromDate
+     * @param \DateTime $thruDate
+     * @return \Doctrine\ORM\Query
+     * returning the query here so that it can be iterated in ExportQueryManager while building the csv file.
+     */
+    public function getOptedInUserQuery($fromDate, $thruDate, $sites)
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->where('u.subscribedAlienwareEvents = 1');
+
+        if ($fromDate) {
+            $qb->andWhere('u.created >= :fromDate')->setParameter('fromDate', $fromDate);
+        }
+
+        if ($thruDate) {
+            $qb->andWhere('u.created <= :thruDate')->setParameter('thruDate', $thruDate);
+        }
+
+        // users dont really belong to sites or regions, but countries. so yeah ...
+        // and sites may or may not have a region. fun stuff!
+        if ($sites) {
+            $countries = array();
+            foreach ($sites as $site) {
+                $region = $site->getRegion();
+                if ($region) {
+                    foreach ($region->getCountries() as $country) {
+                        $countries[] = $country->getCode();
+                    }
+                }
+            }
+
+            if(count($countries) > 0) {
+                $qb->andWhere($qb->expr()->in('u.country', $countries));
+            }
+        }
+
+        return $qb->getQuery();
     }
 }

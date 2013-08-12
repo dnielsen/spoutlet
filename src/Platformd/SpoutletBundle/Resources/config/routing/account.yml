@@ -39,3 +39,22 @@ accounts_videos:
     pattern: /profile/videos
     defaults: { _controller: SpoutletBundle:Account:videos }
 
+accounts_settings:
+    pattern: /settings
+    defaults: { _controller: SpoutletBundle:Account:settings }
+
+accounts_incomplete:
+    pattern: /incomplete
+    defaults: { _controller: SpoutletBundle:Account:incomplete }
+
+accounts_change_password:
+    pattern: /change-password
+    defaults: { _controller: SpoutletBundle:Account:settings }
+
+subscription_settings:
+    pattern: /subscription-settings
+    defaults: { _controller: SpoutletBundle:Account:subscriptionSettings }
+
+accounts_unsubscribe:
+    pattern: /unsubscribe/{email}
+    defaults: { _controller: SpoutletBundle:Account:unsubscribe, email: null }

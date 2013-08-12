@@ -3,6 +3,9 @@
         <div id="nav-wrapper">
             <ul class="sf-menu sf-js-enabled sf-shadow sf-list" id="nav">
                 <li><a href="{{ path('default_index') }}">{{ 'platformd.layout.main_menu.home' | trans }}</a></li>
+                {% if features.hasGiveaways %}
+                    <li><a href="{{ path('giveaway_index') }}">{{ 'platformd.layout.main_menu.giveaways' | trans }}</a></li>
+                {% endif %}
 
                 {% if features.hasNews %}
                     <li><a href="{{ path('news') }}">{{ 'platformd.layout.main_menu.news' | trans }}</a></li>
@@ -21,17 +24,11 @@
                 {% endif %}
 
                 {% if features.hasArp %}
-                    <li><a href="{{ path('arp') }}">{{ 'platformd.layout.main_menu.arp' | trans }}</a></li>
+                    <li><a href="{{ path('_arp_index') }}">{{ 'platformd.layout.main_menu.arp' | trans }}</a></li>
                 {% endif %}
 
                 {% if features.hasGroups %}
-                    <li class="more">
-                        <a class="blue">{{ 'platformd.layout.main_menu.groups' | trans }}</a>
-                        <ul>
-                            <li><a href="{{ path('groups') }}">All Groups</a></li>
-                            <li><a href="{{ path('group_new') }}">Create Group</a></li>
-                        </ul>
-                    </li>
+                    <li><a href="{{ path('groups') }}">{{ 'platformd.layout.main_menu.groups' | trans }}</a></li>
                 {% endif %}
 
                 {% if features.hasGamesNavDropDown %}
@@ -56,13 +53,10 @@
                     <li><a href="{{ path('game_page_list') }}">{{ 'games' | trans }}</a></li>
                 {% endif %}
 
-                {# site_link('EVENTS') returns a link to the old events page on cevo's site. The nomenclature is confusing. #}
                 {% if features.hasEvents %}
                     <li>
                         <a href="{{ path('global_events_index') }}">{{ 'platformd.layout.main_menu.events' | trans | raw }}</a>
                     </li>
-                {% else %}
-                    <li>{{ site_link('EVENTS') | raw }}</a></li>
                 {% endif %}
 
                 {% if features.hasForums %}

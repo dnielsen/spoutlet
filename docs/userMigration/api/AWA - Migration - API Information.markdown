@@ -117,8 +117,7 @@ Which, if successful, will return:
       "email":        "flashgordon@example.com",
       "created":      "2013-01-01T10:05:05Z",
       "lastUpdated":  "2013-01-01T10:05:05Z",
-      "banned":       false,
-      "session":      "66c206f6-33d2-49c8-9618-c54d7c01939a"
+      "banned":       false
     },
     "item": {
       "href":         "https://api.alienwarearena.com/v1/users/f10ab486-9e65-4b81-9da6-27e6fc485260",
@@ -127,8 +126,7 @@ Which, if successful, will return:
       "email":        "ming@example.com",
       "created":      "2012-03-03T10:03:03Z",
       "lastUpdated":  "2013-05-02T17:23:41Z",
-      "banned":       true,
-      "session":      null
+      "banned":       true
     }
   }
 }
@@ -140,7 +138,7 @@ A few notes about retrieving multiple users:
 - There are a number of optional parameters you can send as a query string:
  - `limit` - specifies the maximum number of items you want to retrieve.
  - `offset` - specifies the number of items that you want to *skip* (from the start of the collection).
- - `orderBy` - specifies the sorting mode, can be either *"created"* (which sorts by account created date, oldest first) or *"lastUpdated"* (which sorts by the date the account was last modified, most recently modified last).
+ - `orderBy` - specifies the sorting mode, can be either *"created"* or *"lastUpdated"* - both sort oldest first.
  - `since` - specifies the date you want to use to filter out users that where *"created"* / *"lastUpdated"* (depending on the `orderBy` value) before this value.  You can only specify the date, not the time with this parameter.  The time will always be set to *"00:00:00"*.  Additionally, any users *"created"* / *"lastUpdated"* at exactly *"00:00:00"* will be included in that date's result set.
 - For all optional parameters:
  - If you leave them blank, or pass an invalid value, you can see what they were actually set to while generated the response by looking at the `metaData.{parameterName}` value.

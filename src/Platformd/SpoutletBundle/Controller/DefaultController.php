@@ -3,25 +3,57 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\GiveawayBundle\Entity\Giveaway;
+use Platformd\GiveawayBundle\Entity\Deal;
+use Platformd\SweepstakesBundle\Entity\Sweepstakes;
+use Platformd\SpoutletBundle\Entity\Contest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Platformd\SpoutletBundle\Controller\Controller as Controller;
+use Symfony\Component\HttpFoundation\Cookie;
 
 class DefaultController extends Controller
 {
     public function _mainUserStripAction() {
-        $response = $this->render('SpoutletBundle::_mainUserStrip.html.twig');
+        $incompleteAccount = $this->getCurrentUser() ? ($this->getCurrentUser()->getFacebookId() && !$this->getCurrentUser()->getPassword()) : false;
+        $response = $this->render('SpoutletBundle::_mainUserStrip.html.twig', array(
+            'incompleteAccount' => $incompleteAccount,
+        ));
 
-        $this->varnishCache($response, 120);
+        $this->varnishCache($response, 86400);
 
         return $response;
     }
 
-    public function _flashMessageAction()
+    public function _checkAccountCompleteAction(Request $request)
     {
         if (!$this->isGranted('ROLE_USER')) {
             $response = new Response();
-            $this->varnishCache($response, 3600);
+            $this->varnishCache($response, 86400);
+
+            return $response;
+        }
+
+        $user = $this->getCurrentUser();
+        $accountComplete = $this->getUserManager()->isUserAccountComplete($user);
+
+        if ($accountComplete) {
+            $response = new Response();
+            $this->varnishCache($response, 86400);
+
+            return $response;
+        }
+
+        $response = $this->render('SpoutletBundle::_checkAccountComplete.html.twig');
+        $this->varnishCache($response, 0);
+        return $response;
+    }
+
+    public function _flashMessageAction(Request $request)
+    {
+        if (!$this->isGranted('ROLE_USER')) {
+            $response = new Response();
+            $this->varnishCache($response, 86400);
 
             return $response;
         }
@@ -29,30 +61,113 @@ class DefaultController extends Controller
         $flashes = $this->getFlash();
 
         if (!$flashes) {
-            return new Response();
+            $response = new Response();
+            $this->varnishCache($response, 86400);
+
+            return $response;
         }
 
-        $data    = array();
-        $type    = null;
+        $response = $this->render('SpoutletBundle::_flashMessage.html.twig', array(
+            'type' =>  $flashes['type'],
+            'message' =>  $flashes['message'],
+        ));
 
-        if (isset($flashes['error'])) {
-            $type = 'error';
-        } elseif (isset($flashes['success'])) {
-            $type = 'success';
-        } elseif (isset($flashes['info'])) {
-            $type = 'info';
-        } else {
-            return new Response();
-        }
+        $this->varnishCache($response, 0);
+        return $response;
+    }
 
-        $data['type']    = $type;
-        $data['message'] = $flashes[$type];
+    public function _layoutFooterAction() {
+        $response = $this->render('SpoutletBundle::_footer.html.twig');
 
-        $response = new Response();
-        $response->setContent(json_encode($data));
-        $response->headers->set('Content-Type', 'application/json');
+        $this->varnishCache($response, 86400);
 
         return $response;
+    }
+
+    public function _groupsAction(Request $request)
+    {
+        $em     = $this->getDoctrine()->getEntityManager();
+        $repo   = $em->getRepository('GroupBundle:Group');
+        $site   = $this->getCurrentSite();
+
+        $featured = $repo->findAllFeaturedGroupsForSite($site);
+        $popular  = $repo->findPopularGroupsForHomepage($site);
+
+        $response = $this->render('SpoutletBundle:Default:_groups.html.twig', array(
+            'featured' => $featured,
+            'popular'  => $popular,
+        ));
+
+        $this->varnishCache($response, 30);
+
+        return $response;
+    }
+
+    public function _pollsAction(Request $request)
+    {
+        $response = $this->render('SpoutletBundle:Default:_polls.html.twig');
+
+        $this->varnishCache($response, 30);
+
+        return $response;
+    }
+
+    public function _arpAction(Request $request)
+    {
+        # keeping this here until we take over arp. for now we redirect to cevos
+        #$response = $this->render('SpoutletBundle:Default:_arp.html.twig');
+        #
+        #$this->varnishCache($response, 30);
+        $baseUrl    = 'http://www.alienwarearena.com%s/arp';
+        $subDomain  = $this->getCurrentSite()->getSubDomain() == 'latam' ? '/'.$this->getCurrentSite()->getSubDomain() : '/';
+        $url        = sprintf($baseUrl, $subDomain);
+
+        $response = new RedirectResponse($url);
+
+        return $response;
+    }
+
+    public function _userArpAction(Request $request, $uuid)
+    {
+        if ($uuid) {
+            $response = new Response();
+            $response->headers->set('Content-type', 'text/json; charset=utf-8');
+
+            $url = sprintf("http://alienwarearena.com/arp/getuserarp/%s/", $uuid);
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 0);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+            $result = curl_exec($ch);
+
+            curl_close($ch);
+
+            $data = json_decode($result, true);
+
+            if (isset($data['arp'])) {
+                $response->setContent(json_encode(array('arp' => $data['arp'])));
+            } else {
+                $response->setContent(json_encode(array('arp' => 0)));
+            }
+
+            $this->varnishCache($response, 600);
+
+            return $response;
+        }
+    }
+
+    public function forumsAction(Request $request)
+    {
+        $baseUrl    = 'http://www.alienwarearena.com/%s/forums';
+        $subDomain  = $this->getCurrentSite()->getSubDomain();
+        $url        = sprintf($baseUrl, $subDomain);
+
+        return new RedirectResponse($url);
     }
 
     public function forceLogoutAction(Request $request, $returnUrl) {
@@ -74,6 +189,67 @@ class DefaultController extends Controller
         return $response;
     }
 
+    public function sessionCookieAction()
+    {
+        return new Response('');
+    }
+
+    public function setApiSessionCookieAction($uuid, $expires, Request $request)
+    {
+        $return   = $request->get('return') ? urldecode($request->get('return')) : $this->generateUrl('default_index');
+        $response = new RedirectResponse($return);
+
+        if (!$uuid || !$expires) {
+            return $response;
+        }
+
+        $cookieName     = 'awa_session_key';
+        $cookieValue    = $uuid;
+        $cookieExpiry   = \DateTime::createFromFormat('U', $expires);
+        $cookiePath     = '/';
+        $cookieHost     = '.'.$this->getParameter('base_host');
+
+        $cookie = new Cookie($cookieName, $cookieValue, $cookieExpiry, $cookiePath, $cookieHost, false, false);
+        $response->headers->setCookie($cookie);
+
+        return $response;
+    }
+
+    public function refreshApiSessionCookieAction($uuid, Request $request)
+    {
+        $response = new Response('');
+
+        if (!$uuid) {
+            $this->varnishCache($response, 86400);
+            return $response;
+        }
+
+        $info = $this->getApiManager()->getSessionInfo($uuid);
+
+        if (!$info) {
+            $this->varnishCache($response, 3600);
+            return $response;
+        }
+
+        if (isset($info['metaData']) && $info['metaData']['status'] != 200) {
+            $this->varnishCache($response, 3600);
+            return $response;
+        }
+
+        $cookieName     = 'awa_session_key';
+        $cookieValue    = $uuid;
+        $cookieExpiry   = new \DateTime($info['data']['expires']);
+        $cookiePath     = '/';
+        $cookieHost     = '.'.$this->getParameter('base_host');
+
+        $cookie = new Cookie($cookieName, $cookieValue, $cookieExpiry, $cookiePath, $cookieHost, false, false);
+        $response->headers->setCookie($cookie);
+
+        $this->varnishCache($response, 3600);
+
+        return $response;
+    }
+
     /**
      * The homepage!
      *
@@ -86,7 +262,7 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        if (!$this->getCurrentSite()->getSiteFeatures()->gethasIndex()) {
+        if (!$this->getCurrentSite()->getSiteFeatures()->getHasIndex()) {
             throw $this->createNotFoundException();
         }
 
@@ -110,21 +286,13 @@ class DefaultController extends Controller
             ->findMostRecentForSite($this->getCurrentSite(), 13)
         ;
 
-        return $this->render('SpoutletBundle:Default:hotStories.html.twig', array(
+        $response = $this->render('SpoutletBundle:Default:_hotStories.html.twig', array(
             'news'     => $news,
         ));
-    }
 
-    # this function is just here to allow the use of path / router -> generate functions through the site... but ultimately this action isn't called, instead the site protection listener redirects the call to CEVOs server
-    public function forumsAction()
-    {
-        throw $this->createNotFoundException();
-    }
+        $this->varnishCache($response, 30);
 
-    # this function is just here to allow the use of path / router -> generate functions through the site... but ultimately this action isn't called, instead the site protection listener redirects the call to CEVOs server
-    public function arpAction()
-    {
-        throw $this->createNotFoundException();
+        return $response;
     }
 
     /**
@@ -135,10 +303,11 @@ class DefaultController extends Controller
 
         $site = $this->getCurrentSite();
 
+        // sweeps
         $sweepstakes = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
-            ->getCurrentSweepstakes($this->getCurrentSite())
+            ->getCurrentSweepstakes($site)
         ;
 
         $sweepstakes_list = array();
@@ -146,6 +315,7 @@ class DefaultController extends Controller
             $sweepstakes_list[] = $sweepstake;
         }
 
+        // giveaways
         $giveaways = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Giveaway')
@@ -160,14 +330,80 @@ class DefaultController extends Controller
             }
         }
 
-        $competitions = $this->getGlobalEventService()->findUpcomingEventsForSiteLimited($site);
+        // global events
+        $globalEvents = $this->getGlobalEventService()
+            ->findUpcomingEventsForSiteLimited($site)
+        ;
 
-        $competitions_list = array();
-        foreach($competitions as $competition) {
-            $competitions_list[] = $competition;
+        $events_list = array();
+        $all_list = array();
+        foreach($globalEvents as $globalEvent) {
+            $all_list[]     = $globalEvent;
+            $events_list[]  = $globalEvent;
         }
 
-        $combined_list = array_merge($competitions_list, $giveaways_list, $sweepstakes_list);
+        // group events
+        $groupEvents = $this->getGroupEventService()
+            ->findUpcomingEventsForSiteLimited($site)
+        ;
+
+        foreach ($groupEvents as $groupEvent) {
+            $events_list[] = $groupEvent;
+        }
+
+        // deals
+        $deals = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('GiveawayBundle:Deal')
+            ->findAllActiveDealsForSiteId($site->getId())
+        ;
+
+        $deals_list = array();
+        foreach ($deals as $deal) {
+            $deals_list[] = $deal;
+        }
+
+        // contests
+        $contests = $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SpoutletBundle:Contest')
+            ->findAllForSiteByDate($site->getDefaultLocale())
+        ;
+
+        $contest_list = array();
+        foreach ($contests as $contest) {
+            $contest_list[] = $contest;
+        }
+
+        $combined_list  = array_merge($all_list, $giveaways_list, $sweepstakes_list, $deals_list);
+        $other          = array_merge($sweepstakes_list, $deals_list, $contest_list);
+
+        usort($other, function($a, $b) {
+            $aDate = $a instanceof Contest ? $a->getSubmissionStart() : $a->getStartsAt();
+            $bDate = $b instanceof Contest ? $b->getSubmissionStart() : $b->getStartsAt();
+
+            if ($aDate == $bDate) {
+                return 0;
+            }
+
+            return $aDate > $bDate ? -1 : 1;
+
+        });
+
+        $other_list = array();
+        foreach ($other as $item) {
+            if($item instanceof Sweepstakes) {
+                $other_list[] = array('name' => $item->getName(), 'target' => '', 'link' => $this->generateUrl('sweepstakes_show', array('slug' => $item->getSlug())));
+            }
+
+            if($item instanceof Deal) {
+                $other_list[] = array('name' => $item->getName(), 'target' => '', 'link' => $this->generateUrl('deal_show', array('slug' => $item->getSlug())));
+            }
+
+            if($item instanceof Contest) {
+                $other_list[] = array('name' => $item->getName(), 'target' => '', 'link' => $this->generateUrl('contest_show', array('slug' => $item->getSlug())));
+            }
+        }
 
         usort($combined_list, function($a, $b) {
 
@@ -182,12 +418,17 @@ class DefaultController extends Controller
 
         });
 
-        return $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
+        $response = $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
             'all_events'     => $combined_list,
             'giveaways'      => $giveaways_list,
-            'competitions'   => $competitions_list,
+            'competitions'   => $events_list,
             'sweepstakes'    => $sweepstakes_list,
+            'other'          => $other_list,
         ));
+
+        $this->varnishCache($response, 30);
+
+        return $response;
     }
 
     public function microsoftAction()
@@ -200,12 +441,20 @@ class DefaultController extends Controller
 
     public function privacyAction()
     {
-        return $this->render('SpoutletBundle:Default:privacy.html.twig');
+        $site = $this->getSiteFromUserCountry();
+
+        return $this->render('SpoutletBundle:Default:privacy.html.twig', array(
+            'locale' => $site->getDefaultLocale()
+        ));
     }
 
     public function terms_conditionsAction()
     {
-        return $this->render('SpoutletBundle:Default:terms_conditions.html.twig');
+        $site = $this->getSiteFromUserCountry();
+
+        return $this->render('SpoutletBundle:Default:terms_conditions.html.twig', array(
+            'locale' => $site->getDefaultLocale()
+        ));
     }
 
     public function aboutAction()
@@ -264,30 +513,18 @@ class DefaultController extends Controller
         return $this->render('SpoutletBundle:Default:military.html.twig');
     }
 
-    public function videoFeedAction(Request $request)
+    public function videoFeedAction(Request $request, $height='252')
     {
         $videos = $this->getYoutubeManager()->findFeaturedVideosForCountry($this->getCurrentSite(), $this->getCurrentCountry(), 6);
 
-        return $this->render('SpoutletBundle:Default:videoFeed.html.twig', array(
+        $response = $this->render('SpoutletBundle:Default:_videos.html.twig', array(
             'videos' => $videos,
+            'height' => $height,
         ));
-    }
 
-    private function getVideoFeedUrl($locale)
-    {
-        /*http://chinastaging.alienwarearena.com/video/ajax/apjxml
-        http://china.alienwarearena.com/video/ajax/apjxml
-        http://japanstaging.alienwarearena.com/video/ajax/apjxml
-        http://japan.alienwarearena.com/video/ajax/apjxml*/
-        switch($locale)
-        {
-            case 'zh':
-                return 'http://china.alienwarearena.com/video/ajax/apjxml';
-            case 'ja':
-                return 'http://japan.alienwarearena.com/video/ajax/apjxml';
-            default:
-                return 'http://video.alienwarearena.com/ajax/moviexml';
-        }
+        $this->varnishCache($response, 30);
+
+        return $response;
     }
 
     public function eventsAction()

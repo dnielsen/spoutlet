@@ -26,6 +26,7 @@ class SpoutletExtension extends Twig_Extension
     private $bucketName;
     private $currentSiteConfig = NULL;
     private $currentSiteFeatures = NULL;
+    private $currentSiteCountrySpecificItems = NULL;
     private $currentSite = NULL;
     private $currentUser = NULL;
     private $giveawayManager;
@@ -39,8 +40,11 @@ class SpoutletExtension extends Twig_Extension
     private $backgroundAdRepo;
     private $localAuth;
     private $siteRepo;
+    private $secureUrlScheme;
+    private $countryCode;
+    private $flashUtil;
 
-    public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager, $contentReportRepo, $siteRepo, $backgroundAdRepo, $localAuth)
+    public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager, $contentReportRepo, $siteRepo, $backgroundAdRepo, $localAuth, $secureUrlScheme, $flashUtil)
     {
         $this->bucketName          = $bucketName;
         $this->giveawayManager     = $giveawayManager;
@@ -55,6 +59,8 @@ class SpoutletExtension extends Twig_Extension
         $this->backgroundAdRepo    = $backgroundAdRepo;
         $this->siteRepo            = $siteRepo;
         $this->localAuth           = $localAuth;
+        $this->secureUrlScheme     = $secureUrlScheme;
+        $this->flashUtil           = $flashUtil;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -73,6 +79,9 @@ class SpoutletExtension extends Twig_Extension
         $this->currentSite         = $this->siteUtil->getCurrentSite();
         $this->currentSiteFeatures = $this->currentSite->getSiteFeatures();
         $this->currentSiteConfig   = $this->currentSite->getSiteConfig();
+
+        $countryCode               = $this->request->headers->get('X-Country-Code');
+        $this->countryCode         = $countryCode != 'GB' ? $countryCode : 'UK';
     }
 
     public function getFilters()
@@ -97,21 +106,24 @@ class SpoutletExtension extends Twig_Extension
             'cevo_account_link'              => new Twig_Function_Method($this, 'cevoAccountLink'),
             'cevo_account_giveaway_link'     => new Twig_Function_Method($this, 'cevoAccountGiveawayPageLink'),
             'current_user_cevo_account_link' => new Twig_Function_Method($this, 'currentUserCevoAccountLink'),
-            'can_user_apply_to_giveaway'   => new Twig_Function_Method($this, 'canUserApplyToGiveaway'),
-            'account_link'                 => new Twig_Function_Method($this, 'accountLink'),
-            'change_link_domain'           => new Twig_Function_Method($this, 'changeLinkDomain'),
-            'ends_with'                    => new Twig_Function_Method($this, 'endsWith'),
-            'get_avatar_url'               => new Twig_Function_Method($this, 'getAvatarUrl'),
-            'has_user_applied_to_giveaway' => new Twig_Function_Method($this, 'hasUserAppliedToGiveaway'),
-            'is_admin_page'                => new Twig_Function_Method($this, 'isAdminPage'),
-            'media_path_nice'              => new Twig_Function_Method($this, 'mediaPathNice'),
-            'site_link'                    => new Twig_Function_Method($this, 'siteLink', array('is_safe' => array('html'))),
-            'target_blank'                 => new Twig_Function_Method($this, 'getTargetBlank', array('is_safe' => array('html'))),
-            'can_user_report'              => new Twig_Function_Method($this, 'canReport'),
-            'login_link'                   => new Twig_Function_Method($this, 'getLoginUrl'),
-            'account_home_link'            => new Twig_Function_Method($this, 'getAccountHomeUrl'),
+            'can_user_apply_to_giveaway'     => new Twig_Function_Method($this, 'canUserApplyToGiveaway'),
+            'account_link'                   => new Twig_Function_Method($this, 'accountLink'),
+            'change_link_domain'             => new Twig_Function_Method($this, 'changeLinkDomain'),
+            'ends_with'                      => new Twig_Function_Method($this, 'endsWith'),
+            'get_avatar_url'                 => new Twig_Function_Method($this, 'getAvatarUrl'),
+            'has_user_applied_to_giveaway'   => new Twig_Function_Method($this, 'hasUserAppliedToGiveaway'),
+            'is_admin_page'                  => new Twig_Function_Method($this, 'isAdminPage'),
+            'media_path_nice'                => new Twig_Function_Method($this, 'mediaPathNice'),
+            'site_link'                      => new Twig_Function_Method($this, 'siteLink', array('is_safe' => array('html'))),
+            'target_blank'                   => new Twig_Function_Method($this, 'getTargetBlank', array('is_safe' => array('html'))),
+            'can_user_report'                => new Twig_Function_Method($this, 'canReport'),
+            'login_link'                     => new Twig_Function_Method($this, 'getLoginUrl'),
+            'login_check_path'               => new Twig_Function_Method($this, 'getLoginCheckPath'),
+            'account_home_link'              => new Twig_Function_Method($this, 'getAccountHomeUrl'),
             'current_background_ad_url'      => new Twig_Function_Method($this, 'getCurrentBackgroundUrl'),
             'current_background_ad_link'     => new Twig_Function_Method($this, 'getCurrentBackgroundLink'),
+            'country_specific'               => new Twig_Function_Method($this, 'countrySpecific', array('is_safe' => array('html'))),
+            'get_flash'                      => new Twig_Function_Method($this, 'getFlash'),
         );
     }
 
@@ -205,7 +217,7 @@ class SpoutletExtension extends Twig_Extension
             return null;
         }
 
-        return $this->cevoAccountLinkFromCevoUserId($this->currentUser->getCevoUserId());
+        return $this->cevoAccountLinkFromCevoUserId($this->currentUser->getUuid());
     }
 
     public function cevoAccountLink($user)
@@ -216,9 +228,9 @@ class SpoutletExtension extends Twig_Extension
             return $this->currentUserCevoAccountLink();
         }
 
-        $user = $user instanceof User ? $user : $this->userManager->loadUserByUsername($user);
+        $user = $user instanceof User ? $user : $this->userManager->findUserByUsername($user);
 
-        return $this->cevoAccountLinkFromCevoUserId($user->getCevoUserId());
+        return $this->cevoAccountLinkFromCevoUserId($user->getUuid());
     }
 
     public function cevoAccountGiveawayPageLink($site = null) {
@@ -262,7 +274,7 @@ class SpoutletExtension extends Twig_Extension
         }
 
         if ($cevoUserId && $cevoUserId > 0) {
-            return sprintf('http://www.alienwarearena.com%s/member/%d', $subdomain , $cevoUserId);
+            return sprintf('http://www.alienwarearena.com%s/member/%s', $subdomain , $cevoUserId);
         }
 
         return 'http://www.alienwarearena.com/account/profile';
@@ -270,40 +282,12 @@ class SpoutletExtension extends Twig_Extension
 
     public function accountLink($username)
     {
-        $user           = $this->userManager->loadUserByUsername($username);
+        // http://www.alienwarearena.com/member/9672b289-ec1b-4127-b8a7-a837d9ed0050/
+        // http://www.alienwarearena.com/member/2126643/
+        // http://www.alienwarearena.com/member/playitcool2/
+        $user = $this->userManager->findUserByUsername($username);
 
-        if (!$this->localAuth) {
-            $cevoUserId     = $user->getCevoUserId();
-            $locale         = $this->session->getLocale();
-
-            switch ($locale) {
-                case 'ja':
-                    $subdomain = '/japan';
-                    break;
-
-                case 'zh':
-                    $subdomain = '/china';
-                    break;
-
-                case 'es':
-                    $subdomain = '/latam';
-                    break;
-
-                default:
-                    $subdomain = '';
-                    break;
-            }
-
-            if ($cevoUserId && $cevoUserId > 0) {
-                return sprintf('http://www.alienwarearena.com%s/member/%d', $subdomain , $cevoUserId);
-            }
-
-            return 'http://www.alienwarearena.com/account/profile';
-        } else {
-            return $this->router->generate('accounts_profile', array(
-                'username' => $user ? $username : null,
-            ));
-        }
+        return sprintf('http://www.alienwarearena.com/member/%s', $user->getUuid());
     }
 
     public function endsWith($haystack, $needle) {
@@ -538,14 +522,10 @@ class SpoutletExtension extends Twig_Extension
      * @param string $default
      * @return string
      */
-    public function getAvatarUrl(User $user)
+    public function getAvatarUrl(User $user, $size = 84)
     {
-        if ($user->getCevoAvatarUrl()) {
-            return $user->getCevoAvatarUrl();
-        }
-
         if ($user->getAvatar() && $user->isAvatarApproved()) {
-            return $this->mediaExposer->getPath($user);
+            return $this->mediaExposer->getPath($user, array('size' => $size));
         }
 
         return false;
@@ -595,11 +575,15 @@ class SpoutletExtension extends Twig_Extension
 
     private function GetAlienwareLinkAddress($locale) {
 
+        if ($link = $this->countrySpecific('alienware_link')) {
+            return $link;
+        }
+
         switch($locale) {
             case 'ja':      return 'http://alienware.jp/';
             case 'zh':      return 'http://alienware.com.cn/';
             case 'es':      return 'http://www.alienware.com/mx/';
-            case 'en_SG':   return 'http://allpowerful.com/asia';
+            case 'en_SG':   return 'http://www.alienware.com.my/';
             case 'en_AU':   return 'http://www.alienware.com.au/';
             case 'en_GB':   return 'http://www1.euro.dell.com/content/topics/segtopic.aspx/alienware?c=uk&cs=ukdhs1&l=en&s=dhs&~ck=mn';
             case 'en_IN':   return 'http://www.alienware.co.in/';
@@ -643,6 +627,7 @@ class SpoutletExtension extends Twig_Extension
             case 'es':      return sprintf($format, 'AlienwareLatinoamerica', $enAltText);
             case 'en_IN':   return sprintf($format, 'alienwareindia', $enAltText);
             case 'en_US':   return sprintf($format, $enLink, $enAltText);
+            case 'en_GB':   return sprintf($format, $enLink, $enAltText);
 
             default:        return false;
         }
@@ -657,6 +642,7 @@ class SpoutletExtension extends Twig_Extension
             case 'ja':      return sprintf($format, 'Alienware_JP', $enAltText);
             case 'es':      return sprintf($format, 'AlienwareLatAm', $enAltText);
             case 'en_US':   return sprintf($format, $enLink, $enAltText);
+            case 'en_GB':   return sprintf($format, $enLink, $enAltText);
 
             default:        return false;
         }
@@ -934,6 +920,15 @@ class SpoutletExtension extends Twig_Extension
         return $prefix.$return;
     }
 
+    public function getLoginCheckPath()
+    {
+        $scheme = $this->secureUrlScheme;
+        $path = $this->router->generate('_fos_user_security_check', array(), $scheme == 'https');
+        $path = preg_replace('#^http:#', 'https:', $path);
+
+        return $path;
+    }
+
     public function getAccountHomeUrl() {
         return $this->localAuth ? $this->router->generate('accounts_index') : 'http://alienwarearena.com/account/';
     }
@@ -942,5 +937,32 @@ class SpoutletExtension extends Twig_Extension
     {
         $site = $this->siteRepo->find($siteId);
         return $site ? $site->getName() : '';
+    }
+
+    public function countrySpecific($key)
+    {
+        switch ($key) {
+            case "alienware_link": $default = null; break;
+            default: throw new \InvalidArgumentException(sprintf('Unknown country-specific key "%s"', $key));
+        }
+
+        $countrySpecificItems = $this->siteUtil->getCurrentSiteCached()->getCountrySpecificItems();
+
+        $items = array();
+
+        foreach ($countrySpecificItems as $item) {
+            $items[$item->getName()][$item->getCountryCode()] = $item->getValue();
+        }
+
+        if (!$this->countryCode) {
+            return isset($items[$key]['default']) ? $items[$key]['default'] : $default;
+        }
+
+        return isset($items[$key][$this->countryCode]) ? $items[$key][$this->countryCode] : ((isset($items[$key]['default']) ? $items[$key]['default'] : $default));
+    }
+
+    public function getFlash()
+    {
+        return $this->flashUtil->getFlash();
     }
 }

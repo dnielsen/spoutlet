@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\SpoutletBundle\Entity\SiteFeatures;
 use Platformd\SpoutletBundle\Entity\SiteConfig;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Platformd\SpoutletBundle\Entity\Site
@@ -63,10 +64,20 @@ class Site
     private $siteConfig;
 
     /**
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\CountrySpecificItem", mappedBy="site", cascade={"persist"}, fetch="EAGER")
+     */
+    private $countrySpecificItems;
+
+    /**
      * @ORM\Column(type="string")
      * @Assert\NotNull
      */
     private $theme = self::DEFAULT_THEME;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\Region", mappedBy="site")
+     */
+    private $region;
 
     public function __construct() {
         $this->siteFeatures = new SiteFeatures();
@@ -74,6 +85,8 @@ class Site
 
         $this->siteConfig = new SiteConfig();
         $this->siteConfig->setSite($this);
+
+        $this->countrySpecificItems = new ArrayCollection();
     }
 
     public function __toString() {
@@ -166,5 +179,25 @@ class Site
     public function getTheme()
     {
         return $this->theme;
+    }
+
+    public function setCountrySpecificItems($value)
+    {
+        $this->countrySpecificItems = $value;
+    }
+
+    public function getCountrySpecificItems()
+    {
+        return $this->countrySpecificItems;
+    }
+
+    public function setRegion($value)
+    {
+        $this->region = $value;
+    }
+
+    public function getRegion()
+    {
+        return $this->region;
     }
 }

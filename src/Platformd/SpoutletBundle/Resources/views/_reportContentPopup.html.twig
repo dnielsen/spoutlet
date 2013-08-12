@@ -3,7 +3,7 @@
         <div style="height: 120px;">
             {{ 'content_reporting.must_be_logged_in' | pd_trans }}
         </div>
-        <button id="close-dialog-{{ reportContentType }}" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
+        <button id="close-dialog-{{ reportContentType }}" onclick="$('#report-content-dialog-{{ reportContentType }}').dialog('close');" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
     </div>
 
     <div data-logged-in="true">
@@ -11,7 +11,7 @@
             <div style="height: 120px;">
                 {{ 'content_reporting.once_per_hour' | pd_trans }}
             </div>
-            <button id="close-dialog-{{ reportContentType }}" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
+            <button id="close-dialog-{{ reportContentType }}" onclick="$('#report-content-dialog-{{ reportContentType }}').dialog('close');" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
         </div>
 
         <div data-can-report="true">
@@ -29,7 +29,7 @@
                </div>
             </div>
             <button class="btn btn-primary" id="submit-report-{{ reportContentType }}">{{ 'content_reporting.submit' | pd_trans }}</button>
-            <button class="btn btn-primary" id="close-dialog-{{ reportContentType }}" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
+            <button class="btn btn-primary close-dialog" id="close-dialog-{{ reportContentType }}" onclick="$('#report-content-dialog-{{ reportContentType }}').dialog('close');" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
         </div>
     </div>
 </div>
@@ -96,7 +96,7 @@
                 success: function(data) {
                     $('#report-response').text(data.messageForUser);
                     $('#report-response').fadeIn();
-                    $('#close-dialog-{{ reportContentType }}').text('OK');
+                    $('.btn.btn-primary.close-dialog').text('OK');
                     $('#submit-report-{{ reportContentType }}').hide();
                     reported = true;
                 }

@@ -39,9 +39,14 @@ class InsufficientAgeListener
             return;
         }
 
+        $referer = $event->getRequest()->headers->get('referer');
+        $regPath = $this->router->generate('fos_user_registration_register', array(), true);
+
+        $template = $referer == $regPath ? 'UserBundle:Registration:tooYoung.html.twig' : 'SpoutletBundle:Age:insufficientAge.html.twig';
+
         if ($this->ageManager->isUsersAgeVerified()) {
             $content = $this->templating->render(
-                'SpoutletBundle:Age:insufficientAge.html.twig'
+                $template
             );
 
             $event->setResponse(new Response($content));
@@ -49,10 +54,12 @@ class InsufficientAgeListener
             return;
         }
 
-        $returnUrl = $event->getRequest()->getUri();
-        $verifyUrl = $this->router->generate('age_verification', array('returnUrl' => urlencode($returnUrl)));
-        $response  = new RedirectResponse($verifyUrl);
+        if ($event->getRequest()->get('_route') != 'fos_user_registration_register') {
+            $returnUrl = $event->getRequest()->getUri();
+            $verifyUrl = $this->router->generate('age_verification', array('returnUrl' => urlencode($returnUrl)));
+            $response  = new RedirectResponse($verifyUrl);
 
-        $event->setResponse($response);
+            $event->setResponse($response);
+        }
     }
 }

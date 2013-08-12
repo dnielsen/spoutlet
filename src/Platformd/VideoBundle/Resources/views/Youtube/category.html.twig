@@ -48,6 +48,7 @@
     {{ parent() }}
     <script type="text/javascript">
         $(function () {
+            $('img.lazy').lazyLoad();
             $('.more-videos-link a').truncate({width: 280});
             $(".featured-content-header a").click(function() {
                 var tab = $(this).attr("data-tab");
@@ -68,9 +69,11 @@
                         $('#video-content').html(a);
                         $('.more-videos-link a').truncate({width: 280});
                         $('.videos-wrapper').unblock();
+                        $('img.lazy').lazyLoad();
                     },
                     error: function (a, b, c) {
                         $('.videos-wrapper').unblock();
+                        $('img.lazy').lazyLoad();
                     }
                 });
             });

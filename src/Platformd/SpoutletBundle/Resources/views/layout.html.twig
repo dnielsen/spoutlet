@@ -3,6 +3,9 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        {% render url('_check_account_complete') with {}, {'standalone': true } %}
+
 		<script type="text/javascript">
 			var CKEDITOR_BASEPATH = '/ckeditor/';
 		</script>
@@ -18,9 +21,9 @@
         {% block stylesheets %}
             {% stylesheets
                 'plugins/jquery.ad-gallery/jquery.ad-gallery.css'
-                'bundles/spoutlet/css/forms.css'
-                'bundles/spoutlet/css/style.css'
                 'bundles/spoutlet/css/superfish-aw.css'
+                'bundles/spoutlet/css/style.css'
+                'bundles/spoutlet/css/forms.css'
                 'bundles/spoutlet/css/thickbox.css'
                 'bundles/spoutlet/css/custom-theme/jquery-ui-1.8.16.custom.css'
                 'bundles/spoutlet/css/account-registration.css'
@@ -32,6 +35,7 @@
                 'bundles/spoutlet/css/jquery.mCustomScrollbar.css'
                 'bundles/spoutlet/css/qtip.css'
                 'bundles/spoutlet/css/rsvp.css'
+                'bundles/spoutlet/css/blockUI.css'
 		        filter='cssrewrite'
 		        output='css/packed/layout_default.css'
 		    %}
@@ -68,6 +72,7 @@
                 'plugins/jquery.ad-gallery/jquery.ad-gallery.js'
                 'bundles/spoutlet/js/jquery.blockUI.js'
                 'bundles/spoutlet/js/jquery.watermark.min.js'
+                'bundles/spoutlet/js/libs/jquery.form.js'
 		        output='js/packed/layout_default.js'
 		    %}
 		    <script type="text/javascript" src="{{ asset_url }}"></script>
@@ -121,6 +126,8 @@
 		    $(document).ready(function(){
                 $('a[href^="http://"]').not('a[href*=alienwarearena]').attr('target','_blank');
                 $('a[href*="alienwarearena"]').attr('target','');
+                $('a[href*="mediastaging.alienwarearena"]').attr('target', '_blank');
+                $('a[href*="media.alienwarearena"]').attr('target', '_blank');
 
 		        $("ul.sf-list").supersubs({
 		            minWidth:   12,
@@ -194,23 +201,6 @@
                     }
                 });
 
-                {% if block('flash') %}
-                    $('.session-flash').fadeIn();
-                {% else %}
-                    $.ajax({
-                        url: '{{ path('_session_flash_message') }}',
-                        dataType: 'json',
-                        async: false,
-                        success: function(data) {
-                            if (data && data.type && data.message) {
-                                $('.session-flash #notice-type').html(data.type);
-                                $('.session-flash #notice-message').html(data.message);
-                                $('.session-flash .notice').addClass(data.type + 'Notice');
-                                $('.session-flash').fadeIn();
-                            }
-                        }
-                    });
-                {% endif %}
 			});
 		</script>
 
@@ -223,7 +213,7 @@
 	<body class="site-{{ app.session.locale }}">
         {% if features.hasFacebook and config.facebookAppId %}
         <div id="fb-root"></div>
-        <script src="//connect.facebook.net/en_US/all.js"></script>
+        <script src="//connect.facebook.net/{{ site.defaultLocale }}/all.js"></script>
         <script>
           // assume we are already logged in
           FB.init({appId: '{{ config.facebookAppId }}', xfbml: true, cookie: true});
@@ -247,20 +237,7 @@
 
                                     {% block pre_content_nav %}{% endblock %}
 
-                                    <div class="xnotices session-flash" style="display: none;">
-                                        <div class="{% if block('flash_type') %}{{ block('flash_type') ~ 'Notice ' }}{% endif %}notice">
-                                            <div class="pad">
-                                                <div class="pad2">
-                                                    <div class="pad3">
-                                                        <div class="pad4">
-                                                            <h3 id="notice-type">{% if block('flash_type') %}{{ block('flash_type') }}{% endif %}</h3>
-                                                            <p id="notice-message">{% if block('flash') %}{{ block('flash') }}{% endif %}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {% render url('_flash_message') with {}, {'standalone': true } %}
 
                                     {% block content %}{% endblock %}
 
@@ -273,7 +250,7 @@
                                 {{ block('legal_footer') }}
                             </div>
                         {% endif %}
-	                    {% include 'SpoutletBundle::footer.html.twig' %}
+                        {% render url('_layout_footer') with {}, {'standalone': true } %}
 	                </div>
 	            </div>
 	        </div>
@@ -307,6 +284,5 @@
             // -->
         </script>
         <!-- end mediaplex -->
-
 	</body>
 </html>

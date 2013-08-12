@@ -17,7 +17,6 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
         $site = new Site();
 
         $forwardedPaths = array(
-          '^/$',
           '^/arp',
           '^/forums',
           '^/contact',
@@ -182,7 +181,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasMatchClient()
           ->setHasProfile()
           ->setHasForwardOn404()
-          ->setHasIndex(false)
+          ->setHasIndex()
           ->setHasAbout(false)
           ->setHasContact(false)
           ->setHasSearch()
@@ -213,7 +212,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasMatchClient()
           ->setHasProfile()
           ->setHasForwardOn404()
-          ->setHasIndex(false)
+          ->setHasIndex()
           ->setHasAbout(false)
           ->setHasContact(false)
           ->setHasSearch()
@@ -244,7 +243,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasMatchClient()
           ->setHasProfile()
           ->setHasForwardOn404()
-          ->setHasIndex(false)
+          ->setHasIndex()
           ->setHasAbout(false)
           ->setHasContact(false)
           ->setHasSearch()
@@ -275,7 +274,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasMatchClient()
           ->setHasProfile()
           ->setHasForwardOn404()
-          ->setHasIndex(false)
+          ->setHasIndex()
           ->setHasAbout(false)
           ->setHasContact(false)
           ->setHasSearch()
@@ -306,7 +305,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasMatchClient()
           ->setHasProfile()
           ->setHasForwardOn404()
-          ->setHasIndex(false)
+          ->setHasIndex()
           ->setHasAbout(false)
           ->setHasContact(false)
           ->setHasSearch()
@@ -337,7 +336,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasMatchClient()
           ->setHasProfile()
           ->setHasForwardOn404()
-          ->setHasIndex(false)
+          ->setHasIndex()
           ->setHasAbout(false)
           ->setHasContact(false)
           ->setHasSearch()

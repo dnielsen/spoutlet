@@ -15,10 +15,10 @@ parameters:
     allow_cevo_forwarding: false
 
     email_destination_override: true
-    email_destination_override_with: chris.magee@gametheworld.com
+    email_destination_override_with: jefrykland@igamesinc.com
 
-    # used in security.yml to disable https for viewing admin pages on dev environment
-    admin_url_scheme: http
+    # used in security.yml to disable https for viewing secure pages on dev environment
+    secure_url_scheme: http
     allow_caching: true
 
     # if set to true, the ipLookupUtil will read the contents of a file named "overrideCountry"
@@ -29,6 +29,8 @@ parameters:
     ip_lookup_override: true
 
     search_dev_mode: true
+
+    api_authentication: false
 
 framework:
     router:   { resource: "%kernel.root_dir%/config/routing_dev.yml" }
