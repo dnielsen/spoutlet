@@ -1,0 +1,7 @@
+twitter_security_check:
+    pattern: /login-check
+    defaults: { _controller: UserBundle:Security:twitterSecurityCheck }
+
+twitter_login:
+    pattern: /login
+    defaults: { _controller: UserBundle:Security:twitterLogin }

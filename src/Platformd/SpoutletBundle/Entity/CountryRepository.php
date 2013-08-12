@@ -17,4 +17,13 @@ class CountryRepository extends EntityRepository
             ->getQuery()
             ->execute();
     }
+
+    public function getCountryFromCode($code)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.code = :code')
+            ->setParameter('code', $code)
+            ->getQuery()
+            ->getSingleResult();
+    }
 }

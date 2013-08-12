@@ -1,0 +1,48 @@
+<div class="widget-66" id="groups-widget">
+    <div class="widget-header">
+        <div class="widget-title">Groups</div>
+        <div class="clear"></div>
+    </div>
+    <div class="widget-content" style="height: 287px;">
+        <div style="margin:15px 0 0 15px">
+            {% for group in featured %}
+                <div class="group-list-item">
+                    <a href="{{ path('group_show', { slug: group[0].slug}) }}">
+                        {% if group[0].thumbNail %}
+                        <img  class="lazy" src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" data-src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
+                        {% else %}
+                        <img src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
+                        {% endif %}
+                    </a>
+                    <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
+                        {{ group[0].name }}
+                    </a>
+                    <div class="details">
+                        <div class="item-detail">{{ 'platformd.groups.index.members' | pd_trans }}: {{ group['memberCount'] }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% for group in popular %}
+                <div class="group-list-item">
+                    <a href="{{ path('group_show', { slug: group[0].slug}) }}">
+                        {% if group[0].thumbNail %}
+                        <img  class="lazy" src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" data-src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
+                        {% else %}
+                        <img src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
+                        {% endif %}
+                    </a>
+                    <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
+                        {{ group[0].name }}
+                    </a>
+                    <div class="details">
+                        <div class="item-detail">{{ 'platformd.groups.index.members' | pd_trans }}: {{ group['memberCount'] }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="widget-footer">
+        <a href="{{ path('groups') }}" class="aw-link" id="more-news-link">{{ 'platformd.layout.page_content.see_more' | trans }}</a>
+        <div class="clear"></div>
+    </div>
+</div>

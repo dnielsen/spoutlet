@@ -7,6 +7,12 @@ use Platformd\UserBundle\Entity\User;
 use Platformd\EventBundle\Service\GroupEventService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Platformd\UserBundle\Form\Type\AccountSettingsType;
+use Platformd\UserBundle\Entity\Avatar;
+use Platformd\UserBundle\Form\Type\AvatarType;
+use Platformd\UserBundle\Exception\ApiRequestException;
+use Platformd\UserBundle\Form\Type\UnsubscribeFormType;
 
 class AccountController extends Controller
 {
@@ -50,7 +56,7 @@ class AccountController extends Controller
             }
 
             if ($user) {
-                $cevoUserId = $user->getCevoUserId();
+                $cevoUserId = $user->getUuid();
 
                 if ($cevoUserId && $cevoUserId > 0) {
                     return $this->redirect(sprintf('http://www.alienwarearena.com/%s/member/%d', $subdomain , $cevoUserId));
@@ -63,10 +69,7 @@ class AccountController extends Controller
                 'user' => $user,
             ));
         }
-
-
 	}
-
 
 	public function accountAction()
 	{
@@ -236,6 +239,8 @@ class AccountController extends Controller
 
     public function videosAction(Request $request)
     {
+        $this->checkSecurity();
+
         $page    = $request->query->get('page', 1);
         $user    = $this->getUser();
         $manager = $this->getYoutubeManager();
@@ -268,5 +273,189 @@ class AccountController extends Controller
     protected function getYoutubeManager()
     {
         return $this->get('platformd.model.youtube_manager');
+    }
+
+    public function settingsAction(Request $request)
+    {
+        $this->checkSecurity();
+
+        $form = $this->createForm($this->getFormType(), $this->getUser());
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                try {
+                    $this->getUserManager()->updateApiPassword($form->getData(), $form->get('plainPassword')->getData());
+                    $this->setFlash('success', 'platformd.user.account.changes_saved');
+
+                    return $this->redirect($this->generateUrl('accounts_settings'));
+                } catch (ApiRequestException $e) {
+                    $this->setFlash('error', 'The system is currently unable to process your request. Please try again shortly.');
+                }
+            }
+        }
+
+        $avatarManager = $this->getAvatarManager();
+        $data          = $avatarManager->getAvatarListingData($this->getUser(), 184);
+        $newAvatar     = new Avatar();
+
+        $newAvatar->setUser($this->getUser());
+
+        $avatarForm         = $this->createForm(new AvatarType(), $newAvatar);
+        $subscriptionForm   = $this->createForm($this->getSubscriptionFormType(), $this->getUser());
+
+        return $this->render('SpoutletBundle:Account:settings.html.twig', array(
+            'form'              => $form->createView(),
+            'avatarForm'        => $avatarForm->createView(),
+            'data'              => $data,
+            'subscriptionForm'  => $subscriptionForm->createView(),
+        ));
+    }
+
+    public function subscriptionSettingsAction(Request $request)
+    {
+        $this->checkSecurity();
+
+        $form = $this->createForm($this->getSubscriptionFormType(), $this->getUser());
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            $this->getUserManager()->updateUser($form->getData());
+            $this->setFlash('success', 'platformd.user.account.changes_saved');
+        }
+
+        return $this->redirect($this->generateUrl('accounts_settings'));
+    }
+
+    public function addAvatarAction(Request $request)
+    {
+        $this->checkSecurity();
+
+        $newAvatar     = new Avatar();
+        $newAvatar->setUser($this->getUser());
+
+        $form = $this->createForm(new AvatarType(), $newAvatar);
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                $newAvatar = $form->getData();
+
+                $this->getAvatarManager()->save($newAvatar);
+
+                if ($newAvatar->getUuid()) {
+                    return $this->redirect($this->generateUrl('avatar_crop', array(
+                        'uuid' => $newAvatar->getUuid(),
+                    )));
+                }
+            }
+        }
+
+        $this->setFlash('error', 'platformd.user.avatars.invalid_avatar');
+
+        return $this->redirect($this->generateUrl('accounts_settings'));
+    }
+
+    private function getFormType()
+    {
+        return $this->get('platformd_user.account_settings.form.type');
+    }
+
+    private function getSubscriptionFormType()
+    {
+        return $this->get('platformd_user.subscription_settings.form.type');
+    }
+
+    public function incompleteAction(Request $request)
+    {
+        $this->checkSecurity();
+
+        $user = $this->getCurrentUser();
+
+        if ($this->getUserManager()->isUserAccountComplete($user)) {
+            return $this->redirect($this->generateUrl('accounts_settings'));
+        }
+
+        $form        = $this->createForm('platformd_incomplete_account', $user);
+        $childErrors = false;
+
+        if($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->hasChildren()) {
+                foreach ($form->getChildren() as $child) {
+                    if (!$child->isValid()) {
+                        $childErrors = true;
+                    }
+                }
+            }
+
+            if($form->isValid()) {
+                try {
+                    $this->getUserManager()->updateUserAndApi($form->getData());
+                    return $this->redirect($this->generateUrl('accounts_settings'));
+                } catch (ApiRequestException $e) {
+                    $this->setFlash('error', 'The system is currently unable to process your request. Please try again shortly.');
+                }
+            }
+        }
+
+        return $this->render('SpoutletBundle:Account:incomplete.html.twig', array(
+            'form'        => $form->createView(),
+            'errors'      => $form->getErrors(),
+            'childErrors' => $childErrors,
+        ));
+    }
+
+    public function unsubscribeAction(Request $request, $email)
+    {
+        if ($email) {
+            try {
+                $user = $this->getUserManager()->loadUserByUsername(urldecode($email));
+
+                if ($user) {
+
+                    $form = $this->createForm(new UnsubscribeFormType(), array('unsubscribe' => false, 'email' => $email));
+
+                    if ($request->getMethod() == 'POST') {
+                        $form->bindRequest($request);
+
+                        $data = $form->getData();
+
+                        if ($data['unsubscribe']) {
+                            $user->setSubscribedAlienwareEvents(false);
+                            $this->getUserManager()->updateUserAndApi($user);
+                        }
+
+                        return $this->render('SpoutletBundle:Account:unsubscribe.html.twig', array(
+                            'success'      => true,
+                            'userIsValid'  => true,
+                        ));
+                    }
+
+                    return $this->render('SpoutletBundle:Account:unsubscribe.html.twig', array(
+                        'form'          => $form->createView(),
+                        'email'         => $email,
+                        'userIsValid'   => true,
+                        'success'       => false,
+                    ));
+                }
+            } catch (UsernameNotFoundException $e) {
+                return $this->render('SpoutletBundle:Account:unsubscribe.html.twig', array(
+                    'userIsValid' => false,
+                    'success'     => false,
+                ));
+            }
+        }
+
+        return $this->render('SpoutletBundle:Account:unsubscribe.html.twig', array(
+            'userIsValid' => false,
+            'success'     => false,
+        ));
     }
 }

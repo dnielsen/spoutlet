@@ -3,7 +3,7 @@
     '%username%': user.username,
     '%route%': account_link(user.username)
 }) | raw }}
-	<li class="separator"><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | trans }}</a></li>
+	<li class="separator"><a id="logout" href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | trans }}</a></li>
 	<li class="separator"><a href="{{ path('accounts_index') }}">{{ 'platformd.layout.top_menu.account' | trans }}</a></li>
     {% if is_granted("ROLE_ADMIN") %}
     <li class="separator"><a href="{{ path('admin_index') }}">{{ "platformd.layout.top_menu.admin" | trans }}</a></li>
@@ -15,20 +15,65 @@
         var can_report = {% if can_user_report() %}true{% else %}false{% endif %};
     </script>
 {% else %}
-	<li class="separator"><a id="header-login-link" href="{{ login_link(app.request.uri) }}">{{ 'platformd.layout.top_menu.sign_in' | trans }}</a></li>
+	<li class="separator"><a id="header-login-link" href="javascript:void(0);">{{ 'platformd.layout.top_menu.sign_in' | trans }}</a></li>
 	<li class="separator"><a href="{{ path('fos_user_registration_register') }}">{{ 'platformd.layout.top_menu.join' | trans }}</a></li>
 
     <script type="text/javascript">
+        $(function () {
+            $('#header-login-link').click(function () {
+                $.blockUI({
+                    message: $('#login-modal-wrapper'),
+                    css: {
+                        border: 'none',
+                        backgroundColor: 'transparent',
+                        cursor: 'auto'
+                    },
+                });
+                $('.blockOverlay').click(function () {
+                    $.unblockUI();
+                });
 
-        var newUrl = '{{ login_link() }}' + '?return=' + encodeURIComponent(window.location.href);
+                var sessionExists = document.cookie.indexOf("PHPSESSID") >= 0;
 
-        $('#header-login-link').attr('href', newUrl);
+                if (!sessionExists) {
+                    $('#login-modal').block({message: null});
+                    $.ajax({
+                        url: '{{ path("session_cookie") }}',
+                        type: 'get',
+                        success: function(data) {
+                            $('#login-modal').unblock();
+                        }
+                    })
+                }
+            });
+            $(document).keyup(function(e) {
+                if (e.keyCode == 27) {
+                    $.unblockUI();
+                }
+            });
+            $('#_target_path').val(window.location.href);
 
-        var user_is_logged_in = false;
+            $('#login-form').ajaxForm({
+                success: handleResponse
+            });
+        });
+
+        var user_is_logged_in = false
         var user_id = null;
         var is_admin = false;
         var can_report = false;
+
+        function handleResponse(responseText, statusText, xhr, $form)  {
+            if(responseText.success) {
+                window.location.href = responseText.referer;
+            } else {
+                alert(responseText.error);
+            }
+        }
+
     </script>
 {% endif %}
-
+<div id="login-modal-wrapper" style="display:none;">
+    {% include 'UserBundle:Security:_loginModal.html.twig' %}
+</div>
 

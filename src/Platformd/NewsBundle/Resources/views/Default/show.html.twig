@@ -23,7 +23,11 @@
                     '%posted_date%': ('sweepstakes_date_format' | pd_trans(news.postedAtArray))
                 })}}
             </h6>
-
+            {% if news.image %}
+                <div class="article-image-large">
+                    <img src="{{ news.image.filename | imagine_filter('article_full')  }}" alt="{{ news.title }}" />
+                </div>
+            {% endif %}
             <div style="margin: 10px 0;">
                 {{ news.body | raw }}
             </div>

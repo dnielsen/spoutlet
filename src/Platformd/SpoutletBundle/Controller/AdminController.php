@@ -9,10 +9,6 @@ use Platformd\MediaBundle\Entity\Media,
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-
-/**
- * Admin controller for events
- */
 class AdminController extends Controller
 {
     public function indexAction()
@@ -45,6 +41,82 @@ class AdminController extends Controller
             'medias' => $medias,
             'pager'   => $pager,
             'form'   => $form->createView(),
+        ));
+    }
+
+    public function massUnsubscribeAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $form = $this->createFormBuilder()
+            ->add('emailsText', 'textarea', array(
+                'attr' => array(
+                    'class' => 'input-xlarge'
+                ),
+                'label' => 'Paste Emails',
+                'required' => false,
+            ))
+            ->add('emailsFile', 'file', array(
+                'label' => 'Upload Emails (CSV)',
+                'required' => false,
+            ))
+            ->getForm();
+
+        $emailCount = null;
+
+        if ('POST' === $request->getMethod()) {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                $data = $form->getData();
+
+                $emailsText = $data['emailsText'];
+                $emails = $emailsText ? preg_split( "/[\s,]/", $emailsText, null, PREG_SPLIT_NO_EMPTY) : array();
+
+                foreach ($emails as $index => $email) {
+                    $emails[$index] = trim($email);
+                }
+
+                $file = $form->get('emailsFile');
+                $file = $file->getData();
+
+                if ($file && ($handle = fopen($file, "r")) !== FALSE) {
+
+                    while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                        if (!in_array($data[0], $emails) && $data[0] != "") {
+                            $emails[] = $data[0];
+                        }
+                    }
+
+                    fclose($handle);
+                }
+
+                if (count($emails) == 0) {
+                    $this->setFlash('error', 'No email addresses submitted!');
+                    return $this->redirect($this->generateUrl('admin_mass_unsubscribe'));
+                }
+
+                $users = $em->getRepository('UserBundle:User')->findUserListByEmail($emails);
+
+                if ($users) {
+                    foreach ($users as $user) {
+                        $user->setSubscribedAlienwareEvents(false);
+                        $this->getUserManager()->updateUser($user, false);
+                    }
+
+                    $em->flush();
+                }
+
+                $emailCount = count($users);
+
+                $this->setFlash('success', sprintf('%d members successfully unsubscribed!', $emailCount));
+                return $this->redirect($this->generateUrl('admin_mass_unsubscribe'));
+            }
+        }
+
+        return $this->render('SpoutletBundle:Admin:unsubscribe.html.twig', array(
+            'form' => $form->createView(),
         ));
     }
 

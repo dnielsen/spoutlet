@@ -5,7 +5,7 @@ namespace Platformd\SpoutletBundle\Model;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Session;
 
-class Translator
+class Translator implements TranslatorInterface
 {
     private $theme;
     private $translator;
@@ -21,10 +21,7 @@ class Translator
 
     public function trans($key, array $params = array(), $domain = 'messages', $locale = null)
     {
-        if (!($theme = $this->theme)) {
-            $site = $this->siteUtil->getCurrentSite();
-            $theme = $site ? $site->getTheme() : 'default';
-        }
+        $theme = $this->getTheme();
 
         if ($domain == 'messages' && $theme != 'default') {
             $domain = 'theme_' . $theme;
@@ -43,6 +40,38 @@ class Translator
         return $translatedString;
     }
 
+    public function transChoice($id, $number, array $parameters = array(), $domain = 'messages', $locale = null)
+    {
+        $theme = $this->getTheme();
+
+        if ($domain == 'messages' && $theme != 'default') {
+            $domain = 'theme_' . $theme;
+        }
+
+        if ($locale === null) {
+            $locale = $this->getLocale();
+        }
+
+        $translatedString = $this->translator->transChoice($id, $number, $parameters, $domain, $locale);
+
+        if ($translatedString == $key) {
+            return $this->translator->transChoice($id, $number, $parameters, 'messages', $locale);
+        }
+
+        return $translatedString;
+    }
+
+    private function getTheme()
+    {
+        if (!($theme = $this->theme)) {
+            $site = $this->siteUtil->getCurrentSite();
+            $theme = $site ? $site->getTheme() : 'default';
+            $this->theme = $theme;
+        }
+
+        return $theme;
+    }
+
     public function themeTrans($key, $theme, array $params = array(), $locale = null)
     {
         $this->theme = $theme;
@@ -58,5 +87,10 @@ class Translator
         }
 
         return $this->locale;
+    }
+
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
     }
 }

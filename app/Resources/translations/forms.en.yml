@@ -31,11 +31,11 @@ day: Day
 fos_user_registration_form_birthdate: "Date of Birth"
 fos_user_registration_form_hasAlienwareSystem: "Do you own an Alienware system?"
 fos_user_registration_form_termsAccepted: |
-    I have read and agree to the
+    I have read and agreed to the
     <a href="%terms_url%" target="_blank">Terms & Conditions</a> and
-    <a href="%privacy_url%" target="_blank">Privacy Policy</a>
+    <a href="%privacy_url%" target="_blank">Privacy Policy</a>.
 fos_user_registration_form_subscribedAlienwareEvents: "Subscribe me to receive news on the latest giveaways, contests, events and more from Alienware Arena via email."
-fos_user_registration_form_subscribedGamingNews: "Subscribe me to receive Alienware/Dell Gaming news and special offers via email"
+fos_user_registration_form_subscribedGamingNews: Subscribe me to receive Alienware/Dell gaming news and special offers via email. <a href="http://www.dell.com/learn/us/en/19/policies-privacy?c=us&l=en&s=gen&delphi:gr=true" target="_blank">View Dell Privacy Policy</a>.
 
 giveaway_name: "Name"
 giveaway_slug: "URL string - /giveaways/"
@@ -61,3 +61,17 @@ news_title: Title
 news_body: Body
 news_locale: Site
 news_published: Published?
+
+account_settings_currentPassword: "Current password: "
+account_settings_plainPassword_first: "New password: "
+account_settings_plainPassword_second: "Confirm new password: "
+account_settings_subscribedGamingNews: "Yes, I would like to receive Alienware/Dell Gaming news and special offers via email."
+subscription_settings_subscribedAlienwareEvents: "Subscribe me to the Alienware Arena email newsletter."
+
+# unsubscribe stuff
+platformd.unsubscribe.title: Edit Your Email Subscription Preferences
+platformd.unsubscribe.your_email: "Your email address:"
+platformd_unsubscribe_form_unsubscribe: Please unsubscribe me from receiving Alienware Arena news and announcements.
+platformd.unsubscribe.note: Please note that you will continue to receive event-specific notices for any events you are registered to participate in for the duration of the respective events.
+platformd.unsubscribe.user_not_found: Your email address was not found.
+platformd.unsubscribe.success: Your email preferences have been updated.

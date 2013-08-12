@@ -12,7 +12,7 @@
             {% for index, banner in banners %}
                 <li>
                     <a href="{{ media_path(banner, { "size" : "banner" }) }}">
-                        <img src="{{ media_path(banner) }}" class="image{{ index }}" data-url="{{ banner.url }}" data-new="{{ banner.newWindow }}" />
+                        <img src="{{ media_path(banner) }}" class="image{{ index }}" data-id="{{ 'banner' ~ banner.id}}" data-url="{{ banner.url }}" data-new="{{ banner.newWindow }}" />
                     </a>
                 </li>
             {% endfor %}
@@ -59,7 +59,7 @@ jQuery(function($) {
           newWindow = $("img[src='" + current + "']").data("new");
 
         /**
-         * Redirects user to a specific URL
+         * Redirects user to a speedific URL
          *
          * @param event
          */

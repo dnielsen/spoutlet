@@ -282,3 +282,44 @@ a.down:hover {
 legend {
     margin-top: 15px;
 }
+
+table#avatar-approval {
+    margin: 15px 0 0 0;
+    width: 720px;
+}
+
+#avatar-approval .avatar-wrapper {
+    position: relative;
+}
+
+#avatar-approval .avatar-selected {
+    padding: 0 4px;
+    font-size: 14px;
+    background-color: rgb(209, 209, 209);
+    color: rgb(0, 95, 0)!important;
+    height: 17px;
+    line-height: 18px;
+    right: 6px;
+    top: 6px;
+    position: absolute;
+    display: none;
+    border: 1px solid #555;
+}
+
+#avatar-approval img {
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+}
+
+#avatar-approval img.selected {
+    opacity: 0.5;
+}
+
+#avatar-actions {
+    margin: 15px 0 0 0;
+}
+
+.birthday select {
+    width: 70px;
+}

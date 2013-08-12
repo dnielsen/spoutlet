@@ -1,0 +1,63 @@
+{% extends 'UserBundle::accountLayout.html.twig' %}
+
+{% block title %}{{ "platformd.user.account.avatars" | pd_trans }}{% endblock %}
+
+{% block content %}
+
+    <div class="widget-100">
+        <div class="widget-header">
+            <div class="widget-title">
+                <h2>{{ 'platformd.user.avatars.crop' | pd_trans }}</h2>
+            </div>
+        </div>
+        <div class="widget-content">
+
+            <div id="avatar-crop-wrapper">&nbsp;
+                <img src="{{ avatarUrl }}" id="crop-target" style="display:none;" />
+            </div>
+
+            <div id="avatar-previews">
+
+                <div id="preview1-wrapper" class="preview-panel">
+                    <h3>{{ 'platformd.user.avatars.preview_small'|trans }}</h3>
+                    <div style="position: relative; overflow: hidden; height: 84px; width: 84px; margin-left: auto; margin-right: auto; margin-top: 2px; margin-bottom: 2px;">
+                        <img src="{{ avatarUrl }}" id="preview1" style="height: 84px; margin-left: -13px; margin-top: 0px;" />
+                    </div>
+                </div>
+
+                <br />
+
+                <div id="preview2-wrapper" class="preview-panel">
+                    <h3>{{ 'platformd.user.avatars.preview_large'|trans }}</h3>
+                    <div style="position: relative; overflow: hidden; height: 184px; width: 184px; margin: 2px;">
+                        <img src="{{ avatarUrl }}" id="preview2" style="height: 184px; margin-left: -32px; margin-top: 0px;" />
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" id="submit-crop">{{ 'platformd.user.avatars.submit' | pd_trans }}</button>
+
+            </div>
+
+            <div class="clear"></div>
+
+        </div>
+        <div class="widget-footer">
+            &nbsp;
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        $('#submit-crop').click(function() {
+            window.location = '{{ path("avatar_process", { "uuid": uuid }) }}' + '/' + getCoords();
+        });
+
+    </script>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.Jcrop.min.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jCrop.custom.js"></script>
+{% endblock %}

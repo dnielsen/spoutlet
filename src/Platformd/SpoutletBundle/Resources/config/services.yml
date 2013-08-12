@@ -10,11 +10,7 @@ services:
             - { key: %s3.access_key%, secret: %s3.secret_key% }
 
     # adapters for Gaufrette filesystems
-    platformd.avatar.s3.adapter:
-        class: Gaufrette\Adapter\AmazonS3
-        arguments:
-            - @platformd.s3
-            - "%s3_bucket_name%"
+
     platformd.event.s3.adapter:
         class: Gaufrette\Adapter\AmazonS3
         arguments:
@@ -95,6 +91,7 @@ services:
             - "@platformd.repository.site"
             - "@platformd.repository.background_ads"
             - "%local_auth%"
+            - "%secure_url_scheme%"
             - "@platformd.util.flash_util"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
@@ -124,6 +121,7 @@ services:
         arguments:
             - %ip2location_lookup_directory%
             - %ip_lookup_override%
+
 
     platformd.listener.site_translation_listener:
         class: Platformd\SpoutletBundle\EventListener\SiteTranslationListener
@@ -379,3 +377,27 @@ services:
             - "@platformd.util.varnish_util"
             - "@router"
 
+    platformd_user.account.incomplete_form.type:
+        class: Platformd\SpoutletBundle\Form\Type\IncompleteAccountType
+        arguments:
+            - '@platformd.util.site_util'
+        tags:
+            - { name: form.type, alias: platformd_incomplete_account }
+
+    # export query manager stuff
+    platformd.model.export_query_manager:
+        class: Platformd\SpoutletBundle\Model\ExportQueryManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@platformd.csv.response_factory"
+
+    platformd.export_query_form.type:
+        class: Platformd\SpoutletBundle\Form\Type\ExportQueryType
+        arguments:
+            - "@platformd.model.export_query_manager"
+        tags:
+            - { name: form.type, alias: 'platformd_export_query_type' }
+
+    # csv factory
+    platformd.csv.response_factory:
+        class: Platformd\SpoutletBundle\Util\CsvResponseFactory

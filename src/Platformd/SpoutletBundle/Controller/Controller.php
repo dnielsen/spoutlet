@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Form;
 
 /**
  * Our custom base controller
@@ -276,6 +277,13 @@ class Controller extends BaseController
         }
     }
 
+    protected function getSiteFromUserCountry()
+    {
+        $country = $this->getCurrentCountry();
+
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Region')->findSiteByCountry($country);
+    }
+
     /**
      * @return \Platformd\SpoutletBundle\Age\AgeManager
      */
@@ -320,5 +328,64 @@ class Controller extends BaseController
     protected function getFlashUtil()
     {
         return $this->container->get('platformd.util.flash_util');
+    }
+
+    protected function getAvatarManager()
+    {
+        return $this->get('platformd.model.avatar_manager');
+    }
+
+    protected function getApiManager()
+    {
+        return $this->get('platformd.user.api.manager');
+    }
+
+    protected function getApiAuth()
+    {
+        return $this->getParameter('api_authentication');
+    }
+
+    protected function uuidGen()
+    {
+        return str_replace("\n", '', `uuidgen -r`);
+    }
+
+    /**
+     * @return \Platformd\UserBundle\Security\User\Provider\FacebookProvider
+     */
+    protected function getFacebookProvider()
+    {
+        return $this->container->get('platformd.facebook.provider');
+    }
+
+    /**
+     * @return \Platformd\UserBundle\Security\User\Provider\TwitterProvider
+     */
+    protected function getTwitterProvider()
+    {
+        return $this->container->get('platformd.twitter.provider');
+    }
+
+    protected function getErrorMessages(Form $form) {
+        $errors = array();
+        foreach ($form->getErrors() as $key => $error) {
+            $template = $error->getMessageTemplate();
+            $parameters = $error->getMessageParameters();
+
+            foreach($parameters as $var => $value){
+                $template = str_replace($var, $value, $template);
+            }
+
+            $errors[$key] = $template;
+        }
+        if ($form->hasChildren()) {
+            foreach ($form->getChildren() as $child) {
+                if (!$child->isValid()) {
+                    $errors[$child->getName()] = $this->getErrorMessages($child);
+                }
+            }
+        }
+
+        return $errors;
     }
 }

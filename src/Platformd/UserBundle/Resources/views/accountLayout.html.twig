@@ -16,7 +16,7 @@
             #}
 
             {% if auth_type == 'local' %}
-                <li><a href="{{ path('fos_user_change_password') }}">{{ "platformd.user.account.change_password" | pd_trans }}</a></li>
+                <li><a href="{{ path('accounts_settings') }}">{{ "platformd.user.account.account_settings" | pd_trans }}</a></li>
                 {% if features.hasProfile %}
                     <li><a href="{{ path('fos_user_profile_show') }}">{{ "platformd.user.account.profile" | pd_trans }}</a></li>
                 {% endif %}
@@ -82,12 +82,12 @@
                     </ul>
                 </li>
             {% endif %}
-
-            <li><a href="{{ path('_fos_user_security_logout') }}">{{ "platformd.user.account.sign_out" | pd_trans }}</a></li>
         </ul>
     </div>
 </div>
+<div class="clear"></div>
 {% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     {% include 'SpoutletBundle:Account:_css_assets.html.twig' %}

@@ -66,12 +66,12 @@ class MetricManager
      */
     private $groupDiscussionMetricRepository;
 
-    private $regionRepo;
-
     /**
      * @var \Platformd\SpoutletBundle\Entity\RegionRepository
      */
     private $regionRepository;
+
+    private $countryRepository;
 
     /**
      * An array of all available site keys and their names
@@ -101,6 +101,7 @@ class MetricManager
         $this->groupDiscussionRepository = $em->getRepository('GroupBundle:GroupDiscussion');
         $this->groupDiscussionMetricRepository = $em->getRepository('GroupBundle:Metric\GroupDiscussionMetric');
         $this->regionRepository = $em->getRepository('SpoutletBundle:Region');
+        $this->countryRepository = $em->getRepository('SpoutletBundle:Country');
         $this->sites = $sites;
         $this->ipLookupUtil = $ipLookupUtil;
         $this->regions = $this->regionRepository->findAll();
@@ -264,22 +265,34 @@ class MetricManager
 
     public function createMembershipByCountryAndRegionReport($countries, $regions, $countryDates, $regionDates)
     {
-        $data       = array();
+        $data = array();
 
         foreach ($countries as $country) {
-            $countryCode = $country->getCode();
 
-            $totalUsers = $this->userRepo->getTotalUsersForCountry($countryCode);
-            $arenaOptIn = $this->userRepo->getArenaOptInForCountry($countryCode);
-            $dellOptIn = $this->userRepo->getDellOptInForCountry($countryCode);
-            $newUsers = $this->userRepo->countNewRegistrantsForCountry($countryCode, $countryDates['from'], $countryDates['to']);
+            if ($country == 'all') {
+                $name = 'All';
+                $key = 'all';
 
-            $arenaPercentage = ($arenaOptIn == 0) ? 0 : number_format(100 * ($arenaOptIn / $totalUsers), 2);
-            $dellPercentage = ($dellOptIn == 0) ? 0 : number_format(100 * ($dellOptIn / $totalUsers), 2);
+                $arenaOptIn = $this->userRepo->getArenaOptInForAllCountries($countryDates['from'], $countryDates['to']);
+                $dellOptIn = $this->userRepo->getDellOptInForAllCountries($countryDates['from'], $countryDates['to']);
+                $newUsers = $this->userRepo->countNewRegistrantsForAllCountries($countryDates['from'], $countryDates['to']);
 
-            $data['country'][$country->getId()] = array(
-                'name'                 => $country->getName(),
-                'count'                => $totalUsers,
+            } else {
+                $countryEntity = $this->countryRepository->findOneByCode($country);
+
+                $name = $countryEntity->getName();
+                $key = $countryEntity->getId();
+
+                $arenaOptIn = $this->userRepo->getArenaOptInForCountry($country, $countryDates['from'], $countryDates['to']);
+                $dellOptIn = $this->userRepo->getDellOptInForCountry($country, $countryDates['from'], $countryDates['to']);
+                $newUsers = $this->userRepo->countNewRegistrantsForCountry($country, $countryDates['from'], $countryDates['to']);
+            }
+
+            $arenaPercentage = ($arenaOptIn == 0 || $newUsers == 0) ? 0 : number_format(100 * ($arenaOptIn / $newUsers), 2);
+            $dellPercentage = ($dellOptIn == 0 || $newUsers == 0) ? 0 : number_format(100 * ($dellOptIn / $newUsers), 2);
+
+            $data['country'][$key] = array(
+                'name'                 => $name,
                 'arenaOptIn'           => $arenaOptIn,
                 'arenaOptInPercentage' => $arenaPercentage,
                 'dellOptIn'            => $dellOptIn,
@@ -292,21 +305,42 @@ class MetricManager
 
             $countries = array();
 
-            foreach ($region->getCountries() as $country) {
-                $countries[] = $country->getCode();
+            if ($region == 'all') {
+                $name = 'All';
+                $key = 'all';
+
+                $arenaOptIn = $this->userRepo->getArenaOptInForAllCountries($regionDates['from'], $regionDates['to']);
+                $dellOptIn = $this->userRepo->getDellOptInForAllCountries($regionDates['from'], $regionDates['to']);
+                $newUsers = $this->userRepo->countNewRegistrantsForAllCountries($regionDates['from'], $regionDates['to']);
+
+            } else {
+                $regionEntity = $this->regionRepository->find($region);
+
+                if ($regionEntity) {
+                    $name = $regionEntity->getName();
+                    $key = $regionEntity->getId();
+
+                    foreach ($regionEntity->getCountries() as $country) {
+                        $countries[] = $country->getCode();
+                    }
+
+                    if (count($countries) > 0) {
+                        $arenaOptIn = $this->userRepo->getArenaOptInForCountries($countries, $regionDates['from'], $regionDates['to']);
+                        $dellOptIn = $this->userRepo->getDellOptInForCountries($countries, $regionDates['from'], $regionDates['to']);
+                        $newUsers = $this->userRepo->countNewRegistrantsForCountries($countries, $regionDates['from'], $regionDates['to']);
+                    } else {
+                        $arenaOptIn = 0;
+                        $dellOptIn = 0;
+                        $newUsers = 0;
+                    }
+                }
             }
 
-            $totalUsers = $this->userRepo->getTotalUsersForCountries($countries);
-            $arenaOptIn = $this->userRepo->getArenaOptInForCountries($countries);
-            $dellOptIn = $this->userRepo->getDellOptInForCountries($countries);
-            $newUsers = $this->userRepo->countNewRegistrantsForCountries($countries, $regionDates['from'], $regionDates['to']);
+            $arenaPercentage = ($arenaOptIn == 0 || $newUsers == 0) ? 0 : number_format(100 * ($arenaOptIn / $newUsers), 2);
+            $dellPercentage = ($dellOptIn == 0 || $newUsers == 0) ? 0 : number_format(100 * ($dellOptIn / $newUsers), 2);
 
-            $arenaPercentage = ($arenaOptIn == 0) ? 0 : number_format(100 * ($arenaOptIn / $totalUsers), 2);
-            $dellPercentage = ($dellOptIn == 0) ? 0 : number_format(100 * ($dellOptIn / $totalUsers), 2);
-
-            $data['region'][$region->getId()] = array(
-                'name'                 => $region->getName(),
-                'count'                => $totalUsers,
+            $data['region'][$key] = array(
+                'name'                 => $name,
                 'arenaOptIn'           => $arenaOptIn,
                 'arenaOptInPercentage' => $arenaPercentage,
                 'dellOptIn'            => $dellOptIn,

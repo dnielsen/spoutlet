@@ -74,3 +74,12 @@ services:
         scope: request
         tags:
             - { name: kernel.event_listener, event: kernel.request }
+
+    # used for facebook and twitter account creation. commented out for now since we wont release with migration.
+    # platformd.listener.account_not_complete_listener:
+    #     class: Platformd\SpoutletBundle\EventListener\AccountNotCompleteListener
+    #     arguments:
+    #         - "@router"
+    #         - "@service_container"
+    #     tags:
+    #         - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

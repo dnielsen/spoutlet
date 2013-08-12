@@ -1,0 +1,49 @@
+<div id="login-modal" class="login-modal-wrapper simplemodal-data">
+    <a class="login-modal-close-ne" title="Close" onclick="$($.unblockUI());"></a>
+    <div class="login-modal-title">{{ 'platformd.user.login.title_login' | pd_trans }}</div>
+    <div class="login-modal-content">
+        <form id="login-form" action="{{ login_check_path() }}" method="post" class="form form-horizontal">
+            <table class="tbl">
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td style="text-align:left;padding-left:15px">
+                            <div>
+                                <label for="_username">{{ 'platformd.user.login.username' | pd_trans }}</label>
+                                <input id="_username" name="_username" type="text" maxlength="255" value="" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="text-align:left;padding-left:15px">
+                            <div>
+                                <label for="_password">{{ 'platformd.user.login.password' | pd_trans }}</label>
+                                <input id="_password" name="_password" type="password" maxlength="255" value="" class="form-txt" />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td style="vertical-align:bottom;text-align:left;padding-left:15px">
+                            <div>
+                                <input type="submit" id="_login" class="button btn btn-primary login-button" name="_login" value="{{ 'platformd.user.login.sign_in' | pd_trans }}" />
+                                <input name="cookie_login" id="cookie_login" type="checkbox" class="remember-me">
+                                <label style="font-weight:bold;vertical-align:bottom;width:auto;" for="cookie_login">{{ 'platformd.user.login.remember' | pd_trans }}</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align: center;">
+                            <div>
+                                <a href="{{ path('fos_user_resetting_request') }}">{{ 'platformd.user.login.forgot_password' | pd_trans }}</a> |
+                                <a href="{{ path('fos_user_registration_register') }}">{{ 'platformd.user.login.join' | pd_trans }}</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <input type="hidden" name="_target_path" id="_target_path" value="" />
+        </form>
+    </div>
+</div>

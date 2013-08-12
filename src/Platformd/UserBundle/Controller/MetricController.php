@@ -9,6 +9,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use DateTime;
 
+use Platformd\SpoutletBundle\Entity\Country;
+use Platformd\SpoutletBundle\Entity\Region;
+
 /**
  * @Route("/admin/metrics/users")
  */
@@ -65,7 +68,7 @@ class MetricController extends Controller
             $form = $this->createFormBuilder()
                 ->add('country', 'entity', array(
                     'class'         => 'SpoutletBundle:Country',
-                    'empty_value'   => 'Country',
+                    'empty_value'   => 'All',
                     'property'      => 'name',
                 ))
                 ->add('from_date_country', 'datetime', array(
@@ -80,7 +83,7 @@ class MetricController extends Controller
                 )))
                 ->add('region', 'entity', array(
                     'class'         => 'SpoutletBundle:Region',
-                    'empty_value'   => 'Region',
+                    'empty_value'   => 'All',
                     'property'      => 'name',
                 ))
                 ->add('from_date_region', 'datetime', array(
@@ -104,6 +107,14 @@ class MetricController extends Controller
 
                 $countries = $session->get('countries') ? : array();
                 $regions = $session->get('regions') ? : array();
+
+                if ($request->request->get('all-countries') == 'true') {
+                    $countries = $this->processCountries('all', $session);
+                }
+
+                if ($request->request->get('all-regions') == 'true') {
+                    $regions = $this->processRegions('all', $session);
+                }
 
                 if ($formData['country']) {
                     $countries = $this->processCountries($formData['country'], $session);
@@ -157,8 +168,15 @@ class MetricController extends Controller
     {
         $countries = $session->get('countries') ? : array();
 
-        foreach ($countries as $country) {
-            if ($country->getName() == $newCountry->getName()) {
+        if ($newCountry == 'all' && in_array('all', $countries)) {
+            return $countries;
+        }
+
+        if ($newCountry instanceof Country) {
+
+            $newCountry = $newCountry->getCode();
+
+            if (in_array($newCountry, $countries)) {
                 return $countries;
             }
         }
@@ -173,8 +191,15 @@ class MetricController extends Controller
     {
         $regions = $session->get('regions') ? : array();
 
-        foreach ($regions as $region) {
-            if ($region->getName() == $newRegion->getName()) {
+        if ($newRegion == 'all' && in_array('all', $regions)) {
+            return $regions;
+        }
+
+        if ($newRegion instanceof Region) {
+
+            $newRegion = $newRegion->getId();
+
+            if (in_array($newRegion, $regions)) {
                 return $regions;
             }
         }

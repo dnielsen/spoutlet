@@ -1,0 +1,24 @@
+services:
+
+    platformd_user.registration.timeout_listener:
+        class: Platformd\UserBundle\Listener\UserRegistrationTimeoutListener
+        arguments:
+            - "@router"
+            - "@templating"
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+        scope: request
+
+    platformd.user.security.listener.api_session:
+        class: Platformd\UserBundle\Security\Listener\ApiSessionListener
+        arguments:
+            - '@security.context'
+            - '@security.authentication.session_strategy'
+            - '@platformd.user.api.manager'
+            - '%api_authentication%'
+            - '@platformd_user.manager'
+            - '%fos_user.firewall_name%'
+        calls:
+            - [ setLogger, [ @?logger ] ]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, priority: 1 }

@@ -9,6 +9,8 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 
 use Platformd\UserBundle\Form\Type\EditUserFormType;
 use Symfony\Component\HttpFoundation\Request;
+use Platformd\UserBundle\Form\Type\SuspendUserType;
+use Platformd\UserBundle\Exception\ApiRequestException;
 
 /**
  * Admin controller for users
@@ -64,7 +66,8 @@ class AdminController extends Controller
 
         return $this->render('UserBundle:Admin:edit.html.twig', array(
             'user' => $user,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'suspendForm' => $this->createForm(new SuspendUserType, $user)->createView(),
         ));
     }
 
@@ -72,11 +75,11 @@ class AdminController extends Controller
     {
         $this->addUserBreadcrumb()->addChild('Update');
         $manager = $this->get('fos_user.user_manager');
-        $translator = $this->get('translator');
 
         if (!$user = $manager->findUserBy(array('id' => $id))) {
             throw $this->createNotFoundException(sprintf('Unable to retrieve user #%d', $id));
         }
+
         $form = $this->createForm(new EditUserFormType(), $user, array(
             'allow_promote' => $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN'),
             'local_auth' => $this->container->getParameter('local_auth'),
@@ -84,37 +87,41 @@ class AdminController extends Controller
 
         $form->bindRequest($request);
         if ($form->isValid()) {
-            $manager->updateUser($user);
 
-            $this->setFlash('success', $translator->trans('fos_user_admin_edit_success', array(
-                '%username%' => $user->getUsername()
-            ), 'FOSUserBundle'));
+            try {
+                $manager->updateUserAndApi($user);
+                $this->setFlash('success', $this->trans('fos_user_admin_edit_success', array(
+                    '%username%' => $user->getUsername()
+                ), 'FOSUserBundle'));
 
-            return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
+                return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array(
+                    'id' => $id,
+                )));
+            } catch (ApiRequestException $e) {
+                $this->setFlash('error', 'The system is currently unable to process your request. Please try again shortly.');
+            }
         }
 
         return $this->render('UserBundle:Admin:edit.html.twig', array(
             'user' => $user,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'suspendForm' => $this->createForm(new SuspendUserType, $user)->createView(),
         ));
     }
 
     public function deleteAction($id)
     {
         $manager = $this->get('fos_user.user_manager');
-        $translator = $this->get('translator');
 
         if (!($user = $manager->findUserBy(array('id' => $id))) || $user->isSuperAdmin()) {
 
             throw $this->createNotFoundException(sprintf('Unable to retrieve user #%d', $id));
         }
 
-        // TODO : Use a confirm page and a DELETE HTTP Method
-
         $manager->deleteUser($user);
 
-        $this->setFlash('success', $translator->trans('fos_user_admin_delete_success', array(
-            '%username' => $user->getUsername()
+        $this->setFlash('success', $this->trans('fos_user_admin_delete_success', array(
+            '%username%' => $user->getUsername()
         ), 'FOSUserBundle'));
 
         return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
@@ -123,23 +130,89 @@ class AdminController extends Controller
     public function resetPasswordAction(Request $request, $id)
     {
         $manager = $this->get('fos_user.user_manager');
-        $translator = $this->get('translator');
+        $mailer  = $this->get('fos_user.mailer');
 
         if (!$user = $manager->findUserBy(array('id' => $id))) {
 
             throw $this->createNotFoundException();
         }
 
-        $manager->setNewPassword($user);
+        $user->generateConfirmationToken();
+        $mailer->sendResettedPasswordMessage($user);
+        $user->setPasswordRequestedAt(new \DateTime());
         $manager->updateUser($user);
 
-        $this->get('fos_user.mailer')->sendResettedPasswordMessage($user);
-
-        $this->setFlash('success', $translator->trans('fos_user_admin_resetted_password_success', array(
+        $this->setFlash('success', $this->trans('fos_user_admin_resetted_password_success', array(
             '%email%' => $user->getEmail()
         ), 'FOSUserBundle'));
 
-        return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_index'));
+        return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array(
+            'id' => $id,
+        )));
+    }
+
+    public function unapprovedAvatarsAction(Request $request)
+    {
+        if ($request->getMethod() == 'POST') {
+
+            $processType = $request->request->get('process_type', null);
+
+            if ($processType != 'approve' && $processType != 'reject') {
+                $this->setFlash('error', 'platformd.admin.avatars.unapproved.form_error');
+                $this->redirect($this->generateUrl('admin_unapproved_avatars'));
+            }
+
+            switch ($processType) {
+                case 'approve':
+                    $selectedIds = $request->request->get('all', array());
+                    break;
+
+                case 'reject':
+                    $ids = $request->request->get('selected', array());
+
+                    if (count($ids) == 0) {
+                        $this->setFlash('error', 'platformd.admin.avatars.unapproved.no_avatars_selected');
+                        $this->redirect($this->generateUrl('admin_unapproved_avatars'));
+                    }
+
+                    $selectedIds = array();
+
+                    foreach ($ids as $avatarId) {
+                        if ($avatarId != '') {
+                            $selectedIds[] = $avatarId;
+                        }
+                    }
+
+                    break;
+            }
+
+            if (count($selectedIds) == 0) {
+                $this->setFlash('error', 'platformd.admin.avatars.unapproved.no_avatars_selected');
+                $this->redirect($this->generateUrl('admin_unapproved_avatars'));
+            }
+
+            $this->getAvatarManager()->processAvatars($selectedIds, $processType);
+
+            $flash = $this->trans('platformd.admin.avatars.unapproved.process_success', array(
+                '%count%' => count($selectedIds),
+                '%processType%' => $this->trans('platformd.admin.avatars.unapproved.flash_type_'.$processType),
+            ));
+
+            $this->setFlash('success', $flash);
+            $this->redirect($this->generateUrl('admin_unapproved_avatars'));
+        }
+
+        $page    = $request->query->get('page', 1);
+        $avatars = $this->getAvatarManager()->getUnapprovedAvatars(64, $page, $pager);
+
+        foreach ($avatars as $avatar) {
+
+        }
+
+        return $this->render('UserBundle:Admin:unapprovedAvatars.html.twig', array(
+            'avatars' => $avatars,
+            'pager'   => $pager,
+        ));
     }
 
     public function loginsAction($id)

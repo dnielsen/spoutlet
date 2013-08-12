@@ -12,12 +12,14 @@ use Platformd\MediaBundle\Entity\Media;
 use Platformd\GameBundle\Entity\Game as Game;
 use Platformd\SearchBundle\Model\IndexableInterface;
 use Platformd\TagBundle\Model\TaggableInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
  * Platformd\NewsBundle\Entity\News
  *
  * @ORM\Table(name="sp_news")
  * @ORM\Entity(repositoryClass="Platformd\NewsBundle\Entity\NewsRepository")
+ * @DoctrineAssert\UniqueEntity(fields="slug", message="The url should be unique.")
  */
 class News implements LinkableInterface, IndexableInterface, TaggableInterface
 {

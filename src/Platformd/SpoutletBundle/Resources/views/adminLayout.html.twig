@@ -35,6 +35,7 @@
 		        'bundles/spoutlet/js/libs/jquery-1.7.2.min.js'
 		        'bundles/spoutlet/js/jquery-ui-1.8.16.custom.min.js'
 		        'bundles/spoutlet/alt_js/jquery-ui-timepicker-addon.js'
+                'bundles/spoutlet/js/jquery.truncate.min.js'
 		        'bundles/spoutlet/admin/js/jquery.tablesorter.min.js'
 		        'bundles/spoutlet/js/jquery.autogrow-textarea.js'
 		        'bundles/spoutlet/css/bootstrap/js/bootstrap.js'
@@ -45,6 +46,7 @@
                 'ckeditor/config.admin.js'
 		        'ckeditor/lang/en.js'
 		        'flot/jquery.flot.js'
+                'bundles/spoutlet/js/libs/jquery.form.js'
 		        output='js/packed/admin.js'
 		    %}
 		    <script type="text/javascript" src="{{ asset_url }}"></script>
@@ -166,7 +168,7 @@
 
                             {% endif %}
 
-                            {% if features.hasWallpapers %}
+                            {% if features.hasWallpapers and is_granted('ROLE_SUPER_ADMIN') %}
 
                                 <li>
                                     <a href="{{ path('admin_wallpaper') }}">Wallpapers</a>
@@ -211,6 +213,7 @@
                             </li>
                             {% endif %}
 
+                            {% if is_granted ('ROLE_SUPER_ADMIN') %}
                             <li>
                                 <a href="{{ path('admin_takeover_index') }}">Site Takeovers</a>
                                 <ul>
@@ -219,6 +222,7 @@
                                     </li>
                                 </ul>
                             </li>
+                            {% endif %}
 
                             {% if is_granted('ROLE_ADMIN_TRANSLATIONS') %}
                                 <li>
@@ -240,6 +244,7 @@
                                 <li><a href="{{ path('admin_tags_index') }}">Tags</a></li>
                             {% endif %}
 
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
                             <li>
                                 <a href="{{ path('admin_background_ads_index') }}">Background Ads</a>
                                 <ul>
@@ -248,6 +253,8 @@
                                     </li>
                                 </ul>
                             </li>
+                            {% endif %}
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
                             <li>
                                 <a href="{{ path('admin_rsvp_index') }}">RSVP Events</a>
                                 <ul>
@@ -256,6 +263,7 @@
                                     </li>
                                 </ul>
                             </li>
+                            {% endif %}
 
                             {% if features.hasHtmlWidgets %}
                                 <li>
@@ -269,9 +277,11 @@
                                 </li>
                             {% endif %}
 
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
                             <li>
                                 <a href="{{ path('admin_timeline_index') }}">Timelines</a>
                             </li>
+                            {% endif %}
 
                         </ul>
                     {% endif %}
@@ -303,6 +313,7 @@
 
                             <li><a href="{{ path('admin_event_metrics') }}">Events</a></li>
                             <li><a href="{{ path('youtube_admin_metrics') }}">Videos</a></li>
+                            <li><a href="{{ path('admin_comment_metrics') }}">Comments</a></li>
                         </ul>
                     {% endif %}
 
@@ -310,9 +321,18 @@
                         <h5>Members</h5>
                         <ul>
                             <li><a href="{{ path('Platformd_UserBundle_admin_index') }}">Search Member</a></li>
+
+                            <li><a href="{{ path('admin_unapproved_avatars') }}">Approve Avatars</a></li>
+
                             <li><a href="{{ path('admin_mass_unsubscribe') }}">Mass Unsubscribe</a></li>
+
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            <li><a href="{{ path('admin_export_queries_reports') }}">Reports</a></li>
+                            {% endif %}
                         </ul>
                     {% endif %}
+
+
                 </div>
             </div>
             <div class="content span9">

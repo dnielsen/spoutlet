@@ -1,0 +1,5 @@
+services:
+    security.authentication.factory.api:
+        class:  Platformd\UserBundle\Security\Factory\ApiSecurityFactory
+        tags:
+            - { name: security.listener.factory }

@@ -1,5 +1,6 @@
 imports:
     - { resource: "validation.yml" }
+    - { resource: "listeners.yml" }
 
 parameters:
     platformd_user.mailer.parameters:
@@ -7,6 +8,36 @@ parameters:
         resetting.template: %fos_user.resetting.email.template%
 
 services:
+
+    platformd.security.user.authentication.provider.api:
+        class: Platformd\UserBundle\Security\Provider\ApiAuthenticationProvider
+        arguments:
+            - '@platformd.user.api.manager'
+            - '@platformd.security.user.provider.api'
+            - '@security.user_checker'
+            - ~
+            - '@security.encoder_factory'
+            - '%security.authentication.hide_user_not_found%'
+            - '@pd.cevo.password_handler'
+        calls:
+            - [ setLogger, [ @logger ] ]
+
+    platformd.user.api.manager:
+        class: Platformd\UserBundle\Model\ApiManager
+        arguments:
+            - '%api_base_url%'
+            - '%api_access_key%'
+            - '%api_secret_key%'
+            - "@logger"
+            - @platformd.model.translator
+
+    platformd.security.user.provider.api:
+        class: Platformd\UserBundle\Security\Provider\ApiUserProvider
+        arguments:
+            - '@platformd.user.api.manager'
+            - '@doctrine.orm.entity_manager'
+            - '@platformd_user.manager'
+
     # Forms
     platformd_user.registration.form.type:
         class: Platformd\UserBundle\Form\Type\RegistrationFormType
@@ -15,16 +46,41 @@ services:
             - %platformd.news_source%
             - @session
             - @platformd.model.translator
+            - @platformd.model.ip_lookup_util
+            - @request
+        scope: request
         calls:
             - [ setPrefectures, [ %platformd.prefectures% ] ]
         tags:
             - { name: form.type, alias: platformd_user_registration }
+
     platformd_user.profile.form.type:
         class: Platformd\UserBundle\Form\Type\ProfileFormType
         arguments:
             - %fos_user.model.user.class%
         tags:
             - { name: form.type, alias: platformd_user_profile }
+
+    platformd_user.account_settings.form.type:
+        class: Platformd\UserBundle\Form\Type\AccountSettingsType
+        arguments:
+            - '@security.encoder_factory'
+            - '@security.context'
+            - '@platformd.user.api.manager'
+            - '%api_authentication%'
+        tags:
+            - { name: form.type, alias: platformd_user_profile }
+
+    platformd_user.subscription_settings.form.type:
+        class: Platformd\UserBundle\Form\Type\SubscriptionSettingsType
+        arguments:
+            - '@security.encoder_factory'
+            - '@security.context'
+            - '@platformd.user.api.manager'
+            - '%api_authentication%'
+        tags:
+            - { name: form.type, alias: platformd_user_profile }
+
 
     platformd_user.registration.form.handler:
         class: Platformd\UserBundle\Form\Handler\RegistrationFormHandler
@@ -35,11 +91,26 @@ services:
             - @platformd_user.mailer
             - @doctrine.orm.entity_manager
             - @service_container
+            - @platformd.model.ip_lookup_util
+            - @platformd.user.api.manager
+        scope: request
+
+    platformd_user.resetting.form.type:
+        class: Platformd\UserBundle\Form\Type\ResettingFormType
+        parent: fos_user.resetting.form.type
+        tags:
+            - { name: form.type, alias: platformd_user_resetting }
+
+    platformd_user.resetting.form.handler:
+        class: Platformd\UserBundle\Form\Handler\ResettingFormHandler
+        parent: fos_user.resetting.form.handler.default
         scope: request
 
     # User
     platformd_user.manager:
         class: Platformd\UserBundle\Entity\UserManager
+        arguments:
+            - "@platformd.model.translator"
         parent: fos_user.user_manager.default
         calls:
             - [ setContainer, ['@service_container'] ]
@@ -49,7 +120,7 @@ services:
         class:  'Platformd\UserBundle\AvatarPathResolver'
         arguments:
             - @avatar_filesystem
-            - avatar
+            - avatars
         parent: platformd.path_resolver
         tags:
             - { name: 'knp_media_exposer.resolver' }
@@ -63,9 +134,52 @@ services:
             - '@templating'
             - '%platformd_user.mailer.parameters%'
             - '@platformd.util.site_util'
+            - '@fos_user.user_manager'
 
-    platformd_user.security_logout_handler:
-        class: Platformd\UserBundle\Security\Logout\SuccessHandler
+    platformd.model.avatar_manager:
+        class: Platformd\UserBundle\Model\AvatarManager
         arguments:
-            - "@pd.cevo.cevo_auth_manager"
-            - %base_host%
+            - '@doctrine.orm.entity_manager'
+            - '@avatar_filesystem'
+            - '%s3_bucket_name%'
+            - '%s3_private_bucket_name%'
+            - '@platformd.s3'
+            - '@platformd.util.queue_util'
+            - '@fos_user.user_manager'
+
+    platformd.avatar.s3.adapter:
+        class: Gaufrette\Adapter\AmazonS3
+        arguments:
+            - @platformd.s3
+            - "%s3_private_bucket_name%"
+        calls:
+            - [ "setDirectory", [ "images/avatars"]]
+
+    # platformd.facebook.provider:
+    #     class: Platformd\UserBundle\Security\User\Provider\FacebookProvider
+    #     arguments:
+    #         facebook: "@fos_facebook.api"
+    #         userManager: "@fos_user.user_manager"
+    #         validator: "@validator"
+    #         container: "@service_container"
+
+    # platformd.twitter.provider:
+    #     class: Platformd\UserBundle\Security\User\Provider\TwitterProvider
+    #     arguments:
+    #         twitter_oauth: "@fos_twitter.api"
+    #         userManager: "@fos_user.user_manager"
+    #         validator: "@validator"
+    #         session: "@session"
+    #         api: "@fos_twitter.service"
+    #         container: "@service_container"
+
+    platformd_user.authentication_handler:
+        class: Platformd\UserBundle\Handler\AuthenticationHandler
+        arguments:
+            - "@router"
+            - "@fos_user.user_manager"
+            - "@platformd.util.site_util"
+            - "%api_authentication%"
+            - "@platformd.model.translator"
+            - '%base_host%'
+            - '@platformd.user.api.manager'

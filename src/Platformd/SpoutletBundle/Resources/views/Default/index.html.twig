@@ -12,23 +12,45 @@
         </div>
     </div>
 </div>
-<div id="row-2" class="std_2col">
-    <div class="right">
-        {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
-        {% render url('hot_stories') %}
-    </div>
+<div class="std_2col">
     <div class="left">
-        {% render url('featured_content') %}
-        {% if app.session.locale == 'zh' or app.session.locale == 'ja' %}
-            {% render url('video_feed') %}
+            {% render url('featured_content') %}
+            {% if features.hasGroups %}
+                {% render url('_groups_index') %}
+            {% endif %}
+            {% if features.hasVideo %}
+                {% render url('video_feed', {'height': '287'}) %}
+            {% endif %}
+            {% if features.hasArp and features.hasPolls %}
+                <div id="arp-widget">{% render url('_arp_index') %}</div>
+                <div id="poll-widget">{% render url('_polls_index') %}</div>
+            {% endif %}
+    </div>
+    <div class="right">
+        {% if features.hasNews %}
+            {% render url('hot_stories') %}
         {% endif %}
+
+        {% if features.hasForums %}
+            {% include "SpoutletBundle:Default:_forums.html.twig" %}
+        {% endif %}
+
+        {% if features.hasPhotos and not features.hasStaticPhotoWidget %}
+            {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' with {'height': '288px'} %}
+        {% else %}
+            {% include 'SpoutletBundle:Default:_staticPhotoWidget.html.twig' with {'height': '288px'} %}
+        {% endif %}
+
     </div>
 </div>
+
+
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('bundles/video/css/youtube.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/group/css/groups.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
@@ -44,10 +66,16 @@
             $('.news-ellipse').truncate({
                 width: '250'
             });
-            $('.more-videos-link a').truncate({
-                width: 280
+            $('.home-more-videos-link a').truncate({
+                width: '130'
             });
             $('.ellipse').qtip();
+
+            $('.news-ellipse-first').truncate({
+                width: '400'
+            });
+
+            $('.group-index-link').truncate();
 
             $('#news-content').mCustomScrollbar();
 

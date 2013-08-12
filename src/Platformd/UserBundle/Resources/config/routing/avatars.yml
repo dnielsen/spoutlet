@@ -1,0 +1,26 @@
+avatars:
+    pattern: /
+    defaults: { _controller: UserBundle:Avatar:avatar }
+
+avatar_add:
+    pattern: /add
+    defaults: { _controller: SpoutletBundle:Account:addAvatar }
+
+avatar_crop:
+    pattern: /crop/{uuid}
+    defaults: { _controller: UserBundle:Avatar:cropAvatar, uuid: ~ }
+
+avatar_process:
+    pattern: /process/{uuid}/{dimensions}
+    defaults: { _controller: UserBundle:Avatar:processAvatar, dimensions: ~ }
+
+avatar_delete:
+    pattern: /delete
+    defaults: { _controller: UserBundle:Avatar:delete }
+    requirements:
+        _format: json
+        _method: POST
+
+avatar_switch:
+    pattern: /switch/{uuid}
+    defaults: { _controller: UserBundle:Avatar:switch }

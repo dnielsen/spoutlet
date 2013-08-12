@@ -1,78 +1,61 @@
-<div style="padding-top:0;" class="right_section">
-    <div class="widget-33" id="hs-widget" style="height: auto;">
-        <div class="widget-header" style="height: 36px;">
-            <div class="widget-title" style="width: 175px; float: left;">
-                {{ 'platformd.layout.page_content.photo_gallery' | trans }}<br />
-            </div>
-            <div class="widget-icon"><img src="/bundles/spoutlet/images/photo-icon.png" /></div>
-            <div class="clear"></div>
+<div class="widget-33" id="hs-widget" style="height: auto;">
+    <div class="widget-header" style="height: 36px;">
+        <div class="widget-title" style="width: 200px; float: left;">
+            {{ 'platformd.layout.page_content.photo_gallery' | trans }}<br />
         </div>
-        {# height is a hack for positioning  - see featuredContent.html.twig #}
-        <div class="widget-content normalized" style="height: 252px;">
-            {% if app.session.locale == 'ja' %}
-                {% set caption = 'ALIENWARE ARENA in アイ・カフェ AKIBA PLACE' %}
-                <div id="photoArray">
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/homepage8-thumb.jpg') }}" alt="{{ caption }}" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/homepage9-thumb.jpg') }}" alt="{{ caption }}" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/homepage10-thumb.jpg') }}" alt="{{ caption }}" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/homepage1-thumb.jpg') }}" alt="{{ caption }}" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/homepage2-thumb.jpg') }}" alt="{{ caption }}" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/homepage3-thumb.jpg') }}" alt="{{ caption }}" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/homepage4-thumb.jpg') }}" alt="{{ caption }}" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/homepage5-thumb.jpg') }}" alt="{{ caption }}" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/homepage6-thumb.jpg') }}" alt="{{ caption }}" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/homepage7-thumb.jpg') }}" alt="{{ caption }}" />
-                </div>
-                <h4 class="caption" style="text-align: left; margin-top: 10px; padding-left: 5px;">ALIENWARE ARENA <br/> in アイ・カフェ AKIBA PLACE</h4>
-                <script type="text/javascript">
-                    $(document).ready(function(){
-                        $('#photoArray').cycle({
-                            fx:     'fade',
-                            speed:   300,
-                            timeout: 3000,
-                            next:   '#photoArray',
-                            pause:   1
-                        });
-                    });
-                </script>
-            {% elseif app.session.locale == 'zh' %}
-                {% set caption = 'ALIENWARE&SCC上海超跑嘉年华 速度与狂野的碰撞' %}
-                <div id="photoArray">
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/00-covershot.jpg') }}" alt="Alienware" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/01.JPG') }}" alt="Alienware" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/02.JPG') }}" alt="Alienware" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/03.JPG') }}" alt="Alienware" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/04.JPG') }}" alt="Alienware" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/05.JPG') }}" alt="Alienware" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/06.JPG') }}" alt="Alienware" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/07.JPG') }}" alt="Alienware" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/08.JPG') }}" alt="Alienware" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/09.JPG') }}" alt="Alienware" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/10.JPG') }}" alt="Alienware" />
-                    <img src="{{ asset('bundles/spoutlet/images/homepage-images/china/11.JPG') }}" alt="Alienware" />
-                </div>
-                <h4 class="caption" style="text-align: left; margin-top: 10px; padding-left: 5px;">ALIENWARE&SCC上海超跑嘉年华 <br/>速度与狂野的碰撞</h4>
-                <script type="text/javascript">
-                    $(document).ready(function(){
-                        $('#photoArray').cycle({
-                            fx:     'fade',
-                            speed:   300,
-                            timeout: 3000,
-                            next:   '#photoArray',
-                            pause:   1
-                        });
-                    });
-                </script>
-            {% else %}
-                <img src="{{ asset('images/gallery/gallery.'~app.session.locale~'.jpg') }}" width="290" />
-            {% endif %}
+        <div class="widget-icon"><img src="/bundles/spoutlet/images/photo-icon.png" /></div>
+        <div class="clear"></div>
+    </div>
+    {# height is a hack for positioning  - see featuredContent.html.twig #}
+    <div class="widget-content" style="height: {% if height is defined %}{{ height }}{% else %}252px;{% endif %}">
+        <div id="photoArray">
+
         </div>
-        <div class="widget-footer" style="height: 19px;">
-            {#
-                removed for now
-                <a href="http://www.tbd.com/photos/alienwarearena/" class="aw-link">{{ 'platformd.layout.page_content.view_all' | trans }}</a>
-                <div class="clear"></div>
-            #}
-        </div>
+        <div id="caption"></div>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $.ajax({
+                    url: '{{ path('gallery_featured_media_feed') }}',
+                    method: 'GET',
+                    success: function (data, s, xhr) {
+                        if (data.success && data.media) {
+                            for(var i = 0; i < data.media.length; i++) {
+                                var item = data.media[i];
+                                $('#photoArray').append(
+                                    '<a class="photo-item" href="' + item.url + '" alt="' + item.caption + '"><img src="' + item.thumbnail + '" /></a>'
+                                );
+                            }
+
+                            var opts = {
+                                fx:     'fade',
+                                speed:   300,
+                                timeout: 3000,
+                                next: data.linkable ? '' : '#photoArray',
+                                allowPagerClickBubble: data.linkable,
+                                pagerAnchorBuilder: function(idx, slide) {
+                                    // return sel string for existing anchor
+                                    console.log(idx);
+                                    return '.photo-item';
+                                },
+                                pause:   1,
+                                before: function() {
+                                    $('#caption').html('').fadeOut(300);
+                                },
+                                after: function() {
+                                    $('#caption').html(this.getAttribute('alt')).fadeIn(300);
+                                }
+                            };
+
+                            $('#photoArray').cycle(opts);
+                        }
+
+                    }
+                });
+            });
+        </script>
+    </div>
+    <div class="widget-footer">
+        <a href="{{ path('gallery_index') }}" class="aw-link" id="more-news-link">{{ 'platformd.layout.page_content.see_more' | trans }}</a>
     </div>
 </div>
+

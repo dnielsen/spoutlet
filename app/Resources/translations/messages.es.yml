@@ -5,29 +5,92 @@ cancel: Cancelar
 delete: Borrar
 
 recaptcha:
-    visual_challenge: Get a visual challenge
-    audio_challenge: Get an audio challenge
-    refresh_btn: Get a new challenge
-    instructions_visual: Type the two words:
-    instructions_context: Type the words in the boxes:
-    instructions_audio: Type what you hear:
-    help_btn: Help
-    play_again: Play sound again
-    cant_hear_this: Download sound as MP3
-    incorrect_try_again: Incorrect. Try again.
-    image_alt_text: reCAPTCHA challenge image
+    visual_challenge: Obtener un desafío visual
+    audio_challenge: Obtener un desafío de audio
+    refresh_btn: Obtener un nuevo desafío
+    instructions_visual: Introduzca las dos palabras:
+    instructions_context: Introduzca las palabras en la cajas:
+    instructions_audio: Introduzca lo que escucha:
+    help_btn: Ayuda
+    play_again: Reproducir sonido otra vez
+    cant_hear_this: Descarga sonido como MP3
+    incorrect_try_again: Incorrecto. Inténtelo de Nuevo.
+    image_alt_text: Desafío de imagen reCAPTCHA
 
 site_takeover.continue: Continuar a Alienware Arena
 
+platformd.user.account.account_home: Inicio de Cuenta
+platformd.user.account.edit_account: Editar Cuenta
+platformd.user.account.change_password: Contraseña
+platformd.user.account.profile: Perfíl
+platformd.user.account.registered_events: Mis Eventos
+platformd.user.account.my_giveaways: Regalo
+platformd.user.account.my_videos: Videos
+platformd.user.account.my_events: Mis Eventos
+platformd.user.account.my_groups: Grupos
+platformd.user.account.help: Ayuda
+platformd.user.account.game_ids: IDs de Juego
+platformd.user.account.tournaments: Torneos
+platformd.user.account.media: Medios
+platformd.user.account.media_upload: Subir
+platformd.user.account.my_media: Mis Medios
+platformd.user.account.sign_out: Cerrar sesión
+platformd.user.account.deals: Deals
+platformd.user.account.messages: Mensajes
+platformd.user.account.gameids: IDs de Juego
+platformd.user.account.match_client: Match Client
+platformd.user.account.match_lobby: Match Lobby
+platformd.user.account.gallery: Imágen
+platformd.user.account.images: Imágen
+platformd.user.account.videos: Vídeos
+platformd.user.account.avatars: Avatares
+platformd.user.account.incomplete.title: Complete Registration
+platformd.user.account.incomplete.description: Your registration is missing several key pieces of information. Please complete the form below to complete it.
+platformd.user.account.changes_saved: Tus cambios se guardaron.
+platformd.user.account.error: The system is currently unable to process your request. Please try again shortly.
+platformd.user.avatars.preview_large: Avance Grande
+platformd.user.avatars.preview_small: Avance Chico
+
+platformd.user.avatars.manage: Administrar Avatares
+platformd.user.avatars.select_or_add: 'Selecciona la imagen para utilizar, or <a href="javascript:void(0);" id="add-avatar">agregar una imagen nueva</a>.'
+platformd.user.avatars.add: '<a href="javascript:void(0);" id="add-avatar">Agregar una imagen nueva</a>'
+platformd.user.avatars.file_label: "Archivo:"
+platformd.user.avatars.file_instructions: |
+        Puedes subir archivo de imagen de cualquier tamaño de tu disco duro.
+
+        Vamos a redimensionar las imágenes ampliadas automáticamente por lo que puedes subir la versión de mejor calidad que tienes. Tendrás la oportunidad de recortar la imagen en el siguiente paso.
+platformd.user.avatars.already_cropped: Este avatar ya fue procesado y recortado.
+platformd.user.avatars.invalid_avatar: Avatar inválido especificado.
+platformd.user.avatars.admin_submit_success: Tu avatar se ha cargado y se revisará dentro de 72 horas. Si se aprueba, aparecerá automáticamente tu avatar.
+platformd.user.avatars.submit_success: Tu avatar se ha cargado y se revisará dentro de 72 horas. Si se aprueba, aparecerá automáticamente tu avatar.
+platformd.user.avatars.switch_not_found: No se encuentra el avatar especificado.
+platformd.user.avatars.switch_error: Unable to switch to the specified avatar at this time. Please try again soon.
+platformd.user.avatars.switch_success: Tu avatar aparecerá dentro de 10 minutos.
+platformd.user.avatars.unapproved: No aprobados - %count%
+platformd.user.avatars.processing: Procesando - %count%
+platformd.user.avatars.confirm_delete: ¿Estás seguro que deseas eliminar este avatar?
+platformd.user.avatars.crop: Recortar Avatar
+platformd.user.avatars.submit: Someter
+platformd.user.avatars.awaiting_approval: ESPERANDO LA AROBACIÓN
+platformd.user.avatars.awaiting_processing: ESPERANDO PROCESAMIENTO
+platformd.user.avatars.update: ACTUALIZACIÓN
+platformd.user.avatars.valid_filetypes: Tipo de archivos válidos para avatar son JPG, PNG, GIF.
+platformd.user.avatars.upload: Subir
+platformd.user.avatars.choose_avatar: Administrar Avatares
+
 platformd:
 
+    homepage:
+        news_title: Noticias y Artículos
+
     not_found:
-        title: Page not found
-        body: We're sorry - but we can't find the page you're looking for
+        title: Página no se encuentra
+        body: Lo sentimos, pero esta pagina no exsiste. <a href="/">Haz Cliq</a> para regresar a la paagina de inicio.
 
     flash:
         error_title: ¡Error!
         success_title: ¡Exito!
+        action_required: Acción requerida!
 
     layout:
 
@@ -62,21 +125,23 @@ platformd:
             microsoft: Microsoft
             photos: Galería de Fotos
             contests: Concursos
+            giveaways: Regalos
 
         page_content:
-            featured: Featured
-            giveaways: Giveaways
-            all: All
-            see_more: See More
-            photo_gallery: Image Gallery
-            view_all: View All
+            featured: Destacado
+            giveaways: Regalos
+            all: Todos
+            see_more: Ver Más
+            photo_gallery: Galería de imágenes
+            view_all: Ver todos
             competitions: Competencias
-            hot_stories: Hot Stories
+            hot_stories: Relatos Calientes
             videos: Videos
-            view_more: View More
-            views: Views
-            rating: Rating
-            all_news: All
+            view_more: Ver Más
+            views: Vistas
+            rating: Valuación
+            all_news: Todos
+            other: Otros
 
         bottom_menu:
             contact_us: Contáctenos
@@ -209,8 +274,10 @@ platformd:
             hello_user: Hola %firstname%! Registrado como: %username%.
             ready_to_game: ""
             warning: Advertencia: Nunca des tu contraseña a nadie!
-            under_construction: "Nota: Alienware Arena se encuentra en construcción, por lo tanto regrese más tarde si una característica no está habilitada todavía."
+            under_construction: "Lo sentimos, pero no podemos aceptar tu inscripción en este momento."
             change_your_password: Contraseña
+        giveaway:
+            your_giveaway_keys: Mis Claves para Regalos
 
     comment:
         add_your_comment: Añada tu comentario
@@ -235,9 +302,18 @@ platformd:
         date_format: %month%/%day%/%year%
 
     user:
+        login_header: Iniciar Sesión
+
+        change_password_header: Cambiar Su Contraseña
+        edit_account_header: Editar información de su cuenta
+
+        register_title: Crear una cuenta de Alienware Arena
+
+        name_fields_order: %first_name% %last_name%
+
         account:
             account_home: Inicio de Cuenta
-            edit_account: Edit Account
+            edit_account: Editar Cuenta
             change_password: Contraseña
             profile: Perfíl
             registered_events: Mis Eventos
@@ -245,12 +321,12 @@ platformd:
             my_videos: Videos
             my_events: Mis Eventos
             my_groups: Grupos
-            help: Help
+            help: Ayuda
             game_ids: IDs de Juego
             tournaments: Torneos
             media: Medios
-            media_upload: Upload
-            my_media: My Media
+            media_upload: Subir
+            my_media: Mis Medios
             sign_out: Cerrar sesión
             deals: Deals
             messages: Mensajes
@@ -260,9 +336,49 @@ platformd:
             gallery: Imágen
             images: Imágen
             videos: Vídeos
+            account_settings: Configuración de la cuenta
 
         register:
+            requirements: La participación en Alienware Arena requiere de una cuenta.
+            already: "¿Ya tiene una cuenta en Alienware Arena? <Iniciar>"
+            terms_label: Términos y Condiciones
+            dell_privacy_label: Ver la Protección de datos personales de Dell
+            country_label: Elija un país
+            underage_message: Lo sentimos, pero no podemos aceptar tu inscripción en este momento.
             please_wait: El sistema está procesando múltiples creaciones de cuenta y no puede procesar su solicitud de creación en este momento, por favor vuelve a intentarlo más tarde.
+            oops: ¡Error!
+            cannot_process: No hemos podido completar su solicitud. Si cree que esto es un error o continua teniendo problemas de corregir por debajo de los temas, porfavor contacte a <a href="%s">soporte</a>.
+            problems_found: Hemos encontrado los siguientes problemas:
+            last_step: |
+                Ya casi llegas! Un correo electrónico de confirmación ha sido enviado. Sigue las instrucciones en el correo electrónico para activar tu cuenta de Alienware Arena. Si no recibes un correo electrónico dentro de 15 minutos, Envíe un correo electrónico <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a> para el apoyo.
+                <br /><br />
+                <strong>Importante: Revisa tu carpeta de Spam!</strong>
+            success: Tu cuenta ha sido creada!
+            confirmed_success: Has activado tu cuenta.
+
+        login:
+            username: Nombre de usuario
+            password: Contraseña
+            remember: Acuérdate de mí
+            title: Iniciar Sesión
+            title_login: Iniciar sesión
+            forgot_password: Olvidé mi contraseña
+            need_help: ¿Necesita ayuda?
+            not_a_member_join: ¡Regístrese gratis!
+            password_message: Su contraseña es sensible a las mayúsculas. Asegúrese de que Bloq mayús no esté activado. Si ha olvidado su contraseña, puede restablecerla. Si no puede recordar qué dirección de correo electrónico usó, <a href="%s">contacte a soporte</a>.
+            sign_in: Iniciar
+            join: Unete Gratis!
+
+        reset:
+            title:  Nueva Contraseña
+
+        request_reset:
+            title: ¿Olvidaste tu contraseña?
+            help_message: Para restablecer tu contraseña, por favor proporciona la dirección de correo electrónico que utilizaste para crear tu cuenta de Alienware Arena. Si no recuerdas la dirección de correo electrónico que utilizaste, póngase en contacto con <a href="%s">soporte</a>.
+            spam_message: Importante: Revisa tu carpeta de Spam! - Hacemos todo lo posible, pero a veces filtros de spam confunden nuestros emails como "basura". Por favor permite hasta 30 minutos para que tu contraseña sea restauradaPor lo general sólo toma unos segundos, pero a veces los correos electrónicos quedan "atascados" en el camino a tu buzón.
+
+    about:
+        title: Acerca de Alienware Arena&trade;
 
     event:
         form:
@@ -501,7 +617,7 @@ content_reporting:
 
         Gracias por tu paciencia.  Si tienes cualquier pregunta, por favor contáctenos en contact@alienwarearena.com.
 
-        Equipo Alienware Arena
+        Equipo Web de Alienware Arena
     restored_email_title: Tu contenido ha sido restaurado
     restored_email: |
         Este es un mensaje automatizado para informarle que el contenido a continuación no viola los Términos de servicio y ha sido restaurado en Alienware Arena.
@@ -509,19 +625,20 @@ content_reporting:
         Tipo: %s
         Contenido: %s
 
-        Equipo Alienware Arena
+        Equipo Web de Alienware Arena
 
-    removed_email_title: Your Content Has Been Removed
+    removed_email_title: Tu contenido ha sido retirado.
     removed_email: |
-        The following content has been removed from Alienware Arena due to a violation of our Terms of Service.
+        El siguiente contenido ha sido retirado de Alienware Arena debido a una violación de nuestros Términos de Servicio.
 
-        Type: %s
-        Content: %s
-        Reason: %s
-        Link: %s
+        Tipo: %s
+        Contenido: %s
+        Razón: %s
+        Enlace: %s
 
-        Should you have any questions, please contact us at reports@alienwarearena.com.
-        Alienware Arena Team
+        Si tienes alguna pregunta, por favor, contáctenos a reports@alienwarearena.com.
+        Equipo Web de Alienware Arena
+
 
     staff_notification_title: New Content Reported
     staff_notification: |
@@ -568,8 +685,8 @@ featured_deals: Featured Deals
 expired_deals: Expired Deals
 
 platformd.deal.deal: Deal
-platformd.deal.assigned.key: Code
-platformd.deal.assigned.assigned_at: Assigned
+platformd.deal.assigned.key: Mi Clave
+platformd.deal.assigned.assigned_at: Assignado
 platformd.deal.assigned.view_deal: View Deal
 platformd.deal.view_deal_site: Go to Site
 platformd.account_page.deal.your_deal_keys: My Deals
@@ -588,6 +705,22 @@ platformd.account_page.photos.submit: Enviar Imágenes
 wallpapers: Fondo de pantalla
 exclusive_designs: Diseños Exclusivos
 click_to_download: Hacer clic para descargar
+
+# I'm not sure how we have two different potential "wrong password messages"...
+"Bad credentials": "Usuario/correo electrónico o contraseña incorrecto."
+"The presented password is invalid.": "Usuario/correo electrónico o contraseña incorrecto."
+"The presented password cannot be empty.": "Combinación nombre de usuario/contraseña incorrecta"
+"User account is disabled.": "Your account is not activated. You must confirm your account by clicking on the link in the Activate Account Email."
+"Invalid username or password": "Usuario/correo electrónico o contraseña incorrecto."
+
+"Select one": "----Selecciona Uno----"
+"News Site": "Sitio de Noticias"
+"Email": "Correo Electrónico"
+"Friends or Family": "Amigos o Familia"
+"Blog": "Blog"
+"Search Engine": "Motor de Búsqueda"
+"Live Event": "Evento en Vivo"
+"Other": "Otro"
 
 galleries:
     image: Foto
@@ -734,6 +867,8 @@ timeline.not_found: No timeline found.
 
 platformd.create_account_or_login: Crear una cuenta Alienware Arena  (Si no tienes una)
 
+platformd.giveaway.view_giveaway_site: Mirar sitio de sorteo
+platformd.giveaway.giveaway: Regalo
 platformd.giveaway.click_for_past_giveaways: Haz clic <a href="%cevo_user_account_giveaway_page%">aquí</a> para ver las claves de regalos anteriores.
 platformd.giveaway.get_key:  Obten tu Código
 platformd.giveaway.featured_giveaways: Regalos Destacados de Alienware Arena
@@ -742,6 +877,9 @@ platformd.giveaway.previous_giveaways: Regalos Previos
 platformd.giveaway.latest_comments: Últimos Comentarios
 platformd.giveaway.in_process: Si te has registrado para un sistema tag para regalo de clave y su estado es "Pendiente", por favor, deja transcurrir al menos 2 semanas para su sistema tag sea revisados​​. Si no hay cambio despues de dos semanas, favor de mandar un correo electronico a <a href="mailto:%contact_email%">%contact_email%</a>.
 platformd.giveaway.assigned.message: Por favor, sigue las siguientes instrucciones para activar tu clave. Si necesitas ayuda adicional, envía un correo electrónico a <a href="mailto:%contact_email%">%contact_email%</a>.
+platformd.giveaway.assigned.key: Mi Clave
+platformd.giveaway.assigned.assigned_at: Assignado
+platformd.giveaway.assigned.view_giveaway: Informacíon
 platformd.giveaway.show.availaible_keys: Códigos Disponibles %%count%%
 platformd.giveaway.queue.you_are_queued: Estás en la cola!
 platformd.giveaway.queue.queue_explanation: |
@@ -776,11 +914,14 @@ platformd.key_request_processor_command.key_assigned_email_body: |
         <a href="%promotion_show_page%">%promotion_title%</a>.
         </p>
         %group_section%
-        <p>Equipo Alienware Arena</p>
+        <p>Equipo Web de Alienware Arena</p>
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_subject: Actualización de %promotion_title%
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body: |
     <p>
             Lo sentimos, se nos acabaron los códigos para <a href="%promotion_show_page%">%promotion_title%</a>.
             Por favor, visítanos más tarde ya que se pueden añadir más códigos!
         </p>
-        <p>Equipo Alienware Arena</p>
+        <p>Equipo Web de Alienware Arena</p>
+
+# export query types
+report_user_optin: Arena Opt In Summary

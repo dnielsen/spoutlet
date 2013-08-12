@@ -60,6 +60,11 @@ class SiteConfig
     private $birthdateRequired = true;
 
     /**
+     * @ORM\Column(name="min_age_requirement", type="integer")
+     */
+    private $minAgeRequirement = 13;
+
+    /**
      * @ORM\Column(name="forward_base_url", type="string", nullable=true)
      */
     private $forwardBaseUrl;
@@ -154,6 +159,17 @@ class SiteConfig
     public function getBirthdateRequired()
     {
         return $this->birthdateRequired;
+    }
+
+    public function setMinAgeRequirement($value)
+    {
+        $this->minAgeRequirement = $value;
+        return $this;
+    }
+
+    public function getMinAgeRequirement()
+    {
+        return $this->minAgeRequirement;
     }
 
     public function setForwardBaseUrl($value)

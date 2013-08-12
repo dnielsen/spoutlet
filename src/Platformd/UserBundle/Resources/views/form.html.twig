@@ -6,10 +6,37 @@
 {% block field_label %}
 {% spaceless %}
     <label for="{{ id }}" class="form-lbl{{ required ? ' required' : '' }}">
-        {{ id|trans([], 'FOSUserBundle') }}
         {% if required %}
             <span class="required">*</span>
         {% endif %}
+        {{ id|trans([], 'FOSUserBundle') }}
+
     </label>
 {% endspaceless %}
 {% endblock field_label %}
+
+{% block field_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+
+    {% for error in errors %}
+        <span class="field-error">{{ error.messageTemplate|trans(error.messageParameters, 'validators') }}</span>
+    {% endfor %}
+
+    {% endif %}
+{% endspaceless %}
+{% endblock field_errors %}
+
+{% block form_errors %}
+{% spaceless %}
+
+    {% if errors|length > 0 %}
+
+    {% for error in errors %}
+        <span class="field-error">{{ error.messageTemplate|trans(error.messageParameters, 'validators') }}</span>
+    {% endfor %}
+
+    {% endif %}
+
+{% endspaceless %}
+{% endblock %}

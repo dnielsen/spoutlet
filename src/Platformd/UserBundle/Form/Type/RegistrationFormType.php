@@ -5,10 +5,13 @@ namespace Platformd\UserBundle\Form\Type;
 use Symfony\Component\Form\FormBuilder;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
 use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
-use Platformd\SpoutletBundle\Model\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Collection;
+use Platformd\SpoutletBundle\Entity\CountryRepository;
+use Platformd\SpoutletBundle\Util\IpLookupUtil;
 
 class RegistrationFormType extends BaseType
 {
@@ -26,8 +29,9 @@ class RegistrationFormType extends BaseType
      * @var String user's locale
      */
     private $locale;
-
     private $translator;
+    private $ipLookupUtil;
+    private $request;
 
     protected static $countries = array(
         'ja' => 'JP',
@@ -37,13 +41,15 @@ class RegistrationFormType extends BaseType
     /**
      * @param string $class The User class name
      */
-    public function __construct($class, array $sources = array(), Session $session, Translator $translator)
+    public function __construct($class, array $sources = array(), Session $session, TranslatorInterface $translator, IpLookupUtil $ipLookupUtil, Request $request)
     {
         parent::__construct($class);
 
-        $this->locale = $session->getLocale();
-        $this->sources = $sources;
-        $this->translator = $translator;
+        $this->locale       = $session->getLocale();
+        $this->sources      = $sources;
+        $this->translator   = $translator;
+        $this->ipLookupUtil = $ipLookupUtil;
+        $this->request      = $request;
     }
 
     public function setPrefectures(array $list)
@@ -56,28 +62,31 @@ class RegistrationFormType extends BaseType
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('firstname', null, array('required' => true))
-            ->add('lastname', null, array('required' => true))
-            ->add('email', 'repeated', array('type' => 'email', 'required' => true))
+            ->add('username', null, array('required' => true, 'error_bubbling' => true))
+            ->add('firstname', null, array('required' => true, 'error_bubbling' => true))
+            ->add('lastname', null, array('required' => true, 'error_bubbling' => true))
+            ->add('email', 'email', array('required' => true, 'error_bubbling' => true))
+            ->add('plainPassword', 'password', array('required' => true, 'error_bubbling' => true, 'invalid_message' => 'passwords_do_not_match'))
             ->add('birthdate', 'birthday', array(
-                'empty_value' => '--', 'required' => true,
-                'years' => range(1940, date('Y')),
+                'empty_value' => '--',
+                'required' => true,
+                'years' => range(date('Y'), 1920),
+                'error_bubbling' => true,
             ))
-            ->add('phoneNumber', null, array('required' => false))
             ->add('hasAlienwareSystem', 'choice', array(
                 'expanded' => true,
-                'required' => true,
                 'choices' => array(1 => 'Yes', 0 => 'No'),
-                'empty_value' => '',
+                'required' => true,
+                'error_bubbling' => true,
             ))
             ->add('latestNewsSource', 'choice', array(
                 'empty_value' => 'Select one',
                 'choices' => $this->sources,
                 'required' => false,
+                'error_bubbling' => true,
             ))
             ->add('subscribedGamingNews')
-            ->add('subscribedAlienwareEvents')
-            ->add('termsAccepted', 'checkbox', array('required' => false));
+            ->add('termsAccepted', 'checkbox', array('required' => false, 'error_bubbling' => true));
 
         // if we have preferectures we use a choice
         if (sizeof((array)$this->prefectures) > 0) {
@@ -89,18 +98,18 @@ class RegistrationFormType extends BaseType
             $builder->add('state', 'choice', array(
                 'empty_value' => '',
                 'choices' => $prefs,
-                'required' => true
+                'required' => true,
+                'error_bubbling' => true,
             ));
         } else {
-            $builder->add('state', 'text', array('required' => true));
+            $builder->add('state', 'text', array('required' => true, 'error_bubbling' => true));
         }
 
-        $countryOptions = array('required' => true);
-        if (isset(self::$countries[$this->locale])) {
-            $countryOptions['preferred_choices'] = array(self::$countries[$this->locale]);
-        } else {
-            $countryOptions['empty_value'] = 'platformd.user.register.country_label';
-        }
+        $countryOptions = array(
+            'required' => true,
+            'error_bubbling' => true,
+        );
+
         $builder->add('country', 'country', $countryOptions);
 
         $builder->add('recaptcha', 'ewz_recaptcha', array(
@@ -122,6 +131,13 @@ class RegistrationFormType extends BaseType
             )),
             'property_path' => false,
         ));
+
+        $countryCode = $this->ipLookupUtil->getCountryCode($this->request->getClientIp());
+
+        if($countryCode != 'US') {
+            $builder->add('subscribedAlienwareEvents');
+        }
+
     }
 
     public function getDefaultOptions(array $options)

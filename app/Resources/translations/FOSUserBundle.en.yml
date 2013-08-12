@@ -1,24 +1,29 @@
 # some labels are on the "forms" domain
 fos_user_registration_form_username: "Username:"
-fos_user_registration_form_firstname: "First name:"
-fos_user_registration_form_lastname: "Last name:"
+fos_user_registration_form_firstname: "First Name:"
+fos_user_registration_form_lastname: "Last Name:"
 fos_user_registration_form_phoneNumber: "Phone:"
 fos_user_registration_form_country: "Country:"
 fos_user_registration_form_state: "State/Province:"
 fos_user_registration_form_email_first: "E-mail:"
 fos_user_registration_form_email_second: "Confirm E-mail:"
+fos_user_registration_form_plainPassword_first: "Password:"
+fos_user_registration_form_plainPassword_second: "Confirm Password:"
+fos_user_registration_form_plainPassword: "Password:"
 fos_user_registration_form_hasAlienwareSystem_0: No
 fos_user_registration_form_hasAlienwareSystem_1: Yes
-fos_user_registration_form_latestNewsSource: "How did you most recently hear about Alienware Arena?"
+fos_user_registration_form_latestNewsSource: "How did you hear about Alienware Arena?"
+fos_user_registration_form_recaptcha: "Verification:"
+fos_user_registration_form_subscribedAlienwareEvent: Subscribe me to the Alienware Arena email newsletter.
 
-fos_user_profile_form_user_lastname: "Last name"
-fos_user_profile_form_user_firstname: "First name"
+fos_user_profile_form_user_lastname: "Last Name"
+fos_user_profile_form_user_firstname: "First Name"
 fos_user_profile_form_user_file: "Avatar"
 fos_user_profile_form_current_avatar: "Your current avatar"
 
 profile.show.title: '%username%'
-profile.show.firstname: "First name"
-profile.show.lastname: "Last name"
+profile.show.firstname: "First Name"
+profile.show.lastname: "Last Name"
 profile.show.my_rig: "My Rig"
 profile.show.update: "Update"
 profile.show.signature: "Signature"
@@ -44,29 +49,34 @@ fos_user_admin_index_lastname: Last Name
 fos_user_admin_delete: Delete
 fos_user_admin_edit: Edit
 
-fos_user_admin_reset_password: Reset password
+fos_user_admin_reset_password: Reset Password
 fos_user_admin_user_edit: Edit
 fos_user_admin_edit_success: User "%username%" has been successfully updated !
 fos_user_admin_delete_success: User "%username%" has been successfully deleted !
 fos_user_admin_approve_avatar: Approve avatar
 fos_user_admin_resetted_password_success: "The user's password has been reset and has been sent to %email%."
+fos_user_admin_disapprove_avatar: Disapprove avatar
 
 # Security
 security.login.username: "Username:"
 security.login.password: "Password:"
 security.login.remember_me: Remember me
 security.login.submit: Login
+security.login.problem_logging_in: "We're sorry, but there was a problem logging in:"
 
 # Profile
 profile.edit.submit: Update
 profile.flash.updated: The profile has been updated
 
 # Password change
-change_password.submit: Change password
+change_password.submit: Change Password
 change_password.flash.success: The password has been changed
 
 # Registration
-registration.check_email: An email has been sent to %email%. It contains an activation link you must click to activate your account.
+registration.check_email: |
+    Last Step! A confirmation has been send to your email address. Follow the instructions in the email to activate your Alienware Arena account. Once you have activated your account, you will be able to log in.
+    <br />
+    Alienware Arena Team
 registration.confirmed: Congrats %username%, your account is now confirmed.
 registration.back: Back to the originating page.
 registration.submit: Register
@@ -74,61 +84,69 @@ registration.flash.user_created: The user has been created successfully
 
 # the first line is the subject of the email
 registration.email: |
-    Welcome %username%!
-    <h3>Hello %username%!</h3>
+    Activate Your Alienware Arena Account
+    <p>Dear %username%!</p>
 
     <p>
-        To finish validating your account - please click the following link
+        Thank you for registering for an Alienware Arena account. Please activate your account by clicking on the link below<br />
         <a href="%confirmationUrl%">%confirmationUrl%</a>
     </p>
-
     <p>
-    Regards,<br/>
-    the Team.
+        This is an automated message. Please do not respond to this email.
+    </p>
+    <p>
+        Alienware Arena Team
     </p>
 
 # Password resetting
 resetting.password_already_requested: The password for this user has already been requested within the last 24 hours.
-resetting.check_email: An email has been sent to %email%. It contains a link you must click to reset your password.
-resetting.request.invalid_username: The Email address "%username%" does not exist.
+resetting.check_email: A password reset email has been sent. Please click the link provided in the email to complete your password reset.
+resetting.request.invalid_username: The email you entered, "%username%", does not appear to be in our system. If you believe this is an error, please email <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a> for support.
 resetting.request.username: "Email:"
-resetting.request.submit: Reset my Password
-resetting.reset.submit: Change password
-resetting.flash.success: The password has been reset successfully
+resetting.request.submit: Reset Password
+resetting.reset.submit: Change Password
+resetting.flash.success: Your password has been successfully changed.
 
 # the first line is the subject of the email
 resetting.email: |
-    Reset Password
+    Alienware Arena - Reset Password
     <h3>Hello %username%!</h3>
 
+    <p>We have received a password change request for your Alienware Arena account.</p>
+
     <p>
-        To reset your password - please visit
+        To reset your password - please click on the link below <br />
         <a href="%confirmationUrl%">%confirmationUrl%</a>
     </p>
 
-    <p>
-    Regards,<br/>
-    the Team.
-    </p>
+    <p>If you did not request to have your password reset, please ignore this email.</p>
+
+    <p>This is an automated message. Please do not respond to this email.</p>
+
+    <p>Alienware Arena Team</p>
 
 # Password resetted by admin
 resetted.email: |
-    Alienware Arena - Password Reset
-    <pre>
-    Your password has been reset on our website. Here is your new login information four your Alienware Arena account. Please login and change your password to something you will remember.
+    Alienware Arena - Reset Password
+    <h3>Hello %username%!</h3>
 
-    Username: %username%
-    Password: %plainPassword%
+    <p>We have received a password change request for your Alienware Arena account.</p>
 
-    ** NOTE: Our Support Staff will never ask for your password.
+    <p>
+        To reset your password - please click on the link below <br />
+        <a href="%confirmationUrl%">%confirmationUrl%</a>
+    </p>
 
-    Thanks,
-    Alienware Arena Web Team.
-    </pre>
+    <p>If you did not request to have your password reset, please ignore this email.</p>
+
+    <p>This is an automated message. Please do not respond to this email.</p>
+
+    <p>Alienware Arena Team</p>
+
 
 # Global strings
 layout.logout: Logout
-layout.login: Sign in
+layout.login: Sign In
 layout.register: Register
 
 # Form field labels
@@ -156,10 +174,25 @@ fos_user_registration_form_email: "Email:"
 fos_user_registration_form_plainPassword_first: "Password:"
 fos_user_registration_form_plainPassword_second: "Confirm Password:"
 
-fos_user_resetting_form_new_first: "New password:"
+fos_user_resetting_form_new_first: "New Password:"
 fos_user_resetting_form_new_second: "Confirm Password:"
 
-fos_user_change_password_form_new_first: "New password:"
-fos_user_change_password_form_new_second: "Confirm password:"
-fos_user_change_password_form_current: "Current password:"
+fos_user_change_password_form_new_first: "New Password:"
+fos_user_change_password_form_new_second: "Confirm Password:"
+fos_user_change_password_form_current: "Current Password:"
+platformd.user.account_settings: "Account settings"
+platformd.user.account_settings.change_avatar.submit: "Save"
+account_settings_userAvatars: "Avatars"
+"platformd.user.account_settings.Add an avatar": "Add an avatar"
+"platformd.user.account_settings.Select avatar": "Choose this avatar"
+"platformd.user.account_settings.waiting for approval": "Waiting for approval"
+platformd.user.account_settings.avatars: "Avatars"
+platformd.user.account_settings.password: "Update Password"
+platformd.user.account_settings.newsletter: "Notifications"
 
+invalid_username_password: Incorrect username/email or password
+
+"Bad credentials": "Incorrect username/email or password"
+"The presented password is invalid.": "Incorrect username/email or password"
+"The presented password cannot be empty.": "Please enter a password"
+"User account is disabled.": Your account is not activated. You must confirm your account by clicking on the link in the Activate Account Email.

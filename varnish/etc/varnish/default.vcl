@@ -9,25 +9,27 @@ probe healthcheck {
     .timeout = 3s;
 }
 
-// Note: Hostnames are resolved at VCL compile time - if these change you will need to vcl.load the config again.
-backend awaWeb1  { .host = "ec2-54-227-65-32.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
-backend awaWeb2  { .host = "ec2-23-20-93-253.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
-backend awaWeb3  { .host = "ec2-54-227-94-218.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
-backend awaWeb4  { .host = "ec2-23-20-212-246.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb1  { .host = "ec2-23-22-229-200.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb2  { .host = "ec2-54-226-103-0.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb3  { .host = "ec2-50-19-47-216.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb4  { .host = "ec2-54-227-50-4.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb5  { .host = "ec2-50-16-16-111.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 
 director awaWeb random {
     { .backend = awaWeb1; .weight = 1; }
     { .backend = awaWeb2; .weight = 1; }
     { .backend = awaWeb3; .weight = 1; }
     { .backend = awaWeb4; .weight = 1; }
+    { .backend = awaWeb5; .weight = 1; }
 }
 
 acl ban {
     "ec2-75-101-139-101.compute-1.amazonaws.com";
-    "ec2-54-227-65-32.compute-1.amazonaws.com";
-    "ec2-23-20-93-253.compute-1.amazonaws.com";
-    "ec2-54-227-94-218.compute-1.amazonaws.com";
-    "ec2-23-20-212-246.compute-1.amazonaws.com";
+    "ec2-23-22-229-200.compute-1.amazonaws.com";
+    "ec2-54-226-103-0.compute-1.amazonaws.com";
+    "ec2-50-19-47-216.compute-1.amazonaws.com";
+    "ec2-54-227-50-4.compute-1.amazonaws.com";
+    "ec2-50-16-16-111.compute-1.amazonaws.com";
 }
 
 sub vcl_recv {
@@ -58,12 +60,12 @@ sub vcl_recv {
         error 403 "Forbidden (referer).";
     }
 
-    if (req.url ~ "^/video(/.*)?$") {
-        error 750 "http://" + req.http.host + "/videos";
+    if (req.url ~ "^/account/profile[/]?$") {
+        error 750 "http://www.alienwarearena.com/account/profile";
     }
 
-    if (req.http.host !~ "^.*migration" && req.url ~ "^/account/register" && req.http.host ~ ".com$") {
-        error 750 "https://www.alienwarearena.com/account/register";
+    if (req.url ~ "^/video(/.*)?$") {
+        error 750 "http://" + req.http.host + "/videos";
     }
 
     // This one is temporarily here as CEVO didn't implement the link to our gallery page correctly... care needs to be taken as they do require the feed to still work...
@@ -82,6 +84,12 @@ sub vcl_recv {
     set req.backend = awaWeb;
 
     if (req.http.host == "api.alienwarearena.com") {
+
+        if (req.http.X-Forwarded-Proto == "http") {
+            std.log("Non SSL API request to '" + req.url + "'' from " + req.http.X-Client-IP);
+            error 404 "Page Not Found.";
+        }
+
         return (pass);
     }
 
@@ -120,7 +128,7 @@ sub vcl_recv {
     if (req.http.Cookie) {
         set req.http.Cookie = ";" + req.http.Cookie;
         set req.http.Cookie = regsuball(req.http.Cookie, "; +", ";");
-        set req.http.Cookie = regsuball(req.http.Cookie, ";(PHPSESSID|aw_session)=", "; \1=");
+        set req.http.Cookie = regsuball(req.http.Cookie, ";(PHPSESSID|aw_session|awa_session_key|migration_test_allowed)=", "; \1=");
         set req.http.Cookie = regsuball(req.http.Cookie, ";[^ ][^;]*", "");
         set req.http.Cookie = regsuball(req.http.Cookie, "^[; ]+|[; ]+$", "");
 
@@ -248,7 +256,10 @@ sub vcl_fetch {
     // set so that we can utilize the ban lurker to test against the url of cached items
     set beresp.http.x-url = req.url;
 
-    if (req.url !~ "^/age/verify$" && req.url !~ "^/login(_check)?$" && req.url !~ "^/logout$" && req.url !~ "^/sessionCookie$" && req.url !~ "^/account/register[/]?$" && req.url !~ "^/register/confirm/" && req.url !~ "^/reset/") { # the only exceptions to the "remove all set-cookies rule"
+    // set so that we can utilize the ban lurker to test against the host of cached items
+    set beresp.http.x-host = req.http.host;
+
+    if (req.url !~ "^/allowMigrationTesting$" && req.url !~ "^/(set|refresh)ApiSessionCookie" && req.url !~ "^/age/verify$" && req.url !~ "^/login(\?f=.*|_check)?$" && req.url !~ "^/logout$" && req.url !~ "^/sessionCookie$" && req.url !~ "^/account/register[/]?$" && req.url !~ "^/register/confirm/" && req.url !~ "^/reset/") { # the only exceptions to the "remove all set-cookies rule"
         unset beresp.http.set-cookie;
     }
 
@@ -265,8 +276,8 @@ sub vcl_fetch {
 
     if (req.url ~ "^/(bundles|css|js|images|plugins)/" || req.url ~ "\.(png|gif|jpg|jpeg|swf|css|js|ico|htm|html)$") {
         unset beresp.http.expires;
-        set beresp.ttl = 15m;
-        set beresp.http.cache-control = "max-age=900";
+        set beresp.ttl = 1h;
+        set beresp.http.cache-control = "max-age=3600";
     }
 
     if (!req.http.Cookie && !beresp.http.set-cookie) {
@@ -296,8 +307,8 @@ sub vcl_deliver {
         set resp.http.set-cookie = "aw_session=0; Domain=.alienwarearena.com; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;";
     }
 
-    if (req.url ~ "^/logout") {
-        set resp.http.set-cookie = "PHPSESSID=0; Domain=.alienwarearena.com; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;";
+    if (req.http.host == "api.alienwarearena.com") {
+        std.log("API request (" + resp.status + ") - [" + req.request + "] '" + req.url + "' from " + req.http.X-Client-IP);
     }
 }
 
@@ -329,6 +340,33 @@ sub vcl_error {
 
     if (obj.status == 750) {
         set obj.http.Location = obj.response;
+        set obj.status = 302;
+        return(deliver);
+    }
+
+    // our generic way to deliver a blank response
+    if (obj.status == 999) {
+        synthetic "";
+        return(deliver);
+    }
+
+    if (obj.status == 418) {
+        set obj.http.Set-Cookie = "migration_test_allowed=1; Expires: Sat, 10 Aug 2013 23:59:59 GMT; Path=/; Domain=.alienwarearena.com;";
+        set obj.http.Location = obj.response;
+        set obj.status = 302;
+        return(deliver);
+    }
+
+    // AWA-themed error page
+    if (obj.status == 888) {
+        if (req.http.host ~ "(japan|japanstaging|japanmigration).alienwarearena.(com|local:8080)") {
+            set obj.http.Location = "http://media.alienwarearena.com/error/maintenance_ja.html";
+        } else if (req.http.host ~ "(latam|latamstaging|latammigration).alienwarearena.(com|local:8080)") {
+            set obj.http.Location = "http://media.alienwarearena.com/error/maintenance_es.html";
+        } else {
+            set obj.http.Location = "http://media.alienwarearena.com/error/maintenance.html";
+        }
+
         set obj.status = 302;
         return(deliver);
     }

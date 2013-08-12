@@ -131,10 +131,6 @@ class GamePageType extends AbstractType
 
     public function getStatusChoices()
     {
-        $choices = array(
-            '' => 'status.choose_status',
-        );
-
         foreach (GamePage::getValidStatues() as $status) {
             $choices[$status] = 'status.'.$status;
         }

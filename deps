@@ -192,3 +192,21 @@
 [LiipThemeBundle]
     git=http://github.com/liip/LiipThemeBundle.git
     target=bundles/Liip/ThemeBundle
+
+[FOSFacebookBundle]
+    git=git://github.com/FriendsOfSymfony/FOSFacebookBundle.git
+    target=/bundles/FOS/FacebookBundle
+    version=origin/2.0
+
+[FacebookSDK]
+    git=git://github.com/facebook/facebook-php-sdk.git
+    target=/facebook
+
+[FOSTwitterBundle]
+    git=git://github.com/FriendsOfSymfony/FOSTwitterBundle.git
+    target=/bundles/FOS/TwitterBundle
+    version=origin/v1.0
+
+[twitteroauth]
+    git=git://github.com/kertz/twitteroauth.git
+    target=twitteroauth

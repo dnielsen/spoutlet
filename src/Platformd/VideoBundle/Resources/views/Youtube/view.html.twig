@@ -52,7 +52,7 @@
                 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
         </div>
         <div class="widget-33" style="margin-top: 15px; height: auto;">
-            <div class="widget-header">
+            <div class="widget-header" style="height:auto;background-color:#131313;margin:1px">
                 <div class="widget-title">
                     {{ video.title }}
                 </div>
@@ -63,7 +63,7 @@
                         {% if get_avatar_url(video.author) != false %}
                             <img src="{{ asset(get_avatar_url(video.author)) }}" alt="{{ video.author.username }}" />
                         {% else %}
-                            <div class="default-avatar"></div>
+                            <div class="default-avatar avatar84"></div>
                         {% endif %}
                     </a>
                     <a class="author-name" href="{{ account_link(video.author.username) }}">{{ video.author.username }}</a>

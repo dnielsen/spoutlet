@@ -4,9 +4,21 @@
 {% block content %}
 
 <h1>Members by Country</h1>
+<form action="{{ path('user_metric_by_country') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
 
-<div class="pull-right">
-    {{ form_widget(select) }}
+<div style="height: 40px;">
+    <div class="pull-left">
+        {{ form_widget(form.country) }}
+        <button type="submit" class="btn btn-primary" formnovalidate>Add Country</button>
+        <a href="{{ path('user_metric_by_country') }}" class="btn btn-primary">Reset</a>
+    </div>
+
+    <div class="pull-right">
+        <button type="submit" class="btn btn-primary" formnovalidate>Apply</button>
+        {{ form_widget(form.from_date_country) }}
+        To
+        {{ form_widget(form.to_date_country) }}
+    </div>
 </div>
 
 <table class="table table-striped table-bordered tablesorter">
@@ -18,23 +30,81 @@
             <th>%</th>
             <th>Dell Opted in</th>
             <th>%</th>
-            <th>New Users ({{ range }})</th>
+            <th>New Users ( {% if countryRange %} {{ countryRange }} {% else %} All time {% endif %} ) </th>
         </tr>
     </thead>
     <tbody>
-        {% for siteKey, siteData in sitesData %}
-        <tr>
-            <td>{{ siteData.siteName }}</td>
-            <td>{{ siteData.count }}</td>
-            <td>{{ siteData.arenaOptIn }}</td>
-            <td>{{ siteData.arenaOptInPercentage }}%</td>
-            <td>{{ siteData.dellOptIn }}</td>
-            <td>{{ siteData.dellOptInPercentage }}%</td>
-            <td>{{ siteData.newUsers }}</td>
-        </tr>
-        {% endfor %}
+        {% if 'country' in sitesData | keys %}
+            {% for siteData in sitesData['country'] %}
+            <tr>
+                <td>{{ siteData.name }}</td>
+                <td>{{ siteData.count }}</td>
+                <td>{{ siteData.arenaOptIn }}</td>
+                <td>{{ siteData.arenaOptInPercentage }}%</td>
+                <td>{{ siteData.dellOptIn }}</td>
+                <td>{{ siteData.dellOptInPercentage }}%</td>
+                <td>{{ siteData.newUsers }}</td>
+            </tr>
+            {% endfor %}
+
+        {% else %}
+            <tr><td colspan=7>No Countries Selected!</td></tr>
+        {% endif %}
     </tbody>
 </table>
+
+
+
+<h1>Members by Region</h1>
+
+<div style="height: 40px;">
+    <div class="pull-left">
+        {{ form_widget(form.region) }}
+        <button type="submit" class="btn btn-primary" formnovalidate>Add Region</button>
+        <a href="{{ path('user_metric_by_country') }}" class="btn btn-primary">Reset</a>
+    </div>
+
+    <div class="pull-right">
+        <button type="submit" class="btn btn-primary" formnovalidate>Apply</button>
+        {{ form_widget(form.from_date_region) }}
+        To
+        {{ form_widget(form.to_date_region) }}
+    </div>
+</div>
+
+<table class="table table-striped table-bordered tablesorter">
+    <thead>
+        <tr>
+            <th>Region</th>
+            <th>Count</th>
+            <th>Arena Opted In</th>
+            <th>%</th>
+            <th>Dell Opted in</th>
+            <th>%</th>
+            <th>New Users ( {% if regionRange %} {{ regionRange }} {% else %} All time {% endif %} )</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if 'region' in sitesData | keys %}
+            {% for siteData in sitesData['region'] %}
+            <tr>
+                <td>{{ siteData.name }}</td>
+                <td>{{ siteData.count }}</td>
+                <td>{{ siteData.arenaOptIn }}</td>
+                <td>{{ siteData.arenaOptInPercentage }}%</td>
+                <td>{{ siteData.dellOptIn }}</td>
+                <td>{{ siteData.dellOptInPercentage }}%</td>
+                <td>{{ siteData.newUsers }}</td>
+            </tr>
+            {% endfor %}
+
+        {% else %}
+            <tr colspan=7>No Countries Selected!</td>
+        {% endif %}
+    </tbody>
+</table>
+
+</form>
 
 <script>
     jQuery(document).ready(function() {

@@ -47,7 +47,7 @@
 
 
         $('#youtube_youtubeLink').bind('paste', function () {
-            var youtube_api = 'http://gdata.youtube.com/feeds/api/videos/[id]?alt=jsonc&v=2';
+            var youtube_api = '//gdata.youtube.com/feeds/api/videos/[id]?alt=jsonc&v=2';
             var element = this;
             setTimeout(function () {
                 var text = $(element).val();
@@ -72,7 +72,6 @@
             }, 10);
         });
 
-        $('#youtube_tags').watermark('Separate tags with commas');
         $('#youtube_tags').tagsInput({
             placeholderColor: '#aaaaaa',
             defaultText: "{{ 'tags.forms.add_tag' | pd_trans }}"

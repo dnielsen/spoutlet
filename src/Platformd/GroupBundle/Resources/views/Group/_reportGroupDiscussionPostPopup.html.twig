@@ -3,7 +3,7 @@
         <div style="height: 120px;">
             {{ 'content_reporting.must_be_logged_in' | pd_trans }}
         </div>
-        <button id="close-dialog-GroupDiscussionPost" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
+        <button id="close-dialog-GroupDiscussionPost" onclick="$('#report-content-dialog-GroupDiscussionPost').dialog('close');" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
     </div>
 
 
@@ -12,7 +12,7 @@
             <div style="height: 120px;">
                 {{ 'content_reporting.once_per_hour' | pd_trans }}
             </div>
-            <button id="close-dialog-GroupDiscussionPost" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
+            <button id="close-dialog-GroupDiscussionPost" onclick="$('#report-content-dialog-GroupDiscussionPost').dialog('close');" style="float: right;">{{ 'content_reporting.cancel' | pd_trans }}</button>
         </div>
 
         <div data-can-report="true">
@@ -30,7 +30,7 @@
                 </div>
             </div>
             <button class="btn btn-primary" id="submit-report-GroupDiscussionPost">Submit</button>
-            <button class="btn btn-primary" id="close-dialog-GroupDiscussionPost" style="float: right;">Cancel</button>
+            <button class="btn btn-primary close-dialog" id="close-dialog-GroupDiscussionPost" onclick="$('#report-content-dialog-GroupDiscussionPost').dialog('close');" style="float: right;">Cancel</button>
         </div>
     </div>
 </div>
@@ -76,7 +76,7 @@
             $('.report-post-option').prop('checked', false);
             $('#report-post-response').hide();
             $('#report-post-options').show();
-            $('#close-dialog-GroupDiscussionPost').text('Cancel');
+            $('.btn.btn-primary.close-dialog').text('Cancel');
             $('#submit-report-GroupDiscussionPost').show();
             reportGroupDialog.dialog('open');
         });
@@ -99,7 +99,7 @@
                     } else {
                         $('#report-post-response').fadeIn();
                     }
-                    $('#close-dialog-GroupDiscussionPost').text('OK');
+                    $('.btn.btn-primary.close-dialog').text('OK');
                     $('#submit-report-GroupDiscussionPost').hide();
                     groupDeleted = true;
                 }

@@ -223,7 +223,7 @@ class GalleryController extends Controller
             $description = $submission['description'];
             $gals        = $submission['galleries'];
             $groups      = $submission['groups'];
-            $tagNames    = $submission['tags'];
+            $tagNames    = isset($submission['tags']) ? $submission['tags'] : '';
 
             $errors      = $this->validateMediaPublish($id, $title, $description, $gals, $groups);
 
@@ -935,6 +935,9 @@ class GalleryController extends Controller
                 foreach($media as $mediaItem) {
                     $featuredMedia[$counter]['thumbnail']   = $liip->filter($mediaItem->getImage()->getFilename(), 'media_feed_thumbnail', true);
                     $featuredMedia[$counter]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId(), '_locale' => $site->getDefaultLocale()), true);
+                    $caption = $mediaItem->getTitle();
+                    $caption = (strlen($caption) > 99) ? substr($caption, 0, 96) . '...' : $caption;
+                    $featuredMedia[$counter]['caption']     = $caption;
                     $counter++;
                 }
             } else {
@@ -942,8 +945,9 @@ class GalleryController extends Controller
             }
 
             $response->setContent(json_encode(array(
-                "success" => true,
-                "media"   => $featuredMedia
+                "success"   => true,
+                "media"     => $featuredMedia,
+                "linkable"  => $site->getSiteFeatures()->getHasPhotos(),
             )));
 
             return $response;
@@ -951,6 +955,12 @@ class GalleryController extends Controller
             $em                 = $this->getEntityManager();
             $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
             $site               = $this->getCurrentSite();
+            $linkable           = $site->getSiteFeatures()->getHasPhotos();
+
+            if (!$site->getSiteFeatures()->getHasPhotos()) {
+                $site = $this->getEntityManager()->getRepository('SpoutletBundle:Site')->find(4);
+            }
+
             $media              = $galleryMediaRepo->findFeaturedMediaForSite($site);
 
             $featuredMedia = array();
@@ -961,6 +971,9 @@ class GalleryController extends Controller
                 foreach($media as $mediaItem) {
                     $featuredMedia[$counter]['thumbnail']   = $liip->filter($mediaItem->getImage()->getFilename(), 'media_feed_thumbnail', true);
                     $featuredMedia[$counter]['url']         = $this->generateUrl('gallery_media_show', array('id' => $mediaItem->getId(), '_locale' => $site->getDefaultLocale()), true);
+                    $caption = $mediaItem->getTitle();
+                    $caption = (strlen($caption) > 99) ? substr($caption, 0, 96) . '...' : $caption;
+                    $featuredMedia[$counter]['caption']     = $caption;
                     $counter++;
                 }
             } else {
@@ -968,8 +981,9 @@ class GalleryController extends Controller
             }
 
             $response->setContent(json_encode(array(
-                "success" => true,
-                "media"   => $featuredMedia
+                "success"   => true,
+                "media"     => $featuredMedia,
+                "linkable"  => $linkable,
             )));
 
             $this->varnishCache($response, 30);

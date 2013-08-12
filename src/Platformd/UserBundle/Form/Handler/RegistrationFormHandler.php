@@ -11,6 +11,10 @@ use FOS\UserBundle\Mailer\MailerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Platformd\SpoutletBundle\Util\IpLookupUtil;
+use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
+use Platformd\UserBundle\Exception\UserRegistrationTimeoutException;
+use Platformd\UserBundle\Exception\ApiRequestException;
 
 class RegistrationFormHandler extends BaseRegistrationFormHandler
 {
@@ -20,24 +24,45 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
     protected $mailer;
     protected $em;
     protected $container;
+    protected $ipLookupUtil;
+    protected $apiManager;
 
-    public function __construct(Form $form, Request $request, UserManagerInterface $userManager, MailerInterface $mailer, EntityManager $em, ContainerInterface $container)
+    public function __construct(Form $form, Request $request, UserManagerInterface $userManager, MailerInterface $mailer, EntityManager $em, ContainerInterface $container, IpLookupUtil $ipLookupUtil, $apiManager)
     {
-        $this->form = $form;
-        $this->request = $request;
-        $this->userManager = $userManager;
-        $this->mailer = $mailer;
-        $this->em = $em;
-        $this->container = $container;
+        $this->form         = $form;
+        $this->request      = $request;
+        $this->userManager  = $userManager;
+        $this->mailer       = $mailer;
+        $this->em           = $em;
+        $this->container    = $container;
+        $this->ipLookupUtil = $ipLookupUtil;
+        $this->apiManager   = $apiManager;
     }
 
     public function process($confirmation = false)
     {
         $user = $this->userManager->createUser();
+        $country = $this->getUserCountry();
+        $user->setCountry($country);
         $this->form->setData($user);
+
+        if ($country == 'US') {
+            $user->setSubscribedAlienwareEvents(true);
+        }
 
         if ('POST' == $this->request->getMethod()) {
             $this->form->bindRequest($this->request);
+
+            $ageManager = $this->container->get('platformd.age.age_manager');
+            $site       = $this->container->get('platformd.util.site_util')->getCurrentSite();
+
+            if ($this->form->getData()->getBirthdate()) {
+                $ageManager->setUsersBirthday($this->form->getData()->getBirthdate());
+
+                if ($ageManager->getUsersAge() < $site->getSiteConfig()->getMinAgeRequirement()) {
+                    throw new InsufficientAgeException();
+                }
+            }
 
             if ($this->form->isValid()) {
 
@@ -45,11 +70,22 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
                 $user->setIpAddress($ipAddress);
 
                 if ($this->checkRegistrationTimeoutPassed() === false) {
-                    $this->container->get('platformd.util.flash_util')->setFlash('error', 'platformd.user.register.please_wait');
-                    return false;
+                    throw new UserRegistrationTimeoutException();
+                }
+
+                if ($this->container->getParameter('api_authentication')) {
+                    if (false === $this->apiManager->createRemoteUser($user, $user->getPlainPassword())) {
+                        throw new UserRegistrationTimeoutException();
+                    }
                 }
 
                 $this->onSuccess($user, $confirmation);
+
+                $this->apiManager->updateRemoteUserData(array(
+                    'uuid' => $user->getUuid(),
+                    'created' => $user->getCreated()->format('Y-m-d H:i:s'),
+                    'last_updated' => $user->getUpdated()->format('Y-m-d H:i:s'),
+                ));
 
                 return true;
             }
@@ -76,5 +112,11 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
             ->execute();
 
         return $result ? false : true;
+    }
+
+    private function getUserCountry()
+    {
+        $ipAddress  = $this->request->getClientIp(true);
+        return $this->ipLookupUtil->getCountryCode($ipAddress);
     }
 }
