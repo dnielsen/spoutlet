@@ -20,7 +20,7 @@
     {% if error.messageTemplate == 'fos_user.email.blank' or error.messageTemplate == 'fos_user.email.already_used' or error.messageTemplate == 'fos_user.email.invalid' %}
         {% set email_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
     {% endif %}
-    {% if error.messageTemplate == 'fos_user.password.blank' or error.messageTemplate == 'passwords_do_not_match' %}
+    {% if error.messageTemplate == 'fos_user.password.blank' or error.messageTemplate == 'passwords_do_not_match' or error.messageTemplate == 'password_too_short' %}
         {% set password_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
     {% endif %}
     {% if error.messageTemplate == 'first_name_not_blank' %}

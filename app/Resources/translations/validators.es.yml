@@ -10,6 +10,7 @@ current_passwords_do_not_match: Contraseña antigua no coincide.
 age_requirement_not_met: Debes ser %s de edad para registrar.
 must_enter_new_password: Debe introducir una nueva contraseña.
 must_reenter_new_password: Debe volver a introducir la nueva contraseña
+password_too_short: Your new password must be a minimum of 5 characters.
 
 fos_user.username.already_used: Lo sentimos, este nombre de usuario ya esta en uso.
 fos_user.email.already_used:  Lo sentimos, esta dirección de correo electrónico ya esta en uso.
