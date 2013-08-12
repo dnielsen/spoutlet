@@ -182,7 +182,7 @@ class GalleryController extends Controller
 
         if($media->getFeatured()) {
             try {
-                $response = $this->getCEVOApiManager()->GiveUserXp('photofeature', $media->getAuthor()->getCevoUserId());
+                $response = $this->getCEVOApiManager()->GiveUserXp('contentfeatured', $media->getAuthor()->getCevoUserId());
             } catch (ApiException $e) {
 
             }
@@ -243,7 +243,7 @@ class GalleryController extends Controller
                 $published[] = $id;
                 $media->setPublished(true);
                 try {
-                    $cevoResponse = $this->getCEVOApiManager()->GiveUserXp('photosubmit', $media->getAuthor()->getCevoUserId());
+                    $cevoResponse = $this->getCEVOApiManager()->GiveUserXp('addcontent', $media->getAuthor()->getCevoUserId());
                 } catch(ApiException $e) {
 
                 }

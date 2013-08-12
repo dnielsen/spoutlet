@@ -167,6 +167,13 @@ class FrontendController extends Controller
         $this->getDoctrine()->getEntityManager()->persist($entry);
         $this->getDoctrine()->getEntityManager()->flush();
 
+        // arp - enteredsweepstakes
+        try {
+            $response = $this->getCEVOApiManager()->GiveUserXp('enteredsweepstakes', $user->getCevoUserId());
+        } catch (ApiException $e) {
+
+        }
+
         return $this->redirect($this->generateUrl(
             'sweepstakes_show',
             array('slug' => $sweepstakes->getSlug(), 'entryId' => $entry->getId())

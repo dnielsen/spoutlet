@@ -1289,6 +1289,7 @@ contests:
     no_longer_available: This contest is no longer available.
     entry_success: Your group is entered into the contest.
     contest_finished_you_can_still_like: This contest has ended. You may still like the images, but your vote will not count for the contest.
+    voting_period_not_open: The voting period has not opened yet. Please check back %s to view and vote on entries.
 
 
 platformd.users.avatar_listings.title: User Avatars

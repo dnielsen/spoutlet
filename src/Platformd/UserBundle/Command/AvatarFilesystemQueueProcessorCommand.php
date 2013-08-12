@@ -166,7 +166,7 @@ EOT
                 $source       = array('bucket' => $sourceBucket, 'filename' => $filePath);
                 $destination  = array('bucket' => $publicBucket, 'filename' => $destinationPath);
                 $opts         = array(
-                    'headers' => array('Cache-Control' => 'max-age=300'),
+                    'headers' => array('Cache-Control' => 'max-age=0'),
                 );
 
                 $response = $s3->copy_object($source, $destination, $opts);

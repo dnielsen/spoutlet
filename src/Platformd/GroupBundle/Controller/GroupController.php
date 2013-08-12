@@ -389,6 +389,12 @@ Alienware Arena Team
 
         $this->setFlash('success', 'You have successfully left this group!');
 
+        try {
+            $response = $this->getCEVOApiManager()->GiveUserXp('leavegroup', $user->getCevoUserId());
+        } catch (ApiException $e) {
+
+        }
+
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
     }
 
@@ -433,7 +439,7 @@ Alienware Arena Team
 
         if($group->getIsPublic()) {
             try {
-                $response = $this->getCEVOApiManager()->GiveUserXp('joingroup');
+                $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getCevoUserId());
             } catch (ApiException $e) {
 
             }
@@ -611,6 +617,12 @@ Alienware Arena Team
         $groupManager->saveGroup($group);
 
         $this->setFlash('success', sprintf('%s is no longer in this group.', $user->getUsername()));
+
+        try {
+            $response = $this->getCEVOApiManager()->GiveUserXp('leavegroup', $user->getCevoUserId());
+        } catch (ApiException $e) {
+
+        }
 
         return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
     }
@@ -873,7 +885,7 @@ Alienware Arena Team
                 $this->getGroupManager()->saveGroupImage($groupImage);
 
                 try {
-                    $response = $this->getCEVOApiManager()->GiveUserXp('submitgroupphoto');
+                    $response = $this->getCEVOApiManager()->GiveUserXp('addcontent', $this->getCurrentUser()->getCevoUserId());
                 } catch (ApiException $e) {
 
                 }
@@ -1016,7 +1028,7 @@ Alienware Arena Team
                 $api = $this->getCEVOApiManager();
 
                 try {
-                    $response = $api->GiveUserXp('submitgroupvideo');
+                    $response = $api->GiveUserXp('addcontent', $this->getCurrentUser()->getCevoUserId());
                 } catch (ApiException $e) {
 
                 }
@@ -1589,7 +1601,7 @@ Alienware Arena Team
         if ($this->processForm($form, $request)) {
 
             try {
-                $response = $this->getCEVOApiManager()->GiveUserXp('creategroup');
+                $response = $this->getCEVOApiManager()->GiveUserXp('addcontent', $this->getCurrentUser()->getCevoUserId());
             } catch(ApiException $e) {
             }
 

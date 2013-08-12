@@ -186,7 +186,7 @@ class GroupManager
 
         if ($group->getIsPublic()) {
             try {
-                $this->CEVOApiManager->GiveUserXp('joingroup');
+                $this->CEVOApiManager->GiveUserXp('joingroup', $user->getCevoUserId());
             } catch (ApiException $e) {
                 // We do nothing
             }
@@ -313,6 +313,13 @@ class GroupManager
         // We dispatch a GroupDiscussionEvent
         $event = new GroupDiscussionEvent($groupDiscussion);
         $this->eventDispatcher->dispatch(GroupEvents::DISCUSSION_CREATE, $event);
+
+        // arp call
+        try {
+            $response = $this->CEVOApiManager->GiveUserXp('addcomment', $groupDiscussion->getAuthor()->getCevoUserId());
+        } catch (ApiException $e) {
+
+        }        
     }
 
     /**

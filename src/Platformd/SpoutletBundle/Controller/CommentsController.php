@@ -415,55 +415,19 @@ class CommentsController extends Controller
 
     private function removeUserArp($comment)
     {
-        $threadId = $comment->getThread()->getId();
-        $tag = null;
+        try {
+            $response = $this->getCEVOApiManager()->GiveUserXp('removecomment', $comment->getAuthor()->getCevoUserId());
+        } catch (ApiException $e) {
 
-        if(strlen(stristr($threadId, 'gallery')) > 0) {
-            $tag = 'nukephotocomment';
-        }
-
-        if(strlen(stristr($threadId, 'group')) > 0) {
-            $tag = 'nukeforumreply';
-        }
-
-        if(strlen(stristr($threadId, 'youtube')) > 0) {
-
-            $tab = 'nukeforumreply';
-
-        }
-
-        if($tag) {
-            try {
-                $response = $this->getCEVOApiManager()->GiveUserXp($tag, $comment->getAuthor()->getCevoUserId());
-            } catch (ApiException $e) {
-
-            }
         }
     }
 
     private function giveUserArp($comment)
     {
-        $threadId = $comment->getThread()->getId();
-        $tag = null;
+        try {
+            $response = $this->getCEVOApiManager()->GiveUserXp('addcomment', $comment->getAuthor()->getCevoUserId());
+        } catch (ApiException $e) {
 
-        if(strlen(stristr($threadId, 'gallery')) > 0) {
-            $tag = 'photocomment';
-        }
-
-        if(strlen(stristr($threadId, 'group')) > 0) {
-            $tag = 'replytothread';
-        }
-
-        if(strlen(stristr($threadId, 'youtube')) > 0) {
-            $tag = 'videocomment';
-        }
-
-        if($tag) {
-            try {
-                $response = $this->getCEVOApiManager()->GiveUserXp($tag, $comment->getAuthor()->getCevoUserId());
-            } catch (ApiException $e) {
-
-            }
         }
     }
 

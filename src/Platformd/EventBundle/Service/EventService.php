@@ -18,7 +18,8 @@ use Platformd\EventBundle\Repository\EventRepository,
     Platformd\GroupBundle\Entity\Group,
     Platformd\SpoutletBundle\Entity\Site,
     Platformd\SpoutletBundle\Model\EmailManager,
-    Platformd\SpoutletBundle\Model\Translator
+    Platformd\SpoutletBundle\Model\Translator,
+    Platformd\CEVOBundle\Api\ApiException
 ;
 
 use Symfony\Component\EventDispatcher\EventDispatcher,
@@ -71,6 +72,11 @@ class EventService
      */
     protected $translator;
 
+    /**
+     * @var Cevo Api
+     */
+    protected $cevoApi;
+
     public function __construct(
         EventRepository $repository,
         MediaUtil $mediaUtil,
@@ -78,7 +84,8 @@ class EventService
         AclProvider $aclProvider,
         EmailManager $emailManager,
         RouterInterface $router,
-        Translator $translator
+        Translator $translator,
+        $cevoApi
     )
     {
         $this->repository    = $repository;
@@ -88,6 +95,7 @@ class EventService
         $this->emailManager  = $emailManager;
         $this->router        = $router;
         $this->translator    = $translator;
+        $this->cevoApi       = $cevoApi;
     }
 
     /**
@@ -100,11 +108,19 @@ class EventService
         $this->handleMedia($event);
 
         if ($event instanceof GroupEvent) {
+
+            try {
+                $response = $this->cevoApi->GiveUserXp('addcontent', $event->getUser()->getCevoUserId());
+            } catch (ApiException $e) {
+
+            }
+
             $this->register($event, $event->getUser());
 
             if ($event->getExternalUrl()) {
                 $event->setPrivate(false);
             }
+
         } else {
             $event->setApproved(true);
 
@@ -256,6 +272,14 @@ class EventService
     {
         if ($event->getId() && $this->repository->isUserAttending($event, $user)) {
             return;
+        }
+
+        if ($event->getUser() != $user) {
+            try {
+                $response = $this->cevoApi->GiveUserXp('joinevent', $user->getCevoUserId());
+            } catch (ApiException $e) {
+
+            }
         }
 
         $rsvpAction = ($event instanceof GroupEvent) ? new GroupEventRsvpAction() : new GlobalEventRsvpAction();
