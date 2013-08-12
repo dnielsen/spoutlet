@@ -169,7 +169,7 @@ fos_user_registration_form_plainPassword_first: "パスワード:"
 fos_user_registration_form_plainPassword_second: "確認のためもう一度ご入力ください:"
 
 fos_user_resetting_form_new_first: "新しいパスワード:"
-fos_user_resetting_form_new_second: "認証:"
+fos_user_resetting_form_new_second: "新しいパスワード（確認）:"
 
 fos_user_change_password_form_new_first: "新規パスワード:"
 fos_user_change_password_form_new_second: "新規パスワード（確認）:"
