@@ -13,7 +13,7 @@ backend awaWeb1  { .host = "ec2-23-22-229-200.compute-1.amazonaws.com";  .port =
 backend awaWeb2  { .host = "ec2-54-226-103-0.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 backend awaWeb3  { .host = "ec2-50-19-47-216.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 backend awaWeb4  { .host = "ec2-54-227-50-4.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
-backend awaWeb5  { .host = "ec2-50-16-16-111.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb5  { .host = "ec2-50-16-16-111.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
 
 director awaWeb random {
     { .backend = awaWeb1; .weight = 1; }
@@ -33,6 +33,12 @@ acl ban {
 }
 
 sub vcl_recv {
+
+    // TODO - remove staging-only check below once going live
+    if (req.http.host ~ "(.*staging.alienwarearena.com|local:8080)" && req.http.Cookie !~ "awa_bypass_redirection=1" && req.url !~ "^/siteSpringboard[/]?$") {
+        set req.http.X-Return-Url = req.url;
+        set req.url = "/siteSpringboard";
+    }
 
     if (req.http.X-Forwarded-For) {
         set req.http.X-Client-IP = regsuball(req.http.X-Forwarded-For, "^.*(, |,| )(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$", "\2");
@@ -170,6 +176,10 @@ sub vcl_recv {
         return (pass);
     }
 
+    if (req.url ~ "^/siteSpringboard[/]?$") {
+        return (pass);
+    }
+
     if (req.url ~ "^/login[/]?$" || req.url ~ "^/account/register[/]?$") {
         return (pass);
     }
@@ -259,7 +269,7 @@ sub vcl_fetch {
     // set so that we can utilize the ban lurker to test against the host of cached items
     set beresp.http.x-host = req.http.host;
 
-    if (req.url !~ "^/allowMigrationTesting$" && req.url !~ "^/(set|refresh)ApiSessionCookie" && req.url !~ "^/age/verify$" && req.url !~ "^/login(\?f=.*|_check)?$" && req.url !~ "^/logout$" && req.url !~ "^/sessionCookie$" && req.url !~ "^/account/register[/]?$" && req.url !~ "^/register/confirm/" && req.url !~ "^/reset/") { # the only exceptions to the "remove all set-cookies rule"
+    if (req.url !~ "^/allowMigrationTesting$" && req.url !~ "^/siteSpringboard[/]?$" && req.url !~ "^/(set|refresh)ApiSessionCookie" && req.url !~ "^/age/verify$" && req.url !~ "^/login(\?f=.*|_check)?$" && req.url !~ "^/logout$" && req.url !~ "^/sessionCookie$" && req.url !~ "^/account/register[/]?$" && req.url !~ "^/register/confirm/" && req.url !~ "^/reset/") { # the only exceptions to the "remove all set-cookies rule"
         unset beresp.http.set-cookie;
     }
 
@@ -428,3 +438,4 @@ sub vcl_error {
 
     return (deliver);
 }
+
