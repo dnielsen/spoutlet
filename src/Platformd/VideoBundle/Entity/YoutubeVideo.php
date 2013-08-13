@@ -39,8 +39,8 @@ class YoutubeVideo implements LinkableInterface, CommentableInterface, Reportabl
     const DELETED_REASON_BY_AUTHOR = 'DELETED_BY_AUTHOR';
     const DELETED_REASON_BY_ADMIN  = 'REPORTED_AND_REMOVED_BY_ADMIN';
 
-    const YOUTUBE_HQ_THUMBNAIL_URL = 'http://i.ytimg.com/vi/%s/hqdefault.jpg';
-    const YOUTUBE_SQ_THUMBNAIL_URL = 'http://i.ytimg.com/vi/%s/mqdefault.jpg';
+    const YOUTUBE_HQ_THUMBNAIL_URL = '//i.ytimg.com/vi/%s/hqdefault.jpg';
+    const YOUTUBE_SQ_THUMBNAIL_URL = '//i.ytimg.com/vi/%s/mqdefault.jpg';
 
     const SEARCH_PREFIX  = 'video_';
 

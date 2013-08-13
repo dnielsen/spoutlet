@@ -77,8 +77,8 @@ account_settings_subscribedGamingNews: "Alienware/Dell ゲーム情報やキャ�
 subscription_settings_subscribedAlienwareEvents: 最新の景品、コンテスト、イベント、その他に関してのお知らせをALIENWARE ARENA からE-メールで受け取ります。
 
 # unsubscribe stuff
-platformd.unsubscribe.title: Edit Your Email Subscription Preferences
-platformd.unsubscribe.your_email: "Your email address:"
-platformd_unsubscribe_form_unsubscribe: Please unsubscribe me from receiving Alienware Arena news and announcements.
-platformd.unsubscribe.note: Please note that you will continue to receive event-specific notices for any events you are registered to participate in for the duration of the respective events.
-platformd.unsubscribe.success: Your email preferences have been updated.
+platformd.unsubscribe.title: あなたのメールアドレスの登録設定を編集します
+platformd.unsubscribe.your_email: "あなたのメールアドレス"
+platformd_unsubscribe_form_unsubscribe: ALIENWARE ARENAのニュース及びアナウンスの受信解除を行ってください。
+platformd.unsubscribe.note: 参加登録されているイベントの期間中にはイベントに関する通知を受信し続けますので、ご注意ください。
+platformd.unsubscribe.success: あなたのメールアドレス設定が更新されました

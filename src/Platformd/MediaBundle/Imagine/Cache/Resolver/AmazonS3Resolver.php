@@ -21,14 +21,16 @@ class AmazonS3Resolver extends BaseAmazonS3Resolver
     protected $acl;
     protected $objUrlOptions;
     protected $em;
+    protected $container;
 
-    public function __construct(AmazonS3 $storage, $bucket, EntityManager $em, $acl = AmazonS3::ACL_PUBLIC, array $objUrlOptions = array())
+    public function __construct(AmazonS3 $storage, $bucket, EntityManager $em, $container, $acl = AmazonS3::ACL_PUBLIC, array $objUrlOptions = array())
     {
         $this->storage          = $storage;
         $this->bucket           = $bucket;
         $this->acl              = $acl;
         $this->objUrlOptions    = $objUrlOptions;
         $this->em               = $em;
+        $this->container        = $container;
     }
 
     public function store(Response $response, $targetPath, $filter)
@@ -74,20 +76,36 @@ class AmazonS3Resolver extends BaseAmazonS3Resolver
         return str_replace($urlHost, $cf, $url);
     }
 
+    public function getBrowserObjectUrl($targetPath)
+    {
+        if ($this->bucket == "platformd") {
+            $cf = $this->getIsHttps() ? "https://d2ssnvre2e87xh.cloudfront.net" : "media.alienwarearena.com";
+        } else {
+            $cf = $this->getIsHttps() ? "d3klgvi09f3c52.cloudfront.net" : "mediastaging.alienwarearena.com";
+        }
+
+        $url        = $this->storage->get_object_url($this->bucket, $targetPath, 0, $this->objUrlOptions);
+        $parts      = parse_url($url);
+        $urlHost    = $parts['host'];
+        $scheme    = $parts['scheme'];
+
+        return str_replace(array($urlHost, $scheme), array($cf, $this->getScheme()), $url);
+    }
+
     public function getBrowserPath($targetPath, $filter, $absolute = false)
     {
         $objectPath     = $this->getObjectPath($targetPath, $filter);
         $imageExistsDb  = (bool) $this->em->getRepository('MediaBundle:FilteredMedia')->findByPath($objectPath);
 
         if ($imageExistsDb) {
-            return $this->getObjectUrl($objectPath);
+            return $this->getBrowserObjectUrl($objectPath);
         } else {
 
             $imageExistsOnS3 = $this->storage->if_object_exists($this->bucket, $objectPath);
 
             if ($imageExistsOnS3) {
                 $this->persistFilteredMedia($objectPath, $filter);
-                return $this->getObjectUrl($objectPath);
+                return $this->getBrowserObjectUrl($objectPath);
             }
         }
 
@@ -126,5 +144,23 @@ class AmazonS3Resolver extends BaseAmazonS3Resolver
         }
 
         return $this->storage->if_object_exists($this->bucket, $objectPath);
+    }
+
+    private function getIsHttps()
+    {
+        if (!$this->container->isScopeActive('request')) {
+            return false;
+        }
+
+        return $this->container->get('request')->getScheme() == 'https';
+    }
+
+    private function getScheme()
+    {
+        if (!$this->container->isScopeActive('request')) {
+            return 'http';
+        }
+
+        return $this->container->get('request')->getScheme();
     }
 }

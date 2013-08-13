@@ -280,7 +280,7 @@ class GlobalEventAdminController extends Controller
             $pager = $this->getGroupEventService()->findGroupEventStats(array(
                 'eventName' => $data->getEventName(),
                 'published' => $data->getPublished(),
-                'sites' => $data->getSites()->toArray(),
+                'sites' => $data->getSites() ? $data->getSites()->toArray() : null,
                 'from' => $data->getFrom(),
                 'thru' => $data->getThru(),
                 'page' => $page
