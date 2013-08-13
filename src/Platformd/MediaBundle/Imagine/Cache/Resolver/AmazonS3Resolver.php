@@ -74,20 +74,36 @@ class AmazonS3Resolver extends BaseAmazonS3Resolver
         return str_replace($urlHost, $cf, $url);
     }
 
+    public function getBrowserObjectUrl($targetPath)
+    {
+        if ($this->bucket == "platformd") {
+            $cf = "d2ssnvre2e87xh.cloudfront.net";
+        } else {
+            $cf = "d3klgvi09f3c52.cloudfront.net";
+        }
+
+        $url        = $this->storage->get_object_url($this->bucket, $targetPath, 0, $this->objUrlOptions);
+        $parts      = parse_url($url);
+        $urlHost    = $parts['host'];
+        $scheme     = $parts['scheme'];
+
+        return str_replace(array($urlHost, $scheme, ':'), array($cf, '', ''), $url);
+    }
+
     public function getBrowserPath($targetPath, $filter, $absolute = false)
     {
         $objectPath     = $this->getObjectPath($targetPath, $filter);
         $imageExistsDb  = (bool) $this->em->getRepository('MediaBundle:FilteredMedia')->findByPath($objectPath);
 
         if ($imageExistsDb) {
-            return $this->getObjectUrl($objectPath);
+            return $this->getBrowserObjectUrl($objectPath);
         } else {
 
             $imageExistsOnS3 = $this->storage->if_object_exists($this->bucket, $objectPath);
 
             if ($imageExistsOnS3) {
                 $this->persistFilteredMedia($objectPath, $filter);
-                return $this->getObjectUrl($objectPath);
+                return $this->getBrowserObjectUrl($objectPath);
             }
         }
 
