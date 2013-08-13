@@ -12,7 +12,7 @@ use Platformd\GroupBundle\Event\GroupEvent;
 use Platformd\GroupBundle\GroupEvents;
 use Platformd\CEVOBundle\Api\ApiException;
 use Platformd\GiveawayBundle\ViewModel\giveaway_show_main_actions_data;
-use Platformd\GiveawayBundle\ViewModel\giveaway_show_current_queue_state;
+use Platformd\GiveawayBundle\ViewModel\promotion_show_current_queue_state;
 use Platformd\GiveawayBundle\ViewModel\giveaway_show_key_data;
 use Platformd\GiveawayBundle\QueueMessage\KeyRequestQueueMessage;
 use Platformd\GiveawayBundle\Entity\KeyRequestState;
@@ -70,11 +70,13 @@ class GiveawayController extends Controller
 
         if ($state && in_array($state->getCurrentState(), $statesToNotifyUserOf) && !$state->getUserHasSeenState()) { # they have joined the queue, been rejected or something else
 
-            $data = new giveaway_show_current_queue_state();
+            $data = new promotion_show_current_queue_state();
 
             $data->success              = $state->getCurrentState() == KeyRequestState::STATE_IN_QUEUE ? 'success' : 'error';
             $data->current_state        = $state->getCurrentState();
             $data->current_state_reason = $state->getStateReason();
+            $data->promotion_id         = $giveaway->getId();
+            $data->promotion_type       = 'giveaway';
 
             $cacheFor = 86400;
 

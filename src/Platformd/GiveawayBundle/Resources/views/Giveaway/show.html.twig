@@ -29,7 +29,9 @@
 
 {% block content %}
 
-    {% render url('_giveaway_flash_message', { 'giveawayId': data.giveaway_id }) with {}, {'standalone': true } %}
+    <div id="mainPromotionStatus">
+        {% render url('_giveaway_flash_message', { 'giveawayId': data.giveaway_id }) with {}, {'standalone': true } %}
+    </div>
 
     <div class="std_1col">
 

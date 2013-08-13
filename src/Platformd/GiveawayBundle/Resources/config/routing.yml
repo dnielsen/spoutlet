@@ -14,6 +14,10 @@ _giveaway_show_actions:
     pattern: /esi/USER_SPECIFIC/giveawayShowMainActions/{giveawayId}
     defaults: { _controller: GiveawayBundle:Giveaway:_giveawayShowActions }
 
+ajax_giveaway_flash_message:
+    pattern: /api/v1/giveaway/flashMessage/{giveawayId}
+    defaults: { _controller: GiveawayBundle:Giveaway:_giveawayFlashMessage }
+
 _deal_flash_message:
     pattern: /esi/USER_SPECIFIC/dealFlashMessage/{dealId}
     defaults: { _controller: GiveawayBundle:Deal:_dealFlashMessage }
@@ -26,7 +30,7 @@ ajax_deal_flash_message:
     pattern: /api/v1/deal/flashMessage/{dealId}
     defaults: { _controller: GiveawayBundle:Deal:_dealFlashMessage }
 
-giveaway_index: 
+giveaway_index:
     pattern: /giveaways
     defaults: { _controller: GiveawayBundle:Giveaway:index }
 

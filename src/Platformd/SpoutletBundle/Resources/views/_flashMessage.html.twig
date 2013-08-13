@@ -27,7 +27,7 @@
             type: 'html',
             contentType: 'json',
             success: function(data) {
-                $("#mainPromotionStatus").replaceWith(data);
+                $("#mainPromotionStatus").html(data);
                 updatingMainPromotionStatus = false;
 
                 if (flashMessageUpdateFrequency !== undefined && flashMessageUpdateFrequency > 0) {
@@ -39,7 +39,7 @@
 
     $(function () {
 
-        if (typeof flashMessageUpdateFrequency === "undefined" || typeof flashMessageUpdateUrl === "undefined") {
+        if (flashMessageUpdateFrequency === undefined || flashMessageUpdateFrequency < 1) {
             return;
         }
 
