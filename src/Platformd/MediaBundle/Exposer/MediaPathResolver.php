@@ -14,10 +14,13 @@ class MediaPathResolver implements PathResolver
 
     private $prefix;
 
-    public function __construct($bucketName, $prefix)
+    private $container;
+
+    public function __construct($bucketName, $prefix, $container)
     {
         $this->bucketName = $bucketName;
         $this->prefix = $prefix == '' ?: substr($prefix, 0, 1) == "/" ? $prefix : '/'.$prefix;
+        $this->container = $container;
     }
 
     public function supports($media, array $options)
@@ -42,9 +45,9 @@ class MediaPathResolver implements PathResolver
         }
 
         if ($this->bucketName == "platformd") {
-            $cf = "http://media.alienwarearena.com";
+            $cf = sprintf("%s://d2ssnvre2e87xh.cloudfront.net", $this->getScheme());
         } else {
-            $cf = "http://mediastaging.alienwarearena.com";
+            $cf = sprintf("%s://d3klgvi09f3c52.cloudfront.net", $this->getScheme());
         }
 
         return sprintf('%s%s/%s', $cf, $this->prefix, $media->getFilename());
@@ -62,5 +65,10 @@ class MediaPathResolver implements PathResolver
     private function getPrefix()
     {
         return $this->prefix;
+    }
+
+    private function getScheme()
+    {
+        return $this->container->get('request')->getScheme();
     }
 }
