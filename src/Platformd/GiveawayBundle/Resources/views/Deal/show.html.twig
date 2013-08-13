@@ -22,7 +22,9 @@
 {% block content %}
 
 <div id="deals-wrapper">
-    {% render url('_deal_flash_message', { 'dealId': data.deal_id }) with {}, {'standalone': true } %}
+    <div id="mainPromotionStatus">
+        {% render url('_deal_flash_message', { 'dealId': data.deal_id }) with {}, {'standalone': true } %}
+    </div>
     {% include 'GiveawayBundle:Deal:_dealHeaderCountdownShow.html.twig' %}
 
         <div id="deal-details-wrapper">

@@ -5,6 +5,14 @@
 {% if (data.current_state == 'in_queue')  %}
     <p>{{ 'platformd.giveaway.queue.you_are_queued' | trans }}</p>
     <p>{{ 'platformd.giveaway.queue.queue_explanation' | trans | replace({'%contact_email%': site.siteConfig.supportEmailAddress, '%events_index_page_link%': path('global_events_index')}) | raw }}</p>
+
+    <script type="text/javascript">
+
+        flashMessageUpdateUrl       = "{{ path('ajax_deal_flash_message', { 'dealId': 1}) }}"
+        flashMessageUpdateFrequency = 3000;
+
+    </script>
+
 {% elseif (data.current_state == 'rejected') %}
     {% if data.current_state_reason != 'no_keys' %}<p>{{ 'platformd.giveaway.queue.rejected' | trans }}</p>{% endif %}
     <p>{{ 'platformd.giveaway.queue.reason' | trans }}: {{ ('platformd.giveaway.queue.reasons.'~data.current_state_reason) | trans }}</p>

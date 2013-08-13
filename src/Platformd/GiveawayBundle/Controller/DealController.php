@@ -26,7 +26,6 @@ use Platformd\GiveawayBundle\Entity\KeyRequestState;
 
 class DealController extends Controller
 {
-
     public function _dealFlashMessageAction($dealId)
     {
         $currentSiteId = $this->getCurrentSiteCached()->getId();
