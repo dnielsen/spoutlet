@@ -44,10 +44,11 @@ class MediaPathResolver implements PathResolver
             return $media->getFilename();
         }
 
+        // TODO: this needs to be a config param
         if ($this->bucketName == "platformd") {
-            $cf = sprintf("%s://d2ssnvre2e87xh.cloudfront.net", $this->getScheme());
+            $cf = $this->getIsHttps() ? "https://d2ssnvre2e87xh.cloudfront.net" : "http://media.alienwarearena.com";
         } else {
-            $cf = sprintf("%s://d3klgvi09f3c52.cloudfront.net", $this->getScheme());
+            $cf = $this->getIsHttps() ? "https://d3klgvi09f3c52.cloudfront.net" : "http://mediastaging.alienwarearena.com";
         }
 
         return sprintf('%s%s/%s', $cf, $this->prefix, $media->getFilename());
@@ -67,8 +68,21 @@ class MediaPathResolver implements PathResolver
         return $this->prefix;
     }
 
+    private function getIsHttps()
+    {
+        if (!$this->container->isScopeActive('request')) {
+            return false;
+        }
+
+        return $this->container->get('request')->getScheme() == 'https';
+    }
+
     private function getScheme()
     {
+        if (!$this->container->isScopeActive('request')) {
+            return 'http';
+        }
+
         return $this->container->get('request')->getScheme();
     }
 }
