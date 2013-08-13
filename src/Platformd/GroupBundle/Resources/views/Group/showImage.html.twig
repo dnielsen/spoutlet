@@ -84,13 +84,13 @@
                     <div class="photo-date">{{ media.createdAt | date('M j, Y')}}</div>
                     <p>
                             {% if canDelete %}
-                                <a href="{{ path('group_delete_image', { 'id' : group.id, 'imageId' : media.id })}}" onclick="return confirm('Are you sure you want to delete this item?');">delete</a>
+                                <a href="{{ path('group_delete_image', { 'slug' : group.slug, 'imageId' : media.id })}}" onclick="return confirm('Are you sure you want to delete this item?');">delete</a>
                             {% endif %}
                             {% if canDelete and canEdit %}
                                 |
                             {% endif %}
                             {% if canEdit %}
-                                <a href="{{ path('group_edit_image', { 'id' : group.id, 'imageId' : media.id })}}">edit</a>
+                                <a href="{{ path('group_edit_image', { 'slug' : group.slug, 'imageId' : media.id })}}">edit</a>
                             {% endif %}
                         </p>
 

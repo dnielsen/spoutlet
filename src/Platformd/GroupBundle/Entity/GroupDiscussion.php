@@ -168,7 +168,7 @@ class GroupDiscussion implements LinkableInterface, ReportableContentInterface, 
     function getLinkableRouteParameters()
     {
         return array(
-            'id' => $this->getGroup()->getId(),
+            'slug' => $this->getGroup()->getSlug(),
             'discussionId' => $this->getId()
         );
     }

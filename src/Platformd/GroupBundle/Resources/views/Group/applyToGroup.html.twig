@@ -36,7 +36,7 @@
         <br />
         <br />
 
-        <form action="{{ path('group_apply', { 'id': group.id }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+        <form action="{{ path('group_apply', { 'slug': group.slug }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
 
             {% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
             {% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}

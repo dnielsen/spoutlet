@@ -1344,7 +1344,7 @@ class AbstractFeatureContext extends MinkContext
         if ($group) {
             switch ($mediaType) {
                 case 'news':
-                    $url = $this->getContainer()->get('router')->generate('group_add_news', array('id' => $group->getId()));
+                    $url = $this->getContainer()->get('router')->generate('group_add_news', array('slug' => $group->getSlug()));
                     $this->getSession()->visit($url);
                     break;
 
@@ -1354,7 +1354,7 @@ class AbstractFeatureContext extends MinkContext
                     break;
 
                 case 'discussion':
-                    $url = $this->getContainer()->get('router')->generate('group_add_discussion', array('id' => $group->getId()));
+                    $url = $this->getContainer()->get('router')->generate('group_add_discussion', array('slug' => $group->getSlug()));
                     $this->getSession()->visit($url);
                     break;
 
@@ -1389,8 +1389,8 @@ class AbstractFeatureContext extends MinkContext
             }
 
            $url = $action == "accept"
-                ? $this->getContainer()->get('router')->generate('group_accept_application', array('id' => $group->getId(), 'applicationId' => $application->getId()))
-                : $url = $this->getContainer()->get('router')->generate('group_reject_application', array('id' => $group->getId(), 'applicationId' => $application->getId()));
+                ? $this->getContainer()->get('router')->generate('group_accept_application', array('slug' => $group->getSlug(), 'applicationId' => $application->getId()))
+                : $url = $this->getContainer()->get('router')->generate('group_reject_application', array('slug' => $group->getSlug(), 'applicationId' => $application->getId()));
 
             $this->getSession()->visit($url);
 

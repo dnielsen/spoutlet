@@ -50,7 +50,7 @@
                     <tr>
                         <td>
                         {% if group.deleted %}
-                            <a href="{{ path('group_edit', {'id': group.id}) }}" target="_blank">{{ group.name }}</a>
+                            <a href="{{ path('group_edit', {'slug': group.slug}) }}" target="_blank">{{ group.name }}</a></td>
                         {% else %}
                             {% if site in group.sites or group.allLocales %}
                                 <a href="{{ path('group_show', {'slug': group.slug}) }}" target="_blank">{{ group.name }}</a>
