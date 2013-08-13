@@ -54,6 +54,10 @@ api_session_cookie_refresh:
     pattern: /refreshApiSessionCookie/{uuid}
     defaults: { _controller: SpoutletBundle:Default:refreshApiSessionCookie, uuid: ~ }
 
+site_springboard:
+    pattern: /siteSpringboard
+    defaults: { _controller: SpoutletBundle:Default:siteSpringboard }
+
 default_index:
     pattern:  /
     defaults: { _controller: SpoutletBundle:Default:index }

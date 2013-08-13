@@ -1,7 +1,7 @@
 <?php
 
 namespace Platformd\SpoutletBundle\Util;
-use Platformd\SpoutletBundle\Location\Ip2Location;
+
 use Symfony\Component\HttpFoundation\Request;
 
 
@@ -12,7 +12,7 @@ class IpLookupUtil
 
     public function __construct($lookupDir, $override)
     {
-        $this->lookupFile = $lookupDir.'ipLookup.bin';
+        $this->lookupFile = $lookupDir.'GeoIP.dat';
 
         if ($override) {
             $overrideFile = $lookupDir.'overrideCountry';
@@ -20,53 +20,28 @@ class IpLookupUtil
         }
     }
 
-    public function getAll($ipAddress)
-    {
-        $ip = new Ip2Location();
-        $ip->open($this->lookupFile);
-        $result = $ip->getAll($ipAddress);
-
-        if ($result->getCountryShort() == "GB") {
-            $result->setCountryShort("UK");
-        }
-
-        return $result;
-    }
-
     public function getCountryName($ipAddress)
     {
-        return $this->get('countryLong', $ipAddress);
+        return $this->get('geoip_country_name_by_addr', $ipAddress);
     }
 
     public function getCountryCode($ipAddress)
     {
-        return $this->testCountryCode ?: $this->get('countryShort', $ipAddress);
+        $result = $this->testCountryCode ?: $this->get('geoip_country_code_by_addr', $ipAddress);
+
+        if (empty($result)) {
+            return 'US';
+        }
+
+        return $result == 'GB' ? 'UK' : $result;
     }
 
-    public function getRegion($ipAddress)
+    private function get($method, $ipAddress)
     {
-        return $this->get('region', $ipAddress);
-    }
+        if ($this->isIPv4($ipAddress)) {
 
-    public function getCity($ipAddress)
-    {
-        return $this->get('city', $ipAddress);
-    }
-
-    private function get($parameter, $ipAddress)
-    {
-        $ip = new Ip2Location();
-        $method = 'get'.ucfirst($parameter);
-
-        if (method_exists($ip, $method) && $this->isIPv4($ipAddress)) {
-            $ip->open($this->lookupFile);
-            $result = $ip->$method($ipAddress);
-
-            if (strtolower($parameter) == 'countryshort' && $result == "GB") {
-                return "UK";
-            }
-
-            return $result;
+            $gi = geoip_open($this->lookupFile, GEOIP_STANDARD);
+            return $method($gi, $ipAddress);
         }
 
         return false;

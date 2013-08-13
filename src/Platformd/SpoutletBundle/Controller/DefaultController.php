@@ -246,6 +246,36 @@ class DefaultController extends Controller
         $response->headers->setCookie($cookie);
 
         $this->varnishCache($response, 3600);
+    }
+
+    public function siteSpringboardAction(Request $request)
+    {
+        $fallbackCountry = 'US';
+        $returnPath      = $request->headers->get('X-Return-Url');
+
+        if (!$returnPath) {
+            $returnPath = $this->generateUrl('default_index');
+        }
+
+        $siteFeatures = $this->getCurrentSite()->getSiteFeatures();
+
+        if ($siteFeatures->getHasCountrySiteRedirection()) {
+            $site = $this->getSiteFromUserCountry() ?: $this->getCurrentSite();
+        } else {
+            $site = $this->getCurrentSite();
+        }
+
+        $cookieName   = 'awa_bypass_redirection';
+        $cookieValue  = 1;
+        $cookieExpiry = new \DateTime('+1 week');
+        $cookiePath   = '/';
+        $cookieHost   = '.'.$this->getParameter('base_host');
+        $cookie       = new Cookie($cookieName, $cookieValue, $cookieExpiry, $cookiePath, $cookieHost, false, false);
+
+        $url = $request->getScheme().'://'.$site->getFullDomain().($request->getPort() ? ':'.$request->getPort() : '').$returnPath;
+
+        $response = new RedirectResponse($url);
+        $response->headers->setCookie($cookie);
 
         return $response;
     }

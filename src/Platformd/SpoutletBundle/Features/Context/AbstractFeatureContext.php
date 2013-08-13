@@ -163,7 +163,7 @@ class AbstractFeatureContext extends MinkContext
      */
     public function iAmLocatedIn($countryCode)
     {
-        $file = $this->getContainer()->getParameter('ip2location_lookup_directory').'overrideCountry';
+        $file = $this->getContainer()->getParameter('maxmind_lookup_directory').'overrideCountry';
         file_put_contents($file, trim($countryCode));
     }
 

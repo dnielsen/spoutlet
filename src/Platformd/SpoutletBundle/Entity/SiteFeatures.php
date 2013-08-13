@@ -182,6 +182,11 @@ class SiteFeatures
     private $hasStaticPhotoWidget = false;
 
     /**
+     * @ORM\Column(name="has_country_site_redirection", type="boolean")
+     */
+    private $hasCountrySiteRedirection = false;
+
+    /**
      * Get id
      *
      * @return integer
@@ -540,6 +545,17 @@ class SiteFeatures
     public function setHasStaticPhotoWidget($value)
     {
         $this->hasStaticPhotoWidget = $value;
+        return $this;
+    }
+
+    public function getHasCountrySiteRedirection()
+    {
+        return $this->hasCountrySiteRedirection;
+    }
+
+    public function setHasCountrySiteRedirection($value)
+    {
+        $this->hasCountrySiteRedirection = $value;
         return $this;
     }
 }

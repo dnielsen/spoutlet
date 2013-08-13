@@ -280,8 +280,7 @@ class Controller extends BaseController
     protected function getSiteFromUserCountry()
     {
         $country = $this->getCurrentCountry();
-
-        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Region')->findSiteByCountry($country);
+        return $country ? $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Region')->findSiteByCountry($country) : null;
     }
 
     /**
