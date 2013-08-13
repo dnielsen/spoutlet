@@ -25,7 +25,7 @@ class BackgroundAdAdminController extends Controller
         $this->addBackgroundAdBreadcrumb()->addChild($this->getSiteManager()->getSiteName($site));
 
         $em = $this->get('doctrine')->getEntityManager();
-        $site = $em->getRepository('SpoutletBundle:Site')->findOneBy(array('defaultLocale' => $site));
+        $site = $em->getRepository('SpoutletBundle:Site')->find($site);
         $ads = $this->getRepository()->findBySite($site);
 
         return $this->render('SpoutletBundle:BackgroundAdAdmin:list.html.twig', array(
@@ -57,6 +57,13 @@ class BackgroundAdAdminController extends Controller
             $form->bindRequest($request);
 
             $ad = $form->getData();
+
+            if ($ad->getAdSites()->count() < 1) {
+                $this->setFlash('error', 'Please select at least one site for this ad.');
+                return $this->render('SpoutletBundle:BackgroundAdAdmin:new.html.twig', array(
+                    'form' => $form->createView(),
+                ));
+            }
 
             foreach ($ad->getAdSites() as $adSite) {
                 $adSite->setSite($em->getRepository('SpoutletBundle:Site')->find($adSite->getSiteId()));
@@ -93,9 +100,24 @@ class BackgroundAdAdminController extends Controller
     public function updateAction(Request $request, $id)
     {
         $form = $this->createForm(new BackgroundAdType, $this->findOr404($id));
+        $em   = $this->getDoctrine()->getEntityManager();
 
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
+
+            $ad = $form->getData();
+
+            if ($ad->getAdSites()->count() < 1) {
+                $this->setFlash('error', 'Please select at least one site for this ad.');
+                return $this->render('SpoutletBundle:BackgroundAdAdmin:edit.html.twig', array(
+                    'form' => $form->createView(),
+                    'ad' => $form->getData(),
+                ));
+            }
+
+            foreach ($ad->getAdSites() as $adSite) {
+                $adSite->setSite($em->getRepository('SpoutletBundle:Site')->find($adSite->getSiteId()));
+            }
 
             if ($form->isValid()) {
                 $this->persist($form->getData());
