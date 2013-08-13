@@ -1,5 +1,5 @@
 {% set reportContentType    = features.hasVideo ? 'YoutubeVideo' : 'GroupVideo' %}
-{% set addVideoUrl          = features.hasVideo ? path('youtube_submit') : path('group_add_video', { 'id': group.id }) %}
+{% set addVideoUrl          = features.hasVideo ? path('youtube_submit') : path('group_add_video', { 'slug': group.slug }) %}
 
 <div>
     <div>

@@ -40,8 +40,8 @@
                 {% for application in applications %}
                     <tr class="eventListGroup_lan">
                         <td>
-                            <a href="javascript:void(0);" class="accept-member" user-name="{{ application.applicant.username }}" data-path="{{ path('group_accept_application', { 'id': application.group.id, 'applicationId' : application.id }) }}">Accept</a> |
-                            <a href="javascript:void(0);" class="reject-member" user-name="{{ application.applicant.username }}" data-path="{{ path('group_reject_application', { 'id': application.group.id, 'applicationId' : application.id }) }}">Reject</a>
+                            <a href="javascript:void(0);" class="accept-member" user-name="{{ application.applicant.username }}" data-path="{{ path('group_accept_application', { 'slug': application.group.slug, 'applicationId' : application.id }) }}">Accept</a> |
+                            <a href="javascript:void(0);" class="reject-member" user-name="{{ application.applicant.username }}" data-path="{{ path('group_reject_application', { 'slug': application.group.slug, 'applicationId' : application.id }) }}">Reject</a>
                         </td>
                         <td>
                             {{ application.applicant.username }}

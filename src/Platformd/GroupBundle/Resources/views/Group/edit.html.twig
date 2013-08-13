@@ -9,7 +9,7 @@
 
 </h1>
 
-<form action="{{ path('group_update', { 'id': group.id }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
+<form action="{{ path('group_update', { 'slug': group.slug }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
     {% include 'GroupBundle:Group:_form.html.twig' with {
         'form': edit_form
     } %}

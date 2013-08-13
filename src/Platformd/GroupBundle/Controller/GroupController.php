@@ -110,10 +110,14 @@ class GroupController extends Controller
     }
 
     private function getGroupBySlug($slug) {
-        return $this
-        ->getEntityManager()
-        ->getRepository('GroupBundle:Group')
-        ->findOneBy(array('slug' => $slug));
+        $group = $this
+            ->getEntityManager()
+            ->getRepository('GroupBundle:Group')
+            ->findOneBy(array('slug' => $slug));
+
+        $this->ensureGroupExists($group);
+
+        return $group;
     }
 
     private function getGroupApplicationRepo() {
@@ -148,8 +152,8 @@ Alienware Arena Team
         $this->getEmailManager()->sendEmail($emailTo, $subject, $message, "Group Application Approved", $this->getCurrentSite()->getDefaultLocale());
     }
 
-    public function acceptApplicationAction($id, $applicationId) {
-        $group = $this->getGroup($id);
+    public function acceptApplicationAction($slug, $applicationId) {
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'ManageApplications');
 
         $appRepo = $this->getGroupApplicationRepo();
@@ -158,7 +162,7 @@ Alienware Arena Team
 
         if (!$application) {
             $this->setFlash('error', 'Application not found!');
-            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+            return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
         }
 
         $user = $application->getApplicant();
@@ -166,7 +170,7 @@ Alienware Arena Team
 
         if (!$user) {
             $this->setFlash('error', 'User not found!');
-            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+            return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
         }
 
         $em = $this->getEntityManager();
@@ -179,7 +183,7 @@ Alienware Arena Team
             $em->flush();
 
             $this->setFlash('success', 'This user is already a member of this group - application removed!');
-            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+            return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
         }
 
         $joinAction = new GroupMembershipAction();
@@ -227,12 +231,12 @@ Alienware Arena Team
 
         $this->setFlash('success', sprintf('You have successfully accepted \'%s\' into your group!', $user->getUsername()));
 
-        return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+        return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
     }
 
-    public function rejectApplicationAction($id, $applicationId) {
+    public function rejectApplicationAction($slug, $applicationId) {
 
-        $group = $this->getGroup($id);
+        $group = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'ManageApplications');
 
         $appRepo = $this->getGroupApplicationRepo();
@@ -241,14 +245,14 @@ Alienware Arena Team
 
         if (!$application) {
             $this->setFlash('error', 'Application not found!');
-            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+            return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
         }
 
         $user = $application->getApplicant();
 
         if (!$user) {
             $this->setFlash('error', 'User not found!');
-            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+            return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
         }
 
         $em = $this->getEntityManager();
@@ -261,7 +265,7 @@ Alienware Arena Team
             $em->flush();
 
             $this->setFlash('error', 'This user is already a member of this group - application removed!');
-            return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+            return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
         }
 
         $em->remove($application);
@@ -269,11 +273,11 @@ Alienware Arena Team
 
         $this->setFlash('success', sprintf('You have successfully rejected \'%s\' from joining your group!', $user->getUsername()));
 
-        return $this->redirect($this->generateUrl('group_applications', array('id' => $group->getId())));
+        return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
     }
 
-    public function applicationsAction($id) {
-        $group = $this->getGroup($id);
+    public function applicationsAction($slug) {
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'ManageApplications');
 
         $appRepo = $this->getGroupApplicationRepo();
@@ -328,12 +332,12 @@ Alienware Arena Team
         return $pages;
     }
 
-    public function leaveAction($id)
+    public function leaveAction($slug)
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
 
-        $group = $this->getGroup($id);
-        $user = $this->getCurrentUser();
+        $group = $this->getGroupBySlug($slug);
+        $user  = $this->getCurrentUser();
 
         $groupManager = $this->getGroupManager();
 
@@ -398,11 +402,11 @@ Alienware Arena Team
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
     }
 
-    public function joinAction($id)
+    public function joinAction($slug)
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
 
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
 
         $this->ensureGroupExists($group);
 
@@ -450,11 +454,11 @@ Alienware Arena Team
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
     }
 
-    public function applyToGroupWithEventAction($id, $eventId, Request $request)
+    public function applyToGroupWithEventAction($slug, $eventId, Request $request)
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
 
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
 
         $this->ensureGroupExists($group);
 
@@ -493,7 +497,7 @@ Alienware Arena Team
             '%userName%' => $user->getUsername(),
             '%groupUrl%' => $this->generateUrl($group->getLinkableRouteName(), $group->getLinkableRouteParameters(), true),
             '%groupName%' => $group->getName(),
-            '%approvalUrl%' => $this->generateUrl('group_applications', array('id' => $group->getId()), true),
+            '%approvalUrl%' => $this->generateUrl('group_applications', array('slug' => $group->getSlug()), true),
         ), 'messages', $emailLocale));
 
         $emailTo = $group->getOwner()->getEmail();
@@ -504,11 +508,11 @@ Alienware Arena Team
         return $this->redirect($this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters()));
     }
 
-    public function applyToGroupAction($id, Request $request)
+    public function applyToGroupAction($slug, Request $request)
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
 
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
 
         $this->ensureGroupExists($group);
 
@@ -571,12 +575,12 @@ Alienware Arena Team
         ));
     }
 
-    public function removeAction($id, $uid)
+    public function removeAction($slug, $uid)
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
 
-        $group = $this->getGroup($id);
-        $user = null;
+        $group  = $this->getGroupBySlug($slug);
+        $user   = null;
 
         foreach($group->getMembers() as $member)
         {
@@ -589,19 +593,19 @@ Alienware Arena Team
 
         if($user == null) {
             $this->setFlash('error', 'The user you are trying to remove could not be found!');
-            return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
+            return $this->redirect($this->generateUrl('group_members', array('slug' => $group->getSlug())));
         }
 
         $groupManager = $this->getGroupManager();
 
         if ($group->isOwner($user)) {
             $this->setFlash('error', 'You are the group organizer. Please email contact@alienwarearena.com if you want to be removed from this group.');
-            return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
+            return $this->redirect($this->generateUrl('group_members', array('slug' => $group->getSlug())));
         }
 
         if (!$groupManager->isMember($user, $group)) {
             $this->setFlash('error', 'You cannot remove someone who is not a member of this group!');
-            return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
+            return $this->redirect($this->generateUrl('group_members', array('slug' => $group->getSlug())));
         }
 
         //$this->ensureAllowed($group, 'LeaveGroup');
@@ -624,12 +628,12 @@ Alienware Arena Team
 
         }
 
-        return $this->redirect($this->generateUrl('group_members', array('id' => $group->getId())));
+        return $this->redirect($this->generateUrl('group_members', array('slug' => $group->getSlug())));
     }
 
-    public function eventsAction($id)
+    public function eventsAction($slug)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'ViewGroupContent', false);
 
         $groupEvents    = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group);
@@ -645,9 +649,9 @@ Alienware Arena Team
         ));
     }
 
-    public function newsAction($id, Request $request)
+    public function newsAction($slug, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'ViewGroupContent', false);
 
         $groupNews = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);
@@ -659,9 +663,9 @@ Alienware Arena Team
         ));
     }
 
-    public function addNewsAction($id, Request $request)
+    public function addNewsAction($slug, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'AddNews');
 
         $tagManager = $this->getTagManager();
@@ -708,14 +712,14 @@ Alienware Arena Team
         return $this->render('GroupBundle:Group:addNews.html.twig', array(
             'group' => $group,
             'newsForm' => $form->createView(),
-            'newsFormAction' => $this->generateUrl('group_add_news', array('id' => $id)),
+            'newsFormAction' => $this->generateUrl('group_add_news', array('slug' => $slug)),
             'permissions' => $permissions,
         ));
     }
 
-    public function editNewsAction($id, $newsId, Request $request)
+    public function editNewsAction($slug, $newsId, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'EditNews');
 
         $tagManager     = $this->getTagManager();
@@ -768,14 +772,14 @@ Alienware Arena Team
         return $this->render('GroupBundle:Group:editNews.html.twig', array(
             'group' => $group,
             'newsForm' => $form->createView(),
-            'newsFormAction' => $this->generateUrl('group_edit_news', array('id' => $id, 'newsId' => $newsId)),
+            'newsFormAction' => $this->generateUrl('group_edit_news', array('slug' => $slug, 'newsId' => $newsId)),
             'permissions' => $permissions,
         ));
     }
 
-    public function deleteNewsAction($id, $newsId, Request $request)
+    public function deleteNewsAction($slug, $newsId, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'DeleteNews');
 
         $newsArticle = $this->getGroupNewsRepository()->find($newsId);
@@ -794,9 +798,9 @@ Alienware Arena Team
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
     }
 
-    public function imageAction($id, Request $request)
+    public function imageAction($slug, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'ViewGroupContent', false);
         $site = $this->getCurrentSite();
         $features = $site->getSiteFeatures();
@@ -863,9 +867,9 @@ Alienware Arena Team
         return $this->redirect($this->generateUrl('groups'));
     }
 
-    public function addImageAction($id, Request $request)
+    public function addImageAction($slug, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'AddImage');
 
         $groupImage = new GroupImage();
@@ -903,14 +907,14 @@ Alienware Arena Team
         return $this->render('GroupBundle:Group:addImage.html.twig', array(
             'group' => $group,
             'imageForm' => $form->createView(),
-            'imageFormAction' => $this->generateUrl('group_add_image', array('id' => $id)),
+            'imageFormAction' => $this->generateUrl('group_add_image', array('slug' => $slug)),
             'permissions' => $permissions,
         ));
     }
 
-    public function editImageAction($id, $imageId, Request $request)
+    public function editImageAction($slug, $imageId, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'EditImage');
 
         $image = $this->getGroupImageRepository()->find($imageId);
@@ -944,17 +948,17 @@ Alienware Arena Team
         return $this->render('GroupBundle:Group:editImage.html.twig', array(
             'group' => $group,
             'imageForm' => $form->createView(),
-            'imageFormAction' => $this->generateUrl('group_edit_image', array('id' => $id, 'imageId' => $imageId)),
+            'imageFormAction' => $this->generateUrl('group_edit_image', array('slug' => $slug, 'imageId' => $imageId)),
             'permissions' => $permissions,
         ));
     }
 
-    public function deleteImageAction($id, $imageId, Request $request)
+    public function deleteImageAction($slug, $imageId, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'DeleteImage');
 
-        $em                 = $this->getEntityManager();
+        $em    = $this->getEntityManager();
         $image = $this->getGroupImageRepository()->find($imageId);
 
         if (!$image) {
@@ -972,9 +976,9 @@ Alienware Arena Team
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
     }
 
-    public function videosAction($id, Request $request)
+    public function videosAction($slug, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
 
         $this->ensureAllowed($group, 'ViewGroupContent', false);
 
@@ -1002,9 +1006,9 @@ Alienware Arena Team
         ));
     }
 
-    public function addVideoAction($id, Request $request)
+    public function addVideoAction($slug, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'AddVideo');
 
         $groupVideo = new GroupVideo();
@@ -1046,14 +1050,14 @@ Alienware Arena Team
         return $this->render('GroupBundle:Group:addVideo.html.twig', array(
             'group' => $group,
             'videoForm' => $form->createView(),
-            'videoFormAction' => $this->generateUrl('group_add_video', array('id' => $id)),
+            'videoFormAction' => $this->generateUrl('group_add_video', array('slug' => $slug)),
             'permissions' => $permissions,
         ));
     }
 
-    public function editVideoAction($id, $videoId, Request $request)
+    public function editVideoAction($slug, $videoId, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'EditVideo');
 
         $video = $this->getGroupVideoRepository()->find($videoId);
@@ -1091,14 +1095,14 @@ Alienware Arena Team
         return $this->render('GroupBundle:Group:editVideo.html.twig', array(
             'group' => $group,
             'videoForm' => $form->createView(),
-            'videoFormAction' => $this->generateUrl('group_edit_video', array('id' => $id, 'videoId' => $videoId)),
+            'videoFormAction' => $this->generateUrl('group_edit_video', array('slug' => $slug, 'videoId' => $videoId)),
             'permissions' => $permissions,
         ));
     }
 
-    public function deleteVideoAction($id, $videoId, Request $request)
+    public function deleteVideoAction($slug, $videoId, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'DeleteVideo');
 
         $videoArticle = $this->getGroupVideoRepository()->find($videoId);
@@ -1117,9 +1121,9 @@ Alienware Arena Team
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
     }
 
-    public function discussionsAction($id)
+    public function discussionsAction($slug)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
 
         $this->ensureAllowed($group, 'ViewGroupContent', false);
 
@@ -1137,9 +1141,9 @@ Alienware Arena Team
         ));
     }
 
-    public function enableDiscussionsAction($id)
+    public function enableDiscussionsAction($slug)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
 
         $this->ensureAllowed($group, 'ManageDiscussions');
 
@@ -1149,9 +1153,9 @@ Alienware Arena Team
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
     }
 
-    public function disableDiscussionsAction($id)
+    public function disableDiscussionsAction($slug)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
 
         $this->ensureAllowed($group, 'ManageDiscussions');
 
@@ -1161,9 +1165,9 @@ Alienware Arena Team
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
     }
 
-    public function addDiscussionAction($id, Request $request)
+    public function addDiscussionAction($slug, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'AddDiscussion');
 
         $tagManager      = $this->getTagManager();
@@ -1213,14 +1217,14 @@ Alienware Arena Team
         return $this->render('GroupBundle:Group:addDiscussion.html.twig', array(
             'group' => $group,
             'discussionForm' => $form->createView(),
-            'discussionFormAction' => $this->generateUrl('group_add_discussion', array('id' => $id)),
+            'discussionFormAction' => $this->generateUrl('group_add_discussion', array('slug' => $slug)),
             'permissions' => $permissions,
         ));
     }
 
-    public function editDiscussionAction($id, $discussionId, Request $request)
+    public function editDiscussionAction($slug, $discussionId, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'EditDiscussion');
 
         $tagManager = $this->getTagManager();
@@ -1274,16 +1278,16 @@ Alienware Arena Team
         return $this->render('GroupBundle:Group:editDiscussion.html.twig', array(
             'group' => $group,
             'discussionForm' => $form->createView(),
-            'discussionFormAction' => $this->generateUrl('group_edit_discussion', array('id' => $id, 'discussionId' => $discussionId)),
+            'discussionFormAction' => $this->generateUrl('group_edit_discussion', array('slug' => $slug, 'discussionId' => $discussionId)),
             'discussionId' => $discussionId,
             'permissions' => $permissions,
             )
         );
     }
 
-    public function deleteDiscussionAction($id, $discussionId, Request $request)
+    public function deleteDiscussionAction($slug, $discussionId, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'DeleteDiscussion');
 
         $discussion = $this->getGroupDiscussionRepository()->find($discussionId);
@@ -1300,9 +1304,9 @@ Alienware Arena Team
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
     }
 
-    public function viewDiscussionAction($id, $discussionId, Request $request)
+    public function viewDiscussionAction($slug, $discussionId, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'ViewDiscussion', false);
 
         $groupDiscussion = $this->getGroupDiscussionRepository()->find($discussionId);
@@ -1341,7 +1345,7 @@ Alienware Arena Team
                 $this->setFlash('success', 'Your reply posted successfully.');
 
                 return $this->redirect($this->generateUrl('group_view_discussion', array(
-                    'id' => $id,
+                    'slug' => $slug,
                     'discussionId' => $discussionId
                 )));
             }
@@ -1358,7 +1362,7 @@ Alienware Arena Team
             'pager' => $pager,
             'replyForm' => $form->createView(),
             'replyFormAction' => $this->generateUrl('group_view_discussion', array(
-                'id' => $id,
+                'slug' => $slug,
                 'discussionId' => $discussionId
             )),
             'groupManager' => $this->getGroupManager(),
@@ -1366,9 +1370,9 @@ Alienware Arena Team
         ));
     }
 
-    public function replyDiscussionAction($id, $discussionId, Request $request)
+    public function replyDiscussionAction($slug, $discussionId, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'ViewDiscussion');
 
         $groupDiscussion = $this->getGroupDiscussionRepository()->find($discussionId);
@@ -1396,7 +1400,7 @@ Alienware Arena Team
                 $this->setFlash('success', 'Your reply posted successfully.');
 
                 return $this->redirect($this->generateUrl('group_view_discussion', array(
-                    'id' => $id,
+                    'slug' => $slug,
                     'discussionId' => $discussionId
                 )));
             }
@@ -1411,7 +1415,7 @@ Alienware Arena Team
             'discussion' => $groupDiscussion,
             'replyForm' => $form->createView(),
             'replyFormAction' => $this->generateUrl('group_reply_discussion', array(
-                'id' => $id,
+                'slug' => $slug,
                 'discussionId' => $discussionId
             )),
             'groupManager' => $this->getGroupManager(),
@@ -1452,7 +1456,7 @@ Alienware Arena Team
                 $this->setFlash('success', 'You edited the reply successfully.');
 
                 return $this->redirect($this->generateUrl('group_view_discussion', array(
-                    'id' => $group->getId(),
+                    'slug' => $group->getSlug(),
                     'discussionId' => $groupDiscussion->getId()
                 )));
             }
@@ -1460,14 +1464,18 @@ Alienware Arena Team
             $this->setFlash('error', 'Please correct the following errors and try again!');
         }
 
+        $permissions = $this->getGroupManager()->getPermissions($this->getUser(), $group, $this->getCurrentSite());
+
         return $this->render('GroupBundle:Group:replyDiscussion.html.twig', array(
             'group' => $group,
+            'groupManager' => $this->getGroupManager(),
             'discussion' => $groupDiscussion,
             'replyForm' => $form->createView(),
             'replyFormAction' => $this->generateUrl('group_edit_discussion_post', array(
                 'id' => $id,
                 'discussionId' => $groupDiscussion->getId()
             )),
+            'permissions' => $permissions,
         ));
     }
 
@@ -1492,14 +1500,14 @@ Alienware Arena Team
         $this->setFlash('success', 'Discussion Post was deleted successfully!');
 
         return $this->redirect($this->generateUrl('group_view_discussion', array(
-            'id' => $group->getId(),
+            'slug' => $group->getSlug(),
             'discussionId' => $groupDiscussion->getId()
         )));
     }
 
-    public function aboutAction($id)
+    public function aboutAction($slug)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
 
         return $this->render('GroupBundle:Group:about.html.twig', array(
             'group' => $group,
@@ -1633,9 +1641,9 @@ Alienware Arena Team
         ));
     }
 
-    public function editAction($id, Request $request)
+    public function editAction($slug, Request $request)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'EditGroup');
 
         $this->addGroupsBreadcrumb()->addChild('Edit Group');
@@ -1664,9 +1672,9 @@ Alienware Arena Team
         ;
     }
 
-    public function deleteAction($id)
+    public function deleteAction($slug)
     {
-        $group = $this->getGroup($id);
+        $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'DeleteGroup');
 
         $group->setDeleted(true);
@@ -1678,18 +1686,15 @@ Alienware Arena Team
         return $this->redirect($this->generateUrl('groups'));
     }
 
-    public function membersAction($id) {
-        $group       = $this->getGroup($id);
-
-        $this->ensureGroupExists($group);
-
+    public function membersAction($slug) {
+        $group       = $this->getGroupBySlug($slug);
         $currentUser = $this->getCurrentUser();
         $canRemove   = $group->isOwner($currentUser) && $currentUser !== null;
         $repo        = $this->getEntityManager()->getRepository('GroupBundle:Group');
         $request     = $this->getRequest();
         $page        = $request->query->get('page', 1);
 
-        $adapter  = new ArrayAdapter($repo->getGroupMembers($id));
+        $adapter  = new ArrayAdapter($repo->getGroupMembers($group->getId()));
         $pager    = new Pagerfanta($adapter);
 
         $pager->setMaxPerPage(50);
