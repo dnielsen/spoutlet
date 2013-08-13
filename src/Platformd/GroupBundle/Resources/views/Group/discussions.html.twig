@@ -2,10 +2,10 @@
 
 <div id="discussion-content-scroll" style="height: 550px;">
     {% if results | length > 0 %}
-        <div data-group-member="true">{{ 'platformd.groups.discussions.submit' | pd_trans({ '%url%': ( path('group_add_discussion', {'id' : group.id }) ) }) | raw }}</div>
+        <div data-group-member="true">{{ 'platformd.groups.discussions.submit' | pd_trans({ '%url%': ( path('group_add_discussion', {'slug' : group.slug }) ) }) | raw }}</div>
         <div data-group-member="false">{{ 'platformd.groups.discussions.non_member_add' | pd_trans }}</div>
     {% else %}
-        <div data-group-member="true">{{ 'platformd.groups.discussions.member_no_discussions' | pd_trans({ '%url%': ( path('group_add_discussion', {'id' : group.id }) ) }) | raw }}</div>
+        <div data-group-member="true">{{ 'platformd.groups.discussions.member_no_discussions' | pd_trans({ '%url%': ( path('group_add_discussion', {'slug' : group.slug }) ) }) | raw }}</div>
         <div data-group-member="false">{{ 'platformd.groups.discussions.non_member_no_discussions' | pd_trans }}</div>
     {% endif %}
 
@@ -18,14 +18,14 @@
                     <tr class="forumTopic {% if (loop.index) is divisibleby(2) %}row2{% else %}row1{% endif %}">
                         <td class="name png">
                             <h3>
-                                <a href="{{ path('group_view_discussion', { 'id' : group.id, 'discussionId' : discussion.id }) }}">{{ discussion.title }}</a>
+                                <a href="{{ path('group_view_discussion', { 'slug' : group.slug, 'discussionId' : discussion.id }) }}">{{ discussion.title }}</a>
                             </h3>
                         </td>
                         <td class="replies png">{{ discussion.replyCount }} <br />{{ 'platformd.groups.discussions.replies' | pd_trans }}</td>
                         <td class="views png">{{ discussion.viewCount }} <br />{{ 'platformd.groups.discussions.views' | pd_trans }}</td>
                         <td class="last">
                             <span class="last-update" title="{{ discussion.updatedAt | date ~ 'Z'}}"></span>
-                            - <a href="{{ path('group_view_discussion', { 'id' : group.id, 'discussionId' : discussion.id}) ~ '#comment_' ~ discussion.lastPostId }}">{{ discussion.lastUpdatedBy.username }}</a>
+                            - <a href="{{ path('group_view_discussion', { 'slug' : group.slug, 'discussionId' : discussion.id}) ~ '#comment_' ~ discussion.lastPostId }}">{{ discussion.lastUpdatedBy.username }}</a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -41,7 +41,7 @@
                 'previous_message': '',
                 'next_message': '',
                 'routeName': 'group_discussions',
-                'routeParams': { 'id': group.id }
+                'routeParams': { 'slug': group.slug }
             }) }}
         </div>
 

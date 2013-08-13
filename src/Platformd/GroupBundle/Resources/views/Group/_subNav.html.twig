@@ -3,17 +3,17 @@
         <ul>
             <li><a href="{{ path('group_show', {'slug' : group.slug }) }}">Group Home</a></li>
             <span data-group-admin="true">
-                <li><a href="{{ path('group_edit', { 'id': group.id }) }}">Group Settings</a></li>
+                <li><a href="{{ path('group_edit', { 'slug': group.slug }) }}">Group Settings</a></li>
 
                 {% if not group.isPublic %}
-                    <li><a href="{{ path('group_applications', { 'id': group.id }) }}">Member Approvals</a></li>
+                    <li><a href="{{ path('group_applications', { 'slug': group.slug }) }}">Member Approvals</a></li>
                 {% endif %}
 
                 <li><a href="{{ path('group_event_pending_approval', { 'groupSlug': group.slug }) }}">Event Approvals</a></li>
             </span>
 
             <span data-group-member="true">
-                <li><a href="{{ path('group_leave', { 'id': group.id }) }}" onclick="return confirm('Are you sure you want to leave this group?');">Leave Group</a></li>
+                <li><a href="{{ path('group_leave', { 'slug': group.slug }) }}" onclick="return confirm('Are you sure you want to leave this group?');">Leave Group</a></li>
             </span>
             <li><a href="{{ path('groups') }}">See All Groups</a></li>
         </ul>

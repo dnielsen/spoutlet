@@ -1,5 +1,5 @@
 {% set reportContentType    = features.hasPhotos ? 'GalleryMedia' : 'GroupImage'  %}
-{% set addImageUrl          = features.hasPhotos ? path('gallery_submit') : path('group_add_image', { 'id': group.id }) %}
+{% set addImageUrl          = features.hasPhotos ? path('gallery_submit') : path('group_add_image', { 'slug': group.slug }) %}
 
 <div id="group-images">
 
@@ -20,13 +20,11 @@
                 <div class="items-wrapper">
                 {% for imageList in page %}
                     {% for image in imageList %}
-
                         {% if features.hasPhotos %}
                             {% include 'GroupBundle:Group:_galleryImageItem.html.twig' with { 'image' : image } %}
                         {% else %}
                             {% include 'GroupBundle:Group:_groupImageItem.html.twig' with { 'image' : image } %}
                         {% endif %}
-
                     {% endfor %}
                 {% endfor %}
                 </div>
