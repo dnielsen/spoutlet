@@ -77,7 +77,7 @@ class VoteController extends Controller
         }
 
         try {
-            $response = $this->getCEVOApiManager()->GiveUserXp('contentvote', $comment->getAuthor()->getCevoUserId());
+            $cevoResponse = $this->getCEVOApiManager()->GiveUserXp('contentvote', $comment->getAuthor()->getCevoUserId());
         } catch (ApiException $e) {
 
         }
