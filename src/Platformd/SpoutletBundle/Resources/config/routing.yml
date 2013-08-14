@@ -62,6 +62,10 @@ change_domain:
     pattern: /changeDomain/{locale}
     defaults: { _controller: SpoutletBundle:Default:changeDomain, locale: ~ }
 
+country_state_options:
+    pattern: /countryStateOptions/{countryCode}
+    defaults: { _controller: SpoutletBundle:Default:countryStateOptions, countryCode: ~ }
+
 default_index:
     pattern:  /
     defaults: { _controller: SpoutletBundle:Default:index }

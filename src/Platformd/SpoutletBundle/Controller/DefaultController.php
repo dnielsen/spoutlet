@@ -302,6 +302,33 @@ class DefaultController extends Controller
         return $response;
     }
 
+    public function countryStateOptionsAction($countryCode)
+    {
+        if (!$countryCode) {
+            $this->varnishCache($response, 604800);
+            return new Response();
+        }
+
+        $countryCode = $countryCode == 'GB' ? 'UK' : $countryCode;
+
+        $country = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
+
+        if (!$country) {
+            $this->varnishCache($response, 604800);
+            return new Response();
+        }
+
+        $states = $country->getStates();
+
+        $response = $this->render('SpoutletBundle:Default:_countryStateOptions.html.twig', array(
+            'states' => $states,
+        ));
+
+        $this->varnishCache($response, 604800);
+
+        return $response;
+    }
+
     /**
      * The homepage!
      *

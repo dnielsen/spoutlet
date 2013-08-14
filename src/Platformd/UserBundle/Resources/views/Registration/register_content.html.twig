@@ -122,7 +122,7 @@
                         <tr id="row_address_state">
                             <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.state) }}</td>
                             <td class="form-element-cell" valign="top">
-                                {{ form_widget(form.state, {'attr' : {'class' : 'registration-text'}}) }}
+                                {{ form_widget(form.state) }}
                                 <span class="field-error">{{ state_error }}</span>
                             </td>
                         </tr>
@@ -200,3 +200,29 @@
     </div>
 </div>
 
+<script type="text/javascript">
+
+    updateStateChoices();
+
+    $('#row_address_country select').change(function() {
+        updateStateChoices();
+    });
+
+    function updateStateChoices() {
+
+        $('#row_address_state select').html('<option>...</option>');
+
+        $.ajax({
+            url: '{{ path('country_state_options') }}' + '/' + $('#row_address_country select option:selected').val(),
+            action: 'get',
+            success: function(data) {
+                $('#row_address_state select').html(data);
+            },
+            error: function() {
+                $('#row_address_state select').html('');
+                alert('An error occured while loading states choices.');
+            }
+        });
+    }
+
+</script>
