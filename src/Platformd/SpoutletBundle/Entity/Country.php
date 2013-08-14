@@ -47,6 +47,7 @@ class Country
 
     /**
      * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\CountryState", mappedBy="country")
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private $states;
 
