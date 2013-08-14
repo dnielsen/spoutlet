@@ -250,6 +250,27 @@ class DefaultController extends Controller
         return $response;
     }
 
+    public function changeDomainAction($locale, Request $request)
+    {
+        $path   = $request->query->get('path');
+
+        if (!$path) {
+            $path = $this->generateUrl('default_index');
+        }
+
+        if ($locale) {
+            $site = $this->getSiteFromLocale($locale) ?: $this->getCurrentSite();
+        } else {
+            $site = $this->getCurrentSite();
+        }
+
+        $url  = $request->getScheme().'://'.$site->getFullDomain().($request->getPort() ? ':'.$request->getPort() : '').$path;
+
+        $response = new RedirectResponse($url);
+
+        return $response;
+    }
+
     /**
      * The homepage!
      *

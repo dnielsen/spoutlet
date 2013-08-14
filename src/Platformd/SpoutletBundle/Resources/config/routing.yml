@@ -54,6 +54,10 @@ api_session_cookie_refresh:
     pattern: /refreshApiSessionCookie/{uuid}
     defaults: { _controller: SpoutletBundle:Default:refreshApiSessionCookie, uuid: ~ }
 
+change_domain:
+    pattern: /changeDomain/{locale}
+    defaults: { _controller: SpoutletBundle:Default:changeDomain, locale: ~ }
+
 default_index:
     pattern:  /
     defaults: { _controller: SpoutletBundle:Default:index }
