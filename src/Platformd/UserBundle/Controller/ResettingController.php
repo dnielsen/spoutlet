@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
 use FOS\UserBundle\Model\UserInterface;
+use Platformd\UserBundle\Exception\ApiRequestException;
 
 class ResettingController extends BaseController
 {
@@ -21,6 +22,8 @@ class ResettingController extends BaseController
     public function resetAction($token)
     {
         $user = $this->container->get('fos_user.user_manager')->findUserByConfirmationToken($token);
+        $request = $this->container->get('request');
+        $error = null;
 
         if (null === $user) {
             throw new NotFoundHttpException(sprintf('The user with "confirmation token" does not exist for value "%s"', $token));
@@ -32,20 +35,28 @@ class ResettingController extends BaseController
 
         $form = $this->container->get('fos_user.resetting.form');
         $formHandler = $this->container->get('fos_user.resetting.form.handler');
-        $process = $formHandler->process($user);
 
-        if ($process) {
+        try {
+            $process = $formHandler->process($user);
 
-            $response = new RedirectResponse($this->getRedirectionUrl($user));
-            $this->authenticateUser($user, $response);
-            $this->getFlashUtil()->setFlash('success', $this->trans('resetting.flash.success', array(), 'FOSUserBundle'));
-            return $response;
+            if ($process) {
+                $response = new RedirectResponse($this->getRedirectionUrl($user));
+                $this->authenticateUser($user, $response);
+                $this->getFlashUtil()->setFlash('success', $this->trans('resetting.flash.success', array(), 'FOSUserBundle'));
+                return $response;
+            } elseif ('POST' === $request->getMethod()) {
+                $error = $this->trans('resetting.flash.error', array(), 'FOSUserBundle');
+            }
+
+        } catch (ApiRequestException $e) {
+            $error = $this->trans('resetting.flash.api_error', array(), 'FOSUserBundle');
         }
 
         return $this->container->get('templating')->renderResponse('FOSUserBundle:Resetting:reset.html.'.$this->getEngine(), array(
             'token' => $token,
             'form' => $form->createView(),
             'theme' => $this->container->getParameter('fos_user.template.theme'),
+            'error' => $error,
         ));
     }
 

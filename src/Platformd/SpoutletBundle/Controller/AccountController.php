@@ -416,7 +416,7 @@ class AccountController extends Controller
     {
         if ($email) {
             try {
-                $user = $this->getUserManager()->loadUserByUsername(urldecode($email));
+                $user = $this->getUserManager()->findUserByEmail(urldecode($email));
 
                 if ($user) {
 
@@ -427,9 +427,18 @@ class AccountController extends Controller
 
                         $data = $form->getData();
 
-                        if ($data['unsubscribe']) {
-                            $user->setSubscribedAlienwareEvents(false);
-                            $this->getUserManager()->updateUserAndApi($user);
+                        try {
+                            if ($data['unsubscribe']) {
+                                $user->setSubscribedAlienwareEvents(false);
+                                $this->getUserManager()->updateUserAndApi($user);
+                            }
+                        } catch (\PDOException $e) {
+                            # this is for catching the PDOException due to blank usernames
+                            return $this->render('SpoutletBundle:Account:unsubscribe.html.twig', array(
+                                'userIsValid'   => false,
+                                'success'       => false,
+                                'apiException'  => true,
+                            ));
                         }
 
                         return $this->render('SpoutletBundle:Account:unsubscribe.html.twig', array(

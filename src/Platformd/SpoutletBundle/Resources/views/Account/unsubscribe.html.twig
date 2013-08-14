@@ -38,9 +38,14 @@
             </form>
             {% endif %}
 
-            {% if not userIsValid and not success %}
+            {% if not userIsValid and not success and apiException is not defined %}
             <p>{{ 'platformd.unsubscribe.user_not_found'|trans({}, 'forms') }}</p>
             {% endif %}
+
+            {% if not userIsValid and not success and apiException is defined %}
+            <p style="color: #c62828; font-weight: bold; font-style: italic;">{{ 'platformd.unsubscribe.failure'|trans({}, 'forms')|raw }}</p>
+            {% endif %}
+
         </div>
     </div>
 </div>

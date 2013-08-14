@@ -1,5 +1,9 @@
 {% form_theme form theme %}
 
+{% if error is not null %}
+    {% include 'SpoutletBundle::_flashMessage.html.twig' with { 'type': 'error', 'message': error } %}
+{% endif %}
+
 <h1>{{ 'platformd.user.reset.title' | trans }}</h1>
 
 <form action="{{ path('fos_user_resetting_reset', {'token': token}) }}" {{ form_enctype(form) }} method="POST" class="fos_user_resetting_reset">
