@@ -1526,6 +1526,10 @@ Alienware Arena Team
             return $this->redirect($this->generateUrl('groups'));
         }
 
+        if (!$group->isVisibleOnSite($this->getCurrentSite())) {
+            throw new NotFoundHttpException('Group not found for current site.');
+        }
+
         $this->ensureAllowed($group, 'ViewGroup', false);
 
         $groupNews      = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);

@@ -75,3 +75,4 @@ platformd_unsubscribe_form_unsubscribe: Please unsubscribe me from receiving Ali
 platformd.unsubscribe.note: Please note that you will continue to receive event-specific notices for any events you are registered to participate in for the duration of the respective events.
 platformd.unsubscribe.user_not_found: Your email address was not found.
 platformd.unsubscribe.success: Your email preferences have been updated.
+platformd.unsubscribe.failure: A username has never been assigned to your account. Please email contact@alienwarearena.com with the username you would like to have in order to complete your password reset.

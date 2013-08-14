@@ -82,3 +82,4 @@ platformd.unsubscribe.your_email: "あなたのメールアドレス"
 platformd_unsubscribe_form_unsubscribe: ALIENWARE ARENAのニュース及びアナウンスの受信解除を行ってください。
 platformd.unsubscribe.note: 参加登録されているイベントの期間中にはイベントに関する通知を受信し続けますので、ご注意ください。
 platformd.unsubscribe.success: あなたのメールアドレス設定が更新されました
+platformd.unsubscribe.failure: A username has never been assigned to your account. Please email <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a> with the username you would like to have in order to complete your password reset.
