@@ -416,7 +416,7 @@ class AccountController extends Controller
     {
         if ($email) {
             try {
-                $user = $this->getUserManager()->loadUserByUsername(urldecode($email));
+                $user = $this->getUserManager()->findUserByEmail(urldecode($email));
 
                 if ($user) {
 

@@ -325,5 +325,14 @@ class UserManager extends BaseUserManager
             ->getQuery()
         ;
     }
+
+    protected function canonicalizeUsername($username)
+    {
+        if ($username) {
+            return parent::canonicalizeUsername($username);
+        }
+
+        return null;
+    }
 }
 
