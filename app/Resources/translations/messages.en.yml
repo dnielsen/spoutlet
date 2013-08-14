@@ -1069,7 +1069,7 @@ more_games: More Games
 
 deals_alienware_title: ALIENWARE ARENA DEAL
 deals_new: New
-deals_all: All Deals
+deals_all: Latest
 deals: Deals
 deal: Deal
 deal_redeem_max_ip_hit: Your IP address is not allowed to redeem any more deals.
@@ -1104,7 +1104,7 @@ deal_join_group: By claiming a code, you will automatically become a member of t
 deal_join_group_success: You are now a member of <a href="%link%" target="_blank">%group%</a>.
 
 featured_deals: Alienware Arena Featured Deals
-expired_deals: Expired Deals
+expired_deals: Previous
 
 platformd.deal.deal: Deal
 platformd.deal.assigned.key: Code
