@@ -272,7 +272,8 @@ class DefaultController extends Controller
         $cookieHost   = '.'.$this->getParameter('base_host');
         $cookie       = new Cookie($cookieName, $cookieValue, $cookieExpiry, $cookiePath, $cookieHost, false, false);
 
-        $url = $request->getScheme().'://'.$site->getFullDomain().($request->getPort() ? ':'.$request->getPort() : '').$returnPath;
+        $port = $request->getPort() && $request->getPort() != "80" ? $request->getPort() : '';
+        $url  = $request->getScheme().'://'.$site->getFullDomain().$port.$returnPath;
 
         $response = new RedirectResponse($url);
         $response->headers->setCookie($cookie);
