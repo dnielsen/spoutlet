@@ -294,8 +294,8 @@ class DefaultController extends Controller
             $site = $this->getCurrentSite();
         }
 
-        $url  = $request->getScheme().'://'.$site->getFullDomain().($request->getPort() ? ':'.$request->getPort() : '').$path;
-
+        $port     = $request->getPort() && $request->getPort() != "80" ? $request->getPort() : '';
+        $url      = $request->getScheme().'://'.$site->getFullDomain().$port.$path;
         $response = new RedirectResponse($url);
 
         return $response;
