@@ -26,7 +26,7 @@
             <div class="slider-wrapper theme-nivo">
                 <div id="slider" class="nivoSlider">
                     {% for media in nivoSliderMedia %}
-                        <img src="{{ media_path(media.image, {'local': true}) | imagine_filter('nivo_slider') }}" alt="" class="gallery-slider"/>
+                        <img src="{{ media.image | imagine_filter('nivo_slider') }}" alt="" class="gallery-slider"/>
                     {% endfor %}
                 </div>
             </div>

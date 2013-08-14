@@ -32,7 +32,7 @@
             {% set entryLikes = entry.id in likes|keys ? likes[entry.id] : 0 %}
 
             <tr>
-                <td><img src="{{ media_path(entry.image, {'local': true}) | imagine_filter('game_show_logo') }}" alt="{{ entry.title }}" /></td>
+                <td><img src="{{ entry.image | imagine_filter('game_show_logo') }}" alt="{{ entry.title }}" /></td>
                 <td><a target="_blank" href="{{ path('gallery_media_show', { 'id' : entry.id }) }}">{{ path('gallery_media_show', { 'id' : entry.id }) }}</a></td>
                 <td>{{ entry.author.username }}</td>
                 <td>{{ entry.createdAt | date }}</td>
