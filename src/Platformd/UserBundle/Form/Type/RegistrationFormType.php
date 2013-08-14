@@ -102,7 +102,11 @@ class RegistrationFormType extends BaseType
                 'error_bubbling' => true,
             ));
         } else {
-            $builder->add('state', 'text', array('required' => true, 'error_bubbling' => true));
+            $builder->add('state', 'choice', array(
+                'choices'        => array(),
+                'required'       => true,
+                'error_bubbling' => true
+            ));
         }
 
         $countryOptions = array(
@@ -137,7 +141,6 @@ class RegistrationFormType extends BaseType
         if($countryCode != 'US') {
             $builder->add('subscribedAlienwareEvents');
         }
-
     }
 
     public function getDefaultOptions(array $options)

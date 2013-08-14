@@ -58,6 +58,10 @@ site_springboard:
     pattern: /siteSpringboard
     defaults: { _controller: SpoutletBundle:Default:siteSpringboard }
 
+country_state_options:
+    pattern: /countryStateOptions/{countryCode}
+    defaults: { _controller: SpoutletBundle:Default:countryStateOptions, countryCode: ~ }
+
 default_index:
     pattern:  /
     defaults: { _controller: SpoutletBundle:Default:index }

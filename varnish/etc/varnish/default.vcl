@@ -252,7 +252,9 @@ sub vcl_recv {
         remove req.http.Cookie;
     }
 
-
+    if (req.url ~ "^/countryStateOptions/") {
+        remove req.http.Cookie;
+    }
 
     if (req.http.Cookie) {
         return (pass);

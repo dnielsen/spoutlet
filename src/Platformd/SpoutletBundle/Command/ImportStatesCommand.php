@@ -59,6 +59,7 @@ EOT
 
         $countries = array();
         $states    = array();
+        $skipped   = array();
 
         $this->output();
         $this->output(0, 'Country-State/Province Import Script');
@@ -76,7 +77,7 @@ EOT
         $stateList = $stateRepo->findAll();
 
         foreach ($stateList as $state) {
-            $states[$state->getName()] = $state;
+            $states[$state->getCountry()->getCode()][$state->getName()] = $state;
         }
 
         $state = null;
@@ -96,14 +97,14 @@ EOT
                 $country = isset($countries[$countryCode]) ? $countries[$countryCode] : null;
 
                 if (!$country) {
-                    $this->output(6, 'Country "'.$countryCode.'" not found, skipping');
+                    $skipped[] = 'Country "'.$countryCode.'" not found, skipping';
                     continue;
                 }
 
-                $state = isset($states[$stateName]) ? $states[$stateName] : null;
+                $state = isset($states[$countryCode][$stateName]) ? $states[$countryCode][$stateName] : null;
 
                 if ($state) {
-                    $this->output(6, 'State "'.$stateName.'" already imported, skipping');
+                    $skipped[] = 'State "'.$stateName.'" for country code "'.$countryCode.'" already imported, skipping';
                     continue;
                 }
 
@@ -113,9 +114,25 @@ EOT
                 $state->setCountry($country);
 
                 $em->persist($state);
+
+                $states[$countryCode][$stateName] = $state;
             }
 
+            $this->output();
+            $this->output(2, 'Persisting to database...');
+            $this->output();
+
             $em->flush();
+        }
+
+        if (count($skipped) > 0) {
+            $this->output();
+            $this->output(2, 'Skipped:');
+            $this->output();
+
+            foreach ($skipped as $skippedMessage) {
+                $this->output(4, $skippedMessage);
+            }
         }
 
         $this->output();
