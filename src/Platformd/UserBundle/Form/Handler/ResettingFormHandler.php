@@ -6,8 +6,6 @@ use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Form\Model\ResetPassword;
 use FOS\UserBundle\Form\Handler\ResettingFormHandler as BaseHandler;
 
-use Platformd\UserBundle\Exception\ApiRequestException;
-
 class ResettingFormHandler extends BaseHandler
 {
     public function process(UserInterface $user)
@@ -32,11 +30,7 @@ class ResettingFormHandler extends BaseHandler
         $user->setPasswordRequestedAt(null);
         $user->setEnabled(true);
 
-        try {
-            $this->userManager->updateApiPassword($user, $this->getNewPassword());
-            return true;
-        } catch (ApiRequestException $e) {
-            return false;
-        }
+        $this->userManager->updateApiPassword($user, $this->getNewPassword());
+        return true;
     }
 }
