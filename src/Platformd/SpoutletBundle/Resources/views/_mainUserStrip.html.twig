@@ -14,11 +14,12 @@
         var is_admin = {% if user.adminLevel == 'ROLE_SUPER_ADMIN' %}true{% else %}false{% endif %};
         var can_report = {% if can_user_report() %}true{% else %}false{% endif %};
         $.ajax({
-            url: '/arp/getuserarp/' + '{{ user.uuid }}',
+            url: '/app_dev.php/arp/getuserarp/' + '{{ user.uuid }}',
             method: 'get',
             dataType: 'json',
             success: function (data) {
-                $('#arp-total').text('ARP: ' + data.arp);
+                var period = data.period != null ? data.period : '0';
+                $('#arp-total').text('ARP: ' + period + ' (' + data.arp + ')');
             }
         });
     </script>
