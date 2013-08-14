@@ -12,29 +12,30 @@
             <a href="http://www.alienwarearena.com/cmd/default/set-region/4/?return=%2F">{{ 'platformd.layout.region.global' | trans }}</a>
         </li>
         <li>
-            <a class="region-link" href="http://www.alienwarearena.com/cmd/default/set-region/1/?return={{ (url('change_domain', { 'locale': 'en_US' })) | url_encode }}">{{ 'platformd.layout.region.en_US' | trans }}&nbsp;<img src="/bundles/spoutlet/images/us.png" />&nbsp;<img src="/bundles/spoutlet/images/ca.png" /></a>
+            <a class="region-link external" href="http://www.alienwarearena.com/cmd/default/set-region/1/?return={{ (url('change_domain', { 'locale': 'en_US' })) | url_encode }}">{{ 'platformd.layout.region.en_US' | trans }}&nbsp;<img src="/bundles/spoutlet/images/us.png" />&nbsp;<img src="/bundles/spoutlet/images/ca.png" /></a>
         </li>
         <li>
-            <a class="region-link" href="http://www.alienwarearena.com/cmd/default/set-region/5/?return={{ (url('change_domain', { 'locale': 'en_GB' })) | url_encode }}">{{ 'platformd.layout.region.en_GB' | trans }}</a>
+            <a class="region-link external" href="http://www.alienwarearena.com/cmd/default/set-region/5/?return={{ (url('change_domain', { 'locale': 'en_GB' })) | url_encode }}">{{ 'platformd.layout.region.en_GB' | trans }}</a>
         </li>
         <li>
-            <a class="region-link" href="http://www.alienwarearena.com/cmd/default/set-region/6/?return={{ (url('change_domain', { 'locale': 'en_AU' })) | url_encode }}">{{ 'platformd.layout.region.en_AU' | trans }}&nbsp;<img src="/bundles/spoutlet/images/au.png" />&nbsp;<img src="/bundles/spoutlet/images/nz.png" /></a>
+            <a class="region-link external" href="http://www.alienwarearena.com/cmd/default/set-region/6/?return={{ (url('change_domain', { 'locale': 'en_AU' })) | url_encode }}">{{ 'platformd.layout.region.en_AU' | trans }}&nbsp;<img src="/bundles/spoutlet/images/au.png" />&nbsp;<img src="/bundles/spoutlet/images/nz.png" /></a>
         </li>
         <li>
-            <a class="region-link" href="http://www.alienwarearena.com/cmd/default/set-region/3/?return={{ (url('change_domain', { 'locale': 'es' })) | url_encode }}">{{ 'platformd.layout.region.es' | trans }}</a>
+            <a class="region-link external" href="http://www.alienwarearena.com/cmd/default/set-region/3/?return={{ (url('change_domain', { 'locale': 'es' })) | url_encode }}">{{ 'platformd.layout.region.es' | trans }}</a>
         </li>
         <li>
-            <a href="{{ path('default_index', {'_locale': 'ja'}) }}">{{ 'platformd.layout.region.ja' | trans }}&nbsp;<img src="/bundles/spoutlet/images/jp.png" /></a>
+            <a class="region-link" href="{{ path('change_domain', {'locale': 'ja'}) }}">{{ 'platformd.layout.region.ja' | trans }}&nbsp;<img src="/bundles/spoutlet/images/jp.png" /></a>
         </li>
         <li>
-            <a class="region-link" href="http://www.alienwarearena.com/cmd/default/set-region/2/?return={{ (url('change_domain', { 'locale': 'en_SG' })) | url_encode }}">{{ 'platformd.layout.region.en_SG' | trans }}&nbsp;<img src="/bundles/spoutlet/images/my.png" />&nbsp;<img src="/bundles/spoutlet/images/sg.png" /></a>
+            <a class="region-link external" href="http://www.alienwarearena.com/cmd/default/set-region/2/?return={{ (url('change_domain', { 'locale': 'en_SG' })) | url_encode }}">{{ 'platformd.layout.region.en_SG' | trans }}&nbsp;<img src="/bundles/spoutlet/images/my.png" />&nbsp;<img src="/bundles/spoutlet/images/sg.png" /></a>
         </li>
     </ul>
 </div>
 
 <script type="text/javascript">
     $('.region-link').click(function() {
-        var newHref = $(this).attr('href') + '?path=' + encodeURIComponent(encodeURIComponent(window.location.pathname));
+        var doubleEncode = $(this).hasClass('external');
+        var newHref = $(this).attr('href') + '?path=' + encodeURIComponent(doubleEncode ? encodeURIComponent(window.location.pathname) : window.location.pathname);
         $(this).attr('href', newHref);
     });
 </script>
