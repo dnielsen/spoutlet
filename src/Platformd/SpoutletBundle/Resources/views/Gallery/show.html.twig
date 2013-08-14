@@ -3,7 +3,7 @@
 {% set reportContentType    = 'GalleryMedia' %}
 {% set mediaId              = media.id %}
 
-{% set openGraphThumb       = media_path(media.image, {'local': true}) | imagine_filter('image_thumb_small') %}
+{% set openGraphThumb       = media.image | imagine_filter('image_thumb_small') %}
 
 {% set isVotable = (media.contestEntry is null or media.contestEntry.contest is null or media.contestEntry.contest.isVotable()) %}
 
@@ -74,7 +74,7 @@
                     </div>
                 </div>
             {% endif %}
-            <img id="main-photo" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" style="display:none;" />
+            <img id="main-photo" src="{{ media.image | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" style="display:none;" />
 
             {% if features.hasComments %}
                 {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : media.threadId, 'comments' : null, 'offset' : 0, 'permalink' : permalink } %}
@@ -112,7 +112,7 @@
                                 <div class="user-other-media-thumb-wrapper">
                                    <div class="gallery-media-thumb-square">
                                         <a href="{{ path('gallery_media_show', { id: media.id }) }}">
-                                            <img style="width:82px; height:82px;" class="media-thumb" data-title="{{ media.title }}" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb_square') }}" />
+                                            <img style="width:82px; height:82px;" class="media-thumb" data-title="{{ media.title }}" title="{{ media.title }}" src="{{ media.image | imagine_filter('media_photo_thumb_square') }}" />
                                         </a>
                                     </div>
                                 </div>
@@ -174,10 +174,10 @@
                                 <a href="{{ path('gallery_delete_media', { 'id' : media.id })}}" onclick="return confirm('Are you sure you want to delete this item?');">delete</a> |
                             </span>
                             <span data-user-can-edit-media="true">
-                                <a href="{{ path('gallery_edit_media', { 'id' : media.id })}}">edit</a> |
+                                <a href="{{ path('gallery_edit_media', { 'id' : media.id })}}">edit</a>
                             </span>
                             <span data-user-is-admin="true">
-                                <a href="{{ path('gallery_feature_media', { 'id' : media.id })}}" onclick="return confirm('Are you sure you want to feature this item?');">
+                                | <a href="{{ path('gallery_feature_media', { 'id' : media.id })}}" onclick="return confirm('Are you sure you want to feature this item?');">
                                 {% if media.featured == false %}
                                     feature
                                 {% else %}

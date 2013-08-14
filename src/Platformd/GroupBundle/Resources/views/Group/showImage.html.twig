@@ -31,7 +31,7 @@
     <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
         <div class="left">
 
-            <img id="main-photo" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" style="display:none;" />
+            <img id="main-photo" src="{{ media.image | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" style="display:none;" />
             {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : media.threadId, 'comments' : null, 'offset' : 0, 'permalink' : permalink } %}
 
         </div>
@@ -51,7 +51,7 @@
                                 <div class="user-media-thumb-wrapper">
                                    <div class="gallery-media-thumb-square">
                                         <a href="{{ path('group_image_show', { id: media.id }) }}">
-                                            <img style="width:82px; height:82px;" class="media-thumb" data-title="{{ media.title }}" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb_square') }}" />
+                                            <img style="width:82px; height:82px;" class="media-thumb" data-title="{{ media.title }}" title="{{ media.title }}" src="{{ media.image | imagine_filter('media_photo_thumb_square') }}" />
                                         </a>
                                     </div>
                                 </div>

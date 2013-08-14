@@ -19,7 +19,7 @@
             <td><a href="{{ path('admin_background_ads_edit', { 'id': ad.id }) }}">{{ ad.title }}</a></td>
             <td>
                 {% if ad.file %}
-                    <img src="{{ media_path(ad.file, {'local': true}) | imagine_filter('media_photo_thumb') }}" width="100" />
+                    <img src="{{ ad.file | imagine_filter('media_photo_thumb') }}" width="100" />
                 {% endif %}
             </td>
             <td>
