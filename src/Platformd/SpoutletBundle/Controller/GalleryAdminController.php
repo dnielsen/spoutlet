@@ -180,6 +180,7 @@ class GalleryAdminController extends Controller
 
                 $startDate = $form->get('startDate')->getData();
                 $endDate = $form->get('endDate')->getData();
+                $sites = $form->get('sites')->getData();
 
                 return $galleryMediaRepo->findImagesForMetrics($data['title'], $data['deleted'], $data['published'], $sites, $startDate, $endDate);
             }

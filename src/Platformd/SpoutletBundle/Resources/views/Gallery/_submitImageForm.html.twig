@@ -15,7 +15,6 @@
     {{ 'galleries.submit_photo_file_restrictions' | trans | raw }}
 
     {% if contest is defined %}
-         <p>{{ 'contests.igames_disclaimer' | trans }}</p>
         {% if isUnlimited %}
             <p style="color:#ff0000;">{{ 'contests.photo_submissions_unlimited' | trans }}</p>
         {% else %}
