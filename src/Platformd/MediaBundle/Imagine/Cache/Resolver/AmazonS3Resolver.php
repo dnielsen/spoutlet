@@ -79,7 +79,7 @@ class AmazonS3Resolver extends BaseAmazonS3Resolver
     public function getBrowserObjectUrl($targetPath)
     {
         if ($this->bucket == "platformd") {
-            $cf = $this->getIsHttps() ? "https://d2ssnvre2e87xh.cloudfront.net" : "media.alienwarearena.com";
+            $cf = $this->getIsHttps() ? "d2ssnvre2e87xh.cloudfront.net" : "media.alienwarearena.com";
         } else {
             $cf = $this->getIsHttps() ? "d3klgvi09f3c52.cloudfront.net" : "mediastaging.alienwarearena.com";
         }

@@ -1274,7 +1274,7 @@ contests:
     photos_max: You can submit a maximum of %s image(s) for this contest.
     photo_submission_message: All image submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your image fulfills all the requirements
     igames_disclaimer: By posting or submitting a image you grant iGames and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify,
-    photo_submissions_left: You can submit a maximum of %s images for this contest.
+    photo_submissions_left: You can submit a maximum of %s image(s) for this contest.
     photo_submissions_unlimited: You can submit as many images as you like for this contest.
     congratulations_winners: Congratulations To The Winners!
     winners_page_congrats: Congratulations To The Winners!
