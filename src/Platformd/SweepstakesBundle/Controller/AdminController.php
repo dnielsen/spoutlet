@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use DateTime;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
+use Knp\MediaBundle\Util\MediaUtil;
 
 class AdminController extends Controller
 {
@@ -58,29 +59,26 @@ class AdminController extends Controller
 
     	$form = $this->createForm(new SweepstakesAdminType($sweepstakes, $tagManager), $sweepstakes);
 
-    	if($request->getMethod() == 'POST')
-    	{
+    	if($request->getMethod() == 'POST') {
     		$form->bindRequest($request);
 
-    		if($form->isValid())
-    		{
+    		if($form->isValid()) {
     			$this->saveSweepstakes($form);
-
-                // redirect to the "edit" page
-    			return $this->redirect($this->generateUrl('admin_sweepstakes_edit', array('id' => $sweepstakes->getId())));
+                return $this->redirect($this->generateUrl('admin_sweepstakes_edit', array('id' => $sweepstakes->getId())));
     		}
     	}
 
     	return $this->render('SweepstakesBundle:Admin:new.html.twig', array(
-            'form' => $form->createView(),
+            'form'        => $form->createView(),
             'sweepstakes' => $sweepstakes,
-            'group' => null,
+            'group'       => null,
         ));
     }
 
     public function editAction(Request $request, $id)
     {
         $this->addSweepstakesBreadcrumb()->addChild('Edit');
+
         $tagManager     = $this->getTagManager();
         $sweepstakes    = $this->getSweepstakesRepo()->findOneById($id);
 
@@ -90,29 +88,32 @@ class AdminController extends Controller
 
         $tagManager->loadTagging($sweepstakes);
 
-        $test   = $sweepstakes->getTestOnly();
-        if ($test === null) {
-            $sweepstakes->setTestOnly(0);
+        $originalQuestions = array();
+
+        // Create an array of the current Tag objects in the database
+        foreach ($sweepstakes->getQuestions() as $question) {
+            $originalQuestions[] = $question;
         }
 
         $form = $this->createForm(new SweepstakesAdminType($sweepstakes, $tagManager), $sweepstakes);
 
-        if($request->getMethod() == 'POST')
-        {
+        if($request->getMethod() == 'POST') {
         	$form->bindRequest($request);
 
-        	if($form->isValid())
-        	{
-        		$this->saveSweepstakes($form);
-
+        	if($form->isValid()) {
+        		$this->saveSweepstakes($form, $originalQuestions);
         		return $this->redirect($this->generateUrl('admin_sweepstakes_edit', array('id' => $sweepstakes->getId())));
         	}
         }
 
         $group = $sweepstakes->getGroup();
 
-    	return $this->render('SweepstakesBundle:Admin:edit.html.twig',
-    		array('form' => $form->createView(), 'sweepstakes' => $sweepstakes, 'group' => $group));
+    	return $this->render('SweepstakesBundle:Admin:edit.html.twig', array(
+            'form'        => $form->createView(),
+            'sweepstakes' => $sweepstakes,
+            'group'       => $group,
+            'hasEntries'  => $sweepstakes->getEntries()->first() !== false,
+        ));
     }
 
     public function approveAction($id)
@@ -245,40 +246,10 @@ class AdminController extends Controller
         return $sweepstakes;
     }
 
-    private function saveSweepstakes(Form $sweepstakesForm)
+    private function saveSweepstakes(Form $sweepstakesForm, $originalQuestions = array())
     {
-        // save to db
+        $em          = $this->getDoctrine()->getEntityManager();
         $sweepstakes = $sweepstakesForm->getData();
-
-        $ruleset    = $sweepstakes->getRuleset();
-        $rules      = $ruleset->getRules();
-
-        $newRulesArray = array();
-
-        $defaultAllow = true;
-
-        foreach ($rules as $rule) {
-            if ($rule->getMinAge() || $rule->getMaxAge() || $rule->getCountry()) {
-                $rule->setRuleset($ruleset);
-                $newRulesArray[] = $rule;
-
-                $defaultAllow = $rule->getRuleType() == "allow" ? false : $defaultAllow;
-            }
-        }
-
-        $em = $this->getDoctrine()->getEntityManager();
-        $oldRules = $em->getRepository('SpoutletBundle:CountryAgeRestrictionRule')->findBy(array('ruleset' => $ruleset->getId()));
-
-        if ($oldRules) {
-            foreach ($oldRules as $oldRule) {
-                if (!in_array($oldRule, $newRulesArray)) {
-                    $oldRule->setRuleset(null);
-                }
-            }
-        }
-
-        $sweepstakes->getRuleset()->setParentType('sweepstake');
-        $sweepstakes->getRuleset()->setDefaultAllow($defaultAllow);
 
         $groupId = $sweepstakesForm['group']->getData();
         if($groupId) {
@@ -294,12 +265,29 @@ class AdminController extends Controller
 
         $sweepstakes->getId() ? $tagManager->replaceTags($tags, $sweepstakes) : $tagManager->addTags($tags, $sweepstakes);
 
-        $this
-            ->get('platformd.events_manager')
-            ->save($sweepstakes);
+        $mUtil = new MediaUtil($this->getDoctrine()->getEntityManager());
+
+        if (!$mUtil->persistRelatedMedia($sweepstakes->getBackgroundImage())) {
+            $sweepstakes->setBackgroundImage(null);
+        }
+
+        foreach ($sweepstakes->getQuestions() as $question) {
+            foreach ($originalQuestions as $key => $toDel) {
+                if ($toDel->getId() === $question->getId()) {
+                    unset($originalQuestions[$key]);
+                }
+            }
+        }
+
+        // remove the relationship between the question and the sweepstakes
+        foreach ($originalQuestions as $question) {
+            $em->remove($question);
+        }
+
+        $em->persist($sweepstakes);
+        $em->flush();
 
         $tagManager->saveTagging($sweepstakes);
-
         $tagManager->loadTagging($sweepstakes);
 
         $this->setFlash('success', 'Sweepstakes Saved');

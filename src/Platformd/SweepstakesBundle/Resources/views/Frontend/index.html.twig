@@ -6,12 +6,12 @@
 
 <h1>{{ 'sweepstakes' | trans }}</h1>
 
-<table>
+<table class="table">
     <tbody>
         <tr>
-            <th>{{ 'sweepstakes_name' | trans }}</th>
             <th>{{ 'platformd.events.event_listings.start_date' | trans }}</th>
             <th>{{ 'platformd.events.event_listings.end_date' | trans }}</th>
+            <th>{{ 'sweepstakes_name' | trans }}</th>
         </tr>
         {% if sweepstakess|length == 0 %}
         <tr>
@@ -23,11 +23,11 @@
         {% for sweepstakes in sweepstakess %}
         <tr class="eventListGroup_online">
             <td>
-                {{ 'sweepstakes_datetime_format' | trans(sweepstakes.startsAtInTimezoneTranslationArray) }}
+                {{ sweepstakes.startsAt | date_translate }}
             </td>
 
             <td>
-                {{ 'sweepstakes_datetime_format' | trans(sweepstakes.endsAtInTimezoneTranslationArray) }}
+                {{ sweepstakes.endsAt | date_translate }}
             </td>
 
             <td><a href="{{  path('sweepstakes_show', { 'slug' : sweepstakes.slug }) }}">{{ sweepstakes.name }}</a></td>

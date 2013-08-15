@@ -1,0 +1,2 @@
+sweepstakes.errors.slug_unique: This URL is already used. If you have left slug blank, this means that an existing sweepstakes is already using this sweepstakes name.
+sweepstakes.errors.name_unique: This name is already used.

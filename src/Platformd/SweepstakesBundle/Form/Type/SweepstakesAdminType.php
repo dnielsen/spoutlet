@@ -4,14 +4,12 @@ namespace Platformd\SweepstakesBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
-use Platformd\SweepstakesBundle\Entity\Sweepstakes;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\FormInterface;
-use Platformd\SpoutletBundle\Form\Type\SlugType;
-use Platformd\SpoutletBundle\Form\Type\EventType;
-use Platformd\SpoutletBundle\Form\Type\CountryAgeRestrictionRulesetType;
 
-class SweepstakesAdminType extends EventType
+use Platformd\SpoutletBundle\Form\Type\SlugType;
+use Platformd\MediaBundle\Form\Type\MediaType;
+use Platformd\SweepstakesBundle\Form\Type\SweepstakesQuestionType;
+
+class SweepstakesAdminType extends AbstractType
 {
     private $sweepstakes;
     private $tagManager;
@@ -24,13 +22,14 @@ class SweepstakesAdminType extends EventType
 
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $builder->add('name', 'textarea')
+        $builder
+            ->add('name', 'text')
             ->add('slug', new SlugType(), array(
                 'url_prefix' => '/sweepstakes/'
             ))
             ->add('externalUrl', null, array(
                 'label' => 'External URL',
-                'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to this Sweepstake page.',
+                'help'  => 'sweepstakes.admin.form.slug.help',
             ))
             ->add('sites', 'entity', array(
                 'class'    => 'SpoutletBundle:Site',
@@ -39,18 +38,13 @@ class SweepstakesAdminType extends EventType
                 'property' => 'name',
             ))
             ->add('timezone', 'gmtTimezone')
-            ->add('bannerImageFile', 'file')
-            ->add('generalImageFile', 'file', array(
-                'label' => 'General image',
-            ))
-            ->add('ruleset', new CountryAgeRestrictionRulesetType(), array(
-                'label' => 'Restrictions',
+            ->add('backgroundImage', new MediaType(), array(
+                'image_label'          => 'Background image',
+                'image_help'           => 'sweepstakes.admin.form.background_image.help',
+                'with_remove_checkbox' => true
             ))
             ->add('officialRules', 'purifiedTextarea', array(
                 'attr' => array('class' => 'ckeditor')
-            ))
-            ->add('game', null, array(
-                'empty_value' => 'N/A',
             ))
             ->add('content', 'purifiedTextarea', array(
                 'attr' => array('class' => 'ckeditor')
@@ -61,25 +55,55 @@ class SweepstakesAdminType extends EventType
                     0 => 'No',
                 ),
                 'label' => 'Allow admin testing?',
-                'help'  => 'This allows admins to still test the operation of the sweepstakes IF it is unpublished',
+                'help'  => 'sweepstakes.admin.form.test_only.help',
             ))
             ->add('hidden', 'checkbox', array(
-                'label' => 'Do Not Display Listing',
-            ));
-
-        $this->createStartsAtField($builder);
-        $this->createEndsAtField($builder);
-
-        $builder->add('group', 'hidden', array(
-            'property_path' => false,
-        ));
-
-        $builder->add('tags', 'text', array(
-            'label' => 'Tags',
-            'help' => "Enter keywords to help people discover the sweepstakes.",
-            'property_path' => false,
-            'data' => $this->sweepstakes ? $this->tagManager->getConcatenatedTagNames($this->sweepstakes) : null,
-        ));
+                'label' => 'Do not display listing',
+            ))
+            ->add('startsAt', 'datetime', array(
+                'label'  => 'Entry begins',
+                'widget' => 'single_text',
+                'attr'   => array(
+                    'class' => 'datetime-picker',
+                )
+            ))
+            ->add('endsAt', 'datetime', array(
+                'label'  => 'Entry ends',
+                'widget' => 'single_text',
+                'attr'   => array(
+                    'class' => 'datetime-picker',
+                )
+            ))
+            ->add('published', 'choice', array(
+                'choices' => array(
+                    1 => 'status.published',
+                    0 => 'status.unpublished'
+                ),
+                'label' => 'status.choose_status',
+            ))
+            ->add('group', 'hidden', array(
+                'property_path' => false,
+            ))
+            ->add('tags', 'text', array(
+                'label'         => 'Tags',
+                'help'          => 'sweepstakes.admin.form.tags.help',
+                'property_path' => false,
+                'data'          => $this->sweepstakes ? $this->tagManager->getConcatenatedTagNames($this->sweepstakes) : null,
+            ))
+            ->add('metaDescription', 'text', array(
+                'label' => 'Meta description',
+                'help' => 'sweepstakes.admin.form.meta_description.help',
+            ))
+            ->add('questions', 'collection', array(
+                'type'         => new SweepstakesQuestionType(),
+                'allow_add'    => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'attr'         => array(
+                    'class' => 'sweepstakes_question',
+                ),
+            ))
+        ;
     }
 
     public function getName()

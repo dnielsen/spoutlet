@@ -323,3 +323,7 @@ table#avatar-approval {
 .birthday select {
     width: 70px;
 }
+
+#question-fields-list input[type="text"] {
+    width: 700px;
+}
