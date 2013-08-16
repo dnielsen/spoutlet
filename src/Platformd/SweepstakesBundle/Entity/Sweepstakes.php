@@ -150,8 +150,9 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
 
     public function __construct()
     {
-        $this->entries = new ArrayCollection();
-        $this->sites   = new ArrayCollection();
+        $this->entries   = new ArrayCollection();
+        $this->questions = new ArrayCollection();
+        $this->sites     = new ArrayCollection();
     }
 
     public function isCurrentlyOpen()
