@@ -1,10 +1,20 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
+{% form_theme entryForm 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme entryForm 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
 
-{% block stylesheets %}
-    {{ parent() }}
-
-    <link rel="stylesheet" href="{{ asset('bundles/giveaway/css/giveaway.css') }}">
+{% block meta_description %}
+    {% if sweepstakes.metaDescription %}
+        <meta name="description" content="{{ sweepstakes.metaDescription }}">
+    {% endif %}
 {% endblock %}
+
+{% if sweepstakes.backgroundImage is not null %}
+    {% set bgImage = media_path(sweepstakes.backgroundImage) %}
+{% else %}
+    {% set bgImage = "default" %}
+{% endif %}
+
+{% block page_background_image bgImage %}
 
 {% block title sweepstakes.name %}
 
@@ -22,25 +32,37 @@
             {{ sweepstakes.content | raw }}
         </div>
 
-        {% if features.hasComments %}
-            {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : sweepstakes.threadId, 'comments' : null, 'offset' : 0, 'permalink' : permalink } %}
+        <div id="sweepstakes-entry-links">
+            {% if is_granted("ROLE_USER") %}
+                {% if isEntered %}<div class="already-entered">{{ 'sweepstakes.entry.links.already_entered' | pd_trans }}</div>{% endif %}
+            {% else %}
+                <div class="not-entered">
+                    <a href="#" id="use-existing-account">{{ 'sweepstakes.entry.links.use_existing' | pd_trans }}</a> or <a href="#" id="create-new-account">{{ 'sweepstakes.entry.links.create_new' | pd_trans }}</a>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if is_granted("ROLE_USER") %}
+            {% if not isEntered %}
+                {% include 'SweepstakesBundle:Frontend:_loggedInForm.html.twig' with { 'sweepstakes': sweepstakes, 'entryForm': entryForm } %}
+            {% endif %}
+        {% else %}
+
+            <div id="register-to-enter">
+                {% include 'SweepstakesBundle:Frontend:_registerForm.html.twig' with { 'sweepstakes': sweepstakes, 'entryForm': entryForm } %}
+            </div>
+
         {% endif %}
+
 
     </div>
 
     <div id="sweeps-terms-modal-content" class="modal-content" style="display: none">
-        <h3>{{ 'official_sweepstakes_rules' | trans }}</h3>
+        <h3>{{ 'sweepstakes.entry.rules.title' | pd_trans }}</h3>
         {{ sweepstakes.officialRules | raw }}
     </div>
 
     <script type="text/javascript">
-        window.Sweeps = {
-            renderError: function(msg) {
-
-                $('#_sweeps_error').html(msg).show();
-            }
-        };
-
         jQuery(document).ready(function() {
             // make the terms content display in a modal
             $('.sweeps-terms-modal').click(function() {
@@ -51,16 +73,21 @@
                 return false;
             });
 
-            // on submit of the form, make sure that both of the checkboxes are checked
-            $('#sweeps-form-enter').submit(function() {
-                if (!$('#_sweepstakes_terms').is(':checked')) {
-                    Sweeps.renderError('{{ 'sweeps_check_both_boxes' | trans }}');
+            $('.not-entered #use-existing-account').click(function(e) {
+                e.preventDefault();
+                $('#header-login-link').click();
+            });
 
-                    return false;
-                }
-
-                return true;
+            $('.not-entered #create-new-account').click(function(e) {
+                e.preventDefault();
+                $(this).addClass('active');
+                $('#register-to-enter').slideDown();
             });
         });
     </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'SweepstakesBundle:Frontend:_css_assets.html.twig' %}
 {% endblock %}

@@ -1,0 +1,25 @@
+#sweepstakes-content {
+    margin: 0 0 50px 0;
+}
+
+#sweepstakes-entry-links {
+    font-size: 16px;
+    text-align: center;
+    margin: 0 0 20px 0;
+}
+
+#sweepstakes-entry-links .already-entered {
+    color: #e70000;
+}
+
+#sweepstakes-entry-links .not-entered a {
+    margin: 0 10px;
+}
+
+#sweepstakes-entry-links .not-entered a.active {
+    color: #FFF;
+}
+
+#register-to-enter {
+    display: none;
+}

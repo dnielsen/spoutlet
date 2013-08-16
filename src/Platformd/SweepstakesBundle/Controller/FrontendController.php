@@ -5,6 +5,7 @@ namespace Platformd\SweepstakesBundle\Controller;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 use Platformd\SweepstakesBundle\Entity\SweepstakesEntry;
+use Platformd\SweepstakesBundle\Entity\SweepstakesAnswer;
 use Platformd\SweepstakesBundle\Form\Type\SweepstakesEntryType;
 
 use Platformd\GroupBundle\Entity\GroupMembershipAction;
@@ -58,137 +59,79 @@ class FrontendController extends Controller
      * @param $slug
      * @return array
      */
-    public function showAction($slug, $entryId = null)
+    public function showAction($slug, $entryId = null, Request $request)
     {
         $sweepstakes   = $this->findSweepstakes($slug, false);
+        $user          = $this->getCurrentUser();
         $isGroupMember = null;
+
+        $canTest = $sweepstakes->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
+
+        if ((!$sweepstakes->getPublished() || !$sweepstakes->isCurrentlyOpen()) && !$canTest) {
+            throw $this->createNotFoundException();
+        }
 
         if (!$this->isGranted('ROLE_USER')) {
             $isEntered = false;
         } else {
-            $isEntered     = (bool) $this->getEntryRepo()->findOneBySweepstakesAndUser($sweepstakes, $this->getUser());
-            $isGroupMember = $sweepstakes->getGroup() ? $this->getGroupManager()->isMember($this->getCurrentUser(), $sweepstakes->getGroup()) : null;
+            $isEntered     = (bool) $this->getEntryRepo()->findOneBySweepstakesAndUser($sweepstakes, $user);
+            $isGroupMember = $sweepstakes->getGroup() ? $this->getGroupManager()->isMember($user, $sweepstakes->getGroup()) : null;
         }
 
         $entry = new SweepstakesEntry($sweepstakes);
-        $entryForm = $this->createForm(new SweepstakesEntryType(), $entry);
 
-        $permalink = $this->get('platformd.model.comment_manager')->checkThread($sweepstakes);
-
-        return array(
-            'sweepstakes'   => $sweepstakes,
-            'isEntered'     => $isEntered,
-            'isGroupMember' => $isGroupMember,
-            'permalink'     => $permalink,
-            'entryId'       => $entryId,
-            'entryForm'     => $entryForm->createView(),
-        );
-    }
-
-    /**
-     * The actual action to enter a sweepstakes
-     *
-     * @param string $slug
-     */
-    public function enterAction($slug, Request $request)
-    {
-        $this->enforceUserSecurity();
-        $sweepstakes = $this->findSweepstakes($slug, false);
-
-        // if we're not even published yet, definitely don't let them!
-        $canTest = $sweepstakes->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
-        if (!$sweepstakes->getPublished() && !$canTest) {
-            $this->setFlash('error', 'sweeps_not_open');
-
-            return $this->redirectToShow($sweepstakes);
+        foreach ($sweepstakes->getQuestions() as $question) {
+            $entry->addAnswer(new SweepstakesAnswer($question));
         }
 
-        // todo, check terms checkboxes
-        if (!$request->get('_terms')) {
-            $this->setFlash('error', 'sweeps_check_both_boxes');
+        $entryForm = $this->createForm(new SweepstakesEntryType($user), $entry);
 
-            return $this->redirectToShow($sweepstakes);
-        }
+        if($request->getMethod() == 'POST') {
 
-        // only let someone register once
-        $existing = $this->getEntryRepo()->findOneBySweepstakesAndUser($sweepstakes, $this->getUser());
-        if ($existing) {
-            $this->setFlash('error', 'already_entered_sweepstakes');
+            $this->enforceUserSecurity();
 
-            return $this->redirectToShow($sweepstakes);
-        }
+            $existing = $this->getEntryRepo()->findOneBySweepstakesAndUser($sweepstakes, $user);
+            if ($existing) {
+                $this->setFlash('error', 'already_entered_sweepstakes');
+                return $this->redirectToShow($sweepstakes);
+            }
 
-        // check that they pass the new style age-country restriction ruleset
-        $user = $this->getUser();
+            $entryForm->bindRequest($request);
 
-        if ($sweepstakes->getRuleset() && !$sweepstakes->getRuleset()->doesUserPassRules($user, $this->getCurrentCountry())) {
-            $this->setFlash('error', 'not_eligible_sweepstakes');
-            return $this->redirectToShow($sweepstakes);
-        }
+            if($entryForm->isValid()) {
 
-        // make sure that the sweepstakes is active right now
-        if (!$sweepstakes->isCurrentlyOpen()) {
-            $this->setFlash('error', 'sweeps_not_open');
+                $entry = $entryForm->getData();
 
-            return $this->redirectToShow($sweepstakes);
-        }
+                $entry->setUser($user);
+                $entry->setIpAddress($this->getIpLookupUtil()->getClientIp($request));
 
-        $joinGroup = $request->get('join_checkbox');
+                $em = $this->getDoctrine()->getEntityManager();
 
-        # if user has elected to join the group associated with this deal, we add them to the list of members
-        if($joinGroup && $this->getCurrentSite()->getSiteFeatures()->getHasGroups()) {
-            if($sweepstakes->getGroup()) {
-                $groupManager = $this->getGroupManager();
-                $group = $sweepstakes->getGroup();
+                $em->persist($entry);
+                $em->flush();
 
-                if ($groupManager->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinGroup')) {
-                    // TODO This should probably be refactored to use the global activity table
-                    $joinAction = new GroupMembershipAction();
-                    $joinAction->setGroup($group);
-                    $joinAction->setUser($user);
-                    $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
-
-                    $group->getMembers()->add($user);
-                    $group->getUserMembershipActions()->add($joinAction);
-
-                    // TODO Add a service layer for managing groups and dispatching such events
-                    /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
-                    $dispatcher = $this->get('event_dispatcher');
-                    $event = new GroupEvent($group, $user);
-                    $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
-
-                    $groupManager->saveGroup($group);
-
-                    if($group->getIsPublic()) {
-                        try {
-                            $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getCevoUserId());
-                        } catch (ApiException $e) {
-
-                        }
-                    }
+                if($this->getCurrentSite()->getSiteFeatures()->getHasGroups() && $sweepstakes->getGroup()) {
+                    $this->getGroupManager()->autoJoinGroup($sweepstakes->getGroup(), $user);
                 }
+
+                // arp - enteredsweepstakes
+                try {
+                    $response = $this->getCEVOApiManager()->GiveUserXp('enteredsweepstakes', $user->getCevoUserId());
+                } catch (ApiException $e) {
+
+                }
+
+                return $this->redirect($this->generateUrl('sweepstakes_show', array('slug' => $slug)));
             }
         }
 
-        $entry = $this->getSweepstakesRepo()->createNewEntry(
-            $sweepstakes,
-            $this->getUser(),
-            $this->getClientIp($request)
+        return array(
+            'sweepstakes'       => $sweepstakes,
+            'isEntered'         => $isEntered,
+            'isGroupMember'     => $isGroupMember,
+            'entryId'           => $entryId,
+            'entryForm'         => $entryForm->createView(),
         );
-        $this->getDoctrine()->getEntityManager()->persist($entry);
-        $this->getDoctrine()->getEntityManager()->flush();
-
-        // arp - enteredsweepstakes
-        try {
-            $response = $this->getCEVOApiManager()->GiveUserXp('enteredsweepstakes', $user->getCevoUserId());
-        } catch (ApiException $e) {
-
-        }
-
-        return $this->redirect($this->generateUrl(
-            'sweepstakes_show',
-            array('slug' => $sweepstakes->getSlug(), 'entryId' => $entry->getId())
-        ));
     }
 
     /**

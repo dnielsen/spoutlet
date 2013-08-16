@@ -1,0 +1,20 @@
+{% if sweepstakes.questions|length > 0 %}
+    <div id="sweepstakes-questions">
+        <form action="{{ path('sweepstakes_show', { 'slug': sweepstakes.slug }) }}" method="post" {{ form_enctype(entryForm) }} class="form form-horizontal">
+
+            {{ form_row(entryForm.phoneNumber) }}
+
+            {% for answer in entryForm.answers %}
+                {{ form_widget(answer) }}
+            {% endfor %}
+
+            {{ form_row(entryForm.termsAccepted) }}
+
+            {{ form_rest(entryForm) }}
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" formnovalidate>{{ "enter" | pd_trans }}</button>
+            </div>
+        </form>
+    </div>
+{% endif %}

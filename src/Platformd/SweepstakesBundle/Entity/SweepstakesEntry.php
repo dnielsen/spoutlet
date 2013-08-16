@@ -3,22 +3,36 @@
 namespace Platformd\SweepstakesBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 use Gedmo\Mapping\Annotation as Gedmo;
+
+use FOS\UserBundle\Model\UserInterface;
 
 /**
  * Platformd\SweepstakesBundle\Entity\SweepstakesEntry
  *
- * @ORM\Table(name="sweepstakes_entry")
+ * @ORM\Table(name="pd_sweepstakes_entry")
  * @ORM\Entity(repositoryClass="Platformd\SweepstakesBundle\Entity\SweepstakesEntryRepository")
+ *
+ * @UniqueEntity(fields={"user", "sweepstakes"}, message="sweepstakes.errors.entry_unique")
  */
 class SweepstakesEntry
 {
+    /**
+     * @Assert\True(message="sweepstakes.errors.agree_to_terms")
+     */
+    public $termsAccepted;
+
     /**
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
@@ -33,9 +47,15 @@ class SweepstakesEntry
     protected $sweepstakes;
 
     /**
-     * @ORM\Column(name="ipAddress", type="string", length=255)
+     * @ORM\Column(name="ip_address", type="string", length=40)
      */
-    private $ipAddress;
+    protected $ipAddress;
+
+    /**
+     * @ORM\Column(name="phone_number", type="string", length=50)
+     * @Assert\NotBlank()
+     */
+    protected $phoneNumber;
 
     /**
      * @Gedmo\Timestampable(on="create")
@@ -53,11 +73,12 @@ class SweepstakesEntry
      * @ORM\OneToMany(targetEntity="Platformd\SweepstakesBundle\Entity\SweepstakesAnswer", mappedBy="entry", cascade={"persist"})
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    private $answers;
+    protected $answers;
 
     public function __construct(Sweepstakes $sweepstakes)
     {
         $this->sweepstakes = $sweepstakes;
+        $this->answers     = new ArrayCollection();
     }
 
     public function getId()
@@ -73,6 +94,16 @@ class SweepstakesEntry
     public function getIpAddress()
     {
         return $this->ipAddress;
+    }
+
+    public function setPhoneNumber($value)
+    {
+        $this->phoneNumber = $value;
+    }
+
+    public function getPhoneNumber()
+    {
+        return $this->phoneNumber;
     }
 
     public function getUser()
@@ -123,5 +154,10 @@ class SweepstakesEntry
     public function setAnswers($value)
     {
         $this->answers = $value;
+    }
+
+    public function addAnswer($answer)
+    {
+        $this->answers->add($answer);
     }
 }

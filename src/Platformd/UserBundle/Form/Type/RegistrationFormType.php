@@ -86,7 +86,7 @@ class RegistrationFormType extends BaseType
                 'error_bubbling' => true,
             ))
             ->add('subscribedGamingNews')
-            ->add('termsAccepted', 'checkbox', array('required' => false, 'error_bubbling' => true));
+            ->add('termsAccepted', 'checkbox', array('required' => false, 'error_bubbling' => true)); //required = false as this is not persisted to the DB
 
         // if we have preferectures we use a choice
         if (sizeof((array)$this->prefectures) > 0) {

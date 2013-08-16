@@ -4,16 +4,32 @@ namespace Platformd\SweepstakesBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\Event\DataEvent;
+
+use Platformd\SweepstakesBundle\Entity\SweepstakesAnswer;
 
 class SweepstakesAnswerType extends AbstractType
 {
     public function buildForm(FormBuilder $builder, array $options)
     {
-        $question = $builder->getData()->getQuestion()->getContent();
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (DataEvent $event) use ($builder)
+        {
+            $form = $event->getForm();
+            $data = $event->getData();
 
-        $builder
-            ->add('content', 'text', array('label' => $question));
-        ;
+            /* Check we're looking at the right data/form */
+            if ($data instanceof SweepstakesAnswer)
+            {
+                $label = $data->getQuestion()->getContent();
+                $form->add($builder->getFormFactory()->createNamed(
+                    'text',
+                    'content',
+                    null,
+                    array('label' => $label)
+                ));
+            }
+        });
     }
 
     public function getName()

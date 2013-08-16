@@ -25,7 +25,7 @@ class SweepstakesAdminType extends AbstractType
         $builder
             ->add('name', 'text')
             ->add('slug', new SlugType(), array(
-                'url_prefix' => '/sweepstakes/'
+                'url_prefix' => '/contest-sweeps/'
             ))
             ->add('externalUrl', null, array(
                 'label' => 'External URL',

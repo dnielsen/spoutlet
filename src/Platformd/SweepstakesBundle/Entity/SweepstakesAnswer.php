@@ -3,6 +3,7 @@
 namespace Platformd\SweepstakesBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Platformd\SweepstakesBundle\Entity\SweepstakesAnswer
@@ -29,6 +30,11 @@ class SweepstakesAnswer
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $question;
+
+    public function __construct(SweepstakesQuestion $question)
+    {
+        $this->question = $question;
+    }
 
     public function getId()                { return $this->id; }
     public function getContent()           { return $this->content; }

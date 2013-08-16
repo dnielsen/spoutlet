@@ -1,0 +1,47 @@
+<form action="{{ path('sweepstakes_show', { 'slug': sweepstakes.slug }) }}" method="post" {{ form_enctype(entryForm) }} class="form form-horizontal">
+
+    {{ form_row(entryForm.registrationDetails.username) }}
+    {{ form_row(entryForm.registrationDetails.email) }}
+    {{ form_row(entryForm.registrationDetails.plainPassword, {'label': 'fos_user_registration_form_plainPassword' | pd_trans({}, 'FOSUserBundle')}) }}
+    {{ form_row(entryForm.registrationDetails.firstname, {'label': 'fos_user_registration_form_firstname' | pd_trans({}, 'FOSUserBundle')}) }}
+    {{ form_row(entryForm.registrationDetails.lastname, {'label': 'fos_user_registration_form_lastname' | pd_trans({}, 'FOSUserBundle')}) }}
+
+    <div class="control-group">
+        {{ form_label(entryForm.registrationDetails.birthdate, 'fos_user_registration_form_birthdate' | pd_trans({}, 'forms')) }}
+        <div class="controls">
+            {% include 'UserBundle:Registration:_register_dob.html.twig' with { 'form': entryForm.registrationDetails, 'birthdate_error': null, 'locale': site.defaultLocale} %}
+        </div>
+    </div>
+
+    {{ form_row(entryForm.registrationDetails.country) }}
+    {{ form_row(entryForm.registrationDetails.state) }}
+    {{ form_row(entryForm.registrationDetails.recaptcha) }}
+    {{ form_row(entryForm.registrationDetails.hasAlienwareSystem, {'label': 'fos_user_registration_form_hasAlienwareSystem' | pd_trans({}, 'forms')}) }}
+    {{ form_row(entryForm.registrationDetails.latestNewsSource, {'label': 'fos_user_registration_form_latestNewsSource' | pd_trans({}, 'FOSUserBundle')}) }}
+
+    {{ form_row(entryForm.phoneNumber) }}
+
+    {% if sweepstakes.questions|length > 0 %}
+        <div id="sweepstakes-questions">
+            {% for answer in entryForm.answers %}
+                {{ form_widget(answer) }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {{ form_row(entryForm.termsAccepted) }}
+
+    {{ form_row(entryForm.registrationDetails.termsAccepted, {'label': 'fos_user_registration_form_termsAccepted' | pd_trans({'%terms_url%': path('terms_conditions'),'%privacy_url%': path('privacy')}, 'forms')}) }}
+    {{ form_row(entryForm.registrationDetails.subscribedGamingNews, {'label': 'fos_user_registration_form_subscribedGamingNews' | pd_trans({}, 'forms')}) }}
+    {% if entryForm.registrationDetails.subscribedAlienwareEvents is defined %}
+        {{ form_row(entryForm.registrationDetails.subscribedAlienwareEvents, {'label': 'fos_user_registration_form_subscribedAlienwareEvents' | pd_trans({}, 'forms')}) }}
+    {% endif %}
+
+    {{ form_rest(entryForm.registrationDetails) }}
+    {{ form_rest(entryForm) }}
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary" formnovalidate>{{ "enter" | pd_trans }}</button>
+    </div>
+</form>
+
