@@ -88,9 +88,10 @@ class FrontendController extends Controller
 
         if($request->getMethod() == 'POST') {
 
-            $this->enforceUserSecurity();
+            // need to make this more smart - if no user and no registration details, then do something error-ey
+            //$this->enforceUserSecurity();
 
-            $existing = $this->getEntryRepo()->findOneBySweepstakesAndUser($sweepstakes, $user);
+            $existing = $user ? $this->getEntryRepo()->findOneBySweepstakesAndUser($sweepstakes, $user) : null;
             if ($existing) {
                 $this->setFlash('error', 'already_entered_sweepstakes');
                 return $this->redirectToShow($sweepstakes);
@@ -101,6 +102,11 @@ class FrontendController extends Controller
             if($entryForm->isValid()) {
 
                 $entry = $entryForm->getData();
+
+                if (!$user) {
+                    // user object from registration form section, get this to reg form handler somehow
+                    $user = $entryForm->get('registrationDetails')->getData();
+                }
 
                 $entry->setUser($user);
                 $entry->setIpAddress($this->getIpLookupUtil()->getClientIp($request));
