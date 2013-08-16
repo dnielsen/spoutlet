@@ -53,7 +53,7 @@ class SweepstakesEntry
 
     /**
      * @ORM\Column(name="phone_number", type="string", length=50)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="sweepstakes.errors.phone_blank")
      */
     protected $phoneNumber;
 

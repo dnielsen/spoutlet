@@ -20,7 +20,7 @@ class SweepstakesAnswer
     private $id;
 
     /**
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="sweepstakes.errors.answer_blank")
      * @ORM\Column(name="content", type="string", length=255)
      */
     protected $content;
