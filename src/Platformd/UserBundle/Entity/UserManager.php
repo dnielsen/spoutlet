@@ -209,8 +209,9 @@ class UserManager extends BaseUserManager
                 $qb->leftJoin('u.loginRecords', 'r');
             }
 
-            $where = $type == 'ip' ? 'u.ipAddress = :search OR r.ipAddress = :search' : 'u.username like :search OR u.email LIKE :search';
-            $search = $type == 'ip' ? $search : '%'.$search.'%';
+            # for now we are not allowing like searches but only exact matches which _should_ speed up search
+            $where = $type == 'ip' ? 'u.ipAddress = :search OR r.ipAddress = :search' : 'u.username = :search OR u.email = :search';
+            //$search = $type == 'ip' ? $search : '%'.$search.'%';
 
             $qb
                 ->andWhere($where)
