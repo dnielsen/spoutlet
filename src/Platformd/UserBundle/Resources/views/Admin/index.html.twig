@@ -32,10 +32,8 @@
             <tbody>
             {% for index, user in pager %}
                 <tr class="{{ index is odd ? "odd" : "even" }}">
-                    <td>{{ user.id }}</td>
-                    <td>
-                        <a href="{{ path('Platformd_UserBundle_admin_edit', {'id': user.id}) }}">{{ user.username }}</a>
-                    </td>
+                    <td><a href="{{ path('Platformd_UserBundle_admin_edit', {'id': user.id}) }}">{{ user.id }}</a></td>
+                    <td><a href="{{ path('Platformd_UserBundle_admin_edit', {'id': user.id}) }}">{{ user.username }}</a></td>
                     <td>{{ user.firstname }}</td>
                     <td>{{ user.lastname }}</td>
                     <td>{{ user.email }}</td>
