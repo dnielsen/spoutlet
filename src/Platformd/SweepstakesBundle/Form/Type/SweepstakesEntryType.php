@@ -5,20 +5,21 @@ namespace Platformd\SweepstakesBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\SecurityContext;
 
 class SweepstakesEntryType extends AbstractType
 {
-    protected $user;
+    protected $securityContext;
 
-    public function __construct(UserInterface $user=null)
+    public function __construct(SecurityContext $securityContext)
     {
-        $this->user = $user;
+        $this->securityContext = $securityContext;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
     {
-        if (null === $this->user) {
-            $builder->add('registrationDetails', 'platformd_user_registration', array(
+        if (!$this->securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $builder->add('registrationDetails', 'platformd_sweeps_registration', array(
                 'property_path' => false,
             ));
         }

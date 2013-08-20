@@ -1,20 +1,32 @@
-{% if sweepstakes.questions|length > 0 %}
-    <div id="sweepstakes-questions">
-        <form action="{{ path('sweepstakes_show', { 'slug': sweepstakes.slug }) }}" method="post" {{ form_enctype(entryForm) }} class="form form-horizontal">
-
-            {{ form_row(entryForm.phoneNumber) }}
-
+<div id="sweepstakes-wrapper">
+    <form action="{{ path('sweepstakes_show', { 'slug': sweepstakes.slug }) }}" method="post" {{ form_enctype(entryForm) }} class="form form-horizontal">
+        <table id="sweepstakes-tbl">
+            <tr class="sweepsform-row">
+                <td class="sweepsform-left">{{ form_label(entryForm.phoneNumber) }}</td>
+                <td class="sweepsform-right">{{ form_widget(entryForm.phoneNumber) }} {{ form_errors(entryForm.phoneNumber) }}</td>
+            </tr>
+            {% if sweepstakes.questions|length > 0 %}
             {% for answer in entryForm.answers %}
-                {{ form_widget(answer) }}
+                <tr class="sweepsform-row">
+                    <td class="sweepsform-left">{{ form_label(answer.content) }}</td>
+                    <td class="sweepsform-right answer">{{ form_widget(answer.content) }} {{ form_errors(answer.content) }}</td>
+                </tr>
             {% endfor %}
+            {% endif %}
+            <tr class="sweepsform-row">
+                <td class="sweepsform-left"></td>
+                <td class="sweepsform-right">
+                    {{ form_widget(entryForm.termsAccepted) }}
+                    {{ 'sweepstakes.entry.form.read_and_agreed_to_rules'|pd_trans({'%rules_url%': path('sweepstakes_rules', {'slug': sweepstakes.slug})})|raw }}
+                    {{ form_errors(entryForm.termsAccepted) }}
+                </td>
+            </tr>
+            <tr class="sweepsform-row">
+                <td class="sweepsform-left"></td>
+                <td class="sweepsform-right"><button type="submit" class="btn btn-primary" formnovalidate>{{ "enter" | pd_trans }}</button></td>
+            </tr>
+        </table>
 
-            {{ form_row(entryForm.termsAccepted) }}
-
-            {{ form_rest(entryForm) }}
-
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary" formnovalidate>{{ "enter" | pd_trans }}</button>
-            </div>
-        </form>
-    </div>
-{% endif %}
+        {{ form_rest(entryForm) }}
+    </form>
+</div>

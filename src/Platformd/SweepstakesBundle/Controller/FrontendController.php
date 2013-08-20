@@ -84,9 +84,13 @@ class FrontendController extends Controller
             $entry->addAnswer(new SweepstakesAnswer($question));
         }
 
-        $entryForm = $this->createForm(new SweepstakesEntryType($user), $entry);
+        $entryForm    = $this->createForm('platformd_sweeps_entry', $entry);
+        $formHandler  = $this->container->get('platformd_sweeps.entry.form.handler');
+        $formHandler->setForm($entryForm);
 
-        if($request->getMethod() == 'POST') {
+        $process = $formHandler->process(true);
+
+        if($process) {
 
             // need to make this more smart - if no user and no registration details, then do something error-ey
             //$this->enforceUserSecurity();
@@ -97,38 +101,8 @@ class FrontendController extends Controller
                 return $this->redirectToShow($sweepstakes);
             }
 
-            $entryForm->bindRequest($request);
+            return $this->redirect($this->generateUrl('sweepstakes_show', array('slug' => $slug)));
 
-            if($entryForm->isValid()) {
-
-                $entry = $entryForm->getData();
-
-                if (!$user) {
-                    // user object from registration form section, get this to reg form handler somehow
-                    $user = $entryForm->get('registrationDetails')->getData();
-                }
-
-                $entry->setUser($user);
-                $entry->setIpAddress($this->getIpLookupUtil()->getClientIp($request));
-
-                $em = $this->getDoctrine()->getEntityManager();
-
-                $em->persist($entry);
-                $em->flush();
-
-                if($this->getCurrentSite()->getSiteFeatures()->getHasGroups() && $sweepstakes->getGroup()) {
-                    $this->getGroupManager()->autoJoinGroup($sweepstakes->getGroup(), $user);
-                }
-
-                // arp - enteredsweepstakes
-                try {
-                    $response = $this->getCEVOApiManager()->GiveUserXp('enteredsweepstakes', $user->getCevoUserId());
-                } catch (ApiException $e) {
-
-                }
-
-                return $this->redirect($this->generateUrl('sweepstakes_show', array('slug' => $slug)));
-            }
         }
 
         return array(
@@ -137,7 +111,22 @@ class FrontendController extends Controller
             'isGroupMember'     => $isGroupMember,
             'entryId'           => $entryId,
             'entryForm'         => $entryForm->createView(),
+            'errors'            => $this->getEntryFormErrors($entryForm),
         );
+    }
+
+    public function rulesAction(Request $request, $slug)
+    {
+        $sweepstakes    = $this->findSweepstakes($slug, false);
+        $canTest        = $sweepstakes->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
+
+        if ((!$sweepstakes->getPublished() || !$sweepstakes->isCurrentlyOpen()) && !$canTest) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render('SweepstakesBundle:Frontend:rules.html.twig', array(
+            'sweepstakes' => $sweepstakes,
+        ));
     }
 
     /**
@@ -169,6 +158,31 @@ class FrontendController extends Controller
             'sweepstakes_show',
             array('slug' => $sweepstakes->getSlug())
         ));
+    }
+
+    private function getEntryFormErrors($form)
+    {
+        if ($form->isBound()) {
+            $errors = array();
+            foreach ($form->getErrors() as $error) {
+                $errors[] = $error;
+            }
+
+            if ($form->hasChildren()) {
+                foreach ($form->getChildren() as $child) {
+                    if (!$child->isValid()) {
+                        $childErrors = $this->getEntryFormErrors($child);
+                        foreach ($childErrors as $childError) {
+                            $errors[] = $childError;
+                        }
+                    }
+                }
+            }
+
+            return $errors;
+        }
+
+        return null;
     }
 
     /**

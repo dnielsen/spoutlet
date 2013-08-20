@@ -1,5 +1,4 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
-{% form_theme entryForm 'SpoutletBundle:Admin:normalLabel.html.twig' %}
 {% form_theme entryForm 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
 
 {% block meta_description %}
@@ -44,12 +43,12 @@
 
         {% if is_granted("ROLE_USER") %}
             {% if not isEntered %}
-                {% include 'SweepstakesBundle:Frontend:_loggedInForm.html.twig' with { 'sweepstakes': sweepstakes, 'entryForm': entryForm } %}
+                {% include 'SweepstakesBundle:Frontend:_loggedInForm.html.twig' with { 'sweepstakes': sweepstakes, 'entryForm': entryForm, 'errors': errors } %}
             {% endif %}
         {% else %}
 
             <div id="register-to-enter">
-                {% include 'SweepstakesBundle:Frontend:_registerForm.html.twig' with { 'sweepstakes': sweepstakes, 'entryForm': entryForm } %}
+                {% include 'SweepstakesBundle:Frontend:_registerForm.html.twig' with { 'sweepstakes': sweepstakes, 'entryForm': entryForm, 'errors': errors } %}
             </div>
 
         {% endif %}
