@@ -36,7 +36,7 @@
                 {% if isEntered %}<div class="already-entered">{{ 'sweepstakes.entry.links.already_entered' | pd_trans }}</div>{% endif %}
             {% else %}
                 <div class="not-entered">
-                    <a href="#" id="use-existing-account">{{ 'sweepstakes.entry.links.use_existing' | pd_trans }}</a> or <a href="#" id="create-new-account">{{ 'sweepstakes.entry.links.create_new' | pd_trans }}</a>
+                    <a href="#" id="use-existing-account">{{ 'sweepstakes.entry.links.use_existing' | pd_trans }}</a> {{ 'sweepstakes.entry.or'|pd_trans }} <a href="#" id="create-new-account">{{ 'sweepstakes.entry.links.create_new' | pd_trans }}</a>
                 </div>
             {% endif %}
         </div>
