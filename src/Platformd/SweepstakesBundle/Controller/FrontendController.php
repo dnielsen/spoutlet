@@ -72,14 +72,15 @@ class FrontendController extends Controller
             throw $this->createNotFoundException();
         }
 
+        $entry = new SweepstakesEntry($sweepstakes);
+
         if (!$this->isGranted('ROLE_USER')) {
             $isEntered = false;
         } else {
             $isEntered     = (bool) $this->getEntryRepo()->findOneBySweepstakesAndUser($sweepstakes, $user);
             $isGroupMember = $sweepstakes->getGroup() ? $this->getGroupManager()->isMember($user, $sweepstakes->getGroup()) : null;
+            $entry->setUser($user);
         }
-
-        $entry = new SweepstakesEntry($sweepstakes);
 
         foreach ($sweepstakes->getQuestions() as $question) {
             $entry->addAnswer(new SweepstakesAnswer($question, $entry));
