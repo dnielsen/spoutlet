@@ -15,6 +15,7 @@ imports:
     - { resource: "@VideoBundle/Resources/config/services.yml" }
     - { resource: "@SearchBundle/Resources/config/services.yml" }
     - { resource: "@TagBundle/Resources/config/services.yml" }
+    - { resource: "@SweepstakesBundle/Resources/config/services.yml" }
 
 framework:
     #esi:             ~

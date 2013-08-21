@@ -134,7 +134,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration", "IncompleteUser"}, message="first_name_not_blank")
+     * @Assert\NotBlank(groups={"Default", "Registration", "IncompleteUser"}, message="first_name_not_blank")
      * @Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser"})
      * @Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser"})
      */

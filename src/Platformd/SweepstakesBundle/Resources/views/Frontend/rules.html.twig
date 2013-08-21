@@ -1,0 +1,23 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block meta_description %}
+    {% if sweepstakes.metaDescription %}
+        <meta name="description" content="{{ sweepstakes.metaDescription }}">
+    {% endif %}
+{% endblock %}
+
+{% if sweepstakes.backgroundImage is not null %}
+    {% set bgImage = media_path(sweepstakes.backgroundImage) %}
+{% else %}
+    {% set bgImage = "default" %}
+{% endif %}
+
+{% block page_background_image bgImage %}
+
+{% block title sweepstakes.name %}
+
+{% block content %}
+<div class="std_1col">
+    <p>{{ sweepstakes.officialRules|raw }}</p>
+</div>
+{% endblock %}

@@ -1,47 +1,185 @@
+<div id="sweepstakes-wrapper">
 <form action="{{ path('sweepstakes_show', { 'slug': sweepstakes.slug }) }}" method="post" {{ form_enctype(entryForm) }} class="form form-horizontal">
-
-    {{ form_row(entryForm.registrationDetails.username) }}
-    {{ form_row(entryForm.registrationDetails.email) }}
-    {{ form_row(entryForm.registrationDetails.plainPassword, {'label': 'fos_user_registration_form_plainPassword' | pd_trans({}, 'FOSUserBundle')}) }}
-    {{ form_row(entryForm.registrationDetails.firstname, {'label': 'fos_user_registration_form_firstname' | pd_trans({}, 'FOSUserBundle')}) }}
-    {{ form_row(entryForm.registrationDetails.lastname, {'label': 'fos_user_registration_form_lastname' | pd_trans({}, 'FOSUserBundle')}) }}
-
-    <div class="control-group">
-        {{ form_label(entryForm.registrationDetails.birthdate, 'fos_user_registration_form_birthdate' | pd_trans({}, 'forms')) }}
-        <div class="controls">
-            {% include 'UserBundle:Registration:_register_dob.html.twig' with { 'form': entryForm.registrationDetails, 'birthdate_error': null, 'locale': site.defaultLocale} %}
-        </div>
-    </div>
-
-    {{ form_row(entryForm.registrationDetails.country) }}
-    {{ form_row(entryForm.registrationDetails.state) }}
-    {{ form_row(entryForm.registrationDetails.recaptcha) }}
-    {{ form_row(entryForm.registrationDetails.hasAlienwareSystem, {'label': 'fos_user_registration_form_hasAlienwareSystem' | pd_trans({}, 'forms')}) }}
-    {{ form_row(entryForm.registrationDetails.latestNewsSource, {'label': 'fos_user_registration_form_latestNewsSource' | pd_trans({}, 'FOSUserBundle')}) }}
-
-    {{ form_row(entryForm.phoneNumber) }}
-
-    {% if sweepstakes.questions|length > 0 %}
-        <div id="sweepstakes-questions">
-            {% for answer in entryForm.answers %}
-                {{ form_widget(answer) }}
-            {% endfor %}
-        </div>
-    {% endif %}
-
-    {{ form_row(entryForm.termsAccepted) }}
-
-    {{ form_row(entryForm.registrationDetails.termsAccepted, {'label': 'fos_user_registration_form_termsAccepted' | pd_trans({'%terms_url%': path('terms_conditions'),'%privacy_url%': path('privacy')}, 'forms')}) }}
-    {{ form_row(entryForm.registrationDetails.subscribedGamingNews, {'label': 'fos_user_registration_form_subscribedGamingNews' | pd_trans({}, 'forms')}) }}
-    {% if entryForm.registrationDetails.subscribedAlienwareEvents is defined %}
-        {{ form_row(entryForm.registrationDetails.subscribedAlienwareEvents, {'label': 'fos_user_registration_form_subscribedAlienwareEvents' | pd_trans({}, 'forms')}) }}
-    {% endif %}
+    {% include 'SweepstakesBundle:Frontend:_registerFormErrors.html.twig' with {'errors': errors} %}
+    <table id="sweepstakes-tbl">
+        <tr class="sweepsform-row">
+            <td class="sweepsform-left">
+                <label for="sweepstakes_entry_registrationDetails_username">
+                    <span class="required">*</span>
+                    {{ 'fos_user_registration_form_username'|pd_trans({}, 'FOSUserBundle') }}
+                </label>
+            </td>
+            <td class="sweepsform-right">
+                {{ form_widget(entryForm.registrationDetails.username) }}
+            </td>
+        </tr>
+        <tr class="sweepsform-row">
+            <td class="sweepsform-left">
+                 <label for="sweepstakes_entry_registrationDetails_username">
+                    <span class="required">*</span>
+                    {{ 'fos_user_registration_form_email_first'|pd_trans({}, 'FOSUserBundle') }}
+                </label>
+            </td>
+            <td class="sweepsform-right">
+                {{ form_widget(entryForm.registrationDetails.email) }}
+            </td>
+        </tr>
+        <tr class="sweepsform-row">
+            <td class="sweepsform-left">
+                <label for="sweepstakes_entry_registrationDetails_plainPassword">
+                    <span class="required">*</span>
+                    {{ 'fos_user_registration_form_plainPassword'|pd_trans({}, 'FOSUserBundle') }}
+                </label>
+            </td>
+            <td class="sweepsform-right">
+                {{ form_widget(entryForm.registrationDetails.plainPassword) }}
+            </td>
+        </tr>
+        <tr class="sweepsform-row">
+            <td class="sweepsform-left">
+                <label for="">
+                    <span class="required">*</span>
+                    {{ 'fos_user_registration_form_firstname'|pd_trans({}, 'FOSUserBundle') }}
+                </label>
+            </td>
+            <td class="sweepsform-right">
+                {{ form_widget(entryForm.registrationDetails.firstname) }}
+            </td>
+        </tr>
+        <tr class="sweepsform-row">
+            <td class="sweepsform-left">
+                <label for="">
+                    <span class="required">*</span>
+                    {{ 'fos_user_registration_form_lastname'|pd_trans({}, 'FOSUserBundle') }}
+                </label>
+            </td>
+            <td class="sweepsform-right">
+                {{ form_widget(entryForm.registrationDetails.lastname) }}
+            </td>
+        </tr>
+        <tr class="sweepsform-row">
+            <td class="sweepsform-left">
+                <label for="">
+                    <span class="required">*</span>
+                    {{ 'fos_user_registration_form_birthdate'|pd_trans({}, 'forms') }}
+                </label>
+            </td>
+            <td class="sweepsform-right">
+                {% include 'UserBundle:Registration:_register_dob.html.twig' with { 'form': entryForm.registrationDetails, 'birthdate_error': null, 'locale': site.defaultLocale} %}
+            </td>
+        </tr>
+        <tr class="sweepsform-row">
+            <td class="sweepsform-left">
+                <label for="">
+                    <span class="required">*</span>
+                    {{ 'fos_user_registration_form_country'|pd_trans({}, 'FOSUserBundle') }}
+                </label>
+            </td>
+            <td class="sweepsform-right">
+                {{ form_widget(entryForm.registrationDetails.country) }}
+            </td>
+        </tr>
+        <tr class="sweepsform-row">
+            <td class="sweepsform-left">
+                <label for="">
+                    <span class="required">*</span>
+                    {{ 'fos_user_registration_form_state'|pd_trans({}, 'FOSUserBundle')}}
+                </label>
+            </td>
+            <td class="sweepsform-right">
+                {{ form_widget(entryForm.registrationDetails.state) }}
+            </td>
+        </tr>
+        <tr id="sweepsform-system-row" class="sweepsform-row">
+            <td class="sweepsform-left">
+                <label for="">
+                    <span class="required">*</span>
+                    {{ 'fos_user_registration_form_hasAlienwareSystem'|pd_trans({}, 'forms') }}
+                </label>
+            </td>
+            <td class="sweepsform-right">
+                <div id="fos_user_registration_form_hasAlienwareSystem">
+                    {{ form_widget(entryForm.registrationDetails.hasAlienwareSystem) }}
+                </div>
+            </td>
+        </tr>
+        <tr class="sweepsform-row">
+            <td class="sweepsform-left">
+                {{ 'fos_user_registration_form_latestNewsSource'|pd_trans({}, 'FOSUserBundle') }}
+            </td>
+            <td class="sweepsform-right">
+                {{ form_widget(entryForm.registrationDetails.latestNewsSource) }}
+            </td>
+        </tr>
+        <tr class="sweepsform-row">
+            <td class="sweepsform-left">
+                {{ form_label(entryForm.phoneNumber) }}
+            </td>
+            <td class="sweepsform-right">
+                {{ form_widget(entryForm.phoneNumber) }}
+                {{ form_errors(entryForm.phoneNumber) }}
+            </td>
+        </tr>
+        {% if sweepstakes.questions|length > 0 %}
+        {% for answer in entryForm.answers %}
+            <tr class="sweepsform-row">
+                <td class="sweepsform-left">{{ form_label(answer.content) }}</td>
+                <td class="sweepsform-right answer">{{ form_widget(answer.content) }} {{ form_errors(answer.content) }}</td>
+            </tr>
+        {% endfor %}
+        {% endif %}
+        <tr class="sweepsform-row">
+            <td class="sweepsform-left">
+                <span class="required">*</span>
+            </td>
+            <td class="sweepsform-right">
+                {{ form_widget(entryForm.termsAccepted) }}
+                {{ 'sweepstakes.entry.form.read_and_agreed_to_rules'|pd_trans({'%rules_url%': path('sweepstakes_rules', {'slug': sweepstakes.slug})})|raw }}
+                {{ form_errors(entryForm.termsAccepted) }}
+            </td>
+        </tr>
+        <tr class="sweepsform-row">
+            <td class="sweepsform-left">
+                <span class="required">*</span>
+            </td>
+            <td class="sweepsform-right">
+                {{ form_widget(entryForm.registrationDetails.termsAccepted)}}
+                {{ 'fos_user_registration_form_termsAccepted'|pd_trans({'%terms_url%': path('terms_conditions'),'%privacy_url%': path('privacy')}, 'forms')|raw }}
+            </td>
+        </tr>
+        <tr class="sweepsform-row">
+            <td class="sweepsform-left">
+            </td>
+            <td class="sweepsform-right">
+                {{ form_widget(entryForm.registrationDetails.subscribedGamingNews) }}
+                {{ 'fos_user_registration_form_subscribedGamingNews'|pd_trans({}, 'forms')|raw }}
+            </td>
+        </tr>
+        {% if entryForm.registrationDetails.subscribedAlienwareEvents is defined %}
+        <tr class="sweepsform-row">
+            <td class="sweepsform-left">
+            </td>
+            <td class="sweepsform-right">
+                {{ form_widget(entryForm.registrationDetails.subscribedAlienwareEvents) }}
+                {{ 'fos_user_registration_form_subscribedAlienwareEvents'|pd_trans({}, 'forms')|raw }}
+            </td>
+        </tr>
+        {% endif %}
+        <tr class="sweepsform-row">
+            <td class="sweepsform-left"></td>
+            <td class="sweepsform-right"><button type="submit" class="btn btn-primary" formnovalidate>{{ "enter" | pd_trans }}</button></td>
+        </tr>
+    </table>
 
     {{ form_rest(entryForm.registrationDetails) }}
     {{ form_rest(entryForm) }}
 
-    <div class="form-actions">
-        <button type="submit" class="btn btn-primary" formnovalidate>{{ "enter" | pd_trans }}</button>
-    </div>
 </form>
-
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#sweepstakes_entry_registrationDetails_birthdate_year option:contains("--")').text('{{ 'year' | trans({}, 'forms') }}');
+        $('#sweepstakes_entry_registrationDetails_birthdate_month option:contains("--")').text('{{ 'month' | trans({}, 'forms') }}');
+        $('#sweepstakes_entry_registrationDetails_birthdate_day option:contains("--")').text('{{ 'day' | trans({}, 'forms') }}');
+    });
+</script>

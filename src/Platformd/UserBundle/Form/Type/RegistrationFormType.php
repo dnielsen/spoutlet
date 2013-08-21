@@ -32,6 +32,7 @@ class RegistrationFormType extends BaseType
     private $translator;
     private $ipLookupUtil;
     private $request;
+    private $includeRecaptcha;
 
     protected static $countries = array(
         'ja' => 'JP',
@@ -41,15 +42,16 @@ class RegistrationFormType extends BaseType
     /**
      * @param string $class The User class name
      */
-    public function __construct($class, array $sources = array(), Session $session, TranslatorInterface $translator, IpLookupUtil $ipLookupUtil, Request $request)
+    public function __construct($class, array $sources = array(), Session $session, TranslatorInterface $translator, IpLookupUtil $ipLookupUtil, Request $request, $includeRecaptcha)
     {
         parent::__construct($class);
 
-        $this->locale       = $session->getLocale();
-        $this->sources      = $sources;
-        $this->translator   = $translator;
-        $this->ipLookupUtil = $ipLookupUtil;
-        $this->request      = $request;
+        $this->locale           = $session->getLocale();
+        $this->sources          = $sources;
+        $this->translator       = $translator;
+        $this->ipLookupUtil     = $ipLookupUtil;
+        $this->request          = $request;
+        $this->includeRecaptcha = (bool)$includeRecaptcha;
     }
 
     public function setPrefectures(array $list)
@@ -112,25 +114,27 @@ class RegistrationFormType extends BaseType
 
         $builder->add('country', 'country', $countryOptions);
 
-        $builder->add('recaptcha', 'ewz_recaptcha', array(
-            'attr' => array('options' => array(
-                'theme' => 'white',
-                'custom_translations' => array(
-                    'instructions_visual'   => $this->translator->trans('recaptcha.instructions_visual'),
-                    'visual_challenge'      => $this->translator->trans('recaptcha.visual_challenge'),
-                    'audio_challenge'       => $this->translator->trans('recaptcha.audio_challenge'),
-                    'refresh_btn'           => $this->translator->trans('recaptcha.refresh_btn'),
-                    'instructions_context'  => $this->translator->trans('recaptcha.instructions_context'),
-                    'instructions_audio'    => $this->translator->trans('recaptcha.instructions_audio'),
-                    'help_btn'              => $this->translator->trans('recaptcha.help_btn'),
-                    'play_again'            => $this->translator->trans('recaptcha.play_again'),
-                    'cant_hear_this'        => $this->translator->trans('recaptcha.cant_hear_this'),
-                    'incorrect_try_again'   => $this->translator->trans('recaptcha.incorrect_try_again'),
-                    'image_alt_text'        => $this->translator->trans('recaptcha.image_alt_text'),
-                ),
-            )),
-            'property_path' => false,
-        ));
+        if ($this->includeRecaptcha) {
+            $builder->add('recaptcha', 'ewz_recaptcha', array(
+                'attr' => array('options' => array(
+                    'theme' => 'white',
+                    'custom_translations' => array(
+                        'instructions_visual'   => $this->translator->trans('recaptcha.instructions_visual'),
+                        'visual_challenge'      => $this->translator->trans('recaptcha.visual_challenge'),
+                        'audio_challenge'       => $this->translator->trans('recaptcha.audio_challenge'),
+                        'refresh_btn'           => $this->translator->trans('recaptcha.refresh_btn'),
+                        'instructions_context'  => $this->translator->trans('recaptcha.instructions_context'),
+                        'instructions_audio'    => $this->translator->trans('recaptcha.instructions_audio'),
+                        'help_btn'              => $this->translator->trans('recaptcha.help_btn'),
+                        'play_again'            => $this->translator->trans('recaptcha.play_again'),
+                        'cant_hear_this'        => $this->translator->trans('recaptcha.cant_hear_this'),
+                        'incorrect_try_again'   => $this->translator->trans('recaptcha.incorrect_try_again'),
+                        'image_alt_text'        => $this->translator->trans('recaptcha.image_alt_text'),
+                    ),
+                )),
+                'property_path' => false,
+            ));
+        }
 
         $countryCode = $this->ipLookupUtil->getCountryCode($this->request->getClientIp());
 

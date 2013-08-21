@@ -1,3 +1,7 @@
+sweepstakes_rules:
+    pattern: /contest-sweeps/{slug}/contestrules
+    defaults: { _controller: SweepstakesBundle:Frontend:rules, slug: null }
+
 _sweepstakes_flash_message:
     pattern: /esi/USER_SPECIFIC/sweepstakesFlashMessage/{slug}/{entryId}
     defaults: { _controller: SweepstakesBundle:Frontend:_sweepstakesFlashMessage, entryId: null }
@@ -13,3 +17,5 @@ sweepstakes_index:
 sweepstakes_show:
     pattern: /contest-sweeps/{slug}/{entryId}
     defaults: { _controller: SweepstakesBundle:Frontend:show, entryId: null }
+
+

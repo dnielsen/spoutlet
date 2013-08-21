@@ -3,7 +3,7 @@ sweepstakes: Sweepstakes
 sweepstakes.entry.rules.title: Official Contest Rules
 
 sweepstakes.entry.form.phone_number: Phone Number (used to contact the winner)
-sweepstakes.entry.form.read_and_agreed_to_rules: 'I have read and agree to the <a href="#" class="sweeps-terms-modal">Contest Rules</a>'
+sweepstakes.entry.form.read_and_agreed_to_rules: 'I have read and agree to the <a href="%rules_url%" target="_blank">Contest Rules</a>.'
 
 sweepstakes.entry.links.already_entered: You have been entered into the contest. Thanks for your participation and good luck!
 sweepstakes.entry.links.use_existing: Use Existing Account
