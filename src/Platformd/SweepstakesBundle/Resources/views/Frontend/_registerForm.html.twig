@@ -239,4 +239,33 @@
         $('#platformd_sweeps_entry_registrationDetails_birthdate_month option:contains("--")').text('{{ 'month' | trans({}, 'forms') }}');
         $('#platformd_sweeps_entry_registrationDetails_birthdate_day option:contains("--")').text('{{ 'day' | trans({}, 'forms') }}');
     });
+
+    updateStateChoices();
+
+    $('#row_address_country select').change(function() {
+        updateStateChoices();
+    });
+
+    function updateStateChoices() {
+
+        $('#row_address_state select').html('<option>...</option>');
+
+        $.ajax({
+            url: '{{ path('country_state_options') }}' + '/' + $('#row_address_country select option:selected').val(),
+            action: 'get',
+            success: function(data) {
+                $('#row_address_state select').html(data);
+            },
+            error: function() {
+                $('#row_address_state select').html('');
+                alert('An error occured while loading states choices.');
+            }
+        });
+    }
+</script>
+
+<script type="text/javascript">
+
+
+
 </script>
