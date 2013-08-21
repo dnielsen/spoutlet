@@ -82,6 +82,10 @@
                 $(this).addClass('active');
                 $('#register-to-enter').slideDown();
             });
+
+            {% if errors|length > 0 %}
+                $('.not-entered #create-new-account').trigger('click');
+            {% endif %}
         });
     </script>
 {% endblock %}

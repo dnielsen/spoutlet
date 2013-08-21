@@ -17,8 +17,9 @@ use Platformd\UserBundle\Exception\UserRegistrationTimeoutException;
 use Platformd\UserBundle\Exception\ApiRequestException;
 use Platformd\SpoutletBundle\Util\SiteUtil;
 use Platformd\CEVOBundle\Api\ApiManager as CevoApiManager;
-use Platformd\CEVOBundle\Api\ApiException;
+use Platformd\CEVOBundle\Api\ApiException as CevoApiException;
 use Platformd\GroupBundle\Model\GroupManager;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class SweepstakesEntryFormHandler
 {
@@ -123,11 +124,22 @@ class SweepstakesEntryFormHandler
             if ($this->form->isValid()) {
                 $entry          = $this->form->getData();
                 $sweepstakes    = $entry->getSweepstakes();
-                $user           = $this->form->get('registrationDetails')->getData();
+
+                # we don't have a user at all...
+                if (!$entry->getUser() && !$this->form->get('registrationDetails')->getData()) {
+                    throw new AccessDeniedException();
+                }
+
+                $user = $entry->getUser() ? $entry->getUser() : $this->form->get('registrationDetails')->getData();
+
+                $existing = $user ? $this->em->getRepository('SweepstakesBundle:SweepstakesEntry')->findOneBySweepstakesAndUser($sweepstakes, $user) : null;
+                if ($existing) {
+                    return false;
+                }
 
                 $entry->setUser($user);
 
-                $clientIp = $this->ipLookupUtil->getClientIp($request);
+                $clientIp = $this->ipLookupUtil->getClientIp($this->request);
                 $entry->setIpAddress($clientIp);
 
                 $countryCode = $this->ipLookupUtil->getCountryCode($clientIp);
@@ -144,9 +156,11 @@ class SweepstakesEntryFormHandler
                 // arp - enteredsweepstakes
                 try {
                     $arpResponse = $this->cevoApiManager->GiveUserXp('enteredsweepstakes', $user->getCevoUserId());
-                } catch (ApiException $e) {
+                } catch (CevoApiException $e) {
 
                 }
+
+                $this->setFlash('success', 'platformd.sweepstakes.entered.message');
 
                 return true;
             }
@@ -186,6 +200,11 @@ class SweepstakesEntryFormHandler
             ->execute();
 
         return $result ? false : true;
+    }
+
+    private function setFlash($key, $message)
+    {
+        $this->container->get('platformd.util.flash_util')->setFlash($key, $message);
     }
 
     private function getUserCountry()

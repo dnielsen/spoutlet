@@ -1,6 +1,54 @@
+
+{% set username_error = '' %}
+{% set email_error = '' %}
+{% set password_error = '' %}
+{% set firstname_error = '' %}
+{% set lastname_error = '' %}
+{% set state_error = '' %}
+{% set has_system_error = '' %}
+{% set news_source_error = '' %}
+{% set accept_error = '' %}
+{% set birthdate_error = '' %}
+{% set invalid_captcha = '' %}
+
+{% for error in errors %}
+    {% if error.messageTemplate == 'fos_user.username.blank' or error.messageTemplate == 'fos_user.username.already_used' or error.messageTemplate == 'fos_user.username.short' %}
+        {% set username_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'fos_user.email.blank' or error.messageTemplate == 'fos_user.email.already_used' or error.messageTemplate == 'fos_user.email.invalid' %}
+        {% set email_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'fos_user.password.blank' or error.messageTemplate == 'passwords_do_not_match' or error.messageTemplate == 'password_too_short' %}
+        {% set password_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'first_name_not_blank' %}
+        {% set firstname_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'last_name_not_blank' %}
+        {% set lastname_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'state_not_blank' %}
+        {% set state_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'has_system_not_blank' %}
+        {% set has_system_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'news_source_not_blank' %}
+        {% set news_source_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'You must accept the terms and conditions and the privacy policy' %}
+        {% set accept_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'birthdate_not_blank' or error.messageTemplate == 'age_requirement_not_met' %}
+        {% set birthdate_error = error.messageTemplate|trans(error.messageParameters, 'validators') | format(config.minAgeRequirement)  %}
+    {% endif %}
+    {% if error.messageTemplate == 'This value is not a valid captcha' %}
+        {% set invalid_captcha = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+{% endfor %}
+
 <div id="sweepstakes-wrapper">
 <form action="{{ path('sweepstakes_show', { 'slug': sweepstakes.slug }) }}" method="post" {{ form_enctype(entryForm) }} class="form form-horizontal">
-    {% include 'SweepstakesBundle:Frontend:_registerFormErrors.html.twig' with {'errors': errors} %}
     <table id="sweepstakes-tbl">
         <tr class="sweepsform-row">
             <td class="sweepsform-left">
@@ -11,6 +59,7 @@
             </td>
             <td class="sweepsform-right">
                 {{ form_widget(entryForm.registrationDetails.username) }}
+                <span class="field-error">{{ username_error }}</span>
             </td>
         </tr>
         <tr class="sweepsform-row">
@@ -22,6 +71,7 @@
             </td>
             <td class="sweepsform-right">
                 {{ form_widget(entryForm.registrationDetails.email) }}
+                <span class="field-error">{{ email_error }}</span>
             </td>
         </tr>
         <tr class="sweepsform-row">
@@ -33,6 +83,7 @@
             </td>
             <td class="sweepsform-right">
                 {{ form_widget(entryForm.registrationDetails.plainPassword) }}
+                <span class="field-error">{{ password_error }}</span>
             </td>
         </tr>
         <tr class="sweepsform-row">
@@ -44,6 +95,7 @@
             </td>
             <td class="sweepsform-right">
                 {{ form_widget(entryForm.registrationDetails.firstname) }}
+                <span class="field-error">{{ firstname_error }}</span>
             </td>
         </tr>
         <tr class="sweepsform-row">
@@ -55,6 +107,7 @@
             </td>
             <td class="sweepsform-right">
                 {{ form_widget(entryForm.registrationDetails.lastname) }}
+                <span class="field-error">{{ lastname_error }}</span>
             </td>
         </tr>
         <tr class="sweepsform-row">
@@ -65,7 +118,7 @@
                 </label>
             </td>
             <td class="sweepsform-right">
-                {% include 'UserBundle:Registration:_register_dob.html.twig' with { 'form': entryForm.registrationDetails, 'birthdate_error': null, 'locale': site.defaultLocale} %}
+                {% include 'UserBundle:Registration:_register_dob.html.twig' with { 'form': entryForm.registrationDetails, 'birthdate_error': birthdate_error, 'locale': site.defaultLocale} %}
             </td>
         </tr>
         <tr class="sweepsform-row">
@@ -88,6 +141,7 @@
             </td>
             <td class="sweepsform-right">
                 {{ form_widget(entryForm.registrationDetails.state) }}
+                <span class="field-error">{{ state_error }}</span>
             </td>
         </tr>
         <tr id="sweepsform-system-row" class="sweepsform-row">
@@ -101,6 +155,7 @@
                 <div id="fos_user_registration_form_hasAlienwareSystem">
                     {{ form_widget(entryForm.registrationDetails.hasAlienwareSystem) }}
                 </div>
+                <span class="field-error">{{ has_system_error }}</span>
             </td>
         </tr>
         <tr class="sweepsform-row">
@@ -109,6 +164,7 @@
             </td>
             <td class="sweepsform-right">
                 {{ form_widget(entryForm.registrationDetails.latestNewsSource) }}
+                <span class="field-error">{{ news_source_error }}</span>
             </td>
         </tr>
         <tr class="sweepsform-row">
@@ -145,6 +201,7 @@
             <td class="sweepsform-right">
                 {{ form_widget(entryForm.registrationDetails.termsAccepted)}}
                 {{ 'fos_user_registration_form_termsAccepted'|pd_trans({'%terms_url%': path('terms_conditions'),'%privacy_url%': path('privacy')}, 'forms')|raw }}
+                <span class="field-error">{{ accept_error }}</span>
             </td>
         </tr>
         <tr class="sweepsform-row">

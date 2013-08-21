@@ -94,12 +94,6 @@ class FrontendController extends Controller
 
         if($process) {
 
-            $existing = $user ? $this->getEntryRepo()->findOneBySweepstakesAndUser($sweepstakes, $user) : null;
-            if ($existing) {
-                $this->setFlash('error', 'already_entered_sweepstakes');
-                return $this->redirectToShow($sweepstakes);
-            }
-
             return $this->redirect($this->generateUrl('sweepstakes_show', array('slug' => $slug)));
         }
 

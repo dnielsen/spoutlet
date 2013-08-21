@@ -151,6 +151,15 @@ class RegistrationFormType extends BaseType
         );
     }
 
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        parent::setDefaultOptions($resolver);
+
+        $resolver->setDefaults(array(
+            'validation_groups' => array('Registration', 'IncompleteUser', 'Default'),
+        ));
+    }
+
     public function getName()
     {
 
