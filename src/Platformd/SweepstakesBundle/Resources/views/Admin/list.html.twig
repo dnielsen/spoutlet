@@ -1,18 +1,17 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
-{% block title %}{{ "sweepstakes" | trans }}{% endblock %}
+{% block title %}{{ "sweepstakes" | pd_trans }}{% endblock %}
 
 {% block content %}
 
-<h1>{{ "sweepstakes" | trans }}</h1>
-
+<h1>{{ "sweepstakes" | pd_trans }}</h1>
 
 <table class="table table-striped table-bordered tablesorter">
     <thead>
         <tr>
-            <th>{{ "sweepstakes" | trans }}</th>
-            <th>{{ "tenant_site" | trans({}, 'admin') }}</th>
-            <th>{{ 'url' | trans }}</th>
-            <th>{{ "platformd.help.actions" | trans }}</th>
+            <th>{{ "sweepstakes" | pd_trans }}</th>
+            <th>{{ "tenant_site" | pd_trans({}, 'admin') }}</th>
+            <th>{{ 'url' | pd_trans }}</th>
+            <th>{{ "platformd.help.actions" | pd_trans }}</th>
         </tr>
     </thead>
     <tbody>
@@ -29,18 +28,26 @@
                 <a href="{{ url('sweepstakes_show', {'slug': sweepstakes.slug, '_locale': site.defaultLocale }) }}">{{ url('sweepstakes_show', {'slug': sweepstakes.slug, '_locale': site.defaultLocale }) }}</a>
             </td>
             <td>
-                <a href="{{ path('admin_sweepstakes_edit', {"id" : sweepstakes.id}) }}">{{ "edit" | trans  }}</a>
-                {% if not sweepstakes.published %}
-                    <a href="{{ path('admin_sweepstakes_approve', { "id" : sweepstakes.id })  }}">{{ "approve" | trans }}</a>
-                {% else %}
-                    <a href="{{ path('admin_sweepstakes_unpublish', { "id" : sweepstakes.id }) }}">{{ "unpublish" | trans }}</a>
-                {% endif %}
+                <div class="btn-group">
+                    <a class="btn btn-primary btn-mini" href="{{ path('admin_sweepstakes_edit', {"id" : sweepstakes.id}) }}"><i class="icon-th-list icon-white"></i> {{ "edit" | pd_trans }}</a>
+                    <a class="btn btn-primary btn-mini dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ path('admin_sweepstakes_edit', {"id" : sweepstakes.id}) }}"><i class="icon-pencil"></i> {{ "edit" | pd_trans }}</a></li>
+                        <li>
+                            {% if not sweepstakes.published %}
+                                <a href="{{ path('admin_sweepstakes_approve', { "id" : sweepstakes.id })  }}"><i class="icon-pencil"></i> {{ "approve" | pd_trans }}</a>
+                            {% else %}
+                                <a href="{{ path('admin_sweepstakes_unpublish', { "id" : sweepstakes.id }) }}"><i class="icon-pencil"></i> {{ "Unpublish" | pd_trans }}</a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 
-<a class="btn btn-primary" href="{{ path('admin_sweepstakes_new') }}" style="margin-right:10px;">{{ "create" | trans }}</a>
+<a class="btn btn-primary" href="{{ path('admin_sweepstakes_new') }}" style="margin-right:10px;">{{ "create" | pd_trans }}</a>
 
 {% endblock %}

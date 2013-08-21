@@ -28,7 +28,7 @@ day: Day
 
 # some of these should really be in FOSUserBundle.en.yml with the rest of the labels
 # but for some reason, they're run through the forms domain...
-fos_user_registration_form_birthdate: "Date of Birth"
+fos_user_registration_form_birthdate: "Date of Birth:"
 fos_user_registration_form_hasAlienwareSystem: "Do you own an Alienware system?"
 fos_user_registration_form_termsAccepted: |
     I have read and agreed to the

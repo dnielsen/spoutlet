@@ -1,3 +1,7 @@
+sweepstakes_rules:
+    pattern: /contest-sweeps/{slug}/contestrules
+    defaults: { _controller: SweepstakesBundle:Frontend:rules, slug: null }
+
 _sweepstakes_flash_message:
     pattern: /esi/USER_SPECIFIC/sweepstakesFlashMessage/{slug}/{entryId}
     defaults: { _controller: SweepstakesBundle:Frontend:_sweepstakesFlashMessage, entryId: null }
@@ -7,13 +11,11 @@ _sweeps_admin:
     prefix:   "/admin/sweepstakes"
 
 sweepstakes_index:
-    pattern: /sweepstakes
+    pattern: /contest-sweeps
     defaults: { _controller: SweepstakesBundle:Frontend:index }
 
-sweepstakes_enter:
-    pattern: /sweepstakes/{slug}/enter
-    defaults: { _controller: SweepstakesBundle:Frontend:enter }
-
 sweepstakes_show:
-    pattern: /sweepstakes/{slug}/{entryId}
+    pattern: /contest-sweeps/{slug}/{entryId}
     defaults: { _controller: SweepstakesBundle:Frontend:show, entryId: null }
+
+

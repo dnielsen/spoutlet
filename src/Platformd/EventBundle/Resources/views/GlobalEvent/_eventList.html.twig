@@ -42,10 +42,10 @@
 
             </td>
             <td style="vertical-align:top" class="event-organizer">
-                {% if event.hostedBy is defined %}
+                {% if event.hostedBy|default(null) %}
                     {{ event.hostedBy }}
                 {% else %}
-                    {% if event.group is defined %}
+                    {% if event.group|default(null) and (event.taggableType == 'platformd_global_event' or event.taggableType == 'group_event') %}
                         <a href="{{ path('group_show', {'slug' : event.group.slug }) ~ '#events' }}">{{ event.group.name }}</a>
                     {% else %}
                         {{ 'na'|pd_trans }}
@@ -53,7 +53,7 @@
                 {% endif %}
             </td>
             <td style="vertical-align:top">
-                {% if event.online %}
+                {% if event.online|default(true) %}
                     {{ 'platformd.events.event_listings.online' | pd_trans }}
                 {% else %}
                     {% if event.fullAddress is not null %}

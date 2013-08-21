@@ -239,6 +239,26 @@ abstract class AbstractEvent implements LinkableInterface
      */
     protected $group = null;
 
+    /**
+     * A list of countries that *are* eligible for this sweeps
+     *
+     * @var array
+     * @ORM\Column(type="array")
+     */
+    protected $allowedCountries = array();
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $minimumAgeRequirement = 13;
+
+    /**
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $officialRules;
+
     public function __construct()
     {
         $this->sites = new ArrayCollection();
@@ -744,5 +764,53 @@ abstract class AbstractEvent implements LinkableInterface
     public function getGroup()
     {
         return $this->group;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllowedCountries()
+    {
+        return $this->allowedCountries;
+    }
+
+    /**
+     * @param array $allowedCountries
+     */
+    public function setAllowedCountries($allowedCountries)
+    {
+        $this->allowedCountries = $allowedCountries;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMinimumAgeRequirement()
+    {
+        return $this->minimumAgeRequirement;
+    }
+
+    /**
+     * @param int $minimumAgeRequirement
+     */
+    public function setMinimumAgeRequirement($minimumAgeRequirement)
+    {
+        $this->minimumAgeRequirement = $minimumAgeRequirement;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOfficialRules()
+    {
+        return $this->officialRules;
+    }
+
+    /**
+     * @param string $officialRules
+     */
+    public function setOfficialRules($officialRules)
+    {
+        $this->officialRules = $officialRules;
     }
 }

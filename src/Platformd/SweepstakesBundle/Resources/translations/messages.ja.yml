@@ -1,0 +1,20 @@
+sweepstakes: Sweepstakes
+
+sweepstakes.entry.rules.title: コンテストルール
+
+sweepstakes.entry.or: または
+
+sweepstakes.entry.form.phone_number: '*電話番号（当選者への連絡に使用します）'
+sweepstakes.entry.form.read_and_agreed_to_rules: '私は<a href="%rules_url%" target="_blank">コンテストルール</a>を読み、合意しました'
+
+sweepstakes.entry.links.already_entered: コンテストへの登録が完了しました。ご参加ありがとうございました。
+sweepstakes.entry.links.use_existing: 既存のアカウントを使用する
+sweepstakes.entry.links.create_new: 新規アカウントの作成
+
+sweepstakes.entry.error.invalid_country: There was a problem processing your entry. Please try again soon.
+
+sweepstakes.admin.form.meta_description.help: Enter a description for the sweepstakes. Keep your meta description under 150 characters to help ensure your description makes sense in search results.
+sweepstakes.admin.form.test_only.help: This allows admins to still test the operation of the sweepstakes IF it is unpublished
+sweepstakes.admin.form.background_image.help: "Recommended size: 2000 x 970 pixels"
+sweepstakes.admin.form.slug.help: (Optional) If filled in, this URL will override the destination of any links that would normally point to this Sweepstake page.
+sweepstakes.admin.form.tags.help: Enter keywords to help people discover the sweepstakes.

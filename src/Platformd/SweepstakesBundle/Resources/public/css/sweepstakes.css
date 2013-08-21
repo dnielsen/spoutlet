@@ -1,0 +1,86 @@
+#sweepstakes-content {
+    margin: 0 0 50px 0;
+}
+
+#sweepstakes-entry-links {
+    font-size: 16px;
+    text-align: center;
+    margin: 0 0 20px 0;
+}
+
+#sweepstakes-entry-links .already-entered {
+    color: #e70000;
+}
+
+#sweepstakes-entry-links .not-entered a {
+    margin: 0 10px;
+}
+
+#sweepstakes-entry-links .not-entered a.active {
+    color: #FFF;
+}
+
+#register-to-enter {
+    display: none;
+}
+
+#sweepstakes-wrapper {
+    padding: 5px;
+}
+
+#sweepstakes-wrapper #sweepstakes-tbl {
+    width: 100%;
+}
+
+#sweepstakes-wrapper #sweepstakes-tbl td {
+    vertical-align: top;
+    padding: 4px 4px;
+}
+
+#sweepstakes-wrapper #sweepstakes-tbl .sweepsform-row td {
+    width: 50%;
+    padding: 4px 4px;
+}
+
+#sweepstakes-wrapper #sweepstakes-tbl .sweepsform-row td label {
+    width: 100%;
+}
+
+#sweepstakes-wrapper #sweepstakes-tbl .sweepsform-row td input[type="checkbox"] {
+    margin: 0 3px 0 0;
+}
+
+.sweepsform-left {
+    text-align: right;
+}
+
+.sweepsform-right {
+    text-align: left;
+}
+
+.answer input[type="text"] {
+    width: 100%;
+}
+
+#sweepstakes-wrapper #sweepstakes-tbl .sweepsform-row #fos_user_registration_form_hasAlienwareSystem table tr td {
+    padding: 0;
+    width: auto;
+    vertical-align: top;
+}
+
+#sweepstakes-wrapper #sweepstakes-tbl #sweepsform-system-row .sweepsform-right {
+    padding: 0;
+}
+
+#sweepstakes-wrapper .help-inline {
+    color: #c62828;
+    font-weight: bold;
+    font-style: italic;
+    padding: 3px 0;
+}
+
+#sweepstakes-wrapper .field-error, .field-error-np {
+    color: #c62828;
+    font-weight: bold;
+    font-style: italic;
+}
