@@ -121,7 +121,7 @@
                 {% include 'UserBundle:Registration:_register_dob.html.twig' with { 'form': entryForm.registrationDetails, 'birthdate_error': birthdate_error, 'locale': site.defaultLocale} %}
             </td>
         </tr>
-        <tr class="sweepsform-row">
+        <tr id="row_address_country" class="sweepsform-row">
             <td class="sweepsform-left">
                 <label for="">
                     <span class="required">*</span>
@@ -132,7 +132,7 @@
                 {{ form_widget(entryForm.registrationDetails.country) }}
             </td>
         </tr>
-        <tr class="sweepsform-row">
+        <tr id="row_address_state" class="sweepsform-row">
             <td class="sweepsform-left">
                 <label for="">
                     <span class="required">*</span>
