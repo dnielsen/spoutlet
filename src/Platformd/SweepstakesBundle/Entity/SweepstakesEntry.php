@@ -52,6 +52,12 @@ class SweepstakesEntry
     protected $ipAddress;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Country", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true)
+     */
+    protected $country;
+
+    /**
      * @ORM\Column(name="phone_number", type="string", length=50)
      * @Assert\NotBlank(message="sweepstakes.errors.phone_blank")
      */
@@ -94,6 +100,16 @@ class SweepstakesEntry
     public function getIpAddress()
     {
         return $this->ipAddress;
+    }
+
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    public function setCountry($value)
+    {
+        $this->country = $value;
     }
 
     public function setPhoneNumber($value)

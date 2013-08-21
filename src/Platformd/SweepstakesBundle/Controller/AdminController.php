@@ -146,48 +146,75 @@ class AdminController extends Controller
      */
     public function metricsAction(Request $request)
     {
+        $this->addMetricsBreadcrumbs();
+
         $em = $this->getDoctrine()->getEntityManager();
         $site = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : null;
 
-        $sweepstakes = $site ? $this->getSweepstakesRepo()->findAllForSite($site) : $this->getSweepstakesRepo()->findAllWithoutLocaleOrderedByNewest();
+        $regionCounts = $this->getEntryRepo()->getRegionCounts($site);
+        $totalCounts  = $this->getEntryRepo()->getTotalEntryCounts($site);
 
-        $this->addMetricsBreadcrumbs();
+        $data                 = array();
+        $regionAssignedCounts = array();
+
+        foreach ($regionCounts as $regionCount) {
+            $data[$regionCount['sweepstakesId']]['name'] = $regionCount['sweepstakesName'];
+            $data[$regionCount['sweepstakesId']]['sites'][$regionCount['regionName']] = $regionCount['entryCount'];
+
+            if (isset($regionAssignedCounts[$regionCount['sweepstakesId']])) {
+                $regionAssignedCounts[$regionCount['sweepstakesId']] += $regionCount['entryCount'];
+            } else {
+                $regionAssignedCounts[$regionCount['sweepstakesId']] = $regionCount['entryCount'];
+            }
+        }
+
+        foreach ($totalCounts as $count) {
+            $data[$count['sweepstakesId']]['total'] = $count['entryCount'];
+        }
+
+        $sites = $this->container->get('platformd.metric_manager')->getSiteRegions();
 
         return array(
-            'sweeps' => $sweepstakes,
+            'metrics' => $data,
+            'sites'   => $sites,
+            'regionAssignedCounts' => $regionAssignedCounts,
         );
     }
 
     /**
      * @Template()
      */
-    public function showMetricsAction($id, Request $request)
+    public function getMetricsAction($id, $region, Request $request)
     {
         $sweepstakes = $this->getSweepstakesRepo()->find($id);
         if (!$sweepstakes) {
             throw $this->createNotFoundException('No sweeps for id '.$id);
         }
 
-        $entries = $this->getEntryRepo()->findAllOrderedByNewest($sweepstakes);
+        if ($region == 'all') {
+            $entries = $this->getEntryRepo()->findAllOrderedByNewest($sweepstakes);
+        } elseif ($region == 'global') {
+            $entries = $this->getEntryRepo()->findAllWithoutRegionOrderedByNewest($sweepstakes);
+        } else {
+            $regionId = $region;
+            $region   = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Region')->find($regionId);
 
-        // we support CSV!
-        if ($request->getRequestFormat() == 'csv') {
-            return $this->generateMetricsCsvResponse($entries, $sweepstakes->getSlug());
+            if (!$region) {
+                throw $this->createNotFoundException('No region for id '.$regionId);
+            }
+
+            $region = $region->getName();
+
+            $entries = $this->getEntryRepo()->findAllForRegionOrderedByNewest($sweepstakes, $regionId);
         }
 
-        $this->addMetricsBreadcrumbs();
-        $this->getBreadcrumbs()->addChild($sweepstakes->getName());
-
-        return array(
-            'sweep' => $sweepstakes,
-            'entries' => $entries,
-        );
+        return $this->generateMetricsCsvResponse($entries, $sweepstakes->getSlug(), $region);
     }
 
     /**
      * Downloads a CSV of the entries for a particular sweepstakes
      */
-    private function generateMetricsCsvResponse($entries, $sweepstakesSlug)
+    private function generateMetricsCsvResponse($entries, $sweepstakesSlug, $region)
     {
         // generate CSV content from the rows of data
         $factory = new CsvResponseFactory();
@@ -195,34 +222,50 @@ class AdminController extends Controller
         $factory->addRow(array(
             'Username',
             'Id',
-            'Email',
-            'Acct Created',
-            'Last Logged In',
             'First Name',
             'Last Name',
+            'Email',
             'Age',
+            'Region',
             'Country',
             'State/Province',
-            'Ip Address',
+            'Acct Created',
+            'Last Logged In',
+            'IP Address',
+            'Question 1',
+            'Question 2',
+            'Question 3',
+            'Question 4',
+            'Question 5',
         ));
 
         foreach ($entries as $entry) {
-            $factory->addRow(array(
-                $entry->getUser()->getUsername(),
-                $entry->getUser()->getId(),
-                $entry->getUser()->getEmail(),
-                $entry->getUser()->getCreated()->format('Y-m-d'),
-                ($entry->getUser()->getLastLogin()) ? $entry->getUser()->getLastLogin()->format('Y-m-d') : '',
-                $entry->getUser()->getFirstName(),
-                $entry->getUser()->getLastName(),
-                $entry->getUser()->getAge(),
-                $entry->getUser()->getCountry(),
-                $entry->getUser()->getState(),
-                $entry->getIpAddress(),
-            ));
+
+            $answers = array();
+
+            foreach ($entry[0]->getAnswers() as $answer) {
+                $answers[] = $answer->getContent();
+            }
+
+            $rowData = array_merge(array(
+                $entry[0]->getUser()->getUsername(),
+                $entry[0]->getUser()->getId(),
+                $entry[0]->getUser()->getFirstName(),
+                $entry[0]->getUser()->getLastName(),
+                $entry[0]->getUser()->getEmail(),
+                $entry[0]->getUser()->getAge(),
+                $entry['regionName'] ?: 'None',
+                $entry[0]->getCountry()->getName(),
+                $entry[0]->getUser()->getState(),
+                $entry[0]->getUser()->getCreated()->format('Y-m-d'),
+                ($entry[0]->getUser()->getLastLogin()) ? $entry[0]->getUser()->getLastLogin()->format('Y-m-d') : '',
+                $entry[0]->getIpAddress(),
+            ), $answers);
+
+            $factory->addRow($rowData);
         }
 
-        $filename = sprintf('%s-%s.csv', $sweepstakesSlug, date('Y-m-d'));
+        $filename = sprintf('%s-%s-%s.csv', $sweepstakesSlug, date('Y-m-d'), $region);
         return $factory->createResponse($filename);
 
     }
@@ -318,7 +361,7 @@ class AdminController extends Controller
     {
         return $this->getDoctrine()
             ->getEntityManager()
-            ->getRepository('SweepstakesBundle:Entry')
+            ->getRepository('SweepstakesBundle:SweepstakesEntry')
         ;
     }
 

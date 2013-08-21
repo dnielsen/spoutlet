@@ -64,6 +64,7 @@ class FrontendController extends Controller
         $sweepstakes   = $this->findSweepstakes($slug, false);
         $user          = $this->getCurrentUser();
         $isGroupMember = null;
+        $em            = $this->getDoctrine()->getEntityManager();
 
         $canTest = $sweepstakes->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
 
@@ -81,7 +82,7 @@ class FrontendController extends Controller
         $entry = new SweepstakesEntry($sweepstakes);
 
         foreach ($sweepstakes->getQuestions() as $question) {
-            $entry->addAnswer(new SweepstakesAnswer($question));
+            $entry->addAnswer(new SweepstakesAnswer($question, $entry));
         }
 
         $entryForm = $this->createForm(new SweepstakesEntryType($user), $entry);
@@ -109,9 +110,19 @@ class FrontendController extends Controller
                 }
 
                 $entry->setUser($user);
-                $entry->setIpAddress($this->getIpLookupUtil()->getClientIp($request));
 
-                $em = $this->getDoctrine()->getEntityManager();
+                $clientIp = $this->getIpLookupUtil()->getClientIp($request);
+                $entry->setIpAddress($clientIp);
+
+                $countryCode = $this->getIpLookupUtil()->getCountryCode($clientIp);
+                $country = $em->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
+
+                if (!$country) {
+                    $this->setFlash('error', 'sweepstakes.entry.error.invalid_country');
+                    return $this->redirectToShow($sweepstakes);
+                }
+
+                $entry->setCountry($country);
 
                 $em->persist($entry);
                 $em->flush();

@@ -27,8 +27,19 @@ class SweepstakesRepository extends EntityRepository
 
     public function findAllForSite($site)
     {
-        $qb = $this->getSiteQueryBuilder($site);
+        $qb = $this->getSiteQueryBuilder($site)
+            ->orderBy('ss.created', 'DESC');
+
         return $qb->getQuery()->getResult();
+    }
+
+    public function findAllOrderedByNewest()
+    {
+        return $this->createQueryBuilder('ss')
+            ->orderBy('ss.created', 'DESC')
+            ->getQuery()
+            ->execute()
+        ;
     }
 
     public function findOneBySlugForSite($slug, $site)

@@ -31,9 +31,16 @@ class SweepstakesAnswer
      */
     private $question;
 
-    public function __construct(SweepstakesQuestion $question)
+    /**
+     * @ORM\ManyToOne(targetEntity="Platformd\SweepstakesBundle\Entity\SweepstakesEntry", inversedBy="answers")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
+    protected $entry;
+
+    public function __construct(SweepstakesQuestion $question, SweepstakesEntry $entry)
     {
         $this->question = $question;
+        $this->entry    = $entry;
     }
 
     public function getId()                { return $this->id; }
@@ -41,4 +48,6 @@ class SweepstakesAnswer
     public function setContent($value)     { $this->content = $value; }
     public function getQuestion()          { return $this->question; }
     public function setQuestion($value)    { $this->question = $value; }
+    public function getEntry()             { return $this->entry; }
+    public function setEntry($value)       { $this->entry = $value; }
 }

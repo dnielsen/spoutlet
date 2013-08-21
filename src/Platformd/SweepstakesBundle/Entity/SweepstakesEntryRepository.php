@@ -31,11 +31,6 @@ class SweepstakesEntryRepository extends EntityRepository
         return $res;
     }
 
-    /**
-     * @param $id
-     * @param \Platformd\UserBundle\Entity\User $user
-     * @return \Platformd\SweepstakesBundle\Entity\Entry
-     */
     public function findOneByIdAndUser($id, User $user)
     {
         return $this
@@ -50,17 +45,89 @@ class SweepstakesEntryRepository extends EntityRepository
             ->getOneOrNullResult();
     }
 
-    /**
-     * @return mixed
-     */
     public function findAllOrderedByNewest(Sweepstakes $sweepstakes)
     {
         return $this->createQueryBuilder('e')
+            ->addSelect('r.name regionName')
+            ->leftJoin('e.sweepstakes','ss')
+            ->leftJoin('e.country', 'c')
+            ->leftJoin('c.regions', 'r')
             ->orderBy('e.created', 'DESC')
-            ->where('e.sweepstakes = :sweepstakes')
+            ->andWhere('e.sweepstakes = :sweepstakes')
             ->setParameter('sweepstakes', $sweepstakes)
             ->getQuery()
             ->execute()
         ;
+    }
+
+    public function findAllForRegionOrderedByNewest(Sweepstakes $sweepstakes, $regionId)
+    {
+        return $this->createQueryBuilder('e')
+            ->addSelect('r.name regionName')
+            ->leftJoin('e.sweepstakes','ss')
+            ->leftJoin('e.country', 'c')
+            ->leftJoin('c.regions', 'r')
+            ->andWhere('r.id = :regionId')
+            ->andWhere('e.sweepstakes = :sweepstakes')
+            ->orderBy('e.created', 'DESC')
+            ->setParameter('sweepstakes', $sweepstakes)
+            ->setParameter('regionId', $regionId)
+            ->getQuery()
+            ->execute()
+        ;
+    }
+
+    public function findAllWithoutRegionOrderedByNewest(Sweepstakes $sweepstakes)
+    {
+        return $this->createQueryBuilder('e')
+            ->addSelect('r.name regionName')
+            ->leftJoin('e.sweepstakes','ss')
+            ->leftJoin('e.country', 'c')
+            ->leftJoin('c.regions', 'r')
+            ->orderBy('e.created', 'DESC')
+            ->andWhere('e.sweepstakes = :sweepstakes')
+            ->andWhere('r.id IS NULL')
+            ->setParameter('sweepstakes', $sweepstakes)
+            ->getQuery()
+            ->execute()
+        ;
+    }
+
+    public function getTotalEntryCounts($site = null)
+    {
+        $qb  = $this->createQueryBuilder('e')
+            ->select('COUNT(e.id) AS entryCount', 'ss.id AS sweepstakesId')
+            ->leftJoin('e.sweepstakes','ss')
+            ->addGroupBy('ss.id');
+
+        if ($site) {
+            $qb->leftJoin('ss.sites', 's')
+                ->andWhere('s = :site')
+                ->setParameter('site', $site);
+        }
+
+        return $qb->getQuery()
+            ->getResult();
+    }
+
+    public function getRegionCounts($site = null)
+    {
+        $qb  = $this->createQueryBuilder('e')
+            ->select('COUNT(e.id) AS entryCount', 'ss.id AS sweepstakesId', 'ss.name AS sweepstakesName', 'r.name AS regionName')
+            ->leftJoin('e.sweepstakes','ss')
+            ->leftJoin('e.country', 'c')
+            ->leftJoin('c.regions', 'r')
+            ->andWhere('r.site IS NOT NULL')
+            ->addGroupBy('r.name')
+            ->addGroupBy('ss.name');
+
+        if ($site) {
+            $qb->leftJoin('ss.sites', 's')
+                ->andWhere('s = :site')
+                ->setParameter('site', $site);
+        }
+
+        return $qb->getQuery()
+            ->getResult();
     }
 }

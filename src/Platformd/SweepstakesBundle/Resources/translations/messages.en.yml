@@ -9,6 +9,8 @@ sweepstakes.entry.links.already_entered: You have been entered into the contest.
 sweepstakes.entry.links.use_existing: Use Existing Account
 sweepstakes.entry.links.create_new: Create a New Account
 
+sweepstakes.entry.error.invalid_country: There was a problem processing your entry. Please try again soon.
+
 sweepstakes.admin.form.meta_description.help: Enter a description for the sweepstakes. Keep your meta description under 150 characters to help ensure your description makes sense in search results.
 sweepstakes.admin.form.test_only.help: This allows admins to still test the operation of the sweepstakes IF it is unpublished
 sweepstakes.admin.form.background_image.help: "Recommended size: 2000 x 970 pixels"
