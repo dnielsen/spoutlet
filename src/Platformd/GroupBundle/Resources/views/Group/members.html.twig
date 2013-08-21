@@ -48,7 +48,7 @@
                     <tr class="eventListGroup_lan">
                         {% if canRemove %}
                         <td>
-                            <a href="javascript:void(0);" class="remove-member" data-path="{{ path('group_remove_member', { 'id': group.id, 'uid' : member['id'] }) }}">Remove from Group</a>
+                            <a href="javascript:void(0);" class="remove-member" data-path="{{ path('group_remove_member', { 'slug': group.slug, 'uid' : member['id'] }) }}">Remove from Group</a>
                         </td>
                         {% endif %}
                         <td>
@@ -77,7 +77,7 @@
                         'previous_message': '',
                         'next_message': '',
                         'routeName': 'group_members',
-                        'routeParams': { 'id': group.id }
+                        'routeParams': { 'slug': group.slug }
                     }) }}
                 </div>
                 <div class="clear"></div>

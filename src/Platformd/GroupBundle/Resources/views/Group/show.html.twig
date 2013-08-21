@@ -52,7 +52,7 @@
                 <!-- is allowed JoinGroup -->
                 <div data-group-can-join="true" data-group-applicant="false">
                     <div class="join-group-options">
-                        <form action="{{ path('group_join', { 'id': group.id }) }}">
+                        <form action="{{ path('group_join', { 'slug': group.slug }) }}">
                             <button id="join-group-button" type="submit"></button>
                         </form>
                     </div>
@@ -61,7 +61,7 @@
                 <!-- is allowed ApplyToGroup -->
                 <div data-group-can-join="true" data-group-applicant="false">
                     <div class="join-group-options">
-                        <a href="{{ path('group_apply', { 'id': group.id }) }}" id="join-group-button" style="width:230px;height:62px;display:block;margin-bottom:18px">&nbsp;</a></li>
+                        <a href="{{ path('group_apply', { 'slug': group.slug }) }}" id="join-group-button" style="width:230px;height:62px;display:block;margin-bottom:18px">&nbsp;</a></li>
                     </div>
                 </div>
             {% endif %}
@@ -96,7 +96,7 @@
                         </tr>
                         <tr>
                             <td>{{ 'platformd.groups.show.members' | pd_trans }}</td>
-                            <td><a href="{{ path('group_members', { 'id': group.id }) }}">{{ memberCount }}</a></td>
+                            <td><a href="{{ path('group_members', { 'slug': group.slug }) }}">{{ memberCount }}</a></td>
                         </tr>
 
                     {% if features.hasEvents %}
@@ -300,7 +300,7 @@
             var loadVideoContent = function(id) {
                 var content = $('.featured-content-category#group-content');
 
-                content.load('{{ path('group_videos', { 'id' : group.id }) }}', function(response, status, xhr){
+                content.load('{{ path('group_videos', { 'slug' : group.slug }) }}', function(response, status, xhr){
                     $("#scrollable-videos").scrollable();
                     $('.youtube-link').truncate();
                     $('#group-widget-content').unblock();
@@ -309,7 +309,7 @@
 
             var loadNewsContent = function(id) {
                 var content = $('.featured-content-category#group-content');
-                content.load('{{ path('group_news', { 'id' : group.id }) }}', function(response, status, xhr) {
+                content.load('{{ path('group_news', { 'slug' : group.slug }) }}', function(response, status, xhr) {
                     $('#group-widget-content').unblock();
                 });
             }
@@ -317,7 +317,7 @@
             var loadImageContent = function(id) {
                 var content = $('.featured-content-category#group-content');
 
-                content.load('{{ path('group_images', { 'id' : group.id }) }}', function(response, status, xhr) {
+                content.load('{{ path('group_images', { 'slug' : group.slug }) }}', function(response, status, xhr) {
                     $("#scrollable-images").scrollable();
                     $('.group-image-title').truncate();
                     $('#group-widget-content').unblock();
@@ -327,7 +327,7 @@
             var loadDiscussionContent = function(id) {
                 var content = $('.featured-content-category#group-content');
 
-                content.load('{{ path('group_discussions', { 'id' : group.id }) }}', function(response, status, xhr) {
+                content.load('{{ path('group_discussions', { 'slug' : group.slug }) }}', function(response, status, xhr) {
                     $('#group-widget-content').unblock();
                 });
             }
@@ -335,7 +335,7 @@
             var loadAboutContent = function(id) {
                 var content = $('.featured-content-category#group-content');
 
-                content.load('{{ path('group_about', { 'id' : group.id }) }}', function(response, status, xhr) {
+                content.load('{{ path('group_about', { 'slug' : group.slug }) }}', function(response, status, xhr) {
                     $('.featured-content-category#group-content').mCustomScrollbar();
                     $('#group-widget-content').unblock();
                 });
@@ -345,7 +345,7 @@
             var loadEventContent = function(id) {
                 var content = $('.featured-content-category#group-content');
 
-                content.load('{{ path('group_events', { 'id' : group.id }) }}', function(response, status, xhr) {
+                content.load('{{ path('group_events', { 'slug' : group.slug }) }}', function(response, status, xhr) {
                     $('#event-content-scroll').mCustomScrollbar();
                     $('#group-widget-content').unblock();
                 });

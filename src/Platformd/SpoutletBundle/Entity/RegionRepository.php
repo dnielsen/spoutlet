@@ -21,7 +21,7 @@ class RegionRepository extends EntityRepository
         $result = $qb->getQuery()
             ->getOneOrNullResult();
 
-        return $result->getSite();
+        return $result ? $result->getSite() : null;
     }
 
     public function findRegionNamesForCountry($country)
