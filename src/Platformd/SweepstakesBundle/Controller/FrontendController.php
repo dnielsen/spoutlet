@@ -93,9 +93,6 @@ class FrontendController extends Controller
 
         if($process) {
 
-            // need to make this more smart - if no user and no registration details, then do something error-ey
-            //$this->enforceUserSecurity();
-
             $existing = $user ? $this->getEntryRepo()->findOneBySweepstakesAndUser($sweepstakes, $user) : null;
             if ($existing) {
                 $this->setFlash('error', 'already_entered_sweepstakes');

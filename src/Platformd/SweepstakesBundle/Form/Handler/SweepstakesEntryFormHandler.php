@@ -100,8 +100,8 @@ class SweepstakesEntryFormHandler
                     $this->onSuccess($user, $confirmation);
 
                     $this->apiManager->updateRemoteUserData(array(
-                        'uuid' => $user->getUuid(),
-                        'created' => $user->getCreated()->format('Y-m-d H:i:s'),
+                        'uuid'         => $user->getUuid(),
+                        'created'      => $user->getCreated()->format('Y-m-d H:i:s'),
                         'last_updated' => $user->getUpdated()->format('Y-m-d H:i:s'),
                     ));
 
