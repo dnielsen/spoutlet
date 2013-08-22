@@ -288,8 +288,6 @@ class DefaultController extends Controller
             return new Response();
         }
 
-        $countryCode = $countryCode == 'GB' ? 'UK' : $countryCode;
-
         $country = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
 
         if (!$country) {
