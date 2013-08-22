@@ -131,14 +131,14 @@ class GalleryAdminController extends Controller
     }
 
     public function findAction(Request $request) {
+        set_time_limit(0); // this page has a tendency to timeout because the search params are always returning large data sets
         $this->addFindImagesBreadcrumb();
 
-        $form = $this->createForm(new ImageFindType());
-        $results = $this->processFindForm($form, $request);
-
-        $em      = $this->getDoctrine()->getEntityManager();
-        $upVotes = array();
-        $likes = array();
+        $form       = $this->createForm(new ImageFindType());
+        $results    = $this->processFindForm($form, $request);
+        $em         = $this->getDoctrine()->getEntityManager();
+        $upVotes    = array();
+        $likes      = array();
 
         if($results) {
 
@@ -146,10 +146,10 @@ class GalleryAdminController extends Controller
 
             foreach ($results as $media) {
                 $idArray[] = $media->getId();
-                $likes[$media->getId()] = $this->getEntryLikeCount($media);
+                //$likes[$media->getId()] = $this->getEntryLikeCount($media); # removed for now so that the find action won't hang the page due to curl request in getting fb likes.
             }
 
-            $upVotes   = $em->getRepository('SpoutletBundle:Vote')->findUpVotesInArray($idArray);
+            $upVotes = $em->getRepository('SpoutletBundle:Vote')->findUpVotesInArray($idArray);
         }
 
         $this->bindFormValues($form);
@@ -157,7 +157,6 @@ class GalleryAdminController extends Controller
         return $this->render('SpoutletBundle:GalleryAdmin:find.html.twig', array(
             'results'   => $results,
             'upVotes'   => $upVotes,
-            'likes'     => $likes,
             'form'      => $form->createView()
         ));
     }
@@ -174,7 +173,7 @@ class GalleryAdminController extends Controller
                 $data = $form->getData();
 
                 if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-                    $data['sites'] = array('ja');
+                    $data['sites'] = array(2); #japanhax! so japan cannot see other site data. or something. anyway, japan's site id is 2
                     $form->setData($data);
                 }
 
@@ -237,11 +236,10 @@ class GalleryAdminController extends Controller
 
     public function exportMetricsAction()
     {
-        $factory = new CsvResponseFactory();
-        $galleryMediaRepo = $this->getDoctrine()->getRepository('SpoutletBundle:GalleryMedia');
-
-        $session = $this->getRequest()->getSession();
-        $formValues = $session->get('formValuesGallery');
+        $factory            = new CsvResponseFactory();
+        $galleryMediaRepo   = $this->getDoctrine()->getRepository('SpoutletBundle:GalleryMedia');
+        $session            = $this->getRequest()->getSession();
+        $formValues         = $session->get('formValuesGallery');
 
         $factory->addRow(array(
             'Title',
@@ -253,18 +251,17 @@ class GalleryAdminController extends Controller
             'Country',
             'Likes',
             'Dislikes',
-            'FB Likes',
         ));
 
-        $results = $galleryMediaRepo->findImagesForMetrics($formValues['title'], $formValues['deleted'], $formValues['published'], $formValues['sites'], $formValues['startDate'], $formValues['endDate']);
+        $results = $galleryMediaRepo->findImagesForMetrics($formValues['title'], $formValues['deleted'], $formValues['published'], $formValues['sites'], $formValues['startDate'], $formValues['endDate'], true);
 
         if($results) {
 
             foreach ($results as $media) {
 
                 $status     = $media->getPublished() ? 'Published' : 'Unpublished';
-                $likes      = $this->getEntryLikeCount($media);
-                $totalVotes =  $media->getVotes()->count();
+                //$likes      = $this->getEntryLikeCount($media); #removed for now since it is very inefficient to make the curl request for each media found.
+                $totalVotes = $media->getVotes()->count();
 
                 if ($totalVotes) {
                     $upCount = $media->getVotes()
@@ -290,7 +287,6 @@ class GalleryAdminController extends Controller
                     $media->getAuthor()->getCountry(),
                     $upVotes.'%',
                     $downVotes.'%',
-                    $likes,
                 ));
             }
         }

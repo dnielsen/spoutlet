@@ -27,7 +27,6 @@
                     <th>Upload Date</th>
                     <th>Country</th>
                     <th>Likes</th>
-                    <th>FB Likes</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -42,7 +41,6 @@
                         <td>{{ image.createdAt | date('m/d/Y') }}</td>
                         <td>{{ image.author.country }}</td>
                         <td>{% if image.id in upVotes|keys %}{{ upVotes[image.id] }}{% else %}0{% endif %}</td>
-                        <td>{{ likes[image.id] }}</td>
                         <td>
                             {% if image.deleted != true  %}
                             <a href="{{ path('admin_delete_media', { id : image.id }) }}">Remove from site</a>
