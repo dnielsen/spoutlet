@@ -46,7 +46,7 @@ Feature: Deal Pool
             And I go to "/admin/deal/list/1"
             And I click on "Manage pools"
             And I click on "Create New Pool"
-            And I attach the file "dev/sample-keys/uk_only_sample_keys.csv" to "Keysfile"
+            And I attach the file "dev/sample-keys/gb_only_sample_keys.csv" to "Keysfile"
             And I check "Isactive"
             And I select "United Kingdom" from "Eligible Countries"
             And I press "Save Pool"
@@ -62,7 +62,7 @@ Feature: Deal Pool
             And I go to "/admin/deal/list/1"
             And I click on "Manage pools"
             And I click on "Create New Pool"
-            And I attach the file "dev/sample-keys/uk_only_sample_keys_2.csv" to "Keysfile"
+            And I attach the file "dev/sample-keys/gb_only_sample_keys_2.csv" to "Keysfile"
             And I check "Isactive"
             And I select "United Kingdom" from "Eligible Countries"
             And I press "Save Pool"
@@ -78,7 +78,7 @@ Feature: Deal Pool
 
     Scenario: I should be told that there are no more keys if I join the queue and the keys run out before I get one - but I should only see the message once
         Given I am authenticated as a user
-            And I am located in "UK"
+            And I am located in "GB"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
             And I should see "You're in the queue"
@@ -89,15 +89,15 @@ Feature: Deal Pool
             And I go to "/deal/diablo-3-bonus"
             And I should not see "no longer any keys available"
 
-    Scenario: I am a user from the UK I should get a valid UK key
+    Scenario: I am a user from the GB I should get a valid GB key
         Given I am authenticated as a user
-            And I am located in "UK"
+            And I am located in "GB"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
             And I should see "You're in the queue"
         When The Key Queue Processor is run
             And I go to "/deal/diablo-3-bonus"
-        Then I should see "UK_only_1"
+        Then I should see "GB_only_1"
 
     Scenario: I am a user from the US I should get a valid US key
         Given I am authenticated as a user
@@ -128,33 +128,33 @@ Feature: Deal Pool
             And The Key Queue Processor is run
             And I go to "/deal/diablo-3-bonus"
             And I should see "You are not eligible (based on your age and/or country)"
-        When I am located in "UK"
+        When I am located in "GB"
             And I click "deal-redeem-link"
             And I should see "You're in the queue"
             And The Key Queue Processor is run
             And I go to "/deal/diablo-3-bonus"
-        Then I should see "UK_only_1"
+        Then I should see "GB_only_1"
 
-    Scenario: I am the third user from the UK I should get the third valid UK key
+    Scenario: I am the third user from the GB I should get the third valid GB key
         Given I re-login as the user "William"
-            And I am located in "UK"
+            And I am located in "GB"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
             And The Key Queue Processor is run
             And I go to "/deal/diablo-3-bonus"
-            And I should see "UK_only_1"
+            And I should see "GB_only_1"
             And I re-login as the user "Harry"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
             And The Key Queue Processor is run
             And I go to "/deal/diablo-3-bonus"
-            And I should see "UK_only_2"
+            And I should see "GB_only_2"
         When I re-login as the user "Charles"
             And I go to "/deal/diablo-3-bonus"
             And I click "deal-redeem-link"
             And The Key Queue Processor is run
             And I go to "/deal/diablo-3-bonus"
-        Then I should see "UK_only_3"
+        Then I should see "GB_only_3"
 
     Scenario: The same IP address should not be able to claim more than 1 IP addresses
         Given I re-login as the user "William"
