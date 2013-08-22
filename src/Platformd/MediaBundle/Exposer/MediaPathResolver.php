@@ -14,10 +14,13 @@ class MediaPathResolver implements PathResolver
 
     private $prefix;
 
-    public function __construct($bucketName, $prefix)
+    private $container;
+
+    public function __construct($bucketName, $prefix, $container)
     {
         $this->bucketName = $bucketName;
         $this->prefix = $prefix == '' ?: substr($prefix, 0, 1) == "/" ? $prefix : '/'.$prefix;
+        $this->container = $container;
     }
 
     public function supports($media, array $options)
@@ -41,10 +44,11 @@ class MediaPathResolver implements PathResolver
             return $media->getFilename();
         }
 
+        // TODO: this needs to be a config param
         if ($this->bucketName == "platformd") {
-            $cf = "http://media.alienwarearena.com";
+            $cf = $this->getIsHttps() ? "https://d2ssnvre2e87xh.cloudfront.net" : "http://media.alienwarearena.com";
         } else {
-            $cf = "http://mediastaging.alienwarearena.com";
+            $cf = $this->getIsHttps() ? "https://d3klgvi09f3c52.cloudfront.net" : "http://mediastaging.alienwarearena.com";
         }
 
         return sprintf('%s%s/%s', $cf, $this->prefix, $media->getFilename());
@@ -62,5 +66,23 @@ class MediaPathResolver implements PathResolver
     private function getPrefix()
     {
         return $this->prefix;
+    }
+
+    private function getIsHttps()
+    {
+        if (!$this->container->isScopeActive('request')) {
+            return false;
+        }
+
+        return $this->container->get('request')->getScheme() == 'https';
+    }
+
+    private function getScheme()
+    {
+        if (!$this->container->isScopeActive('request')) {
+            return 'http';
+        }
+
+        return $this->container->get('request')->getScheme();
     }
 }

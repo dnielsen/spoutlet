@@ -25,7 +25,7 @@
                         <div class="user-media-thumb-wrapper{% if isFirstInRow %} first-media{% else %} "style="padding-left:7px;{% endif %}">
                             <div class="account-image-image">
                                <a href="{{ path('gallery_media_show', { id: image.id }) }}">
-                                    <img src="{{ media_path(image.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" alt="{{ image.title }}" />
+                                    <img src="{{ image.image | imagine_filter('media_photo_thumb') }}" alt="{{ image.title }}" />
                                     <div class="thumbnail-caption" style="display:none;">
                                         <a href="{{ path('gallery_edit_media', { id : image.id }) }}">{{ 'edit' | trans }}</a>
                                     </div>

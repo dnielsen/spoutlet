@@ -63,10 +63,10 @@
 
                 <div class="group-discussion-actions">
                     {% if canDelete %}
-                        <a href="{{ path('group_delete_discussion', { 'id' : group.id, 'discussionId' : discussion.id })}}" onclick="return confirm('Are you sure you want to delete this discussion?');">Delete</a> |
+                        <a href="{{ path('group_delete_discussion', { 'slug' : group.slug, 'discussionId' : discussion.id })}}" onclick="return confirm('Are you sure you want to delete this discussion?');">Delete</a> |
                     {% endif %}
                     {% if canEdit %}
-                        <a href="{{ path('group_edit_discussion', { 'id' : group.id, 'discussionId' : discussion.id })}}">Edit</a> |
+                        <a href="{{ path('group_edit_discussion', { 'slug' : group.slug, 'discussionId' : discussion.id })}}">Edit</a> |
                     {% endif %}
                     <a href="javascript:void(0);" class="report-content" report-data="{{ discussion.id }}">Report</a>
                 </div>
@@ -166,7 +166,7 @@
                             'previous_message': '',
                             'next_message': '',
                             'routeName': 'group_view_discussion',
-                            'routeParams': { 'id': group.id, 'discussionId': discussion.id }
+                            'routeParams': { 'slug': group.slug, 'discussionId': discussion.id }
                         }) }}
                     </div>
                 </div>

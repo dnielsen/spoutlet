@@ -33,7 +33,7 @@ class IpLookupUtil
             return 'US';
         }
 
-        return $result == 'GB' ? 'UK' : $result;
+        return $result;
     }
 
     private function get($method, $ipAddress)

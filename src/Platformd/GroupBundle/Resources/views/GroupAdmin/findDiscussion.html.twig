@@ -57,9 +57,9 @@
                         <td>{{ groupDiscussion.viewCount }}</td>
                         <td>
                             {#{% if (groupDiscussion.deleted == false ) %}#}
-                                {#<a href="{{ path('group_view_discussion', {'id': groupDiscussion.group.id, 'discussionId': groupDiscussion.id }) }}">View</a> /#}
+                                {#<a href="{{ path('group_view_discussion', {'slug': groupDiscussion.group.slug, 'discussionId': groupDiscussion.id }) }}">View</a> /#}
                             {#{% endif %}#}
-                            {#<a href="{{ path('group_edit_discussion', {'id': groupDiscussion.group.id, 'discussionId': groupDiscussion.id }) }}">Edit</a> /#}
+                            {#<a href="{{ path('group_edit_discussion', {'slug': groupDiscussion.group.slug, 'discussionId': groupDiscussion.id }) }}">Edit</a> /#}
                             {#{% if form.from.get('value') != null and form.thru.get('value') != null %}#}
                                 {#<a href="{{ path('admin_group_discussion_details_export', {'id': groupDiscussion.id, 'from': form.from.get('value')|date('m/d/Y'), 'thru': form.thru.get('value')|date('m/d/Y') }) }}">Download metrics</a>#}
                             {#{% else %}#}

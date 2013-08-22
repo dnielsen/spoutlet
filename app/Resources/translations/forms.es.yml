@@ -69,8 +69,9 @@ account_settings_subscribedGamingNews: "Sí, me gustaría recibir notificaciones
 subscription_settings_subscribedAlienwareEvents: Subscribeme al boletín electrónico de Alienware Arena.
 
 # unsubscribe stuff
-platformd.unsubscribe.title: Edit Your Email Subscription Preferences
-platformd.unsubscribe.your_email: "Your email address:"
-platformd_unsubscribe_form_unsubscribe: Please unsubscribe me from receiving Alienware Arena news and announcements.
-platformd.unsubscribe.note: Please note that you will continue to receive event-specific notices for any events you are registered to participate in for the duration of the respective events.
-platformd.unsubscribe.success: Your email preferences have been updated.
+platformd.unsubscribe.title: Modificar tus preferencias de correo electrónico de suscripción
+platformd.unsubscribe.your_email: "Tu dirección de de correo electrónico:"
+platformd_unsubscribe_form_unsubscribe: Porfavor, cancelen mi suscripción de recibir anuncios y noticias de Alienware Arena.
+platformd.unsubscribe.note: Toma en cuenta que seguirás recibiendo noticias de eventos-específicos para los eventos en que seas registrado para participar en la duración de los respectivos eventos.
+platformd.unsubscribe.success: Las preferancias de correo electrónico han sido actulizadas.
+platformd.unsubscribe.failure: A username has never been assigned to your account. Please email <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a> with the username you would like to have in order to complete your password reset.

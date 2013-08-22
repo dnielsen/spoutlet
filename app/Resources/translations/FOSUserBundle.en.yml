@@ -106,6 +106,8 @@ resetting.request.username: "Email:"
 resetting.request.submit: Reset Password
 resetting.reset.submit: Change Password
 resetting.flash.success: Your password has been successfully changed.
+resetting.flash.api_error: There was a problem processing your password change. Please email "contact@alienwarearena.com" for support.
+resetting.flash.error: There was a problem submitting your request. Please try again shortly.
 
 # the first line is the subject of the email
 resetting.email: |

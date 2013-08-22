@@ -15,6 +15,8 @@ backend awaWeb3  { .host = "ec2-50-19-47-216.compute-1.amazonaws.com";  .port = 
 backend awaWeb4  { .host = "ec2-54-227-50-4.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 backend awaWeb5  { .host = "ec2-50-16-16-111.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
 
+backend cevo { .host = "www.alienwarearena.com"; .port = "http"; }
+
 director awaWeb random {
     { .backend = awaWeb1; .weight = 1; }
     { .backend = awaWeb2; .weight = 1; }
@@ -38,6 +40,13 @@ sub vcl_recv {
     if (req.http.host ~ "(.*staging.alienwarearena.com|local:8080)" && req.http.Cookie !~ "awa_bypass_redirection=1" && req.url !~ "^/siteSpringboard[/]?$") {
         set req.http.X-Return-Url = req.url;
         set req.url = "/siteSpringboard";
+    }
+
+    if (req.url ~ "^/arp/getuserarp/") {
+        set req.http.host = "www.alienwarearena.com";
+        set req.backend = cevo;
+        remove req.http.Cookie;
+        return (lookup);
     }
 
     if (req.http.X-Forwarded-For) {
@@ -292,6 +301,12 @@ sub vcl_fetch {
         set beresp.http.cache-control = "max-age=3600";
     }
 
+    if (req.url ~ "^/arp/getuserarp/") {
+        unset beresp.http.expires;
+        set beresp.ttl = 30s;
+        set beresp.http.cache-control = "max-age=30";
+    }
+
     if (!req.http.Cookie && !beresp.http.set-cookie) {
         set beresp.http.X-Anon = "1";
     }
@@ -440,3 +455,4 @@ sub vcl_error {
 
     return (deliver);
 }
+

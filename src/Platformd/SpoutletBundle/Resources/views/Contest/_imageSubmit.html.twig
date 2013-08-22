@@ -113,7 +113,7 @@
     <div class="right">
         {% for media in medias %}
             <div class="gallery-media-wrapper" id="gallery-media-wrapper-{{ media.id }}">
-                <img title="{{ media.title }}" id="media-{{ media.id }}" class="gallery-media{% if loop.first %} active{% endif %}" data-title={{ media.title }} data-id="{{ media.id }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('image_thumb') }}" />
+                <img title="{{ media.title }}" id="media-{{ media.id }}" class="gallery-media{% if loop.first %} active{% endif %}" data-title={{ media.title }} data-id="{{ media.id }}" src="{{ media.image | imagine_filter('image_thumb') }}" />
                 <a href="#" class="delete-media" data-id="{{ media.id }}" style="vertical-align:top; padding-left:10px;">&times;</a>
             </div>
         {% endfor %}

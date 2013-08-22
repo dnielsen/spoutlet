@@ -4,7 +4,7 @@
         <div class="gallery-media-thumb-wrapper{% if isFirstInRow %} first{% endif %}">
             <div class="gallery-media-thumb">
                 <a href="{{ path('gallery_media_show', { id: media.id }) }}">
-                    <img class="media-thumb" title="{{ media.title }}" src="{{ media_path(media.image, {'local': true}) | imagine_filter('media_photo_thumb') }}" />
+                    <img class="media-thumb" title="{{ media.title }}" src="{{ media.image | imagine_filter('media_photo_thumb') }}" />
                     {% if app.user is not null %}
                         {% if media.hasUserVoted(app.user) == false and contest.isVotable %}
                             <div class="thumbnail-vote-caption">
