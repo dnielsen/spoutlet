@@ -30,10 +30,10 @@ class MetricController extends Controller
 
         $localAuth = $this->container->getParameter('local_auth');
 
-        if (!$localAuth) {
+        if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
 
             $em     = $this->getDoctrine()->getEntityManager();
-            $site   = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : null;
+            $site   = $em->getRepository('SpoutletBundle:Site')->find(2);
 
             // create a select field for range
             $select = $this->get('form.factory')

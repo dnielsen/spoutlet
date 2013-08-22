@@ -25,15 +25,15 @@ Feature: Giveaway Pool
             And the current giveaway has the following pools:
                 | description | key_count | country | active | max_per_ip |
                 | NOT_VALID   | 2         | US      | no     |            |
-                | NOT_VALID_2 | 2         | UK      | no     |            |
-                | UK_only     | 2         | UK      | yes    |            |
+                | NOT_VALID_2 | 2         | GB      | no     |            |
+                | GB_only     | 2         | GB      | yes    |            |
                 | US_only     | 2         | US      | yes    |            |
-                | UK_only_2   | 2         | UK      | yes    |            |
+                | GB_only_2   | 2         | GB      | yes    |            |
                 | IE_only     | 2         | IE      | yes    | 1          |
 
     #Scenario: I should be told that there are no more keys if I join the queue and the keys run out before I get one - but I should only see the message once
     #    Given I am authenticated as a user
-    #        And I am located in "UK"
+    #        And I am located in "GB"
     #        And I go to "/giveaways/diablo-3-giveaway"
     #        And I click "GET KEY"
     #        And I should see "You're in the queue"
@@ -44,15 +44,15 @@ Feature: Giveaway Pool
     #        And I go to "/giveaways/diablo-3-giveaway"
     #        And I should not see "no longer any keys available"
 
-    Scenario: I am a user from the UK I should get a valid UK key
+    Scenario: I am a user from the GB I should get a valid GB key
         Given I am authenticated as a user
-            And I am located in "UK"
+            And I am located in "GB"
             And I go to "/giveaways/diablo-3-giveaway"
             And I click "GET KEY"
             And I should see "You're in the queue"
         When The Key Queue Processor is run
             And I go to "/giveaways/diablo-3-giveaway"
-        Then I should see "UK_only_1"
+        Then I should see "GB_only_1"
 
     Scenario: I am a user from the US I should get a valid US key
         Given I am authenticated as a user
@@ -70,26 +70,26 @@ Feature: Giveaway Pool
             And I go to "/giveaways/diablo-3-giveaway"
         Then I should not see "GET KEY"
 
-    Scenario: I am the third user from the UK I should get the third valid UK key, and it should be taken from the second valid keypool if the first valid keypool is empty
+    Scenario: I am the third user from the GB I should get the third valid GB key, and it should be taken from the second valid keypool if the first valid keypool is empty
         Given I re-login as the user "William"
-            And I am located in "UK"
+            And I am located in "GB"
             And I go to "/giveaways/diablo-3-giveaway"
             And I click "GET KEY"
             And The Key Queue Processor is run
             And I go to "/giveaways/diablo-3-giveaway"
-            And I should see "UK_only_1"
+            And I should see "GB_only_1"
             And I re-login as the user "Harry"
             And I go to "/giveaways/diablo-3-giveaway"
             And I click "GET KEY"
             And The Key Queue Processor is run
             And I go to "/giveaways/diablo-3-giveaway"
-            And I should see "UK_only_2"
+            And I should see "GB_only_2"
         When I re-login as the user "Charles"
             And I go to "/giveaways/diablo-3-giveaway"
             And I click "GET KEY"
             And The Key Queue Processor is run
             And I go to "/giveaways/diablo-3-giveaway"
-        Then I should see "UK_only_2_1"
+        Then I should see "GB_only_2_1"
 
     Scenario: The same IP address should not be able to claim more than 1 IP addresses
         Given I re-login as the user "William"

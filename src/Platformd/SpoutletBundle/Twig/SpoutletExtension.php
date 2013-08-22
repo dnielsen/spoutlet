@@ -80,8 +80,7 @@ class SpoutletExtension extends Twig_Extension
         $this->currentSiteFeatures = $this->currentSite->getSiteFeatures();
         $this->currentSiteConfig   = $this->currentSite->getSiteConfig();
 
-        $countryCode               = $this->request->headers->get('X-Country-Code');
-        $this->countryCode         = $countryCode != 'GB' ? $countryCode : 'UK';
+        $this->countryCode         = $this->request->headers->get('X-Country-Code');
     }
 
     public function getFilters()

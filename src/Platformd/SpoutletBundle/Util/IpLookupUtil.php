@@ -26,10 +26,6 @@ class IpLookupUtil
         $ip->open($this->lookupFile);
         $result = $ip->getAll($ipAddress);
 
-        if ($result->getCountryShort() == "GB") {
-            $result->setCountryShort("UK");
-        }
-
         return $result;
     }
 
@@ -61,10 +57,6 @@ class IpLookupUtil
         if (method_exists($ip, $method) && $this->isIPv4($ipAddress)) {
             $ip->open($this->lookupFile);
             $result = $ip->$method($ipAddress);
-
-            if (strtolower($parameter) == 'countryshort' && $result == "GB") {
-                return "UK";
-            }
 
             return $result;
         }
