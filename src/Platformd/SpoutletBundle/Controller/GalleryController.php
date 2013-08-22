@@ -473,7 +473,10 @@ class GalleryController extends Controller
         $em->persist($media);
         $em->flush();
 
-        if ($request->headers->get('referer') != null) {
+        $referer = $request->headers->get('referer');
+        $host    = $referer ? parse_url($referer, PHP_URL_HOST) : null;
+
+        if ($referer != null && (false !== strpos($host, 'alienwarearena.com'))) {
             $referer = parse_url($request->headers->get('referer'));
             $pathArr = explode('/', $referer['path']);
 
