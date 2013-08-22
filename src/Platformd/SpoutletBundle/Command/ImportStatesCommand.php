@@ -89,7 +89,7 @@ EOT
 
         if (($handle = fopen($path, "r")) !== FALSE) {
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                $countryCode    = $data[0] == 'GB' ? 'UK' : $data[0];
+                $countryCode    = $data[0];
                 $stateName      = ucwords(strtolower($data[1]));
 
                 $this->output(4, 'State => { CountryCode = "'.$countryCode.'", State = "'.$stateName.'" }');

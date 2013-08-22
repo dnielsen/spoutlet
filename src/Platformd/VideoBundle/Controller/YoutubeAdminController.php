@@ -98,7 +98,7 @@ class YoutubeAdminController extends Controller
                 $result['video']->getTitle(),
                 $result['video']->getAuthor()->getUsername(),
                 $result['video']->getAuthor()->getCountry(),
-                $result['video']->getSite()->getName(),
+                $result['video']->getSite() ? $result['video']->getSite()->getName() : 'N/A',
                 $result['video']->getCreatedAt()->format('m/d/Y'),
                 $result['voteCount'],
                 $result['video']->getViews(),
