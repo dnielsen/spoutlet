@@ -3,7 +3,8 @@
         <ul>
             <li><a href="{{ path('group_show', {'slug' : group.slug }) }}">Group Home</a></li>
             <span data-group-admin="true">
-                <li><a href="{{ path('group_edit', { 'slug': group.slug }) }}">Group Settings</a></li>
+                <li><a href="{{ path('group_edit', { 'slug': group.slug }) }}">Settings</a></li>
+                <li><a href="{{ path('group_contact', { 'slug': group.slug }) }}">Email Members</a></li>
 
                 {% if not group.isPublic %}
                     <li><a href="{{ path('group_applications', { 'slug': group.slug }) }}">Member Approvals</a></li>
@@ -11,11 +12,6 @@
 
                 <li><a href="{{ path('group_event_pending_approval', { 'groupSlug': group.slug }) }}">Event Approvals</a></li>
             </span>
-
-            <span data-group-member="true">
-                <li><a href="{{ path('group_leave', { 'slug': group.slug }) }}" onclick="return confirm('Are you sure you want to leave this group?');">Leave Group</a></li>
-            </span>
-            <li><a href="{{ path('groups') }}">See All Groups</a></li>
         </ul>
     </div>
 </div>
@@ -30,14 +26,6 @@
     } else {
         $('[data-group-admin="true"]').hide();
         $('[data-group-admin="false"]').show();
-    }
-
-    if (user_is_group_member) {
-        $('[data-group-member="true"]').show();
-        $('[data-group-member="false"]').hide();
-    } else {
-        $('[data-group-member="true"]').hide();
-        $('[data-group-member="false"]').show();
     }
 
 </script>

@@ -3,11 +3,15 @@
 namespace Platformd\SpoutletBundle\Model;
 
 use Doctrine\ORM\EntityManager;
+
 use Platformd\SpoutletBundle\Entity\SentEmail;
+use Platformd\SpoutletBundle\Entity\MassEmail;
+
 use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+
 use AmazonSES;
 
 class EmailManager
@@ -112,5 +116,44 @@ class EmailManager
         $this->em->flush();
 
         return $sentEmail;
+    }
+
+    public function sendMassEmail(MassEmail $email, $type=null)
+    {
+        $subject    = $email->getSubject();
+        $message    = $email->getMessage();
+
+        $fromName   = $email->getSender() ? ($email->getSender()->getAdminLevel() ? null : $email->getSender()->getUsername()) : null;
+        $site       = $email->getSite() ? $email->getSite()->getDefaultLocale() : null;
+        $emailType  = $type ?: $email->getEmailType();
+        $sendCount  = 0;
+
+        foreach ($email->getRecipients() as $recipient) {
+            $emailTo = $recipient->getEmail();
+            $this->sendHtmlEmail($emailTo, $subject, $message, $emailType, $site, $fromName);
+            $sendCount++;
+        }
+
+        $this->em->persist($email);
+        $this->em->flush();
+
+        return $sendCount;
+    }
+
+    public function hasUserHitEmailLimit($user)
+    {
+        $limit = MassEmail::EMAIL_LIMIT_COUNT;
+
+        $recentGroupMassEmailCount       = $this->em->getRepository('GroupBundle:GroupMassEmail')->getRecentEmailCountForUser($user);
+        $recentGroupEventMassEmailCount  = $this->em->getRepository('EventBundle:GroupEventEmail')->getRecentEmailCountForUser($user);
+        $recentGlobalEventMassEmailCount = $this->em->getRepository('EventBundle:GlobalEventEmail')->getRecentEmailCountForUser($user);
+
+        $emailCount = array_sum(array(
+            $recentGroupMassEmailCount,
+            $recentGroupEventMassEmailCount,
+            $recentGlobalEventMassEmailCount,
+        ));
+
+        return $emailCount >= $limit;
     }
 }

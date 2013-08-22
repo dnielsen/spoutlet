@@ -61,8 +61,8 @@ class GroupManager
     private $isMemberCache;
     private $isApplicantCache;
 
-    static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications', 'AddEvent', 'ApproveEvent', 'CancelEvent', 'ViewEvent', 'JoinEvent', 'DeleteEvent', 'JoinGroup', 'ApplyToGroup', 'LeaveGroup');
-    static private $ownerIsAllowedTo             = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications', 'AddEvent', 'ApproveEvent', 'ViewEvent', 'JoinEvent', 'DeleteEvent');
+    static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications', 'AddEvent', 'ApproveEvent', 'CancelEvent', 'ViewEvent', 'JoinEvent', 'DeleteEvent', 'JoinGroup', 'ApplyToGroup', 'LeaveGroup', 'ContactGroup');
+    static private $ownerIsAllowedTo             = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications', 'AddEvent', 'ApproveEvent', 'ViewEvent', 'JoinEvent', 'DeleteEvent', 'ContactGroup');
     static private $memberIsAllowedTo            = array('ViewGroupContent', 'ViewGroup', 'AddImage', 'AddVideo', 'AddDiscussion', 'ViewDiscussion', 'AddEvent', 'ViewEvent', 'JoinEvent', 'LeaveGroup');
     static private $nonMemberPublicIsAllowedTo   = array('ViewGroupContent', 'ViewGroup', 'JoinGroup', 'ViewEvent', 'JoinEvent');
     static private $nonMemberPrivateIsAllowedTo  = array('ViewGroup', 'ApplyToGroup');
@@ -319,7 +319,7 @@ class GroupManager
             $response = $this->CEVOApiManager->GiveUserXp('addcomment', $groupDiscussion->getAuthor()->getCevoUserId());
         } catch (ApiException $e) {
 
-        }        
+        }
     }
 
     /**

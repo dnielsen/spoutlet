@@ -356,6 +356,23 @@ class GroupEventController extends Controller
             throw new AccessDeniedException();
         }
 
+        $hitEmailLimit = $this->getEmailManager()->hasUserHitEmailLimit($this->getCurrentUser());
+
+        if ($hitEmailLimit) {
+            $this->setFlash('error', 'platformd.events.event_contact.limit_hit');
+
+            if ($groupEvent->getExternalUrl()) {
+                return $this->redirect($this->generateUrl('group_show', array(
+                    'slug' => $group->getSlug()
+                )) . '#events');
+            }
+
+            return $this->redirect($this->generateUrl('group_event_view', array(
+                'groupSlug' => $groupSlug,
+                'eventSlug' => $groupEvent->getSlug()
+            )));
+        }
+
         $email = new GroupEventEmail();
 
         $emailLocale = $group->getOwner()->getLocale() ?: 'en';
@@ -425,15 +442,16 @@ class GroupEventController extends Controller
 
                 $content = $email->getMessage();
 
-                $email->setMessage(str_replace('%content%', '------'.$content.'------', nl2br($this->trans(
+                $email->setMessage($this->trans(
                     'platformd.event.email.attendees_contact.message',
                     array(
+                        '%content%' => $content,
                         '%eventName%' => $groupEvent->getName(),
                         '%organizerName%' => $this->getUser()->getUsername(),
                     ),
                     'messages',
                     $emailLocale
-                ))));
+                ));
 
                 $sendCount = $this->getGroupEventService()->sendEmail($email);
 
@@ -505,15 +523,16 @@ class GroupEventController extends Controller
 
                 $content = $email->getMessage();
 
-                $email->setMessage(str_replace('%content%', '------'.$content.'------', nl2br($this->trans(
+                $email->setMessage($this->trans(
                     'platformd.event.email.attendees_contact.message',
                     array(
+                        '%content%' => $content,
                         '%eventName%' => $event->getName(),
                         '%organizerName%' => $this->getUser()->getUsername(),
                     ),
                     'messages',
                     $emailLocale
-                ))));
+                ));
 
                 return $this->render('EventBundle::contactPreview.html.twig', array(
                     'subject' => $email->getSubject(),

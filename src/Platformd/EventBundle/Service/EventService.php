@@ -6,7 +6,7 @@ use Platformd\EventBundle\Repository\EventRepository,
     Platformd\EventBundle\Entity\Event,
     Platformd\UserBundle\Entity\User,
     Platformd\EventBundle\Entity\GroupEvent,
-    Platformd\EventBundle\Entity\EventEmail,
+    Platformd\SpoutletBundle\Entity\MassEmail,
     Platformd\EventBundle\Entity\GroupEventEmail,
     Platformd\EventBundle\Entity\GlobalEventEmail,
     Platformd\EventBundle\Event\EventEvent,
@@ -400,7 +400,7 @@ class EventService
         return $user instanceof User ? $this->repository->isUserAttending($event, $user) : false;
     }
 
-    public function saveEmail(EventEmail $email)
+    public function saveEmail(MassEmail $email)
     {
         $this->repository->saveEmail($email);
     }
@@ -461,7 +461,7 @@ class EventService
         $this->repository->saveEmail($email);
     }
 
-    public function sendEmail(EventEmail $email, $type=null)
+    public function sendEmail(MassEmail $email, $type=null)
     {
         $subject    = $email->getSubject();
         $message    = $email->getMessage();

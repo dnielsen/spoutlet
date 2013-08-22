@@ -531,11 +531,6 @@ class ContentReportAdminController extends Controller
         return $this->getBreadcrumbs();
     }
 
-    private function getEmailManager()
-    {
-        return $this->get('platformd.model.email_manager');
-    }
-
     private function getCEVOApiManager()
     {
         return $this->get('pd.cevo.api.api_manager');

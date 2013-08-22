@@ -366,6 +366,11 @@ class Controller extends BaseController
         return $this->container->get('platformd.twitter.provider');
     }
 
+    protected  function getEmailManager()
+    {
+        return $this->container->get('platformd.model.email_manager');
+    }
+
     protected function getErrorMessages(Form $form) {
         $errors = array();
         foreach ($form->getErrors() as $key => $error) {

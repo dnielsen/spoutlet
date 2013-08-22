@@ -5,14 +5,15 @@ namespace Platformd\EventBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Platformd\SpoutletBundle\Entity\MassEmail;
 
 /**
  * Platformd\EventBundle\Entity\GroupEventEmail
  *
  * @ORM\Table(name="group_event_email")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Platformd\EventBundle\Repository\GroupEventEmailRepository")
  */
-class GroupEventEmail extends EventEmail
+class GroupEventEmail extends MassEmail
 {
     /**
      * Email recipients
@@ -51,5 +52,10 @@ class GroupEventEmail extends EventEmail
     public function setEvent($event)
     {
         $this->event = $event;
+    }
+
+    public function getEmailType()
+    {
+        return 'Group Event Mass Email';
     }
 }
