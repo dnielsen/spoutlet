@@ -93,6 +93,9 @@ class FrontendController extends Controller
         $process = $formHandler->process(true);
 
         if($process) {
+            if (!$this->isGranted('ROLE_USER')) {
+                $this->setFlash('success', 'sweepstakes.entry.registration.flash');
+            }
 
             return $this->redirect($this->generateUrl('sweepstakes_show', array('slug' => $slug)));
         }
