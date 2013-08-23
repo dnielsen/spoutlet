@@ -19,7 +19,9 @@
 
 {% block content %}
 
-    {% render url('_sweepstakes_flash_message', { 'slug': sweepstakes.slug, 'entryId': entryId }) with {}, {'standalone': true } %}
+    {% if registered|default(false) %}
+        {% include 'SpoutletBundle::_flashMessage.html.twig' with { 'type': 'success', 'message': 'sweepstakes.entry.registration.flash' } %}
+    {% endif %}
 
     <div class="std_1col">
 

@@ -20,30 +20,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class FrontendController extends Controller
 {
-    public function _sweepstakesFlashMessageAction($slug, $entryId = null)
-    {
-        $sweepstakes = $this->findSweepstakes($slug, false);
-
-        if ($entryId) {
-            $assignedEntry = $this->getEntryRepo()->findOneByIdAndUser($entryId, $this->getUser());
-        } else {
-            $assignedEntry = null;
-        }
-
-        if ($assignedEntry) { # the user has a key, so let's display it for them
-
-            $response = $this->render('SweepstakesBundle:Frontend:_showKey.html.twig', array(
-                'sweepstakes' => $sweepstakes
-            ));
-
-            $this->varnishCache($response, 60);
-
-            return $response;
-        }
-
-        return new Response();
-    }
-
     public function indexAction()
     {
         $sweepstakess = $this->getSweepstakesRepo()->findPublished($this->getCurrentSite());
@@ -65,6 +41,7 @@ class FrontendController extends Controller
         $user          = $this->getCurrentUser();
         $isGroupMember = null;
         $em            = $this->getDoctrine()->getEntityManager();
+        $registered    = $request->query->get('registered');
 
         $canTest = $sweepstakes->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
 
@@ -86,15 +63,15 @@ class FrontendController extends Controller
             $entry->addAnswer(new SweepstakesAnswer($question, $entry));
         }
 
-        $entryForm    = $this->createForm('platformd_sweeps_entry', $entry);
-        $formHandler  = $this->container->get('platformd_sweeps.entry.form.handler');
+        $entryForm   = $this->createForm('platformd_sweeps_entry', $entry);
+        $formHandler = $this->container->get('platformd_sweeps.entry.form.handler');
         $formHandler->setForm($entryForm);
 
         $process = $formHandler->process(true);
 
         if($process) {
             if (!$this->isGranted('ROLE_USER')) {
-                $this->setFlash('success', 'sweepstakes.entry.registration.flash');
+                return $this->redirect($this->generateUrl('sweepstakes_show', array('slug' => $slug, 'registered' => '1')));
             }
 
             return $this->redirect($this->generateUrl('sweepstakes_show', array('slug' => $slug)));
@@ -107,6 +84,7 @@ class FrontendController extends Controller
             'entryId'           => $entryId,
             'entryForm'         => $entryForm->createView(),
             'errors'            => $this->getEntryFormErrors($entryForm),
+            'registered'        => $registered,
         );
     }
 
