@@ -1,15 +1,15 @@
 <?php
 
-namespace Platformd\GroupBundle\Entity;
+namespace Platformd\EventBundle\Repository;
 
 use Platformd\SpoutletBundle\Entity\MassEmail;
 use Platformd\SpoutletBundle\Entity\MassEmailRepository;
 
 use DateTime;
 
-class GroupMassEmailRepository extends MassEmailRepository
+class EventEmailRepository extends MassEmailRepository
 {
-    public function hasUserHitEmailLimitForGroup($user, $group)
+    public function hasUserHitEmailLimitForEvent($user, $event)
     {
         $limit      = MassEmail::EMAIL_LIMIT_COUNT;
         $timePeriod = MassEmail::EMAIL_LIMIT_PERIOD;
@@ -18,9 +18,9 @@ class GroupMassEmailRepository extends MassEmailRepository
         $count = $this->createQueryBuilder('e')
             ->select('COUNT(e.id) emailCount')
             ->andWhere('e.sender = :user')
-            ->andWhere('e.group = :group')
+            ->andWhere('e.event = :event')
             ->andWhere('e.createdAt > :since')
-            ->setParameter('group', $group)
+            ->setParameter('event', $event)
             ->setParameter('user', $user)
             ->setParameter('since', $since)
             ->getQuery()

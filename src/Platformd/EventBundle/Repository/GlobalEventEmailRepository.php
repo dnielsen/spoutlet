@@ -2,8 +2,6 @@
 
 namespace Platformd\EventBundle\Repository;
 
-use Platformd\SpoutletBundle\Entity\MassEmailRepository;
-
-class GlobalEventEmailRepository extends MassEmailRepository
+class GlobalEventEmailRepository extends EventEmailRepository
 {
 }

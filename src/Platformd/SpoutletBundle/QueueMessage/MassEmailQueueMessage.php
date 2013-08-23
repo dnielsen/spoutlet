@@ -18,22 +18,23 @@ class MassEmailQueueMessage extends SqsMessageBase
       self::EMAIL_TYPE_GROUP_EVENT  => 'EventBundle:GroupEventEmail',
     );
 
-    public $bucket;
-    public $filepath;
-    public $siteId;
     public $senderId;
     public $emailType;
     public $emailId;
 
     public function __toString() {
-        return 'MassEmailQueueMessage => { RecipientFile = "['.$this->bucket.'] '.$this->filepath.'", EmailType = "'.$this->emailType.'", EmailId = '.$this->emailId.', SenderId = '.$this->senderId.', SiteId = '.$this->siteId.' }';
+        return 'MassEmailQueueMessage => { EmailType = "'.$this->emailType.'", EmailId = '.$this->emailId.', SenderId = '.$this->senderId.' }';
     }
 
     public function getQueueName() {
         return 'MASS_EMAIL';
     }
 
-    public static function isValidEmailType($value) {
+    public function hasValidEmailType() {
+        return self::isAllowedEmailType($this->emailType);
+    }
+
+    public static function isAllowedEmailType($value) {
         if (!$value) {
             return false;
         }

@@ -58,10 +58,13 @@ abstract class MassEmail
     protected $recipients;
 
     /**
-     * @var \DateTime $sentAt
-     *
-     * @ORM\Column(name="sent_at", type="datetime")
+     * @ORM\Column(name="created_at", type="datetime")
      * @Gedmo\Timestampable(on="create")
+     */
+    protected $createdAt;
+
+    /**
+     * @ORM\Column(name="sent_at", type="datetime", nullable=true)
      */
     protected $sentAt;
 
@@ -166,6 +169,22 @@ abstract class MassEmail
     public function setSentAt($sentAt)
     {
         $this->sentAt = $sentAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
     }
 
     /**

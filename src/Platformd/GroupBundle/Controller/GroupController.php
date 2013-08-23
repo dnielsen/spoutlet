@@ -1558,7 +1558,7 @@ Alienware Arena Team
             'contest'        => $contest,
             'upcomingEvents' => $upcomingEvents,
             'pastEvents'     => $pastEvents,
-            'memberCount'    => $memberCount[0]['membershipCount'],
+            'memberCount'    => $memberCount,
             'groupManager'   => $this->getGroupManager(),
             'permalink'      => $permalink,
         ));
@@ -1734,7 +1734,7 @@ Alienware Arena Team
         $this->ensureAllowed($group, 'ContactGroup');
 
         $user          = $this->getCurrentUser();
-        $hitEmailLimit = $this->getEmailManager()->hasUserHitEmailLimit($user);
+        $hitEmailLimit = $this->getDoctrine()->getEntityManager()->getRepository('GroupBundle:GroupMassEmail')->hasUserHitEmailLimitForGroup($user, $group);
 
         if ($hitEmailLimit) {
             $this->setFlash('error', 'platformd.groups.contact.error.email_limit_hit');
@@ -1766,11 +1766,9 @@ Alienware Arena Team
 
             if ($form->isValid()) {
 
-                foreach ($group->getMembers() as $recipient) {
-                    $recipients[] = $recipient;
-                }
+                $recipientCount = $this->getGroupManager()->getMembershipCountByGroup($group);
 
-                if (count($recipients) < 1) {
+                if ($recipientCount < 1) {
                     $this->setFlash('error', 'platformd.groups.contact.error.no_recipients');
                     return $this->render('GroupBundle:Group:contact.html.twig', array(
                         'group' => $group,
@@ -1782,7 +1780,7 @@ Alienware Arena Team
 
                 $email->setSender($user);
                 $email->setSite($this->getCurrentSite());
-                $email->setRecipients($recipients);
+                $email->setRecipients($group->getMembers()->toArray());
 
                 $content = $email->getMessage();
 
@@ -1797,11 +1795,11 @@ Alienware Arena Team
                 ));
 
                 $emailManager = $this->container->get('platformd.model.email_manager');
-                $sendCount    = $emailManager->sendMassEmail($email);
+                $queueResult  = $emailManager->queueMassEmail($email);
 
                 $this->setFlash('success', $this->trans(
                     'platformd.groups.contact.confirmation',
-                    array('%recipientCount%' => $sendCount)
+                    array('%recipientCount%' => $recipientCount)
                 ));
 
                 return $this->redirect($this->generateUrl('group_show', array(

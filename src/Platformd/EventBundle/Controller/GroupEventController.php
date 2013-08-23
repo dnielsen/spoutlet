@@ -356,7 +356,7 @@ class GroupEventController extends Controller
             throw new AccessDeniedException();
         }
 
-        $hitEmailLimit = $this->getEmailManager()->hasUserHitEmailLimit($this->getCurrentUser());
+        $hitEmailLimit = $this->getDoctrine()->getEntityManager()->getRepository('EventBundle:GroupEventEmail')->hasUserHitEmailLimitForEvent($this->getCurrentUser(), $groupEvent);
 
         if ($hitEmailLimit) {
             $this->setFlash('error', 'platformd.events.event_contact.limit_hit');
@@ -422,7 +422,9 @@ class GroupEventController extends Controller
                     }
                 }
 
-                if (count($recipients) < 1) {
+                $recipientCount = count($recipients);
+
+                if ($recipientCount < 1) {
 
                     $this->setFlash('error', 'No valid recipients found.');
 
@@ -453,11 +455,12 @@ class GroupEventController extends Controller
                     $emailLocale
                 ));
 
-                $sendCount = $this->getGroupEventService()->sendEmail($email);
+                $emailManager = $this->container->get('platformd.model.email_manager');
+                $queueResult  = $emailManager->queueMassEmail($email);
 
                 $this->setFlash('success', $this->trans(
                     'platformd.events.event_contact.confirmation',
-                    array('%attendeeCount%' => $sendCount),
+                    array('%attendeeCount%' => $recipientCount),
                     'messages',
                     $emailLocale
                 ));

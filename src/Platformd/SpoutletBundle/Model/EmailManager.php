@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 
 use Platformd\SpoutletBundle\Entity\SentEmail;
 use Platformd\SpoutletBundle\Entity\MassEmail;
+use Platformd\SpoutletBundle\QueueMessage\MassEmailQueueMessage;
 
 use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
 use AmazonSES;
+use DateTime;
 
 class EmailManager
 {
@@ -118,42 +120,51 @@ class EmailManager
         return $sentEmail;
     }
 
-    public function sendMassEmail(MassEmail $email, $type=null)
+    public function queueMassEmail(MassEmail $email)
+    {
+        // We persist the email to the DB first so we can use its ID in the QueueMessage
+        $this->em->persist($email);
+        $this->em->flush();
+
+        $message            = new MassEmailQueueMessage();
+        $message->senderId  = $email->getSender()->getId();
+        $message->emailType = $email->getEmailType();
+        $message->emailId   = $email->getId();
+
+        $result = $this->container->get('platformd.util.queue_util')->addToQueue($message);
+
+        return $result;
+    }
+
+    public function sendMassEmail(MassEmail $email)
     {
         $subject    = $email->getSubject();
         $message    = $email->getMessage();
 
         $fromName   = $email->getSender() ? ($email->getSender()->getAdminLevel() ? null : $email->getSender()->getUsername()) : null;
         $site       = $email->getSite() ? $email->getSite()->getDefaultLocale() : null;
-        $emailType  = $type ?: $email->getEmailType();
+        $emailType  = $email->getEmailType();
         $sendCount  = 0;
 
-        foreach ($email->getRecipients() as $recipient) {
-            $emailTo = $recipient->getEmail();
-            $this->sendHtmlEmail($emailTo, $subject, $message, $emailType, $site, $fromName);
+        $recipientEmails = $this->em->createQueryBuilder('e')
+            ->select('u.email')
+            ->from(get_class($email), 'e')
+            ->leftJoin('e.recipients', 'u')
+            ->andWhere('e = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getResult();
+
+        foreach ($recipientEmails as $recipient) {
+            $this->sendHtmlEmail($recipient['email'], $subject, $message, $emailType, $site, $fromName);
             $sendCount++;
         }
+
+        $email->setSentAt(new DateTime());
 
         $this->em->persist($email);
         $this->em->flush();
 
         return $sendCount;
-    }
-
-    public function hasUserHitEmailLimit($user)
-    {
-        $limit = MassEmail::EMAIL_LIMIT_COUNT;
-
-        $recentGroupMassEmailCount       = $this->em->getRepository('GroupBundle:GroupMassEmail')->getRecentEmailCountForUser($user);
-        $recentGroupEventMassEmailCount  = $this->em->getRepository('EventBundle:GroupEventEmail')->getRecentEmailCountForUser($user);
-        $recentGlobalEventMassEmailCount = $this->em->getRepository('EventBundle:GlobalEventEmail')->getRecentEmailCountForUser($user);
-
-        $emailCount = array_sum(array(
-            $recentGroupMassEmailCount,
-            $recentGroupEventMassEmailCount,
-            $recentGlobalEventMassEmailCount,
-        ));
-
-        return $emailCount >= $limit;
     }
 }
