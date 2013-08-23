@@ -72,6 +72,16 @@
     padding: 0;
 }
 
+#sweepstakes-wrapper #sweepstakes-tbl .sweepsform-row input[type="text"],
+#sweepstakes-wrapper #sweepstakes-tbl .sweepsform-row input[type="email"],
+#sweepstakes-wrapper #sweepstakes-tbl .sweepsform-row input[type="password"] {
+    width:235px;
+}
+
+#sweepstakes-wrapper #sweepstakes-tbl .aligned select {
+    width:245px;
+}
+
 #sweepstakes-wrapper .help-inline {
     color: #c62828;
     font-weight: bold;

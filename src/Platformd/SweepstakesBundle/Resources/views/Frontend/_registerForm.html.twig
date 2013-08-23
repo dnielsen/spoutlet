@@ -121,7 +121,7 @@
                 {% include 'UserBundle:Registration:_register_dob.html.twig' with { 'form': entryForm.registrationDetails, 'birthdate_error': birthdate_error, 'locale': site.defaultLocale} %}
             </td>
         </tr>
-        <tr class="sweepsform-row">
+        <tr class="sweepsform-row aligned">
             <td class="sweepsform-left">
                 <label for="">
                     <span class="required">*</span>
@@ -132,7 +132,7 @@
                 {{ form_widget(entryForm.registrationDetails.country) }}
             </td>
         </tr>
-        <tr class="sweepsform-row">
+        <tr class="sweepsform-row aligned">
             <td class="sweepsform-left">
                 <label for="">
                     <span class="required">*</span>
@@ -158,7 +158,7 @@
                 <span class="field-error">{{ has_system_error }}</span>
             </td>
         </tr>
-        <tr class="sweepsform-row">
+        <tr class="sweepsform-row aligned">
             <td class="sweepsform-left">
                 {{ 'fos_user_registration_form_latestNewsSource'|pd_trans({}, 'FOSUserBundle') }}
             </td>
@@ -184,6 +184,19 @@
             </tr>
         {% endfor %}
         {% endif %}
+
+        {% if entryForm.registrationDetails.recaptcha is defined %}
+        <tr class="sweepsform-row">
+            <td class="sweepsform-left">
+                {{ form_label(entryForm.registrationDetails.recaptcha) }}
+            </td>
+            <td class="sweepsform-right recaptcha">
+                {{ form_widget(entryForm.registrationDetails.recaptcha) }}
+                <span class="field-error">{{ invalid_captcha }}</span>
+            </td>
+        </tr>
+        {% endif %}
+
         <tr class="sweepsform-row">
             <td class="sweepsform-left">
                 <span class="required">*</span>
