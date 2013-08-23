@@ -361,8 +361,13 @@ class GalleryMediaRepository extends EntityRepository
             ->execute();
     }
 
-    public function findImagesForMetrics($title, $deleted, $status, $sites, $startDate="", $endDate="")
+    public function findImagesForMetrics($title, $deleted, $status, $sites, $startDate="", $endDate="", $execute = true)
     {
+        $siteIds = array();
+        foreach ($sites as $site) {
+            $siteIds[] = $site->getId();
+        }
+
         $qb = $this->createQueryBuilder('gm')
             ->leftJoin('gm.galleries', 'g')
             ->leftJoin('g.sites', 's')
@@ -370,8 +375,8 @@ class GalleryMediaRepository extends EntityRepository
 
         if (count($sites) > 0) {
 
-            $qb->andWhere('(s IN (:siteList))');
-            $qb->setParameter('siteList', $sites);
+            $qb->andWhere('(s.id IN (:siteList))');
+            $qb->setParameter('siteList', $siteIds);
 
         }
 
@@ -404,6 +409,10 @@ class GalleryMediaRepository extends EntityRepository
             $qb->setParameter('endDate', $endDate);
         }
 
-        return $qb->getQuery()->execute();
+        if ($execute) {
+            return $qb->getQuery()->execute();
+        }
+
+        return $qb->getQuery();
     }
 }
