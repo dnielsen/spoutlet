@@ -52,7 +52,7 @@
     <table id="sweepstakes-tbl">
         <tr class="sweepsform-row">
             <td class="sweepsform-left">
-                <label for="sweepstakes_entry_registrationDetails_username">
+                <label for="sweepstakes_entry_registrationDetails_username" class="control-label">
                     <span class="required">*</span>
                     {{ 'fos_user_registration_form_username'|pd_trans({}, 'FOSUserBundle') }}
                 </label>
@@ -64,7 +64,7 @@
         </tr>
         <tr class="sweepsform-row">
             <td class="sweepsform-left">
-                 <label for="sweepstakes_entry_registrationDetails_username">
+                 <label for="sweepstakes_entry_registrationDetails_username" class="control-label">
                     <span class="required">*</span>
                     {{ 'fos_user_registration_form_email_first'|pd_trans({}, 'FOSUserBundle') }}
                 </label>
@@ -76,7 +76,7 @@
         </tr>
         <tr class="sweepsform-row">
             <td class="sweepsform-left">
-                <label for="sweepstakes_entry_registrationDetails_plainPassword">
+                <label for="sweepstakes_entry_registrationDetails_plainPassword" class="control-label">
                     <span class="required">*</span>
                     {{ 'fos_user_registration_form_plainPassword'|pd_trans({}, 'FOSUserBundle') }}
                 </label>
@@ -88,7 +88,7 @@
         </tr>
         <tr class="sweepsform-row">
             <td class="sweepsform-left">
-                <label for="">
+                <label for="" class="control-label">
                     <span class="required">*</span>
                     {{ 'fos_user_registration_form_firstname'|pd_trans({}, 'FOSUserBundle') }}
                 </label>
@@ -100,7 +100,7 @@
         </tr>
         <tr class="sweepsform-row">
             <td class="sweepsform-left">
-                <label for="">
+                <label for="" class="control-label">
                     <span class="required">*</span>
                     {{ 'fos_user_registration_form_lastname'|pd_trans({}, 'FOSUserBundle') }}
                 </label>
@@ -112,7 +112,7 @@
         </tr>
         <tr class="sweepsform-row">
             <td class="sweepsform-left">
-                <label for="">
+                <label for="" class="control-label">
                     <span class="required">*</span>
                     {{ 'fos_user_registration_form_birthdate'|pd_trans({}, 'forms') }}
                 </label>
@@ -123,7 +123,7 @@
         </tr>
         <tr class="sweepsform-row aligned">
             <td class="sweepsform-left">
-                <label for="">
+                <label for="" class="control-label">
                     <span class="required">*</span>
                     {{ 'fos_user_registration_form_country'|pd_trans({}, 'FOSUserBundle') }}
                 </label>
@@ -134,7 +134,7 @@
         </tr>
         <tr class="sweepsform-row aligned">
             <td class="sweepsform-left">
-                <label for="">
+                <label for="" class="control-label">
                     <span class="required">*</span>
                     {{ 'fos_user_registration_form_state'|pd_trans({}, 'FOSUserBundle')}}
                 </label>
@@ -160,7 +160,9 @@
         </tr>
         <tr class="sweepsform-row aligned">
             <td class="sweepsform-left">
-                {{ 'fos_user_registration_form_latestNewsSource'|pd_trans({}, 'FOSUserBundle') }}
+                <label for="" class="control-label">
+                    {{ 'fos_user_registration_form_latestNewsSource'|pd_trans({}, 'FOSUserBundle') }}
+                </label>
             </td>
             <td class="sweepsform-right">
                 {{ form_widget(entryForm.registrationDetails.latestNewsSource) }}

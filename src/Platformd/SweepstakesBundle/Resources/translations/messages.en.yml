@@ -10,6 +10,7 @@ sweepstakes.entry.form.read_and_agreed_to_rules: 'I have read and agreed to the 
 sweepstakes.entry.links.already_entered: You have been entered into the contest. Thanks for your participation and good luck!
 sweepstakes.entry.links.use_existing: Use Existing Account
 sweepstakes.entry.links.create_new: Create a New Account
+sweepstakes.entry.links.rules: '<a href="%rules_url%" target="_blank">Contest Rules</a>'
 
 sweepstakes.entry.registration.flash: Thank you for your participation! A confirmation has been sent to your email address. Follow the instructions in the email to activate your Alienware Arena account. Once you have activated your account, you will be able to log in.
 
