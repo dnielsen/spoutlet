@@ -244,6 +244,7 @@ platformd:
             cancel: キャンセル
             attending: イベントに出席
             error: あなのEメールをプレビューする際にエラーが発生しました！
+            limit_hit: You have reached the maximum number of emails you can send to event attendees within a 24-hour period.
             confirmation: メールは %attendeeCount%参加者（複数可）に送信されます。
             form:
                 recipients: 受取人
@@ -514,26 +515,34 @@ platformd:
                 title: %eventName% について、イベント主催者からのメッセージ
                 message: |
                     次のメッセージは %eventName%: のためにあなたのもとへ送られました
-
+                    <br /><br />
+                    <hr>
                     %content%
-
+                    <br />
+                    <hr>
+                    <br />
                     ALIENWAREARENAチーム
-
+                    <br /><br />
                     重要：ALIENWARE ARENAは、決してパスワード、生年月日、本名などの個人情報をお尋ねすることはありません。これらの情報を他の人と共有しないでください。もし、これらの疑いがある場合は、 contact@alienwarearena.com に報告してください。
+                    <br /><br />
                     注意：これらのメールを受信しないようにするには、イベントページで「出席」を選択しないでください。
-
+                    <br />
             attendees_contact:
                 title: %eventName% について、イベント主催者からのメッセージ
                 message: |
                     次のメッセージは %eventName%: のためにあなたのもとへ送られました
-
+                    <br /><br />
+                    <hr>
                     %content%
-
+                    <br />
+                    <hr>
+                    <br />
                     %organizerName%を代表してALIENWARE ARENAより送られました
-
+                    <br /><br />
                     重要：ALIENWARE ARENAは、決してパスワード、生年月日、本名などの個人情報をお尋ねすることはありません。これらの情報を他の人と共有しないでください。もし、これらの疑いがある場合は、 contact@alienwarearena.com に報告してください。
+                    <br /><br />
                     注意：これらのメールを受信しないようにするには、イベントページで「出席」を選択しないでください。
-
+                    <br />
             approved:
                 title: Your Event Has Been Approved
                 message: |

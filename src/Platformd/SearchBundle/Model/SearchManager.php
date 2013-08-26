@@ -209,7 +209,7 @@ class SearchManager
 
             case 'Group':
                 $memberCount = $this->em->getRepository('GroupBundle:Group')->getMembershipCountByGroup($entity);
-                return array('group_member_count' => $memberCount[0]['membershipCount']);
+                return array('group_member_count' => $memberCount);
 
             case 'YoutubeVideo':
                 return array('video_views' => $entity->getViews(), 'video_votes' => $entity->getVotes()->count());

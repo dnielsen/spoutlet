@@ -6,7 +6,7 @@ use Platformd\EventBundle\Repository\EventRepository,
     Platformd\EventBundle\Entity\Event,
     Platformd\UserBundle\Entity\User,
     Platformd\EventBundle\Entity\GroupEvent,
-    Platformd\EventBundle\Entity\EventEmail,
+    Platformd\SpoutletBundle\Entity\MassEmail,
     Platformd\EventBundle\Entity\GroupEventEmail,
     Platformd\EventBundle\Entity\GlobalEventEmail,
     Platformd\EventBundle\Event\EventEvent,
@@ -400,7 +400,7 @@ class EventService
         return $user instanceof User ? $this->repository->isUserAttending($event, $user) : false;
     }
 
-    public function saveEmail(EventEmail $email)
+    public function saveEmail(MassEmail $email)
     {
         $this->repository->saveEmail($email);
     }
@@ -459,33 +459,6 @@ class EventService
         $email->setMessage($message);
 
         $this->repository->saveEmail($email);
-    }
-
-    public function sendEmail(EventEmail $email, $type=null)
-    {
-        $subject    = $email->getSubject();
-        $message    = $email->getMessage();
-
-        $fromName   = ($email->getSender()) ? $email->getSender()->getAdminLevel() ? null : $email->getSender()->getUsername() : null;
-        $site       = $email->getSite() ? $email->getSite()->getDefaultLocale() : null;
-
-        if ($type === null) {
-            $emailType  = $email instanceof GroupEventEmail ? "Group Event Mass Email" : $email instanceof GlobalEventEmail ? "Global Event Mass Email" : "Event Mass Email";
-        } else {
-            $emailType = $type;
-        }
-
-        $sendCount = 0;
-
-        foreach ($email->getRecipients() as $recipient) {
-            $emailTo = $recipient->getEmail();
-            $this->emailManager->sendHtmlEmail($emailTo, $subject, str_replace('%username%', $recipient->getUsername(), $message), $emailType, $site, $fromName);
-            $sendCount++;
-        }
-
-        $this->repository->saveEmail($email);
-
-        return $sendCount;
     }
 
     public function findUpcomingEventsStartingDaysFromNow($days)

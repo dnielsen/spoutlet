@@ -50,7 +50,7 @@
 
             {% if group.isPublic %}
                 <!-- is allowed JoinGroup -->
-                <div data-group-can-join="true" data-group-applicant="false">
+                <div data-group-member="false" data-group-applicant="false">
                     <div class="join-group-options">
                         <form action="{{ path('group_join', { 'slug': group.slug }) }}">
                             <button id="join-group-button" type="submit"></button>
@@ -59,7 +59,7 @@
                 </div>
             {% else %}
                 <!-- is allowed ApplyToGroup -->
-                <div data-group-can-join="true" data-group-applicant="false">
+                <div data-group-member="false" data-group-applicant="false">
                     <div class="join-group-options">
                         <a href="{{ path('group_apply', { 'slug': group.slug }) }}" id="join-group-button" style="width:230px;height:62px;display:block;margin-bottom:18px">&nbsp;</a></li>
                     </div>
@@ -135,13 +135,21 @@
                         </div>
                     {% endif %}
                     <hr style="border-top: #aaa 1px solid; border-bottom: #aaa 1px solid;" />
-                    <div id="group-like-wrapper">
-                        <div class="fb-like" data-send="false" data-width="300" data-layout="button_count" data-show-faces="false" data-colorscheme="dark"></div>
-                    </div>
 
                     {% if features.hasFacebook and config.facebookAppId %}
+                        <div id="group-like-wrapper">
+                            <div class="fb-like" data-send="false" data-width="300" data-layout="button_count" data-show-faces="false" data-colorscheme="dark"></div>
+                        </div>
+
                         <div id="group-invite-wrapper"><a href="javascript:void(0);" id="group-invite">Invite Friends</a></div>
                     {% endif %}
+
+                    <span data-group-member="true" style="display:none;">
+                        <div id="leave-group">
+                            <a href="{{ path('group_leave', { 'slug': group.slug }) }}" onclick="return confirm('Are you sure you want to leave this group?');">{{ 'platformd.groups.show.leave_group' | pd_trans }}</a>
+                        </div>
+                    </span>
+
                     <div id="report-group-wrapper"><a href="javascript:void(0);" id="report-group" class="report-group" report-data="{{ group.id }}">{{ 'platformd.groups.show.report_group' | pd_trans }}</a></div>
                     {% if group.location and group.category == 'location' %}
                     <div id="group-location-address" class="location-info">
@@ -250,12 +258,12 @@
                 $('[data-group-applicant="false"]').show();
             }
 
-            if (!user_is_group_member) {
-                $('[data-group-can-join="true"]').show();
-                $('[data-group-can-join="false"]').hide();
+            if (user_is_group_member) {
+                $('[data-group-member="true"]').show();
+                $('[data-group-member="false"]').hide();
             } else {
-                $('[data-group-can-join="true"]').hide();
-                $('[data-group-can-join="false"]').show();
+                $('[data-group-member="true"]').hide();
+                $('[data-group-member="false"]').show();
             }
 
             if (view_group_content) {

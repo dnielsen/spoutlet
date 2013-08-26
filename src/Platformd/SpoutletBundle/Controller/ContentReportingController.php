@@ -201,11 +201,6 @@ class ContentReportingController extends Controller
         $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Content Reported User Notification", $this->getCurrentSite()->getDefaultLocale());
     }
 
-    private function getEmailManager()
-    {
-        return $this->get('platformd.model.email_manager');
-    }
-
     private function sendStaffReportedNotificationEmail($id, $type, $reason, $report)
     {
         $em = $this->getDoctrine()->getEntityManager();
