@@ -31,8 +31,9 @@ class CountryState
      */
     private $country;
 
+    // Workaround for multiple overlapping branches on staging - remove once this and sweeps v2 are on production
     public function __toString() {
-        return 'State => { Id = '.$this->getId().', Name = "'.$this->getName().'" Country = "'.($this->getCountry() ? $this->getCountry()->getName() : '').'" }';
+        return $this->name;
     }
 
     public function getId()
