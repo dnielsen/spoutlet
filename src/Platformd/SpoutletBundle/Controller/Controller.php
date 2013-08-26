@@ -283,6 +283,10 @@ class Controller extends BaseController
         return $country ? $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Region')->findSiteByCountry($country) : null;
     }
 
+    protected function getSiteFromCountryCode($countryCode) {
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Region')->findSiteByCountry($countryCode);
+    }
+
     /**
      * @return \Platformd\SpoutletBundle\Age\AgeManager
      */

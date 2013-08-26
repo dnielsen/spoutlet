@@ -1,0 +1,4 @@
+create_account:
+    pattern: /account/create
+    defaults: { _controller: SpoutletBundle:Api:createAccount }
+

@@ -1,0 +1,48 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'platformd.user.register_title' | trans %}
+
+{% block content %}
+
+{% set username_error = '' %}
+{% set password_error = '' %}
+
+
+<h1>Complete Your Registration</h1>
+<p>Please provide the details below to activate your account.</p>
+<form action="{{ path('accounts_tradeshow_confirm', {'token': token}) }}" {{ form_enctype(form) }} method="POST" class="form form-horizontal">
+    {% if errors is defined %}
+        {% for error in errors %}
+            {% if error.messageTemplate == 'Please enter a username.' or error.messageTemplate == 'Username already exists.' %}
+                {% set username_error = error.messageTemplate %}
+            {% endif %}
+
+            {% if error.messageTemplate == 'Please enter a password.' or error.messageTemplate == 'Password must be more than 5 characters.' %}
+                {% set password_error = error.messageTemplate %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <div class="form_row">
+        <label for="form_username" class=" form-lbl required"  style="width: auto;">
+            <span class="required">*</span>
+                Username:
+        </label>
+        {{ form_widget(form.username) }}
+        <span style="padding-left: 5px;color: #c62828;font-weight: bold;font-style: italic;">{{ username_error }}</span>
+    </div>
+    <div class="form_row">
+        <label for="form_password" class=" form-lbl required" style="width: auto;">
+            <span class="required">*</span>
+                Password:
+        </label>
+        {{ form_widget(form.password) }}
+        <span style="padding-left: 5px;color: #c62828;font-weight: bold;font-style: italic;">{{ password_error }}</span>
+    </div>
+
+    {{ form_rest(form) }}
+
+    <button type="submit" formnovalidate>{{ 'save' | trans }}</button>
+</form>
+
+{% endblock %}

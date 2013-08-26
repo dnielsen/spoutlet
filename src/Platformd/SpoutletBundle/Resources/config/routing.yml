@@ -219,3 +219,7 @@ TagBundle_frontend:
 SpoutletBundle_export_queries:
     resource: "@SpoutletBundle/Resources/config/routing/admin_export_queries.yml"
     prefix: /admin
+
+SpoutletBundle_api:
+    resource: "@SpoutletBundle/Resources/config/routing/api.yml"
+    prefix: /api

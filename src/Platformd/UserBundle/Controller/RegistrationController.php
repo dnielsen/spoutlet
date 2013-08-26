@@ -6,6 +6,7 @@ use FOS\UserBundle\Controller\RegistrationController as BaseRegistrationControll
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Platformd\UserBundle\Form\Type\TradeshowCompleteRegType;
 
 class RegistrationController extends BaseRegistrationController
 {

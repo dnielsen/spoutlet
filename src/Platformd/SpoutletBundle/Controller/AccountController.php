@@ -13,6 +13,8 @@ use Platformd\UserBundle\Entity\Avatar;
 use Platformd\UserBundle\Form\Type\AvatarType;
 use Platformd\UserBundle\Exception\ApiRequestException;
 use Platformd\UserBundle\Form\Type\UnsubscribeFormType;
+use Platformd\SpoutletBundle\Form\Type\TradeshowCompleteRegType;
+use Symfony\Component\Form as Form;
 
 class AccountController extends Controller
 {
@@ -465,6 +467,79 @@ class AccountController extends Controller
         return $this->render('SpoutletBundle:Account:unsubscribe.html.twig', array(
             'userIsValid' => false,
             'success'     => false,
+        ));
+    }
+
+    public function confirmTradeshowRegAction(Request $request, $token)
+    {
+        $manager    = $this->getUserManager();
+        $user       = $manager->findUserByConfirmationToken($token);
+
+        if (null === $user) {
+            $this->createNotFoundException('User not found.');
+        }
+
+        $default = array('username' => null, 'password' => null);
+        $form = $this->createFormBuilder($default)
+            ->add('username', 'text', array('required' => true, 'label' => 'Username:'))
+            ->add('password', 'password', array('required' => true, 'label' => 'Password:'))
+            ->getForm()
+        ;
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+            $data = $form->getData();
+
+            if (!$data['username']) {
+                $form->addError(new Form\FormError('Please enter a username.'));
+            }
+
+            if (!$data['password']) {
+                $form->addError(new Form\FormError('Please enter a password.'));
+            }
+
+            if (count($form->getErrors()) > 0) {
+                return $this->render('SpoutletBundle:Account:tradeshow_confirm.html.twig', array(
+                    'form' => $form->createView(),
+                    'token' => $token,
+                    'errors' => $form->getErrors(),
+                ));
+            }
+
+            $usernameExists     = $manager->findUserByUsername($data['username']);
+            $passwordTooShort   = strlen($data['password']) < 5;
+
+            if ($usernameExists) {
+                $form->addError(new Form\FormError('Username already exists.'));
+            }
+
+            if ($passwordTooShort) {
+                $form->addError(new Form\FormError('Password must be more than 5 characters.'));
+            }
+
+            if (count($form->getErrors()) > 0) {
+                return $this->render('SpoutletBundle:Account:tradeshow_confirm.html.twig', array(
+                    'form' => $form->createView(),
+                    'token' => $token,
+                    'errors' => $form->getErrors(),
+                ));
+            }
+
+            $user->setUsername($data['username']);
+            $user->setPlainPassword($data['password']);
+            $user->setConfirmationToken(null);
+            $user->setEnabled(true);
+
+            $manager->updateUser($user);
+
+            return $this->redirect($this->generateUrl('fos_user_security_login', array('f' => 'reg')));
+
+        }
+
+        return $this->render('SpoutletBundle:Account:tradeshow_confirm.html.twig', array(
+            'form' => $form->createView(),
+            'token' => $token,
+            'errors' => null,
         ));
     }
 }

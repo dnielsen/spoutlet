@@ -58,3 +58,7 @@ subscription_settings:
 accounts_unsubscribe:
     pattern: /unsubscribe/{email}
     defaults: { _controller: SpoutletBundle:Account:unsubscribe, email: null }
+
+accounts_tradeshow_confirm:
+    pattern: /tradeshow/confirm/{token}
+    defaults: { _controller: SpoutletBundle:Account:confirmTradeshowReg, token: null }
