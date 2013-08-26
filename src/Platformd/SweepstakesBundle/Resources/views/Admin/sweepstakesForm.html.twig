@@ -54,36 +54,22 @@
     {% set hasEntries = hasEntries|default(false) %}
 
     <fieldset>
-        <legend>c) Questions {% if hasEntries %}(Unable to edit due to existing entries){% endif %}</legend>
-
-        {% if hasEntries %}
-
-            <div class="row-fluid">
-                <div class="span1">&nbsp;</div>
-                <div class="span6">
-                    {% for question in sweepstakes.questions %}
-                        <div class="well well-small">Question {{ loop.index }} - {{ question.content }}</div>
-                    {% endfor %}
+        <legend>c) Questions</legend>
+        <div class="row-fluid">
+            <div id="question-fields-list" data-prototype="{{ form_widget(form.questions.vars.prototype) | e }}">
+            {% for questionField in form.questions %}
+                <div>
+                    {{ form_errors(questionField) }}
+                    {{ form_widget(questionField) }}
                 </div>
+            {% endfor %}
             </div>
 
-        {% else %}
-            <div class="row-fluid">
-                <div id="question-fields-list" data-prototype="{{ form_widget(form.questions.vars.prototype) | e }}">
-                {% for questionField in form.questions %}
-                    <div>
-                        {{ form_errors(questionField) }}
-                        {{ form_widget(questionField) }}
-                    </div>
-                {% endfor %}
-                </div>
-
-                <div class="span1">&nbsp;</div>
-                <div class="span11">
-                    <div><a href="#" id="add-another-question" class="btn btn-primary"><i class="icon-plus icon-white"></i> Add another (Max 5)</a></div>
-                </div>
+            <div class="span1">&nbsp;</div>
+            <div class="span11">
+                <div><a href="#" id="add-another-question" class="btn btn-primary"><i class="icon-plus icon-white"></i> Add another (Max 5)</a></div>
             </div>
-        {% endif %}
+        </div>
     </fieldset>
 
     <fieldset>

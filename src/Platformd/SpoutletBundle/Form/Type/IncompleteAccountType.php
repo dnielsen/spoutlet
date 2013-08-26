@@ -121,7 +121,7 @@ class IncompleteAccountType extends AbstractType
     public function getDefaultOptions(array $options)
     {
         return array(
-            'validation_groups' => array('IncompleteUser', 'Default')
+            'validation_groups' => array('IncompleteUser')
         );
     }
 }

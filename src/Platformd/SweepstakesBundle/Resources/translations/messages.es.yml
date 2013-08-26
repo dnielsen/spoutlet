@@ -10,6 +10,9 @@ sweepstakes.entry.form.read_and_agreed_to_rules: 'He leído y aceptado las <a hr
 sweepstakes.entry.links.already_entered: Has sido entrado en el concurso. Gracias por tu participación y buena suerte!
 sweepstakes.entry.links.use_existing: Usar Cuenta Existente
 sweepstakes.entry.links.create_new: Crear una cuenta de Alienware Arena
+sweepstakes.entry.links.rules: '<a href="%rules_url%" target="_blank">Reglas del Consurso</a>'
+
+sweepstakes.entry.registration.flash: Thank you for your participation! A confirmation has been sent to your email address. Follow the instructions in the email to activate your Alienware Arena account. Once you have activated your account, you will be able to log in.
 
 sweepstakes.entry.error.invalid_country: There was a problem processing your entry. Please try again soon.
 
