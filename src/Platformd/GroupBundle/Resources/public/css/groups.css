@@ -478,3 +478,17 @@ button#join-group-button:hover {
 #group-contact-page .form-horizontal .controls {
     margin-left: 100px;
 }
+
+#group-details {
+    background: none;
+}
+
+#group-details .widget-header {
+    background-color: #131313;
+    min-height: 36px;
+    height: auto;
+    width: 293px;
+    margin: 0 auto;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
