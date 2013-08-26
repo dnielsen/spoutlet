@@ -42,7 +42,7 @@ class User extends BaseUser
     protected $id;
 
     /**
-     * @Assert\NotBlank();
+     * @Assert\NotBlank(groups={"Registration, Default"});
      * @ORM\Column(type="string", length="255", nullable=true)
      */
     protected $username;
