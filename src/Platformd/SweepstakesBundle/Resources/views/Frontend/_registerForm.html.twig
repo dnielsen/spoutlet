@@ -243,8 +243,10 @@
         </tr>
     </table>
 
-    {{ form_rest(entryForm.registrationDetails) }}
-    {{ form_rest(entryForm) }}
+    <div style="display:none;">
+        {{ form_rest(entryForm.registrationDetails) }}
+        {{ form_rest(entryForm) }}
+    </div>
 
 </form>
 </div>
