@@ -531,7 +531,6 @@ exercise_html_purifier:
         Output.FlashCompat: true
         HTML.FlashAllowFullScreen: true
 
-
 liip_theme:
     themes: %liip_enabled_themes%
     active_theme: 'default'
