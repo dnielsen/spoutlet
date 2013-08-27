@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpFoundation\Request
 ;
 
+/**
+ * Really ugly and I'm sorry. Needed quick way to process awa account creations from tradeshows
+ */
 class ApiController extends Controller
 {
     public function createAccountAction(Request $request)
@@ -24,7 +27,7 @@ class ApiController extends Controller
 
         if (count($errors) > 0) {
             // set errors and return response
-            $response->setContent(json_encode(array('success' => false, 'errors' => $this->getErrorKeys($errors))));
+            $response->setContent(json_encode(array('success' => false, 'errors' => $this->getErrorMessageTemplates($errors))));
             return $response;
         }
 
@@ -35,8 +38,9 @@ class ApiController extends Controller
 
     private function process($data)
     {
-        $um     = $this->getUserManager();
-        $user   = $um->createUser();
+        $um         = $this->getUserManager();
+        $user       = $um->createUser();
+        $validator  = $this->get('validator');
 
         $user->setUsername(isset($data['username']) ? $data['username'] : null);
         $user->setEmail(isset($data['email']) ? $data['email'] : null);
@@ -51,12 +55,10 @@ class ApiController extends Controller
         $user->setCreated(new \DateTime('now'));
         $user->setUpdated(new \DateTime('now'));
 
-        if ($user->getCountry() == 'US') {
-            $user->setSubscribedAlienwareEvents(true);
-        }
+        $subscribedAlienwareEvents = $user->getCountry() == 'US' && isset($data['dell_optin']) ? $data['dell_optin'] : false;
 
-        $validator = $this->get('validator');
-
+        $user->setSubscribedAlienwareEvents($subscribedAlienwareEvents);
+        
         $errors = $validator->validate($user);
 
         if (count($errors) > 0) {
@@ -67,16 +69,16 @@ class ApiController extends Controller
 
         $this->sendConfirmationEmail($user);
 
-/*        $this->apiManager->updateRemoteUserData(array(
+        $this->getApiManager()->updateRemoteUserData(array(
             'uuid' => $user->getUuid(),
             'created' => $user->getCreated()->format('Y-m-d H:i:s'),
             'last_updated' => $user->getUpdated()->format('Y-m-d H:i:s'),
-        ));*/
+        ));
 
         return array();
     }
 
-    private function getErrorKeys($errors) {
+    private function getErrorMessageTemplates($errors) {
         $errorMessages = array();
 
         foreach ($errors as $error) {
