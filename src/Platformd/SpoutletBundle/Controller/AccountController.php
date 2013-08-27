@@ -532,7 +532,8 @@ class AccountController extends Controller
 
             $manager->updateUser($user);
 
-            return $this->redirect($this->generateUrl('fos_user_security_login', array('f' => 'reg')));
+            $returnUrl = urlencode($this->generateUrl('default_index'));
+            return $this->redirect($this->generateUrl('fos_user_security_login', array('f' => 'reg', 'return' => $returnUrl)));
 
         }
 

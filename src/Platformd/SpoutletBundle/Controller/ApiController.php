@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response,
 ;
 
 /**
- * Really ugly and I'm sorry. Needed quick way to process awa account creations from tradeshows
+ * Really ugly and I'm sorry. Needed quick way to process awa account creations from tradeshows -J
  */
 class ApiController extends Controller
 {
