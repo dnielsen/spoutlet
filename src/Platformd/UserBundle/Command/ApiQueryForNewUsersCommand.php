@@ -94,7 +94,7 @@ EOT
         if (!$hasRun) {
             $hasRun = new ScriptLastRun(self::SCRIPT_ID);
             $em->persist($hasRun);
-            $em->flush;
+            $em->flush();
         }
 
         $since  = $hasRun->getLastRun();
