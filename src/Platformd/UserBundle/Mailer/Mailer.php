@@ -70,10 +70,10 @@ class Mailer implements MailerInterface
         $this->sendEmailMessage($rendered, $user->getEmail(), 'Registration Email');
     }
 
-    public function sendApiConfirmationEmailMessage(UserInterface $user)
+    public function sendTradeshowConfirmationEmailMessage(UserInterface $user, $locale)
     {
         $template = 'UserBundle:Registration:email_api.txt.twig';
-        $url      = $this->router->generate('accounts_tradeshow_confirm', array('token' => $user->getConfirmationToken()), true);
+        $url      = $this->router->generate(sprintf('%s_accounts_tradeshow_confirm', $locale), array('token' => $user->getConfirmationToken()), true);
         $rendered = $this->templating->render($template, array(
             'user'            => $user,
             'confirmationUrl' =>  $url

@@ -51,14 +51,16 @@ class ApiController extends Controller
         $user->setLastname(isset($data['last_name']) ? $data['last_name'] : null);
         $user->setState(isset($data['state']) ? $data['state'] : null);
         $user->setHasAlienwareSystem(false);
-        $user->setPassword('');
+        $user->setPassword(str_replace("\n", '', `uuidgen -r`));
         $user->setCreated(new \DateTime('now'));
         $user->setUpdated(new \DateTime('now'));
 
-        $subscribedAlienwareEvents = $user->getCountry() == 'US' && isset($data['dell_optin']) ? $data['dell_optin'] : false;
+        if ($user->getCountry() == 'US') {
+            $user->setSubscribedAlienwareEvents(true);
+        } else {
+            $user->setSubscribedAlienwareEvents(isset($data['dell_optin']) ? $data['dell_optin'] : false);
+        }
 
-        $user->setSubscribedAlienwareEvents($subscribedAlienwareEvents);
-        
         $errors = $validator->validate($user);
 
         if (count($errors) > 0) {
@@ -91,6 +93,8 @@ class ApiController extends Controller
     private function sendConfirmationEmail($user) {
         $mailer = $this->get('platformd_user.mailer');
 
-        $mailer->sendApiConfirmationEmailMessage($user);
+        $site = $this->getSiteFromCountryCode($user->getCountry());
+
+        $mailer->sendTradeshowConfirmationEmailMessage($user, $site->getDefaultLocale());
     }
 }
