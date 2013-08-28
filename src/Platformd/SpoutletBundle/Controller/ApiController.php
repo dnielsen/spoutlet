@@ -42,7 +42,7 @@ class ApiController extends Controller
         $user       = $um->createUser();
         $validator  = $this->get('validator');
 
-        $user->setUsername(isset($data['username']) ? $data['username'] : null);
+        $user->setUsername(isset($data['username']) ? $data['username'] : $user->getUuid());
         $user->setEmail(isset($data['email']) ? $data['email'] : null);
         $user->setBirthdate(isset($data['birth_date']) ? \DateTime::createFromFormat('Y-m-d', $data['birth_date']) : null);
         $user->setCountry(isset($data['country']) ? $data['country'] : null);
