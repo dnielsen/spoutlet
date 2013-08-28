@@ -249,6 +249,11 @@ class Controller extends BaseController
         return $this->container->get('platformd.model.translator')->trans($key, $params, $domain, $locale);
     }
 
+    protected function transChoice($key, $number, $params = array(), $domain = 'messages', $locale = null)
+    {
+        return $this->container->get('platformd.model.translator')->transChoice($key, $number, $params, $domain, $locale);
+    }
+
     /**
      * Enforces that the user is a certain age and throws the InsufficientAgeException
      * if he/she is now.

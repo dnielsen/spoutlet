@@ -40,7 +40,7 @@ class Translator implements TranslatorInterface
         return $translatedString;
     }
 
-    public function transChoice($id, $number, array $parameters = array(), $domain = 'messages', $locale = null)
+    public function transChoice($key, $number, array $parameters = array(), $domain = 'messages', $locale = null)
     {
         $theme = $this->getTheme();
 
@@ -52,10 +52,10 @@ class Translator implements TranslatorInterface
             $locale = $this->getLocale();
         }
 
-        $translatedString = $this->translator->transChoice($id, $number, $parameters, $domain, $locale);
+        $translatedString = $this->translator->transChoice($key, $number, $parameters, $domain, $locale);
 
         if ($translatedString == $key) {
-            return $this->translator->transChoice($id, $number, $parameters, 'messages', $locale);
+            return $this->translator->transChoice($key, $number, $parameters, 'messages', $locale);
         }
 
         return $translatedString;

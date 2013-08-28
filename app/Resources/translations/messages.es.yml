@@ -225,7 +225,7 @@ platformd:
             attending: Asistiendo
             error: Hubo un error al previsualizar tu correo electrónico!
             limit_hit: You have reached the maximum number of emails you can send to event attendees within a 24-hour period.
-            confirmation: Correo electrónico enviado a %attendeeCount% asistente(s).
+            confirmation: Correo electrónico enviado a %attendeeCount% asistente.|Correo electrónico enviado a %attendeeCount% asistentes.
             form:
                 recipients: Destinatarios
                 message: Mensaje
@@ -428,7 +428,7 @@ platformd:
             global_event_contact:
                 title: Mensaje del organizador del evento sobre %eventName%
                 message: |
-                    El siguiente mensaje ha sido enviado a ti para el evento - %eventName%:
+                    El siguiente mensaje ha sido enviado a ti para el evento - <a href="%eventUrl%">%eventName%</a>:
                     <br /><br />
                     <hr>
                     %content%
@@ -444,7 +444,7 @@ platformd:
             attendees_contact:
                 title: Mensaje del organizador del evento sobre %eventName%
                 message: |
-                    El siguiente mensaje ha sido enviado a ti para el evento - %eventName%:
+                    El siguiente mensaje ha sido enviado a ti para el evento - <a href="%eventUrl%">%eventName%</a>:
                     <br /><br />
                     <hr>
                     %content%

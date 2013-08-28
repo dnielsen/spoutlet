@@ -1789,6 +1789,8 @@ Alienware Arena Team
                     array(
                         '%content%' => $content,
                         '%username%' => $user->getUsername(),
+                        '%groupUrl%' => $this->generateUrl('group_show', array('slug' => $slug), true),
+                        '%groupName%' => $group->getName(),
                     ),
                     'messages',
                     $emailLocale
@@ -1797,8 +1799,9 @@ Alienware Arena Team
                 $emailManager = $this->container->get('platformd.model.email_manager');
                 $queueResult  = $emailManager->queueMassEmail($email);
 
-                $this->setFlash('success', $this->trans(
+                $this->setFlash('success', $this->transChoice(
                     'platformd.groups.contact.confirmation',
+                    $recipientCount,
                     array('%recipientCount%' => $recipientCount)
                 ));
 
@@ -1851,6 +1854,8 @@ Alienware Arena Team
                     array(
                         '%content%' => $content,
                         '%username%' => $user->getUsername(),
+                        '%groupUrl%' => $this->generateUrl('group_show', array('slug' => $slug), true),
+                        '%groupName%' => $group->getName(),
                     ),
                     'messages',
                     $emailLocale

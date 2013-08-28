@@ -245,7 +245,7 @@ platformd:
             attending: イベントに出席
             error: あなのEメールをプレビューする際にエラーが発生しました！
             limit_hit: You have reached the maximum number of emails you can send to event attendees within a 24-hour period.
-            confirmation: メールは %attendeeCount%参加者（複数可）に送信されます。
+            confirmation: メールは %attendeeCount%参加者（複数可）に送信されます。|メールは %attendeeCount%参加者（複数可）に送信されます。
             form:
                 recipients: 受取人
                 message: メッセージ
@@ -514,7 +514,7 @@ platformd:
             global_event_contact:
                 title: %eventName% について、イベント主催者からのメッセージ
                 message: |
-                    次のメッセージは %eventName%: のためにあなたのもとへ送られました
+                    次のメッセージは <a href="%eventUrl%">%eventName%</a>: のためにあなたのもとへ送られました
                     <br /><br />
                     <hr>
                     %content%
@@ -530,7 +530,7 @@ platformd:
             attendees_contact:
                 title: %eventName% について、イベント主催者からのメッセージ
                 message: |
-                    次のメッセージは %eventName%: のためにあなたのもとへ送られました
+                    次のメッセージは <a href="%eventUrl%">%eventName%</a>: のためにあなたのもとへ送られました
                     <br /><br />
                     <hr>
                     %content%
