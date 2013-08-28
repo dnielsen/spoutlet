@@ -419,6 +419,7 @@ class GlobalEventController extends Controller
                     array(
                         '%content%' => $content,
                         '%eventName%' => $event->getName(),
+                        '%eventUrl%' => $this->generateUrl('global_event_view', array('slug' => $slug), true),
                         '%organizerName%' => $this->getUser()->getUsername(),
                     ),
                     'messages',
@@ -428,8 +429,9 @@ class GlobalEventController extends Controller
                 $emailManager = $this->container->get('platformd.model.email_manager');
                 $queueResult  = $emailManager->queueMassEmail($email);
 
-                $this->setFlash('success', $this->trans(
+                $this->setFlash('success', $this->transChoice(
                     'platformd.events.event_contact.confirmation',
+                    $recipientCount,
                     array('%attendeeCount%' => $recipientCount),
                     'messages',
                     $emailLocale
@@ -491,6 +493,7 @@ class GlobalEventController extends Controller
                     array(
                         '%content%' => $content,
                         '%eventName%' => $event->getName(),
+                        '%eventUrl%' => $this->generateUrl('global_event_view', array('slug' => $slug), true),
                         '%organizerName%' => $this->getUser()->getUsername(),
                     ),
                     'messages',

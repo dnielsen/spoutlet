@@ -96,7 +96,7 @@ platformd.groups.contact.error.preview_error: There was an error previewing your
 platformd.groups.contact.error.email_limit_hit: You have reached the maximum number of emails you can send to your group members within a 24-hour period.
 platformd.groups.contact.title: Message from the group organizer about %groupName%
 platformd.groups.contact.message: |
-      The following message has been sent to group members:
+      The following message has been sent to all group members for <a href="%groupUrl%">%groupName%</a>.
       <br /><br />
       <hr>
       %content%
@@ -107,6 +107,6 @@ platformd.groups.contact.message: |
       <br /><br />
       Important: Alienware Arena will never ask you for personal information such as your username, password, date of birth, email address, etc. Please do not share that with anyone. If you suspect this email to be a scam or inappropriate, please report it to contact@alienwarearena.com.
       <br /><br />
-      Note: To unsubscribe from similar emails, you must leave (link to group page) this group.
+      Note: To unsubscribe from similar emails, you must leave <a href="%groupUrl%">this group</a>.
       <br />
-platformd.groups.contact.confirmation: Email sent to %recipientCount% members(s).
+platformd.groups.contact.confirmation: Email sent to %recipientCount% member.|Email sent to %recipientCount% members.
