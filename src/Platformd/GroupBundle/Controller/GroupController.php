@@ -1306,6 +1306,8 @@ Alienware Arena Team
 
     public function viewDiscussionAction($slug, $discussionId, Request $request)
     {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
         $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'ViewDiscussion', false);
 
