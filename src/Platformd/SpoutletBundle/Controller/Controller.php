@@ -289,7 +289,8 @@ class Controller extends BaseController
     }
 
     protected function getSiteFromCountryCode($countryCode) {
-        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Region')->findSiteByCountry($countryCode);
+        $country = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
+        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Region')->findSiteByCountry($country);
     }
 
     /**
