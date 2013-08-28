@@ -196,9 +196,9 @@ EOT
 
         $this->output(2, 'Encrypting data file.');
 
-        exec('gpg -ea --batch --always-trust'.$recipientString.' '.$filename);
+        exec('gpg -e --batch --always-trust'.$recipientString.' '.$filename);
 
-        if (!file_exists($filename.'.asc')) {
+        if (!file_exists($filename.'.gpg')) {
             $this->error('Unable to generate encrypted data file.');
             exit;
         }
@@ -206,7 +206,7 @@ EOT
         $this->output(2, 'Shredding unencrypted file "'.$filename.'".');
         $this->shred($filename);
 
-        $filename = $filename.'.asc';
+        $filename = $filename.'.gpg';
 
         $ftpInfo = array($ftpHost, $ftpUser, $ftpPass, $ftpDirectory);
 
