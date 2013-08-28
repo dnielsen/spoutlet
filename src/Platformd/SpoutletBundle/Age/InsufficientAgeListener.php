@@ -39,10 +39,11 @@ class InsufficientAgeListener
             return;
         }
 
-        $referer = $event->getRequest()->headers->get('referer');
-        $regPath = $this->router->generate('fos_user_registration_register', array(), true);
+        $referer   = $event->getRequest()->headers->get('referer');
+        $regPath   = $this->router->generate('fos_user_registration_register', array(), true);
+        $sweepsReg = $event->getRequest()->get('_route') == 'sweepstakes_show';
 
-        $template = $referer == $regPath ? 'UserBundle:Registration:tooYoung.html.twig' : 'SpoutletBundle:Age:insufficientAge.html.twig';
+        $template = ($referer == $regPath || $sweepsReg) ? 'UserBundle:Registration:tooYoung.html.twig' : 'SpoutletBundle:Age:insufficientAge.html.twig';
 
         if ($this->ageManager->isUsersAgeVerified()) {
             $content = $this->templating->render(

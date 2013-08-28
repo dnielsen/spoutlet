@@ -42,6 +42,7 @@ class FrontendController extends Controller
         $isGroupMember = null;
         $em            = $this->getDoctrine()->getEntityManager();
         $registered    = $request->query->get('registered');
+        $timedout      = $request->query->get('timedout');
 
         $canTest = $sweepstakes->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
 
@@ -85,6 +86,7 @@ class FrontendController extends Controller
             'entryForm'         => $entryForm->createView(),
             'errors'            => $this->getEntryFormErrors($entryForm),
             'registered'        => $registered,
+            'timedout'          => $timedout,
         );
     }
 

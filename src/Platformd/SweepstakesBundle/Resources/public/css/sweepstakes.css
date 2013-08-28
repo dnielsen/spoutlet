@@ -1,5 +1,5 @@
 #sweepstakes-content {
-    margin: 0 0 50px 0;
+    margin: 0 75px 50px 75px;
 }
 
 #sweepstakes-entry-links {
@@ -37,9 +37,16 @@
     padding: 4px 4px;
 }
 
+#sweepstakes-wrapper #sweepstakes-tbl .sweepsform-row td.sweepsform-left {
+    width: 45%;
+}
+
+#sweepstakes-wrapper #sweepstakes-tbl .sweepsform-row td.sweepsform-right {
+    width: 55%;
+}
+
 #sweepstakes-wrapper #sweepstakes-tbl .sweepsform-row td.sweepsform-left,
 #sweepstakes-wrapper #sweepstakes-tbl .sweepsform-row td.sweepsform-right {
-    width: 50%;
     padding: 4px 4px;
 }
 
@@ -97,6 +104,5 @@
 }
 
 #sweepstakes-rules {
-    text-align: center;
-    margin-bottom: 10px;
+    margin: 20px 0 10px 0;
 }

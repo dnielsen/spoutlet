@@ -51,10 +51,14 @@ class SweepstakesEntryFormHandler
 
     public function process($confirmation = false)
     {
-        $regProcessed   = $this->processRegistation($confirmation);
-        $entryProcessed = $this->processSweepsEntry();
+        $regProcessed = $this->processRegistation($confirmation);
 
-        return $regProcessed && $entryProcessed;
+        if ($regProcessed) {
+            $entryProcessed = $this->processSweepsEntry();
+            return $entryProcessed;
+        }
+
+        return false;
     }
 
     private function processRegistation($confirmation = false)
@@ -119,9 +123,15 @@ class SweepstakesEntryFormHandler
     private function processSweepsEntry()
     {
         if ('POST' == $this->request->getMethod()) {
-            $this->form->bindRequest($this->request);
 
-            if ($this->form->isValid()) {
+            $valid = true;
+
+            if (!$this->form->isBound()) {
+                $this->form->bindRequest($this->request);
+                $valid = $this->form->isValid();
+            }
+
+            if ($valid) {
                 $entry          = $this->form->getData();
                 $sweepstakes    = $entry->getSweepstakes();
 

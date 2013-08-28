@@ -23,6 +23,10 @@
         {% include 'SpoutletBundle::_flashMessage.html.twig' with { 'type': 'success', 'message': 'sweepstakes.entry.registration.flash' } %}
     {% endif %}
 
+    {% if timedout %}
+        {% include 'SpoutletBundle::_flashMessage.html.twig' with { 'type': 'error', 'message': 'platformd.user.register.please_wait' } %}
+    {% endif %}
+
     <div class="std_1col">
 
         <div class="page-header">
@@ -31,11 +35,13 @@
 
         <div id="sweepstakes-content">
             {{ sweepstakes.content | raw }}
+
+            <div id="sweepstakes-rules">
+                {{ 'sweepstakes.entry.links.rules'|pd_trans({'%rules_url%': path('sweepstakes_rules', {'slug': sweepstakes.slug})})|raw }}
+            </div>
         </div>
 
-        <div id="sweepstakes-rules">
-            {{ 'sweepstakes.entry.links.rules'|pd_trans({'%rules_url%': path('sweepstakes_rules', {'slug': sweepstakes.slug})})|raw }}
-        </div>
+
 
         <div id="sweepstakes-entry-links">
             {% if is_granted("ROLE_USER") %}

@@ -1,36 +1,36 @@
-first_name_not_blank: 姓を入力してください
-last_name_not_blank: 名前を入力してください
-birthdate_not_blank: 生年月日を選択してください
-state_not_blank: 都道府県を選択してください
+first_name_not_blank: 姓を入力してください。
+last_name_not_blank: 名前を入力してください。
+birthdate_not_blank: 生年月日を選択してください。
+state_not_blank: 都道府県を選択してください。
 country_not_blank: Please select a country
-news_source_not_blank: ALIENWARE ARENA を直近で聞いた時期を入力してください
+news_source_not_blank: ALIENWARE ARENA を直近で聞いた時期を入力してください。
 has_system_not_blank: あなたがALIENWAREを所有しているかどうか記入してください。
 passwords_do_not_match: 古いパスワードが承認されません。
 current_passwords_do_not_match: 古いパスワードが承認されません。
 age_requirement_not_met: You must be %s years old to register.
-must_enter_new_password: 新しいパスワードを入力するか再入力してください
-must_reenter_new_password: 新しいパスワードを入力するか再入力してください
+must_enter_new_password: 新しいパスワードを入力するか再入力してください。
+must_reenter_new_password: 新しいパスワードを入力するか再入力してください。
 password_too_short: Your new password must be a minimum of 5 characters.
 
-fos_user.username.already_used: ユーザー名が既に使用されています
-fos_user.email.already_used: メールアドレスが既に使用されています
-fos_user.username.blank: ユーザー名を入力してください
-fos_user.username.short: ユーザー名が短すぎます
-"The username is too long": ユーザー名が長すぎます
-fos_user.email.blank: 既に使われています
-"The email is too short": メールアドレスが短すぎます
-"The email is too long": メールアドレスが長すぎます
-fos_user.email.invalid: メールアドレスが有効ではありません
-fos_user.password.blank: パスワードを入力してください
-"The password is too short": パスワードが短すぎます
-"Please enter a new password": 新しいパスワードを入力してください
-"The new password is too short": 新しいパスワードが短すぎます
-"Please enter a new password": 新しいパスワードを入力してください
-"The new password is too short": 新しいパスワードが短すぎます
-"Please enter a name": 名前を入力してください
-"The name is too short": 名前が短すぎます
-"The name is too long": 名前が長すぎます
-"This value is not a valid captcha": 有効なcaptcha値ではありません
+fos_user.username.already_used: ユーザー名が既に使用されています。
+fos_user.email.already_used: メールアドレスが既に使用されています。
+fos_user.username.blank: ユーザー名を入力してください。
+fos_user.username.short: ユーザー名が短すぎます。
+"The username is too long": ユーザー名が長すぎます。
+fos_user.email.blank: 既に使われています。
+"The email is too short": メールアドレスが短すぎます。
+"The email is too long": メールアドレスが長すぎます。
+fos_user.email.invalid: メールアドレスが有効ではありません。
+fos_user.password.blank: パスワードを入力してください。
+"The password is too short": パスワードが短すぎます。
+"Please enter a new password": 新しいパスワードを入力してください。
+"The new password is too short": 新しいパスワードが短すぎます。
+"Please enter a new password": 新しいパスワードを入力してください。
+"The new password is too short": 新しいパスワードが短すぎます。
+"Please enter a name": 名前を入力してください。
+"The name is too short": 名前が短すぎます。
+"The name is too long": 名前が長すぎます。
+"This value is not a valid captcha": 有効なcaptcha値ではありません。
 
 "You must accept the terms and conditions and the privacy policy": サービス規約とプライバシーポリシー をお読みになりチェックをしてください
 
