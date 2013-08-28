@@ -29,7 +29,15 @@ class UserRegistrationTimeoutListener
             return;
         }
 
-        $url = $this->router->generate('fos_user_registration_register', array('timedout' => 1));
+        $request   = $event->getRequest();
+        $sweepsReg = $request->get('_route') == 'sweepstakes_show';
+
+        if ($sweepsReg) {
+            $slug = $request->get('slug');
+            $url  = $this->router->generate('sweepstakes_show', array('slug' => $slug, 'timedout' => 1));
+        } else {
+            $url = $this->router->generate('fos_user_registration_register', array('timedout' => 1));
+        }
 
         $event->setResponse(new RedirectResponse($url));
 

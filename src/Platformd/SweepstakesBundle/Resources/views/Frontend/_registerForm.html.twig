@@ -190,7 +190,10 @@
         {% if entryForm.registrationDetails.recaptcha is defined %}
         <tr class="sweepsform-row">
             <td class="sweepsform-left">
-                {{ form_label(entryForm.registrationDetails.recaptcha) }}
+                <label for="">
+                    <span class="required">*</span>
+                    {{ 'fos_user_registration_form_recaptcha'|pd_trans({}, 'FOSUserBundle') }}
+                </label>
             </td>
             <td class="sweepsform-right recaptcha">
                 {{ form_widget(entryForm.registrationDetails.recaptcha) }}
