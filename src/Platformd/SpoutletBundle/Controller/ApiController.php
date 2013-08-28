@@ -51,7 +51,7 @@ class ApiController extends Controller
         $user->setLastname(isset($data['last_name']) ? $data['last_name'] : null);
         $user->setState(isset($data['state']) ? $data['state'] : null);
         $user->setHasAlienwareSystem(false);
-        $user->setPassword(str_replace("\n", '', `uuidgen -r`));
+        $user->setPlainPassword(str_replace("\n", '', `uuidgen -r`));
         $user->setCreated(new \DateTime('now'));
         $user->setUpdated(new \DateTime('now'));
 
@@ -92,9 +92,8 @@ class ApiController extends Controller
 
     private function sendConfirmationEmail($user) {
         $mailer = $this->get('platformd_user.mailer');
+        $site   = $this->getSiteFromCountryCode($user->getCountry());
 
-        $site = $this->getSiteFromCountryCode($user->getCountry());
-
-        $mailer->sendTradeshowConfirmationEmailMessage($user, $site->getDefaultLocale());
+        $mailer->sendTradeshowConfirmationEmailMessage($user, $site);
     }
 }
