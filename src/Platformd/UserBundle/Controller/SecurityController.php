@@ -31,11 +31,13 @@ class SecurityController extends BaseController
 
         $doesRefererMatchLoginStuff = ($referer == $loginPath || $referer == $loginCheckPath);
 
-        if (!$doesRefererMatchLoginStuff) {
-            $session->set('_security.target_path', $referer);
-            $session->set('_security.temp_target_path', $referer);
-        } else {
-            $session->set('_security.target_path', $session->get('_security.temp_target_path'));
+        if (!$request->getSession()->get('_security.target_path')) {
+            if (!$doesRefererMatchLoginStuff) {
+                $session->set('_security.target_path', $referer);
+                $session->set('_security.temp_target_path', $referer);
+            } else {
+                $session->set('_security.target_path', $session->get('_security.temp_target_path'));
+            }
         }
 
         return parent::loginAction();
