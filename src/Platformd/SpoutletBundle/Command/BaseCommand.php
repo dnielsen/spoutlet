@@ -65,6 +65,8 @@ abstract class BaseCommand extends ContainerAwareCommand
             foreach ($this->errors as $error) {
                 $this->output(0, $error);
             }
+
+            $this->output();
         }
     }
 

@@ -1533,8 +1533,6 @@ Alienware Arena Team
 
         $this->ensureAllowed($group, 'ViewGroup', false);
 
-        $groupNews      = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);
-        $groupVideos    = $this->getGroupVideoRepository()->getVideosForGroupMostRecentFirst($group);
         $commentTotal   = $this->getTotalCommentCountForGroup('group-'.$group->getId());
         $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group, 5);
         $pastEvents     = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group, 5);
@@ -1555,8 +1553,6 @@ Alienware Arena Team
         return $this->render('GroupBundle:Group:show.html.twig', array(
             'commentTotal'   => $commentTotal,
             'group'          => $group,
-            'groupNews'      => $groupNews,
-            'groupVideos'    => $groupVideos,
             'isEntered'      => $isEntered,
             'contestCount'   => $contestMemberCount,
             'contest'        => $contest,

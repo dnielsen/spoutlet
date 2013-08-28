@@ -1,0 +1,10 @@
+<?php
+
+// Duplicate this file as /home/ubuntu/scripts/e-dialog/config.php
+
+$ftpHost = '';
+$ftpUser = '';
+$ftpPass = '';
+$ftpDirectory = '';
+$recipients[] = 'GPG Recipient Name';
+$recipients[] = 'GPG Recipient Name 2';

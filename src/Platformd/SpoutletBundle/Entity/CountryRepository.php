@@ -26,4 +26,23 @@ class CountryRepository extends EntityRepository
             ->getQuery()
             ->getSingleResult();
     }
+
+    public function getCountryCodeLocaleArray()
+    {
+        $result = $this
+            ->createQueryBuilder('c')
+            ->select('c.code, s.defaultLocale')
+            ->leftJoin('c.regions','r')
+            ->leftJoin('r.site','s')
+            ->getQuery()
+            ->execute();
+
+        $map = array();
+
+        foreach ($result as $countryData) {
+            $map[$countryData['code']] = $countryData['defaultLocale'];
+        }
+
+        return $map;
+    }
 }
