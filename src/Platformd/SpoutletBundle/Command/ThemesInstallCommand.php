@@ -121,11 +121,11 @@ EOT
                 // Create the views directory otherwise symlink will fail.
                 $filesystem->mkdir($viewDir, 0777);
 
-                $oldAssets    = Finder::create()->files()->name('theme_*.*')->in($viewDir);
-                $filesystem->remove($oldAssets);
-
                 $originAssetsTemplateFile = $themeDir . DIRECTORY_SEPARATOR . $assetsTemplateFile;
                 $targetAssetsTemplateFile = $viewDir . DIRECTORY_SEPARATOR . 'theme_' . $theme . '_' . $assetsTemplateFile;
+
+                $oldAssets    = Finder::create()->files()->name('theme_' . $theme . '_' . $assetsTemplateFile)->in($viewDir);
+                $filesystem->remove($oldAssets);
 
                 $filesystem->symlink($originAssetsTemplateFile, $targetAssetsTemplateFile);
 
