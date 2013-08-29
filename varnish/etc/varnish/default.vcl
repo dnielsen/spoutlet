@@ -249,6 +249,10 @@ sub vcl_recv {
         remove req.http.Cookie;
     }
 
+    if (req.url ~ "^/countryStateOptions/") {
+        remove req.http.Cookie;
+    }
+
     if (req.url ~ "^/galleries/gallery-data\?") {
         remove req.http.Cookie;
     }
