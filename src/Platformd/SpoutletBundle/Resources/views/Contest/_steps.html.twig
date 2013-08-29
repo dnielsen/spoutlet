@@ -3,7 +3,7 @@
         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             {{ 'platformd.create_account_or_login' | trans }}
         {% else %}
-            <a href="{{ login_link(url('contest_show', {'slug': contest.slug})) }}">
+            <a class="reg-source" href="{{ login_link(url('contest_show', {'slug': contest.slug})) }}">
                 {{ 'platformd.create_account_or_login' | trans }}
             </a>
         {% endif %}

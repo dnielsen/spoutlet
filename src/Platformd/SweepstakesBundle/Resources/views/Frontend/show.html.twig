@@ -168,6 +168,10 @@
 
                 return true;
             });
+
+            $('a.reg-source').click(function() {
+                addSourceInfo(this, '{{ { 'type': regSourceType, 'id': sweepstakes.id } | base64_encode }}');
+            });
         });
     </script>
 {% endblock %}

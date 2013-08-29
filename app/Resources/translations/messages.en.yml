@@ -386,7 +386,7 @@ platformd:
 
     comment:
         add_your_comment: Add Your Comment
-        login_to_comment: To post a comment, please <a href="%login_url%">log in.</a>
+        login_to_comment: To post a comment, please <a class="reg-source" href="%login_url%">log in.</a>
         comments: Comments
         sort_by: Sort By:
         sort_by_votes: Votes

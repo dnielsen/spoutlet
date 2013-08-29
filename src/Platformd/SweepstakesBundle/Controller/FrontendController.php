@@ -11,6 +11,7 @@ use Platformd\GroupBundle\Event\GroupEvent;
 use Platformd\GroupBundle\GroupEvents;
 use Platformd\CEVOBundle\Api\ApiException;
 use Symfony\Component\HttpFoundation\Response;
+use Platformd\UserBundle\Entity\RegistrationSource;
 
 class FrontendController extends Controller
 {
@@ -71,6 +72,7 @@ class FrontendController extends Controller
             'groupManager'  => $this->getGroupManager(),
             'permalink'     => $permalink,
             'entryId'       => $entryId,
+            'regSourceType' => RegistrationSource::REGISTRATION_SOURCE_TYPE_SWEEPSTAKES,
         );
     }
 

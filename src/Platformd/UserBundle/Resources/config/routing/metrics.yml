@@ -1,0 +1,11 @@
+user_metric_by_activity:
+    pattern: /activity
+    defaults: { _controller: UserBundle:Metric:registrationActivity }
+
+user_metric_by_country:
+    pattern: /country
+    defaults: { _controller: UserBundle:Metric:membershipByCountry }
+
+user_metrics_get_activities:
+    pattern: /get-activities/{type}
+    defaults: { _controller: UserBundle:Metric:getActivityChoices, type: ~ }

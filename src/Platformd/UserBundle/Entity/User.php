@@ -433,6 +433,11 @@ class User extends BaseUser
      */
     protected $aboutMe;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\UserBundle\Entity\RegistrationSource", cascade={"persist"}, mappedBy="user")
+     */
+    protected $registrationSource;
+
     public function __construct()
     {
         parent::__construct();
@@ -1291,5 +1296,15 @@ class User extends BaseUser
         }
 
         return true;
+    }
+
+    public function getRegistrationSource()
+    {
+        return $this->registrationSource;
+    }
+
+    public function setRegistrationSource($value)
+    {
+        $this->registrationSource = $value;
     }
 }

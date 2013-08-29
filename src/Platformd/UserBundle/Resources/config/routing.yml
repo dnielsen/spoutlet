@@ -38,3 +38,7 @@ platformd_avatars:
 # fos_twitter:
 #     resource: "@UserBundle/Resources/config/routing/twitter.yml"
 #     prefix: /twitter
+
+Platformd_UserBundle_metrics:
+    resource: "@UserBundle/Resources/config/routing/metrics.yml"
+    prefix: /admin/metrics/users

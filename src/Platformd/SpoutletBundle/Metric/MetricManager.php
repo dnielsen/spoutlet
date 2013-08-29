@@ -6,6 +6,7 @@ use DateTime,
     DateTimeZone
 ;
 
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Form\FormFactoryInterface;
 use Doctrine\ORM\EntityManager;
 
@@ -21,90 +22,41 @@ use Platformd\GiveawayBundle\Entity\Giveaway,
 
 class MetricManager
 {
-    /**
-     * @var \Platformd\SpoutletBundle\Entity\SiteRepository
-     */
     private $siteRepository;
-
-    /**
-     * @var \Platformd\SpoutletBundle\Entity\GlobalActivityRepository
-     */
     private $globalActivityRepository;
-
-    /**
-     * @var \Platformd\UserBundle\Entity\UserRepository
-     */
     private $userRepo;
-
-    /**
-     * @var \Platformd\GiveawayBundle\Entity\Repository\GiveawayKeyRepository
-     */
     private $giveawayKeyRepository;
-
-    /**
-     * @var \Platformd\GiveawayBundle\Entity\DealCodeRepository
-     */
     private $dealCodeRepository;
-
-    /**
-     * @var \Platformd\GroupBundle\Entity\GroupRepository
-     */
     private $groupRepository;
-
-    /**
-     * @var \Platformd\GroupBundle\Entity\Metric\GroupMetricRepository
-     */
     private $groupMetricRepository;
-
-    /**
-     * @var \Platformd\GroupBundle\Entity\GroupDiscussionRepository
-     */
     private $groupDiscussionRepository;
-
-    /**
-     * @var \Platformd\GroupBundle\Entity\Metric\GroupDiscussionMetricRepository
-     */
     private $groupDiscussionMetricRepository;
-
-    /**
-     * @var \Platformd\SpoutletBundle\Entity\RegionRepository
-     */
     private $regionRepository;
-
     private $countryRepository;
-
-    /**
-     * An array of all available site keys and their names
-     *
-     * @var array
-     */
+    private $regSourceRepo;
     private $sites;
-
-    /**
-     * An array of all available regions (country groups)
-     *
-     * @var array
-     */
     private $regions;
-
     private $ipLookupUtil;
+    private $router;
 
-    public function __construct(EntityManager $em, array $sites, IpLookupUtil $ipLookupUtil)
+    public function __construct(EntityManager $em, array $sites, IpLookupUtil $ipLookupUtil, $router)
     {
-        $this->siteRepository = $em->getRepository('SpoutletBundle:Site');
-        $this->userRepo = $em->getRepository('UserBundle:User');
-        $this->globalActivityRepository = $em->getRepository('SpoutletBundle:GlobalActivity');
-        $this->giveawayKeyRepository = $em->getRepository('GiveawayBundle:GiveawayKey');
-        $this->dealCodeRepository = $em->getRepository('GiveawayBundle:DealCode');
-        $this->groupRepository = $em->getRepository('GroupBundle:Group');
-        $this->groupMetricRepository = $em->getRepository('GroupBundle:Metric\GroupMetric');
-        $this->groupDiscussionRepository = $em->getRepository('GroupBundle:GroupDiscussion');
+        $this->siteRepository                  = $em->getRepository('SpoutletBundle:Site');
+        $this->userRepo                        = $em->getRepository('UserBundle:User');
+        $this->globalActivityRepository        = $em->getRepository('SpoutletBundle:GlobalActivity');
+        $this->giveawayKeyRepository           = $em->getRepository('GiveawayBundle:GiveawayKey');
+        $this->dealCodeRepository              = $em->getRepository('GiveawayBundle:DealCode');
+        $this->groupRepository                 = $em->getRepository('GroupBundle:Group');
+        $this->groupMetricRepository           = $em->getRepository('GroupBundle:Metric\GroupMetric');
+        $this->groupDiscussionRepository       = $em->getRepository('GroupBundle:GroupDiscussion');
         $this->groupDiscussionMetricRepository = $em->getRepository('GroupBundle:Metric\GroupDiscussionMetric');
-        $this->regionRepository = $em->getRepository('SpoutletBundle:Region');
-        $this->countryRepository = $em->getRepository('SpoutletBundle:Country');
-        $this->sites = $sites;
-        $this->ipLookupUtil = $ipLookupUtil;
-        $this->regions = $this->regionRepository->findAll();
+        $this->regionRepository                = $em->getRepository('SpoutletBundle:Region');
+        $this->countryRepository               = $em->getRepository('SpoutletBundle:Country');
+        $this->regSourceRepo                   = $em->getRepository('UserBundle:RegistrationSource');
+        $this->sites                           = $sites;
+        $this->ipLookupUtil                    = $ipLookupUtil;
+        $this->regions                         = $this->regionRepository->findAll();
+        $this->router                          = $router;
     }
 
     /**
@@ -650,5 +602,10 @@ class MetricManager
             'format' => 'yyyy-MM-dd',
         ));
 
+    }
+
+    public function getRegistrationActivityData($settings)
+    {
+        return $this->regSourceRepo->getRegistrationActivityData($settings);
     }
 }

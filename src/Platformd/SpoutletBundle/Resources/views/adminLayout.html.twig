@@ -269,10 +269,10 @@
                                 <li>
                                     <a href="{{ path('admin_html_widget_index') }}">Html Widgets</a>
                                     <ul>
-                                    <li>
-                                        <a href="{{ path('admin_html_widget_new') }}">Add new</a>
-                                    </li>
-                                </ul>
+                                        <li>
+                                            <a href="{{ path('admin_html_widget_new') }}">Add new</a>
+                                        </li>
+                                    </ul>
 
                                 </li>
                             {% endif %}
@@ -300,6 +300,11 @@
                             {% endif %}
 
                             <li><a href="{{ path('user_metric_by_country') }}">Members</a></li>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('user_metric_by_activity') }}">Registration Sources</a>
+                                </li>
+                            </ul>
 
                             <li><a href="{{ path('admin_sweepstakes_metrics') }}">Sweepstakes</a></li>
 
