@@ -92,7 +92,8 @@
             });
         });
 
-        {% if errors|length > 0 %}
+        $(window).load(function() {
+            {% if errors|length > 0 %}
                 if ($('.field-error').length > 0) {
                     className = '.field-error';
                 } else {
@@ -100,9 +101,10 @@
                 }
 
                 $('html, body').stop().delay(400).animate({
-                    scrollTop: ($(className).first().offset().top)
+                    scrollTop: ($(className).first().offset().top) - 50
                 }, 400);
             {% endif %}
+        });
     </script>
 {% endblock %}
 
