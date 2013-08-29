@@ -274,7 +274,7 @@ platformd:
             hello_user: Hola %firstname%! Registrado como: %username%.
             ready_to_game: ""
             warning: Advertencia: Nunca des tu contraseña a nadie!
-            under_construction: "Lo sentimos, pero no podemos aceptar tu inscripción en este momento."
+            under_construction: "Nota: Alienware Arena se encuentra en construcción, por lo tanto regrese más tarde si una característica no está habilitada todavía."
             change_your_password: Contraseña
         giveaway:
             your_giveaway_keys: Mis Claves para Regalos

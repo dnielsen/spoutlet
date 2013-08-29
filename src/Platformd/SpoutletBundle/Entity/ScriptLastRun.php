@@ -21,6 +21,11 @@ class ScriptLastRun
      */
     protected $lastRun = null;
 
+    /**
+     * @ORM\Column(name="last_id", type="integer", nullable=true)
+     */
+    protected $lastId = null;
+
     public function __construct($id) {
         $this->id = $id;
     }
@@ -38,5 +43,15 @@ class ScriptLastRun
     public function getLastRun()
     {
         return $this->lastRun;
+    }
+
+    public function setLastId($value)
+    {
+        $this->lastId = $value;
+    }
+
+    public function getLastId()
+    {
+        return $this->lastId;
     }
 }

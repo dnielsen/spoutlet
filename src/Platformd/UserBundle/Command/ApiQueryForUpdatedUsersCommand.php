@@ -81,7 +81,7 @@ EOT
             exit;
         }
 
-        $response          = 200;
+        $exitScript        = false;
         $offset            = 0;
         $limit             = 100;
 
@@ -95,7 +95,7 @@ EOT
             if (!$hasRun) {
                 $hasRun = new ScriptLastRun(self::SCRIPT_ID);
                 $em->persist($hasRun);
-                $em->flush;
+                $em->flush();
             }
 
             $since  = $hasRun->getLastRun();
@@ -103,51 +103,59 @@ EOT
 
         $this->output();
         $this->output(0, 'PlatformD User Updater');
-        $this->output();
 
-        while ($response == 200) {
+        while ($exitScript === false) {
 
+            $this->output();
             $this->output(2, 'Getting next ['.$limit.'] users...', false);
 
             $apiResult = $apiManager->getUserList($offset, $limit, 'lastUpdated', $since);
-            $response  = $apiResult['metaData']['status'];
+            $itemCount = count($apiResult['items']);
 
             $this->tick();
 
-            if ($response == 200) {
-                $userList = $apiResult['items'];
+            if ($itemCount < 1) {
+                $exitScript = true;
+                continue;
+            }
 
-                foreach ($userList as $user) {
+            $userList = $apiResult['items'];
 
-                    $this->output(4, 'Looking up user "'.$user['uuid'].'" in database...');
-                    $dbUser = $userManager->findByUuid($user['uuid']);
+            foreach ($userList as $user) {
 
-                    if (!$dbUser) {
-                        $this->output(4, 'User not in database - skipping.');
-                        continue;
-                    }
+                $this->output(4, 'Looking up user "'.$user['uuid'].'" in database...');
+                $dbUser = $userManager->findByUuid($user['uuid']);
 
-                    $created   = $user['created'] ? new \DateTime($user['created']) : null;
-                    $updated   = $user['last_updated'] ? new \DateTime($user['last_updated']) : null;
-                    $suspendedUntil = $user['suspended_until'] ? new \DateTime($user['suspended_until']) : null;
-
-                    $dbUser->setUsername($user['username']);
-                    $dbUser->setEmail($user['email']);
-                    $dbUser->setCreated($created);
-                    $dbUser->setUpdated($updated);
-                    $dbUser->setEnabled(true);
-                    $dbUser->setPassword('no_longer_used');
-                    $dbUser->setCountry($user['country']);
-                    $dbUser->setState($user['state']);
-                    $dbUser->setIpAddress($user['creation_ip_address']);
-                    $dbUser->setBirthdate($user['birth_date']);
-                    $dbUser->setFirstname($user['first_name']);
-                    $dbUser->setLastname($user['last_name']);
-                    $dbUser->setExpired($user['banned']);
-                    $dbUser->setExpiredUntil($suspendedUntil);
-
-                    $userManager->updateUser($dbUser);
+                if (!$dbUser) {
+                    $this->output(6, 'User not in database - skipping.');
+                    continue;
                 }
+
+                $this->output(6, 'Updating user...', false);
+
+                $created   = $user['created'] ? new \DateTime($user['created']) : null;
+                $updated   = $user['last_updated'] ? new \DateTime($user['last_updated']) : null;
+                $birthdate = $user['birth_date'] ? new \DateTime($user['birth_date']) : null;
+                $suspendedUntil = $user['suspended_until'] ? new \DateTime($user['suspended_until']) : null;
+
+                $dbUser->setUsername($user['username']);
+                $dbUser->setEmail($user['email']);
+                $dbUser->setCreated($created);
+                $dbUser->setUpdated($updated);
+                $dbUser->setEnabled(true);
+                $dbUser->setPassword('no_longer_used');
+                $dbUser->setCountry($user['country']);
+                $dbUser->setState($user['state']);
+                $dbUser->setIpAddress($user['creation_ip_address']);
+                $dbUser->setBirthdate($birthdate);
+                $dbUser->setFirstname($user['first_name']);
+                $dbUser->setLastname($user['last_name']);
+                $dbUser->setExpired($user['banned']);
+                $dbUser->setExpiredUntil($suspendedUntil);
+
+                $userManager->updateUser($dbUser);
+
+                $this->tick();
             }
 
             $offset += $limit;
