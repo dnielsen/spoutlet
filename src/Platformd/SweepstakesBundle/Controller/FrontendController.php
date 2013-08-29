@@ -84,6 +84,7 @@ class FrontendController extends Controller
             'isGroupMember'     => $isGroupMember,
             'entryId'           => $entryId,
             'entryForm'         => $entryForm->createView(),
+            'regFormData'       => $entryForm->has('registrationDetails') ? $entryForm->get('registrationDetails')->getData() : null,
             'errors'            => $this->getEntryFormErrors($entryForm),
             'registered'        => $registered,
             'timedout'          => $timedout,

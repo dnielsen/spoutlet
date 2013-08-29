@@ -276,6 +276,12 @@
             action: 'get',
             success: function(data) {
                 $('#row_address_state select').html(data);
+
+                {% if regFormData.state | default(null) %}
+                    if ($('#row_address_state select option[value={{ regFormData.state }}]').length > 0) {
+                        $('#row_address_state select').val({{ regFormData.state }});
+                    }
+                {% endif %}
             },
             error: function() {
                 $('#row_address_state select').html('');
