@@ -21,4 +21,4 @@
 {% endif %}
 
 <br />
-<span class="field-error-np">{{ birthdate_error }}</span>
+{% if birthdate_error != '' %}<span class="field-error-np">{{ birthdate_error }}</span>{% endif %}

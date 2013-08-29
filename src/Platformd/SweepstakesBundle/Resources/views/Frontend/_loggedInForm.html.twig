@@ -17,7 +17,7 @@
                 <td class="sweepsform-left"></td>
                 <td class="sweepsform-right">
                     {{ form_widget(entryForm.termsAccepted) }}
-                    {{ 'sweepstakes.entry.form.read_and_agreed_to_rules'|pd_trans({'%rules_url%': path('sweepstakes_rules', {'slug': sweepstakes.slug})})|raw }}
+                    <span class="checkbox-label">{{ 'sweepstakes.entry.form.read_and_agreed_to_rules'|pd_trans({'%rules_url%': path('sweepstakes_rules', {'slug': sweepstakes.slug})})|raw }}</span>
                     {{ form_errors(entryForm.termsAccepted) }}
                 </td>
             </tr>

@@ -12,7 +12,10 @@ sweepstakes.entry.links.use_existing: 既存のアカウントを使用する
 sweepstakes.entry.links.create_new: 新規アカウントの作成
 sweepstakes.entry.links.rules: '<a href="%rules_url%" target="_blank">コンテストルール</a>'
 
-sweepstakes.entry.registration.flash: Thank you for your participation! A confirmation has been sent to your email address. Follow the instructions in the email to activate your Alienware Arena account. Once you have activated your account, you will be able to log in.
+sweepstakes.entry.registration.flash: |
+    ご参加していただきありがとうございます！確認はあなたのメールアドレスに送信されています。あなたのALIENWAREARENAのアカウントをアクティブにするために電子メールの指示に従ってください。
+    <br />
+    あなたのアカウントをアクティブにしたら、ログインできるようになります。
 
 sweepstakes.entry.error.invalid_country: There was a problem processing your entry. Please try again soon.
 

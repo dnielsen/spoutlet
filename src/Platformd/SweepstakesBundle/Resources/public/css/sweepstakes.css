@@ -76,6 +76,10 @@
     vertical-align: top;
 }
 
+#sweepstakes-wrapper #sweepstakes-tbl .sweepsform-row #fos_user_registration_form_hasAlienwareSystem .field-error {
+    vertical-align: 4px;
+}
+
 #sweepstakes-wrapper #sweepstakes-tbl #sweepsform-system-row .sweepsform-right {
     padding: 0;
 }
@@ -103,6 +107,14 @@
     font-style: italic;
 }
 
+#sweepstakes-wrapper .field-error.nowrap {
+    white-space: nowrap;
+}
+
 #sweepstakes-rules {
     margin: 20px 0 10px 0;
+}
+
+#sweepstakes-wrapper .checkbox-label {
+    vertical-align: middle;
 }

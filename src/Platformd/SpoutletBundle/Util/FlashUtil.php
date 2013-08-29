@@ -45,7 +45,7 @@ class FlashUtil
         }
     }
 
-    public function getFlash()
+    public function getFlash($andDelete = true)
     {
         $user = $this->securityContext->getToken() ? $this->securityContext->getToken()->getUser() : null;
 
@@ -55,6 +55,11 @@ class FlashUtil
 
         $key = 'FLASH_MESSAGE::'.$user->getId();
 
-        return $this->cacheUtil->getAndDeleteItem($key);
+        return $andDelete ? $this->cacheUtil->getAndDeleteItem($key) : $this->cacheUtil->getItem($key);
+    }
+
+    public function hasFlash()
+    {
+        return $this->getFlash(false) ? true : false;
     }
 }
