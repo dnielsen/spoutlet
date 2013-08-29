@@ -146,6 +146,11 @@ class Controller extends BaseController
         return $this->getFlashUtil()->getFlash();
     }
 
+    protected function hasFlash()
+    {
+        return $this->getFlashUtil()->hasFlash();
+    }
+
     protected function getQueueUtil()
     {
         return $this->container->get('platformd.util.queue_util');

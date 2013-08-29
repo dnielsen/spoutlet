@@ -12,7 +12,7 @@ sweepstakes.entry.links.use_existing: Usar Cuenta Existente
 sweepstakes.entry.links.create_new: Crear una cuenta de Alienware Arena
 sweepstakes.entry.links.rules: '<a href="%rules_url%" target="_blank">Reglas del Consurso</a>'
 
-sweepstakes.entry.registration.flash: Thank you for your participation! A confirmation has been sent to your email address. Follow the instructions in the email to activate your Alienware Arena account. Once you have activated your account, you will be able to log in.
+sweepstakes.entry.registration.flash: ¡Gracias por tu participación! Una confirmación ha sido enviada a la dirección de tu correo electrónico. Sigue las instrucciones en el correo electrónico para activar tu cuenta de Alienware Arena. Una vez que hayas activado la cuenta, podrás iniciar la sesión.
 
 sweepstakes.entry.error.invalid_country: There was a problem processing your entry. Please try again soon.
 
