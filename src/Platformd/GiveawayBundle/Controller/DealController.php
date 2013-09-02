@@ -148,6 +148,7 @@ class DealController extends Controller
         $data->deal_has_keys              = $totalAvailableKeys ? $totalAvailableKeys > 0 : false;
         $data->deal_redemption_steps      = $deal->getCleanedRedemptionInstructionsArray();
         $data->deal_slug                  = $deal->getSlug();
+        $data->deal_id                    = $deal->getId();
         $data->deal_user_already_redeemed = (bool) $currentlyAssigned;
         $data->is_member_of_deal_group    = $group && $currentUser ? $groupManager->isMember($currentUser, $group) : false;
         $data->deal_show_claim_button     = !$deal->hasExpired() && $data->deal_has_keys && !$inQueue && !$currentlyAssigned;

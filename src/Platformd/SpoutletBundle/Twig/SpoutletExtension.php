@@ -96,6 +96,7 @@ class SpoutletExtension extends Twig_Extension
             'date_translate'     => new Twig_Filter_Method($this, 'dateTranslate'),
             'site_name'          => new Twig_Filter_Method($this, 'getSiteNameFromId'),
             'pd_trans'           => new Twig_Filter_Method($this, 'themedTranslate'),
+            'base64_encode'      => new Twig_Filter_Method($this, 'base64Encode'),
         );
     }
 
@@ -969,5 +970,14 @@ class SpoutletExtension extends Twig_Extension
     public function hasFlash()
     {
         return $this->flashUtil->hasFlash();
+    }
+
+    public function base64Encode($data)
+    {
+        if (is_array($data)) {
+            $data = json_encode($data);
+        }
+
+        return base64_encode($data);
     }
 }

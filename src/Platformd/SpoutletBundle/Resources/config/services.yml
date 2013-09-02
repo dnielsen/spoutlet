@@ -59,6 +59,7 @@ services:
             # TODO this should NOT be hardcoded
             - %platformd_sites%
             - @platformd.model.ip_lookup_util
+            - @router
 
     # the custom slug constraint for AbstractEvent
     platformd.validation.abstract_event_unique_slug_validator:

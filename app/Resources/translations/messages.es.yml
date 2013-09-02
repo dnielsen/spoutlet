@@ -282,7 +282,7 @@ platformd:
 
     comment:
         add_your_comment: Añada tu comentario
-        login_to_comment: Para poner un comentario, favor de <a href="%login_url%">iniciar sesión.</a>
+        login_to_comment: Para poner un comentario, favor de <a class="reg-source" href="%login_url%">iniciar sesión.</a>
         comments: Comentarios
         sort_by: Ordenar por:
         sort_by_votes: Votos

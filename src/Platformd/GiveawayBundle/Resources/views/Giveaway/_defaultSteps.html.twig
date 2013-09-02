@@ -3,7 +3,7 @@
         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             {{ 'platformd.create_account_or_login' | trans }}
         {% else %}
-            <a href="{{ path('fos_user_security_login') }}">
+            <a class="reg-source" href="{{ path('fos_user_security_login') }}">
                 {{ 'platformd.create_account_or_login' | trans }}
             </a>
         {% endif %}

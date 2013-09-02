@@ -113,7 +113,7 @@ EOT
 
         $this->output(2, 'Processing "'.$userCount.'" users.');
 
-        $filename = 'email_source_edlg_'.$dateTime->format('YmdHis').'.dat';
+        $filename = 'DELLUS_AW_ARENA_WELCOME_'.$dateTime->format('YmdHis').'.dat';
         $lastId   = 0;
 
         if (($handle = fopen($filename, 'w')) !== FALSE) {

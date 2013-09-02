@@ -335,7 +335,7 @@ platformd:
 
     comment:
         add_your_comment: あなたのコメントを追加する
-        login_to_comment: コメントを投稿するには<a href="%login_url%">ログイン</a>してください。
+        login_to_comment: コメントを投稿するには<a class="reg-source" href="%login_url%">ログイン</a>してください。
         comments: コメント
         sort_by: 並べ替え
         sort_by_votes: 票
