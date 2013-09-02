@@ -79,7 +79,9 @@ class MetricManager
         $return = array();
 
         foreach ($this->regions as $region) {
-            $return[] = $region->getName();
+            if ($region->getIsMetricsRegion()) {
+                $return[] = $region->getName();
+            }
         }
 
         return $return;
