@@ -8,21 +8,20 @@
         <div id="source-by-region">
             <h1>Account Source by Region</h1>
 
-            <div class="well" style="margin-bottom: 20px;">
-                <div class="pull-left">
-
+            <div style="margin-bottom: 20px; width: 700px;">
+                <div>
                     {{ form_widget(form.region) }}
                     {{ form_widget(form.region_activity_type) }}
                     {{ form_widget(form.region_activity_id) }}
                     <input type="hidden" class="add-all" name="all-regions" value="false" />
+                    <button type="submit" class="btn btn-primary add-region" formnovalidate>Submit</button>
+                    <a href="{{ path('user_metric_by_activity') }}" class="btn btn-danger">Reset</a>
                 </div>
 
-                <div class="pull-right">
+                <div style="margin-top: 10px;">
                     {{ form_widget(form.from_date_region) }}
                     To
                     {{ form_widget(form.to_date_region) }}
-                    <button type="submit" class="btn btn-primary add-region" formnovalidate>Submit</button>
-                    <a href="{{ path('user_metric_by_activity') }}" class="btn btn-danger">Reset</a>
                 </div>
             </div>
 
@@ -56,20 +55,20 @@
         <div id="source-by-country" style="margin-top: 40px;">
             <h1>Account Source by Country</h1>
 
-            <div class="well" style="margin-bottom: 20px;">
-                <div class="pull-left">
+            <div style="margin-bottom: 20px; width: 700px;">
+                <div>
                     {{ form_widget(form.country) }}
                     {{ form_widget(form.country_activity_type) }}
                     {{ form_widget(form.country_activity_id) }}
                     <input type="hidden" class="add-all" name="all-countries" value="false" />
+                    <button type="submit" class="btn btn-primary add-country" formnovalidate>Submit</button>
+                    <a href="{{ path('user_metric_by_activity') }}" class="btn btn-danger">Reset</a>
                 </div>
 
-                <div class="pull-right">
+                <div style="margin-top: 10px;">
                     {{ form_widget(form.from_date_country) }}
                     To
                     {{ form_widget(form.to_date_country) }}
-                    <button type="submit" class="btn btn-primary add-country" formnovalidate>Submit</button>
-                    <a href="{{ path('user_metric_by_activity') }}" class="btn btn-danger">Reset</a>
                 </div>
             </div>
 
