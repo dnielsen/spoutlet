@@ -142,7 +142,7 @@ EOT
                 $dbUser->setEmail($user['email']);
                 $dbUser->setCreated($created);
                 $dbUser->setUpdated($updated);
-                $dbUser->setEnabled(true);
+                $dbUser->setEnabled(!$user['banned']);
                 $dbUser->setPassword('no_longer_used');
                 $dbUser->setCountry($user['country']);
                 $dbUser->setState($user['state']);
