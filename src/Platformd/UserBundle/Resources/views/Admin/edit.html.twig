@@ -30,40 +30,25 @@
     {% endif %}
 
     <div class="row-fluid">
-        <div class="span6 well">
-            <form method="post" action="{{ path("Platformd_UserBundle_admin_update", { "id" : user.id }) }}" class="form-horizontal">
-                <input type="hidden" name="_method" value="PUT" />
-
-                {{ form_errors(form) }}
-
-                {{ form_row(form.username, { "attr" : {"label" : ""} }) }}
-                {{ form_row(form.firstname) }}
-                {{ form_row(form.lastname) }}
-                {{ form_row(form.email) }}
-                {{ form_row(form.admin_level) }}
-
-                {{ form_rest(form) }}
-                <div class="form-actions">
-                    <input type="submit" value="{{ 'Save'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" formnovalidate />
-                </div>
-            </form>
-        </div>
-
         <div class="span6">
-            <table class="table table-bordered">
-                <tr>
-                    <th>Last Seen</th>
-                    <td>{{ user.lastLogin|date }}</td>
-                </tr>
-                <tr>
-                    <th>Created</th>
-                    <td>{{ user.created|date }}</td>
-                </tr>
-                <tr>
-                    <th>IP Address at creation</th>
-                    <td>{{ user.ipAddress }}</td>
-                </tr>
-            </table>
+            <div class="well">
+                <form method="post" action="{{ path("Platformd_UserBundle_admin_update", { "id" : user.id }) }}" class="form-horizontal">
+                    <input type="hidden" name="_method" value="PUT" />
+
+                    {{ form_errors(form) }}
+
+                    {{ form_row(form.username, { "attr" : {"label" : ""} }) }}
+                    {{ form_row(form.firstname) }}
+                    {{ form_row(form.lastname) }}
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.admin_level) }}
+
+                    {{ form_rest(form) }}
+                    <div class="form-actions">
+                        <input type="submit" value="{{ 'Save'|trans({}, 'FOSUserBundle') }}" class="btn btn-primary" formnovalidate />
+                    </div>
+                </form>
+            </div>
 
             <div class="well">
                 <legend>Suspension</legend>
@@ -86,9 +71,99 @@
             </div>
         </div>
 
+        <div class="span6">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Last Seen</th>
+                    <td>{{ user.lastLogin|date }}</td>
+                </tr>
+                <tr>
+                    <th>Created</th>
+                    <td>{{ user.created|date }}</td>
+                </tr>
+                <tr>
+                    <th>IP Address at creation</th>
+                    <td>{{ user.ipAddress }}</td>
+                </tr>
+            </table>
+
+            <div id="comments" class="well">
+                <legend>
+                    <div class="pull-left">Comments</div>
+                    <div class="pull-right"><a id="remove-and-ban" href="{{ path('Platformd_UserBundle_admin_remove_all_comments_ban', { 'id': user.id }) }}" class="btn btn-danger btn-mini">Remove all and ban</a></div>
+                    <div class="clear">&nbsp;</div>
+                </legend>
+
+                {% if comments.haveToPaginate %}
+                    {{ pagerfanta(comments, 'twitter_bootstrap', {
+                        'routeName': 'Platformd_UserBundle_admin_edit',
+                        'routeParams': { 'id': user.id }
+                    }) }}
+                {% endif %}
+
+
+                {% for comment in comments %}
+                    <div id="comment-wrapper-{{ comment.id }}">
+                        <table class="table table-bordered table-condensed" style="background-color: #fff;">
+                            <tr><td>
+                                <div class="pull-left">{{ comment.createdAt | date('m-d-Y @ g:i:s A') }}</div>
+                                <div class="pull-right">
+                                    <span id="actions-{{ comment.id }}" {% if comment.deleted %} style="display:none;"{% endif %}>
+                                        <a href="{{ comment.thread.permalink }}" target="_blank">source</a> |
+                                        <a id="delete-{{ comment.id }}" class="delete-link" data-id="{{ comment.id }}" href="#">remove</a>
+                                    </span>
+                                    <span id="removed-{{ comment.id }}" class="label label-important"{% if not comment.deleted %} style="display:none;"{% endif %}>(removed)</span>
+                                </div>
+                            </td></tr>
+                            <tr><td>{{ comment.body | nl2br }}</td></tr>
+                        </table>
+                    </div>
+
+                {% else %}
+                    <p>No comments!</p>
+                {% endfor %}
+
+            </div>
+        </div>
+
     </div>
 
     <script type="text/javascript">
+
+        $('#remove-and-ban').click(function() {
+            return confirm('Are you sure you want to ban the user and remove all their comments?');
+        });
+
+        $('.delete-link').click(function (event) {
+
+            event.preventDefault();
+
+            var answer = confirm("{{ 'platformd.comment.delete_confirm' | pd_trans }}");
+            if (!answer){
+                return false;
+            }
+
+            var commentId = $(this).data('id');
+            $('#comment-wrapper-' + commentId).block({message: null});
+            $.ajax({
+                url: '{{ path('Platformd_UserBundle_admin_comment_delete') }}',
+                type: 'post',
+                data: JSON.stringify({
+                    'commentId' : commentId
+                }),
+                contentType: 'application/json',
+                success: function(data, status, req) {
+                    if (data.success) {
+                        $('#actions-' + commentId).hide();
+                        $('#removed-' + commentId).fadeIn();
+                        $('#comment-wrapper-' + commentId).unblock();
+                    } else {
+                        alert(data.message);
+                    }
+                }
+            })
+        });
+
         $('a.confirm').click(function(event) {
             var confirmMsg = $(this).attr('data-confirm') ? $(this).attr('data-confirm') : 'Delete this?';
             if (!confirm(confirmMsg)) {
@@ -98,4 +173,9 @@
             }
         });
     </script>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.blockUI.js') }}"></script>
 {% endblock %}

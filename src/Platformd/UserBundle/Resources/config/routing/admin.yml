@@ -70,3 +70,14 @@ Platformd_UserBundle_admin_avatar_disapprove_batch:
     defaults: { _controller: UserBundle:Admin\Avatar:batchSetApprove }
     requirements:
         _method: POST
+
+Platformd_UserBundle_admin_comment_delete:
+    pattern: /delete-comment
+    defaults: { _controller: "UserBundle:Admin:deleteCommentAjax" }
+    requirements:
+        _format: json
+        _method: POST
+
+Platformd_UserBundle_admin_remove_all_comments_ban:
+    pattern: /{id}/delete-ban
+    defaults: { _controller: "UserBundle:Admin:deleteCommentsAndBan" }

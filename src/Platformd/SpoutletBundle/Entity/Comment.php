@@ -16,16 +16,18 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Comment implements ReportableContentInterface
 {
-    const DELETED_BY_OWNER  = 'BY_OWNER';
-    const DELETED_BY_ADMIN  = 'BY_ADMIN';
-    const DELETED_BY_REPORT = 'REPORTED_PENDING_INVESTIGATION';
-    const DELETED_BY_REPORT_ADMIN = 'REPORTED_AND_REMOVED_BY_ADMIN';
+    const DELETED_BY_OWNER          = 'BY_OWNER';
+    const DELETED_BY_ADMIN          = 'BY_ADMIN';
+    const DELETED_BY_REPORT         = 'REPORTED_PENDING_INVESTIGATION';
+    const DELETED_BY_REPORT_ADMIN   = 'REPORTED_AND_REMOVED_BY_ADMIN';
+    const DELETED_BY_ADMIN_USER_BAN = 'BY_ADMIN_USER_BAN';
 
     static private $validDeletedReasons = array(
         self::DELETED_BY_OWNER,
         self::DELETED_BY_ADMIN,
         self::DELETED_BY_REPORT,
         self::DELETED_BY_REPORT_ADMIN,
+        self::DELETED_BY_ADMIN_USER_BAN,
     );
 
     /**

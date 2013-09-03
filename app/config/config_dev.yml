@@ -1,6 +1,11 @@
 imports:
     - { resource: config.yml }
 
+services:
+    twig.extension.debug:
+        class: Twig_Extension_Debug # Allows use of the twig "dump" function to var_dump from within twig
+        tags: [{ name: 'twig.extension' }]
+
 parameters:
     # This says to use the current host, but prefix the URLs with this
     # this allows us to fake CEVO's api right on our own site
