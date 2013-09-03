@@ -90,7 +90,7 @@
             <div id="comments" class="well">
                 <legend>
                     <div class="pull-left">Comments</div>
-                    <div class="pull-right"><a id="remove-and-ban" href="{{ path('Platformd_UserBundle_admin_remove_all_comments_ban', { 'id': user.id }) }}" class="btn btn-danger btn-mini">Remove all and ban</a></div>
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}<div class="pull-right"><a id="remove-and-ban" href="{{ path('Platformd_UserBundle_admin_remove_all_comments_ban', { 'id': user.id }) }}" class="btn btn-danger btn-mini">Remove all and ban</a></div>{% endif %}
                     <div class="clear">&nbsp;</div>
                 </legend>
 
@@ -109,8 +109,8 @@
                                 <div class="pull-left">{{ comment.createdAt | date('m-d-Y @ g:i:s A') }}</div>
                                 <div class="pull-right">
                                     <span id="actions-{{ comment.id }}" {% if comment.deleted %} style="display:none;"{% endif %}>
-                                        <a href="{{ comment.thread.permalink }}" target="_blank">source</a> |
-                                        <a id="delete-{{ comment.id }}" class="delete-link" data-id="{{ comment.id }}" href="#">remove</a>
+                                        <a href="{{ comment.thread.permalink }}" target="_blank">source</a>
+                                        {% if is_granted('ROLE_SUPER_ADMIN') %}| <a id="delete-{{ comment.id }}" class="delete-link" data-id="{{ comment.id }}" href="#">remove</a>{% endif %}
                                     </span>
                                     <span id="removed-{{ comment.id }}" class="label label-important"{% if not comment.deleted %} style="display:none;"{% endif %}>(removed)</span>
                                 </div>

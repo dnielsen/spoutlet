@@ -85,6 +85,11 @@ class AdminController extends Controller
         $response = new Response();
         $response->headers->set('Content-type', 'text/json; charset=utf-8');
 
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+            $response->setContent(json_encode(array("success" => false, "details" => 'insufficient privileges')));
+            return $response;
+        }
+
         $params   = array();
         $content  = $request->getContent();
 
@@ -131,6 +136,11 @@ class AdminController extends Controller
 
     public function deleteCommentsAndBanAction($id)
     {
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+            $this->setFlash('error', 'YOu do not have the required privileges to perform this action.');
+            return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array('id' => $id)));
+        }
+
         $manager = $this->get('fos_user.user_manager');
 
         if (!$user = $manager->findUserBy(array('id' => $id))) {
