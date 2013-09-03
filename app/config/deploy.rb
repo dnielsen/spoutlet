@@ -17,14 +17,19 @@ set :awaWeb6, "ec2-54-242-110-246.compute-1.amazonaws.com"
 set :awaWeb7, "ec2-107-22-123-147.compute-1.amazonaws.com"
 set :awaWeb8, "ec2-50-17-67-206.compute-1.amazonaws.com"
 set :awaWeb9, "ec2-54-235-20-209.compute-1.amazonaws.com"
+set :awaWeb10, "ec2-54-227-135-171.compute-1.amazonaws.com"
+set :awaWeb11, "ec2-54-225-33-100.compute-1.amazonaws.com"
+set :awaWeb12, "ec2-54-243-0-223.compute-1.amazonaws.com"
+set :awaWeb13, "ec2-54-225-62-40.compute-1.amazonaws.com"
+set :awaWeb14, "ec2-54-242-4-69.compute-1.amazonaws.com"
 
 set :scm,         :git
 set :repository,  "git@github.com:platformd/spoutlet.git"
 set :user,        "ubuntu"
 set :branch,      "master"
 
-role :web,        awaWeb6, awaWeb7, awaWeb8, awaWeb9# awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, awaWeb5,
-role :app,        awaWeb6, awaWeb7, awaWeb8, awaWeb9# awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, awaWeb5,
+role :web,        awaWeb10, awaWeb11, awaWeb12, awaWeb13, awaWeb14# awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, awaWeb5, awaWeb6, awaWeb7, awaWeb8, awaWeb9
+role :app,        awaWeb10, awaWeb11, awaWeb12, awaWeb13, awaWeb14# awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, awaWeb5, awaWeb6, awaWeb7, awaWeb8, awaWeb9
 
 role :db,         awaProcessor1, :primary => true
 
