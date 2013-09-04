@@ -14,14 +14,14 @@
                     {{ form_widget(form.region_activity_type) }}
                     {{ form_widget(form.region_activity_id) }}
                     <input type="hidden" class="add-all" name="all-regions" value="false" />
-                    <button type="submit" class="btn btn-primary add-region" formnovalidate>Submit</button>
-                    <a href="{{ path('user_metric_by_activity') }}" class="btn btn-danger">Reset</a>
                 </div>
 
                 <div style="margin-top: 10px;">
                     {{ form_widget(form.from_date_region) }}
                     To
                     {{ form_widget(form.to_date_region) }}
+                    <button type="submit" class="btn btn-primary add-region" style="margin-left: 10px;" formnovalidate>Submit</button>
+                    <a href="{{ path('user_metric_by_activity') }}" class="btn btn-danger">Reset</a>
                 </div>
             </div>
 
@@ -61,14 +61,14 @@
                     {{ form_widget(form.country_activity_type) }}
                     {{ form_widget(form.country_activity_id) }}
                     <input type="hidden" class="add-all" name="all-countries" value="false" />
-                    <button type="submit" class="btn btn-primary add-country" formnovalidate>Submit</button>
-                    <a href="{{ path('user_metric_by_activity') }}" class="btn btn-danger">Reset</a>
                 </div>
 
                 <div style="margin-top: 10px;">
                     {{ form_widget(form.from_date_country) }}
                     To
                     {{ form_widget(form.to_date_country) }}
+                    <button type="submit" class="btn btn-primary add-country" style="margin-left: 10px;" formnovalidate>Submit</button>
+                    <a href="{{ path('user_metric_by_activity') }}" class="btn btn-danger">Reset</a>
                 </div>
             </div>
 
