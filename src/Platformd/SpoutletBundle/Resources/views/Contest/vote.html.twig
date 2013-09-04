@@ -17,7 +17,7 @@
         <div id="contest-voting-rules">
             {{ contest.voteInstructions | raw }}
         </div>
-        {% if "now"|date("Y-m-d H:i:s", contest.timezone) <= contest.votingStartTz|date("Y-m-d H:i:s") and contest.id == 15 %}
+        {% if "now"|date("Y-m-d H:i:s", contest.timezone) <= contest.votingStartTz|date("Y-m-d H:i:s") and contest.category != "group" %}
             <p class="voting-period-not-open">{{ 'contests.voting_period_not_open'|trans|format(contest.votingStartTz|date('date_format'|trans)) }}</p>
         {% else %}
         <div id="contest-entries">

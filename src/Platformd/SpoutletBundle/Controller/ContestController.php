@@ -26,39 +26,12 @@ use DateTimezone;
 
 class ContestController extends Controller
 {
-    public function indexAction($category=null)
+    public function indexAction()
     {
         $site = $this->getCurrentSite();
-
-        $contests = null;
-
-        if($category) {
-            if($category == 'expired') {
-                $contests = $this->getContestRepository()->findAllExpiredBySite($site);
-            } else {
-                $contests = $this->getContestRepository()->findAllByCategoryAndSiteWithVotingPeriod($category, $site);
-            }
-        } else {
-            $contests = $this->getContestRepository()->findAllForSiteByDate($site->getDefaultLocale());
-        }
+        $contests = $this->getContestRepository()->findAllBySite($site);
 
         return $this->render('SpoutletBundle:Contest:index.html.twig', array(
-            'contests' => $contests,
-            'category' => $category,
-        ));
-    }
-
-    public function filteredContestsAction($filter)
-    {
-        $site = $this->getCurrentSite();
-
-        if($filter == 'expired') {
-            $contests = $this->getContestRepository()->findAllExpiredBySite($site);
-        } else {
-            $contests = $this->getContestRepository()->findAllByCategoryAndSiteWithVotingPeriod($filter, $site);
-        }
-
-        return $this->render('SpoutletBundle:Contest:_contests.html.twig', array(
             'contests' => $contests,
         ));
     }

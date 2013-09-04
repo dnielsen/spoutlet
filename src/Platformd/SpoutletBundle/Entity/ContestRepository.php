@@ -92,6 +92,17 @@ class ContestRepository extends EntityRepository
         return $qb->getQuery()->execute();
     }
 
+    public function findAllBySite($site, $status=array('published'))
+    {
+        $qb = $this->createSiteQueryBuilder($site);
+
+        $qb->andWhere($qb->expr()->in('c.status', $status))
+            ->orderBy('c.votingEnd', 'DESC')
+        ;
+
+        return $qb->getQuery()->execute();
+    }
+
     public function findAllByCategory($category)
     {
         return $this->createQueryBuilder('c')
