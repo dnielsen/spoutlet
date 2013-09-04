@@ -1,18 +1,9 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block title 'contests.index_page_title' | trans %}
+{% block title 'contests.index_page_title' | pd_trans %}
 
 {% block content %}
-<h1>{{ 'contests.index_page_title_long' | trans }}</h1>
-<input type="hidden" id="category" value="{{ category }}" />
-<div class="styled-select">
-    <select id="filter-select">
-        <option value="none">- Select a Category -</option>
-        <option value="image">Images</option>
-        <option value="group">Groups</option>
-        <option value="expired">Expired</option>
-    </select>
-</div>
+<h1>{{ 'contests.index_page_title_long' | pd_trans }}</h1>
 <div class="contest-list">
 {% include "SpoutletBundle:Contest:_contests.html.twig" with {"contests": contests} %}
 </div>
@@ -20,35 +11,5 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/forms.css') }}" />
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript">
-        $(function () {
-
-            var category = $('#category').val();
-
-            switch (category) {
-                case 'image':
-                    $('#filter-select').val('image');
-                    break;
-                case 'group':
-                    $('#filter-select').val('group');
-                    break;
-                case 'expired':
-                    $('#filter-select').val('expired');
-                    break;
-                default:
-                    $('#filter-select').val('none');
-                    break;
-            }
-
-            $('#filter-select').change(function () {
-                var c = $(this).val() == 'none' ? '' : '/' + $(this).val();
-                location.href = '{{ path('contest_index') }}' + c;
-            });
-        });
-    </script>
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/spoutlet/css/contests.css') }}" />
 {% endblock %}

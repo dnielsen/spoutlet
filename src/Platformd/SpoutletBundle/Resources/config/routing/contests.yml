@@ -1,7 +1,3 @@
 contest_index:
-    pattern: /{category}
-    defaults: { _controller: SpoutletBundle:Contest:index, category: null }
-
-contest_filter:
-    pattern: /filter/{filter}
-    defaults: { _controller: SpoutletBundle:Contest:filteredContests, filter: "image" }
+    pattern: /
+    defaults: { _controller: SpoutletBundle:Contest:index }

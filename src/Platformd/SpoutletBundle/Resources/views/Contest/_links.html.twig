@@ -2,9 +2,7 @@
 <div id="contest-header" {% if contest.banner %}style="background:url('{{ media_path(contest.banner) }}') top left no-repeat;"{% endif %}>
     <ul class="links">
         <li><a href="{{ path('contest_show', {slug: contest.slug}) }}">{{ 'contests.show_page_contest' | trans }}</a></li>
-        {% if "now"|date("Y-m-d H:i:s", contest.timezone) <= contest.votingStartTz|date("Y-m-d H:i:s") and contest.id == 15  %}
-
-        {% else %}
+        {% if "now"|date("Y-m-d H:i:s", contest.timezone) >= contest.votingStartTz|date("Y-m-d H:i:s") or contest.category == "group"  %}
             <li><a href="{{ path('contest_vote', {slug: contest.slug}) }}">{{ 'contests.show_page_entries' | trans }}</a></li>
         {% endif %}
         {% if contest.isFinished and contest.winners | length > 0 %}

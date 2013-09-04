@@ -18,9 +18,9 @@
 <div class="std_2col">
     <div class="left">
     	<div class="group-contest-content">
-			<h3>{{ 'contests.submit_groups_title' | trans }}{% if contest.maxEntries > 1 %}s{% endif %}</h3>
+			<h3>{{ 'contests.submit_groups_title' | trans }}{% if contest.maxEntries > 1 or contest.maxEntries == 0 %}s{% endif %}</h3>
 			<div>
-				{% if groupsEntered.count == contest.maxEntries %}
+				{% if groupsEntered.count == contest.maxEntries and contest.maxEntries > 0 %}
 					<div style="width:290px;padding:5px 0;">
 	                    <p class="alert alert-info help" style="margin:0;color:red;"><i class="icon-exclamation-sign"></i>
 	                        <em><span style="color: #ff0000;">{{ 'contests.submit_page_entry_max_reached_groups' | trans}}</span></em>

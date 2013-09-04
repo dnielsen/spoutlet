@@ -1,13 +1,11 @@
-
 {% for contest in contests %}
 <div class="contest-wrapper">
     <h3><a href="{{ path('contest_show', {slug: contest.slug}) }}">{{ contest.name }}</a></h3>
-    <h6 style="font-size:10px;">{{ 'contests.entry_period' | trans }}: {{ contest.submissionStart | date('M d, Y')}} - {{ contest.submissionEnd | date('M d, Y')}}
+    <h6 style="font-size:10px;">{{ 'contests.entry_period' | pd_trans }}: {{ contest.submissionStart | date('M d, Y')}} - {{ contest.submissionEnd | date('M d, Y')}}
         <br />
-        {{ 'contests.vote_period' | trans }}: {{ contest.votingStart | date('M d, Y')}} - {{ contest.votingEnd | date('M d, Y')}}
+        {{ 'contests.vote_period' | pd_trans }}: {{ contest.votingStart | date('M d, Y')}} - {{ contest.votingEnd | date('M d, Y')}}
     </h6>
 </div>
 {% else %}
-<p>{{ 'contests.no_contests' | trans }}</p>
+<p>{{ 'contests.no_contests' | pd_trans }}</p>
 {% endfor %}
-
