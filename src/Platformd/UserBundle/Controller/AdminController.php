@@ -9,8 +9,11 @@ use Pagerfanta\Adapter\DoctrineORMAdapter;
 
 use Platformd\UserBundle\Form\Type\EditUserFormType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Platformd\UserBundle\Form\Type\SuspendUserType;
 use Platformd\UserBundle\Exception\ApiRequestException;
+use Platformd\SpoutletBundle\Entity\Comment;
+use Platformd\CEVOBundle\Api\ApiException;
 
 /**
  * Admin controller for users
@@ -31,7 +34,7 @@ class AdminController extends Controller
         $pager->setCurrentPage($this->getRequest()->get('page', 1));
 
         return $this->render('UserBundle:Admin:index.html.twig', array(
-            'pager' => $pager,
+            'pager'  => $pager,
             'search' => $search,
         ));
     }
@@ -64,11 +67,120 @@ class AdminController extends Controller
             'local_auth' => $this->container->getParameter('local_auth'),
         ));
 
+        $commentsQuery = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Comment')->getFindCommentsForUserQuery($user);
+        $pager = new PagerFanta(new DoctrineORMAdapter($commentsQuery));
+        $pager->setMaxPerPage(50);
+
+        $page = $this->getRequest()->get('comment_page', 1);
+        $page = $page > $pager->getNbPages() ? $pager->getNbPages() : $page;
+        $pager->setCurrentPage($page);
+
         return $this->render('UserBundle:Admin:edit.html.twig', array(
-            'user' => $user,
-            'form' => $form->createView(),
+            'user'        => $user,
+            'form'        => $form->createView(),
             'suspendForm' => $this->createForm(new SuspendUserType, $user)->createView(),
+            'comments'    => $pager,
         ));
+    }
+
+    public function deleteCommentAjaxAction(Request $request)
+    {
+        $response = new Response();
+        $response->headers->set('Content-type', 'text/json; charset=utf-8');
+
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+            $response->setContent(json_encode(array("success" => false, "details" => 'insufficient privileges')));
+            return $response;
+        }
+
+        $params   = array();
+        $content  = $request->getContent();
+
+        if (empty($content)) {
+            $response->setContent(json_encode(array("success" => false, "details" => 'no content passed')));
+            return $response;
+        }
+
+        $params   = json_decode($content, true);
+
+        if (!isset($params['commentId'])) {
+            $response->setContent(json_encode(array("success" => false, "details" => 'no comment id set')));
+            return $response;
+        }
+
+        $em      = $this->getDoctrine()->getEntityManager();
+        $comment = $em->getRepository('SpoutletBundle:Comment')->find($params['commentId']);
+
+        if (!$comment) {
+            $response->setContent(json_encode(array("success" => false, "details" => 'comment not found')));
+            return $response;
+        }
+
+        $comment->setDeleted(true);
+        $comment->setDeletedReason(Comment::DELETED_BY_ADMIN);
+
+        $em->persist($comment);
+        $em->flush();
+
+        $this->removeUserArp($comment);
+
+        $response->setContent(json_encode(array("success" => true)));
+        return $response;
+    }
+
+    private function removeUserArp($comment)
+    {
+        try {
+            $response = $this->get('pd.cevo.api.api_manager')->GiveUserXp('removecomment', $comment->getAuthor()->getCevoUserId());
+        } catch (ApiException $e) {
+
+        }
+    }
+
+    public function deleteCommentsAndBanAction($id)
+    {
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+            $this->setFlash('error', 'YOu do not have the required privileges to perform this action.');
+            return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array('id' => $id)));
+        }
+
+        $manager = $this->get('fos_user.user_manager');
+
+        if (!$user = $manager->findUserBy(array('id' => $id))) {
+            throw $this->createNotFoundException(sprintf('Unable to retrieve user #%d', $id));
+        }
+
+        if ($this->getApiAuth()) {
+            try {
+                $this->getApiManager()->banUser($user);
+            } catch (ApiRequestException $e) {
+                $this->setFlash('error', 'There was a problem suspending this user. Please try again soon.');
+                return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array('id' => $id)));
+            }
+        }
+
+        $user->setExpired(true);
+        $this->getUserManager()->updateUser($user);
+
+        $em             = $this->getDoctrine()->getEntityManager();
+        $commentsQuery  = $em->getRepository('SpoutletBundle:Comment')->getAllActiveCommentsForUserQuery($user);
+        $iterableResult = $commentsQuery->iterate();
+
+        foreach ($iterableResult AS $row) {
+            $row[0]->setDeleted(true);
+            $row[0]->setDeletedReason(Comment::DELETED_BY_ADMIN_USER_BAN);
+
+            $em->persist($row[0]);
+
+            // Disabled as this requires a cURL request to CEVO for each and every comment removed.
+            //$this->removeUserArp($row[0]);
+        }
+
+        $em->flush();
+
+        $this->setFlash('success', 'This user is banned and all comments posted by them have been removed.');
+
+        return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array('id' => $id)));
     }
 
     public function updateAction(Request $request, $id)
@@ -82,7 +194,7 @@ class AdminController extends Controller
 
         $form = $this->createForm(new EditUserFormType(), $user, array(
             'allow_promote' => $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN'),
-            'local_auth' => $this->container->getParameter('local_auth'),
+            'local_auth'    => $this->container->getParameter('local_auth'),
         ));
 
         $form->bindRequest($request);
@@ -103,8 +215,8 @@ class AdminController extends Controller
         }
 
         return $this->render('UserBundle:Admin:edit.html.twig', array(
-            'user' => $user,
-            'form' => $form->createView(),
+            'user'        => $user,
+            'form'        => $form->createView(),
             'suspendForm' => $this->createForm(new SuspendUserType, $user)->createView(),
         ));
     }
@@ -230,8 +342,8 @@ class AdminController extends Controller
         $logins = array_slice($allLogins, 0, 100);
 
         return $this->render('UserBundle:Admin:logins.html.twig', array(
-            'user'      => $user,
-            'logins'    => $logins,
+            'user'   => $user,
+            'logins' => $logins,
         ));
     }
 

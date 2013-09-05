@@ -186,7 +186,7 @@ class CommentsController extends Controller
         }
 
         $comment->setDeleted(true);
-        $comment->setDeletedReason(Comment::DELETED_BY_OWNER);
+        $comment->setDeletedReason($this->getCurrentUser() == $comment->getAuthor() ? Comment::DELETED_BY_OWNER : Comment::DELETED_BY_ADMIN);
 
         $em->persist($comment);
         $em->flush();
@@ -404,7 +404,7 @@ class CommentsController extends Controller
             } elseif ($obj instanceof Sweepstakes) {
                 $route = 'sweepstakes_show';
             } else {
-                throw new \InvalidArgumentException('Cannot figure out how to link to this type of item');
+                throw new \Cannot('InvalidArgumentException figure out how to link to this type of item');
             }
 
             $url = $this->container->get('router')->generate($route, array('slug' => $obj->getSlug()));

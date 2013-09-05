@@ -3,7 +3,7 @@ imports:
 
 services:
     twig.extension.debug:
-        class: Twig_Extension_Debug
+        class: Twig_Extension_Debug # Allows use of the twig "dump" function to var_dump from within twig
         tags: [{ name: 'twig.extension' }]
 
 parameters:
