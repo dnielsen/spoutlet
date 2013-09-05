@@ -275,13 +275,21 @@ class GlobalEventAdminController extends Controller
             }
         }
 
+        $sites = array();
+
+        foreach ($data['sites'] as $site) {
+            $sites[] = $site;
+        }
+
+        if (count($sites) > 0) {
+            $data['sites'] = $sites;
+        }
+
         if($data['eventType'] == 'global') {
             $pager = $this->getGlobalEventService()->findGlobalEventStats(array_merge(array('page' => $page), $data));
         } else {
             $pager = $this->getGroupEventService()->findGroupEventStats(array_merge(array('page' => $page), $data));
         }
-
-        $event = $this->getGlobalEventService()->find(1);
 
         return $this->render('EventBundle:GlobalEvent\Admin:metrics.html.twig', array(
             'pager'    => $pager,
