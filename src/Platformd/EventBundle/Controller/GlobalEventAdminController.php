@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException
 ;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 class GlobalEventAdminController extends Controller
 {
     public function indexAction()
@@ -237,7 +239,10 @@ class GlobalEventAdminController extends Controller
             $this->resetEventsFilterFormData();
         }
 
-        $page = $request->query->get('page', 1);
+        $page  = $request->query->get('page', 1);
+        $em    = $this->getDoctrine()->getEntityManager();
+        $japan = $em->getRepository('SpoutletBundle:Site')->find(2);
+
         $data = array(
             'eventName' => null,
             'published' => null,
@@ -249,7 +254,7 @@ class GlobalEventAdminController extends Controller
         $form = $this->createForm(new EventFindType(), $data);
 
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-            $data->setSites(array('ja'));
+            $data['sites'] = new ArrayCollection(array($japan));
             $form->setData($data);
         }
 
@@ -261,7 +266,7 @@ class GlobalEventAdminController extends Controller
                 $data = $form->getData();
 
                 if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-                    $data->setSites(array('ja'));
+                    $data['sites'] = new ArrayCollection(array($japan));
                     $form->setData($data);
                 }
 
@@ -271,18 +276,30 @@ class GlobalEventAdminController extends Controller
             $sessionData = $this->getEventsFilterFormData();
             if (count($sessionData) > 0) {
                 $data = $sessionData;
+
+                if (count($data['sites']) > 0) {
+                    foreach ($data['sites'] as $site) {
+                        $site = $em->merge($site);
+                        $sites[] = $site;
+                    }
+
+                    $data['sites'] = new ArrayCollection($sites);
+                }
+
                 $form->setData($data);
             }
         }
 
         $sites = array();
 
-        foreach ($data['sites'] as $site) {
-            $sites[] = $site;
-        }
+        if (count($data['sites']) > 0) {
+            foreach ($data['sites'] as $site) {
+                $sites[] = $site;
+            }
 
-        if (count($sites) > 0) {
-            $data['sites'] = $sites;
+            if (count($sites) > 0) {
+                $data['sites'] = $sites;
+            }
         }
 
         if($data['eventType'] == 'global') {
