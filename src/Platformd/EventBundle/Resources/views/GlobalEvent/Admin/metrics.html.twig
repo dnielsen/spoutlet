@@ -8,7 +8,7 @@
         {% include 'EventBundle:GlobalEvent/Admin:_findEventForm.html.twig' %}
         <div style="margin-left: 160px">
             <button type="submit" class="btn btn-primary" formnovalidate>Search</button>
-            <a href="{{ path('admin_event_metrics') }}" class="btn btn-primary" style="margin-left: 20px;">Clear</a>
+            <a href="{{ path('admin_event_metrics') }}?reset=true" class="btn btn-primary" style="margin-left: 20px;">Clear</a>
         </div>
     </form>
 </div>
@@ -16,7 +16,7 @@
 {% if pager.haveToPaginate %}
     {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
     {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
-    {{ pagerfanta(pager, 'twitter_bootstrap', {'routeName': 'admin_event_metrics', 'pageParameter' : 'group_page'}) }}
+    {{ pagerfanta(pager, 'twitter_bootstrap', {'routeName': 'admin_event_metrics', 'pageParameter' : 'page'}) }}
 {% endif %}
 <table class="table table-striped table-bordered tablesorter">
     <thead>

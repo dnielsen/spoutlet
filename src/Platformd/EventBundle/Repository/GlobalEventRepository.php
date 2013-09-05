@@ -127,7 +127,7 @@ class GlobalEventRepository extends EventRepository
     public function findGlobalEventStats(array $data = array())
     {
         $filters = array_merge(
-            array('eventName' => '', 'published' => '', 'sites' => array(), 'startDate' => '', 'endDate' => ''),
+            array('eventName' => '', 'published' => '', 'sites' => array(), 'from' => '', 'thru' => ''),
             $data
         );
 
@@ -150,7 +150,6 @@ class GlobalEventRepository extends EventRepository
             ->leftJoin('gE.sites', 's');
 
         if (count($sites) > 0) {
-
             $qb->andWhere('s IN (:siteList)');
             $qb->setParameter('siteList', $sites);
 
@@ -167,16 +166,14 @@ class GlobalEventRepository extends EventRepository
         }
 
         if ($from != "") {
-
             $from->setTime(0, 0, 0);
             $qb->andWhere('gE.startsAt >= :from');
             $qb->setParameter('from', $from);
         }
 
         if ($thru != "") {
-
             $thru->setTime(23, 59, 59);
-            $qb->andWhere('gE.endsAt <= :thru');
+            $qb->andWhere('gE.startsAt <= :thru');
             $qb->setParameter('thru', $thru);
         }
 
