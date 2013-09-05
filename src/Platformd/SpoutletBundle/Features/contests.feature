@@ -31,7 +31,7 @@ Feature: Contest Frontend
         When I click "Diablo 3 Image Contest"
         Then I should be on "/contest/diablo-3"
             And I should see "Diablo 3 Image Contest"
-            And I should see "I have read and agreed to the Contest Rules"
+            And I should see "I have read and agree to the Official Rules"
 
     Scenario: Unable to enter an expired contest
         Given I am on "/contest/expired-contest"
@@ -43,7 +43,7 @@ Feature: Contest Frontend
         When I click "Unstarted Contest"
         Then I should be on "/contest/unstarted-contest"
             And I should see "Unstarted Contest"
-            And I should not see "I have read and agreed to the Contest Rules"
+            And I should not see "I have read and agree to the Official Rules"
 
     Scenario: Expired contests should not show up on contest index page
         Given I am on "/contests/image"

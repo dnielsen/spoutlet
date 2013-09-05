@@ -80,7 +80,10 @@ class SweepstakesEntryFormHandler
                 $site       = $this->siteUtil->getCurrentSite();
 
                 if ($this->form->get('registrationDetails')->getData()->getBirthdate()) {
-                    $ageManager->setUsersBirthday($this->form->get('registrationDetails')->getData()->getBirthdate());
+
+                    if(!$ageManager->getUsersAge()) {
+                        $ageManager->setUsersBirthday($this->form->get('registrationDetails')->getData()->getBirthdate());
+                    }
 
                     if ($ageManager->getUsersAge() < $site->getSiteConfig()->getMinAgeRequirement()) {
                         throw new InsufficientAgeException();

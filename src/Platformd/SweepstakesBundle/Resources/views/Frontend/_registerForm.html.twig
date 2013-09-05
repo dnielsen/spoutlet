@@ -170,6 +170,9 @@
                 {% if news_source_error != '' %}<span class="field-error">{{ news_source_error }}</span>{% endif %}
             </td>
         </tr>
+
+        <tr><td>&nbsp;</td><td id="sweeps-entry-form-title">{{ 'sweepstakes.entry.form.title' | pd_trans }}</td></tr>
+
         <tr class="sweepsform-row">
             <td class="sweepsform-left">
                 {{ form_label(entryForm.phoneNumber) }}

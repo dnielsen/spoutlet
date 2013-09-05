@@ -94,6 +94,7 @@ class SpoutletExtension extends Twig_Extension
             'pd_link_target'     => new Twig_Filter_Method($this, 'linkToObjectTarget', array('is_safe' => array('html'))),
             'wrap'               => new Twig_Filter_Method($this, 'wrap'),
             'date_translate'     => new Twig_Filter_Method($this, 'dateTranslate'),
+            'datetime_translate' => new Twig_Filter_Method($this, 'dateTranslate'),
             'site_name'          => new Twig_Filter_Method($this, 'getSiteNameFromId'),
             'pd_trans'           => new Twig_Filter_Method($this, 'themedTranslate'),
         );
@@ -905,6 +906,11 @@ class SpoutletExtension extends Twig_Extension
     public function dateTranslate($datetime)
     {
         return $datetime->format($this->themedTranslate('date_format', array(), $this->session->getLocale()));
+    }
+
+    public function dateTimeTranslate($datetime)
+    {
+        return $datetime->format($this->themedTranslate('datetime_format', array(), $this->session->getLocale()));
     }
 
     public function themedTranslate($transKey, $variables = array(), $domain = 'messages', $locale = null)

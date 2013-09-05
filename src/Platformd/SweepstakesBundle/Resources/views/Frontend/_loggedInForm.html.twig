@@ -1,6 +1,7 @@
 <div id="sweepstakes-wrapper">
     <form action="{{ path('sweepstakes_show', { 'slug': sweepstakes.slug }) }}" method="post" {{ form_enctype(entryForm) }} class="form form-horizontal">
         <table id="sweepstakes-tbl">
+            <tr><td>&nbsp;</td><td id="sweeps-entry-form-title">{{ 'sweepstakes.entry.form.title' | pd_trans }}</td></tr>
             <tr class="sweepsform-row">
                 <td class="sweepsform-left">{{ form_label(entryForm.phoneNumber) }}</td>
                 <td class="sweepsform-right">{{ form_widget(entryForm.phoneNumber) }} {{ form_errors(entryForm.phoneNumber) }}</td>

@@ -38,6 +38,8 @@
         <div id="sweepstakes-content">
             {{ sweepstakes.content | raw }}
 
+            <div class="clear"></div>
+
             <div id="sweepstakes-rules">
                 {{ 'sweepstakes.entry.links.rules'|pd_trans({'%rules_url%': path('sweepstakes_rules', {'slug': sweepstakes.slug})})|raw }}
             </div>
@@ -45,7 +47,9 @@
 
         <div id="sweepstakes-entry-links">
             {% if is_granted("ROLE_USER") %}
-                {% if isEntered %}<div class="already-entered">{{ 'sweepstakes.entry.links.already_entered' | pd_trans }}</div>{% endif %}
+                {% if isEntered %}<div class="sweespstakes-cant-enter">{{ 'sweepstakes.entry.links.already_entered' | pd_trans }}</div>{% endif %}
+                {% if not sweepstakes.hasStarted %}<div class="sweespstakes-cant-enter">{{ 'sweepstakes.entry.contest_not_started' | pd_trans({ '%dateString%': (sweepstakes.startsAt | date_translate) }) }}</div>{% endif %}
+                {% if sweepstakes.isFinished %}<div class="sweespstakes-cant-enter">{{ 'sweepstakes.entry.contest_has_ended' | pd_trans }}</div>{% endif %}
             {% else %}
                 <div class="not-entered">
                     <a href="#" id="use-existing-account">{{ 'sweepstakes.entry.links.use_existing' | pd_trans }}</a>
@@ -55,16 +59,16 @@
             {% endif %}
         </div>
 
-        {% if is_granted("ROLE_USER") %}
-            {% if not isEntered %}
-                {% include 'SweepstakesBundle:Frontend:_loggedInForm.html.twig' with { 'sweepstakes': sweepstakes, 'entryForm': entryForm, 'errors': errors } %}
+        {% if sweepstakes.isCurrentlyOpen %}
+            {% if is_granted("ROLE_USER") %}
+                {% if not isEntered %}
+                    {% include 'SweepstakesBundle:Frontend:_loggedInForm.html.twig' with { 'sweepstakes': sweepstakes, 'entryForm': entryForm, 'errors': errors } %}
+                {% endif %}
+            {% else %}
+                <div id="register-to-enter"{% if errors|length > 0 %} style="display: block;"{% endif %}>
+                    {% include 'SweepstakesBundle:Frontend:_registerForm.html.twig' with { 'sweepstakes': sweepstakes, 'entryForm': entryForm, 'errors': errors } %}
+                </div>
             {% endif %}
-        {% else %}
-
-            <div id="register-to-enter"{% if errors|length > 0 %} style="display: block;"{% endif %}>
-                {% include 'SweepstakesBundle:Frontend:_registerForm.html.twig' with { 'sweepstakes': sweepstakes, 'entryForm': entryForm, 'errors': errors } %}
-            </div>
-
         {% endif %}
 
     </div>

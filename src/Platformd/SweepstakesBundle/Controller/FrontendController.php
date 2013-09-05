@@ -46,7 +46,7 @@ class FrontendController extends Controller
 
         $canTest = $sweepstakes->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
 
-        if ((!$sweepstakes->getPublished() || !$sweepstakes->isCurrentlyOpen()) && !$canTest) {
+        if (!$sweepstakes->getPublished() && !$canTest) {
             throw $this->createNotFoundException();
         }
 
@@ -68,14 +68,16 @@ class FrontendController extends Controller
         $formHandler = $this->container->get('platformd_sweeps.entry.form.handler');
         $formHandler->setForm($entryForm);
 
-        $process = $formHandler->process(true);
+        if ($sweepstakes->isCurrentlyOpen()) {
+            $process = $formHandler->process(true);
 
-        if($process) {
-            if (!$this->isGranted('ROLE_USER')) {
-                return $this->redirect($this->generateUrl('sweepstakes_show', array('slug' => $slug, 'registered' => '1')));
+            if($process) {
+                if (!$this->isGranted('ROLE_USER')) {
+                    return $this->redirect($this->generateUrl('sweepstakes_show', array('slug' => $slug, 'registered' => '1')));
+                }
+
+                return $this->redirect($this->generateUrl('sweepstakes_show', array('slug' => $slug)));
             }
-
-            return $this->redirect($this->generateUrl('sweepstakes_show', array('slug' => $slug)));
         }
 
         return array(
@@ -95,7 +97,7 @@ class FrontendController extends Controller
         $sweepstakes    = $this->findSweepstakes($slug, false);
         $canTest        = $sweepstakes->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
 
-        if ((!$sweepstakes->getPublished() || !$sweepstakes->isCurrentlyOpen()) && !$canTest) {
+        if (!$sweepstakes->getPublished() && !$canTest) {
             throw $this->createNotFoundException();
         }
 
