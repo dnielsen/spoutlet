@@ -2,6 +2,9 @@
 {% block title %}{{ "platformd.events.admin.title" | trans }}{% endblock %}
 
 {% block content %}
+
+<h1>Events</h1>
+
 <div style="width:750px">
 
     <form action="{{ path('admin_event_metrics') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
