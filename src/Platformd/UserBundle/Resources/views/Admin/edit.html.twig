@@ -97,7 +97,8 @@
                 {% if comments.haveToPaginate %}
                     {{ pagerfanta(comments, 'twitter_bootstrap', {
                         'routeName': 'Platformd_UserBundle_admin_edit',
-                        'routeParams': { 'id': user.id }
+                        'routeParams': { 'id': user.id },
+                        'pageParameter': 'comment_page'
                     }) }}
                 {% endif %}
 

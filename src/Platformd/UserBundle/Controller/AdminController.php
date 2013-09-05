@@ -70,7 +70,10 @@ class AdminController extends Controller
         $commentsQuery = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Comment')->getFindCommentsForUserQuery($user);
         $pager = new PagerFanta(new DoctrineORMAdapter($commentsQuery));
         $pager->setMaxPerPage(50);
-        $pager->setCurrentPage($this->getRequest()->get('page', 1));
+
+        $page = $this->getRequest()->get('comment_page', 1);
+        $page = $page > $pager->getNbPages() ? $pager->getNbPages() : $page;
+        $pager->setCurrentPage($page);
 
         return $this->render('UserBundle:Admin:edit.html.twig', array(
             'user'        => $user,
