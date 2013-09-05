@@ -154,11 +154,11 @@ class GroupEventRepository extends EventRepository
     public function findGroupEventStats(array $data = array())
     {
         $filters = array_merge(
-            array('eventName' => '','sites' => array(), 'filter' => ''),
+            array('eventName' => '', 'published' => '', 'sites' => array(), 'from' => '', 'thru' => '', 'filter' => ''),
             $data
         );
 
-        $qb = $this->getFindEventsQB($filters['eventName'], $filters['sites'], $filters['filter']);
+        $qb = $this->getFindEventsQB($filters['eventName'], $filters['published'], $filters['sites'], $filters['from'], $filters['thru'], $filters['filter']);
 
         if (isset($filters['page'])) {
             $adapter = new DoctrineORMAdapter($qb);
@@ -171,14 +171,13 @@ class GroupEventRepository extends EventRepository
         return $qb->getQuery()->execute();
     }
 
-    public function getFindEventsQB($eventName, $sites, $filter="")
+    public function getFindEventsQB($eventName, $status, $sites, $from="", $thru="", $filter="")
     {
         $qb = $this->createQueryBuilder('gE')
             ->leftJoin('gE.group', 'g')
             ->leftJoin('gE.sites', 's');
 
         if (count($sites) > 0) {
-
             $qb->andWhere('s IN (:siteList)');
             $qb->setParameter('siteList', $sites);
 
@@ -187,6 +186,23 @@ class GroupEventRepository extends EventRepository
         if ($eventName) {
             $qb->andWhere('gE.name like :eventName');
             $qb->setParameter('eventName', '%'.$eventName.'%');
+        }
+
+        if ($status != "") {
+            $qb->andWhere('gE.published = :status');
+            $qb->setParameter('status', $status);
+        }
+
+        if ($from != "") {
+            $from->setTime(0, 0, 0);
+            $qb->andWhere('gE.startsAt >= :from');
+            $qb->setParameter('from', $from);
+        }
+
+        if ($thru != "") {
+            $thru->setTime(23, 59, 59);
+            $qb->andWhere('gE.startsAt <= :thru');
+            $qb->setParameter('thru', $thru);
         }
 
         if($filter != "") {

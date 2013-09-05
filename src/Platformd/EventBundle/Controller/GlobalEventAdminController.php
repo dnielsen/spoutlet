@@ -7,7 +7,6 @@ use Platformd\SpoutletBundle\Controller\Controller,
     Platformd\EventBundle\Entity\GlobalEvent,
     Platformd\EventBundle\Form\Type\GlobalEventType,
     Platformd\EventBundle\Entity\GlobalEventTranslation,
-    Platformd\EventBundle\Entity\EventFindWrapper,
     Platformd\EventBundle\Form\Type\EventFindType,
     Platformd\SpoutletBundle\Util\CsvResponseFactory
 ;
@@ -234,11 +233,19 @@ class GlobalEventAdminController extends Controller
 
     public function metricsAction(Request $request)
     {
+        if ($request->query->get('reset')) {
+            $this->resetEventsFilterFormData();
+        }
+
         $page = $request->query->get('page', 1);
-
-        $this->resetEventsFilterFormData();
-
-        $data = new EventFindWrapper();
+        $data = array(
+            'eventName' => null,
+            'published' => null,
+            'eventType' => null,
+            'sites'     => null,
+            'from'      => null,
+            'thru'      => null,
+        );
         $form = $this->createForm(new EventFindType(), $data);
 
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
@@ -247,8 +254,10 @@ class GlobalEventAdminController extends Controller
         }
 
         if ('POST' == $request->getMethod()) {
+
             $form->bindRequest($request);
             if ($form->isValid()) {
+
                 $data = $form->getData();
 
                 if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
@@ -256,44 +265,36 @@ class GlobalEventAdminController extends Controller
                     $form->setData($data);
                 }
 
-                $this->setEventsFilterFormData(array(
-                    'eventName' => $data->getEventName(),
-                    'published' => $data->getPublished(),
-                    'sites' => $data->getSites(),
-                    'from' => $data->getFrom(),
-                    'thru' => $data->getThru(),
-                    'eventType' => $data->getEventType(),
-                ));
+                $this->setEventsFilterFormData($data);
+            }
+        } else {
+            $sessionData = $this->getEventsFilterFormData();
+            if (count($sessionData) > 0) {
+                $data = $sessionData;
+                $form->setData($data);
             }
         }
 
-        if($data->getEventType() == 'global') {
-            $pager = $this->getGlobalEventService()->findGlobalEventStats(array(
-                'eventName' => $data->getEventName(),
-                'published' => $data->getPublished(),
-                'sites' => $data->getSites()->toArray(),
-                'from' => $data->getFrom(),
-                'thru' => $data->getThru(),
-                'page' => $page
-            ));
-        } else {
-            $pager = $this->getGroupEventService()->findGroupEventStats(array(
-                'eventName' => $data->getEventName(),
-                'published' => $data->getPublished(),
-                'sites' => $data->getSites() ? $data->getSites()->toArray() : null,
-                'from' => $data->getFrom(),
-                'thru' => $data->getThru(),
-                'page' => $page
-            ));
+        $sites = array();
 
+        foreach ($data['sites'] as $site) {
+            $sites[] = $site;
         }
 
-        $event = $this->getGlobalEventService()->find(1);
+        if (count($sites) > 0) {
+            $data['sites'] = $sites;
+        }
+
+        if($data['eventType'] == 'global') {
+            $pager = $this->getGlobalEventService()->findGlobalEventStats(array_merge(array('page' => $page), $data));
+        } else {
+            $pager = $this->getGroupEventService()->findGroupEventStats(array_merge(array('page' => $page), $data));
+        }
 
         return $this->render('EventBundle:GlobalEvent\Admin:metrics.html.twig', array(
             'pager'    => $pager,
             'form'     => $form->createView(),
-            'typeParam'=> $data->getEventType() ?: 'group'
+            'typeParam'=> $data['eventType'] ?: 'group'
         ));
     }
 
