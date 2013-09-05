@@ -1,11 +1,13 @@
 sweepstakes: Sweepstakes
 
 sweepstakes.entry.rules.title: Official Contest Rules
-
 sweepstakes.entry.or: or
+sweepstakes.entry.contest_not_started: Sorry, the submission period has not started yet. Check back on %dateString%.
+sweepstakes.entry.contest_has_ended: Sorry, the submission period is closed. Please check back to see the winners.
 
+sweepstakes.entry.form.title: Entry Form
 sweepstakes.entry.form.phone_number: 'Phone Number (used to contact the winner)'
-sweepstakes.entry.form.read_and_agreed_to_rules: 'I have read and agreed to the <a href="%rules_url%" target="_blank">Contest Rules</a>.'
+sweepstakes.entry.form.read_and_agreed_to_rules: 'I have read and agreed to the <a href="%rules_url%" target="_blank">Official Rules</a>.'
 
 sweepstakes.entry.links.already_entered: You have been entered into the contest. Thanks for your participation and good luck!
 sweepstakes.entry.links.use_existing: Use Existing Account

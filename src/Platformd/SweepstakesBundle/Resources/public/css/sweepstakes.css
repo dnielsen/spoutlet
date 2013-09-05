@@ -8,7 +8,7 @@
     margin: 0 0 20px 0;
 }
 
-#sweepstakes-entry-links .already-entered {
+#sweepstakes-entry-links .sweespstakes-cant-enter {
     color: #e70000;
 }
 
@@ -117,4 +117,10 @@
 
 #sweepstakes-wrapper .checkbox-label {
     vertical-align: middle;
+}
+
+#sweepstakes-wrapper #sweeps-entry-form-title {
+    font-size: 14px;
+    text-decoration: underline;
+    padding: 20px 4px !important;
 }

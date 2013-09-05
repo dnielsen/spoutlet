@@ -57,7 +57,10 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
             $site       = $this->container->get('platformd.util.site_util')->getCurrentSite();
 
             if ($this->form->getData()->getBirthdate()) {
-                $ageManager->setUsersBirthday($this->form->getData()->getBirthdate());
+
+                if(!$ageManager->getUsersAge()) {
+                    $ageManager->setUsersBirthday($this->form->getData()->getBirthdate());
+                }
 
                 if ($ageManager->getUsersAge() < $site->getSiteConfig()->getMinAgeRequirement()) {
                     throw new InsufficientAgeException();

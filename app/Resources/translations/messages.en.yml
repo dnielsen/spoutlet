@@ -3,6 +3,7 @@ submit: Submit
 cancel: Cancel
 delete: Delete
 date_format: M j, Y
+datetime_format: M j, Y @ H:i
 
 recaptcha:
     visual_challenge: Get a visual challenge
@@ -350,7 +351,7 @@ platformd:
             yes: "Yes"
             no: "No"
             agree_to_terms: |
-                I have read and agreed to the
+                I have read and agree to the
                 <a href="%terms_url%" target="_blank">Terms & Conditions</a> and
                 <a href="%privacy_url%" target="_blank">Privacy Policy</a>.
             subscribe_dell: Subscribe me to receive Alienware/Dell gaming news and special offers via email. <a href="http://www.dell.com/learn/us/en/19/policies-privacy?c=us&l=en&s=gen&delphi:gr=true" target="_blank">View Dell Privacy Policy</a>.
@@ -775,7 +776,6 @@ click_register_sweepstakes_step: Click "Enter" to participate.
 already_entered_sweepstakes: You already entered this sweepstakes.
 not_eligible_sweepstakes: Sorry, you are not eligible to participate in this sweepstakes.
 enter: Enter
-read_and_agreed_to_rules: I have read and agree to the %a_start%Official Rules%a_end%
 official_sweepstakes_rules: Official Sweepstakes Rules
 sweeps_check_both_boxes: Please agree to the Official Rules before entering the sweepstakes.
 overview: Overview
@@ -1174,7 +1174,7 @@ contests:
     show_page_vote_now: View Entries
     show_page_entries: Entries
     show_page_my_entries: Enter
-    show_page_agree_text: I have read and agreed to the <a id="contest-official-rules" href="javascript:void(0);">Contest Rules</a>.
+    show_page_agree_text: I have read and agree to the <a id="contest-official-rules" href="javascript:void(0);">Contest Rules</a>.
     vote_page_instruction: Voting Instructions
     inform_user_entrycount: You have currently entered %entryCount% entry, but may still enter more.|You have currently entered %entryCount% entries, but may still enter more.
     enter_page_success: You have now entered into %s. Please submit your %s(s) for this contest.

@@ -155,24 +155,6 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
         $this->sites     = new ArrayCollection();
     }
 
-    public function isCurrentlyOpen()
-    {
-        $now = time();
-
-        if (!$this->getStartsAt()) {
-            return false;
-        }
-
-        $start = $this->getStartsAt()->format('U');
-        $end   = $this->getEndsAt() ? $this->getEndsAt()->format('U') : null;
-
-        if ($now < $start || ($end && $now > $end)) {
-            return false;
-        }
-
-        return true;
-    }
-
     public function getId() { return $this->id; }
 
     public function getName() { return $this->name; }
@@ -296,5 +278,57 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
     public function removeSweepstakesQuestion(SweepstakesQuestion $question)
     {
         $this->questions->removeElement($question);
+    }
+
+    public function isCurrentlyOpen()
+    {
+        $now = time();
+
+        if (!$this->getStartsAt()) {
+            return false;
+        }
+
+        $start = $this->getStartsAt()->format('U');
+        $end   = $this->getEndsAt() ? $this->getEndsAt()->format('U') : null;
+
+        if ($now < $start || ($end && $now > $end)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function hasStarted()
+    {
+        $now = time();
+
+        if (!$this->getStartsAt()) {
+            return true;
+        }
+
+        $start = $this->getStartsAt()->format('U');
+
+        if ($now < $start) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function isFinished()
+    {
+        $now = time();
+
+        if (!$this->getEndsAt()) {
+            return false;
+        }
+
+        $end   = $this->getEndsAt() ? $this->getEndsAt()->format('U') : null;
+
+        if ($end && $now > $end) {
+            return true;
+        }
+
+        return false;
     }
 }
