@@ -106,7 +106,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
             ->andWhere('u.created > :dateTime')
             ->setParameters(array(
                 'ipAddress' => $ipAddress,
-                'dateTime'  => new \DateTime('-5 minutes')
+                'dateTime'  => new \DateTime('-1 minutes')
             ))
             ->getQuery()
             ->execute();

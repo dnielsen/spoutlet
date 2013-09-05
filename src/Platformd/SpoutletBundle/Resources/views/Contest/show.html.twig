@@ -162,7 +162,7 @@
                 return true;
             });
 
-            $('a.reg-source').click(function() {
+            $('.reg-source').click(function() {
                 addSourceInfo(this, '{{ { 'type': regSourceType, 'id': contest.id } | base64_encode }}');
             });
         });
