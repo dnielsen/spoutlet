@@ -933,7 +933,7 @@ platformd.key_request_processor_command.key_assigned_email_body: |
         %group_section%
         <p>Equipo Web de Alienware Arena</p>
 
-platformd.key_request_processor_command.key_not_assigned_generic_email_subject: Actualización de %promotion_title%
+platformd.key_request_processor_command.key_not_assigned_generic_email_subject: No es posible asignar una clave para %promotion_title%
 platformd.key_request_processor_command.key_not_assigned_generic_email_body: |
     <p>Desafortunadamente, no pudismos asignarte una clave. Esto puede ocurrir por una de varias razones, incluyendo:<br />
         <br />
