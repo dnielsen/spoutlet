@@ -1026,7 +1026,7 @@ platformd.key_request_processor_command.key_assigned_email_body: |
         %group_section%
         <p>Alienware Arenaチーム</p>
 
-platformd.key_request_processor_command.key_not_assigned_generic_email_subject: %promotion_title%　アップデート
+platformd.key_request_processor_command.key_not_assigned_generic_email_subject: %promotion_title%　のためのキーを割り当てることができません。
 platformd.key_request_processor_command.key_not_assigned_generic_email_body: |
     <p>あなたのキーを割り当てることができませんでした。<br />
         この問題は、次の理由のうち一つを含む場合があります。<br />
