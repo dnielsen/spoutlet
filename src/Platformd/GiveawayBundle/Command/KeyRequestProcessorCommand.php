@@ -450,12 +450,9 @@ EOT
 
                 $this->rejectRequestWithOutput(5, 'No keys left for user.', $state, $lastReason, $message);
 
-
-                if ($lastReason == KeyRequestState::REASON_NO_KEYS_LEFT) {
-                    $this->output(5, 'Sending user email.');
-                    $this->emailUserNoKeysLeft($user, $promotion->getName(), $urlToShowPage, $site, $groupName, $urlToGroupShowPage);
-                    $this->output(5, 'Email sent.');
-                }
+                $this->output(5, 'Sending user email.');
+                $this->emailUserRejected($user, $promotion->getName(), $urlToShowPage, $site, $groupName, $urlToGroupShowPage);
+                $this->output(5, 'Email sent.');
 
                 $lastReason = null;
 
@@ -572,6 +569,39 @@ EOT
         $message = $translator->trans('platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body', $mainReplacements, 'messages', $locale);
 
         $emailManager->sendHtmlEmail($emailTo, $subject, $message, 'promotion_not_assigned_no_keys_left', $site->getName());
+    }
+
+    private function emailUserRejected($user, $promotionTitle, $promotionShowPage, $site, $promotionGroupName = null, $promotionGroupShowPage = null) {
+
+        $emailManager = $this->getContainer()->get('platformd.model.email_manager');
+        $translator   = $this->getContainer()->get('translator');
+        $locale       = $site->getDefaultLocale();
+
+        $mainReplacements = array(
+            '%promotion_title%'     => $promotionTitle,
+            '%promotion_show_page%' => 'http://'.$site->getFullDomain().$promotionShowPage,
+            '%extra_info%'       => '',
+        );
+
+        if ($promotionGroupName && $promotionGroupShowPage) {
+
+            $groupReplacements = array(
+                '%promotion_group_name%'      => $promotionGroupName,
+                '%promotion_group_show_page%' => 'http://'.$site->getFullDomain().$promotionGroupShowPage,
+            );
+
+            $groupSection = $translator->trans('platformd.key_request_processor_command.key_not_assigned_group_section', $groupReplacements, 'messages', $locale);
+
+            $mainReplacements['%extra_info%'] = $groupSection;
+        } else {
+            $mainReplacements['%extra_info%'] = $translator->trans('platformd.key_request_processor_command.key_not_assigned_no_group_extra_info', array(), 'messages', $locale);
+        }
+
+        $emailTo = $user->getEmail();
+        $subject = $translator->trans('platformd.key_request_processor_command.key_not_assigned_generic_email_subject', $mainReplacements, 'messages', $locale);
+        $message = $translator->trans('platformd.key_request_processor_command.key_not_assigned_generic_email_body', $mainReplacements, 'messages', $locale);
+
+        $emailManager->sendHtmlEmail($emailTo, $subject, $message, 'promotion_not_assigned_generic', $site->getName());
     }
 
     private function emailUser($user, $promotionTitle, $promotionKey, $promotionShowPage, $site, $promotionGroupName = null, $promotionGroupShowPage = null) {
