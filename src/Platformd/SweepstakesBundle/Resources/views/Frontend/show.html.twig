@@ -46,10 +46,12 @@
         </div>
 
         <div id="sweepstakes-entry-links">
-            {% if is_granted("ROLE_USER") %}
+            {% if not sweepstakes.hasStarted %}
+                <div class="sweespstakes-cant-enter">{{ 'sweepstakes.entry.contest_not_started' | pd_trans({ '%dateString%': (sweepstakes.startsAt | date_translate) }) }}</div>
+            {% elseif sweepstakes.isFinished %}
+                <div class="sweespstakes-cant-enter">{{ 'sweepstakes.entry.contest_has_ended' | pd_trans }}</div>
+            {% elseif is_granted("ROLE_USER") %}
                 {% if isEntered %}<div class="sweespstakes-cant-enter">{{ 'sweepstakes.entry.links.already_entered' | pd_trans }}</div>{% endif %}
-                {% if not sweepstakes.hasStarted %}<div class="sweespstakes-cant-enter">{{ 'sweepstakes.entry.contest_not_started' | pd_trans({ '%dateString%': (sweepstakes.startsAt | date_translate) }) }}</div>{% endif %}
-                {% if sweepstakes.isFinished %}<div class="sweespstakes-cant-enter">{{ 'sweepstakes.entry.contest_has_ended' | pd_trans }}</div>{% endif %}
             {% else %}
                 <div class="not-entered">
                     <a href="#" id="use-existing-account">{{ 'sweepstakes.entry.links.use_existing' | pd_trans }}</a>

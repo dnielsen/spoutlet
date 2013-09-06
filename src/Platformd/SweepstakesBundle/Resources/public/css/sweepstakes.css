@@ -120,7 +120,8 @@
 }
 
 #sweepstakes-wrapper #sweeps-entry-form-title {
-    font-size: 14px;
+    font-size: 18px;
     text-decoration: underline;
-    padding: 20px 4px !important;
+    font-weight: bold;
+    padding: 25px 4px 5px !important;
 }
