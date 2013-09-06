@@ -1245,7 +1245,14 @@ platformd.giveaway.assigned.assigned_at: Assigned
 platformd.giveaway.assigned.view_giveaway: View Giveaway
 platformd.giveaway.show.availaible_keys: Available Keys: %%count%%
 platformd.giveaway.queue.you_are_queued: "You're in the queue!"
-platformd.giveaway.queue.queue_explanation: 'Your approximate wait time is less than 5 minutes. You will be notified via email if you have been assigned a code.  If you do not receive an email within an hour please email support at <a href="mailto:%contact_email%">%contact_email%</a>.  In the meantime, check out our <a href="%events_index_page_link%">events page</a> to view upcoming online and on-site events in your area.'
+platformd.giveaway.queue.queue_explanation: 'Your approximate wait time is less than 60 minutes. You will be notified via email if you have been assigned a code.  If you do not receive an email within 24 hours, please email support at <a href="mailto:%contact_email%">%contact_email%</a>.  In the meantime, check out our <a href="%events_index_page_link%">events page</a> to view upcoming online and on-site events in your area.'
+platformd.giveaway.queue.rejected_with_examples: |
+    <p>Unfortunately, a key could not be assigned to you. This can occur for one of several reasons, including:
+    <br /><br />
+    1) We've ran out of keys before we could assign one to you while you were in the queue.<br />
+    2) You are in a country or region that is not eligible to receive a key.<br />
+    3) A key has already been assigned to you.</p>
+
 platformd.giveaway.queue.rejected: Sorry, a key could not be assigned to you.
 platformd.giveaway.queue.problem: There was a problem processing your key request.
 platformd.giveaway.queue.reason: Reason
@@ -1273,6 +1280,17 @@ platformd.key_request_processor_command.key_assigned_email_body: |
         %group_section%
         <p>Alienware Arena Team</p>
 platformd.key_request_processor_command.key_assigned_email_body_group_section: "In addition to receiving a key for %promotion_title%, you are now a member of <a href=\"%promotion_group_show_page%\">%promotion_group_name%</a>. While in %promotion_group_name%, you'll be able to view and discuss the newest videos, events, and images."
+
+platformd.key_request_processor_command.key_not_assigned_generic_email_subject: Unable to Assign a Key for %promotion_title%
+platformd.key_request_processor_command.key_not_assigned_generic_email_body: |
+    <p>Unfortunately, a key could not be assigned to you. This can occur for one of several reasons, including:<br />
+        <br />
+        1) We've ran out of keys before we could assign one to you while you were in the queue.<br />
+        2) You are in a country or region that is not eligible to receive a key.<br />
+        3) A key has already been assigned to you.
+    </p>
+    <p>Alienware Arena Team</p>
+
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_subject: %promotion_title% Update
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body: |
     <p>

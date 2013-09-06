@@ -7,7 +7,6 @@ use Platformd\SpoutletBundle\Controller\Controller,
     Platformd\EventBundle\Entity\GlobalEvent,
     Platformd\EventBundle\Form\Type\GlobalEventType,
     Platformd\EventBundle\Entity\GlobalEventTranslation,
-    Platformd\EventBundle\Entity\EventFindWrapper,
     Platformd\EventBundle\Form\Type\EventFindType,
     Platformd\SpoutletBundle\Util\CsvResponseFactory
 ;
@@ -16,6 +15,8 @@ use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException
 ;
+
+use Doctrine\Common\Collections\ArrayCollection;
 
 class GlobalEventAdminController extends Controller
 {
@@ -234,66 +235,83 @@ class GlobalEventAdminController extends Controller
 
     public function metricsAction(Request $request)
     {
-        $page = $request->query->get('page', 1);
+        if ($request->query->get('reset')) {
+            $this->resetEventsFilterFormData();
+        }
 
-        $this->resetEventsFilterFormData();
+        $page  = $request->query->get('page', 1);
+        $em    = $this->getDoctrine()->getEntityManager();
+        $japan = $em->getRepository('SpoutletBundle:Site')->find(2);
 
-        $data = new EventFindWrapper();
+        $data = array(
+            'eventName' => null,
+            'published' => null,
+            'eventType' => null,
+            'sites'     => null,
+            'from'      => null,
+            'thru'      => null,
+        );
         $form = $this->createForm(new EventFindType(), $data);
 
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-            $data->setSites(array('ja'));
+            $data['sites'] = new ArrayCollection(array($japan));
             $form->setData($data);
         }
 
         if ('POST' == $request->getMethod()) {
+
             $form->bindRequest($request);
             if ($form->isValid()) {
+
                 $data = $form->getData();
 
                 if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-                    $data->setSites(array('ja'));
+                    $data['sites'] = new ArrayCollection(array($japan));
                     $form->setData($data);
                 }
 
-                $this->setEventsFilterFormData(array(
-                    'eventName' => $data->getEventName(),
-                    'published' => $data->getPublished(),
-                    'sites' => $data->getSites(),
-                    'from' => $data->getFrom(),
-                    'thru' => $data->getThru(),
-                    'eventType' => $data->getEventType(),
-                ));
+                $this->setEventsFilterFormData($data);
+            }
+        } else {
+            $sessionData = $this->getEventsFilterFormData();
+            if (count($sessionData) > 0) {
+                $data = $sessionData;
+
+                if (count($data['sites']) > 0) {
+                    foreach ($data['sites'] as $site) {
+                        $site = $em->merge($site);
+                        $sites[] = $site;
+                    }
+
+                    $data['sites'] = new ArrayCollection($sites);
+                }
+
+                $form->setData($data);
             }
         }
 
-        if($data->getEventType() == 'global') {
-            $pager = $this->getGlobalEventService()->findGlobalEventStats(array(
-                'eventName' => $data->getEventName(),
-                'published' => $data->getPublished(),
-                'sites' => $data->getSites()->toArray(),
-                'from' => $data->getFrom(),
-                'thru' => $data->getThru(),
-                'page' => $page
-            ));
-        } else {
-            $pager = $this->getGroupEventService()->findGroupEventStats(array(
-                'eventName' => $data->getEventName(),
-                'published' => $data->getPublished(),
-                'sites' => $data->getSites() ? $data->getSites()->toArray() : null,
-                'from' => $data->getFrom(),
-                'thru' => $data->getThru(),
-                'page' => $page
-            ));
+        $sites = array();
 
+        if (count($data['sites']) > 0) {
+            foreach ($data['sites'] as $site) {
+                $sites[] = $site;
+            }
+
+            if (count($sites) > 0) {
+                $data['sites'] = $sites;
+            }
         }
 
-        $event = $this->getGlobalEventService()->find(1);
+        if($data['eventType'] == 'global') {
+            $pager = $this->getGlobalEventService()->findGlobalEventStats(array_merge(array('page' => $page), $data));
+        } else {
+            $pager = $this->getGroupEventService()->findGroupEventStats(array_merge(array('page' => $page), $data));
+        }
 
         return $this->render('EventBundle:GlobalEvent\Admin:metrics.html.twig', array(
             'pager'    => $pager,
             'form'     => $form->createView(),
-            'typeParam'=> $data->getEventType() ?: 'group'
+            'typeParam'=> $data['eventType'] ?: 'group'
         ));
     }
 

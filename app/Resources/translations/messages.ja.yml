@@ -82,6 +82,7 @@ platformd:
     flash:
         error_title: エラー！
         success_title: 登録完了
+        info_title: 情報
         action_required: アクションが必要です！
 
     layout:
@@ -994,11 +995,18 @@ platformd.giveaway.assigned.message: あなたのキーをアクティブにす�
 platformd.giveaway.show.availaible_keys: キー残数: %%count%%
 platformd.giveaway.queue.you_are_queued: 現在対応中です。
 platformd.giveaway.queue.queue_explanation: |
-    <p>あなたの待ち時間はおおよそ5分程度です。コードがすでに割り当てられている場合は、メールで通知されます。</p>
+    <p>あなたの待ち時間はおおよそ60分未満です。あなたにコードが割り当てられている場合は、Eメールで通知されます。もし、24時間以内にメールが届かない場合は、<a href="mailto:%contact_email%">%contact_email%</a> にメールを送ってください。</p>
+    <p>また、私たちの<a href="%events_index_page_link%">イベントページ</a></p>
+    <p>をご確認ください。お住まいの地域で行われる、オンライン、オフラインのイベントをご覧頂けます。</p>
 
-        <p>もし、1時間以内にメールが届かない場合、<a href="mailto:%contact_email%">%contact_email%</a> にご連絡をお願いします。</p>
+platformd.giveaway.queue.rejected_with_examples: |
+    <p>あなたのキーを割り当てることができませんでした。<br />
+    この問題は、次の理由のうち一つを含む場合があります。<br />
+    <br />
+    1) あなたがデータ入力を行う前に、キーがなくなりました。<br />
+    2) あなたは、キーを受け取るのには適格でない国か地域にいます。<br />
+    3) 既にキーは、あなたに割り当てられました。</p>
 
-        <p>また、<a href="%events_index_page_link%">イベント</a> では、お住まいの地域でのオンラインイベントや、オフラインイベントをご覧いただけます。</p>
 platformd.giveaway.queue.rejected: 申し訳ありません。キーをあなたに割り当てることができませんでした。
 platformd.giveaway.queue.problem: あなたのキー要求処理に問題が発生しました。
 platformd.giveaway.queue.reason: 理由
@@ -1027,6 +1035,18 @@ platformd.key_request_processor_command.key_assigned_email_body: |
         </p>
         %group_section%
         <p>Alienware Arenaチーム</p>
+
+platformd.key_request_processor_command.key_not_assigned_generic_email_subject: %promotion_title%　アップデート
+platformd.key_request_processor_command.key_not_assigned_generic_email_body: |
+    <p>あなたのキーを割り当てることができませんでした。<br />
+        この問題は、次の理由のうち一つを含む場合があります。<br />
+        <br />
+        1) あなたがデータ入力を行う前に、キーがなくなりました。<br />
+        2) あなたは、キーを受け取るのには適格でない国か地域にいます。<br />
+        3) 既にキーは、あなたに割り当てられました。
+    </p>
+    <p>Alienware Arenaチーム</p>
+
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_subject: %promotion_title%　アップデート
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body: |
     <p>

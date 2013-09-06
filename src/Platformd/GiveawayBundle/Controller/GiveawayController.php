@@ -72,7 +72,7 @@ class GiveawayController extends Controller
 
             $data = new giveaway_show_current_queue_state();
 
-            $data->success              = $state->getCurrentState() == KeyRequestState::STATE_IN_QUEUE ? 'success' : 'error';
+            $data->success              = $state->getCurrentState() == KeyRequestState::STATE_IN_QUEUE ? 'info' : 'error';
             $data->current_state        = $state->getCurrentState();
             $data->current_state_reason = $state->getStateReason();
 

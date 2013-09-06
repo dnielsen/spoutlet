@@ -260,6 +260,7 @@ class YoutubeVideoRepository extends EntityRepository
             ->andWhere('yt.isAccessible = 1')
             ->andWhere('g IN (:group)')
             ->setParameter('group', $group)
+            ->orderBy('yt.createdAt', 'DESC')
             ->getQuery()
             ->execute();
     }

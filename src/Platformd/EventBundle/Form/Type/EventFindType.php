@@ -16,8 +16,8 @@ class EventFindType extends AbstractType
             ->add('published', 'choice', array(
                 'label' => 'Status:',
                 'choices' => array(
-                    '0' => 'Active',
-                    '1' => 'Inactive'
+                    '1' => 'Active',
+                    '0' => 'Inactive'
                 ),
                 'empty_value' => 'Select All',
                 'required' => false,
@@ -36,7 +36,7 @@ class EventFindType extends AbstractType
                 'property' => 'name',
             ))
             ->add('from', 'date', array(
-                'label' => 'Start Date:',
+                'label' => 'Starts After:',
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'attr'   => array(
@@ -44,13 +44,20 @@ class EventFindType extends AbstractType
                 )
             ))
             ->add('thru', 'date', array(
-                'label' => 'End Date:',
+                'label' => 'Starts Before:',
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'attr'   => array(
                     'class' => 'date-picker'
                 )
             ));
+    }
+
+    public function getDefaultOptions(array $options)
+    {
+        return array(
+            'csrf_protection' => false,
+        );
     }
 
     public function getName()
