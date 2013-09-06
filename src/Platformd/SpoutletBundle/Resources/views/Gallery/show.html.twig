@@ -58,7 +58,7 @@
         </div>
         <div class="right">
             <div class="submit-media" style="display: inline; margin:10px 15px 0 0; float:right;">
-                <a href="{{ path('gallery_submit') }}" class="btn btn-primary">{{ 'galleries.submit_photo_page_title' | trans }}</a>
+                <a href="{{ path('gallery_submit') }}" class="btn btn-primary reg-source">{{ 'galleries.submit_photo_page_title' | trans }}</a>
             </div>
         </div>
     </div>
@@ -155,7 +155,7 @@
                             </span>
                             <span data-logged-in="false">
                                 <div class="photo-like">
-                                    <span id="media-like-label">Like it? </span><a class="media-voting-button up" href="{{ login_link(app.request.uri ~ '?vote=' ~ media.id) }}"></a>
+                                    <span id="media-like-label">Like it? </span><a class="media-voting-button up reg-source" href="{{ login_link(app.request.uri ~ '?vote=' ~ media.id) }}"></a>
                                 </div>
                             </span>
 
@@ -263,6 +263,9 @@
     <script src="{{ asset('bundles/spoutlet/js/jquery.imagesloaded.min.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
         $(function () {
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
+            });
 
             $('#main-photo').imagesLoaded(function () {
                 $(this).fadeIn('slow');

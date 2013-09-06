@@ -20,7 +20,7 @@ parameters:
     allow_cevo_forwarding: false
 
     email_destination_override: true
-    email_destination_override_with: jefrykland@igamesinc.com
+    email_destination_override_with: andy.finlay@velocity42.com
 
     # used in security.yml to disable https for viewing secure pages on dev environment
     secure_url_scheme: http

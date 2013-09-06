@@ -53,10 +53,11 @@ addSourceInfo = function(element, source) {
     if (elementType == 'BUTTON' || elementType == 'INPUT') {
         var form = $(element).parents('form:first');
         if (form.length > 0) {
-            var _href = $(form).attr('action');
-            var params = new Array();
-            params['source'] = source;
-            $(form).attr('action', addQueryParams(_href, params));
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'source',
+                value: source
+            }).appendTo(form);
         }
         return;
     }

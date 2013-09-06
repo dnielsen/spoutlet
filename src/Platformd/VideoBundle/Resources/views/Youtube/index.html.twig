@@ -12,7 +12,7 @@
                 {% render url('search_form', {'category': 'video', 'watermark': 'platformd.search.form.default.all'}) %}
             </div>
             <div class="right">
-                <a href="{{ path('youtube_submit') }}" class="btn">{{ 'youtube.submit_video' | pd_trans }}</a>
+                <a href="{{ path('youtube_submit') }}" class="btn reg-source">{{ 'youtube.submit_video' | pd_trans }}</a>
             </div>
         </div>
     {% endif %}
@@ -65,6 +65,9 @@
     {{ parent() }}
     <script type="text/javascript">
         $(function () {
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
+            });
 
             $('img.lazy').lazyLoad();
             $('.more-videos-link a').truncate({width: 280});

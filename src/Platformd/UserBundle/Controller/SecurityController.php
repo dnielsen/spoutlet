@@ -28,7 +28,7 @@ class SecurityController extends BaseController
         $referer        = $request->get('return') ? urldecode($request->get('return')) : $request->headers->get('referer');
         $loginPath      = $this->container->get('router')->generate('fos_user_security_login', array(), true);
         $loginCheckPath = $this->container->get('router')->generate('_fos_user_security_check', array(), true);
-var_dump($session->get('_security.target_path'));exit;
+
         if ($target = $session->get('_security.target_path')) {
             parse_str(parse_url($target, PHP_URL_QUERY), $queryParams);
 

@@ -20,6 +20,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Platformd\SpoutletBundle\Util\StringUtil;
 use Platformd\UserBundle\Entity\User;
 use Platformd\MediaBundle\Imagine\Cache\Resolver\AmazonS3Resolver;
+use Platformd\UserBundle\Entity\RegistrationSource;
 
 /**
  * Gallery controller.
@@ -96,8 +97,9 @@ class GalleryController extends Controller
         }
 
         return $this->render('SpoutletBundle:Gallery:index.html.twig', array(
-            'nivoSliderMedia'   => $nivoSliderMedia,
-            'filterOptions'     => $options,
+            'nivoSliderMedia' => $nivoSliderMedia,
+            'filterOptions'   => $options,
+            'regSourceData'   => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_IMAGES),
         ));
     }
 
@@ -502,12 +504,13 @@ class GalleryController extends Controller
         $permalink = $this->get('platformd.model.comment_manager')->checkThread($media);
 
         return $this->render('SpoutletBundle:Gallery:show.html.twig', array(
-            'media'             => $media,
-            'otherMediaPages'   => $otherMediaPages,
-            'likes'             => $likes,
-            'crumb'             => $crumb,
-            'returnType'        => $returnType,
-            'permalink'         => $permalink,
+            'media'           => $media,
+            'otherMediaPages' => $otherMediaPages,
+            'likes'           => $likes,
+            'crumb'           => $crumb,
+            'returnType'      => $returnType,
+            'permalink'       => $permalink,
+            'regSourceData'   => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_IMAGES),
         ));
     }
 
@@ -834,6 +837,7 @@ class GalleryController extends Controller
             'medias'        => $medias,
             'sort'          => $sort,
             'page'          => $page,
+            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_IMAGES),
         ));
     }
 
@@ -848,16 +852,18 @@ class GalleryController extends Controller
                 # get featured media
                 $medias = $repo->findFeaturedMediaForSite($site);
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
-                    'medias' => $medias,
-                    'type'   => $type,
+                    'medias'        => $medias,
+                    'type'          => $type,
+                    'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_IMAGES),
                 ));
 
             case 'latest':
                 # get latest media
                 $medias = $repo->findLatestMediaForSite($site);
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
-                    'medias' => $medias,
-                    'type'   => $type,
+                    'medias'        => $medias,
+                    'type'          => $type,
+                    'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_IMAGES),
                 ));
 
             case 'popular':
@@ -865,16 +871,18 @@ class GalleryController extends Controller
                 $medias = $repo->findPopularMediaForSite($site);
 
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
-                    'medias' => $medias,
-                    'type'   => $type,
+                    'medias'        => $medias,
+                    'type'          => $type,
+                    'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_IMAGES),
                 ));
 
             default:
                 # if its none of the above, we'll assume its a gallery id
                 $medias = $repo->findMediaForGalleryByGalleryId($type);
                 return $this->render('SpoutletBundle:Gallery:_media.html.twig', array(
-                    'medias' => $medias,
-                    'type'   => $type,
+                    'medias'        => $medias,
+                    'type'          => $type,
+                    'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_IMAGES),
                 ));
         }
     }

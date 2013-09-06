@@ -121,7 +121,7 @@
 
                                         <div id="event-attending-message" data-user-attending="true">{{ 'platformd.events.event_show.im_attending' | pd_trans }}</div>
 
-                                    <div id="event-rsvp-link" data-user-attending="true"><a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ path("group_event_rsvp") }}" data-contenttype="{{ event.contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | pd_trans }}</a></div>
+                                        <div id="event-rsvp-link" data-user-attending="true"><a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ path("group_event_rsvp") }}" data-contenttype="{{ event.contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | pd_trans }}</a></div>
                                     </div>
                                     <div data-can-join="false">
                                         <div data-group-applicant="true">
@@ -138,7 +138,7 @@
                                 </div>
                                 <div data-user-logged-in="false">
                                     <div id="event-registration-button">
-                                        <a href="{% if group.isPublic %}{{ path('group_event_register_and_join', { 'groupSlug': group.slug, 'eventId': event.id }) }}{% else %}{{ path('group_apply_with_event', { 'slug': group.slug, 'eventId': event.id }) }}{% endif %}" class="btn btn-primary">{{ 'platformd.events.event_show.register' | pd_trans }}</a>
+                                        <a href="{% if group.isPublic %}{{ path('group_event_register_and_join', { 'groupSlug': group.slug, 'eventId': event.id }) }}{% else %}{{ path('group_apply_with_event', { 'slug': group.slug, 'eventId': event.id }) }}{% endif %}" class="btn btn-primary reg-source">{{ 'platformd.events.event_show.register' | pd_trans }}</a>
                                     </div>
                                 </div>
                             {% endif %}
@@ -250,6 +250,9 @@
 
     <script type="text/javascript">
         $(function () {
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
+            });
 
             $('#register-link').click(function () {
                 $('#register-link').block({
