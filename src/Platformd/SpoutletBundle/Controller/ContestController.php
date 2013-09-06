@@ -32,7 +32,8 @@ class ContestController extends Controller
         $contests = $this->getContestRepository()->findAllBySite($site);
 
         return $this->render('SpoutletBundle:Contest:index.html.twig', array(
-            'contests' => $contests,
+            'contests'      => $contests,
+            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_CONTEST),
         ));
     }
 
@@ -86,7 +87,7 @@ class ContestController extends Controller
             'entriesLeft'   => $entriesLeft,
             'isUnlimited'   => $isUnlimited,
             'nowInTz'       => new DateTime('now', new DateTimeZone($contest->getTimezone())),
-            'regSourceType' => RegistrationSource::REGISTRATION_SOURCE_TYPE_CONTEST,
+            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_CONTEST, 'id'=>$contest->getId()),
         ));
     }
 
@@ -302,9 +303,10 @@ class ContestController extends Controller
         }
 
         return $this->render('SpoutletBundle:Contest:vote.html.twig', array(
-            'contest' => $contest,
-            'medias'  => $medias,
-            'groups'  => $groups,
+            'contest'       => $contest,
+            'medias'        => $medias,
+            'groups'        => $groups,
+            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_CONTEST, 'id'=>$contest->getId()),
         ));
     }
 

@@ -16,12 +16,28 @@ class RegistrationSource
     const REGISTRATION_SOURCE_TYPE_CONTEST     = 2;
     const REGISTRATION_SOURCE_TYPE_SWEEPSTAKES = 3;
     const REGISTRATION_SOURCE_TYPE_DEAL        = 4;
+    const REGISTRATION_SOURCE_TYPE_NEWS        = 5;
+    const REGISTRATION_SOURCE_TYPE_HOMEPAGE    = 6;
+    const REGISTRATION_SOURCE_TYPE_GROUP       = 7;
+    const REGISTRATION_SOURCE_TYPE_ARP         = 8;
+    const REGISTRATION_SOURCE_TYPE_FORUMS      = 9;
+    const REGISTRATION_SOURCE_TYPE_VIDEOS      = 10;
+    const REGISTRATION_SOURCE_TYPE_IMAGES      = 11;
+    const REGISTRATION_SOURCE_TYPE_OTHER       = 12;
 
     static $sourceEntities = array(
         self::REGISTRATION_SOURCE_TYPE_GIVEAWAY    => 'GiveawayBundle:Giveaway',
         self::REGISTRATION_SOURCE_TYPE_CONTEST     => 'SpoutletBundle:Contest',
         self::REGISTRATION_SOURCE_TYPE_SWEEPSTAKES => 'SweepstakesBundle:Sweepstakes',
         self::REGISTRATION_SOURCE_TYPE_DEAL        => 'GiveawayBundle:Deal',
+        self::REGISTRATION_SOURCE_TYPE_NEWS        => 'NewsBundle:News',
+        self::REGISTRATION_SOURCE_TYPE_HOMEPAGE    => null,
+        self::REGISTRATION_SOURCE_TYPE_GROUP       => 'GroupBundle:Group',
+        self::REGISTRATION_SOURCE_TYPE_ARP         => null,
+        self::REGISTRATION_SOURCE_TYPE_FORUMS      => null,
+        self::REGISTRATION_SOURCE_TYPE_VIDEOS      => 'VideoBundle:YoutubeVideo',
+        self::REGISTRATION_SOURCE_TYPE_IMAGES      => 'SpoutletBundle:GalleryMedia',
+        self::REGISTRATION_SOURCE_TYPE_OTHER       => null,
     );
 
     /**
@@ -52,7 +68,7 @@ class RegistrationSource
     /**
      * The id of the entity that caused the user to register - string because some entities use a string as the ID (e.g. comment thread)
      *
-     * @ORM\Column(name="source_id",type="string")
+     * @ORM\Column(name="source_id",type="string", nullable="true")
      */
     protected $sourceId;
 

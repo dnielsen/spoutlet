@@ -53,7 +53,7 @@
                 <div data-group-member="false" data-group-applicant="false">
                     <div class="join-group-options">
                         <form action="{{ path('group_join', { 'slug': group.slug }) }}">
-                            <button id="join-group-button" type="submit"></button>
+                            <button class="reg-source" id="join-group-button" type="submit"></button>
                         </form>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                 <!-- is allowed ApplyToGroup -->
                 <div data-group-member="false" data-group-applicant="false">
                     <div class="join-group-options">
-                        <a href="{{ path('group_apply', { 'slug': group.slug }) }}" id="join-group-button" style="width:230px;height:62px;display:block;margin-bottom:18px">&nbsp;</a></li>
+                        <a class="reg-source" href="{{ path('group_apply', { 'slug': group.slug }) }}" id="join-group-button" style="width:230px;height:62px;display:block;margin-bottom:18px">&nbsp;</a></li>
                     </div>
                 </div>
             {% endif %}
@@ -243,6 +243,9 @@
     <script type="text/javascript">
 
         $(function () {
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
+            });
 
             {% if group.isPublic %}
                 var view_group_content = true;

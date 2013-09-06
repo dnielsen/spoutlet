@@ -37,23 +37,30 @@ class RegistrationController extends BaseRegistrationController
             $user       = $form->getData();
             $authUser   = false;
 
+            $ipLookupUtil = $this->container->get('platformd.model.ip_lookup_util');
+            $em           = $this->container->get('doctrine.orm.entity_manager');
+            $countryCode  = $ipLookupUtil->getCountryCode($ipLookupUtil->getClientIp($request));
+            $country      = $em->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
+
+            $regSource = null;
+
             if ($sourceInfo) {
-                $sourceType = $sourceInfo['type'];
-                $sourceId   = $sourceInfo['id'];
+                $sourceType = isset($sourceInfo['type']) ? $sourceInfo['type'] : null;
+                $sourceId   = isset($sourceInfo['id']) ? $sourceInfo['id'] : null;
 
-                $ipLookupUtil = $this->container->get('platformd.model.ip_lookup_util');
-                $em = $this->container->get('doctrine.orm.entity_manager');
-
-                $countryCode = $ipLookupUtil->getCountryCode($ipLookupUtil->getClientIp($request));
-                $country = $em->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
-
-                $regSource  = new RegistrationSource($user, $sourceType, $sourceId, $country);
-
-                $em->persist($regSource);
-                $em->flush();
-
-                $session->remove('registration_source');
+                if ($sourceType) {
+                    $regSource  = new RegistrationSource($user, $sourceType, $sourceId, $country);
+                }
             }
+
+            if (!$regSource) {
+                $regSource  = new RegistrationSource($user, RegistrationSource::REGISTRATION_SOURCE_TYPE_OTHER, null, $country);
+            }
+
+            $em->persist($regSource);
+            $em->flush();
+
+            $session->remove('registration_source');
 
             if ($confirmationEnabled) {
                 $session->set('fos_user_send_confirmation_email/email', $user->getEmail());

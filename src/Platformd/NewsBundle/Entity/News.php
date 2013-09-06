@@ -489,4 +489,9 @@ class News implements LinkableInterface, IndexableInterface, TaggableInterface
     {
         return $this->getId();
     }
+
+    public function getName()
+    {
+        return $this->title;
+    }
 }

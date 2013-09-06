@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Controller\Controller as Controller;
 use Symfony\Component\HttpFoundation\Cookie;
+use Platformd\UserBundle\Entity\RegistrationSource;
 
 class DefaultController extends Controller
 {
@@ -343,7 +344,9 @@ class DefaultController extends Controller
             throw $this->createNotFoundException();
         }
 
-        return $this->render('SpoutletBundle:Default:index.html.twig');
+        return $this->render('SpoutletBundle:Default:index.html.twig', array(
+            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_HOMEPAGE),
+        ));
     }
 
     public function healthCheckAction() {

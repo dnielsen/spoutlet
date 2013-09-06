@@ -4,6 +4,7 @@ namespace Platformd\NewsBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Platformd\UserBundle\Entity\RegistrationSource;
 
 /**
 *
@@ -20,6 +21,7 @@ class DefaultController extends Controller
 
         return $this->render('NewsBundle:Default:'.$template, array(
             'news' => $news,
+            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_NEWS),
         ));
     }
 
@@ -44,6 +46,7 @@ class DefaultController extends Controller
         return $this->render('NewsBundle:Default:show.html.twig', array(
             'news'          => $news,
             'permalink'     => $permalink,
+            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_NEWS, 'id'=>$news->getId()),
         ));
     }
 }

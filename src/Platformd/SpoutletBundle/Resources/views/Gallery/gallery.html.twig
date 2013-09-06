@@ -30,7 +30,7 @@
                                         {% endif %}
                                     {% else %}
                                         <div class="thumbnail-vote-caption">
-                                            <a href="{{ login_link(app.request.uri) }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
+                                            <a class="reg-source" href="{{ login_link(app.request.uri) }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
                                         </div>
                                     {% endif %}
                                 </a>
@@ -60,7 +60,7 @@
                                         {% endif %}
                                     {% else %}
                                         <div class="thumbnail-vote-caption">
-                                            <a href="{{ login_link(app.request.uri) }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
+                                            <a class="reg-source" href="{{ login_link(app.request.uri) }}">{{ 'galleries.quick_vote_caption' | trans }}</a>
                                         </div>
                                     {% endif %}
                                 </a>
@@ -81,7 +81,7 @@
     <div class="right">
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
         <div style="width:100%;padding:15px 0 15px 0;text-align:center; float: left;">
-            <a href="{{ path('gallery_submit') }}" class="btn btn-primary">{{ 'galleries.submit_photo_page_title' | trans }}</a>
+            <a href="{{ path('gallery_submit') }}" class="btn btn-primary reg-source">{{ 'galleries.submit_photo_page_title' | trans }}</a>
         </div>
     </div>
 </div>
@@ -101,6 +101,9 @@
     {% include 'SpoutletBundle:Gallery:_quickVoteJavascript.html.twig' %}
     <script type="text/javascript">
         $(function () {
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
+            });
 
             var sortMedia = function (a, b) {
                 var option = $('#media-filter-options').val();

@@ -47,10 +47,30 @@ addQueryParams = function(url, params) {
 };
 
 addSourceInfo = function(element, source) {
-    var _href = $(element).attr('href');
-    var params = new Array();
-    params['source'] = source;
-    $(element).attr('href', addQueryParams(_href, params));
+
+    elementType = $(element).prop('tagName');
+
+    if (elementType == 'BUTTON' || elementType == 'INPUT') {
+        var form = $(element).parents('form:first');
+        if (form.length > 0) {
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'source',
+                value: source
+            }).appendTo(form);
+        }
+        return;
+    }
+
+    if (elementType == 'A') {
+        var _href = $(element).attr('href');
+        var params = new Array();
+        params['source'] = source;
+        $(element).attr('href', addQueryParams(_href, params));
+        return;
+    }
+
+    return;
 }
 
 /**
