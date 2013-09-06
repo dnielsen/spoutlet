@@ -1,9 +1,11 @@
 sweepstakes: Sweepstakes
 
 sweepstakes.entry.rules.title: コンテストルール
-
 sweepstakes.entry.or: または
+sweepstakes.entry.contest_not_started: Sorry, the submission period has not started yet. Check back on %dateString%.
+sweepstakes.entry.contest_has_ended: 申請期間は終了しております。試合内容を確認するには過去のデータをご参照ください。
 
+sweepstakes.entry.form.title: 申込フォーム
 sweepstakes.entry.form.phone_number: '*電話番号（当選者への連絡に使用します）'
 sweepstakes.entry.form.read_and_agreed_to_rules: '私は<a href="%rules_url%" target="_blank">コンテストルール</a>を読み、合意しました'
 

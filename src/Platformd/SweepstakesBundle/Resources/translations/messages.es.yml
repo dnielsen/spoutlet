@@ -1,9 +1,11 @@
 sweepstakes: Sweepstakes
 
 sweepstakes.entry.rules.title: Reglas del Concurso
-
 sweepstakes.entry.or: o
+sweepstakes.entry.contest_not_started: Sorry, the submission period has not started yet. Check back on %dateString%.
+sweepstakes.entry.contest_has_ended: Lo sentimos, el plazo de presentación está cerrado. Por favor, vuelve para ver a los ganadores.
 
+sweepstakes.entry.form.title: Formulario de Entrada
 sweepstakes.entry.form.phone_number: '*Número de teléfono (utilizado para contactar al ganador)'
 sweepstakes.entry.form.read_and_agreed_to_rules: 'He leído y aceptado las <a href="%rules_url%" target="_blank">Reglas del Consurso</a>.'
 
