@@ -17,6 +17,14 @@ class RegistrationActivitiesMetricsType extends AbstractType
         RegistrationSource::REGISTRATION_SOURCE_TYPE_CONTEST     => 'Contests',
         RegistrationSource::REGISTRATION_SOURCE_TYPE_SWEEPSTAKES => 'Sweepstakes',
         RegistrationSource::REGISTRATION_SOURCE_TYPE_DEAL        => 'Deals',
+        RegistrationSource::REGISTRATION_SOURCE_TYPE_NEWS        => 'News',
+        RegistrationSource::REGISTRATION_SOURCE_TYPE_HOMEPAGE    => 'Homepage',
+        RegistrationSource::REGISTRATION_SOURCE_TYPE_GROUP       => 'Groups',
+        RegistrationSource::REGISTRATION_SOURCE_TYPE_ARP         => 'ARP',
+        RegistrationSource::REGISTRATION_SOURCE_TYPE_FORUMS      => 'Forums',
+        RegistrationSource::REGISTRATION_SOURCE_TYPE_VIDEOS      => 'Videos',
+        RegistrationSource::REGISTRATION_SOURCE_TYPE_IMAGES      => 'Images',
+        RegistrationSource::REGISTRATION_SOURCE_TYPE_OTHER       => 'Other',
     );
 
     public function buildForm(FormBuilder $builder, array $options)

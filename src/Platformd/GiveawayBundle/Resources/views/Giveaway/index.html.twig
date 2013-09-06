@@ -97,6 +97,10 @@
     {% endif %}
     <script type="text/javascript">
         $(function () {
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
+            });
+
            $('.deal-link').truncate({ width: 225 });
            $('.title a').truncate({ width: 240 });
            $('.when').timeago();

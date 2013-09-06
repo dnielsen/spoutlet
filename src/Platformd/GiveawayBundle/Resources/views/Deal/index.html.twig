@@ -152,6 +152,10 @@
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.serialScroll-1.2.2-min.js') }}"></script>
     <script type="text/javascript">
         $(function() {
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ { 'type': data.deal_source_type } | base64_encode }}');
+            });
+
             var endsAt = new Date($('#deal-ends-date').val());
             $('#time-left').countdown({
                 until: endsAt,
