@@ -20,6 +20,7 @@ use Platformd\CEVOBundle\Api\ApiManager as CevoApiManager;
 use Platformd\CEVOBundle\Api\ApiException as CevoApiException;
 use Platformd\GroupBundle\Model\GroupManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Platformd\UserBundle\Entity\RegistrationSource;
 
 class SweepstakesEntryFormHandler
 {
@@ -104,6 +105,14 @@ class SweepstakesEntryFormHandler
                             throw new UserRegistrationTimeoutException();
                         }
                     }
+
+                    $entry       = $this->form->getData();
+                    $sweepstakes = $entry->getSweepstakes();
+                    $country     = $this->em->getRepository('SpoutletBundle:Country')->findOneByCode($country);
+                    $regSource   = new RegistrationSource($user, RegistrationSource::REGISTRATION_SOURCE_TYPE_SWEEPSTAKES, $sweepstakes->getId(), $country);
+
+                    $this->em->persist($regSource);
+                    $this->em->flush();
 
                     $this->onSuccess($user, $confirmation);
 
