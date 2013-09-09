@@ -7,15 +7,17 @@ use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 use Platformd\SweepstakesBundle\Entity\SweepstakesEntry;
 use Platformd\SweepstakesBundle\Entity\SweepstakesAnswer;
 use Platformd\SweepstakesBundle\Form\Type\SweepstakesEntryType;
-
 use Platformd\GroupBundle\Entity\GroupMembershipAction;
 use Platformd\GroupBundle\Event\GroupEvent;
 use Platformd\GroupBundle\GroupEvents;
 use Platformd\CEVOBundle\Api\ApiException;
+use Platformd\UserBundle\Entity\RegistrationSource;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Platformd\UserBundle\Entity\RegistrationSource;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
@@ -91,6 +93,7 @@ class FrontendController extends Controller
             'errors'            => $this->getEntryFormErrors($entryForm),
             'registered'        => $registered,
             'timedout'          => $timedout,
+            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_SWEEPSTAKES, 'id'=>$sweepstakes->getId()),
         );
     }
 
