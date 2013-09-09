@@ -23,7 +23,7 @@ Feature: Deal Pool
                 | Ends At                   | 2099-01-01 00:00                      |
                 | Timezone                  | UTC                                   |
                 | Description               | Lorem ipsum                           |
-            And I check the "Demo" option for "Sites"
+            And I check the "Global" option for "Sites"
             And I select "published" from "Status"
             And I press "Create"
 

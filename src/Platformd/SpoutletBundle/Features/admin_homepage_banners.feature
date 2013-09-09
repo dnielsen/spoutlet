@@ -9,7 +9,7 @@ Feature: Home Page Banner Administration
         When I click to add new "Homepage Banner"
             And I fill in the following:
                 | Url       | http://www.alienwarearena.com |
-            And I check the "Demo" option for "Sites"
+            And I check the "Global" option for "Sites"
             And I attach the file "src/Platformd/SpoutletBundle/Features/Context/120x60.gif" to "Thumb file"
             And I attach the file "src/Platformd/SpoutletBundle/Features/Context/634x183.gif" to "Banner file"
             And I press "Save"

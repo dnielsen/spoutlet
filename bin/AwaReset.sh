@@ -123,7 +123,7 @@ echo "Installing web assets..."
 echo
 echo "Executing development web request:"
 
-wget demo.alienwarearena.local/app_dev.php --quiet -O /dev/null >> bin/AwaReset.log
+wget www.alienwarearena.local/app_dev.php --quiet -O /dev/null >> bin/AwaReset.log
 
 sudo ls > /dev/null
 
@@ -165,7 +165,7 @@ echo "Clearing test cache:"
 echo
 echo "Executing test web request:"
 
-wget demo.alienwarearena.local/app_test.php --quiet -O /dev/null  >> bin/AwaReset.log
+wget www.alienwarearena.local/app_test.php --quiet -O /dev/null  >> bin/AwaReset.log
 
 echo
 echo "Changing cache & logs permissions..."

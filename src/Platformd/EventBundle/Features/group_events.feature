@@ -6,7 +6,7 @@ Feature: Group Events
 
 #    Background:
 #        Given I am authenticated as a user
-#            And I am on the "Demo" site
+#            And I am on the "Global" site
 #            And I have the following groups:
 #                | name            | slug           | site  | category | description                  | public | featured | owner |
 #                | Group 1         | group-1        | en    | topic    | this is group 1              | yes    | no       |       |

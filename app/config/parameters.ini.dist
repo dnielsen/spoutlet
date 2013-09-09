@@ -75,7 +75,7 @@
     api_access_key        = yourAccessKeyHere
     api_secret_key        = yourSecretKeyHere
 
-    varnish_server        = http://demo.alienwarearena.local:8080
+    varnish_server        = http://www.alienwarearena.local:8080
 
     ; only set to true if you have implemented the API authentication system and have configured it properly
     api_authentication    = false

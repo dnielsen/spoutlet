@@ -29,7 +29,7 @@ Feature: Contest Admin
                 | Rules                        | Lorem ipsum             |
                 | Instructions for contestants | Lorem ipsum             |
                 | Instructions for voters      | Lorem ipsum             |
-            And I check the "Demo" option for "Sites"
+            And I check the "Global" option for "Sites"
             And I select "image" from "Category"
             And I select "published" from "Status"
             And I press "Create"
@@ -37,7 +37,7 @@ Feature: Contest Admin
 
     Scenario: List existing contests
         Given I click on "Contests"
-        When I click on "Demo"
+        When I click on "Global"
         Then I should see 4 data rows in "image-contest-list"
             And I should see "Diablo 3 Image Contest"
             And I should see "Other Contest"
@@ -45,7 +45,7 @@ Feature: Contest Admin
 
     Scenario: Edit existing contest
         Given I click on "Contests"
-        When I click on "Demo"
+        When I click on "Global"
             And I click on "Diablo 3 Image Contest"
             And I fill in the following:
                 | Contest name    | Diablo 3 Image Contest Updated!    |
@@ -54,6 +54,6 @@ Feature: Contest Admin
 
     Scenario: Preview the contest
         Given I click on "Contests"
-        When I click on "Demo"
+        When I click on "Global"
             And I click on the URL for "Diablo 3 Image Contest"
         Then I should be on the contest called "Diablo 3 Image Contest" in "en"

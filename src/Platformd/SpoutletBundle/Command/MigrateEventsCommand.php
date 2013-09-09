@@ -166,7 +166,7 @@ EOT
 
             $cevoMigratedCount = 0;
 
-            $sites['demo']   = $siteRepo->find(1);
+            $sites['www']   = $siteRepo->find(1);
             $sites['na']     = $siteRepo->find(4);
             $sites['eu']     = $siteRepo->find(5);
             $sites['latam']  = $siteRepo->find(6);
@@ -208,7 +208,7 @@ EOT
                     }
 
                     if (count($eventSitesArr) < 1) {
-                        $eventSitesArr[] = $sites['demo'];
+                        $eventSitesArr[] = $sites['www'];
                     }
 
                     if ($pos = strpos($endString, 'Set to ') !== false) {
@@ -267,7 +267,7 @@ EOT
 
             $cevoMigratedCount = 0;
 
-            $sites['DEMO']   = $siteRepo->find(1);
+            $sites['WWW']    = $siteRepo->find(1);
             $sites['NA']     = $siteRepo->find(4);
             $sites['EURO']   = $siteRepo->find(5);
             $sites['LATAM']  = $siteRepo->find(6);
@@ -311,7 +311,7 @@ EOT
                     }
 
                     if (count($eventSitesArr) < 1) {
-                        $eventSitesArr[] = $sites['DEMO'];
+                        $eventSitesArr[] = $sites['WWW'];
                     }
 
                     $eventSites = new ArrayCollection($eventSitesArr);

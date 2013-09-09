@@ -16,7 +16,7 @@ Feature: Giveaway Admin
                 | Giveaway Type | key_giveaway              |
                 | Description   | content                   |
             And I attach the file "foo.jpg" to "Banner Image"
-            And I check the "Demo" option for "Sites"
+            And I check the "Global" option for "Sites"
             And I select "Skyrim" from "Game"
             And I press "Save Giveaway"
         Then I should see "Giveaway has been saved"

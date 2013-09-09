@@ -16,7 +16,7 @@ Feature: News Administration
                 | Blurb     | My cool blurb |
                 | Body      | Lorem ipsum   |
             And I attach the file "foo.jpg" to "Upload an image"
-            And I check the "Demo" option for "Sites"
+            And I check the "Global" option for "Sites"
             And I select "Skyrim" from "Game"
             And I press "Save news"
         Then I should see "news item has been created"

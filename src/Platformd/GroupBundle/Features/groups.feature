@@ -5,7 +5,7 @@ Feature: Groups Frontend
 
     Background:
         Given I am authenticated as a user
-            And I am on the "Demo" site
+            And I am on the "Global" site
             And I have the following users:
                 | username      | email                 |
                 | Notme         | someone@example.com   |

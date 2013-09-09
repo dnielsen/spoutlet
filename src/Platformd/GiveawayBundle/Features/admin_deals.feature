@@ -18,7 +18,7 @@ Feature: Deal Admin
                 | Ends At                   | 2012-06-21 12:00                      |
                 | Timezone                  | UTC                                   |
                 | Description               | Lorem ipsum                           |
-            And I check the "Demo" option for "Sites"
+            And I check the "Global" option for "Sites"
             And I select "published" from "Status"
             # missing image uploads
             # missing the gradient details
@@ -30,14 +30,14 @@ Feature: Deal Admin
             And there is a deal called "Free Swag" in "en"
             And there is a deal called "Deal for China!" in "zh"
         When I click on "Deals"
-            And I click on "Demo"
+            And I click on "Global"
         Then I should see 2 data rows
             And I should see "Free Swag"
 
     Scenario: Edit existing game
         Given there is a deal called "Free Swag" in "en"
         When I click on "Deals"
-            And I click on "Demo"
+            And I click on "Global"
             And I click on "Free Swag"
             And I fill in the following:
                 | Name            | Updated!                         |
@@ -47,6 +47,6 @@ Feature: Deal Admin
     Scenario: Preview the deal
         Given there is a deal called "Free Swag" in "en"
         When I click on "Deals"
-            And I click on "Demo"
+            And I click on "Global"
             And I click on the URL for "Free Swag"
         Then I should be on the deal called "Free Swag" in "en"

@@ -12,7 +12,7 @@ Feature: Contest Frontend
                 | NA Contest             | na-contest        | en_US | -4 days          | +4 days        | -4 days      | +4 days    | image    | 0           | published |
                 | Expired Contest        | expired-contest   | en    | -4 days          | -2 days        | -4 days      | -2 days    | image    | 0           | published |
                 | Unstarted Contest      | unstarted-contest | en    | +4 days          | +5 days        | +4 days      | +5 days    | image    | 0           | published |
-            And I am on the "Demo" site
+            And I am on the "Global" site
 
     Scenario: List existing contests for the correct site
         Given I am on "/contests/image"

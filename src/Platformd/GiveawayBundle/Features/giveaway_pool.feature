@@ -18,7 +18,7 @@ Feature: Giveaway Pool
                 | Name                      | Diablo 3 Giveaway  |
                 | URL                       | diablo-3-giveaway  |
                 | Description               | Lorem ipsum        |
-            And I check the "Demo" option for "Sites"
+            And I check the "Global" option for "Sites"
             And I select "active" from "Status"
             And I press "Save Giveaway"
             And I set the current giveaway to "Diablo 3 Giveaway"

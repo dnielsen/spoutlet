@@ -261,7 +261,7 @@ class FeatureContext extends AbstractFeatureContext
         $giveaway = $em->getRepository('Platformd\GiveawayBundle\Entity\Giveaway')->findOneByName($name);
         assertNotNull($giveaway);
 
-        $this->setSitehost('demo');
+        $this->setSitehost('www');
         $this->NavigateTo('giveaway_show', array('slug' => $giveaway->getSlug()), true);
         if ($not) {
             assertNull($this->getSession()->getPage()->find('css', sprintf('h3:contains("%s")', 'Available Keys: 0')));

@@ -131,7 +131,8 @@ platformd:
             change_region: Change your region
             global: Global
             en_US: "USA/Canada"
-            en: "USA/Canada"
+            en: "Global"
+            en_DEMO: "USA/Canada"
             en_SG: "Southeast Asia"
             es: América Latina
             en_GB: Europe

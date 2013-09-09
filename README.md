@@ -4,10 +4,10 @@ INSTALLATION
 * NOTE: Read the last section if you face challenges with the installation.
 
 
-* Prerequisite: 
-    You'll need Apache and PHP. At this time, Symphony2 depends on PHP5.3.3+. 
-    Mac: You can download and install Apache and PHP5.3.*. Installing PHP on 
-      a leopard (10.5.*) m/c can be a challenge.  You might want to use macport 
+* Prerequisite:
+    You'll need Apache and PHP. At this time, Symphony2 depends on PHP5.3.3+.
+    Mac: You can download and install Apache and PHP5.3.*. Installing PHP on
+      a leopard (10.5.*) m/c can be a challenge.  You might want to use macport
       to install it.
 		Link: https://trac.macports.org/wiki/howto/MAMP
       It may take a couple of hours to install PHP, Apache, and dependencies.
@@ -44,7 +44,7 @@ INSTALLATION
         ServerName platformd.l
         ServerAlias japan.platformd.l
         ServerAlias china.platformd.l
-        ServerAlias demo.platformd.l
+        ServerAlias www.platformd.l
         ErrorLog "logs/platformd.com-error_log"
         CustomLog "logs/platformd.com-access_log" common
 
@@ -62,7 +62,7 @@ INSTALLATION
 
 * Add the following entry to that file and save
 
-    127.0.0.1       platformd.l japan.platformd.l china.platformd.l demo.platformd.l
+    127.0.0.1       platformd.l japan.platformd.l china.platformd.l www.platformd.l
 
 * Correct the permissions on a few directories. From your project root:
 
@@ -88,7 +88,7 @@ INSTALLATION
 
 * Head to the site (in dev mode)!
 
-   http://demo.platformd.l/app_dev.php
+   http://www.platformd.l/app_dev.php
 
 UPDATING
 --------
@@ -114,7 +114,7 @@ UPDATING
 
 * Head to the site (in dev mode)!
 
-   http://demo.platformd.l/app_dev.php
+   http://www.platformd.l/app_dev.php
 
 
 
@@ -122,13 +122,13 @@ UPDATING
 INSTALLATION CHALLENGES
 -----------------------
 
-* php bin/vendors install : fails 
+* php bin/vendors install : fails
     The following error is because of certificate verification:
 
       error: SSL certificate problem, verify that the CA cert is OK. Details:
       error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed while accessing https://github.com/Behat/BehatBundle.git/info/refs
 
-    Replace https:// with git:// in <deps> file. Here is a quick fix: 
+    Replace https:// with git:// in <deps> file. Here is a quick fix:
 
        $ cd spoutlet
        $ vi deps

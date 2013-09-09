@@ -111,6 +111,7 @@ platformd:
             change_language: 言語変更
             english: 英語
             espanol: スペイン語
+            en_DEMO: "北米/カナダ"
 
         top_menu:
             admin: Admin

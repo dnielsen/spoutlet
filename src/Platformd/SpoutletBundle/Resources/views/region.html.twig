@@ -1,36 +1,37 @@
 <div class="to_alienware" id="regionLink">
     <a class="grey" href="#" id="toggleRegion" onclick=
     "s_objectID=&quot;http://www.alienwarearena.com/#_1&quot;;return this.s_oc?this.s_oc(e):true"
-    name="toggleRegion">{{ 'platformd.layout.region.region' | trans }} {{ ('platformd.layout.region.'~app.session.locale) | trans  }} <span class="change">{{ 'platformd.layout.region.change' | trans }}</span></a>
+    name="toggleRegion">{{ 'platformd.layout.region.region' | pd_trans }} {{ ('platformd.layout.region.'~app.session.locale) | pd_trans  }} <span class="change">{{ 'platformd.layout.region.change' | pd_trans }}</span></a>
 </div>
 
 <div style="display:none;" id="selectRegion">
-    <p>{{ 'platformd.layout.region.change_region' | trans }}</p>
+    <p>{{ 'platformd.layout.region.change_region' | pd_trans }}</p>
 
     <ul>
         <li>
-            <a class="region-link" href="http://www.alienwarearena.com/cmd/default/set-region/4/?return=%2F">{{ 'platformd.layout.region.global' | trans }}</a>
+            <a class="region-link" href="http://www.alienwarearena.com/cmd/default/set-region/4/?return=%2F">{{ 'platformd.layout.region.global' | pd_trans }}</a>
         </li>
         <li>
-            <a class="region-link" href="http://www.alienwarearena.com/cmd/default/set-region/1/?return=%2F">{{ 'platformd.layout.region.en_US' | trans }}&nbsp;<img src="/bundles/spoutlet/images/us.png" />&nbsp;<img src="/bundles/spoutlet/images/ca.png" /></a>
+            <a class="region-link" href="http://www.alienwarearena.com/cmd/default/set-region/1/?return=%2F">{{ 'platformd.layout.region.en_US' | pd_trans }}&nbsp;<img src="/bundles/spoutlet/images/us.png" />&nbsp;<img src="/bundles/spoutlet/images/ca.png" /></a>
         </li>
         <li>
-            <a class="region-link" href="http://www.alienwarearena.com/cmd/default/set-region/5/?return=%2F">{{ 'platformd.layout.region.en_GB' | trans }}</a>
+            <a class="region-link" href="http://www.alienwarearena.com/cmd/default/set-region/5/?return=%2F">{{ 'platformd.layout.region.en_GB' | pd_trans }}</a>
         </li>
         <li>
-            <a class="region-link" href="http://www.alienwarearena.com/cmd/default/set-region/6/?return=%2F">{{ 'platformd.layout.region.en_AU' | trans }}&nbsp;<img src="/bundles/spoutlet/images/au.png" />&nbsp;<img src="/bundles/spoutlet/images/nz.png" /></a>
+            <a class="region-link" href="http://www.alienwarearena.com/cmd/default/set-region/6/?return=%2F">{{ 'platformd.layout.region.en_AU' | pd_trans }}&nbsp;<img src="/bundles/spoutlet/images/au.png" />&nbsp;<img src="/bundles/spoutlet/images/nz.png" /></a>
         </li>
         <li>
-            <a class="region-link" href="http://www.alienwarearena.com/cmd/default/set-region/3/?return=%2F">{{ 'platformd.layout.region.es' | trans }}</a>
+            <a class="region-link" href="http://www.alienwarearena.com/cmd/default/set-region/3/?return=%2F">{{ 'platformd.layout.region.es' | pd_trans }}</a>
         </li>
         <li>
-            <a class="region-link" href="{{ path('default_index', {'_locale': 'ja'}) }}">{{ 'platformd.layout.region.ja' | trans }}&nbsp;<img src="/bundles/spoutlet/images/jp.png" /></a>
+            <a class="region-link" href="{{ path('default_index', {'_locale': 'ja'}) }}">{{ 'platformd.layout.region.ja' | pd_trans }}&nbsp;<img src="/bundles/spoutlet/images/jp.png" /></a>
         </li>
         <li>
-            <a class="region-link" href="http://www.alienwarearena.com/cmd/default/set-region/2/?return=%2F">{{ 'platformd.layout.region.en_SG' | trans }}&nbsp;<img src="/bundles/spoutlet/images/my.png" />&nbsp;<img src="/bundles/spoutlet/images/sg.png" /></a>
+            <a class="region-link" href="http://www.alienwarearena.com/cmd/default/set-region/2/?return=%2F">{{ 'platformd.layout.region.en_SG' | pd_trans }}&nbsp;<img src="/bundles/spoutlet/images/my.png" />&nbsp;<img src="/bundles/spoutlet/images/sg.png" /></a>
         </li>
         {#<li>
-            <a href="{{ path('default_index', {'_locale': 'zh'}) }}">{{ 'platformd.layout.region.zh' | trans }}&nbsp;<img src="/bundles/spoutlet/images/cn.png" /></a>
+            <a href="{{ path('default_index', {'_locale': 'zh'}) }}">{{ 'platformd.layout.region.zh' | pd_trans }}&nbsp;<img src="/bundles/spoutlet/images/cn.png" /></a>
         </li>#}
     </ul>
 </div>
+

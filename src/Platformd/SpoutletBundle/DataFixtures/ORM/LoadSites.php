@@ -53,17 +53,18 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
 
         $this->resetAutoIncrementId();
 
-        $demo  = $this->createSite(1, 'Demo', 'en', 'demo.alienwarearena.local', 'demo@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $www   = $this->createSite(1, 'Global', 'en', 'www.alienwarearena.local', 'contact@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
         $japan = $this->createSite(2, 'Japan', 'ja', 'japan.alienwarearena.local', 'japan@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
         $china = $this->createSite(3, 'China', 'zh', 'china.alienwarearena.local', 'china@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
-        $na    = $this->createSite(4, 'North America', 'en_US', 'na.alienwarearena.local', 'na@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
-        $eu    = $this->createSite(5, 'Europe', 'en_GB', 'eu.alienwarearena.local', 'eu@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $na    = $this->createSite(4, 'North America', 'en_US', 'na.alienwarearena.local', 'contact@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $eu    = $this->createSite(5, 'Europe', 'en_GB', 'eu.alienwarearena.local', 'europe@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
         $latam = $this->createSite(6, 'Latin America', 'es', 'latam.alienwarearena.local', 'latam@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
         $in    = $this->createSite(7, 'India', 'en_IN', 'in.alienwarearena.local', 'in@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
         $mysg  = $this->createSite(8, 'Singapore', 'en_SG', 'mysg.alienwarearena.local', 'mysg@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
         $anz   = $this->createSite(9, 'Australia / New Zealand', 'en_AU', 'anz.alienwarearena.local', 'anz@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $demo  = $this->createSite(10, 'Demo', 'en_DEMO', 'demo.alienwarearena.local', 'demo@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
 
-        $demo->getSiteFeatures()
+        $www->getSiteFeatures()
           ->setHasArp()
           ->setHasComments()
           ->setHasContests()
@@ -339,6 +340,37 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasIndex()
           ->setHasAbout(false)
           ->setHasContact(false)
+          ->setHasSearch()
+        ;
+
+        $demo->getSiteFeatures()
+          ->setHasArp()
+          ->setHasComments()
+          ->setHasContests()
+          ->setHasDeals()
+          ->setHasForums()
+          ->setHasGames()
+          ->setHasGamesNavDropDown(false)
+          ->setHasGroups()
+          ->setHasMessages()
+          ->setHasMicrosoft()
+          ->setHasNews()
+          ->setHasPhotos()
+          ->setHasSteamXfireCommunities()
+          ->setHasSweepstakes(false)
+          ->setHasVideo()
+          ->setHasWallpapers()
+          ->setHasEvents()
+          ->setHasHtmlWidgets(false)
+          ->setHasFacebook()
+          ->setHasGoogleAnalytics()
+          ->setHasTournaments()
+          ->setHasMatchClient()
+          ->setHasProfile()
+          ->setHasForwardOn404(false)
+          ->setHasIndex()
+          ->setHasAbout()
+          ->setHasContact()
           ->setHasSearch()
         ;
 

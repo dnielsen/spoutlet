@@ -16,7 +16,7 @@ Feature: Giveaway keys display
                 | Giveaway Type | key_giveaway              |
                 | Description   | content                   |
             And I attach the file "foo.jpg" to "Banner Image"
-            And I check the "Demo" option for "Sites"
+            And I check the "Global" option for "Sites"
             And I select "Skyrim" from "Game"
             And I check "Show key count"
             And I select "Active" from "Status"
@@ -33,7 +33,7 @@ Feature: Giveaway keys display
                 | Giveaway Type | key_giveaway              |
                 | Description   | content                   |
             And I attach the file "foo.jpg" to "Banner Image"
-            And I check the "Demo" option for "Sites"
+            And I check the "Global" option for "Sites"
             And I select "Skyrim" from "Game"
             And I uncheck "Show key count"
             And I press "Save Giveaway"

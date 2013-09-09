@@ -23,7 +23,7 @@ Feature: Global Events
                 | Event Details     | Description       |
             And I fill in "03/01/2013" for "globalEvent_startsAt_date"
             And I fill in "03/01/2015" for "globalEvent_endsAt_date"
-            And I check the "Demo" option for "Sites"
+            And I check the "Global" option for "Sites"
             And I select the "Online Event" radio button
             And I press "Save"
         Then I should see "New event posted successfully!"
@@ -31,7 +31,7 @@ Feature: Global Events
     Scenario: I can edit an event
         Given I am on "/admin"
         When I click on "Events"
-            And I click on "Demo"
+            And I click on "Global"
             And I click on "Test global event"
             And I fill in the following:
                 | Title         | Test Event Updated  |
@@ -42,7 +42,7 @@ Feature: Global Events
     Scenario: List existing events for admins
         Given I am on "/admin"
         When I click on "Events"
-            And I click on "Demo"
+            And I click on "Global"
         Then I should see 2 data rows
             And I should see "Test global event"
             And I should see "Other global event"

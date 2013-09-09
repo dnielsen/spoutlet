@@ -52,7 +52,7 @@ class AbstractFeatureContext extends MinkContext
         parent::__construct($kernel);
 
         $this->entityManager = $this->getContainer()->get('doctrine')->getEntityManager();
-        $this->currentSite   = $this->entityManager->getRepository('SpoutletBundle:Site')->findOneByName('Demo');
+        $this->currentSite   = $this->entityManager->getRepository('SpoutletBundle:Site')->findOneByName('Global');
         $this->cacheUtil     = $this->getContainer()->get('platformd.util.cache_util');
         $this->purger        = new ORMPurger($this->entityManager);
         $this->dbConnection  = $this->entityManager->getConnection();
@@ -90,7 +90,7 @@ class AbstractFeatureContext extends MinkContext
 
         $this->dbConnection
             ->prepare("INSERT INTO `pd_site` (`name`, `defaultLocale`, `fullDomain`, `theme`) VALUES
-            ('Demo', 'en', 'demo.alienwarearena.local', 'default'),
+            ('Global', 'en', 'www.alienwarearena.local', 'default'),
             ('Japan', 'ja', 'japan.alienwarearena.local', 'default'),
             ('China', 'zh', 'china.alienwarearena.local', 'default'),
             ('North America', 'en_US', 'na.alienwarearena.local', 'default'),
@@ -98,7 +98,8 @@ class AbstractFeatureContext extends MinkContext
             ('Latin America', 'es', 'latam.alienwarearena.local', 'default'),
             ('India', 'en_IN', 'in.alienwarearena.local', 'default'),
             ('Singapore', 'en_SG', 'mysg.alienwarearena.local', 'default'),
-            ('Australia / New Zealand', 'en_AU', 'anz.alienwarearena.local', 'default')")
+            ('Australia / New Zealand', 'en_AU', 'anz.alienwarearena.local', 'default'),
+            ('Demo', 'en_DEMO', 'demo.alienwarearena.local', 'default')")
             ->execute();
 
         $this->dbConnection
@@ -115,20 +116,22 @@ class AbstractFeatureContext extends MinkContext
             (6,6,1,1,0,1,1,0,0,1,0,1,0,1,1,1,1,1,0,1,0,1,1,1,1,1,1,0,0,0),
             (7,7,1,1,0,1,1,0,0,1,0,1,0,1,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0),
             (8,8,1,1,0,1,1,0,0,1,0,1,0,1,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0),
-            (9,9,1,1,0,1,1,0,0,1,0,1,0,1,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0)")
+            (9,9,1,1,0,1,1,0,0,1,0,1,0,1,1,0,0,0,0,1,0,1,1,1,1,1,1,0,0,0),
+            (10,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,1,1)")
             ->execute();
 
         $this->dbConnection
             ->prepare('INSERT INTO `pd_site_config` (`id`, `site_id`, `supportEmailAddress`, `automatedEmailAddress`, `emailFromName`, `birthdateRequired`, `forward_base_url`, `forwarded_paths`) VALUES
-            (1,1,"demo@alienwarearena.local","demo@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", null),
+            (1,1,"contact@alienwarearena.local","contact@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", null),
             (2,2,"japan@alienwarearena.local","japan@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", null),
             (3,3,"china@alienwarearena.local","china@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", null),
-            (4,4,"na@alienwarearena.local","na@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", \'a:5:{i:0;s:3:"^/$";i:1;s:5:"^/arp";i:2;s:8:"^/forums";i:3;s:9:"^/contact";i:4;s:7:"^/about";}\'),
-            (5,5,"eu@alienwarearena.local","eu@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", \'a:5:{i:0;s:3:"^/$";i:1;s:5:"^/arp";i:2;s:8:"^/forums";i:3;s:9:"^/contact";i:4;s:7:"^/about";}\'),
+            (4,4,"contact@alienwarearena.local","contact@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", \'a:5:{i:0;s:3:"^/$";i:1;s:5:"^/arp";i:2;s:8:"^/forums";i:3;s:9:"^/contact";i:4;s:7:"^/about";}\'),
+            (5,5,"europe@alienwarearena.local","europe@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", \'a:5:{i:0;s:3:"^/$";i:1;s:5:"^/arp";i:2;s:8:"^/forums";i:3;s:9:"^/contact";i:4;s:7:"^/about";}\'),
             (6,6,"latam@alienwarearena.local","latam@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", \'a:5:{i:0;s:3:"^/$";i:1;s:5:"^/arp";i:2;s:8:"^/forums";i:3;s:9:"^/contact";i:4;s:7:"^/about";}\'),
             (7,7,"in@alienwarearena.local","in@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", \'a:5:{i:0;s:3:"^/$";i:1;s:5:"^/arp";i:2;s:8:"^/forums";i:3;s:9:"^/contact";i:4;s:7:"^/about";}\'),
             (8,8,"mysg@alienwarearena.local","mysg@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", \'a:5:{i:0;s:3:"^/$";i:1;s:5:"^/arp";i:2;s:8:"^/forums";i:3;s:9:"^/contact";i:4;s:7:"^/about";}\'),
-            (9,9,"anz@alienwarearena.local","anz@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", \'a:5:{i:0;s:3:"^/$";i:1;s:5:"^/arp";i:2;s:8:"^/forums";i:3;s:9:"^/contact";i:4;s:7:"^/about";}\')')
+            (9,9,"anz@alienwarearena.local","anz@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", \'a:5:{i:0;s:3:"^/$";i:1;s:5:"^/arp";i:2;s:8:"^/forums";i:3;s:9:"^/contact";i:4;s:7:"^/about";}\'),
+            (10,10,"demo@alienwarearena.local","demo@alienwarearena.local","Alienware Arena",1,"http://www.alienwarearena.com", null)')
             ->execute();
 
         $this->dbConnection
@@ -1093,7 +1096,7 @@ class AbstractFeatureContext extends MinkContext
     }
 
     /**
-     * Changes the base URL to be a different site (is demo by default)
+     * Changes the base URL to be a different site (is global by default)
      *
      * @Given /^I am on the "([^"]*)" site$/
      */
@@ -1560,8 +1563,8 @@ class AbstractFeatureContext extends MinkContext
      */
     public function getParameter($name)
     {
-        // if we're not on the "demo" site, then we need to modify the base URL
-        if ($name == 'base_url' && $this->currentSite && $this->currentSite->getName() != "Demo") {
+        // if we're not on the "global" site, then we need to modify the base URL
+        if ($name == 'base_url' && $this->currentSite && $this->currentSite->getName() != "Global") {
             return 'http://'.$this->currentSite->getFullDomain();
         }
 

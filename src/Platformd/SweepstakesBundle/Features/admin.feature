@@ -18,7 +18,7 @@ Feature: Sweepstake Admin
                 | Official Rules        | the rules!            |
                 | Content               | the release!          |
             And I select "Skyrim" from "Game"
-            And I check the "Demo" option for "Sites"
+            And I check the "Global" option for "Sites"
             And I press "Save"
         Then I should see "Sweepstakes Saved"
 
