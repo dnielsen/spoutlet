@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use Knp\MediaBundle\Util\MediaUtil;
 use Platformd\UserBundle\Entity\User;
+use Platformd\UserBundle\Entity\RegistrationSource;
 use Platformd\SpoutletBundle\Entity\Vote;
 use Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil;
 use DateTime;
@@ -112,6 +113,7 @@ class ContestController extends Controller
             'entriesLeft'   => $entriesLeft,
             'isUnlimited'   => $isUnlimited,
             'nowInTz'       => new DateTime('now', new DateTimeZone($contest->getTimezone())),
+            'regSourceType' => RegistrationSource::REGISTRATION_SOURCE_TYPE_CONTEST,
         ));
     }
 

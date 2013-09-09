@@ -225,6 +225,8 @@ class GiveawayController extends Controller
 
     public function keyAction($giveawayId, $slug, Request $request, $joinGroup=true)
     {
+        $this->container->get('request')->headers->set('source-type', 1);
+        $this->container->get('request')->headers->set('source-id', 1);
         $this->basicSecurityCheck(array('ROLE_USER'));
 
         $stateRepo   = $this->getKeyRequestStateRepo();

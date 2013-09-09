@@ -2,6 +2,8 @@
 
 namespace Platformd\GiveawayBundle\ViewModel;
 
+use Platformd\UserBundle\Entity\RegistrationSource;
+
 class giveaway_show_main_actions_data
 {
     public $giveaway_allow_key_fetch;
@@ -16,4 +18,6 @@ class giveaway_show_main_actions_data
     public $user_is_member_of_promotion_group;
     public $promotion_group_name;
     public $promotion_group_slug;
+
+    public $giveaway_source_type =RegistrationSource::REGISTRATION_SOURCE_TYPE_GIVEAWAY;
 }

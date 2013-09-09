@@ -1,0 +1,158 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+{% block title %}Account Sources by Activity{% endblock %}
+
+{% block content %}
+
+    <form action="{{ path('user_metric_by_activity') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+
+        <div id="source-by-region">
+            <h1>Account Source by Region</h1>
+
+            <div class="well" style="margin-bottom: 20px;">
+                <div class="pull-left">
+
+                    {{ form_widget(form.region) }}
+                    {{ form_widget(form.region_activity_type) }}
+                    {{ form_widget(form.region_activity_id) }}
+                    <input type="hidden" class="add-all" name="all-regions" value="false" />
+                </div>
+
+                <div class="pull-right">
+                    {{ form_widget(form.from_date_region) }}
+                    To
+                    {{ form_widget(form.to_date_region) }}
+                    <button type="submit" class="btn btn-primary add-region" formnovalidate>Submit</button>
+                    <a href="{{ path('user_metric_by_activity') }}" class="btn btn-danger">Reset</a>
+                </div>
+            </div>
+
+            <table class="table table-striped table-bordered tablesorter">
+                <thead>
+                    <tr>
+                        <th style="width: 12%;">Region</th>
+                        <th style="width: 12%;">Total</th>
+                        <th style="width: 12%;">Date Range</th>
+                        <th style="width: 12%;">Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data if row['region']|default(null) or row['all_regions']|default(false) %}
+                        {% set dateRange = (row['from'] or row['to'] ? ( (row['from'] ? 'From ' ~ row['from'] : '') ~ (row['to'] ? (row['from'] ? ' ' : '') ~ 'Until ' ~ row['to'] : '') ) : 'All Time') %}
+
+                        <tr>
+                            <td>{{ row['region_name'] }}</td>
+                            <td>{{ row['count'] }}</td>
+                            <td>{{ dateRange }}</td>
+                            <td>{{ row['activity_name'] }}</td>
+                        </tr>
+
+                    {% else %}
+                        <tr><td colspan=4>No Regions Selected!</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div id="source-by-country" style="margin-top: 40px;">
+            <h1>Account Source by Country</h1>
+
+            <div class="well" style="margin-bottom: 20px;">
+                <div class="pull-left">
+                    {{ form_widget(form.country) }}
+                    {{ form_widget(form.country_activity_type) }}
+                    {{ form_widget(form.country_activity_id) }}
+                    <input type="hidden" class="add-all" name="all-countries" value="false" />
+                </div>
+
+                <div class="pull-right">
+                    {{ form_widget(form.from_date_country) }}
+                    To
+                    {{ form_widget(form.to_date_country) }}
+                    <button type="submit" class="btn btn-primary add-country" formnovalidate>Submit</button>
+                    <a href="{{ path('user_metric_by_activity') }}" class="btn btn-danger">Reset</a>
+                </div>
+            </div>
+
+            <table class="table table-striped table-bordered tablesorter">
+                <thead>
+                    <tr>
+                        <th style="width: 12%;">Country</th>
+                        <th style="width: 12%;">Total</th>
+                        <th style="width: 12%;">Date Range</th>
+                        <th style="width: 12%;">Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data if row['country']|default(null) or row['all_countries']|default(false) %}
+
+                        {% set dateRange = (row['from'] or row['to'] ? ( (row['from'] ? 'From ' ~ row['from'] : '') ~ (row['to'] ? (row['from'] ? ' ' : '') ~ 'Until ' ~ row['to'] : '') ) : 'All Time') %}
+
+                        <tr>
+                            <td>{{ row['country_name'] }}</td>
+                            <td>{{ row['count'] }}</td>
+                            <td>{{ dateRange }}</td>
+                            <td>{{ row['activity_name'] }}</td>
+                        </tr>
+
+                    {% else %}
+                        <tr><td colspan=4>No Countries Selected!</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {{ form_row(form.currentSettings) }}
+
+    </form>
+
+    <script type="text/javascript">
+
+        $(function() {
+            $('.activity-type').each(function() {
+                if (parseInt($(this).val())) {
+                    updateChoices(this);
+                }
+            });
+
+            $('input,select').keypress(function(event) { return event.keyCode != 13; });
+        });
+
+        function updateChoices(element)
+        {
+            var targetClass = '.' + $(element).data('grouping') + '-activity-id';
+
+            if (!parseInt($(element).val())) {
+                $(targetClass).html('<option value="">Choose an Activity Type</option>');
+                return;
+            }
+
+            $(targetClass).html('<option value="">Loading...</option>');
+
+            $.ajax({
+                url: '{{ path('user_metrics_get_activities') }}/' + $(element).val(),
+                type: 'get',
+                contentType: 'application/json',
+                success: function (html, status, req) {
+                    $(targetClass).html(html);
+                    return;
+                }
+            });
+        }
+
+        $('.activity-type').change(function() {
+            updateChoices(this);
+        });
+
+        $('.add-country').click(function() {
+            var addAll = !$('#source-by-country .base-select').val() ? 'true' : 'false';
+            $('#source-by-country .add-all').val(addAll);
+        });
+
+        $('.add-region').click(function() {
+            var addAll = !$('#source-by-region .base-select').val() ? 'true' : 'false';
+            $('#source-by-region .add-all').val(addAll);
+        });
+
+    </script>
+
+{% endblock %}
