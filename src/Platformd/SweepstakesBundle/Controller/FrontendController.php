@@ -18,8 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
 class FrontendController extends Controller
 {
     public function indexAction()

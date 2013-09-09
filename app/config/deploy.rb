@@ -1,7 +1,7 @@
 set :stages, %w(production staging migration)
 set :stage_dir, "app/config/deploy"
 require 'capistrano/ext/multistage'
-
+logger.level = Logger::MAX_LEVEL
 ssh_options[:port] = "22"
 ssh_options[:forward_agent] = true
 default_run_options[:pty] = true
