@@ -15,7 +15,6 @@ use Platformd\UserBundle\Entity\RegistrationSource;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Platformd\UserBundle\Entity\RegistrationSource;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
