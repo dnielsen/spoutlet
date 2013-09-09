@@ -268,7 +268,7 @@ class MetricController extends Controller
             return new Response();
         }
 
-        $repoClass = RegistrationSource::$sourceEntities[$type];
+        $repoClass = isset(RegistrationSource::$sourceEntities[$type]) ? RegistrationSource::$sourceEntities[$type] : null;
 
         if (!$repoClass) {
             return new Response();

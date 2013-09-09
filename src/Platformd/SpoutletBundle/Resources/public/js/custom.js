@@ -47,10 +47,29 @@ addQueryParams = function(url, params) {
 };
 
 addSourceInfo = function(element, source) {
-    var _href = $(element).attr('href');
-    var params = new Array();
-    params['source'] = source;
-    $(element).attr('href', addQueryParams(_href, params));
+
+    elementType = $(element).prop('tagName');
+
+    if (elementType == 'BUTTON' || elementType == 'INPUT') {
+        var form = $(element).parents('form:first');
+        if (form.length > 0) {
+            var _href = $(form).attr('action');
+            var params = new Array();
+            params['source'] = source;
+            $(form).attr('action', addQueryParams(_href, params));
+        }
+        return;
+    }
+
+    if (elementType == 'A') {
+        var _href = $(element).attr('href');
+        var params = new Array();
+        params['source'] = source;
+        $(element).attr('href', addQueryParams(_href, params));
+        return;
+    }
+
+    return;
 }
 
 /**
