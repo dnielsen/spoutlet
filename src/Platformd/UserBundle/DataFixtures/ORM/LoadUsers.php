@@ -7,6 +7,7 @@ use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Platformd\UserBundle\Entity\User;
+use DateTime;
 
 class LoadUsers implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
 {
@@ -20,16 +21,20 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface, OrderedFix
         $this->resetAutoIncrementId();
 
         // a normal user
-        $this->getUserManipulator()->create(
+        $user = $this->getUserManipulator()->create(
             'user',
             'user',
             'user@user.com',
             true,
             false
         );
+        $user->setFirstName('User');
+        $user->setLastName('User');
+        $user->setBirthdate(new DateTime('1980-01-01'));
+        $this->manager->persist($user);
 
         // an "organizer" - can create events
-        $this->getUserManipulator()->create(
+        $organizer = $this->getUserManipulator()->create(
             'organizer',
             'organizer',
             'organizer@organizer.com',
@@ -37,9 +42,13 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface, OrderedFix
             false
         );
         $this->getUserManipulator()->addRole('organizer', 'ROLE_ORGANIZER');
+        $organizer->setFirstName('Organizer');
+        $organizer->setLastName('Organizer');
+        $organizer->setBirthdate(new DateTime('1980-01-01'));
+        $this->manager->persist($organizer);
 
         // a super admin user (ROLE_SUPER_ADMIN)
-        $this->getUserManipulator()->create(
+        $admin = $this->getUserManipulator()->create(
             'admin',
             'admin',
             'admin@admin.com',
@@ -47,6 +56,12 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface, OrderedFix
             true
         );
         $this->getUserManipulator()->addRole('admin', 'ROLE_SUPER_ADMIN');
+        $admin->setFirstName('Admin');
+        $admin->setLastName('Admin');
+        $admin->setBirthdate(new DateTime('1980-01-01'));
+        $this->manager->persist($admin);
+
+        $this->manager->flush();
     }
 
     private function resetAutoIncrementId() {

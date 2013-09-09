@@ -27,6 +27,9 @@
     {{ parent() }}
     <script type="text/javascript">
         $(function () {
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
+            });
 
             var category = $('#category').val();
 

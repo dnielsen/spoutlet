@@ -8,6 +8,8 @@ use Platformd\VideoBundle\Entity\YoutubeVote;
 use Platformd\VideoBundle\Form\Type\YoutubeType;
 use Platformd\GroupBundle\Entity\GroupVideo;
 use Platformd\CEVOBundle\Api\ApiException;
+use Platformd\UserBundle\Entity\RegistrationSource;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Symfony\Component\HttpFoundation\Request,
@@ -56,6 +58,7 @@ class YoutubeController extends Controller
             'categoryVideos'         => $categoryVideos,
             'popularVideos'          => $popularVideos,
             'currentlyWatchedVideos' => $currentlyWatchedVideos,
+            'regSourceData'          => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_VIDEOS),
         ));
 
         $this->varnishCache($response, 15);
@@ -76,8 +79,9 @@ class YoutubeController extends Controller
         $videos = $manager->findPopularVideosByCategoryForCountry($category, $this->getCurrentCountry());
 
         return $this->render('VideoBundle:Youtube:category.html.twig', array(
-            'videos'    => $videos,
-            'category'  => $category,
+            'videos'        => $videos,
+            'category'      => $category,
+            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_VIDEOS),
         ));
     }
 
@@ -208,9 +212,10 @@ class YoutubeController extends Controller
         $this->getYoutubeManager()->updateVideo($video);
 
         return $this->render('VideoBundle:Youtube:view.html.twig', array(
-            'video'                 => $video,
-            'videos'                => $videos,
-            'showFeaturedInstead'   => $showFeaturedInstead,
+            'video'               => $video,
+            'videos'              => $videos,
+            'showFeaturedInstead' => $showFeaturedInstead,
+            'regSourceData'       => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_VIDEOS, 'id'=>$video->getId()),
         ));
     }
 
