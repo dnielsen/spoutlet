@@ -1,0 +1,6 @@
+sweepstakes.errors.slug_unique: This URL is already used. If you have left slug blank, this means that an existing sweepstakes is already using this sweepstakes name.
+sweepstakes.errors.name_unique: This name is already used.
+sweepstakes.errors.entry_unique: You have already entered this sweepstakes.
+sweepstakes.errors.agree_to_terms: コンテストのルールに同意する必要があります。
+sweepstakes.errors.phone_blank: あなたの電話番号を入力してください。
+sweepstakes.errors.answer_blank: この質問に答える必要があります。

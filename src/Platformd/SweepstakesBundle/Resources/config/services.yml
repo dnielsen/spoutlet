@@ -1,0 +1,40 @@
+services:
+
+    # forms
+    platformd_sweeps.registration.form.type:
+        class: Platformd\UserBundle\Form\Type\RegistrationFormType
+        arguments:
+            - %fos_user.model.user.class%
+            - %platformd.news_source%
+            - @session
+            - @platformd.model.translator
+            - @platformd.model.ip_lookup_util
+            - @request
+            - 1
+        scope: request
+        calls:
+            - [ setPrefectures, [ %platformd.prefectures% ] ]
+        tags:
+            - { name: form.type, alias: platformd_sweeps_registration }
+
+    platformd_sweeps.entry.form.type:
+        class: Platformd\SweepstakesBundle\Form\Type\SweepstakesEntryType
+        arguments:
+            - @security.context
+        tags:
+            - { name: form.type, alias: platformd_sweeps_entry }
+
+    platformd_sweeps.entry.form.handler:
+        class: Platformd\SweepstakesBundle\Form\Handler\SweepstakesEntryFormHandler
+        arguments:
+            - @request
+            - @platformd_user.manager
+            - @platformd_user.mailer
+            - @doctrine.orm.entity_manager
+            - @service_container
+            - @platformd.model.ip_lookup_util
+            - @platformd.user.api.manager
+            - @platformd.util.site_util
+            - @platformd.model.group_manager
+            - @pd.cevo.api.api_manager
+        scope: request

@@ -4,6 +4,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+        {% block meta_description %}{% endblock %}
+
         {% render url('_check_account_complete') with {}, {'standalone': true } %}
 
 		<script type="text/javascript">

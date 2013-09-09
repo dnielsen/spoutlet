@@ -1,0 +1,34 @@
+<div id="sweepstakes-wrapper">
+    <form action="{{ path('sweepstakes_show', { 'slug': sweepstakes.slug }) }}" method="post" {{ form_enctype(entryForm) }} class="form form-horizontal">
+        <table id="sweepstakes-tbl">
+            <tr><td>&nbsp;</td><td id="sweeps-entry-form-title">{{ 'sweepstakes.entry.form.title' | pd_trans }}</td></tr>
+            <tr class="sweepsform-row">
+                <td class="sweepsform-left">{{ form_label(entryForm.phoneNumber) }}</td>
+                <td class="sweepsform-right">{{ form_widget(entryForm.phoneNumber) }} {{ form_errors(entryForm.phoneNumber) }}</td>
+            </tr>
+            {% if sweepstakes.questions|length > 0 %}
+            {% for answer in entryForm.answers %}
+                <tr class="sweepsform-row">
+                    <td class="sweepsform-left">{{ form_label(answer.content) }}</td>
+                    <td class="sweepsform-right answer">{{ form_widget(answer.content) }} {{ form_errors(answer.content) }}</td>
+                </tr>
+            {% endfor %}
+            {% endif %}
+            <tr class="sweepsform-row">
+                <td class="sweepsform-left"></td>
+                <td class="sweepsform-right">
+                    {{ form_widget(entryForm.termsAccepted) }}
+                    <span class="checkbox-label">{{ 'sweepstakes.entry.form.read_and_agreed_to_rules'|pd_trans({'%rules_url%': path('sweepstakes_rules', {'slug': sweepstakes.slug})})|raw }}</span>
+                    {{ form_errors(entryForm.termsAccepted) }}
+                </td>
+            </tr>
+            <tr class="sweepsform-row">
+                <td class="sweepsform-left"></td>
+                <td class="sweepsform-right"><button type="submit" class="btn btn-primary" formnovalidate>{{ "enter" | pd_trans }}</button></td>
+            </tr>
+        </table>
+        <div style="display:none;">
+            {{ form_rest(entryForm) }}
+        </div>
+    </form>
+</div>

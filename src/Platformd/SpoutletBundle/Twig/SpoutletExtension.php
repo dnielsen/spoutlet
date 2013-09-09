@@ -74,7 +74,7 @@ class SpoutletExtension extends Twig_Extension
         }
 
         $token                     = $this->securityContext->getToken();
-        $this->currentUser         = $token ? $token->getUser() : null;
+        $this->currentUser         = $token ? ($token->getUser() !== 'anon.' ? $token->getUser() : null) : null;
         $this->session             = $this->request->getSession();
         $this->currentSite         = $this->siteUtil->getCurrentSite();
         $this->currentSiteFeatures = $this->currentSite->getSiteFeatures();
@@ -94,6 +94,7 @@ class SpoutletExtension extends Twig_Extension
             'pd_link_target'     => new Twig_Filter_Method($this, 'linkToObjectTarget', array('is_safe' => array('html'))),
             'wrap'               => new Twig_Filter_Method($this, 'wrap'),
             'date_translate'     => new Twig_Filter_Method($this, 'dateTranslate'),
+            'datetime_translate' => new Twig_Filter_Method($this, 'dateTranslate'),
             'site_name'          => new Twig_Filter_Method($this, 'getSiteNameFromId'),
             'pd_trans'           => new Twig_Filter_Method($this, 'themedTranslate'),
         );
@@ -123,6 +124,7 @@ class SpoutletExtension extends Twig_Extension
             'current_background_ad_link'     => new Twig_Function_Method($this, 'getCurrentBackgroundLink'),
             'country_specific'               => new Twig_Function_Method($this, 'countrySpecific', array('is_safe' => array('html'))),
             'get_flash'                      => new Twig_Function_Method($this, 'getFlash'),
+            'has_flash'                      => new Twig_Function_Method($this, 'hasFlash'),
         );
     }
 
@@ -906,6 +908,11 @@ class SpoutletExtension extends Twig_Extension
         return $datetime->format($this->themedTranslate('date_format', array(), $this->session->getLocale()));
     }
 
+    public function dateTimeTranslate($datetime)
+    {
+        return $datetime->format($this->themedTranslate('datetime_format', array(), $this->session->getLocale()));
+    }
+
     public function themedTranslate($transKey, $variables = array(), $domain = 'messages', $locale = null)
     {
         return $this->translator->trans($transKey, $variables, $domain, $locale);
@@ -963,5 +970,10 @@ class SpoutletExtension extends Twig_Extension
     public function getFlash()
     {
         return $this->flashUtil->getFlash();
+    }
+
+    public function hasFlash()
+    {
+        return $this->flashUtil->hasFlash();
     }
 }

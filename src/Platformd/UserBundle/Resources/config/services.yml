@@ -48,6 +48,7 @@ services:
             - @platformd.model.translator
             - @platformd.model.ip_lookup_util
             - @request
+            - 1
         scope: request
         calls:
             - [ setPrefectures, [ %platformd.prefectures% ] ]

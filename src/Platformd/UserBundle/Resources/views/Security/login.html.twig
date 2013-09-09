@@ -3,6 +3,8 @@
 {% block title 'platformd.user.login.title' | pd_trans %}
 
 {% block fos_user_content %}
+
+{% if user is null %}
 <div id="login-flash" class="xnotices session-flash" style="display:none;">
     <div class="notice successNotice">
         <div class="pad">
@@ -17,6 +19,8 @@
         </div>
     </div>
 </div>
+{% endif %}
+
 <div class="std_2col">
     <div class="left">
         <div id="loginArea">
@@ -80,6 +84,8 @@
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
     </div>
 </div>
+
+{% if user is null %}
 <script type="text/javascript">
     $(function () {
         var qs = location.search.substring(1);
@@ -102,6 +108,8 @@
         }
     });
 </script>
+{% endif %}
+
 {% endblock fos_user_content %}
 
 

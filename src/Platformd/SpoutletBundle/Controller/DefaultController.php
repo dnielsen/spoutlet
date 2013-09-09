@@ -306,7 +306,7 @@ class DefaultController extends Controller
         // sweeps
         $sweepstakes = $this->getDoctrine()
             ->getEntityManager()
-            ->getRepository('SpoutletBundle:AbstractEvent')
+            ->getRepository('SweepstakesBundle:Sweepstakes')
             ->getCurrentSweepstakes($site)
         ;
 

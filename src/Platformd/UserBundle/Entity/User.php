@@ -23,8 +23,8 @@ use  Platformd\UserBundle\Validator\User as ValidateUser;
  * @ORM\Entity(repositoryClass="Platformd\UserBundle\Entity\UserRepository")
  * @ORM\haslifecyclecallbacks
  * @ValidateUser()
- * @UniqueEntity(fields={"username"})
- * @UniqueEntity(fields={"email"})
+ * @UniqueEntity(fields={"username"}, message="fos_user.username.already_used")
+ * @UniqueEntity(fields={"email"}, message="fos_user.email.already_used")
  */
 class User extends BaseUser
 {
@@ -42,7 +42,7 @@ class User extends BaseUser
     protected $id;
 
     /**
-     * @Assert\NotBlank(groups={"Registration, Default"});
+     * @Assert\NotBlank(message="fos_user.username.blank", groups={"Registration", "Default"});
      * @ORM\Column(type="string", length="255", nullable=true)
      */
     protected $username;
@@ -53,7 +53,7 @@ class User extends BaseUser
     protected $usernameCanonical;
 
     /**
-     * @Assert\NotBlank();
+     * @Assert\NotBlank(message="fos_user.email.blank", groups={"Registration", "Default"});
      * @ORM\Column(type="string", length="255")
      */
     protected $email;
@@ -80,7 +80,8 @@ class User extends BaseUser
 
     /**
      * Plain password. Used for model validation. Must not be persisted.
-     * @Assert\MinLength(limit="5", groups={"Default", "Registration"}, message="password_too_short")
+     * @Assert\MinLength(limit="5", groups={"Registration", "Default"}, message="password_too_short")
+     * @Assert\NotBlank(message="fos_user.password.blank", groups={"Registration", "Default"})
      */
     protected $plainPassword;
 
@@ -134,7 +135,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration", "IncompleteUser"}, message="first_name_not_blank")
+     * @Assert\NotBlank(groups={"Registration", "IncompleteUser", "Default"}, message="first_name_not_blank")
      * @Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser"})
      * @Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser"})
      */
@@ -145,7 +146,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration", "IncompleteUser"}, message="last_name_not_blank")
+     * @Assert\NotBlank(groups={"Registration", "IncompleteUser", "Default"}, message="last_name_not_blank")
      * @Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser"})
      * @Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser"})
      */
@@ -156,7 +157,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="date", nullable=true)
      *
-     * @Assert\Date(groups={"Registration", "IncompleteUser"})
+     * @Assert\Date(groups={"Registration", "IncompleteUser", "Default"})
      */
     protected $birthdate;
 
@@ -172,7 +173,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration"}, message="country_not_blank")
+     * @Assert\NotBlank(groups={"Registration", "Default"}, message="country_not_blank")
      */
     protected $country;
 
@@ -181,7 +182,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration"}, message="state_not_blank")
+     * @Assert\NotBlank(groups={"Registration", "Default"}, message="state_not_blank")
      */
     protected $state;
 
@@ -220,7 +221,7 @@ class User extends BaseUser
     /**
      * @var Boolean $terms_accepted
      *
-     * @Assert\True(message="You must accept the terms and conditions and the privacy policy", groups={"Registration", "IncompleteUser"})
+     * @Assert\True(message="You must accept the terms and conditions and the privacy policy", groups={"Registration", "IncompleteUser", "Default"})
      */
     protected $termsAccepted;
 

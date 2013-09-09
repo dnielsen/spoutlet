@@ -1,153 +1,81 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
+{% form_theme entryForm 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
 
-{% block stylesheets %}
-    {{ parent() }}
-
-    <link rel="stylesheet" href="{{ asset('bundles/giveaway/css/giveaway.css') }}">
+{% block meta_description %}
+    {% if sweepstakes.metaDescription %}
+        <meta name="description" content="{{ sweepstakes.metaDescription }}">
+    {% endif %}
 {% endblock %}
+
+{% if sweepstakes.backgroundImage is not null %}
+    {% set bgImage = media_path(sweepstakes.backgroundImage) %}
+{% else %}
+    {% set bgImage = "default" %}
+{% endif %}
+
+{% block page_background_image bgImage %}
 
 {% block title sweepstakes.name %}
 
 {% block content %}
 
-    {% render url('_sweepstakes_flash_message', { 'slug': sweepstakes.slug, 'entryId': entryId }) with {}, {'standalone': true } %}
+    {% if user is null %}
+        {% if registered|default(false) %}
+            {% include 'SpoutletBundle::_flashMessage.html.twig' with { 'type': 'success', 'message': 'sweepstakes.entry.registration.flash' } %}
+        {% endif %}
+
+        {% if timedout %}
+            {% include 'SpoutletBundle::_flashMessage.html.twig' with { 'type': 'error', 'message': 'platformd.user.register.please_wait' } %}
+        {% endif %}
+    {% endif %}
 
     <div class="std_1col">
 
-        {% if sweepstakes.bannerImage %}
-            <div id="eventHeader" style="background:url('{{ asset(media_path(sweepstakes)) }}') no-repeat;"></div>
-        {% endif %}
-
         <div class="page-header">
             <h1 class="controlled-spacing">{{ sweepstakes.name }}</h1>
+        </div>
 
-            {% if sweepstakes.generalImage %}
-                <div style="text-align: center;">
-                    <img src="{{ asset(media_path(sweepstakes, {
-                        'type': 'general'
-                    })) }}" alt="{{ sweepstakes.name }}" alt="{{ sweepstakes.name }}" />
-                </div>
-            {% endif %}
-        </div><!-- widget-header -->
-    </div><!-- std_1col -->
+        <div id="sweepstakes-content">
+            {{ sweepstakes.content | raw }}
 
-    <div class="std_2col">
-        <div class="right">
-            <div id="giveaway-getkey" class="widget-33">
-                <div class="widget-header">
-                    <div class="widget-title">{{ 'platformd.sweepstakes.enter' | trans }}</div>
-                </div>
+            <div class="clear"></div>
 
-                <form action="{{ path('sweepstakes_enter', {'slug': sweepstakes.slug}) }}" method="GET" id="sweeps-form-enter">
-
-                    <div class="widget-content">
-                        {% if isEntered %}
-
-                            <p>{{ 'already_entered_sweepstakes' | trans }}</p>
-
-                        {% elseif not sweepstakes.isCurrentlyOpen %}
-
-                            <p>{{ 'sweeps_not_open' | trans }}</p>
-
-                        {% else %}
-                            <ol>
-                                {% include 'SweepstakesBundle:Frontend:_defaultSteps.html.twig' with {'sweepstakes': sweepstakes} %}
-                            </ol>
-
-                            <div class="form-msg-error" id="_sweeps_error"></div>
-
-                            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-
-                                <div class="agree-row">
-                                    <input type="checkbox" name="_terms" id="_sweepstakes_terms" />
-                                    <label for="_sweepstakes_terms" style="display:inline;">{{ 'read_and_agreed_to_rules' | trans({
-                                        '%a_start%': '<a href="#" class="sweeps-terms-modal">',
-                                        '%a_end%': '</a>'
-                                    }) | raw }}</label>
-                                </div>
-
-                                <div style="text-align: center;">
-                                    <input type="submit" value="{{ 'enter' | trans }}" class="button" />
-                                </div>
-
-                                {% if features.hasGroups %}
-                                    {% if sweepstakes.group is not null %}
-                                        {% if not groupManager.isMember(user, sweepstakes.group) %}
-                                        <div class="agree-row">
-                                                {{ 'deal_join_group' | trans | replace({'%link%': path('group_show', {'slug': sweepstakes.group.slug}), '%group%': sweepstakes.group.name}) | raw }}
-                                        </div>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endif %}
-
-                            {% endif %}
-
-                            <div class="clear"></div>
-
-                        {% endif %}
-                    </div>
-                </form>
+            <div id="sweepstakes-rules">
+                {{ 'sweepstakes.entry.links.rules'|pd_trans({'%rules_url%': path('sweepstakes_rules', {'slug': sweepstakes.slug})})|raw }}
             </div>
+        </div>
 
-        </div><!-- right -->
-
-        <div class="left">
-            <div id="giveaway-info" class="widget-66">
-                <div class="widget-header">
-                    <div class="widget-title">{{ 'overview' | trans }}</div>
-                </div><!-- widget-header -->
-
-                <div class="widget-content" id="giveaway-details">
-                    <ul class="sweepstakes-details">
-                        <li class="tight">
-                            <label style="display:inline;">{{ 'registration_opens' | trans }}</label>
-                            {{ 'sweepstakes_datetime_format' | trans(sweepstakes.startsAtInTimezoneTranslationArray) }}
-                        </li>
-                        <li>
-                            {% if sweepstakes.endsAt %}
-
-                                <label style="display:inline;">{{ 'registration_closes' | trans }}</label>
-                            {{ 'sweepstakes_datetime_format' | trans(sweepstakes.endsAtInTimezoneTranslationArray) }}
-                            {% else %}
-                                <label style="display:inline;">{{ 'registration_closes' | trans }}</label>
-                                {{ 'na' | trans }}
-                            {% endif %}
-                        </li>
-
-                    </ul>
-
-                    <label style="display:inline;">{{ 'instructions' |trans }}</label><br/>
-
-                    {{ sweepstakes.content | raw }}
-
-                </div><!-- giveaway-details -->
-
-            </div><!-- giveaway-info -->
-
-            {% if features.hasComments %}
-                {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : sweepstakes.threadId, 'comments' : null, 'offset' : 0, 'permalink' : permalink } %}
+        <div id="sweepstakes-entry-links">
+            {% if not sweepstakes.hasStarted %}
+                <div class="sweespstakes-cant-enter">{{ 'sweepstakes.entry.contest_not_started' | pd_trans({ '%dateString%': (sweepstakes.startsAt | date_translate) }) }}</div>
+            {% elseif sweepstakes.isFinished %}
+                <div class="sweespstakes-cant-enter">{{ 'sweepstakes.entry.contest_has_ended' | pd_trans }}</div>
+            {% elseif is_granted("ROLE_USER") %}
+                {% if isEntered %}<div class="sweespstakes-cant-enter">{{ 'sweepstakes.entry.links.already_entered' | pd_trans }}</div>{% endif %}
+            {% else %}
+                <div class="not-entered">
+                    <a href="#" id="use-existing-account">{{ 'sweepstakes.entry.links.use_existing' | pd_trans }}</a>
+                    {{ 'sweepstakes.entry.or'|pd_trans }}
+                    <a href="#"{% if errors|length > 0 %} class="active"{% endif %} id="create-new-account">{{ 'sweepstakes.entry.links.create_new' | pd_trans }}</a>
+                </div>
             {% endif %}
+        </div>
 
-        </div><!-- left -->
+        {% if sweepstakes.isCurrentlyOpen %}
+            {% if is_granted("ROLE_USER") %}
+                {% if not isEntered %}
+                    {% include 'SweepstakesBundle:Frontend:_loggedInForm.html.twig' with { 'sweepstakes': sweepstakes, 'entryForm': entryForm, 'errors': errors } %}
+                {% endif %}
+            {% else %}
+                <div id="register-to-enter"{% if errors|length > 0 %} style="display: block;"{% endif %}>
+                    {% include 'SweepstakesBundle:Frontend:_registerForm.html.twig' with { 'sweepstakes': sweepstakes, 'entryForm': entryForm, 'errors': errors } %}
+                </div>
+            {% endif %}
+        {% endif %}
 
-        <div class="clear">
-
-        </div><!-- clear -->
-    </div><!-- std_2col -->
-
-    <div id="sweeps-terms-modal-content" class="modal-content" style="display: none">
-        <h3>{{ 'official_sweepstakes_rules' | trans }}</h3>
-        {{ sweepstakes.officialRules | raw }}
     </div>
 
     <script type="text/javascript">
-        window.Sweeps = {
-            renderError: function(msg) {
-
-                $('#_sweeps_error').html(msg).show();
-            }
-        };
-
         jQuery(document).ready(function() {
             // make the terms content display in a modal
             $('.sweeps-terms-modal').click(function() {
@@ -158,16 +86,35 @@
                 return false;
             });
 
-            // on submit of the form, make sure that both of the checkboxes are checked
-            $('#sweeps-form-enter').submit(function() {
-                if (!$('#_sweepstakes_terms').is(':checked')) {
-                    Sweeps.renderError('{{ 'sweeps_check_both_boxes' | trans }}');
+            $('.not-entered #use-existing-account').click(function(e) {
+                e.preventDefault();
+                $('#header-login-link').click();
+            });
 
-                    return false;
-                }
-
-                return true;
+            $('.not-entered #create-new-account').click(function(e) {
+                e.preventDefault();
+                $(this).addClass('active');
+                $('#register-to-enter').slideDown();
             });
         });
+
+        $(window).load(function() {
+            {% if errors|length > 0 %}
+                if ($('.field-error').length > 0) {
+                    className = '.field-error';
+                } else {
+                    className = '.help-inline';
+                }
+
+                $('html, body').stop().delay(400).animate({
+                    scrollTop: ($(className).first().offset().top) - 50
+                }, 400);
+            {% endif %}
+        });
     </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'SweepstakesBundle:Frontend:_css_assets.html.twig' %}
 {% endblock %}

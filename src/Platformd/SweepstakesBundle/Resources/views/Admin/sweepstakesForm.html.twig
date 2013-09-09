@@ -11,10 +11,9 @@
 
     <fieldset>
         <legend>a) Basic Information</legend>
-        <div class="row-fluid first">
+        <div class="row-fluid">
             <div class="span6">
                 {{ form_row(form.name) }}
-                {{ form_row(form.game) }}
                 {{ form_row(form.slug) }}
                 {{ form_row(form.externalUrl) }}
                 {{ form_row(form.testOnly) }}
@@ -37,66 +36,87 @@
             </div>
             <div class="span6">
                 {{ form_row(form.sites) }}
-                <div style="margin-bottom: 10px; border: 1px solid #ddd; padding: 5px; width: 340px;">
-                    The current time of the server is <b>{{ '' | date('Y-m-d H:i') }}</b>
-                    <br/>
-                    Enter the below times in the timezone of the server. Then choose
-                    the timezone that you'd like these times to be displayed in to the user.
-                </div>
-                {{ form_row(form.starts_at) }}
-                {{ form_row(form.ends_at) }}
+                {{ form_row(form.startsAt) }}
+                {{ form_row(form.endsAt) }}
                 {{ form_row(form.timezone) }}
             </div>
         </div>
     </fieldset>
+
     <fieldset>
-        <legend>b) Images</legend>
-        <div class="row-fluid first">
-            <div class="span6">
-                {{ form_row(form.bannerImageFile, {'help': 'platformd.events.admin.banner_note'}) }}
-                {{ form_row(form.generalImageFile) }}
+        <legend>b) Content</legend>
+        {{ form_row(form.content) }}
+        {{ form_row(form.backgroundImage) }}
+        {{ form_row(form.tags) }}
+        {{ form_row(form.metaDescription) }}
+    </fieldset>
+
+    {% set hasEntries = hasEntries|default(false) %}
+
+    <fieldset>
+        <legend>c) Questions</legend>
+        <div class="row-fluid">
+            <div id="question-fields-list" data-prototype="{{ form_widget(form.questions.vars.prototype) | e }}">
+            {% for questionField in form.questions %}
+                <div>
+                    {{ form_errors(questionField) }}
+                    {{ form_widget(questionField) }}
+                </div>
+            {% endfor %}
+            </div>
+
+            <div class="span1">&nbsp;</div>
+            <div class="span11">
+                <div><a href="#" id="add-another-question" class="btn btn-primary"><i class="icon-plus icon-white"></i> Add another (Max 5)</a></div>
             </div>
         </div>
     </fieldset>
-    <fieldset>
-            <legend>c) Rules</legend>
-            {{ form_row(form.officialRules) }}
-    </fieldset>
-    <fieldset>
-        <legend>d) Restrictions</legend>
-        <div class="game-page-form">
-            <div class="alert alert-info help" style="width: 600px;"><i class="icon-info-sign" style="padding-right: 10px;"></i>{{ form.ruleset.vars.help | raw }}</div>
-            <ul class="restrictions-list clearfix row-fluid rules" data-prototype="{{ form_widget(form.ruleset.rules.vars.prototype)|e }}">
-                {# see the CSS file this explanation #}
-                <li class="dummy"></li>
-                {% for rule in form.ruleset.rules %}
-                    <li class="span5 restriction-li existing-restriction">{{ form_widget(rule) }}</li>
 
-                    {% if loop.index is even %}
-                        <li class="clear"></li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        </div>
-    </fieldset>
     <fieldset>
-        <legend>e) Content</legend>
-        {{ form_row(form.content) }}
-        {{ form_row(form.tags) }}
+        <legend>d) Rules</legend>
+        {{ form_row(form.officialRules) }}
     </fieldset>
 
-<div style="display: none;">
-    {{ form_row(form.ruleset) }}
-    {{ form_label(form.ruleset.rules) }}
-</div>
+    <fieldset>
+        <legend>e) Status</legend>
+        {{ form_row(form.published) }}
+    </fieldset>
 
-{{ form_rest(form) }}
+    <div style="display:none;">
+        {{ form_rest(form) }}
+    </div>
+
     <div class="form-actions">
         <input type="submit" class="btn btn-primary" value="{{ "save" | trans }}" formnovalidate />
     </div>
 </form>
 <script type="text/javascript">
+
+    var questionCount = '{{ form.questions | length }}';
+    var questionIndex = questionCount;
+    var questionList = $('#question-fields-list');
+
     $(function () {
+
+        questionList.find('div.control-group').each(function() {
+            addDeleteLink($(this));
+        });
+
+        $('#add-another-question').click(function(e) {
+            e.preventDefault();
+
+            if (questionCount >= 5) { return false; }
+
+            questionCount++;
+            questionIndex++;
+            var newWidget = questionList.attr('data-prototype');
+            newWidget = newWidget.replace(/\$\$name\$\$/g, questionIndex);
+            var newDiv = $('<div></div>').html(newWidget);
+            newDiv.appendTo($('#question-fields-list'));
+            addDeleteLink($(newDiv));
+            return false;
+        });
+
         $('#group-auto-complete').autocomplete({
             source: '{{ path('admin_group_autocomplete') }}',
             minLength: 3,
@@ -107,4 +127,15 @@
             }
         });
     });
+
+    function addDeleteLink($div) {
+        var $removeFormA = $('<a href="#" style="margin-left:10px;">&times;</a>');
+        $div.find('.controls').append($removeFormA);
+
+        $removeFormA.on('click', function(e) {
+            e.preventDefault();
+            $div.remove();
+            questionCount--;
+        });
+    }
 </script>

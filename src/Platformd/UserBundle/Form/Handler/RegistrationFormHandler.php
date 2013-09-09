@@ -57,7 +57,10 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
             $site       = $this->container->get('platformd.util.site_util')->getCurrentSite();
 
             if ($this->form->getData()->getBirthdate()) {
-                $ageManager->setUsersBirthday($this->form->getData()->getBirthdate());
+
+                if(!$ageManager->getUsersAge()) {
+                    $ageManager->setUsersBirthday($this->form->getData()->getBirthdate());
+                }
 
                 if ($ageManager->getUsersAge() < $site->getSiteConfig()->getMinAgeRequirement()) {
                     throw new InsufficientAgeException();
@@ -106,7 +109,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
             ->andWhere('u.created > :dateTime')
             ->setParameters(array(
                 'ipAddress' => $ipAddress,
-                'dateTime'  => new \DateTime('-5 minutes')
+                'dateTime'  => new \DateTime('-1 minute')
             ))
             ->getQuery()
             ->execute();

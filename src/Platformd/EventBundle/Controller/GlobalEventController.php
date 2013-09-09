@@ -99,8 +99,11 @@ class GlobalEventController extends Controller
         $upcomingGroupEvents  = $hasGroups ? $this->getGroupEventService()->findUpcomingEventsForSite($site, 0) : array();
         $pastGroupEvents      = $hasGroups ? $this->getGroupEventService()->findPastEventsForSite($site, 0) : array();
 
-        $upcomingEvents       = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
-        $pastEvents           = array_merge($pastGroupEvents, $pastGlobalEvents);
+        $currentSweepstakes   = $this->getSweepstakesRepo()->getCurrentSweepstakes($site);
+        $pastSweepstakes      = $this->getSweepstakesRepo()->getPastSweepstakes($site);
+
+        $upcomingEvents       = array_merge($upcomingGlobalEvents, $upcomingGroupEvents, $currentSweepstakes);
+        $pastEvents           = array_merge($pastGroupEvents, $pastGlobalEvents, $pastSweepstakes);
 
         uasort($upcomingEvents, array($this, 'eventCompare'));
         uasort($pastEvents, array($this, 'eventCompare'));

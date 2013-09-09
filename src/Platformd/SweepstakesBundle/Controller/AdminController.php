@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use DateTime;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
+use Knp\MediaBundle\Util\MediaUtil;
 
 class AdminController extends Controller
 {
@@ -58,29 +59,26 @@ class AdminController extends Controller
 
     	$form = $this->createForm(new SweepstakesAdminType($sweepstakes, $tagManager), $sweepstakes);
 
-    	if($request->getMethod() == 'POST')
-    	{
+    	if($request->getMethod() == 'POST') {
     		$form->bindRequest($request);
 
-    		if($form->isValid())
-    		{
+    		if($form->isValid()) {
     			$this->saveSweepstakes($form);
-
-                // redirect to the "edit" page
-    			return $this->redirect($this->generateUrl('admin_sweepstakes_edit', array('id' => $sweepstakes->getId())));
+                return $this->redirect($this->generateUrl('admin_sweepstakes_edit', array('id' => $sweepstakes->getId())));
     		}
     	}
 
     	return $this->render('SweepstakesBundle:Admin:new.html.twig', array(
-            'form' => $form->createView(),
+            'form'        => $form->createView(),
             'sweepstakes' => $sweepstakes,
-            'group' => null,
+            'group'       => null,
         ));
     }
 
     public function editAction(Request $request, $id)
     {
         $this->addSweepstakesBreadcrumb()->addChild('Edit');
+
         $tagManager     = $this->getTagManager();
         $sweepstakes    = $this->getSweepstakesRepo()->findOneById($id);
 
@@ -90,29 +88,32 @@ class AdminController extends Controller
 
         $tagManager->loadTagging($sweepstakes);
 
-        $test   = $sweepstakes->getTestOnly();
-        if ($test === null) {
-            $sweepstakes->setTestOnly(0);
+        $originalQuestions = array();
+
+        // Create an array of the current Tag objects in the database
+        foreach ($sweepstakes->getQuestions() as $question) {
+            $originalQuestions[] = $question;
         }
 
         $form = $this->createForm(new SweepstakesAdminType($sweepstakes, $tagManager), $sweepstakes);
 
-        if($request->getMethod() == 'POST')
-        {
+        if($request->getMethod() == 'POST') {
         	$form->bindRequest($request);
 
-        	if($form->isValid())
-        	{
-        		$this->saveSweepstakes($form);
-
+        	if($form->isValid()) {
+        		$this->saveSweepstakes($form, $originalQuestions);
         		return $this->redirect($this->generateUrl('admin_sweepstakes_edit', array('id' => $sweepstakes->getId())));
         	}
         }
 
         $group = $sweepstakes->getGroup();
 
-    	return $this->render('SweepstakesBundle:Admin:edit.html.twig',
-    		array('form' => $form->createView(), 'sweepstakes' => $sweepstakes, 'group' => $group));
+    	return $this->render('SweepstakesBundle:Admin:edit.html.twig', array(
+            'form'        => $form->createView(),
+            'sweepstakes' => $sweepstakes,
+            'group'       => $group,
+            'hasEntries'  => $sweepstakes->getEntries()->first() !== false,
+        ));
     }
 
     public function approveAction($id)
@@ -145,48 +146,75 @@ class AdminController extends Controller
      */
     public function metricsAction(Request $request)
     {
+        $this->addMetricsBreadcrumbs();
+
         $em = $this->getDoctrine()->getEntityManager();
         $site = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : null;
 
-        $sweepstakes = $site ? $this->getSweepstakesRepo()->findAllForSite($site) : $this->getSweepstakesRepo()->findAllWithoutLocaleOrderedByNewest();
+        $regionCounts = $this->getEntryRepo()->getRegionCounts($site);
+        $totalCounts  = $this->getEntryRepo()->getTotalEntryCounts($site);
 
-        $this->addMetricsBreadcrumbs();
+        $data                 = array();
+        $regionAssignedCounts = array();
+
+        foreach ($regionCounts as $regionCount) {
+            $data[$regionCount['sweepstakesId']]['name'] = $regionCount['sweepstakesName'];
+            $data[$regionCount['sweepstakesId']]['sites'][$regionCount['regionName']] = $regionCount['entryCount'];
+
+            if (isset($regionAssignedCounts[$regionCount['sweepstakesId']])) {
+                $regionAssignedCounts[$regionCount['sweepstakesId']] += $regionCount['entryCount'];
+            } else {
+                $regionAssignedCounts[$regionCount['sweepstakesId']] = $regionCount['entryCount'];
+            }
+        }
+
+        foreach ($totalCounts as $count) {
+            $data[$count['sweepstakesId']]['total'] = $count['entryCount'];
+        }
+
+        $sites = $this->container->get('platformd.metric_manager')->getSiteRegions();
 
         return array(
-            'sweeps' => $sweepstakes,
+            'metrics' => $data,
+            'sites'   => $sites,
+            'regionAssignedCounts' => $regionAssignedCounts,
         );
     }
 
     /**
      * @Template()
      */
-    public function showMetricsAction($id, Request $request)
+    public function getMetricsAction($id, $region, Request $request)
     {
         $sweepstakes = $this->getSweepstakesRepo()->find($id);
         if (!$sweepstakes) {
             throw $this->createNotFoundException('No sweeps for id '.$id);
         }
 
-        $entries = $this->getEntryRepo()->findAllOrderedByNewest($sweepstakes);
+        if ($region == 'all') {
+            $entries = $this->getEntryRepo()->findAllOrderedByNewest($sweepstakes);
+        } elseif ($region == 'global') {
+            $entries = $this->getEntryRepo()->findAllWithoutRegionOrderedByNewest($sweepstakes);
+        } else {
+            $regionId = $region;
+            $region   = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Region')->find($regionId);
 
-        // we support CSV!
-        if ($request->getRequestFormat() == 'csv') {
-            return $this->generateMetricsCsvResponse($entries, $sweepstakes->getSlug());
+            if (!$region) {
+                throw $this->createNotFoundException('No region for id '.$regionId);
+            }
+
+            $region = $region->getName();
+
+            $entries = $this->getEntryRepo()->findAllForRegionOrderedByNewest($sweepstakes, $regionId);
         }
 
-        $this->addMetricsBreadcrumbs();
-        $this->getBreadcrumbs()->addChild($sweepstakes->getName());
-
-        return array(
-            'sweep' => $sweepstakes,
-            'entries' => $entries,
-        );
+        return $this->generateMetricsCsvResponse($entries, $sweepstakes->getSlug(), $region);
     }
 
     /**
      * Downloads a CSV of the entries for a particular sweepstakes
      */
-    private function generateMetricsCsvResponse($entries, $sweepstakesSlug)
+    private function generateMetricsCsvResponse($entries, $sweepstakesSlug, $region)
     {
         // generate CSV content from the rows of data
         $factory = new CsvResponseFactory();
@@ -194,34 +222,50 @@ class AdminController extends Controller
         $factory->addRow(array(
             'Username',
             'Id',
-            'Email',
-            'Acct Created',
-            'Last Logged In',
             'First Name',
             'Last Name',
+            'Email',
             'Age',
+            'Region',
             'Country',
             'State/Province',
-            'Ip Address',
+            'Acct Created',
+            'Last Logged In',
+            'IP Address',
+            'Question 1',
+            'Question 2',
+            'Question 3',
+            'Question 4',
+            'Question 5',
         ));
 
         foreach ($entries as $entry) {
-            $factory->addRow(array(
-                $entry->getUser()->getUsername(),
-                $entry->getUser()->getId(),
-                $entry->getUser()->getEmail(),
-                $entry->getUser()->getCreated()->format('Y-m-d'),
-                ($entry->getUser()->getLastLogin()) ? $entry->getUser()->getLastLogin()->format('Y-m-d') : '',
-                $entry->getUser()->getFirstName(),
-                $entry->getUser()->getLastName(),
-                $entry->getUser()->getAge(),
-                $entry->getUser()->getCountry(),
-                $entry->getUser()->getState(),
-                $entry->getIpAddress(),
-            ));
+
+            $answers = array();
+
+            foreach ($entry[0]->getAnswers() as $answer) {
+                $answers[] = $answer->getContent();
+            }
+
+            $rowData = array_merge(array(
+                $entry[0]->getUser()->getUsername(),
+                $entry[0]->getUser()->getId(),
+                $entry[0]->getUser()->getFirstName(),
+                $entry[0]->getUser()->getLastName(),
+                $entry[0]->getUser()->getEmail(),
+                $entry[0]->getUser()->getAge(),
+                $entry['regionName'] ?: 'None',
+                $entry[0]->getCountry()->getName(),
+                $entry[0]->getUser()->getState(),
+                $entry[0]->getUser()->getCreated()->format('Y-m-d'),
+                ($entry[0]->getUser()->getLastLogin()) ? $entry[0]->getUser()->getLastLogin()->format('Y-m-d') : '',
+                $entry[0]->getIpAddress(),
+            ), $answers);
+
+            $factory->addRow($rowData);
         }
 
-        $filename = sprintf('%s-%s.csv', $sweepstakesSlug, date('Y-m-d'));
+        $filename = sprintf('%s-%s-%s.csv', $sweepstakesSlug, date('Y-m-d'), $region);
         return $factory->createResponse($filename);
 
     }
@@ -245,40 +289,10 @@ class AdminController extends Controller
         return $sweepstakes;
     }
 
-    private function saveSweepstakes(Form $sweepstakesForm)
+    private function saveSweepstakes(Form $sweepstakesForm, $originalQuestions = array())
     {
-        // save to db
+        $em          = $this->getDoctrine()->getEntityManager();
         $sweepstakes = $sweepstakesForm->getData();
-
-        $ruleset    = $sweepstakes->getRuleset();
-        $rules      = $ruleset->getRules();
-
-        $newRulesArray = array();
-
-        $defaultAllow = true;
-
-        foreach ($rules as $rule) {
-            if ($rule->getMinAge() || $rule->getMaxAge() || $rule->getCountry()) {
-                $rule->setRuleset($ruleset);
-                $newRulesArray[] = $rule;
-
-                $defaultAllow = $rule->getRuleType() == "allow" ? false : $defaultAllow;
-            }
-        }
-
-        $em = $this->getDoctrine()->getEntityManager();
-        $oldRules = $em->getRepository('SpoutletBundle:CountryAgeRestrictionRule')->findBy(array('ruleset' => $ruleset->getId()));
-
-        if ($oldRules) {
-            foreach ($oldRules as $oldRule) {
-                if (!in_array($oldRule, $newRulesArray)) {
-                    $oldRule->setRuleset(null);
-                }
-            }
-        }
-
-        $sweepstakes->getRuleset()->setParentType('sweepstake');
-        $sweepstakes->getRuleset()->setDefaultAllow($defaultAllow);
 
         $groupId = $sweepstakesForm['group']->getData();
         if($groupId) {
@@ -294,12 +308,29 @@ class AdminController extends Controller
 
         $sweepstakes->getId() ? $tagManager->replaceTags($tags, $sweepstakes) : $tagManager->addTags($tags, $sweepstakes);
 
-        $this
-            ->get('platformd.events_manager')
-            ->save($sweepstakes);
+        $mUtil = new MediaUtil($this->getDoctrine()->getEntityManager());
+
+        if (!$mUtil->persistRelatedMedia($sweepstakes->getBackgroundImage())) {
+            $sweepstakes->setBackgroundImage(null);
+        }
+
+        foreach ($sweepstakes->getQuestions() as $question) {
+            foreach ($originalQuestions as $key => $toDel) {
+                if ($toDel->getId() === $question->getId()) {
+                    unset($originalQuestions[$key]);
+                }
+            }
+        }
+
+        // remove the relationship between the question and the sweepstakes
+        foreach ($originalQuestions as $question) {
+            $em->remove($question);
+        }
+
+        $em->persist($sweepstakes);
+        $em->flush();
 
         $tagManager->saveTagging($sweepstakes);
-
         $tagManager->loadTagging($sweepstakes);
 
         $this->setFlash('success', 'Sweepstakes Saved');
@@ -330,7 +361,7 @@ class AdminController extends Controller
     {
         return $this->getDoctrine()
             ->getEntityManager()
-            ->getRepository('SweepstakesBundle:Entry')
+            ->getRepository('SweepstakesBundle:SweepstakesEntry')
         ;
     }
 

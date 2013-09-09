@@ -12,7 +12,7 @@
         {% if form.get('help') %}
         <p class="alert alert-info help">
             <i class="icon-info-sign"></i>
-            {{ form.get('help') | trans | raw }}
+            {{ form.get('help') | pd_trans | raw }}
         </p>
         {% endif %}
     </div>
@@ -26,7 +26,7 @@
 
     {% for error in errors %}
         <div class="help-inline">
-            {{ error.messageTemplate|trans(error.messageParameters, 'validators') }}
+            {{ error.messageTemplate|pd_trans(error.messageParameters, 'validators') }}
         </div>
     {% endfor %}
 
@@ -41,7 +41,7 @@
 <div class="help-inline">
 {#<div class="alert alert-error" style="display: inline-block;">#}
     {% for error in errors %}
-    {{ error.messageTemplate|trans(error.messageParameters, 'validators') }}
+    {{ error.messageTemplate|pd_trans(error.messageParameters, 'validators') }}
     <br/>
     {% endfor %}
 </div>
@@ -60,7 +60,7 @@
         {% if required %}
             <span class="required">*</span>
         {% endif %}
-        {{ label|trans }}
+        {{ label|pd_trans|raw }}
     </label>
 {% endspaceless %}
 {% endblock %}
@@ -83,7 +83,7 @@
         {% for child in form %}
             <label class="checkbox">
                 {{ form_widget(child) }}
-                {{ child.get('label') | trans }}
+                {{ child.get('label') | pd_trans }}
             </label>
         {% endfor %}
     {% elseif expanded and not multiple %}
@@ -93,7 +93,7 @@
                 <td style="vertical-align:top;">
                     <label class="radio">
                         {{ form_widget(child) }}
-                        {{ child.get('label') | trans }}
+                        {{ child.get('label') | pd_trans }}
                     </label>
                 </td>
             {% endfor %}
@@ -103,7 +103,7 @@
         {# this side is untouched #}
         <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
             {% if empty_value is not none %}
-                <option value="">{{ empty_value|trans }}</option>
+                <option value="">{{ empty_value|pd_trans }}</option>
             {% endif %}
             {% if preferred_choices|length > 0 %}
                 {% set options = preferred_choices %}

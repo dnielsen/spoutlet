@@ -1,4 +1,5 @@
 date_format: M j, Y
+datetime_format: M j, Y @ H:i
 edit: Editar
 submit: Enviar
 cancel: Cancelar

@@ -127,7 +127,20 @@ class MetricManager
         $return = array();
 
         foreach ($this->regions as $region) {
-            $return[] = $region->getName();
+            $return[$region->getId()] = $region->getName();
+        }
+
+        return $return;
+    }
+
+    public function getSiteRegions()
+    {
+        $return = array();
+
+        foreach ($this->regions as $region) {
+            if ($region->getSite()) {
+                $return[$region->getId()] = $region->getName();
+            }
         }
 
         return $return;
