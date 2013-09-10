@@ -2,6 +2,7 @@ edit: Edit
 submit: Submit
 cancel: Cancel
 delete: Delete
+enter: Enter
 date_format: M j, Y
 datetime_format: M j, Y @ H:i
 
@@ -853,7 +854,6 @@ agree_to_terms_sweepstakes_step: Agree to the Terms and Conditions
 click_register_sweepstakes_step: Click "Enter" to participate.
 already_entered_sweepstakes: You already entered this sweepstakes.
 not_eligible_sweepstakes: Sorry, you are not eligible to participate in this sweepstakes.
-enter: Enter
 official_sweepstakes_rules: Official Sweepstakes Rules
 sweeps_check_both_boxes: Please agree to the Official Rules before entering the sweepstakes.
 overview: Overview

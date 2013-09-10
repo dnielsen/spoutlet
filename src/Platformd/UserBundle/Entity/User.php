@@ -42,7 +42,7 @@ class User extends BaseUser
     protected $id;
 
     /**
-     * @Assert\NotBlank(message="fos_user.username.blank", groups={"Registration", "Default"});
+     * @Assert\NotBlank(message="fos_user.username.blank", groups={"Registration", "Default", "AdminEdit"});
      * @ORM\Column(type="string", length="255", nullable=true)
      */
     protected $username;
@@ -53,7 +53,7 @@ class User extends BaseUser
     protected $usernameCanonical;
 
     /**
-     * @Assert\NotBlank(message="fos_user.email.blank", groups={"Registration", "Default"});
+     * @Assert\NotBlank(message="fos_user.email.blank", groups={"Registration", "Default", "AdminEdit"});
      * @ORM\Column(type="string", length="255")
      */
     protected $email;
@@ -135,9 +135,9 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration", "IncompleteUser", "Default"}, message="first_name_not_blank")
-     * @Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser"})
-     * @Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser"})
+     * @Assert\NotBlank(groups={"Registration", "IncompleteUser", "Default", "AdminEdit"}, message="first_name_not_blank")
+     * @Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser", "AdminEdit"})
+     * @Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser", "AdminEdit"})
      */
     protected $firstname;
 
@@ -146,9 +146,9 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration", "IncompleteUser", "Default"}, message="last_name_not_blank")
-     * @Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser"})
-     * @Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser"})
+     * @Assert\NotBlank(groups={"Registration", "IncompleteUser", "Default", "AdminEdit"}, message="last_name_not_blank")
+     * @Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser", "AdminEdit"})
+     * @Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser", "AdminEdit"})
      */
     protected $lastname;
 
@@ -157,7 +157,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="date", nullable=true)
      *
-     * @Assert\Date(groups={"Registration", "IncompleteUser", "Default"})
+     * @Assert\Date(groups={"Registration", "IncompleteUser", "Default", "AdminEdit"})
      */
     protected $birthdate;
 
@@ -173,7 +173,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration", "Default"}, message="country_not_blank")
+     * @Assert\NotBlank(groups={"Registration", "Default", "AdminEdit"}, message="country_not_blank")
      */
     protected $country;
 
@@ -182,7 +182,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration", "Default"}, message="state_not_blank")
+     * @Assert\NotBlank(groups={"Registration", "Default", "AdminEdit"}, message="state_not_blank")
      */
     protected $state;
 

@@ -4,6 +4,7 @@ datetime_format: Y年m月d日 H:i
 submit: 出品
 cancel: キャンセル
 delete: 消去
+enter: 参加
 
 recaptcha:
     visual_challenge: 画像認証を行う
@@ -685,7 +686,6 @@ agree_to_terms_sweepstakes_step: 利用規約に同意
 click_register_sweepstakes_step: 登録ボタンをクリックして応募
 already_entered_sweepstakes: 懸賞に参加済みです
 not_eligible_sweepstakes: 申し訳ありませんがこの懸賞に参加できません。
-enter: 参加
 read_and_agreed_to_rules: 本キャンペーンに関する%a_start%諸条%a_end%件を読んだ上、同意します。
 official_sweepstakes_rules: 公式懸賞規定
 sweeps_check_both_boxes: 公式ルールに同意してスイープステークにご参加ください。

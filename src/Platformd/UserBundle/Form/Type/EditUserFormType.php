@@ -54,7 +54,8 @@ class EditUserFormType extends AbstractType
     {
         return array_merge($options, array(
             'allow_promote' => false,
-            'local_auth' => false
+            'local_auth' => false,
+            'validation_groups' => array('AdminEdit')
         ));
     }
 

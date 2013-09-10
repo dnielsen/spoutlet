@@ -4,6 +4,7 @@ edit: Editar
 submit: Enviar
 cancel: Cancelar
 delete: Borrar
+enter: Participar
 
 recaptcha:
     visual_challenge: Obtener un desafío visual
@@ -888,7 +889,7 @@ platformd.giveaway.queue.you_are_queued: Estás en la cola!
 platformd.giveaway.queue.queue_explanation: 'Tu tiempo de espera aproximado es de menos de 60 minutos. Serás notificado por correo electrónico si usted haz sido asignado un código. Si no recibes un correo electrónico dentro de 24 horas, favor de envíar un correo electrónico al departamento de apoyo <a href="mailto:%contact_email%">%contact_email%</a>. Por lo tanto, visita nuestra <a href="%events_index_page_link%">página de eventos</a> para ver los próximos eventos en línea y en el lugar en tu área.'
 platformd.giveaway.queue.you_are_queued: Estás en la cola!
 platformd.giveaway.queue.rejected_with_examples: |
-    <p>Desafortunadamente, no pudismos asignarte una clave. Esto puede ocurrir por una de varias razones, incluyendo:
+    <p>Desafortunadamente, no pudimos asignarte una clave. Esto puede ocurrir por una de varias razones, incluyendo:
     <br /><br />
     1) Se nos acabaron las claves antes de que pudieramos asignarte una mientras estabas en la cola.<br />
     2) Estás en un país o región que no es elegible para recibir una clave.<br />
@@ -926,7 +927,7 @@ platformd.key_request_processor_command.key_assigned_email_body: |
 
 platformd.key_request_processor_command.key_not_assigned_generic_email_subject: No es posible asignar una clave para %promotion_title%
 platformd.key_request_processor_command.key_not_assigned_generic_email_body: |
-    <p>Desafortunadamente, no pudismos asignarte una clave. Esto puede ocurrir por una de varias razones, incluyendo:<br />
+    <p>Desafortunadamente, no pudimos asignarte una clave. Esto puede ocurrir por una de varias razones, incluyendo:<br />
         <br />
         1) Se nos acabaron las claves antes de que pudieramos asignarte una mientras estabas en la cola.<br />
         2) Estás en un país o región que no es elegible para recibir una clave.<br />

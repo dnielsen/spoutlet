@@ -57,7 +57,7 @@ class DealManager
         $siteId           = $this->siteUtil->getCurrentSiteCached()->getId();
         $featuredDeals    = $this->findFeaturedDeals($siteId);
         $mainDeal         = empty($featuredDeals) ? null : $featuredDeals[0];
-        $allDeals         = $this->findActiveDeals($siteId);
+        $allDeals         = $this->findActiveDeals($siteId, $featuredDeals);
         $expiredDeals     = $this->findExpiredDeals($siteId);
         $comments         = $this->commentManager->findMostRecentCommentsByThreadPrefixWithObjects(Deal::COMMENT_PREFIX, 5);
 
@@ -174,14 +174,9 @@ class DealManager
         return $this->getRepository()->findFeaturedDealsForSiteId($siteId);
     }
 
-    public function findActiveNonFeaturedDeals(array $featuredDeals, $site)
+    public function findActiveDeals($siteId, $featuredDeals)
     {
-        return $this->getRepository()->findAllActiveNonFeatureDealsForSite($site, $featuredDeals);
-    }
-
-    public function findActiveDeals($siteId)
-    {
-        return $this->getRepository()->findAllActiveDealsForSiteId($siteId);
+        return $this->getRepository()->findAllActiveDealsForSiteId($siteId, true, $featuredDeals);
     }
 
     public function findExpiredDeals($siteId)

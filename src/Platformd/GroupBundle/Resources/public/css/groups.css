@@ -245,6 +245,10 @@ button#join-group-button:hover {
     margin: 5px;
 }
 
+.group-image-image {
+    border: 1px solid #4A4A4A;
+}
+
 .group-image-image img {
     width: 135px;
     height: 80px;

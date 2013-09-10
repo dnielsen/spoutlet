@@ -358,7 +358,7 @@ class DefaultController extends Controller
         $deals = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Deal')
-            ->findAllActiveDealsForSiteId($site->getId())
+            ->findAllActiveDealsForSiteId($site->getId(), false)
         ;
 
         $deals_list = array();
