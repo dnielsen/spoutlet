@@ -68,12 +68,7 @@ class GamePageController extends Controller
             throw $this->createNotFoundException('No game page found in this site for slug '.$slug);
         }
 
-        // events, giveaways, sweepstakes related to this game and active
-        $feedEvents = $this->getDoctrine()
-            ->getEntityManager()
-            ->getRepository('SpoutletBundle:AbstractEvent')
-            ->findActivesForGame($gamePage->getGame(), $site)
-        ;
+        // giveaways, sweepstakes related to this game and active
 
         $feedGiveaways = $this->getDoctrine()
             ->getEntityManager()
@@ -95,7 +90,7 @@ class GamePageController extends Controller
 
         $events = $this->getGlobalEventService()->findEventsForGamePage($site, $gamePage->getGame());
 
-        $hasFeedItems = count($deals) > 0 || count($feedNewsItems) > 0 || count($feedEvents) > 0 || $hasVideos || count($events) > 0;
+        $hasFeedItems = count($deals) > 0 || count($feedNewsItems) > 0 || $hasVideos || count($events) > 0;
 
         $hasFeatures = $gamePage->getKeyFeature1() != ''
             || $gamePage->getKeyFeature2() != ''
@@ -104,15 +99,14 @@ class GamePageController extends Controller
 
 
         return array(
-            'gamePage' => $gamePage,
-            'feedEvents' => $feedEvents,
+            'gamePage'      => $gamePage,
             'feedNewsItems' => $feedNewsItems,
-            'feedDeals' => $deals,
-            'hasVideos' => $hasVideos,
-            'hasFeedItems' => $hasFeedItems,
-            'hasFeatures' => $hasFeatures,
+            'feedDeals'     => $deals,
+            'hasVideos'     => $hasVideos,
+            'hasFeedItems'  => $hasFeedItems,
+            'hasFeatures'   => $hasFeatures,
             'feedGiveaways' => $feedGiveaways,
-            'events' => $events,
+            'events'        => $events,
         );
     }
 

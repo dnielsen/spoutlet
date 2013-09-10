@@ -1,10 +1,10 @@
 Feature: Contest Admin
     In order to generate interest in the website's media functionality
-    As an organizer
+    As an admin
     I need to be able to add/edit/delete contests
 
     Background:
-        Given I am authenticated as an organizer
+        Given I am authenticated as an admin
             And I have the following contests:
                 | name                   | slug              | site  | submission_start | submission_end | voting_start | voting_end | category | max_entries | status    |
                 | Diablo 3 Image Contest | diablo-3          | en    | -4 days          | +4 days        | -4 days      | +4 days    | image    | 0           | published |

@@ -8,6 +8,7 @@ use Platformd\SpoutletBundle\Entity\BackgroundAd;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Knp\MediaBundle\Util\MediaUtil;
 use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
+use Platformd\SpoutletBundle\Entity\BackgroundAdSite;
 
 class BackgroundAdAdminController extends Controller
 {

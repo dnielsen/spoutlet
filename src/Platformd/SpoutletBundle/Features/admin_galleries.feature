@@ -1,10 +1,10 @@
 Feature: Gallery Admin
     In order to showcase media for users
-    As an organizer
+    As an admin
     I need to be able to add/edit/delete galleries
 
     Background:
-        Given I am authenticated as an organizer
+        Given I am authenticated as an admin
             And I go to "/admin"
 
     Scenario: Add a new gallery

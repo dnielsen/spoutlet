@@ -66,7 +66,7 @@ Feature: Groups Frontend
         Given I am on "/groups/"
         When I click on "Other Group"
             And I click on "Member Approvals"
-        Then I should see 1 data rows
+        Then I should see 1 "eventListGroup_lan" data rows
 
     Scenario: Approve successful applicant
         Given I am on "/groups/"

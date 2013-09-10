@@ -4,7 +4,7 @@ Feature: Global Events
     I need to be able to add and edit Events
 
     Background:
-        Given I am authenticated as an organizer
+        Given I am authenticated as an admin
         And I have the following events:
                 | name                  | slug                 | site  | start    | end     | details                |
                 | Test global event     | test-global-event    | en    | +2 days  | +4 days | Some description       |

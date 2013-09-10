@@ -4,7 +4,7 @@ Feature: Giveaway keys display
     I need to be able to check visibility of keys
 
     Background:
-        Given I am authenticated as an organizer
+        Given I am authenticated as an admin
             And there is a game called "Skyrim"
 
     Scenario: Add a key giveaway

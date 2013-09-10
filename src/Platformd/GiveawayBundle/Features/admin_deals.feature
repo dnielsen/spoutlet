@@ -1,10 +1,10 @@
 Feature: Deal Admin
     In order to advertise and incentivize some product
-    As an organizer
+    As an admin
     I need to be able to add/edit/delete deals
 
     Background:
-        Given I am authenticated as an organizer
+        Given I am authenticated as an admin
             And I go to "/admin"
             And there is a game called "Diablo 3"
 

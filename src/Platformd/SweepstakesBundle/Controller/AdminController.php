@@ -157,8 +157,13 @@ class AdminController extends Controller
         $data                 = array();
         $regionAssignedCounts = array();
 
+        foreach ($totalCounts as $count) {
+            $data[$count['sweepstakesId']]['name']  = $count['sweepstakesName'];
+            $data[$count['sweepstakesId']]['total'] = $count['entryCount'];
+            $data[$count['sweepstakesId']]['sites'] = array();
+        }
+
         foreach ($regionCounts as $regionCount) {
-            $data[$regionCount['sweepstakesId']]['name'] = $regionCount['sweepstakesName'];
             $data[$regionCount['sweepstakesId']]['sites'][$regionCount['regionName']] = $regionCount['entryCount'];
 
             if (isset($regionAssignedCounts[$regionCount['sweepstakesId']])) {
@@ -166,10 +171,6 @@ class AdminController extends Controller
             } else {
                 $regionAssignedCounts[$regionCount['sweepstakesId']] = $regionCount['entryCount'];
             }
-        }
-
-        foreach ($totalCounts as $count) {
-            $data[$count['sweepstakesId']]['total'] = $count['entryCount'];
         }
 
         $sites = $this->container->get('platformd.metric_manager')->getSiteRegions();
@@ -255,7 +256,7 @@ class AdminController extends Controller
                 $entry[0]->getUser()->getEmail(),
                 $entry[0]->getUser()->getAge(),
                 $entry['regionName'] ?: 'None',
-                $entry[0]->getCountry()->getName(),
+                $entry[0]->getCountry() ? $entry[0]->getCountry()->getName() : null,
                 $entry[0]->getUser()->getState(),
                 $entry[0]->getUser()->getCreated()->format('Y-m-d'),
                 ($entry[0]->getUser()->getLastLogin()) ? $entry[0]->getUser()->getLastLogin()->format('Y-m-d') : '',

@@ -4,9 +4,7 @@ Feature: Metrics
   I need to view statistics about different things
 
   Background:
-    Given I have an account
-     And I have the "ROLE_ADMIN, ROLE_STATS_ADMIN" permissions
-     And I am authenticated
+    Given I am authenticated as an admin
 
   Scenario: I can access the giveaways metrics page
     When I go to "/admin/metrics/giveaways"

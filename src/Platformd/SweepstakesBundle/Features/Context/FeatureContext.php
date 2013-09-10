@@ -11,7 +11,7 @@ use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
-use Platformd\SweepstakesBundle\Entity\Entry;
+use Platformd\SweepstakesBundle\Entity\SweepstakesEntry;
 
 
 use Platformd\SpoutletBundle\Features\Context\FeatureContext as BaseContext;
@@ -28,10 +28,15 @@ class FeatureContext extends BaseContext
      */
     public function thereIsASweepstakes()
     {
+        $site = $this->getEntityManager()->getRepository('SpoutletBundle:Site')->find(1);
+
         $sweepstakes = new Sweepstakes();
         $sweepstakes->setName('testing');
         $sweepstakes->setContent('testing sweepstakes');
-        $sweepstakes->setLocale('en');
+        $sweepstakes->setOfficialRules('testing sweepstakes');
+        $sweepstakes->setStartsAt(new \DateTime('-1 week'));
+        $sweepstakes->setEndsAt(new \DateTime('+1 week'));
+        $sweepstakes->setSites(array($site));
 
         $em = $this->getEntityManager();
         $em->persist($sweepstakes);
@@ -64,10 +69,11 @@ class FeatureContext extends BaseContext
         $em = $this->getEntityManager();
 
         for ($i = 0; $i <= 3; $i++) {
-            $entry = new Entry();
+            $entry = new SweepstakesEntry($this->currentSweepstakes);
             $entry->setSweepstakes($this->currentSweepstakes);
             $entry->setUser($user);
             $entry->setIpAddress('127.0.0.1');
+            $entry->setPhoneNumber('012345556789');
             $em->persist($entry);
         }
 

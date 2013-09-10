@@ -2,11 +2,11 @@
 
 Feature: Deal Pool
     In order to advertise and incentivize some product
-    As an organizer
+    As an admin
     I need to be able to add/edit/delete deals with key pools
 
     Background:
-        Given I am authenticated as an organizer
+        Given I am authenticated as an admin
             And I have the following users:
                 | username      | email                   |  cevo id |
                 | William       | William@example.com     |  1       |
@@ -85,9 +85,9 @@ Feature: Deal Pool
             And the keys run out for the "Buy Diablo 3 and Get a Bonus Upgrade" deal
         When The Key Queue Processor is run
             And I go to "/deal/diablo-3-bonus"
-        Then I should see "no longer any keys available"
+        Then I should see "Unfortunately, a key could not be assigned to you."
             And I go to "/deal/diablo-3-bonus"
-            And I should not see "no longer any keys available"
+            And I should not see "Unfortunately, a key could not be assigned to you."
 
     Scenario: I am a user from the GB I should get a valid GB key
         Given I am authenticated as a user
@@ -117,7 +117,7 @@ Feature: Deal Pool
             And I should see "You're in the queue"
         When The Key Queue Processor is run
             And I go to "/deal/diablo-3-bonus"
-        Then I should see "You are not eligible (based on your age and/or country)"
+        Then I should see "Unfortunately, a key could not be assigned to you."
 
     Scenario: I am a user who was rejected for a key, but then moved country and successfully got key
         Given I am authenticated as a user
@@ -127,7 +127,7 @@ Feature: Deal Pool
             And I should see "You're in the queue"
             And The Key Queue Processor is run
             And I go to "/deal/diablo-3-bonus"
-            And I should see "You are not eligible (based on your age and/or country)"
+            And I should see "Unfortunately, a key could not be assigned to you."
         When I am located in "GB"
             And I click "deal-redeem-link"
             And I should see "You're in the queue"
@@ -170,5 +170,5 @@ Feature: Deal Pool
             And I click "deal-redeem-link"
             And The Key Queue Processor is run
             And I go to "/deal/diablo-3-bonus"
-        Then I should see "Sorry, a key could not be assigned to you as your IP address has already claimed the maximum number of keys allowed."
+        Then I should see "Unfortunately, a key could not be assigned to you."
 

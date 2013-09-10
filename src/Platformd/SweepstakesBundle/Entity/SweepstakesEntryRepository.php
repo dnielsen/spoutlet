@@ -96,7 +96,7 @@ class SweepstakesEntryRepository extends EntityRepository
     public function getTotalEntryCounts($site = null)
     {
         $qb  = $this->createQueryBuilder('e')
-            ->select('COUNT(e.id) AS entryCount', 'ss.id AS sweepstakesId')
+            ->select('COUNT(e.id) AS entryCount', 'ss.id AS sweepstakesId', 'ss.name AS sweepstakesName')
             ->leftJoin('e.sweepstakes','ss')
             ->addGroupBy('ss.id');
 

@@ -4,7 +4,7 @@ Feature: Giveaway Pool
     I need to be able to request a key from a giveaway for which I am eligible
 
     Background:
-        Given I am authenticated as an organizer
+        Given I am authenticated as an admin
             And I have the following users:
                 | username      | email                   |  cevo id |
                 | William       | William@example.com     |  1       |
@@ -105,4 +105,4 @@ Feature: Giveaway Pool
             And I click "GET KEY"
             And The Key Queue Processor is run
             And I go to "/giveaways/diablo-3-giveaway"
-        Then I should see "Sorry, a key could not be assigned to you as your IP address has already claimed the maximum number of keys allowed."
+        Then I should see "Unfortunately, a key could not be assigned to you."

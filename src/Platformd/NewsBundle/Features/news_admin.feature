@@ -1,10 +1,10 @@
 Feature: News Administration
     In order to control which news items show up on each site
-    As an organizer
+    As an admin
     I need to be able to add, edit, and publish news stories
 
     Background:
-        Given I am authenticated as an organizer
+        Given I am authenticated as an admin
             And there is a game called "Skyrim"
 
     Scenario: Add a news story

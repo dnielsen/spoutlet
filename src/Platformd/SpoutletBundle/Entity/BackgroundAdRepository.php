@@ -24,7 +24,7 @@ class BackgroundAdRepository extends EntityRepository
     public function hasSameTimeForSites(BackgroundAd $ad)
     {
         $siteIds = $ad->getSiteIds();
-        if (empty($siteIds)) {
+        if (empty($siteIds) || !$ad->getDateStart() || !$ad->getDateEnd()) {
             return false;
         }
 

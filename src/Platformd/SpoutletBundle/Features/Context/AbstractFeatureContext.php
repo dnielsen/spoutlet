@@ -246,13 +246,16 @@ class AbstractFeatureContext extends MinkContext
      */
     public function iAmAuthenticated()
     {
-        $user = $this->getCurrentUser();
+        if (!$this->currentUser) {
+            $this->IHaveAnAccount();
+        }
 
         return array(
-            new When('I am on "/login"'),
-            new When('I fill in "login-username" with "user"'),
-            new When('I fill in "login-password" with "user"'),
-            new When(sprintf('I press "Sign In"')),
+            new When('I go to "/logout"'),
+            new When('I go to "/login"'),
+            new When('I fill in "login-username" with "'.$this->currentUser->getUsername().'"'),
+            new When('I fill in "login-password" with "'.$this->currentUser->getUsername().'"'),
+            new When('I press "_submit"'),
         );
     }
 
@@ -275,6 +278,25 @@ class AbstractFeatureContext extends MinkContext
         // enforce the right role
         $this->currentUser->setRoles(array(
             'ROLE_ORGANIZER',
+        ));
+        $this->getUserManager()->updateUser($this->currentUser);
+
+        return $this->iAmAuthenticated();
+    }
+
+    /**
+     * @Given /^I am authenticated as an admin$/
+     */
+    public function iAmAuthenticatedAsAnAdmin()
+    {
+        // guarantee there is a user, because we wouldn't normally say it beforehand...
+        if (!$this->currentUser) {
+            $this->IHaveAnAccount();
+        }
+
+        // enforce the right role
+        $this->currentUser->setRoles(array(
+            'ROLE_SUPER_ADMIN',
         ));
         $this->getUserManager()->updateUser($this->currentUser);
 
@@ -671,9 +693,16 @@ class AbstractFeatureContext extends MinkContext
         $this->iHaveNoInTheDatabase('UserBundle:User');
 
         $user = $um->createUser();
+
         $user->setUsername('user');
         $user->setPlainPassword('user');
         $user->setEmail('user@user.com');
+        $user->setCountry('US');
+        $user->setEnabled(true);
+        $user->setFirstname('User');
+        $user->setLastname('User');
+        $user->setBirthdate(new \DateTime('1980-01-01'));
+        $user->setHasAlienwareSystem(false);
         $user->setCevoUserId(55);
 
         $um->updateUser($user);
@@ -686,6 +715,10 @@ class AbstractFeatureContext extends MinkContext
      */
     public function iHaveTheRole($role)
     {
+        if (!$this->currentUser) {
+            $this->IHaveAnAccount();
+        }
+
         $this->currentUser->addRole($role);
 
         $this->getEntityManager()->persist($this->currentUser);
@@ -702,12 +735,9 @@ class AbstractFeatureContext extends MinkContext
 
             if (isset($data['username'])) {
                 $user->setUsername($data['username']);
-            }
-
-            if (isset($data['password'])) {
-                $user->setPassword($data['password']);
-            } else {
-                $user->setPassword('foo');
+                $user->setPlainPassword($data['username']);
+                $user->setFirstname($data['username']);
+                $user->setLastname($data['username']);
             }
 
             if (isset($data['email'])) {
@@ -723,6 +753,10 @@ class AbstractFeatureContext extends MinkContext
             if (isset($data['cevo country'])) {
                 $user->setCountry($data['cevo country']);
             }
+
+            $user->setBirthdate(new \DateTime('1980-01-01'));
+            $user->setHasAlienwareSystem(false);
+            $user->setEnabled(true);
 
             $this->getUserManager()->updateUser($user);
         }
@@ -819,9 +853,18 @@ class AbstractFeatureContext extends MinkContext
     public function iShouldSeeDataRows($num)
     {
         $rows = $this->getPage()->findAll('css', 'table tbody tr');
-
         assertEquals($num, count($rows));
     }
+
+    /**
+     * @Then /^I should see (\d+) "([^"]*)" data rows$/
+     */
+    public function iShouldSeeClassedDataRows($num, $class)
+    {
+        $rows = $this->getPage()->findAll('css', 'table tbody tr.'.$class);
+        assertEquals($num, count($rows));
+    }
+
 
     /**
      * Checks a checkbox in a "many" choice field.
@@ -852,16 +895,15 @@ class AbstractFeatureContext extends MinkContext
      */
     public function iShouldBeOnTheGamePageFor($gameName, $siteName)
     {
-        $em     = $this->getEntityManager();
-        $game   = $em->getRepository('GameBundle:Game')->findOneBy(array('name' => $gameName));
+        $em   = $this->getEntityManager();
+        $game = $em->getRepository('GameBundle:Game')->findOneBy(array('name' => $gameName));
 
         if (!$game) {
             throw new \Exception('Could not find game in the database');
         }
 
-        $siteName = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($siteName);
-
-        $gamePage = $em->getRepository('GameBundle:GamePage')->findOneByGame($game, $siteName);
+        $site     = $em->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($siteName);
+        $gamePage = $em->getRepository('GameBundle:GamePage')->findOneByGame($game, $site);
 
         if (!$gamePage) {
             throw new \Exception('Could not find the game page for this game in the database');
@@ -1411,7 +1453,7 @@ class AbstractFeatureContext extends MinkContext
 
         if ($group){
 
-            $url = $this->getContainer()->get('router')->generate($route, array('id' => $group->getId()));
+            $url = $this->getContainer()->get('router')->generate($route, array('slug' => $group->getSlug()));
             return array(
                 new When('I go to "'.$url.'"'),
             );
@@ -1433,7 +1475,7 @@ class AbstractFeatureContext extends MinkContext
 
         if ($group){
 
-            $url = $this->getContainer()->get('router')->generate($route, array('id' => $group->getId()));
+            $url = $this->getContainer()->get('router')->generate($route, array('slug' => $group->getSlug()));
             return array(
                 new When('I go to "'.$url.'"'),
                 new Then('I should see "'.$string.'"'),

@@ -2,12 +2,10 @@
 
 {% block content %}
 
-{% if features.hasSearch %}
-    <div class="std_2col">
-        <div class="left">{% render url('search_form', {'category': 'group', 'watermark': 'platformd.search.form.default.all' }) %}</div>
-        <div class="right"><a href="{{ path('group_new') }}" class="btn">{{ 'platformd.groups.index.create_group' | pd_trans }}</a></div>
-    </div>
-{% endif %}
+<div class="std_2col">
+    {% if features.hasSearch %}<div class="left">{% render url('search_form', {'category': 'group', 'watermark': 'platformd.search.form.default.all' }) %}</div>{% endif %}
+    <div class="right"><a href="{{ path('group_new') }}" class="btn">{{ 'platformd.groups.index.create_group' | pd_trans }}</a></div>
+</div>
 
 <div class="std_2col">
     <div class="left">
@@ -120,7 +118,9 @@
             </div>
         </div>
     </div>
+
     <div class="right">
+
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
         <div class="widget-33" id="new-groups-widget">
             <div class="widget-header">

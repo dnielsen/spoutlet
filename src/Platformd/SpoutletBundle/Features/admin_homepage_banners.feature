@@ -1,10 +1,10 @@
 Feature: Home Page Banner Administration
     In order to control which banners show up on each site's home page
-    As an organizer
+    As an admin
     I need to be able to add, edit, and publish banners
 
     Scenario: Add a new banner
-        Given I am authenticated as an organizer
+        Given I am authenticated as an admin
             And I am on "/admin"
         When I click to add new "Homepage Banner"
             And I fill in the following:
