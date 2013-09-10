@@ -13,8 +13,8 @@
     <div class="comment-sorting">
         <label for="comment-sort-method">{{ 'platformd.comment.sort_by' | pd_trans }}</label>
         <select name="comment-sort-method" id="comment-sort-method">
-            <option value="votes"{% if method is not defined or method == "votes" %} selected{% endif %}>{{ 'platformd.comment.sort_by_votes' | pd_trans }}</option>
-            <option value="recent"{% if method is defined and method == "recent" %} selected{% endif %}>{{ 'platformd.comment.sort_by_newest' | pd_trans }}</option>
+            <option value="recent"{% if method is not defined or method == "recent" %} selected{% endif %}>{{ 'platformd.comment.sort_by_newest' | pd_trans }}</option>
+            <option value="votes"{% if method is defined and method == "votes" %} selected{% endif %}>{{ 'platformd.comment.sort_by_votes' | pd_trans }}</option>
             <option value="oldest"{% if method is defined and method == "oldest" %} selected{% endif %}>{{ 'platformd.comment.sort_by_oldest' | pd_trans }}</option>
         </select>
     </div>

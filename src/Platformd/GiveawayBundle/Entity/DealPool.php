@@ -44,6 +44,11 @@ class DealPool extends AbstractPool
     protected $regions;
 
     /**
+     * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\DealCode", mappedBy="pool")
+     */
+    protected $codes;
+
+    /**
      * @return \Platformd\SpoutletBundle\Entity\Deal
      */
     public function getDeal()
@@ -110,5 +115,10 @@ class DealPool extends AbstractPool
     public function getParentName()
     {
         return $this->getDeal()->getName();
+    }
+
+    public function getCodes()
+    {
+        return $this->codes;
     }
 }

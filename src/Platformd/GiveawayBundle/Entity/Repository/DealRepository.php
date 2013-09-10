@@ -128,6 +128,11 @@ class DealRepository extends EntityRepository
             ->leftJoin('d.thumbnailLarge', 't')
             ->addSelect('b, t');
 
+        $qb->leftJoin('d.pools', 'p')
+            ->leftJoin('p.codes', 'c')
+            ->andWhere('c.user IS NULL')
+            ->andHaving('COUNT(c.id) > 0');
+
         return $qb
             ->getQuery()
             ->setMaxResults(4)
@@ -274,7 +279,11 @@ class DealRepository extends EntityRepository
             $qb = $this->createQueryBuilder('d');
         }
 
-        $qb->andWhere('d.endsAt < :now AND d.endsAt IS NOT NULL');
+        $qb->leftJoin('d.pools', 'p')
+            ->leftJoin('p.codes', 'c')
+            ->andWhere('c.user IS NULL');
+
+        $qb->andHaving('(d.endsAt < :now AND d.endsAt IS NOT NULL) OR COUNT(c.id) < 1 OR COUNT(p.id) < 1');
         $qb->setParameter('now', new DateTime('now', new DateTimeZone('UTC')));
 
         return $qb;
