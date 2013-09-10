@@ -174,11 +174,6 @@ class DealManager
         return $this->getRepository()->findFeaturedDealsForSiteId($siteId);
     }
 
-    public function findActiveNonFeaturedDeals(array $featuredDeals, $site)
-    {
-        return $this->getRepository()->findAllActiveNonFeatureDealsForSite($site, $featuredDeals);
-    }
-
     public function findActiveDeals($siteId)
     {
         return $this->getRepository()->findAllActiveDealsForSiteId($siteId);
