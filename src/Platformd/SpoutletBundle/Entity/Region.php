@@ -36,6 +36,11 @@ class Region
      */
     private $countries;
 
+    /**
+     * @ORM\Column(name="is_metrics_region", type="boolean")
+     */
+    private $isMetricsRegion;
+
     public function __construct()
     {
         $this->countries = new ArrayCollection();
@@ -74,5 +79,15 @@ class Region
     public function setCountries($countries)
     {
         $this->countries = $countries;
+    }
+
+    public function getIsMetricsRegion()
+    {
+        return $this->isMetricsRegion;
+    }
+
+    public function setIsMetricsRegion($value)
+    {
+        $this->isMetricsRegion = $value;
     }
 }

@@ -162,7 +162,9 @@
                 return true;
             });
 
-            //$('.modal-content').scrollable();
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
+            });
         });
     </script>
 {% endblock %}

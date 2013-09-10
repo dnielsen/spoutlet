@@ -574,4 +574,9 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface, Tag
     {
         return $this->getId();
     }
+
+    public function getName()
+    {
+        return $this->title;
+    }
 }

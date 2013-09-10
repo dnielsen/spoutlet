@@ -863,4 +863,9 @@ class YoutubeVideo implements LinkableInterface, CommentableInterface, Reportabl
     {
         return $this->getId();
     }
+
+    public function getName()
+    {
+        return $this->title;
+    }
 }

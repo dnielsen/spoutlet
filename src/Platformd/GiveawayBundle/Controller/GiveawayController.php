@@ -16,6 +16,7 @@ use Platformd\GiveawayBundle\ViewModel\giveaway_show_current_queue_state;
 use Platformd\GiveawayBundle\ViewModel\giveaway_show_key_data;
 use Platformd\GiveawayBundle\QueueMessage\KeyRequestQueueMessage;
 use Platformd\GiveawayBundle\Entity\KeyRequestState;
+use Platformd\UserBundle\Entity\RegistrationSource;
 
 /**
 *
@@ -187,10 +188,11 @@ class GiveawayController extends Controller
         }
 
         $response = $this->render('GiveawayBundle:Giveaway:index.html.twig', array(
-            'giveaways' => $active,
-            'featured'  => $featured,
-            'expired'   => $expired,
-            'headerImage' => $this->getHeaderImage($site),
+            'giveaways'     => $active,
+            'featured'      => $featured,
+            'expired'       => $expired,
+            'headerImage'   => $this->getHeaderImage($site),
+            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_GIVEAWAY),
         ));
 
         $this->varnishCache($response, 86400, 30);
@@ -225,6 +227,8 @@ class GiveawayController extends Controller
 
     public function keyAction($giveawayId, $slug, Request $request, $joinGroup=true)
     {
+        $this->container->get('request')->headers->set('source-type', 1);
+        $this->container->get('request')->headers->set('source-id', 1);
         $this->basicSecurityCheck(array('ROLE_USER'));
 
         $stateRepo   = $this->getKeyRequestStateRepo();

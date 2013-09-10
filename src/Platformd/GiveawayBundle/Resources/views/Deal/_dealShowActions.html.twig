@@ -38,3 +38,12 @@
     </ul>
 </div>
 
+{% if not is_granted('ROLE_USER') %}
+    <script type="text/javascript">
+        $(function() {
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ { 'type': data.deal_source_type, 'id': data.deal_id } | base64_encode }}');
+            });
+        });
+    </script>
+{% endif %}

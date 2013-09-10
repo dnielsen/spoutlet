@@ -29,6 +29,22 @@ class SecurityController extends BaseController
         $loginPath      = $this->container->get('router')->generate('fos_user_security_login', array(), true);
         $loginCheckPath = $this->container->get('router')->generate('_fos_user_security_check', array(), true);
 
+        if ($target = $session->get('_security.target_path')) {
+            parse_str(parse_url($target, PHP_URL_QUERY), $queryParams);
+
+            if (isset($queryParams['source'])) {
+                $session->set('registration_source', json_decode(base64_decode($queryParams['source']), true));
+            }
+        }
+
+        if ($queryString = $request->getQueryString()) {
+            parse_str($queryString, $queryParams);
+
+            if (isset($queryParams['source'])) {
+                $session->set('registration_source', json_decode(base64_decode($queryParams['source']), true));
+            }
+        }
+
         $doesRefererMatchLoginStuff = ($referer == $loginPath || $referer == $loginCheckPath);
 
         if (!$request->getSession()->get('_security.target_path')) {

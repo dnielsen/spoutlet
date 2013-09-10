@@ -63,7 +63,7 @@
     <div class="right">
         {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
         <div class="submit-media">
-            <a href="{{ path('gallery_submit') }}" class="btn btn-primary">{{ 'galleries.submit_photo_page_title' | trans }}</a>
+            <a href="{{ path('gallery_submit') }}" class="btn btn-primary reg-source">{{ 'galleries.submit_photo_page_title' | trans }}</a>
         </div>
     </div>
 </div>
@@ -87,6 +87,10 @@
     <script src="{{ asset('bundles/spoutlet/js/jquery.truncate.min.js') }}" type="text/javascript"></script>
     <script type="text/javascript">
         $(function () {
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
+            });
+
             $('#slider').nivoSlider({
                 pauseTime: 5000,
                 effect: 'fade',

@@ -4,7 +4,7 @@
 
 <div class="std_2col">
     {% if features.hasSearch %}<div class="left">{% render url('search_form', {'category': 'group', 'watermark': 'platformd.search.form.default.all' }) %}</div>{% endif %}
-    <div class="right"><a href="{{ path('group_new') }}" class="btn">{{ 'platformd.groups.index.create_group' | pd_trans }}</a></div>
+    <div class="right"><a href="{{ path('group_new') }}" class="btn reg-source">{{ 'platformd.groups.index.create_group' | pd_trans }}</a></div>
 </div>
 
 <div class="std_2col">
@@ -169,8 +169,11 @@
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.truncate.min.js"></script>
     <script type="text/javascript">
-
         $(function () {
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
+            });
+
             locationScrollable = $('#scrollable-location-groups').scrollable({
                 next: '#location-next',
                 prev: '#location-prev',

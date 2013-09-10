@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\ArrayAdapter;
+use Platformd\UserBundle\Entity\RegistrationSource;
 
 /**
  * Group controller.
@@ -313,6 +314,7 @@ Alienware Arena Team
             'recentGroups'   => $recentGroups,
             'popularGroups'  => $popularGroups,
             'featuredGroups' => $featuredGroups,
+            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_GROUP),
         ));
     }
 
@@ -1558,6 +1560,7 @@ Alienware Arena Team
             'memberCount'    => $memberCount[0]['membershipCount'],
             'groupManager'   => $this->getGroupManager(),
             'permalink'      => $permalink,
+            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_GROUP, 'id'=>$group->getId()),
         ));
     }
 

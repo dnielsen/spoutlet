@@ -12,7 +12,8 @@ use Platformd\EventBundle\Entity\GroupEvent,
     Platformd\EventBundle\Form\Type\GroupEventType,
     Platformd\EventBundle\Service\EventService,
     Platformd\EventBundle\Entity\GroupEventTranslation,
-    Platformd\EventBundle\Entity\GroupEventEmail
+    Platformd\EventBundle\Entity\GroupEventEmail,
+    Platformd\UserBundle\Entity\RegistrationSource
 ;
 
 use Symfony\Component\HttpFoundation\Request,
@@ -325,6 +326,7 @@ class GroupEventController extends Controller
         return $this->render('EventBundle:GroupEvent:view.html.twig', array(
             'group'         => $group,
             'event'         => $groupEvent,
+            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_GROUP, 'id'=>$group->getId()),
         ));
     }
 

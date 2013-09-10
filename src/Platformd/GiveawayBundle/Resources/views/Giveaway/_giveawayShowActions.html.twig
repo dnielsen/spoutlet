@@ -3,8 +3,9 @@
 {%  endif %}
 
 {% if data.giveaway_show_get_key_button %}
+
     <div class="blueButton" id="buttonGetKey" style="width: 100px; margin: 0 auto; text-align: center;">
-        <a href="{{ path('giveaway_get_key', { "giveawayId" : data.giveaway_id, "slug" : data.giveaway_slug }) }}">{{ 'platformd.giveaway.get_key' | trans }}</a>
+        <a class="reg-source" href="{{ path('giveaway_get_key', { "giveawayId" : data.giveaway_id, "slug" : data.giveaway_slug }) }}">{{ 'platformd.giveaway.get_key' | trans }}</a>
     </div>
 {% endif %}
 
@@ -48,3 +49,13 @@
         {% endfor %}
     {% endif %}
 </ol>
+
+{% if not is_granted('ROLE_USER') %}
+    <script type="text/javascript">
+        $(function() {
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ { 'type': data.giveaway_source_type, 'id': data.giveaway_id } | base64_encode }}');
+            });
+        });
+    </script>
+{% endif %}

@@ -3,32 +3,23 @@
 namespace Platformd\UserBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use DateTime;
 
 use Platformd\SpoutletBundle\Entity\Country;
 use Platformd\SpoutletBundle\Entity\Region;
+use Platformd\UserBundle\Form\Type\RegistrationActivitiesMetricsType;
+use Platformd\UserBundle\Entity\RegistrationSource;
 
-/**
- * @Route("/admin/metrics/users")
- */
 class MetricController extends Controller
 {
-    /**
-     * @Route("/country", name="user_metric_by_country")
-     * @Template()
-     */
     public function membershipByCountryAction(Request $request)
     {
         $metricManager = $this->container->get('platformd.metric_manager');
 
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Members');
-
-        $localAuth = $this->container->getParameter('local_auth');
 
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
 
@@ -208,5 +199,127 @@ class MetricController extends Controller
 
         $session->set('regions', $regions);
         return $regions;
+    }
+
+    public function registrationActivityAction(Request $request)
+    {
+        $this->getBreadcrumbs()->addChild('Metrics');
+        $this->getBreadcrumbs()->addChild('Registration Activities');
+
+        $metricManager = $this->container->get('platformd.metric_manager');
+        $form          = $this->createForm(new RegistrationActivitiesMetricsType(), array());
+        $data          = array();
+
+        if ($request->getMethod() == 'POST') {
+
+            $form->bindRequest($request);
+            $settings = $form->getData();
+
+            $currentSettings = json_decode($settings['currentSettings'], true) ?: array();
+
+            $allCountries = ($request->request->get('all-countries') == 'true');
+            $allRegions   = ($request->request->get('all-regions') == 'true');
+
+            if ($settings['country'] || $allCountries) {
+                $newSetting['country']       = isset($settings['country']) ? $settings['country']->getId() : null;
+                $newSetting['all_countries'] = $allCountries;
+                $newSetting['country_name']  = isset($settings['country']) ? $settings['country']->getName() : 'All Countries';
+                $newSetting['activity_type'] = $settings['country_activity_type'];
+                $newSetting['activity_id']   = empty($settings['country_activity_id']) ? null : $settings['country_activity_id'];
+
+                $newSetting['activity_name'] = $newSetting['activity_id'] ?
+                    $this->getActivityName($newSetting['activity_type'], $newSetting['activity_id']) :
+                    RegistrationActivitiesMetricsType::$choices[$newSetting['activity_type']];
+
+                $newSetting['from']          = $settings['from_date_country'] ? $settings['from_date_country']->format('Y-m-d'): null;
+                $newSetting['to']            = $settings['to_date_country'] ? $settings['to_date_country']->format('Y-m-d'): null;
+                $currentSettings[]           = $newSetting;
+            } elseif ($settings['region'] || $allRegions) {
+                $newSetting['region']        = isset($settings['region']) ? $settings['region']->getId() : null;
+                $newSetting['all_regions']   = $allRegions;
+                $newSetting['region_name']   = isset($settings['region']) ? $settings['region']->getName() : 'All Regions';
+                $newSetting['activity_type'] = $settings['region_activity_type'];
+                $newSetting['activity_id']   = empty($settings['region_activity_id']) ? null : $settings['region_activity_id'];
+
+                $newSetting['activity_name'] = $newSetting['activity_id'] ?
+                    $this->getActivityName($newSetting['activity_type'], $newSetting['activity_id']) :
+                    RegistrationActivitiesMetricsType::$choices[$newSetting['activity_type']];
+
+                $newSetting['from']          = $settings['from_date_region'] ? $settings['from_date_region']->format('Y-m-d'): null;
+                $newSetting['to']            = $settings['to_date_region'] ? $settings['to_date_region']->format('Y-m-d'): null;
+                $currentSettings[]           = $newSetting;
+            }
+
+            $data = $metricManager->getRegistrationActivityData($currentSettings);
+            $settings['currentSettings'] = json_encode($data);
+
+            $form->setData($settings);
+        }
+
+        return $this->render('UserBundle:Metric:registrationActivities.html.twig', array(
+            'form' => $form->createView(),
+            'data' => $data,
+        ));
+    }
+
+    public function getActivityChoicesAction($type = null)
+    {
+        if (!$type) {
+            return new Response();
+        }
+
+        $repoClass = isset(RegistrationSource::$sourceEntities[$type]) ? RegistrationSource::$sourceEntities[$type] : null;
+
+        if (!$repoClass) {
+            return new Response();
+        }
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $repo = $em->getRepository($repoClass);
+
+        if (!$repo) {
+            return new Response();
+        }
+
+        $options = $em->createQueryBuilder()
+            ->select('a')
+            ->from($repoClass, 'a')
+            ->orderBy('a.id', 'DESC')
+            ->getQuery()
+            ->getResult();
+
+        return $this->render('UserBundle:Metric:_registrationActivityOptions.html.twig', array(
+            'options' => $options,
+        ));
+    }
+
+    protected function getActivityName($type, $id)
+    {
+        if (!$type || !$id) {
+            return 'Unknown';
+        }
+
+        $typeName = RegistrationActivitiesMetricsType::$choices[$type];
+
+        $repoClass = RegistrationSource::$sourceEntities[$type];
+
+        if (!$repoClass) {
+            return 'Unknown';
+        }
+
+        $repo = $this->getDoctrine()->getEntityManager()->getRepository($repoClass);
+
+        if (!$repo) {
+            return 'Unknown';
+        }
+
+        $entity = $repo->find($id);
+
+        if (!$entity) {
+            return 'Unknown';
+        }
+
+        return '['.$typeName.'] '.$entity->getName();
     }
 }

@@ -92,6 +92,10 @@
                     $('#featured-content').resize();
                     $('#featured-content').mCustomScrollbar('update');
             });
+
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
+            });
         });
     </script>
 {% endblock %}

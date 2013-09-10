@@ -35,9 +35,9 @@
                 <a href="javascript:void(0);" data-id="{{ video.id }}" class="vote-button" id="video-vote"><span id="video-points">{{ video.votes | length }}</span> {{ 'youtube.points' | trans }}<i></i></a>
             </span>
             <span data-logged-in="false">
-                <a href="{{ login_link(app.request.uri) }}" data-id="{{ video.id }}" class="vote-button"><span id="video-points">{{ video.votes | length }}</span> {{ 'youtube.points' | trans }}<i></i></a>
+                <a href="{{ login_link(app.request.uri) }}" data-id="{{ video.id }}" class="vote-button reg-source"><span id="video-points">{{ video.votes | length }}</span> {{ 'youtube.points' | trans }}<i></i></a>
             </span>
-            <a href="{{ path('youtube_submit') }}" class="btn submit-video">{{ 'youtube.submit_video' | pd_trans }}</a>
+            <a href="{{ path('youtube_submit') }}" class="btn submit-video reg-source">{{ 'youtube.submit_video' | pd_trans }}</a>
         </div>
         <div class="video-social">
             <div class="fb-like"
@@ -168,6 +168,9 @@
     {{ parent() }}
     <script type="text/javascript">
         $(function () {
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
+            });
 
             var voteRequestSent;
 

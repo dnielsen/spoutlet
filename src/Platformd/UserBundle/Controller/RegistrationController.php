@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Platformd\UserBundle\Form\Type\TradeshowCompleteRegType;
+use Platformd\UserBundle\Entity\RegistrationSource;
 
 class RegistrationController extends BaseRegistrationController
 {
@@ -14,18 +15,55 @@ class RegistrationController extends BaseRegistrationController
     {
         $this->enforceAgeProtection();
 
+        $request                = $this->container->get('request');
+        $session                = $request->getSession();
         $form                   = $this->container->get('fos_user.registration.form');
         $formHandler            = $this->container->get('fos_user.registration.form.handler');
         $confirmationEnabled    = $this->container->getParameter('fos_user.registration.confirmation.enabled');
-        $timedout               = $this->container->get('request')->get('timedout') ? true : false;
+        $timedout               = $request->get('timedout') ? true : false;
+
+        if ($queryString = $request->getQueryString()) {
+            parse_str($queryString, $queryParams);
+
+            if (isset($queryParams['source'])) {
+                $session->set('registration_source', json_decode(base64_decode($queryParams['source']), true));
+            }
+        }
+
+        $sourceInfo = $session->get('registration_source');
 
         $process = $formHandler->process($confirmationEnabled);
         if ($process) {
             $user       = $form->getData();
             $authUser   = false;
 
+            $ipLookupUtil = $this->container->get('platformd.model.ip_lookup_util');
+            $em           = $this->container->get('doctrine.orm.entity_manager');
+            $countryCode  = $ipLookupUtil->getCountryCode($ipLookupUtil->getClientIp($request));
+            $country      = $em->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
+
+            $regSource = null;
+
+            if ($sourceInfo) {
+                $sourceType = isset($sourceInfo['type']) ? $sourceInfo['type'] : null;
+                $sourceId   = isset($sourceInfo['id']) ? $sourceInfo['id'] : null;
+
+                if ($sourceType) {
+                    $regSource  = new RegistrationSource($user, $sourceType, $sourceId, $country);
+                }
+            }
+
+            if (!$regSource) {
+                $regSource  = new RegistrationSource($user, RegistrationSource::REGISTRATION_SOURCE_TYPE_OTHER, null, $country);
+            }
+
+            $em->persist($regSource);
+            $em->flush();
+
+            $session->remove('registration_source');
+
             if ($confirmationEnabled) {
-                $this->container->get('session')->set('fos_user_send_confirmation_email/email', $user->getEmail());
+                $session->set('fos_user_send_confirmation_email/email', $user->getEmail());
                 $route = 'fos_user_registration_check_email';
             } else {
                 $authUser   = true;

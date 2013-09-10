@@ -25,6 +25,54 @@ $.fn.lazyLoad = function() {
     });
 }
 
+// Adds/updates parameters in URL query strings
+addQueryParams = function(url, params) {
+    urlParts = url.split("#");
+    url = urlParts[0];
+    hashPart = 1 in urlParts ? urlParts[1] : '';
+    url =  url.match(/\?/) ? url : url + '?';
+
+    for ( var key in params ) {
+        var re = RegExp( '&?' + key + '=?[^&]*', 'g' );
+        url = url.replace( re, '');
+        url += '&' + key + '=' + params[key];
+    }
+
+    url = url.replace(/[&]$/, '');
+    url = url.replace(/\?[&]/, '?');
+    url = url.replace(/[&]{2}/g, '&');
+
+    url = url + hashPart;
+    return url;
+};
+
+addSourceInfo = function(element, source) {
+
+    elementType = $(element).prop('tagName');
+
+    if (elementType == 'BUTTON' || elementType == 'INPUT') {
+        var form = $(element).parents('form:first');
+        if (form.length > 0) {
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'source',
+                value: source
+            }).appendTo(form);
+        }
+        return;
+    }
+
+    if (elementType == 'A') {
+        var _href = $(element).attr('href');
+        var params = new Array();
+        params['source'] = source;
+        $(element).attr('href', addQueryParams(_href, params));
+        return;
+    }
+
+    return;
+}
+
 /**
  * The site's main on ready block
  */

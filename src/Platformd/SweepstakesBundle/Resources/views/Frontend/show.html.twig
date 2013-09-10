@@ -76,6 +76,12 @@
     </div>
 
     <script type="text/javascript">
+        $(function() {
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
+            });
+        });
+
         jQuery(document).ready(function() {
             // make the terms content display in a modal
             $('.sweeps-terms-modal').click(function() {

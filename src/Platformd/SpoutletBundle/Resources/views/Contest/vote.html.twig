@@ -60,6 +60,10 @@
         });
 
         $(function () {
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
+            });
+
             $('.media-title').truncate({
                 width: 115
             });
