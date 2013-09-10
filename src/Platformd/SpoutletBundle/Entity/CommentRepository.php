@@ -6,6 +6,26 @@ use Doctrine\ORM\EntityRepository;
 
 class CommentRepository extends EntityRepository
 {
+    public function getFindCommentsForUserQuery($user, $dateSort = 'DESC')
+    {
+       return $this->createQueryBuilder('c')
+            ->andWhere('c.author = :user')
+            ->setParameter('user', $user)
+            ->orderBy('c.createdAt', $dateSort)
+            ->getQuery()
+        ;
+    }
+
+    public function getAllActiveCommentsForUserQuery($user)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.author = :user')
+            ->andWhere('c.deleted = false')
+            ->setParameter('user', $user)
+            ->getQuery()
+        ;
+    }
+
     public function findCommentsForThreadSortedByDate($thread, $limit=25, $order='DESC')
     {
         $result = $this->createQueryBuilder('c')
