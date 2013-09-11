@@ -392,7 +392,7 @@ platformd:
         comments: Comments
         sort_by: Sort By:
         sort_by_votes: Votes
-        sort_by_newest: Most Recent
+        sort_by_newest: Recent
         sort_by_oldest: Oldest
         add_comment: Add Comment
         login_to_reply: Log in to Reply
