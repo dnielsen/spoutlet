@@ -21,13 +21,23 @@ class GiveawayRepository extends EntityRepository
      * @param $site
      * @return array
      */
-    public function findActives($site)
+    public function findActives($site, $featuredToIgnore=null)
     {
-        return $this
+        $qb = $this
             ->createActiveQueryBuilder($site)
-            ->andWhere('g.featured != 1')
-            ->orderBy('g.created', 'DESC')
-            ->getQuery()
+            ->orderBy('g.created', 'DESC');
+
+        if ($featuredToIgnore){
+            foreach ($featuredToIgnore as $featuredGiveaway) {
+                $featuredIds[] = $featuredGiveaway->getId();
+            }
+
+            if (count($featuredIds) > 0) {
+                $qb->andWhere($qb->expr()->notIn('g.id', $featuredIds));
+            }
+        }
+
+        return $qb->getQuery()
             ->getResult();
     }
 

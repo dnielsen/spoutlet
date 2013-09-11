@@ -172,8 +172,8 @@ class GiveawayController extends Controller
     {
         $active    = array();
         $expired   = array();
-        $giveaways = $this->getRepository()->findActives($this->getCurrentSite());
         $featured  = $this->getRepository()->findActiveFeaturedForSite($this->getCurrentSite());
+        $giveaways = $this->getRepository()->findActives($this->getCurrentSite(), $featured);
         $keyRepo   = $this->getKeyRepository();
         $site      = $this->getCurrentSite();
 

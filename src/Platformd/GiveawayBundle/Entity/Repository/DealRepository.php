@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use DateTime;
 use DateTimeZone;
+use Doctrine\ORM\Query\Expr\Join;
 
 class DealRepository extends EntityRepository
 {
@@ -132,7 +133,7 @@ class DealRepository extends EntityRepository
             ->leftJoin('p.codes', 'c')
             ->andWhere('c.user IS NULL')
             ->andHaving('COUNT(c.id) > 0')
-            ->addGroupBy('d.id');;
+            ->addGroupBy('d.id');
 
         return $qb
             ->getQuery()
@@ -166,7 +167,7 @@ class DealRepository extends EntityRepository
             ->leftJoin('p.codes', 'c')
             ->andWhere('c.user IS NULL')
             ->andHaving('COUNT(c.id) > 0')
-            ->addGroupBy('d.id');;
+            ->addGroupBy('d.id');
 
         return $qb->getQuery()
             ->execute()
@@ -282,7 +283,7 @@ class DealRepository extends EntityRepository
         }
 
         $qb->leftJoin('d.pools', 'p')
-            ->leftJoin('p.codes', 'c')
+            ->leftJoin('p.codes', 'c', Join::WITH, 'p.id = c.pool AND c.user IS NULL')
             ->andWhere('c.user IS NULL')
             ->addGroupBy('d.id');
 
