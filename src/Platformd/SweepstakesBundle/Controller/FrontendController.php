@@ -43,6 +43,7 @@ class FrontendController extends Controller
         $em            = $this->getDoctrine()->getEntityManager();
         $registered    = $request->query->get('registered');
         $timedout      = $request->query->get('timedout');
+        $suspended     = $request->query->get('suspended');
 
         $canTest = $sweepstakes->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
 
@@ -81,15 +82,16 @@ class FrontendController extends Controller
         }
 
         return array(
-            'sweepstakes'   => $sweepstakes,
-            'isEntered'     => $isEntered,
-            'isGroupMember' => $isGroupMember,
-            'entryId'       => $entryId,
-            'entryForm'     => $entryForm->createView(),
-            'errors'        => $this->getEntryFormErrors($entryForm),
-            'registered'    => $registered,
-            'timedout'      => $timedout,
-            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_SWEEPSTAKES, 'id'=>$sweepstakes->getId()),
+            'sweepstakes'    => $sweepstakes,
+            'isEntered'      => $isEntered,
+            'isGroupMember'  => $isGroupMember,
+            'entryId'        => $entryId,
+            'entryForm'      => $entryForm->createView(),
+            'errors'         => $this->getEntryFormErrors($entryForm),
+            'registered'     => $registered,
+            'timedout'       => $timedout,
+            'suspended'      => $suspended,
+            'regSourceData'  => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_SWEEPSTAKES, 'id'=>$sweepstakes->getId()),
         );
     }
 

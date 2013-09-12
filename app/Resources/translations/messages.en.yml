@@ -427,6 +427,7 @@ platformd:
             country_label: Choose a country
             underage_message: Sorry, we are not able to accept your registration at this time.
             please_wait: The system is currently processing multiple account creations and cannot process your creation request at this time, please try again later.
+            ip_suspended: Your IP address is currently suspended. If you believe this to be in error, please contact %contact_email%.
             oops: Error!
             cannot_process: We were unable to create your account. Please complete or correct the required fields below.
             problems_found: We found the following problems:

@@ -27,6 +27,10 @@
         {% if timedout %}
             {% include 'SpoutletBundle::_flashMessage.html.twig' with { 'type': 'error', 'message': 'platformd.user.register.please_wait' } %}
         {% endif %}
+
+        {% if suspended %}
+            {% include 'SpoutletBundle::_flashMessage.html.twig' with { 'type': 'error', 'message': ('fos_user.account_banned_no_date' | pd_trans({}, 'validators')) } %}
+        {% endif %}
     {% endif %}
 
     <div class="std_1col">

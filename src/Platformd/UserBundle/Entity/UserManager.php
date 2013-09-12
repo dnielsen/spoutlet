@@ -96,11 +96,26 @@ class UserManager extends BaseUserManager
             throw new UsernameNotFoundException(sprintf('No user with name or email "%s" was found.', $username));
         }
 
-        if ($this->isExpired($user)) {
+        if ($user->isExpired()) {
             throw new CredentialsExpiredException(
                 sprintf(
                     $this->translator->trans('fos_user.account_banned', array(), 'validators'),
                     $user->getExpiredUntil() ? $user->getExpiredUntil()->format($this->translator->trans('date_format')) : 'infinity'
+                )
+            );
+        }
+
+        $ipAddress     = $this->getClientIpAddress();
+        $isIpSuspended = $ipAddress ? $this->em->getRepository('UserBundle:SuspendedIpAddress')->getIpAddressSuspensions($ipAddress) : false;
+
+        if ($isIpSuspended) {
+            $banned         = ($isIpSuspended[0]->getSuspendedUntil() === null);
+            $suspendedUntil = $banned ? null : end($isIpSuspended)->getSuspendedUntil();
+
+            throw new CredentialsExpiredException(
+                sprintf(
+                    $this->translator->trans('fos_user.account_banned', array(), 'validators'),
+                    $banned ? 'infinity' : $suspendedUntil->format($this->translator->trans('date_format'))
                 )
             );
         }
@@ -287,20 +302,6 @@ class UserManager extends BaseUserManager
         }
 
         return $this->container->get('request')->getClientIp(true);
-    }
-
-    private function isExpired(User $user)
-    {
-        if ($user->isExpired()) {
-            return true;
-        }
-
-        return 0 < $this->countOtherExpiredUsersByIpAddress($this->getClientIpAddress(), $user->getUsername());
-    }
-
-    private function countOtherExpiredUsersByIpAddress($ipAddress, $username)
-    {
-        return $this->repository->countOtherExpiredUsersByIpAddress($ipAddress, $this->canonicalizeUsername($username));
     }
 
     private function uuidGen()

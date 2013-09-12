@@ -15,12 +15,13 @@ class RegistrationController extends BaseRegistrationController
     {
         $this->enforceAgeProtection();
 
-        $request                = $this->container->get('request');
-        $session                = $request->getSession();
-        $form                   = $this->container->get('fos_user.registration.form');
-        $formHandler            = $this->container->get('fos_user.registration.form.handler');
-        $confirmationEnabled    = $this->container->getParameter('fos_user.registration.confirmation.enabled');
-        $timedout               = $request->get('timedout') ? true : false;
+        $request             = $this->container->get('request');
+        $session             = $request->getSession();
+        $form                = $this->container->get('fos_user.registration.form');
+        $formHandler         = $this->container->get('fos_user.registration.form.handler');
+        $confirmationEnabled = $this->container->getParameter('fos_user.registration.confirmation.enabled');
+        $timedout            = $request->get('timedout') ? true : false;
+        $suspended           = $request->get('suspended') ? true : false;
 
         if ($queryString = $request->getQueryString()) {
             parse_str($queryString, $queryParams);
@@ -82,12 +83,13 @@ class RegistrationController extends BaseRegistrationController
         }
 
         return $this->container->get('templating')->renderResponse('UserBundle:Registration:register.html.'.$this->getEngine(), array(
-            'form'      => $form->createView(),
-            'theme'     => $this->container->getParameter('fos_user.template.theme'),
-            'errors'    => $form->getErrors(),
-            'config'    => $this->getCurrentSite()->getSiteConfig(),
-            'locale'    => $this->getCurrentSite()->getDefaultLocale(),
-            'timedout'  => $timedout,
+            'form'           => $form->createView(),
+            'theme'          => $this->container->getParameter('fos_user.template.theme'),
+            'errors'         => $form->getErrors(),
+            'config'         => $this->getCurrentSite()->getSiteConfig(),
+            'locale'         => $this->getCurrentSite()->getDefaultLocale(),
+            'timedout'       => $timedout,
+            'suspended'      => $suspended,
         ));
     }
 
