@@ -1,9 +1,8 @@
 <?php
 
-namespace Platformd\EventBundle\Entity;
+namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
 use Doctrine\Common\Collections\ArrayCollection;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -13,12 +12,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\UserBundle\Entity\User;
 
 /**
- * Base EventEMail
+ * Base MassEMail
  *
  * @ORM\MappedSuperclass
  */
-abstract class EventEmail
+abstract class MassEmail
 {
+    const EMAIL_LIMIT_COUNT = 2;
+    const EMAIL_LIMIT_PERIOD = '24 hours';
+
     /**
      * @var integer $id
      *
@@ -56,10 +58,13 @@ abstract class EventEmail
     protected $recipients;
 
     /**
-     * @var \DateTime $sentAt
-     *
-     * @ORM\Column(name="sent_at", type="datetime")
+     * @ORM\Column(name="created_at", type="datetime")
      * @Gedmo\Timestampable(on="create")
+     */
+    protected $createdAt;
+
+    /**
+     * @ORM\Column(name="sent_at", type="datetime", nullable=true)
      */
     protected $sentAt;
 
@@ -167,6 +172,22 @@ abstract class EventEmail
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
      * @return User
      */
     public function getSender()
@@ -196,5 +217,10 @@ abstract class EventEmail
     public function setSite($site)
     {
         $this->site = $site;
+    }
+
+    public function getEmailType()
+    {
+        return 'Mass Email';
     }
 }

@@ -287,7 +287,8 @@ platformd:
             cancel: Cancel
             attending: Attending
             error: There was an error previewing your email!
-            confirmation: Email sent to %attendeeCount% attendee(s).
+            limit_hit: You have reached the maximum number of emails you can send to event attendees within a 24-hour period.
+            confirmation: Email sent to %attendeeCount% attendee.|Email sent to %attendeeCount% attendees.
             form:
                 recipients: Recipients
                 message: Message
@@ -592,27 +593,35 @@ platformd:
             global_event_contact:
                 title: Message from the event organizer about %eventName%
                 message: |
-                    The following message has been sent to you for the event – %eventName%:
-
+                    The following message has been sent to you for the event – <a href="%eventUrl%">%eventName%</a>:
+                    <br /><br />
+                    <hr>
                     %content%
-
+                    <br />
+                    <hr>
+                    <br />
                     Alienware Arena Team
-
+                    <br /><br />
                     Important: Alienware Arena will never ask you for personal information such as your username, password, date of birth, email address, etc.  Please do not share that with anyone.  If you suspect this email to be a scam or inappropriate, please report it to contact@alienwarearena.com.
+                    <br /><br />
                     Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
-
+                    <br />
             attendees_contact:
                 title: Message from the event organizer about %eventName%
                 message: |
-                    The following message has been sent to you for the event – %eventName%:
-
+                    The following message has been sent to you for the event – <a href="%eventUrl%">%eventName%</a>:
+                    <br /><br />
+                    <hr>
                     %content%
-
+                    <br />
+                    <hr>
+                    <br />
                     Sent from Alienware Arena on behalf of %organizerName%.
-
+                    <br /><br />
                     Important: Alienware Arena will never ask you for personal information such as your username, password, date of birth, email address, etc.  Please do not share that with anyone.  If you suspect this email to be a scam or inappropriate, please report it to contact@alienwarearena.com.
+                    <br /><br />
                     Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
-
+                    <br />
             approved:
                 title: Your Event Has Been Approved
                 message: |
@@ -734,93 +743,6 @@ platformd:
                     If you believe this to be an error, please send contact the event organizer.
 
                     Alienware Arena Team
-
-    groups:
-        index:
-            my_groups: My Groups
-            create_group: Create Group
-            recommended_groups: Alienware Arena Groups
-            featured_groups: Featured Groups
-            members: Members
-            organizer: Organizer
-            report_group: Report this Group
-            topic_groups: Topic Groups
-            previous: Previous
-            see_more: See More
-            location_groups: Location Groups
-            welcome_new: Welcome New Groups
-            no_groups_found: No groups found. Check back soon!
-            most_popular: Most Popular Groups
-            staff: Staff
-        show:
-            waiting_on_approval: Waiting on Approval
-            founded: Founded
-            organizer: Organizer
-            staff: Staff
-            members: Members
-            upcoming_events: Upcoming Events
-            past_events: Past Events
-            comments: Comments
-            group_type: Group
-            new_members: New Members Acquired
-            invite: Invite Friends
-            report_group: Report this Group
-            location: LOCATION
-            news: News
-            events: Events
-            images: Images
-            videos: Videos
-            discussions: Discussions
-            about: About
-            must_be_member_comments: You must be a member of a private group before you can see or post comments.
-            public: Public
-            private: Private
-        news:
-            add: Add News
-            delete: Delete
-            edit: Edit
-            report: Report
-            no_articles: No news articles yet... please come back later!
-        images:
-            submit_images: Submit image(s)
-            non_member_add: Want to add an image? Become a member of our group.
-            member_no_images: There are no images. <a href='%addImageUrl%'>Submit image(s)</a>
-            non_member_no_images: There are no images. Want to add an image? Become a member of our group.
-            delete: Delete
-            edit: Edit
-            report: Report
-            previous: Previous
-            see_more: See More
-        videos:
-            submit: Submit Video
-            non_member_add: Want to add an video? Become a member of our group.
-            member_no_videos: There are no videos. <a href='%url%'>Submit Video</a>
-            non_member_no_videos: There are no videos. Want to add an video? Become a member of our group.
-            delete: delete
-            edit: edit
-            report: report
-        discussions:
-            submit: <a href='%url%'>Submit your topic</a> now.
-            non_member_add: Want to add a topic? Become a member of our group.
-            member_no_discussions: No discussions yet... <a href='%url%'>Submit your topic</a> now.
-            non_member_no_discussions: No discussions yet... Want to add a topic? Become a member of our group.
-            replies: Replies
-            views: Views
-        events:
-            submit: Submit Event
-            member_no_events: No group events yet. <a href="%url%">Submit Event</a>
-            non_member_add: Want to add an event? Become a member of our group.
-            non_member_no_events: No group events yet. Want to add an event? Become a member of our group.
-            time: Time
-            where: Where
-            online: Online
-            edit: Edit
-            delete: Delete
-            report: Report
-            view_past_events: View Past Events
-            no_past_events: No past events!
-            show_more_past: Show More Past Events
-            delete_confirmation: Are you sure you want to delete this event?
 
 "Bad credentials": "Incorrect username/email or password"
 "The presented password is invalid.": "Incorrect username/email or password"

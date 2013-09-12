@@ -331,6 +331,20 @@ class GlobalEventController extends Controller
             throw new AccessDeniedException();
         }
 
+        $hitEmailLimit = $this->getDoctrine()->getEntityManager()->getRepository('EventBundle:GlobalEventEmail')->hasUserHitEmailLimitForEvent($this->getCurrentUser(), $event);
+
+        if ($hitEmailLimit) {
+            $this->setFlash('error', 'platformd.events.event_contact.limit_hit');
+
+            if ($event->getExternalUrl()) {
+                return $this->redirect($this->generateUrl('global_events_index'));
+            }
+
+            return $this->redirect($this->generateUrl('global_event_view', array(
+                'slug' => $slug
+            )));
+        }
+
         $email = new GlobalEventEmail();
 
         $emailLocale = $this->getLocale() ?: 'en';
@@ -380,7 +394,9 @@ class GlobalEventController extends Controller
                     }
                 }
 
-                if (count($recipients) < 1) {
+                $recipientCount = count($recipients);
+
+                if ($recipientCount < 1) {
 
                     $this->setFlash('error', 'No valid recipients found.');
 
@@ -398,21 +414,25 @@ class GlobalEventController extends Controller
 
                 $content = $email->getMessage();
 
-                $email->setMessage(str_replace('%content%', '------'.$content.'------', nl2br($this->trans(
+                $email->setMessage($this->trans(
                     'platformd.event.email.global_event_contact.message',
                     array(
+                        '%content%' => $content,
                         '%eventName%' => $event->getName(),
+                        '%eventUrl%' => $this->generateUrl('global_event_view', array('slug' => $slug), true),
                         '%organizerName%' => $this->getUser()->getUsername(),
                     ),
                     'messages',
                     $emailLocale
-                ))));
+                ));
 
-                $sendCount = $this->getGlobalEventService()->sendEmail($email);
+                $emailManager = $this->container->get('platformd.model.email_manager');
+                $queueResult  = $emailManager->queueMassEmail($email);
 
-                $this->setFlash('success', $this->trans(
+                $this->setFlash('success', $this->transChoice(
                     'platformd.events.event_contact.confirmation',
-                    array('%attendeeCount%' => $sendCount),
+                    $recipientCount,
+                    array('%attendeeCount%' => $recipientCount),
                     'messages',
                     $emailLocale
                 ));
@@ -468,15 +488,17 @@ class GlobalEventController extends Controller
 
                 $content = $email->getMessage();
 
-                $email->setMessage(str_replace('%content%', '------'.$content.'------', nl2br($this->trans(
+                $email->setMessage($this->trans(
                     'platformd.event.email.global_event_contact.message',
                     array(
+                        '%content%' => $content,
                         '%eventName%' => $event->getName(),
+                        '%eventUrl%' => $this->generateUrl('global_event_view', array('slug' => $slug), true),
                         '%organizerName%' => $this->getUser()->getUsername(),
                     ),
                     'messages',
                     $emailLocale
-                ))));
+                ));
 
                 return $this->render('EventBundle::contactPreview.html.twig', array(
                     'subject' => $email->getSubject(),

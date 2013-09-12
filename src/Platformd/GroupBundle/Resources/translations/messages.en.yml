@@ -1,0 +1,112 @@
+platformd.groups.index.my_groups: My Groups
+platformd.groups.index.create_group: Create Group
+platformd.groups.index.recommended_groups: Alienware Arena Groups
+platformd.groups.index.featured_groups: Featured Groups
+platformd.groups.index.members: Members
+platformd.groups.index.organizer: Organizer
+platformd.groups.index.report_group: Report this Group
+platformd.groups.index.topic_groups: Topic Groups
+platformd.groups.index.previous: Previous
+platformd.groups.index.see_more: See More
+platformd.groups.index.location_groups: Location Groups
+platformd.groups.index.welcome_new: Welcome New Groups
+platformd.groups.index.no_groups_found: No groups found. Check back soon!
+platformd.groups.index.most_popular: Most Popular Groups
+platformd.groups.index.staff: Staff
+
+platformd.groups.show.waiting_on_approval: Waiting on Approval
+platformd.groups.show.founded: Founded
+platformd.groups.show.organizer: Organizer
+platformd.groups.show.staff: Staff
+platformd.groups.show.members: Members
+platformd.groups.show.upcoming_events: Upcoming Events
+platformd.groups.show.past_events: Past Events
+platformd.groups.show.comments: Comments
+platformd.groups.show.group_type: Group
+platformd.groups.show.new_members: New Members Acquired
+platformd.groups.show.invite: Invite Friends
+platformd.groups.show.report_group: Report this Group
+platformd.groups.show.leave_group: Leave Group
+platformd.groups.show.location: LOCATION
+platformd.groups.show.news: News
+platformd.groups.show.events: Events
+platformd.groups.show.images: Images
+platformd.groups.show.videos: Videos
+platformd.groups.show.discussions: Discussions
+platformd.groups.show.about: About
+platformd.groups.show.must_be_member_comments: You must be a member of a private group before you can see or post comments.
+platformd.groups.show.public: Public
+platformd.groups.show.private: Private
+
+platformd.groups.news.add: Add News
+platformd.groups.news.delete: Delete
+platformd.groups.news.edit: Edit
+platformd.groups.news.report: Report
+platformd.groups.news.no_articles: No news articles yet... please come back later!
+
+platformd.groups.images.submit_images: Submit image(s)
+platformd.groups.images.non_member_add: Want to add an image? Become a member of our group.
+platformd.groups.images.member_no_images: There are no images. <a href='%addImageUrl%'>Submit image(s)</a>
+platformd.groups.images.non_member_no_images: There are no images. Want to add an image? Become a member of our group.
+platformd.groups.images.delete: Delete
+platformd.groups.images.edit: Edit
+platformd.groups.images.report: Report
+platformd.groups.images.previous: Previous
+platformd.groups.images.see_more: See More
+
+platformd.groups.videos.submit: Submit Video
+platformd.groups.videos.non_member_add: Want to add an video? Become a member of our group.
+platformd.groups.videos.member_no_videos: There are no videos. <a href='%url%'>Submit Video</a>
+platformd.groups.videos.non_member_no_videos: There are no videos. Want to add an video? Become a member of our group.
+platformd.groups.videos.delete: delete
+platformd.groups.videos.edit: edit
+platformd.groups.videos.report: report
+
+platformd.groups.discussions.submit: <a href='%url%'>Submit your topic</a> now.
+platformd.groups.discussions.non_member_add: Want to add a topic? Become a member of our group.
+platformd.groups.discussions.member_no_discussions: No discussions yet... <a href='%url%'>Submit your topic</a> now.
+platformd.groups.discussions.non_member_no_discussions: No discussions yet... Want to add a topic? Become a member of our group.
+platformd.groups.discussions.replies: Replies
+platformd.groups.discussions.views: Views
+
+platformd.groups.events.submit: Submit Event
+platformd.groups.events.member_no_events: No group events yet. <a href="%url%">Submit Event</a>
+platformd.groups.events.non_member_add: Want to add an event? Become a member of our group.
+platformd.groups.events.non_member_no_events: No group events yet. Want to add an event? Become a member of our group.
+platformd.groups.events.time: Time
+platformd.groups.events.where: Where
+platformd.groups.events.online: Online
+platformd.groups.events.edit: Edit
+platformd.groups.events.delete: Delete
+platformd.groups.events.report: Report
+platformd.groups.events.view_past_events: View Past Events
+platformd.groups.events.no_past_events: No past events!
+platformd.groups.events.show_more_past: Show More Past Events
+platformd.groups.events.delete_confirmation: Are you sure you want to delete this event?
+
+platformd.groups.contact.form.title: Email Members
+platformd.groups.contact.form.instructions: Your email will be sent to all members in your group. You may send up to two emails within a 24-hour period.
+platformd.groups.contact.form.message: Message
+platformd.groups.contact.form.preview: Preview
+platformd.groups.contact.form.send: Send
+platformd.groups.contact.form.cancel: Cancel
+platformd.groups.contact.error.no_recipients: No valid recipients found
+platformd.groups.contact.error.generic_error: There was an error while sending your email
+platformd.groups.contact.error.preview_error: There was an error previewing your email.
+platformd.groups.contact.error.email_limit_hit: You have reached the maximum number of emails you can send to your group members within a 24-hour period.
+platformd.groups.contact.title: Message from the group organizer about %groupName%
+platformd.groups.contact.message: |
+      The following message has been sent to all group members for <a href="%groupUrl%">%groupName%</a>.
+      <br /><br />
+      <hr>
+      %content%
+      <br />
+      <hr>
+      <br />
+      Sent from Alienware Arena on behalf of %username%.
+      <br /><br />
+      Important: Alienware Arena will never ask you for personal information such as your username, password, date of birth, email address, etc. Please do not share that with anyone. If you suspect this email to be a scam or inappropriate, please report it to contact@alienwarearena.com.
+      <br /><br />
+      Note: To unsubscribe from similar emails, you must leave <a href="%groupUrl%">this group</a>.
+      <br />
+platformd.groups.contact.confirmation: Email sent to %recipientCount% member.|Email sent to %recipientCount% members.
