@@ -5,6 +5,7 @@ namespace Platformd\NewsBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Platformd\GameBundle\Entity\Game;
+use Platformd\NewsBundle\Entity\News;
 
 /**
  * NewsRepository
@@ -22,7 +23,8 @@ class NewsRepository extends EntityRepository
     public function getFindNewsQuery()
     {
         return $this->createQueryBuilder('n')
-            ->orderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.id', 'DESC')
             ->getQuery();
     }
 
@@ -32,30 +34,28 @@ class NewsRepository extends EntityRepository
             ->leftJoin('n.sites', 's')
             ->andWhere(is_string($site) ? 's.name = :site' : 's = :site')
             ->setParameter('site', $site)
-            ->orderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.id', 'DESC')
             ->getQuery();
     }
 
-    /**
-     * @return array
-     */
     public function findAllForSite($site)
     {
         return $this->createBaseQueryBuilder($site)
-            ->orderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.id', 'DESC')
             ->getQuery()
             ->getResult()
         ;
     }
 
-    /**
-     * @return \Platformd\NewsBundle\Entity\News;
-     */
-    public function findOneFeaturedForSite($site)
+    public function findMostRecentArticleForSite($site)
     {
-        // todo - this will need to do something smarter - see #68
         return $this->createBaseQueryBuilder($site)
-            ->orderBy('n.postedAt', 'DESC')
+            ->andWhere('n.type = :article')
+            ->addOrderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.id', 'DESC')
+            ->setParameter('article', News::NEWS_TYPE_ARTICLE)
             ->getQuery()
             ->setMaxResults(1)
             ->getOneOrNullResult()
@@ -69,8 +69,26 @@ class NewsRepository extends EntityRepository
     public function findMostRecentForSite($site, $num)
     {
         return $this->createBaseQueryBuilder($site)
-            ->orderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.id', 'DESC')
             ->getQuery()
+            ->setMaxResults($num)
+            ->execute()
+        ;
+    }
+
+    public function findMostRecentForSiteExcept($site, $num, $exceptId)
+    {
+        $qb =  $this->createBaseQueryBuilder($site)
+            ->addOrderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.id', 'DESC');
+
+        if ($exceptId) {
+            $qb->andWhere('n.id <> :exceptId')
+            ->setParameter('exceptId', $exceptId);
+        }
+
+        return $qb->getQuery()
             ->setMaxResults($num)
             ->execute()
         ;
@@ -85,7 +103,8 @@ class NewsRepository extends EntityRepository
         return $this->createBaseQueryBuilder($site)
             ->andWhere('n.game = :game')
             ->setParameter('game', $game)
-            ->orderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.postedAt', 'DESC')
+            ->addOrderBy('n.id', 'DESC')
             ->getQuery()
             ->execute()
         ;

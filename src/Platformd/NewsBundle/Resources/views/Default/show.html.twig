@@ -11,7 +11,7 @@
         </div>
 
         <div class="std-item">
-            {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
+            {% render url('hot_stories') %}
         </div>
     </div>
     <div class="left">
@@ -19,8 +19,8 @@
             <h1 class="controlled-spacing">{{ news.title }}</h1>
 
             <h6>
-                {{ 'announced_date' | pd_trans({
-                    '%posted_date%': ('sweepstakes_date_format' | pd_trans(news.postedAtArray))
+                {{ (news.type == 'article' ? 'platformd.news.published_date' : 'platformd.news.announced_date') | pd_trans({
+                    '%posted_date%': (news.postedAt|date_translate)
                 })}}
             </h6>
             {% if news.image %}

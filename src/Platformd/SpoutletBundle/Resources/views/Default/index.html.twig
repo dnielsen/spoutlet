@@ -55,7 +55,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.mCustomScrollbar.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.resize.min.js"></script>
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.mousewheel.min.js"></script>
     <script type="text/javascript">
@@ -63,21 +62,12 @@
             $('.ellipse').truncate({
                 width: '160'
             });
-            $('.news-ellipse').truncate({
-                width: '250'
-            });
             $('.home-more-videos-link a').truncate({
                 width: '130'
             });
             $('.ellipse').qtip();
 
-            $('.news-ellipse-first').truncate({
-                width: '400'
-            });
-
             $('.group-index-link').truncate();
-
-            $('#news-content').mCustomScrollbar();
 
             $('div#featured-content').mCustomScrollbar();
 

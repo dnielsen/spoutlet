@@ -462,6 +462,39 @@ ul.list-normal {
     background-color: #fcb3b3;
 }
 
+.article-image {
+    width: 200px;
+    float: left;
+    margin-right: 12px;
+}
+
+.article-image img {
+    width: 200px;
+    height: 113px;
+}
+
+.article-actions a {
+    float: right;
+}
+
+.article-image-large img {
+    width: 634px;
+    padding-top: 5px;
+}
+
+.article-comment-count {
+    font-style: italic;
+}
+
+#featured-news-article img {
+    width: 244px;
+    height: 92px;
+}
+
+#featured-news-article a {
+    font-size: 18px;
+}
+
 .age-wrapper {
     text-align: center;
 }

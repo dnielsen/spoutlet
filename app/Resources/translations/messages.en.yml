@@ -187,6 +187,7 @@ platformd:
             giveaways: Giveaways
             all: All
             see_more: More
+            read_more: Read More
             photo_gallery: Image Gallery
             view_all: View All
             competitions: Events
@@ -532,25 +533,7 @@ platformd:
 
         first_active_used: NOTE: The first "active" pool will be the one that is currently used on the site
 
-    # used only in the admin area
     admin:
-        news:
-            heading: Manage news
-            title: Title
-            edit:  Edit
-            delete: Delete
-            delete_confirm: Are you sure you want to delete this news item?
-            create: Create a new item
-            save_news: Save news
-            create_title: Create a news item
-            created: Your news item has been created !
-            modified: Your news item has been modified !
-            deleted: Your news item has been deleted !
-            edit_title: Edit a news item
-            upload_image: Upload an image
-            image_dimensions: (recommended size: 634x400)
-            tags: Tags
-            tags_help: Enter keywords to help people discover this article.
         games:
             category:
                 action:     Action
@@ -894,7 +877,6 @@ status:
 
 # More frontend things
 no_news_currently: There is currently no featured news - check back later!
-news_and_announcements: Alienware Arena News & Announcements
 announced_date: Announced %posted_date%
 read_more: Read More
 go_to_website: Go to Website

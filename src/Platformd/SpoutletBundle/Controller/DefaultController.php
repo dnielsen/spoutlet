@@ -285,12 +285,18 @@ class DefaultController extends Controller
      */
     public function hotStoriesAction()
     {
+        $featuredArticle = $this->getNewsRepo()
+            ->findMostRecentArticleForSite($this->getCurrentSite());
+
+        $exceptId = $featuredArticle ? $featuredArticle->getId() : null;
+
         $news = $this->getNewsRepo()
-            ->findMostRecentForSite($this->getCurrentSite(), 13)
+            ->findMostRecentForSiteExcept($this->getCurrentSite(), 8, $exceptId)
         ;
 
         $response = $this->render('SpoutletBundle:Default:_hotStories.html.twig', array(
-            'news'     => $news,
+            'featuredArticle' => $featuredArticle,
+            'news'            => $news,
         ));
 
         $this->varnishCache($response, 30);

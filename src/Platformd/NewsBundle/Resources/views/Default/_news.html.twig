@@ -2,26 +2,33 @@
     <h2>
         <a class="controlled-spacing" href="{{ item | pd_link }}" {{ item is external ? 'target="_blank"' : '' }}>{{ item.title }}</a>
     </h2>
-    <h6>
-            {{ 'announced_date' | pd_trans({
-                '%posted_date%': ('sweepstakes_date_format' | pd_trans(item.postedAtArray))
-            })}}
-        </h6>
     <div class="article-content">
 
-        {% if item.image %}
-        <div class="article-image">
-            <a href="{{ item | pd_link }}"{{ item is external ? ' target="_blank"' : '' }}>
-                <img src="{{ item.image.filename | imagine_filter('article_list')  }}" alt="{{ item.title }}" />
-            </a>
-        </div>
+        {% if item.type == 'article' %}
+
+            {% if item.image and item.image.filename %}
+            <div class="article-image">
+                <a href="{{ item | pd_link }}"{{ item is external ? ' target="_blank"' : '' }}>
+                    <img src="{{ item.image.filename | imagine_filter('article_list')  }}" alt="{{ item.title }}" />
+                </a>
+            </div>
+            {% endif %}
+
         {% endif %}
 
         <div class="article-blurb">
+            <h6>
+                {{ (item.type == 'article' ? 'platformd.news.published_date' : 'platformd.news.announced_date') | pd_trans({
+                    '%posted_date%': (item.postedAt|date_translate)
+                })}}
 
+                <span class="article-comment-count">{{ 'platformd.news.comment_count' | transchoice((item.commentThreadId in commentCounts|keys ? commentCounts[item.commentThreadId] : 0),{
+                    '%comment_count%': (item.commentThreadId in commentCounts|keys ? commentCounts[item.commentThreadId] : 0)
+                })}}</span>
+            </h6>
 
             <p class="article-blurb-text">
-                {{ item.blurb | nl2br }}
+                {{ item.blurb | raw | nl2br }}
             </p>
         </div>
 
@@ -29,7 +36,7 @@
             {% if item is external %}
             <a href="{{ item | pd_link }}" target="_blank">{{ 'go_to_website' | pd_trans }}</a>
             {% else %}
-            <a href="{{ item | pd_link }}">{{ 'read_more' | pd_trans }}</a>
+            <a href="{{ item | pd_link }}">{{ 'platformd.news.listings.read_more' | pd_trans }}</a>
             {% endif %}
             <div class="clear"></div>
         </div>

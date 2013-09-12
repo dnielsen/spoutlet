@@ -516,6 +516,11 @@ liip_imagine:
                 relative_resize: { heighten: 300 }
                 crop: { start: [0, 0], size: [250, 250] }
 
+        featured_article_thumb:
+            quality: 100
+            filters:
+                crop: { start: [0, 0], size: [244, 92] }
+
 knp_time: ~
 
 exercise_html_purifier:
