@@ -519,7 +519,7 @@ liip_imagine:
         featured_article_thumb:
             quality: 100
             filters:
-                crop: { start: [0, 0], size: [244, 92] }
+                crop: { start: [0, 0], size: [274, 92] }
 
 knp_time: ~
 

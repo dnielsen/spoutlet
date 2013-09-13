@@ -486,13 +486,13 @@ ul.list-normal {
     font-style: italic;
 }
 
-#featured-news-article img {
-    width: 244px;
-    height: 92px;
+.article-thumbnail {
+    margin-top: 5px;
 }
 
-#featured-news-article a {
-    font-size: 18px;
+.article-thumbnail img {
+    width: 274px;
+    height: 92px;
 }
 
 .age-wrapper {

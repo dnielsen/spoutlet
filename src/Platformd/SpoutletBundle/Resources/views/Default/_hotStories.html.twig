@@ -9,17 +9,17 @@
     {# height is a hack for positioning  - see featuredContent.html.twig #}
     <div class="widget-content" id="news-content" style="height: 288px;">
         {% if featuredArticle %}
-            <div id="featured-news-article" class="widget-item">
-                <div class="title">
-                    <a class="widget-link news-ellipse-first" {{ featuredArticle | pd_link_target }} href="{{ featuredArticle | pd_link }}">{{ featuredArticle.title }}</a>
-                </div>
+            <div class="widget-item">
+
                 {% if featuredArticle.thumbnail %}
+                    <div class="title"><a class="widget-link news-ellipse-title" {{ featuredArticle | pd_link_target }} href="{{ featuredArticle | pd_link }}">{{ featuredArticle.title }}</a></div>
                     <div class="article-thumbnail">
                         <a href="{{ featuredArticle | pd_link }}" {{ featuredArticle | pd_link_target }}>
                             <img src="{{ featuredArticle.thumbnail.filename | imagine_filter('featured_article_thumb') }}" alt="{{ featuredArticle.title }}" />
                         </a>
                     </div>
                 {% else %}
+                    <a class="widget-link news-ellipse" {{ featuredArticle | pd_link_target }} href="{{ featuredArticle | pd_link }}">{{ featuredArticle.title }}</a>
                     <div class="article-type">{{ 'platformd.news.widget.article' | trans }}</div>
                 {% endif %}
             </div>
@@ -28,9 +28,7 @@
         {% if news %}
             {% for news_item in news if featuredArticle.id is not defined or news_item.id != featuredArticle.id %}
                 <div class="widget-item">
-                    <div{% if not featuredArticle and loop.first %} class="title"{% endif %}>
-                        <a class="widget-link news-ellipse{% if not featuredArticle and loop.first %}-first{% endif %}" {{ news_item | pd_link_target }} href="{{ news_item | pd_link }}">{{ news_item.title }}</a>
-                    </div>
+                    <a class="widget-link news-ellipse" {{ news_item | pd_link_target }} href="{{ news_item | pd_link }}">{{ news_item.title }}</a>
                     <div class="article-type">{{ ('platformd.news.widget.' ~ news_item.type|default('article')) | trans }}</div>
                 </div>
             {% endfor %}
@@ -42,13 +40,10 @@
 </div>
 
 <script type="text/javascript">
+    $('.news-ellipse-title').truncate({
+        width: '245'
+    });
     $('.news-ellipse').truncate({
-        width: '240'
+        width: '270'
     });
-
-    $('.news-ellipse-first').truncate({
-        width: '460'
-    });
-
-    $('#news-content').mCustomScrollbar();
 </script>

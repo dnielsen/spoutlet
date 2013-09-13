@@ -289,9 +289,10 @@ class DefaultController extends Controller
             ->findMostRecentArticleForSite($this->getCurrentSite());
 
         $exceptId = $featuredArticle ? $featuredArticle->getId() : null;
+        $articleCount = $featuredArticle ? ($featuredArticle->getThumbnail() ? 4 : 6) : 6;
 
         $news = $this->getNewsRepo()
-            ->findMostRecentForSiteExcept($this->getCurrentSite(), 8, $exceptId)
+            ->findMostRecentForSiteExcept($this->getCurrentSite(), $articleCount, $exceptId)
         ;
 
         $response = $this->render('SpoutletBundle:Default:_hotStories.html.twig', array(
