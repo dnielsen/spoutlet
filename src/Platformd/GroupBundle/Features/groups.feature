@@ -39,7 +39,7 @@ Feature: Groups Frontend
     Scenario: Edit a group
         Given I am on "/groups/"
         When I click on "Group 1"
-            And I click on "Group Settings"
+            And I click on "Settings"
             And I fill in the following:
                 | Group Name                | New test group updated     |
                 | Group Description         | Some updated information   |
