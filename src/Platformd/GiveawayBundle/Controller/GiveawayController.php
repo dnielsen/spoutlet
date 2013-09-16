@@ -17,6 +17,7 @@ use Platformd\GiveawayBundle\ViewModel\giveaway_show_key_data;
 use Platformd\GiveawayBundle\QueueMessage\KeyRequestQueueMessage;
 use Platformd\GiveawayBundle\Entity\KeyRequestState;
 use Platformd\UserBundle\Entity\RegistrationSource;
+use Platformd\SpoutletBundle\Util\CacheUtil;
 
 /**
 *
@@ -227,9 +228,13 @@ class GiveawayController extends Controller
 
     public function keyAction($giveawayId, $slug, Request $request, $joinGroup=true)
     {
-        $this->container->get('request')->headers->set('source-type', 1);
-        $this->container->get('request')->headers->set('source-id', 1);
         $this->basicSecurityCheck(array('ROLE_USER'));
+
+        $lockKey = 'GIVEAWAY_QUEUE_ENTRY_' . $slug . '_' . $this->getCurrentUser()->getId();
+
+        if(!$this->getCache()->getLock($lockKey, CacheUtil::DEFAULT_LOCK_DURATION_SECONDS)) {
+            return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
+        }
 
         $stateRepo   = $this->getKeyRequestStateRepo();
         $currentUser = $this->getCurrentUser();
@@ -273,27 +278,38 @@ class GiveawayController extends Controller
             die('Could not add you to the queue... please try again shortly.');
         }
 
-        if (!$state) {
-            $state = new KeyRequestState();
-
-            $state->setGiveaway($giveaway);
-            $state->setUser($currentUser);
-            $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_GIVEAWAY);
-        }
-
-        $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
-        $state->setStateReason(null);
-        $state->setUserHasSeenState(false);
-
         $em = $this->getDoctrine()->getEntityManager();
-        $em->persist($state);
-        $em->flush();
+        $em->getConnection()->beginTransaction();
+
+        try {
+            if (!$state) {
+                $state = new KeyRequestState();
+                $state->setGiveaway($giveaway);
+                $state->setUser($currentUser);
+                $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_GIVEAWAY);
+            }
+
+            $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
+            $state->setStateReason(null);
+            $state->setUserHasSeenState(false);
+
+            $em->persist($state);
+            $em->flush();
+            $em->getConnection()->commit();
+        } catch (\Exception $e) {
+            $em->getConnection()->rollback();
+            $em->close();
+
+            return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
+        }
 
         $path = $this->generateUrl('_giveaway_flash_message', array('giveawayId' => $giveaway->getId()));
         $this->getVarnishUtil()->banCachedObject($path, array('userId' => $userId), true);
 
         $path = $this->generateUrl('_giveaway_show_actions', array('giveawayId' => $giveaway->getId()));
         $this->getVarnishUtil()->banCachedObject($path, array('userId' => $userId), true);
+
+        $this->getCache()->releaseNamedLock($lockKey);
 
         return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
     }

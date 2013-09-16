@@ -12,10 +12,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use DateTime;
 use DateTimezone;
 use Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Platformd\GiveawayBundle\Entity\KeyRequestState
- * @ORM\Table(name="pd_key_request_state")
+ * @ORM\Table(name="pd_key_request_state", uniqueConstraints={
+ *    @ORM\UniqueConstraint(name="user_giveaway", columns={"user_id", "giveaway_id"}),
+ *    @ORM\UniqueConstraint(name="user_deal", columns={"user_id", "deal_id"})
+ * })
  * @ORM\Entity(repositoryClass="Platformd\GiveawayBundle\Entity\Repository\KeyRequestStateRepository")
  */
 

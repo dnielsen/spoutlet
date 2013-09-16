@@ -42,7 +42,7 @@ class CacheUtil
         }
     }
 
-    private function getLock($forKey, $lockDurationSeconds) {
+    public function getLock($forKey, $lockDurationSeconds) {
         $lockKeyName = self::LOCK_PREFIX_FOR_CACHE_KEYS.$forKey;
         $gotLock     = $this->cache->add($lockKeyName, 1, $lockDurationSeconds);
 
@@ -314,5 +314,19 @@ class CacheUtil
     public function addItem($key, $data, $expiry=86400)
     {
         $this->cache->set($key, serialize($data), $expiry);
+    }
+
+    public function releaseNamedLock($forKey)
+    {
+        $lockKeyName = self::LOCK_PREFIX_FOR_CACHE_KEYS.$forKey;
+        $lock        = $this->getFromCache($lockKeyName);
+
+        if ($lock === null) {
+            $this->logger->warn(self::LOG_MESSAGE_PREFIX.'Was asked to releaseNamedLock but the lock was null.');
+            return;
+        }
+
+        $this->logger->debug(self::LOG_MESSAGE_PREFIX.'Releasing lock - lock = "'.$lockKeyName.'".');
+        $this->cache->delete($lockKeyName);
     }
 }
