@@ -114,10 +114,6 @@ sub vcl_recv {
         error 750 "http://" + req.http.host  + "/galleries/";
     }
 
-    if (req.url ~ "^/healthCheck$") {
-        error 404 "Page Not Found.";
-    }
-
     if (req.esi_level == 0 && req.url ~ "^/esi/" && req.request != "BAN") { # an external client is requesting an esi
         error 404 "Page Not Found.";
     }
@@ -212,6 +208,10 @@ sub vcl_recv {
     }
 
     if (req.url ~ "^/siteSpringboard[/]?$") {
+        return (pass);
+    }
+
+    if (req.url ~ "^/healthCheck$") {
         return (pass);
     }
 

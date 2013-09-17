@@ -14,6 +14,7 @@ use Platformd\UserBundle\Form\Type\SuspendUserType;
 use Platformd\UserBundle\Exception\ApiRequestException;
 use Platformd\SpoutletBundle\Entity\Comment;
 use Platformd\CEVOBundle\Api\ApiException;
+use Platformd\UserBundle\Entity\SuspendedIpAddress;
 
 /**
  * Admin controller for users
@@ -174,6 +175,14 @@ class AdminController extends Controller
 
             // Disabled as this requires a cURL request to CEVO for each and every comment removed.
             //$this->removeUserArp($row[0]);
+        }
+
+        $ipAddress = $user->getLoginRecords()->first() ? $user->getLoginRecords()->first()->getIpAddress() : ($user->getIpAddress() ?: null);
+
+        if ($ipAddress) {
+            $suspendedIp = new SuspendedIpAddress($ipAddress);
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($suspendedIp);
         }
 
         $em->flush();

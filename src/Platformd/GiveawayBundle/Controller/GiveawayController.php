@@ -155,7 +155,7 @@ class GiveawayController extends Controller
         $data->giveaway_id                        = $giveaway->getId();
         $data->giveaway_show_keys                 = $giveaway->getShowKeys();
         $data->giveaway_allow_key_fetch           = $giveaway->allowKeyFetch();
-        $data->giveaway_allow_machine_code_submit = $giveaway->allowMachineCodeSubmit();
+        $data->giveaway_allow_machine_code_submit = $giveaway->allowMachineCodeSubmit() && $giveaway->isActive();
         $data->giveaway_redemption_steps          = $giveaway->getCleanedRedemptionInstructionsArray();
         $data->giveaway_show_get_key_button       = $giveaway->allowKeyFetch() && $data->giveaway_available_keys > 0 && !$assignedKey && !$inQueue;
 

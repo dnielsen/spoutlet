@@ -254,21 +254,6 @@ class UserRepository extends EntityRepository
         ;
     }
 
-    public function countOtherExpiredUsersByIpAddress($ipAddress, $username)
-    {
-        return $this->createQueryBuilder('u')
-            ->select('COUNT(u.id)')
-            ->andWhere('u.ipAddress = :ipAddress')
-            ->andWhere('u.usernameCanonical != :username')
-            ->andWhere('u.expiresAt > :now')
-            ->setParameter('ipAddress', $ipAddress)
-            ->setParameter('username', $username)
-            ->setParameter('now', new \DateTime)
-            ->getQuery()
-            ->getSingleScalarResult()
-        ;
-    }
-
     /**
     * @param \Doctrine\ORM\QueryBuilder $qb
     * @param $since

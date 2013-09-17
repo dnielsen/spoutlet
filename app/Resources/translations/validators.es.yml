@@ -38,3 +38,4 @@ error:
     select_status: Por favor, elija un estado de.
 
 fos_user.account_banned: Esta cuenta ha sido suspendida hasta %s. Si crees que esto es un error, envía un correo electrónico a contact@alienwarearena.com.
+fos_user.account_banned_no_date: Esta cuenta ha sido suspendida. Si crees que esto es un error, envía un correo electrónico a contact@alienwarearena.com.
