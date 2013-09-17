@@ -20,9 +20,6 @@
                 </div>
             </div>
         </div>
-        <div style="width:100%;padding:15px 0 15px 0;text-align:center;">
-            <a class="{% if not canVote %}disabled-button{% else %}btn{% endif %}" id="vote-now" href="{{ path('contest_vote', {slug: contest.slug})}}">{{ 'contests.show_page_vote_now' | trans }}</a>
-        </div>
     </div>
     <div class="right">
         <div class="widget-33" style="height:auto;">
