@@ -1156,7 +1156,7 @@ contests:
     show_page_vote_now: View Entries
     show_page_entries: Entries
     show_page_my_entries: Enter
-    show_page_agree_text: I have read and agree to the <a id="contest-official-rules" href="javascript:void(0);">Contest Rules</a>.
+    show_page_agree_text: I have read and agree to the <a id="contest-official-rules" href="javascript:void(0);">Official Rules</a>.
     vote_page_instruction: Voting Instructions
     inform_user_entrycount: You have currently entered %entryCount% entry, but may still enter more.|You have currently entered %entryCount% entries, but may still enter more.
     enter_page_success: You have now entered into %s. Please submit your %s(s) for this contest.
