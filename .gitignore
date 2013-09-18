@@ -27,3 +27,4 @@ VERSION
 /app/Resources/views/
 /app/Resources/translations/theme_*
 /app/config/config_server.yml
+/logs/
