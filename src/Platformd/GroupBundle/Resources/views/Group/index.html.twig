@@ -179,6 +179,7 @@
                 if(list.length <= groupsLoaded + i)
                 {
                     groupsLoaded+=i;
+                    updateCounts(type, groupsLoaded);
                     return;
                 }
                 if (i % 8 == 0) {
@@ -213,6 +214,10 @@
 
             groupsLoaded+=num;
 
+            updateCounts(type, groupsLoaded);
+        }
+
+        function updateCounts(type, groupsLoaded) {
             if (type == 'location') {
                 locationGroupsLoaded = groupsLoaded;
             } else if (type == 'topic') {
