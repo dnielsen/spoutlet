@@ -58,6 +58,7 @@ class AppKernel extends Kernel
             new Platformd\VideoBundle\VideoBundle(),
             new Platformd\SearchBundle\SearchBundle(),
             new Platformd\TagBundle\TagBundle(),
+            new Platformd\IdeaBundle\IdeaBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
