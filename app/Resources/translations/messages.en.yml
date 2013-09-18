@@ -1270,7 +1270,8 @@ platformd.key_request_processor_command.key_not_assigned_generic_email_body: |
         <br />
         1) We've ran out of keys before we could assign one to you while you were in the queue.<br />
         2) You are in a country or region that is not eligible to receive a key.<br />
-        3) A key has already been assigned to you.
+        3) A key has already been assigned to you.<br />
+        %extra_info%
     </p>
     <p>Alienware Arena Team</p>
 
