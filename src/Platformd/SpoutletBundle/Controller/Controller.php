@@ -35,6 +35,11 @@ class Controller extends BaseController
         $this->getVarnishUtil()->cacheResponse($response, $sharedMaxAge, $maxAge);
     }
 
+    protected function varnishBan($path, $parameters = array(), $bestEffort = false)
+    {
+        $this->getVarnishUtil()->banCachedObject($path, $parameters, $bestEffort);
+    }
+
     protected function getCurrentSiteId() {
         return $this->getCurrentSiteCached()->getId();
     }

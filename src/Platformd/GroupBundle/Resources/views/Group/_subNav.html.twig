@@ -2,7 +2,7 @@
     <div class="sub-nav groups-sub-nav">
         <ul>
             <li><a href="{{ path('group_show', {'slug' : group.slug }) }}">Group Home</a></li>
-            <span data-group-admin="true">
+            <span data-group-admin="true" style="display:none;">
                 <li><a href="{{ path('group_edit', { 'slug': group.slug }) }}">Settings</a></li>
                 <li><a href="{{ path('group_contact', { 'slug': group.slug }) }}">Email Members</a></li>
 
@@ -20,12 +20,14 @@
 
 <script type="text/javascript">
 
-    if (groupAdmin) {
-        $('[data-group-admin="true"]').show();
-        $('[data-group-admin="false"]').hide();
-    } else {
-        $('[data-group-admin="true"]').hide();
-        $('[data-group-admin="false"]').show();
-    }
+    $(function () {
+        if (groupAdmin) {
+            $('[data-group-admin="true"]').show();
+            $('[data-group-admin="false"]').hide();
+        } else {
+            $('[data-group-admin="true"]').hide();
+            $('[data-group-admin="false"]').show();
+        }
+    });
 
 </script>

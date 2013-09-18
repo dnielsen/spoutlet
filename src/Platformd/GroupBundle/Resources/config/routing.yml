@@ -2,6 +2,10 @@ _group_member_check:
     pattern: /esi/USER_SPECIFIC/groupMemberCheck/{groupId}
     defaults: { _controller: GroupBundle:Group:_groupMemberCheck }
 
+_group_show_content:
+    pattern: /esi/groupContent/{slug}
+    defaults: { _controller: GroupBundle:Group:_groupShowContent }
+
 military:
     pattern: /groups/military
     defaults: { _controller: SpoutletBundle:Default:military }

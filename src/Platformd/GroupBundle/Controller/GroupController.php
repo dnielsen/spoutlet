@@ -31,22 +31,22 @@ use Platformd\UserBundle\Entity\RegistrationSource;
  *
  */
 class GroupController extends Controller
-{
-    public function _groupMemberCheckAction($groupId)
+
+{    public function _groupMemberCheckAction($groupId)
     {
         $group = $this->getGroup($groupId);
         $user  = $this->getUser();
 
         $this->ensureGroupExists($group);
 
-        $isMember          = $this->getGroupManager()->isMember($user, $group);
-        $isOwner           = $group->getOwner() == $user;
-        $isApplicant       = $this->getGroupManager()->isApplicant($user, $group);
+        $isMember    = $this->getGroupManager()->isMember($user, $group);
+        $isOwner     = $group->getOwner() == $user;
+        $isApplicant = $this->getGroupManager()->isApplicant($user, $group);
 
-        $response          = $this->render('GroupBundle:Group:_groupMemberCheck.html.twig', array(
-            'isMember'          => $isMember,
-            'isOwner'           => $isOwner,
-            'isApplicant'       => $isApplicant,
+        $response = $this->render('GroupBundle:Group:_groupMemberCheck.html.twig', array(
+            'isMember'    => $isMember,
+            'isOwner'     => $isOwner,
+            'isApplicant' => $isApplicant,
         ));
 
         $this->varnishCache($response, 1);
@@ -434,6 +434,8 @@ Alienware Arena Team
 
         }
 
+        $this->varnishBan($this->generateUrl('_group_show_content', array('slug' => $slug)));
+
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
     }
 
@@ -485,6 +487,7 @@ Alienware Arena Team
         }
 
         $this->setFlash('success', 'You have successfully joined this group!');
+        $this->varnishBan($this->generateUrl('_group_show_content', array('slug' => $slug)));
 
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
     }
@@ -697,6 +700,53 @@ Alienware Arena Team
             'groupManager' => $this->getGroupManager(),
         ));
     }
+
+    public function _groupNewsContentAction($slug)
+    {
+        $this->addGroupsBreadcrumb();
+
+        $group  = $this->getGroupBySlug($slug);
+
+        if ($group && $group->getDeleted()) {
+            $this->setFlash('error', 'Sorry, this group does not exist.');
+            return $this->redirect($this->generateUrl('groups'));
+        }
+
+        $commentTotal   = $this->getTotalCommentCountForGroup('group-'.$group->getId());
+        $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group, 5);
+        $pastEvents     = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group, 5);
+        $memberCount    = $this->getGroupManager()->getMembershipCountByGroup($group);
+
+        $contest = $this->getContestRepository()->findContestByGroup($group);
+
+        $contestMemberCount = 0;
+        $isEntered = false;
+
+        if($contest != null) {
+            $contestMemberCount = $this->getMemberActionRepository()->getMembersJoinedCountByGroup($group, $contest->getVotingStart(), $contest->getVotingEnd());
+            $isEntered = $contest->getVotingEnd() > new \DateTime('now');
+        }
+
+        $permalink   = $this->get('platformd.model.comment_manager')->checkThread($group);
+
+        $response = $this->render('GroupBundle:Group:_showContent.html.twig', array(
+            'commentTotal'   => $commentTotal,
+            'group'          => $group,
+            'isEntered'      => $isEntered,
+            'contestCount'   => $contestMemberCount,
+            'contest'        => $contest,
+            'upcomingEvents' => $upcomingEvents,
+            'pastEvents'     => $pastEvents,
+            'memberCount'    => $memberCount,
+            'permalink'      => $permalink,
+            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_GROUP, 'id'=>$group->getId()),
+        ));
+
+        $this->varnishCache($response, 60);
+
+        return $response;
+    }
+
 
     public function addNewsAction($slug, Request $request)
     {
@@ -1553,17 +1603,21 @@ Alienware Arena Team
 
     public function showAction($slug)
     {
+        return $this->render('GroupBundle:Group:show.html.twig', array(
+            'slug' => $slug,
+        ));
+    }
+
+    public function _groupShowContentAction($slug)
+    {
         $this->addGroupsBreadcrumb();
 
-        $user   = $this->getCurrentUser();
         $group  = $this->getGroupBySlug($slug);
 
         if ($group && $group->getDeleted()) {
             $this->setFlash('error', 'Sorry, this group does not exist.');
             return $this->redirect($this->generateUrl('groups'));
         }
-
-        $this->ensureAllowed($group, 'ViewGroup', false);
 
         $commentTotal   = $this->getTotalCommentCountForGroup('group-'.$group->getId());
         $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group, 5);
@@ -1582,7 +1636,7 @@ Alienware Arena Team
 
         $permalink   = $this->get('platformd.model.comment_manager')->checkThread($group);
 
-        return $this->render('GroupBundle:Group:show.html.twig', array(
+        $response = $this->render('GroupBundle:Group:_showContent.html.twig', array(
             'commentTotal'   => $commentTotal,
             'group'          => $group,
             'isEntered'      => $isEntered,
@@ -1591,10 +1645,13 @@ Alienware Arena Team
             'upcomingEvents' => $upcomingEvents,
             'pastEvents'     => $pastEvents,
             'memberCount'    => $memberCount,
-            'groupManager'   => $this->getGroupManager(),
             'permalink'      => $permalink,
             'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_GROUP, 'id'=>$group->getId()),
         ));
+
+        $this->varnishCache($response, 60);
+
+        return $response;
     }
 
     public function showPrefixedAction($slug)
