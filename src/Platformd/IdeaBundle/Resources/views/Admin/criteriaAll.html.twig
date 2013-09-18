@@ -1,0 +1,20 @@
+{% extends 'IdeaBundle::base.html.twig' %}
+{% block content %}
+    <h1>Criteria Configuration Panel</h1>
+
+    <form action="{{ path('idea_admin_criteria_all', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+
+        <input type="submit" value="New" name="new" formnovalidate />
+        <input type="submit" value="Edit" name="edit" />
+        <input type="submit" value="Delete" name="delete" />
+
+    </form>
+
+    <br><br>
+
+    <form action = {{ path('idea_admin', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }} method="get">
+        <input type="submit" value="Back">
+    </form>
+
+{% endblock %}

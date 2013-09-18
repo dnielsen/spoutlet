@@ -28,10 +28,10 @@ day: Day
 
 # some of these should really be in FOSUserBundle.en.yml with the rest of the labels
 # but for some reason, they're run through the forms domain...
-fos_user_registration_form_birthdate: "Date of Birth:"
+fos_user_registration_form_birthdate: "Date of Birth"
 fos_user_registration_form_hasAlienwareSystem: "Do you own an Alienware system?"
 fos_user_registration_form_termsAccepted: |
-    I have read and agree to the
+    I have read and agreed to the
     <a href="%terms_url%" target="_blank">Terms & Conditions</a> and
     <a href="%privacy_url%" target="_blank">Privacy Policy</a>.
 fos_user_registration_form_subscribedAlienwareEvents: "Subscribe me to receive news on the latest giveaways, contests, events and more from Alienware Arena via email."
@@ -76,3 +76,21 @@ platformd.unsubscribe.note: Please note that you will continue to receive event-
 platformd.unsubscribe.user_not_found: Your email address was not found.
 platformd.unsubscribe.success: Your email preferences have been updated.
 platformd.unsubscribe.failure: A username has never been assigned to your account. Please email contact@alienwarearena.com with the username you would like to have in order to complete your password reset.
+form_displayName: Criteria Name
+form_description: Criteria Description
+form_name: Event Title
+form_content: Event Description
+form_startsAt: Start Date
+form_endsAt: End Date
+form_location: Location
+form_address1: Address Line 1
+form_address2: Address Line 2
+form_allowedVoters: Current Judges
+form_registrationOption: Registration
+form_isSubmissionActive: Submission
+form_isVotingActive: Judging
+form_title: Title
+form_linkDescription: Description
+form_url: URL
+form_type: Type
+form_file: Image to Upload

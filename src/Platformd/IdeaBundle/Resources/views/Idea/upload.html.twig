@@ -1,0 +1,15 @@
+{% extends 'IdeaBundle::base.html.twig' %}
+
+{% block content %}
+
+    <h1>Upload File</h1>
+
+    <form action="{{ path('idea_upload', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+
+        <br><br>
+        <input type="hidden" name="id" value={{ id }}>
+        <input type="submit" value="Upload Image" />
+    </form>
+
+{% endblock %}

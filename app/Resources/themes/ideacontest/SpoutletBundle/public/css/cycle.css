@@ -1,0 +1,64 @@
+
+/*::::::::::::::: SLIDER CONTAINERS :::::::::::::::*/
+
+#slideshow { 
+	width: 644px;
+	height: 340px;
+	margin: 0 auto;
+	padding: 0;
+}
+
+.unicusSlides {
+	width: 644px;
+	height: 340px;
+}
+
+/*::::::::::::::: CONTROL BULLETS :::::::::::::::*/	
+
+#bullets { 
+	opacity: .6; 
+    filter: alpha(opacity=60);
+	width: 140px;
+	min-width: 30px; 
+	height: 30px;
+	padding: 0 5px;
+	margin: 0 auto;
+	margin-top: 30px;
+	z-index: 50;
+}
+
+a.service0,
+a.service1,
+a.service2,
+a.service3,
+a.service4,
+a.service5,
+a.service6,
+a.service7 {
+	font-size: 2.5em; 
+	line-height: 0.75em; 
+	color: #bfbfbf;
+	text-decoration: none; 
+	padding-right: 5px;
+}
+a.service0:hover,
+a.service1:hover,
+a.service2:hover,
+a.service3:hover,
+a.service4:hover,
+a.service5:hover,
+a.service6:hover,
+a.service7:hover {
+	color: #34acda;
+}
+a.service0.activeSlide,
+a.service1.activeSlide,
+a.service2.activeSlide,
+a.service3.activeSlide,
+a.service4.activeSlide,
+a.service5.activeSlide,
+a.service6.activeSlide,
+a.service7.activeSlide {
+	color: #34acda;
+}
+

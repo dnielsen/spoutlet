@@ -17,11 +17,13 @@ class GroupType extends AbstractType
     private $user;
     private $group;
     private $tagManager;
+    private $hasMultiSiteGroups;
 
-    public function __construct($user, $group, $tagManager) {
+    public function __construct($user, $group, $tagManager, $hasMultiSiteGroups) {
         $this->user         = $user;
         $this->group        = $group;
         $this->tagManager   = $tagManager;
+        $this->hasMultiSiteGroups = $hasMultiSiteGroups;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
@@ -72,14 +74,15 @@ class GroupType extends AbstractType
 
             if ($this->user instanceof User && $this->user->hasRole('ROLE_SUPER_ADMIN')) {
 
-                $builder->add('sites', 'entity', array(
-                    'class'    => 'SpoutletBundle:Site',
-                    'multiple' => true,
-                    'expanded' => true,
-                    'property' => 'name'
-                ))
-                ->add('allLocales', 'checkbox', array('label' => 'Enable for all Locales', 'help' => 'If set to true this overrides the "locales" setting and sets this group to be visible to all sites'));
-
+                if ($this->hasMultiSiteGroups) {
+                    $builder->add('sites', 'entity', array(
+                            'class'    => 'SpoutletBundle:Site',
+                            'multiple' => true,
+                            'expanded' => true,
+                            'property' => 'name'
+                        ))
+                        ->add('allLocales', 'checkbox', array('label' => 'Enable for all Locales', 'help' => 'If set to true this overrides the "locales" setting and sets this group to be visible to all sites'));
+                }
 
                 if ($this->group->getId() > 0) {
                     $builder->add('deleted', 'checkbox', array(

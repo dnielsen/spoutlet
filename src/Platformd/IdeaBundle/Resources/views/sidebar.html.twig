@@ -1,0 +1,15 @@
+{% if not app.user %}
+    <p><a href="{{ path('fos_user_registration_register') }}" class="btnLg2">Join Now &rsaquo;</a></p>
+{% endif %}
+
+<div class="sponsorLogo">
+    <a href="https://www.hpcloud.com/" target="_blank">
+        <img src="{{ asset('bundles/idea/img/hpcloud_logo.png') }}" width="190" height="135" alt="HP Cloud">
+    </a>
+    <a href="http://www.takeflightgraphics.com" target="_blank">
+        <img src="{{ asset('bundles/idea/img/logo-tfg-lg.gif') }}" width="190" height="135" alt="Take Flight Graphics">
+    </a>
+    <a href="http://www.cloudcamp.org/" target="_blank">
+        <img src="{{ asset('bundles/idea/img/logo-cloudcamp-lg.gif') }}" width="190" height="135" alt="CloudCamp">
+    </a>
+</div>

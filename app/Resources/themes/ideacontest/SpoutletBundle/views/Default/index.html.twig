@@ -1,0 +1,13 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+
+    <h2 class="spcr-b">Groups</h2>
+
+    {%  render url('_all_groups') %}
+
+    <a href="{{ path('group_new') }}">Create a new group</a>
+
+
+
+{% endblock %}

@@ -280,6 +280,13 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     protected $deals;
 
     /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\EventBundle\Entity\GroupEvent", mappedBy="group")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $events;
+
+    /**
      * @var Platformd\TagBundle\Entity\Tag[]
      *
      */
@@ -294,6 +301,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         $this->contentReports           = new ArrayCollection();
         $this->deals                    = new ArrayCollection();
         $this->videos                   = new ArrayCollection();
+        $this->events                   = new ArrayCollection();
     }
 
     public function __toString() {
@@ -937,6 +945,19 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     public function getDeals()
     {
         return $this->deals;
+    }
+
+    public function setEvents($value)
+    {
+        $this->events = $value;
+    }
+    public function getEvents()
+    {
+        return $this->events;
+    }
+    public function addEvent($event)
+    {
+        $this->events[] = $event;
     }
 
     public function isOwner($user)

@@ -16,6 +16,7 @@ imports:
     - { resource: "@SearchBundle/Resources/config/services.yml" }
     - { resource: "@TagBundle/Resources/config/services.yml" }
     - { resource: "@SweepstakesBundle/Resources/config/services.yml" }
+    - { resource: "@IdeaBundle/Resources/config/services.yml" }
 
 framework:
     #esi:             ~
@@ -168,7 +169,7 @@ parameters:
 
     # this allows config_dev.yml to override where emails that are sent from the system (instead of the "real" recipient)... do not change this in config.yml though
     email_destination_override: false
-    email_destination_override_with: chris.magee@gametheworld.com
+    email_destination_override_with: osman@platformd.com
 
     # if set to true, the ipLookupUtil will read the contents of a file named "overrideCountry"
     # in the %ip2location_lookup_directory% directory and return it after an ip address lookup.
@@ -181,40 +182,25 @@ parameters:
     available_locales:
         # we're abusing the locales to make our many "sites"
         # this will change in the future
-        - en    # demo.
-        - ja    # japan.
-        - zh    # china.
-        - en_AU # au. (australia + new zealand)
-        - en_GB # europe.
-        - en_IN # india.
-        - es    # latinam. (Latin America)
-        - en_SG # singapore. Malaysia / Singapore
-        - en_US # us. (USA!)
+        - en_sjsu           # sjsu.
+        - en_dataminingcamp # dataminingcamp.
+        - en_hackomaha      # hackomaha.
+        - en_rollingout     # rollingout.
 
     # used by the router
     site_host_map:
         # %host_suffix% might be something like "staging"
-        en:     demo%host_suffix%.%base_host%
-        ja:     japan%host_suffix%.%base_host%
-        zh:     china%host_suffix%.%base_host%
-        en_AU:  anz%host_suffix%.%base_host%
-        en_GB:  eu%host_suffix%.%base_host%
-        en_IN:  in%host_suffix%.%base_host%
-        es:     latam%host_suffix%.%base_host%
-        en_SG:  mysg%host_suffix%.%base_host%
-        en_US:  na%host_suffix%.%base_host%
+        en_sjsu:            sjsu%host_suffix%.%base_host%
+        en_dataminingcamp:  dataminingcamp%host_suffix%.%base_host%
+        en_hackomaha:       hackomaha%host_suffix%.%base_host%
+        en_rollingout:      rollingout%host_suffix%.%base_host%
 
     # this is repeated in the multitenancy manager - should not be
     platformd_sites:
-        en: Demo
-        ja: Japan
-        zh: China
-        en_AU: Australia / New Zealand
-        en_GB: Europe
-        en_IN: India
-        es:    Latin America
-        en_SG: Singapore
-        en_US: North America
+        en_sjsu: SanJoseStateUniversity
+        en_dataminingcamp: DataMiningCamp
+        en_hackomaha: HackOmaha
+        en_rollingout: RollingOut
 
     # an array of "sites" where we host their main site
     # used by the SiteProtectionListener to prevent, for example, Latin America users
@@ -235,8 +221,8 @@ parameters:
     email_destination_override: false
     email_destination_override_with: ""
 
-    sender_email_address: "noreply@%base_host%"
-    sender_email_name: Alienware Arena
+    sender_email_address: "noreply@cloudcamp.org"
+    sender_email_name: CloudCamp
     platformd.news_source:
         alienware: source_alienware
         cevo: CEVO
@@ -345,7 +331,7 @@ parameters:
             - 台湾省
 
 jms_i18n_routing:
-    default_locale: %locale%
+    default_locale: en_sjsu
     locales: %available_locales%
     strategy: custom
     hosts: %site_host_map%
@@ -524,12 +510,7 @@ exercise_html_purifier:
     editor_basic:
         HTML.Allowed: a[href], p, strong, u, em, ul, ol, li, div, *[style], br
     editor_admin:
-        HTML.Allowed: a[href], p, strong, hr, u, em, ul, ol, li, h1, h2, h3, h4, img[src|width|height], strike, sub, sup, blockquote, table[border|cellpadding|cellspacing], tbody, tr, td[width|colspan], thead, tfoot, th[width], pre, span, div, *[style], *[class], br, iframe[width|height|src|frameborder], object[width|height], param[name|value]
-        HTML.SafeIframe: true
-        URI.SafeIframeRegexp: '%%//(www.youtube.com/embed/|player.vimeo.com/video/)%%'
-        HTML.SafeObject: true
-        Output.FlashCompat: true
-        HTML.FlashAllowFullScreen: true
+        HTML.Allowed: a[href], p, strong, hr, u, em, ul, ol, li, h1, h2, h3, h4, img[src|width|height], strike, sub, sup, blockquote, table[border|cellpadding|cellspacing], tbody, tr, td[width|colspan], thead, tfoot, th[width], pre, span, div, *[style], *[class], br
 
 liip_theme:
     themes: %liip_enabled_themes%

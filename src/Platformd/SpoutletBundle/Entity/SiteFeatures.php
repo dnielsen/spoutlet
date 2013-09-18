@@ -182,6 +182,11 @@ class SiteFeatures
     private $hasStaticPhotoWidget = false;
 
     /**
+     * @ORM\Column(name="has_multi_site_groups", type="boolean")
+     */
+    private $hasMultiSiteGroups = false;
+
+    /**
      * Get id
      *
      * @return integer
@@ -540,6 +545,17 @@ class SiteFeatures
     public function setHasStaticPhotoWidget($value)
     {
         $this->hasStaticPhotoWidget = $value;
+        return $this;
+    }
+
+    public function getHasMultiSiteGroups()
+    {
+        return $this->hasMultiSiteGroups;
+    }
+
+    public function setHasMultiSiteGroups($value)
+    {
+        $this->hasMultiSiteGroups = $value;
         return $this;
     }
 }

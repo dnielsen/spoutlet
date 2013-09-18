@@ -1,0 +1,64 @@
+{% extends 'IdeaBundle::base.html.twig' %}
+
+{% block content %}
+
+    <div class="left"><h1>Proposed Ideas - Round {{ round }}</h1></div>
+
+    {% if submitActive %}
+        <form action = {{ path('idea_create_form', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }} method="get" class="right">
+            <input type="submit" value="Add Idea" class="right">
+        </form>
+    {%  endif %}
+
+    <br><br><br>
+
+    <form action = {{ path('idea_show_all', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }} id='filterForm' method="get">
+        <table>
+        <tr>
+            <td><input type="text" name="tag" tabindex="1" placeholder="Filter by tag" value="{{tag}}" /></td>
+            <td><input type="submit" value="Filter" class="btnMdm" /></td>
+            {% if tag %}<td style="padding-left: 5px"><a href="{{ path('idea_show_all', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}"><input type="button" value="View All" class="btnMdm" /></a></td>{% endif %}
+        </tr>
+        </table><br>
+    </form>
+
+	{% for idea in ideas %}
+        <div id="idea">
+            <div class="voteBx">
+                <p><strong class="lrgtxt">{{  idea.numFollowers }}</strong><br>
+                    <span class="tnytxt gry">followers</span></p>
+                <form action = "{{ path('idea_follow', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}" method="POST">
+                    <input type="hidden" name="id" value="{{idea.id}}">
+                    <input type="hidden" name="source" value="list">
+                    <input type="hidden" name="tag" value="{{ tag }}">
+                    <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnTny" value="Follow"{% else %}class="btnTnyInv" value="Unfollow"{% endif %}{% else %}class="btnTny" value="Follow"{% endif %}>
+                </form>
+            </div>
+
+            <div class="session" style="overflow:hidden">
+                <a href="{{ path('idea_show', {'groupSlug': groupSlug, 'eventSlug': eventSlug, 'id': idea.id}) }}">
+                    <h3>{{ idea.name }}</h3>
+                </a>
+                <p>{{ idea.description|truncate(300) }}</p>
+
+                <p class="right tnytxt">Proposed by: <a href="{{ path('profile', {'groupSlug': groupSlug, 'username': idea.creator.username}) }}">{{idea.creator.name}}</a>{% if idea.members %}, {{idea.members}}{% endif %}</p>
+                <div class="kWords">
+                    <ul>
+                        <li>Tags</li>
+                        {% for tag in idea.tags %}
+                            <li><a href="{{ path('idea_show_all', {'groupSlug': groupSlug, 'eventSlug': eventSlug, 'tag': tag.tagName}) }}">{{ tag.tagName }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="clr"></div>
+            <hr>
+        </div>
+
+	{% endfor %}
+
+    <form action = {{ path('idea_index', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }} method="get">
+        <input type="submit" value="Home">
+    </form>
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'FOSUserBundle::layout.html.twig' %}
+
+{% block fos_user_content %}
+    {% if error %}
+        <div>Invalid credentials, please try again.</div><br>
+    {% else %}
+        <h1>Please sign in:</h1>
+    {% endif %}
+
+    <form action="{{ path("_fos_user_security_check") }}" method="post">
+
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="_username" value="{{ last_username }}" class="auth" tabindex="1"/>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="_password" class="auth" tabindex="2"/>
+
+        <label for="remember_me">{{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}</label>
+        <input type="checkbox" id="remember_me" name="_remember_me" value="on" tabindex="3"/>
+
+        <br><br>
+        <input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" class='btnMdm left'/>
+        <a href="{{ path('fos_user_registration_register') }}"><input type="button" class="btnMdm left marginlft" value="Join Now"</a>
+
+    </form>
+
+{% endblock %}

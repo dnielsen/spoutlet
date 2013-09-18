@@ -1,0 +1,9 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title event.name %}
+
+{% block content %}
+
+    {% render url('idea_index', { 'groupSlug': group.slug, 'eventSlug': event.slug }) %}
+
+{%  endblock %}

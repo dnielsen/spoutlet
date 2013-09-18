@@ -1,0 +1,55 @@
+{% extends 'IdeaBundle::base.html.twig' %}
+
+{% block content %}
+
+    <table class="tblStyle">
+        {% if ownProfile %}
+            <tr>
+                <td><a href="{{ path('change_password') }}">Change Password</a></td><td></td>
+            </tr>
+        {% endif %}
+        <tr>
+            <td class="padrt"><strong>Username:</strong></td>
+            <td> {{ user.username }} </td>
+        </tr>
+        <tr>
+            <td class="padrt"><strong>Full Name:</strong></td>
+            <td> {{ user.name }} </td>
+        </tr>
+        <tr>
+            <td class="padrt"><strong>Email:</strong></td>
+            <td> {{ user.email }} </td>
+        </tr>
+        {% if user.school %}
+        <tr>
+            <td class="padrt"><strong>Organization:</strong></td>
+            <td> {{ user.school }} </td>
+        </tr>
+        {% endif %}
+        {% if user.major %}
+        <tr>
+            <td class="padrt"><strong>Focus:</strong></td>
+            <td> {{ user.major }} </td>
+        </tr>
+        {% endif %}
+        <tr>
+            <td class="padrt"><strong>Affiliation:</strong></td>
+            <td> {{ user.affiliation }} </td>
+        </tr>
+        <tr>
+            <td class="padrt"><strong>Role:</strong></td>
+            <td> {{ user.svicRole }} </td>
+        </tr>
+        <tr>
+            <td class="padrt"><strong>Proposed Ideas:</strong></td>
+            <td>
+                {% for idea in user.ideas %}
+                    {% set event = idea.getEvent %}
+                    {% set group = event.getGroup %}
+                    {% if idea.canUserView(app.user) %}<a href="{{ path('idea_show', {'groupSlug': group.getSlug, 'eventSlug': event.getSlug, 'id': idea.id}) }}">{{ group.name }} - {{ event.name }} - {{ idea.name }}</a><br>{% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+    </table>
+
+{% endblock %}

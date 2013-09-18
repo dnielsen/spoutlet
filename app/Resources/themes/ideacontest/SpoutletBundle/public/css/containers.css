@@ -1,0 +1,309 @@
+
+
+/*::::::::::::::: PAGE CONTAINER :::::::::::::::*/
+
+#wrapper-ht { /* sets up properties for bottom fixed footer */
+	width: 100%;
+	min-height: 100%; /* ie6 hack */
+	height: auto !important; /* ie6 hack */
+	height: 100%;
+	margin: 0 auto -350px;
+}
+
+/*::::::::::::::: HEADER :::::::::::::::*/
+
+#header-mp, #header {
+	position: relative;
+	width: 1050px;
+	margin: 0 auto;
+}
+#header-mp {
+	height: 655px;
+}
+#header {
+	height: 220px;
+
+}
+	#topSocial { /* For styling, see list-links.css */
+		width: 1050px;
+		height: 35px;
+		text-align: right;
+	}
+		#topNav {
+			position: absolute;
+			top: 35px;
+			right: 0;
+			font-size: 12px;
+		}
+	#brand {
+		margin-top: -10px;
+		padding-bottom: 10px;
+	}
+	#tagline {
+		position: absolute;
+		top: 123px;
+		right: 0;
+	}
+		#tagline span {
+			font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
+			font-size: 32px;
+			font-weight: bold;
+			letter-spacing: -1px;
+		}
+
+	/*::::::::::::::: NAV :::::::::::::::*/
+
+	#navWrap {
+		width: 1050px;
+		height: 32px;
+		padding-top: 12px;
+		margin: 0 auto 20px;
+		border-top: 1px dashed #ccc;
+		border-bottom: 1px dashed #ccc;
+	}
+
+	/*::::::::::::::: END NAV :::::::::::::::*/
+
+	/* see rs-default.css for content-slider styles for royal slider element */
+
+	#intro {
+		float: right;
+		width: 644px;
+		height: 340px;
+		padding: 20px;
+		padding-top: 40px;
+		border: 1px dashed #ccc;
+		text-align: center;
+	}
+
+/*::::::::::::::: PAGE CONTENT CONTAINERs :::::::::::::::*/
+
+#content {
+	width: 1050px;
+	margin: 0 auto;
+	margin-bottom: 50px;
+}
+#colRt {
+	float: right;
+	width: 271px;
+	height: 425px;
+}
+#row1, #row2 {
+	float: left;
+	width: 757px;
+	margin-bottom: 15px;
+	border-top: 1px dashed #ccc;
+}
+#row1 {
+	height: 210px;
+}
+#row2 {
+	padding-top: 15px;
+}
+	.cBx1 {
+		float: left;
+		width: 644px;
+		padding-top: 8px;
+	}
+	.cBx2 {
+		float: right;
+		padding-top: 15px;
+		padding-left: 15px;
+		border-left: 1px dashed #ccc;
+	}
+	.cBx2 {
+		width: 364px;
+		height: 195px;
+	}
+		.cBx2 #sponsors  {
+			display: block;
+			margin: 0 auto;
+		}
+
+/*********** SUBPAGE CONTAINERs ***********/
+
+	.col1 {
+		float: left;
+		width: 698px;
+		padding-right: 20px;
+		padding-bottom: 30px;
+		margin-right: 15px;
+		border-right: 1px dashed #ccc;
+	}
+		.col1 > h2 {
+			margin-top: 15px;
+		}
+		.col1 h2 + p {
+			margin-top: 0;
+			padding-top: 3px;
+		}
+	.col2 {
+		float: left;
+		width: 275px;
+		padding: 0 15px 15px;
+	}
+
+	.kWords p {
+		padding-top: 0;
+	}
+	.voteBx {
+		float: left;
+		width: 75px; /* margin-right: 20px; */
+		background: #fbfbfb;
+	}
+		.voteBx p {
+			border: 1px solid #e2e2e2;
+			-webkit-border-radius: 4px;
+			-moz-border-radius: 4px;
+			border-radius: 4px;
+			behavior: url("PIE.php");
+			font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
+			font-size: 18px;
+			color: #616161;
+			text-align: center;
+		}
+	.session {
+		float: right;
+		width: 605px;
+	}
+	.session-mp {
+		float: right;
+		width: 665px;
+	}
+
+	.sponsorLogo a {
+		display: block;
+		width: 190px;
+		height: 135px;
+		margin: 0 auto;
+	}
+		.sponsorLogo img {
+			margin-top: 20px;
+		}
+
+/*::::::::::::::: TABLE :::::::::::::::*/
+
+table.tblStyle {
+	width: 100%;
+}
+	.tblStyle td {
+		padding: 2px;
+		text-align: right;
+		border-bottom: 1px solid #e5e5e5;
+	}
+        .tblStyle td:first-child {
+            text-align: left;
+        }
+
+    .tblStyle th {
+		padding: 5px;
+        border-bottom: 1px solid #e5e5e5;
+		text-align: right;
+	}
+        .tblStyle th:first-child {
+            font-size: 18px;
+            text-align: left;
+        }
+#eventDetails {
+    margin-top: 20px;
+}
+
+table.tblStyle2 {
+	width: 100%;
+}
+	.tblStyle2 td {
+		font-size: 12px;
+		line-height: 15px;
+        text-align: right;
+	}
+		.tblStyle2 td:first-child {
+			font-size: 14px;
+			line-height: 20px;
+             text-align: left;
+		}
+	.tblStyle2 td, .tblStyle2 th {
+		padding: 15px 3px;
+		border-bottom: 1px solid #e5e5e5;
+	}
+	.tblStyle2 th {
+		font-size: 11px;
+		font-weight: normal;
+		text-transform: uppercase;
+		text-align: right;
+	}
+    		.tblStyle2 th:first-child {
+                 text-align: left;
+            }
+.fill {
+	background: #f5f5f5;
+}
+
+.paddedTable td {
+	padding: 5px 10px;
+	font-size: 16px;
+}
+
+.prevNext td {
+    padding: 5px 10px;
+    font-size: 16px;
+    width: 115px;
+}
+
+
+/*::::::::::::::: FOOTER :::::::::::::::*/
+
+
+#footer, .push {  /* sets up properties for bottom fixed footer */
+	height: 350px;
+}
+#footer { /* For footer link lists refer to lists-links.css */
+	width: 100%;
+	border-top: 1px dashed #ccc;
+	background: #f9f9f9;
+}
+	#ftr-content {
+		width: 1050px;
+		margin: 0 auto;
+		padding-top: 35px;
+	}
+	#ftr-content, #ftr-content p {
+		font: normal 12px/19px 'Muli', Arial, sans-serif;
+		font-weight: 400;
+	}
+	.ftrcol {
+		float: left;
+		width: 150px;
+		height: 267px;
+		padding-left: 40px;
+	}
+		#ftr-content .ftrcol:first-child {
+			padding-left: 0;
+		}
+	#contactNfo {
+		float: right;
+		width: 250px;
+		padding-left: 20px;
+		border-left: 1px dashed #ccc;
+	}
+
+/*::::::::::::::: SITE CREDIT, COPYRIGHT :::::::::::::::*/
+
+#credit, #copyright {
+	height: 10px;
+	border-top: 1px dashed #ccc;
+	padding-top: 10px;
+	font: 11px/16px 'Muli', Arial, sans-serif;
+	font-weight: 400;
+}
+#credit { /* see links-lists.css for link properties */
+	clear: both;
+	float: left;
+	width: 525px;
+	color: #ccc;
+}
+
+#copyright {
+	float: right;
+	width: 525px;
+	text-align: right;
+}

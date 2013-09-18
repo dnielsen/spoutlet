@@ -1,0 +1,96 @@
+{% extends 'IdeaBundle::base.html.twig' %}
+
+{% block content %}
+    <h1>Round {{ round }} Results</h1>
+
+    {# Filter by tag text field / Link to create new criteria #}
+    {% if criteriaList|length == 0 %}
+        <h2>Please define the judging criteria</h2>
+        <form action = {{ path('idea_admin_criteria_all', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }} method="get">
+            <input type="submit" value="Judging Criteria">
+        </form>
+
+    {% else %}
+        <table class="left">
+            <form action = {{ path('idea_summary', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }} id='filterForm' method="get">
+                <td><input type="text" name="tag" tabindex="1" placeholder="Filter by tag" value="{{tag}}" /></td>
+                <td><input type="submit" value="Filter" class="btnMdm" /></td>
+                {% if tag %}<td style="padding-left: 5px"><a href="{{ path('idea_summary', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}"><input type="button" value="View All" class="btnMdm" /></a></td>{% endif %}
+            <input type="hidden" name="crit" tabindex="1" value='{{crit}}' />
+            </form>
+        </table>
+
+        <table class="tblStyle">
+            {# loop over criteria list to add each header #}
+            <tr>
+                <th>Idea Name</th>
+                {% for criteria in criteriaList %}
+                    <th>
+                        <a href="{{ path('idea_summary', {'groupSlug': groupSlug, 'eventSlug': eventSlug, 'crit': criteria.id, 'tag': tag}) }}">
+                            {{criteria.displayName}}
+                        </a>
+                    </th>
+                {% endfor %}
+                <th><a href="{{ path('idea_summary', {'groupSlug': groupSlug, 'eventSlug': eventSlug, 'tag': tag}) }}">Average</a></th>
+                <th>Promote</th>
+            </tr>
+
+            {# loop over each idea, loop over each criteria #}
+
+            <form action = {{ path('idea_advance', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }} id='advance'  method="post">
+                {% for idea in ideas %}
+                    <tr>
+                        <!-- TODO: Change link here to point to drill down table for selected idea -->
+                        <td>
+                            <a href="{{ path('idea_show', {'groupSlug': groupSlug, 'eventSlug': eventSlug, 'id': idea.id}) }}"><h3>{{ idea.name }}</h3></a>
+                        </td>
+
+                        {% set ideaAvgScore = attribute(avgScore,idea.id) %}
+                        {% for criteria in criteriaList %}
+                            <td>
+                                <!-- must do existence check in case no votes exist for idea + criteria -->
+                                {% if attribute( ideaAvgScore, criteria.id) is defined %}
+                                    {{ attribute( ideaAvgScore, criteria.id) }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </td>
+                        {% endfor %}
+                        <td>{{ attribute( ideaAvgScore, 'avgScore') }}</td>
+
+                        <td><input type='checkbox' name ='{{idea.id}}' {% if loop.index0 < firstN %}checked="yes"{% endif %}/></td>
+
+                    </tr>
+                {% endfor %}
+            </form>
+        </table>
+    {% endif %}
+
+    <br>
+
+    <table class="right">
+        <form action = {{ path('idea_summary', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }} id='firstNForm' method="get">
+            <td><input type='text' name='firstN' placeholder="Select first N ideas" /></td>
+            <td><input type='submit' value='Select' class='btnMdm' /></td>
+            <input type='hidden' name='tag' value='{{tag}}'/>
+            <input type='hidden' name='crit' value='{{crit}}'/>
+        </form>
+    </table>
+
+    <br><br><br>
+
+    <table class="right">
+        <td style="padding-right: 10px">
+            <form action = {{ path('idea_admin', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }} method="get">
+                <input type="submit" value="Back">
+            </form>
+        </td>
+    <td>
+        <input type="submit" value="Advance To Next Round" onclick="document.forms['advance'].submit();">
+    </td>
+
+    </table>
+
+
+
+{% endblock %}

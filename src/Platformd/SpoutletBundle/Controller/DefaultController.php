@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Controller\Controller as Controller;
 use Symfony\Component\HttpFoundation\Cookie;
-use Platformd\UserBundle\Entity\RegistrationSource;
 
 class DefaultController extends Controller
 {
@@ -98,6 +97,23 @@ class DefaultController extends Controller
             'featured' => $featured,
             'popular'  => $popular,
         ));
+
+        $this->varnishCache($response, 30);
+
+        return $response;
+    }
+
+    public function _allGroupsAction(Request $request)
+    {
+        $em     = $this->getDoctrine()->getEntityManager();
+        $repo   = $em->getRepository('GroupBundle:Group');
+        $site   = $this->getCurrentSite();
+
+        $groups  = $repo->findAllGroupsRelevantForSite($site);
+
+        $response = $this->render('SpoutletBundle:Default:_allGroups.html.twig', array(
+                'groups' => $groups,
+            ));
 
         $this->varnishCache($response, 30);
 
@@ -267,9 +283,7 @@ class DefaultController extends Controller
             throw $this->createNotFoundException();
         }
 
-        return $this->render('SpoutletBundle:Default:index.html.twig', array(
-            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_HOMEPAGE),
-        ));
+        return $this->render('SpoutletBundle:Default:index.html.twig');
     }
 
     public function healthCheckAction() {
@@ -309,7 +323,7 @@ class DefaultController extends Controller
         // sweeps
         $sweepstakes = $this->getDoctrine()
             ->getEntityManager()
-            ->getRepository('SweepstakesBundle:Sweepstakes')
+            ->getRepository('SpoutletBundle:AbstractEvent')
             ->getCurrentSweepstakes($site)
         ;
 
