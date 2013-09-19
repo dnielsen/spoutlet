@@ -49,7 +49,7 @@ class GroupController extends Controller
             'isApplicant' => $isApplicant,
         ));
 
-        $this->varnishCache($response, 1);
+        $this->varnishCache($response, 2592000);
 
         return $response;
     }
@@ -233,6 +233,8 @@ Alienware Arena Team
 
         $this->setFlash('success', sprintf('You have successfully accepted \'%s\' into your group!', $user->getUsername()));
 
+        $this->varnishBan($this->generateUrl('_group_member_check', array('groupId' => $group->getId())), array('userId' => $user->getId()));
+
         return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
     }
 
@@ -274,6 +276,7 @@ Alienware Arena Team
         $em->flush();
 
         $this->setFlash('success', sprintf('You have successfully rejected \'%s\' from joining your group!', $user->getUsername()));
+        $this->varnishBan($this->generateUrl('_group_member_check', array('groupId' => $group->getId())), array('userId' => $user->getId()));
 
         return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
     }
@@ -435,6 +438,7 @@ Alienware Arena Team
         }
 
         $this->varnishBan($this->generateUrl('_group_show_content', array('slug' => $slug)));
+        $this->varnishBan($this->generateUrl('_group_member_check', array('groupId' => $group->getId())), array('userId' => $user->getId()));
 
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
     }
@@ -488,6 +492,7 @@ Alienware Arena Team
 
         $this->setFlash('success', 'You have successfully joined this group!');
         $this->varnishBan($this->generateUrl('_group_show_content', array('slug' => $slug)));
+        $this->varnishBan($this->generateUrl('_group_member_check', array('groupId' => $group->getId())), array('userId' => $user->getId()));
 
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
     }
@@ -543,6 +548,9 @@ Alienware Arena Team
         $this->getEmailManager()->sendHtmlEmail($emailTo, $subject, $message, "Group Application Notification", $this->getCurrentSite()->getDefaultLocale());
 
         $this->setFlash('success', 'A request has been sent to the group organizer to accept you into the private group. Once approved, you will also be registered for the event.');
+
+        $this->varnishBan($this->generateUrl('_group_member_check', array('groupId' => $group->getId())), array('userId' => $user->getId()));
+
         return $this->redirect($this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters()));
     }
 
@@ -597,6 +605,7 @@ Alienware Arena Team
                 $em->flush();
 
                 $this->setFlash('success', 'You will receive an email if you are admitted into this group.');
+                $this->varnishBan($this->generateUrl('_group_member_check', array('groupId' => $group->getId())), array('userId' => $user->getId()));
 
                 return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
             }
