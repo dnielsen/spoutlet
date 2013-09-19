@@ -64,6 +64,10 @@ PlatformDHtmlWidgetBundle:
     resource: "@HtmlWidgetBundle/Resources/config/routing.yml"
     prefix:   /
 
+IdeaBundle:
+    resource: "@IdeaBundle/Resources/config/routing.yml"
+    prefix:   /
+
 # This MUST remain last in this list, as it needs to have lowest priority in order to prevent groups pages
 # from conflicting with other routes. This facilitates the removal of the /groups prefix on groups urls
 PlatformDGroupBundle:
