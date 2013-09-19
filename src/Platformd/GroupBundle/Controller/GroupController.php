@@ -31,8 +31,8 @@ use Platformd\UserBundle\Entity\RegistrationSource;
  *
  */
 class GroupController extends Controller
-
-{    public function _groupMemberCheckAction($groupId)
+{
+    public function _groupMemberCheckAction($groupId)
     {
         $group = $this->getGroup($groupId);
         $user  = $this->getUser();
@@ -671,6 +671,13 @@ Alienware Arena Team
 
     public function eventsAction($slug)
     {
+        return $this->render('GroupBundle:Group:eventsWrapper.html.twig', array(
+            'slug' => $slug,
+        ));
+    }
+
+    public function _groupEventsAction($slug)
+    {
         $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'ViewGroupContent', false);
 
@@ -679,67 +686,11 @@ Alienware Arena Team
 
         $canAdd         = $this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'AddEvent');
 
-        return $this->render('GroupBundle:Group:events.html.twig', array(
+        $response = $this->render('GroupBundle:Group:events.html.twig', array(
             'group'         => $group,
             'groupEvents'   => $groupEvents,
             'pastEvents'    => $pastEvents,
             'canAdd'        => $canAdd,
-        ));
-    }
-
-    public function newsAction($slug, Request $request)
-    {
-        $group  = $this->getGroupBySlug($slug);
-        $this->ensureAllowed($group, 'ViewGroupContent', false);
-
-        $groupNews = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);
-
-        return $this->render('GroupBundle:Group:news.html.twig', array(
-            'group' => $group,
-            'groupNews' => $groupNews,
-            'groupManager' => $this->getGroupManager(),
-        ));
-    }
-
-    public function _groupNewsContentAction($slug)
-    {
-        $this->addGroupsBreadcrumb();
-
-        $group  = $this->getGroupBySlug($slug);
-
-        if ($group && $group->getDeleted()) {
-            $this->setFlash('error', 'Sorry, this group does not exist.');
-            return $this->redirect($this->generateUrl('groups'));
-        }
-
-        $commentTotal   = $this->getTotalCommentCountForGroup('group-'.$group->getId());
-        $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group, 5);
-        $pastEvents     = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group, 5);
-        $memberCount    = $this->getGroupManager()->getMembershipCountByGroup($group);
-
-        $contest = $this->getContestRepository()->findContestByGroup($group);
-
-        $contestMemberCount = 0;
-        $isEntered = false;
-
-        if($contest != null) {
-            $contestMemberCount = $this->getMemberActionRepository()->getMembersJoinedCountByGroup($group, $contest->getVotingStart(), $contest->getVotingEnd());
-            $isEntered = $contest->getVotingEnd() > new \DateTime('now');
-        }
-
-        $permalink   = $this->get('platformd.model.comment_manager')->checkThread($group);
-
-        $response = $this->render('GroupBundle:Group:_showContent.html.twig', array(
-            'commentTotal'   => $commentTotal,
-            'group'          => $group,
-            'isEntered'      => $isEntered,
-            'contestCount'   => $contestMemberCount,
-            'contest'        => $contest,
-            'upcomingEvents' => $upcomingEvents,
-            'pastEvents'     => $pastEvents,
-            'memberCount'    => $memberCount,
-            'permalink'      => $permalink,
-            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_GROUP, 'id'=>$group->getId()),
         ));
 
         $this->varnishCache($response, 60);
@@ -747,6 +698,30 @@ Alienware Arena Team
         return $response;
     }
 
+    public function newsAction($slug)
+    {
+        return $this->render('GroupBundle:Group:newsWrapper.html.twig', array(
+            'slug' => $slug,
+        ));
+    }
+
+    public function _groupNewsAction($slug)
+    {
+        $group  = $this->getGroupBySlug($slug);
+        $this->ensureAllowed($group, 'ViewGroupContent', false);
+
+        $groupNews = $this->getGroupNewsRepository()->getNewsForGroupMostRecentFirst($group);
+
+        $response = $this->render('GroupBundle:Group:news.html.twig', array(
+            'group' => $group,
+            'groupNews' => $groupNews,
+            'groupManager' => $this->getGroupManager(),
+        ));
+
+        $this->varnishCache($response, 60);
+
+        return $response;
+    }
 
     public function addNewsAction($slug, Request $request)
     {
@@ -785,6 +760,8 @@ Alienware Arena Team
                 $tagManager->saveTagging($groupNews);
 
                 $this->setFlash('success', 'New article posted successfully.');
+
+                $this->varnishBan($this->generateUrl('_group_news', array('slug' => $slug)));
 
                 return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
             }
@@ -838,13 +815,13 @@ Alienware Arena Team
                 $newsArticle->setGroup($group);
 
                 $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
+
                 $tagManager->replaceTags($tags, $newsArticle);
-
                 $this->getGroupManager()->saveGroupNews($newsArticle);
-
                 $tagManager->saveTagging($newsArticle);
 
                 $this->setFlash('success', 'New article updated successfully.');
+                $this->varnishBan($this->generateUrl('_group_news', array('slug' => $slug)));
 
                 return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
             }
@@ -880,10 +857,19 @@ Alienware Arena Team
 
         $this->setFlash('success', 'News article was deleted successfully!');
 
+        $this->varnishBan($this->generateUrl('_group_news', array('slug' => $slug)));
+
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
     }
 
-    public function imageAction($slug, Request $request)
+    public function imageAction($slug)
+    {
+        return $this->render('GroupBundle:Group:imagesWrapper.html.twig', array(
+            'slug' => $slug,
+        ));
+    }
+
+    public function _groupImagesAction($slug)
     {
         $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'ViewGroupContent', false);
@@ -904,12 +890,17 @@ Alienware Arena Team
             $offset += $itemsPerPage;
         }
 
-        return $this->render('GroupBundle:Group:images.html.twig', array(
-            'pages' => $pages,
-            'group' => $group,
+        $response = $this->render('GroupBundle:Group:images.html.twig', array(
+            'pages'        => $pages,
+            'group'        => $group,
             'groupManager' => $this->getGroupManager(),
         ));
+
+        $this->varnishCache($response, 60);
+
+        return $response;
     }
+
 
     public function showImageAction ($id)
     {
@@ -981,6 +972,8 @@ Alienware Arena Team
 
                 $this->setFlash('success', 'Image posted successfully.');
 
+                $this->varnishBan($this->generateUrl('_group_images', array('slug' => $slug)));
+
                 return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
             }
 
@@ -1023,6 +1016,7 @@ Alienware Arena Team
                 $this->getGroupManager()->saveGroupImage($image);
 
                 $this->setFlash('success', 'Image updated successfully.');
+                $this->varnishBan($this->generateUrl('_group_images', array('slug' => $slug)));
 
                 return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
             }
@@ -1058,10 +1052,19 @@ Alienware Arena Team
 
         $this->setFlash('success', 'Image was deleted successfully!');
 
+        $this->varnishBan($this->generateUrl('_group_images', array('slug' => $slug)));
+
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
     }
 
-    public function videosAction($slug, Request $request)
+    public function videosAction($slug)
+    {
+        return $this->render('GroupBundle:Group:videosWrapper.html.twig', array(
+            'slug' => $slug,
+        ));
+    }
+
+    public function _groupVideosAction($slug)
     {
         $group  = $this->getGroupBySlug($slug);
 
@@ -1083,12 +1086,15 @@ Alienware Arena Team
             $offset += $itemsPerPage;
         }
 
-
-        return $this->render('GroupBundle:Group:videos.html.twig', array(
+        $response = $this->render('GroupBundle:Group:videos.html.twig', array(
             'pages' => $pages,
             'group' => $group,
             'groupManager' => $this->getGroupManager(),
         ));
+
+        $this->varnishCache($response, 60);
+
+        return $response;
     }
 
     public function addVideoAction($slug, Request $request)
@@ -1123,6 +1129,8 @@ Alienware Arena Team
                 }
 
                 $this->setFlash('success', 'New video posted successfully.');
+
+                $this->varnishBan($this->generateUrl('_group_videos', array('slug' => $slug)));
 
                 return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
             }
@@ -1169,6 +1177,8 @@ Alienware Arena Team
 
                 $this->setFlash('success', 'Video updated successfully.');
 
+                $this->varnishBan($this->generateUrl('_group_videos', array('slug' => $slug)));
+
                 return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
             }
 
@@ -1203,10 +1213,19 @@ Alienware Arena Team
 
         $this->setFlash('success', 'Video was deleted successfully!');
 
+        $this->varnishBan($this->generateUrl('_group_videos', array('slug' => $slug)));
+
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
     }
 
     public function discussionsAction($slug)
+    {
+        return $this->render('GroupBundle:Group:discussionsWrapper.html.twig', array(
+            'slug' => $slug,
+        ));
+    }
+
+    public function _groupDiscussionsAction($slug)
     {
         $group  = $this->getGroupBySlug($slug);
 
@@ -1218,12 +1237,16 @@ Alienware Arena Team
         $pager = $this->getGroupDiscussionRepository()->getDiscussionsForGroupMostRecentFirst($group, 11, $page);
         $results = $pager->getCurrentPageResults();
 
-        return $this->render('GroupBundle:Group:discussions.html.twig', array(
-            'group' => $group,
-            'results' => $results,
-            'pager' => $pager,
+        $response = $this->render('GroupBundle:Group:discussions.html.twig', array(
+            'group'        => $group,
+            'results'      => $results,
+            'pager'        => $pager,
             'groupManager' => $this->getGroupManager(),
         ));
+
+        $this->varnishCache($response, 60);
+
+        return $response;
     }
 
     public function enableDiscussionsAction($slug)
@@ -1291,6 +1314,8 @@ Alienware Arena Team
 
                 $this->setFlash('success', 'New discussion posted successfully.');
 
+                $this->varnishBan($this->generateUrl('_group_discussions', array('slug' => $slug)));
+
                 return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
             }
 
@@ -1352,6 +1377,8 @@ Alienware Arena Team
 
                 $this->setFlash('success', 'Discussion updated successfully.');
 
+                $this->varnishBan($this->generateUrl('_group_discussions', array('slug' => $slug)));
+
                 return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
             }
 
@@ -1385,6 +1412,8 @@ Alienware Arena Team
         $this->getGroupManager()->deleteGroupDiscussion($discussion);
 
         $this->setFlash('success', 'Discussion was deleted successfully!');
+
+        $this->varnishBan($this->generateUrl('_group_discussions', array('slug' => $slug)));
 
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
     }
@@ -1594,11 +1623,22 @@ Alienware Arena Team
 
     public function aboutAction($slug)
     {
+        return $this->render('GroupBundle:Group:aboutWrapper.html.twig', array(
+            'slug' => $slug,
+        ));
+    }
+
+    public function _groupAboutAction($slug)
+    {
         $group  = $this->getGroupBySlug($slug);
 
-        return $this->render('GroupBundle:Group:about.html.twig', array(
+        $response = $this->render('GroupBundle:Group:about.html.twig', array(
             'group' => $group,
         ));
+
+        $this->varnishCache($response, 86400);
+
+        return $response;
     }
 
     public function showAction($slug)
@@ -1745,6 +1785,8 @@ Alienware Arena Team
 
         if ($this->processForm($editForm, $request)) {
             $this->setFlash('success', 'The group was saved!');
+
+            $this->varnishBan($this->generateUrl('_group_about', array('slug' => $slug)));
 
             return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
         }

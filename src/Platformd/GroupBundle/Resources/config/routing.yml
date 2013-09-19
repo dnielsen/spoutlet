@@ -2,6 +2,30 @@ _group_member_check:
     pattern: /esi/USER_SPECIFIC/groupMemberCheck/{groupId}
     defaults: { _controller: GroupBundle:Group:_groupMemberCheck }
 
+_group_news:
+    pattern: /esi/USER_SPECIFIC/groupNews/{slug}
+    defaults: { _controller: GroupBundle:Group:_groupNews }
+
+_group_images:
+    pattern: /esi/USER_SPECIFIC/groupImages/{slug}
+    defaults: { _controller: GroupBundle:Group:_groupImages }
+
+_group_videos:
+    pattern: /esi/USER_SPECIFIC/groupVideos/{slug}
+    defaults: { _controller: GroupBundle:Group:_groupVideos }
+
+_group_discussions:
+    pattern: /esi/USER_SPECIFIC/groupDiscussions/{slug}
+    defaults: { _controller: GroupBundle:Group:_groupDiscussions }
+
+_group_events:
+    pattern: /esi/USER_SPECIFIC/groupEvents/{slug}
+    defaults: { _controller: GroupBundle:Group:_groupEvents }
+
+_group_about:
+    pattern: /esi/USER_SPECIFIC/groupAbout/{slug}
+    defaults: { _controller: GroupBundle:Group:_groupAbout }
+
 _group_show_content:
     pattern: /esi/groupContent/{slug}
     defaults: { _controller: GroupBundle:Group:_groupShowContent }
