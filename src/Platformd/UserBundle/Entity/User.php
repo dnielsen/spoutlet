@@ -135,9 +135,9 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration", "IncompleteUser", "Default"}, message="first_name_not_blank")
-     * @Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser"})
-     * @Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser"})
+     * //Assert\NotBlank(groups={"Registration", "IncompleteUser", "Default"}, message="first_name_not_blank")
+     * //Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser"})
+     * //Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser"})
      */
     protected $firstname;
 
@@ -146,9 +146,9 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration", "IncompleteUser", "Default"}, message="last_name_not_blank")
-     * @Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser"})
-     * @Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser"})
+     * //Assert\NotBlank(groups={"Registration", "IncompleteUser", "Default"}, message="last_name_not_blank")
+     * //Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser"})
+     * //Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser"})
      */
     protected $lastname;
 
@@ -157,7 +157,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="date", nullable=true)
      *
-     * @Assert\Date(groups={"Registration", "IncompleteUser", "Default"})
+     * //Assert\Date(groups={"Registration", "IncompleteUser", "Default"})
      */
     protected $birthdate;
 
@@ -173,7 +173,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration", "Default"}, message="country_not_blank")
+     * //Assert\NotBlank(groups={"Registration", "Default"}, message="country_not_blank")
      */
     protected $country;
 
@@ -182,7 +182,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration", "Default"}, message="state_not_blank")
+     * //Assert\NotBlank(groups={"Registration", "Default"}, message="state_not_blank")
      */
     protected $state;
 
@@ -190,7 +190,7 @@ class User extends BaseUser
      * @var boolean $has_alienware_system
      *
      * @ORM\Column(name="has_alienware_system", type="boolean", nullable=true)
-     * @Assert\NotNull(groups={"Registration"}, message="has_system_not_blank")
+     * //Assert\NotNull(groups={"Registration"}, message="has_system_not_blank")
      */
     protected $hasAlienwareSystem;
 
@@ -221,7 +221,7 @@ class User extends BaseUser
     /**
      * @var Boolean $terms_accepted
      *
-     * @Assert\True(message="You must accept the terms and conditions and the privacy policy", groups={"Registration", "IncompleteUser", "Default"})
+     * //Assert\True(message="You must accept the terms and conditions and the privacy policy", groups={"Registration", "IncompleteUser", "Default"})
      */
     protected $termsAccepted;
 
@@ -439,6 +439,42 @@ class User extends BaseUser
      */
     protected $registrationSource;
 
+    /**
+     * @ORM\Column(type="string", length="255", nullable=true)
+     * @Assert\NotBlank(message="Please enter your name.", groups={"Registration", "Profile"})
+     */
+    protected $name = null;
+
+    /**
+     * @ORM\Column(type="string", length="255")
+     */
+    protected $school = null;
+
+    /**
+     * @ORM\Column(type="string", length="255")
+     */
+    protected $major = null;
+
+    /**
+     * @ORM\Column(type="string", length="255")
+     */
+    protected $affiliation = null;
+
+    /**
+     * @ORM\Column(type="string", length="255")
+     */
+    protected $svicRole = null;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\Idea", mappedBy="creator")
+     */
+    protected $ideas;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\Comment", mappedBy="user")
+     */
+    protected $comments;
+
     public function __construct()
     {
         parent::__construct();
@@ -448,6 +484,8 @@ class User extends BaseUser
         $this->loginRecords             = new ArrayCollection();
         $this->pdGroups                 = new ArrayCollection();
         $this->avatars                  = new ArrayCollection();
+        $this->ideas                    = new ArrayCollection();
+        $this->comments                 = new ArrayCollection();
     }
 
     public function __toString() {
@@ -1308,4 +1346,76 @@ class User extends BaseUser
     {
         $this->registrationSource = $value;
     }
+    
+    
+
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setSchool($school)
+    {
+        $this->school = $school;
+    }
+    public function getSchool()
+    {
+        return $this->school;
+    }
+
+    public function setMajor($major)
+    {
+        $this->major = $major;
+    }
+    public function getMajor()
+    {
+        return $this->major;
+    }
+
+    public function setAffiliation($affiliation)
+    {
+        $this->affiliation = $affiliation;
+    }
+    public function getAffiliation()
+    {
+        return $this->affiliation;
+    }
+
+    public function setSvicRole($svic_role)
+    {
+        $this->svicRole = $svic_role;
+    }
+    public function getSvicRole()
+    {
+        return $this->svicRole;
+    }
+
+
+    public function addComment($comments)
+    {
+        $this->comments[] = $comments;
+    }
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    public function addIdea($idea)
+    {
+        $this->ideas[] = $idea;
+    }
+    public function removeIdea($idea)
+    {
+        $this->ideas->removeElement($idea);
+    }
+    public function getIdeas()
+    {
+        return $this->ideas;
+    }
+    
 }

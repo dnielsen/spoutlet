@@ -185,7 +185,8 @@ parameters:
         - en_sjsu           # sjsu.
         - en_dataminingcamp # dataminingcamp.
         - en_hackomaha      # hackomaha.
-        - en_rollingout     # rollingout.
+        - en_toyota         # toyota.
+        - en_platformd      # platformd.
 
     # used by the router
     site_host_map:
@@ -193,14 +194,16 @@ parameters:
         en_sjsu:            sjsu%host_suffix%.%base_host%
         en_dataminingcamp:  dataminingcamp%host_suffix%.%base_host%
         en_hackomaha:       hackomaha%host_suffix%.%base_host%
-        en_rollingout:      rollingout%host_suffix%.%base_host%
+        en_toyota:          toyota%host_suffix%.%base_host%
+        en_platformd:       platformd%host_suffix%.%base_host%
 
     # this is repeated in the multitenancy manager - should not be
     platformd_sites:
-        en_sjsu: SanJoseStateUniversity
-        en_dataminingcamp: DataMiningCamp
-        en_hackomaha: HackOmaha
-        en_rollingout: RollingOut
+        en_sjsu:            SanJoseStateUniversity
+        en_dataminingcamp:  DataMiningCamp
+        en_hackomaha:       HackOmaha
+        en_toyota:          Toyota
+        en_platformd:       PlatformD 
 
     # an array of "sites" where we host their main site
     # used by the SiteProtectionListener to prevent, for example, Latin America users
