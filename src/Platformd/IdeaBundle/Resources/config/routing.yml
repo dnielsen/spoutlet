@@ -12,7 +12,7 @@ fos_user_profile_show:
 
 idea_admin_event:
     pattern:  /{groupSlug}/{eventSlug}/admin/configure
-    defaults: { _controller: IdeaBundle:Admin:event, eventSlug:new}
+    defaults: { _controller: IdeaBundle:Admin:event, eventSlug:newEvent}
 
 idea_admin:
     pattern:  /{groupSlug}/{eventSlug}/admin

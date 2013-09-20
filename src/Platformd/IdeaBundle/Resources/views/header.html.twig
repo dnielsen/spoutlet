@@ -20,11 +20,11 @@
   </ul>
 
   {% if app.user %}
-  <ul><li>Welcome, <a href="{{ path('profile', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}">{% if app.user.name %}{{app.user.name}}{% else %}{{app.user.username}}{% endif %}</a></li></ul>
+  <ul><li>Welcome, <a href="{{ path('profile', {'groupSlug': groupSlug}) }}">{% if app.user.name %}{{app.user.name}}{% else %}{{app.user.username}}{% endif %}</a></li></ul>
   {% endif %}
 
 </div>
-<a href="{{ path('idea_index', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}"><img src="{{ asset('bundles/idea/img/SVIC_logo_horizontal_color.jpg') }}" alt="SVIC" width="328" height="126" id="brand"></a>
+<a href="{{ path('idea_index', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}"><img src="{{ asset('bundles/spoutlet/images/campsitelogo.jpg') }}" alt="Campsite" width="328" height="126" id="brand"></a>
 <div id="tagline">
   <span class="grn">innovate.</span>
   <span class="blu">network.</span>
