@@ -346,6 +346,11 @@ class User extends BaseUser
     protected $giveawayKeys;
 
     /**
+     * @ORM\OneToMany(targetEntity="Platformd\GiveawayBundle\Entity\CodeAssignmentCode", mappedBy="user")
+     */
+    protected $codeAssignmentCodes;
+
+    /**
      * @var datetime $created
      *
      * @Gedmo\Timestampable(on="create")
@@ -1307,5 +1312,15 @@ class User extends BaseUser
     public function setRegistrationSource($value)
     {
         $this->registrationSource = $value;
+    }
+
+    public function getCodeAssignmentCodes()
+    {
+        return $this->codeAssignmentCodes;
+    }
+
+    public function setCodeAssignmentCodes($value)
+    {
+        $this->codeAssignmentCodes = $value;
     }
 }

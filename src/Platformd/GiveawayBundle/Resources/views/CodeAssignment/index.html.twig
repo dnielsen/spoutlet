@@ -1,0 +1,26 @@
+{% extends 'SpoutletBundle::adminLayout.html.twig' %}
+
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+{% block content %}
+
+<h1>Assign Codes</h1>
+
+<form action="{{ path('admin_assign_codes') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+
+    {{ form_errors(form) }}
+
+    {{ form_row(form.name) }}
+    {{ form_row(form.url) }}
+    {{ form_row(form.type) }}
+    {{ form_row(form.codesFile) }}
+
+    {{ form_rest(form) }}
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary" formnovalidate>Assign</button>
+    </div>
+</form>
+
+{% endblock %}

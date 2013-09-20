@@ -1,0 +1,15 @@
+platformd.code_assignment.users_email.subject: Your %assignmentName% Code!
+platformd.code_assignment.users_email.content: |
+    <p>Congratulations, you've successfully been assigned a code for <a href="%assignmentUrl%">%assignmentName%</a>:</p>
+    <p>%code%</p>
+    <p>Alienware Arena Team</p>
+
+platformd.code_assignment.lan_centers_email.subject: Your %assignmentName% Codes!
+platformd.code_assignment.lan_centers_email.content: |
+    <p>Dear LAN Center member,</p>
+    <p>You've successfully been assigned code(s) for the %assignmentName% promotion:</p>
+    <ul>
+        %codes%
+    </ul>
+    <p>For instructions on how to redeem the code(s), click <a href="%assignmentUrl%">here</a>.</p>
+    <p>iGames Team</p>

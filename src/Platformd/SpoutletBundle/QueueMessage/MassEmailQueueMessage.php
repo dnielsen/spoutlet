@@ -10,7 +10,11 @@ class MassEmailQueueMessage extends SqsMessageBase
     const EMAIL_TYPE_GLOBAL_EVENT = 'Global Event Mass Email';
     const EMAIL_TYPE_GROUP_EVENT  = 'Group Event Mass Email';
 
-    public static $validTypes = array(self::EMAIL_TYPE_GROUP, self::EMAIL_TYPE_GLOBAL_EVENT, self::EMAIL_TYPE_GROUP_EVENT);
+    public static $validTypes = array(
+        self::EMAIL_TYPE_GROUP,
+        self::EMAIL_TYPE_GLOBAL_EVENT,
+        self::EMAIL_TYPE_GROUP_EVENT,
+    );
 
     public static $typeClassMap = array(
       self::EMAIL_TYPE_GROUP        => 'GroupBundle:GroupMassEmail',

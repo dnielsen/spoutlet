@@ -39,13 +39,19 @@ class UserRepository extends EntityRepository
       return  $qb ;
 	}
 
-    public function findUserListByEmail($users)
+    public function getFindUserListByEmailQuery($users)
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.emailCanonical IN (:users)')
             ->setParameter('users', $users)
             ->getQuery()
-            ->execute();
+        ;
+    }
+
+    public function findUserListByEmail($users)
+    {
+        return $getFindUserListByEmailQuery($users)
+            ->execute()
         ;
     }
 
