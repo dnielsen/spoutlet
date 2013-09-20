@@ -13,7 +13,6 @@
     {% else %}
         <li><a href="{{ path('_fos_user_security_logout') }}">Sign out</a></li>
     {% endif %}
-	<li><a href="mailto:svic@sjsu.edu">Contact Us</a></li>
 	<li><a href="{{ path('idea_index', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}">Home</a></li>
     {% if is_granted('ROLE_ADMIN') %}
         <li><a href="{{ path('idea_admin', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}">Admin Console</a></li>
