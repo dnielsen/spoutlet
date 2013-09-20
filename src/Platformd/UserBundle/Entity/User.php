@@ -439,6 +439,42 @@ class User extends BaseUser
      */
     protected $registrationSource;
 
+    /**
+     * @ORM\Column(type="string", length="255", nullable=true)
+     * @Assert\NotBlank(message="Please enter your name.", groups={"Registration", "Profile"})
+     */
+    protected $name = null;
+
+    /**
+     * @ORM\Column(type="string", length="255")
+     */
+    protected $school = null;
+
+    /**
+     * @ORM\Column(type="string", length="255")
+     */
+    protected $major = null;
+
+    /**
+     * @ORM\Column(type="string", length="255")
+     */
+    protected $affiliation = null;
+
+    /**
+     * @ORM\Column(type="string", length="255")
+     */
+    protected $svicRole = null;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\Idea", mappedBy="creator")
+     */
+    protected $ideas;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\Comment", mappedBy="user")
+     */
+    protected $comments;
+
     public function __construct()
     {
         parent::__construct();
@@ -448,6 +484,8 @@ class User extends BaseUser
         $this->loginRecords             = new ArrayCollection();
         $this->pdGroups                 = new ArrayCollection();
         $this->avatars                  = new ArrayCollection();
+        $this->ideas                    = new ArrayCollection();
+        $this->comments                 = new ArrayCollection();
     }
 
     public function __toString() {
@@ -1308,4 +1346,76 @@ class User extends BaseUser
     {
         $this->registrationSource = $value;
     }
+    
+    
+
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setSchool($school)
+    {
+        $this->school = $school;
+    }
+    public function getSchool()
+    {
+        return $this->school;
+    }
+
+    public function setMajor($major)
+    {
+        $this->major = $major;
+    }
+    public function getMajor()
+    {
+        return $this->major;
+    }
+
+    public function setAffiliation($affiliation)
+    {
+        $this->affiliation = $affiliation;
+    }
+    public function getAffiliation()
+    {
+        return $this->affiliation;
+    }
+
+    public function setSvicRole($svic_role)
+    {
+        $this->svicRole = $svic_role;
+    }
+    public function getSvicRole()
+    {
+        return $this->svicRole;
+    }
+
+
+    public function addComment($comments)
+    {
+        $this->comments[] = $comments;
+    }
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    public function addIdea($idea)
+    {
+        $this->ideas[] = $idea;
+    }
+    public function removeIdea($idea)
+    {
+        $this->ideas->removeElement($idea);
+    }
+    public function getIdeas()
+    {
+        return $this->ideas;
+    }
+    
 }
