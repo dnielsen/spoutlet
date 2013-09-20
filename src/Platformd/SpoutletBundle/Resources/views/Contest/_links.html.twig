@@ -8,6 +8,8 @@
         {% if contest.isFinished and contest.winners | length > 0 %}
         <li><a href="{{ path('contest_winners', {slug: contest.slug}) }}">{{ 'contests.show_page_winners' | trans }}</a></li>
         {% endif %}
+        {% if not contest.hidden %}
         <li><a href="{{ path('contest_index') }}">{{ 'contests.show_page_see_more_contests' | trans }}</a></li>
+        {% endif %}
     </ul>
 </div>

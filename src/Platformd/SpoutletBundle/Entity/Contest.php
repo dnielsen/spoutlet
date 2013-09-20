@@ -231,6 +231,11 @@ class Contest implements LinkableInterface, TaggableInterface
      */
     private $tags;
 
+    /**
+     * @ORM\Column(name="hidden", type="boolean")
+     */
+    private $hidden = false;
+
     public function __construct()
     {
         $this->sites = new ArrayCollection();
@@ -886,5 +891,15 @@ class Contest implements LinkableInterface, TaggableInterface
     public function getTaggableId()
     {
         return $this->getId();
+    }
+
+    public function getHidden()
+    {
+        return $this->hidden;
+    }
+
+    public function setHidden($value)
+    {
+        $this->hidden = $value;
     }
 }

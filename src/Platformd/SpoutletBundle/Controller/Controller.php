@@ -237,10 +237,10 @@ class Controller extends BaseController
      * @param \Platformd\SpoutletBundle\Link\LinkableInterface $linkableObj
      * @return string
      */
-    protected function getLinkableUrl(LinkableInterface $linkableObj)
+    protected function getLinkableUrl(LinkableInterface $linkableObj, $absolute=false)
     {
         return $this->container->get('platformd.link.linkable_manager')
-            ->link($linkableObj);
+            ->link($linkableObj, $absolute);
     }
 
     /**

@@ -83,7 +83,7 @@
 				{% endif %}
 			</div>
 			<div style="padding: 10px 0 10px 0;">
-				<button id="submit-groups" class="btn" {% if entriesLeft == 0 %}disabled="disabled"{% endif %}>{{ 'save' | trans }}</button>
+				<button id="submit-groups" class="btn" {% if entriesLeft == 0 and contest.maxEntries != 0 %}disabled="disabled"{% endif %}>{{ 'save' | trans }}</button>
 				<button id="cancel" class="btn" rel="{{ path('contest_show', { slug: contest.slug }) }}" style="margin-left: 10px;">{{ 'galleries.cancel' | trans }}</button>
 			</div>
 		</div>
@@ -102,7 +102,7 @@
         });
 
 		$('.group-list-item').click(function (e) {
-			var entriesLeft = parseInt($('#entries-left').text());
+			var entriesLeft = $('#entries-left').length ? parseInt($('#entries-left').text()) : 9999;
 			var entries = $('.entered').length;
 			var maxEntries = {{ contest.maxEntries }};
 
@@ -149,12 +149,7 @@
 				contentType: 'application/json',
 				success: function(data) {
 					if(data.success) {
-						var entriesLeft = parseInt($('#entries-left').text());
-						if(entriesLeft == 0) {
-							window.location = '{{ path('contest_vote', {'slug' : contest.slug }) }}';
-						} else {
-							window.location = '{{ path('contest_submit', {'slug' : contest.slug }) }}';
-						}
+						window.location = '{{ path('contest_vote', {'slug' : contest.slug }) }}';
 					}
 				},
 				error: function(e, s, t) {
