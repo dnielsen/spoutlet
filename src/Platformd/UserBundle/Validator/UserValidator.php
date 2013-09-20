@@ -60,7 +60,7 @@ class UserValidator extends ConstraintValidator
             }
         }
 
-        if($entity->getHasAlienwareSystem() === null) {
+        /*if($entity->getHasAlienwareSystem() === null) {
                 // Set error message at top of form
                 $this->context->addViolation(self::ERROR_MESSAGE_HAS_ALIENWARE, array(), $entity->getHasAlienwareSystem());
 
@@ -69,7 +69,7 @@ class UserValidator extends ConstraintValidator
                 $this->context->setPropertyPath(empty($oldPath) ? 'hasAlienwareSystem' : $oldPath.'.hasAlienwareSystem');
                 $this->context->addViolation(self::ERROR_MESSAGE_HAS_ALIENWARE, array(), $entity->getHasAlienwareSystem());
                 $this->context->setPropertyPath($oldPath);
-        }
+        }*/
 
         return true;
     }
