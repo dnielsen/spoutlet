@@ -1,4 +1,4 @@
-{% extends 'IdeaBundle::base.html.twig' %}
+{% extends 'IdeaBundle::event_layout.html.twig' %}
 
 {% block content %}
 
@@ -41,7 +41,7 @@
                 </a>
                 <p>{{ idea.description|truncate(300) }}</p>
 
-                <p class="right tnytxt">Proposed by: <a href="{{ path('profile', {'groupSlug': groupSlug, 'username': idea.creator.username}) }}">{{idea.creator.name}}</a>{% if idea.members %}, {{idea.members}}{% endif %}</p>
+                <p class="right tnytxt">Proposed by: <a href="{{ path('profile', {'username': idea.creator.username}) }}">{{idea.creator.name}}</a>{% if idea.members %}, {{idea.members}}{% endif %}</p>
                 <div class="kWords">
                     <ul>
                         <li>Tags</li>

@@ -693,7 +693,7 @@ class IdeaController extends Controller
     }
 
 
-    public function profileAction($groupSlug, $username = null) {
+    public function profileAction($username = null) {
 
         $currentUser = $this->get('security.context')->getToken()->getUser();
 
@@ -710,7 +710,6 @@ class IdeaController extends Controller
         return $this->render('IdeaBundle:Idea:profile.html.twig', array(
                 'user'=>$user,
                 'ownProfile'=>$ownProfile,
-                'groupSlug' => $groupSlug,
             ));
     }
 

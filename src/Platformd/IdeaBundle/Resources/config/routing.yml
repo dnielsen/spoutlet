@@ -1,11 +1,7 @@
 
 profile:
-    pattern:    /{groupSlug}/profile/{username}
+    pattern:    /profile/{username}
     defaults:   { _controller: IdeaBundle:Idea:profile, username:null }
-
-fos_user_profile_show:
-    pattern:    /{groupSlug}/profile
-    defaults:   { _controller: IdeaBundle:Idea:profile }
 
 
 # ADMIN ROUTES

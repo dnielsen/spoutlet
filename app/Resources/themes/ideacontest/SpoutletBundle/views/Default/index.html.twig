@@ -2,13 +2,10 @@
 
 {% block content %}
 
-    <h2 class="spcr-b">Groups</h2>
+    <a href="{{ path('group_new') }}">Create a new group</a><br/>
+
+    <h2 class="spcr-b">Groups</h2><hr/>
 
     {%  render url('_all_groups') %}
-
-    <br/>
-    <a href="{{ path('group_new') }}">Create a new group</a>
-
-
 
 {% endblock %}
