@@ -203,7 +203,7 @@ parameters:
         en_dataminingcamp:  DataMiningCamp
         en_hackomaha:       HackOmaha
         en_toyota:          Toyota
-        en_platformd:       PlatformD 
+        en_platformd:       PlatformD
 
     # an array of "sites" where we host their main site
     # used by the SiteProtectionListener to prevent, for example, Latin America users
@@ -225,7 +225,7 @@ parameters:
     email_destination_override_with: ""
 
     sender_email_address: "noreply@cloudcamp.org"
-    sender_email_name: CloudCamp
+    sender_email_name: Campsite
     platformd.news_source:
         alienware: source_alienware
         cevo: CEVO

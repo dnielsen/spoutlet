@@ -2,6 +2,7 @@ platformd:
     user:
         register:
             last_step: |
-                You’re almost there! A confirmation email has been sent. Follow the instructions in the email to activate your CloudCamp account. If you do not receive an email within 15 minutes, please email <a href="mailto:osman@platformd.com">osman@platformd.com</a> for support.
+                You’re almost there! A confirmation email has been sent. Follow the instructions in the email to activate your Campsite account. If you do not receive an email within 15 minutes, please email <a href="mailto:osman@platformd.com">osman@platformd.com</a> for support.
                 <br /><br />
                 <strong>Important: Check Your Spam Folder!</strong>
+

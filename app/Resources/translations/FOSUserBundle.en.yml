@@ -12,15 +12,15 @@ fos_user_registration_form_plainPassword_second: "Confirm Password:"
 fos_user_registration_form_plainPassword: "Password:"
 fos_user_registration_form_hasAlienwareSystem_0: No
 fos_user_registration_form_hasAlienwareSystem_1: Yes
-fos_user_registration_form_latestNewsSource: "How did you hear about CloudCamp?"
+fos_user_registration_form_latestNewsSource: "How did you hear about Campsite?"
 fos_user_registration_form_recaptcha: "Verification:"
-fos_user_registration_form_subscribedAlienwareEvent: Subscribe me to the CloudCamp email newsletter.
+fos_user_registration_form_subscribedAlienwareEvent: Subscribe me to the Campsite email newsletter.
 
 fos_user_registration_form_name: "Full Name:"
 fos_user_registration_form_plainPassword_second: "Confirm Password:"
 fos_user_registration_form_school: "School, Institution or Organization:"
 fos_user_registration_form_major: "Major, Profession, or Area of Expertise:"
-fos_user_registration_form_svicRole: "SVIC Role:"
+fos_user_registration_form_svicRole: "Group Role:"
 fos_user_registration_form_affiliation: "Affiliation:"
 
 fos_user_profile_form_user_lastname: "Last Name"
@@ -81,9 +81,9 @@ change_password.flash.success: The password has been changed
 
 # Registration
 registration.check_email: |
-    Last Step! A confirmation has been send to your email address. Follow the instructions in the email to activate your CloudCamp account. Once you have activated your account, you will be able to log in.
+    Last Step! A confirmation has been send to your email address. Follow the instructions in the email to activate your Campsite account. Once you have activated your account, you will be able to log in.
     <br />
-    CloudCamp Team
+    Campsite Team
 registration.confirmed: Congrats %username%, your account is now confirmed.
 registration.back: Back to the originating page.
 registration.submit: Register
@@ -91,18 +91,18 @@ registration.flash.user_created: The user has been created successfully
 
 # the first line is the subject of the email
 registration.email: |
-    Activate Your CloudCamp Account
+    Activate Your Campsite Account
     <p>Dear %username%!</p>
 
     <p>
-        Thank you for registering for a CloudCamp account. Please activate your account by clicking on the link below<br />
+        Thank you for registering for a Campsite account. Please activate your account by clicking on the link below<br />
         <a href="%confirmationUrl%">%confirmationUrl%</a>
     </p>
     <p>
         This is an automated message. Please do not respond to this email.
     </p>
     <p>
-        CloudCamp Team
+        Campsite Team
     </p>
 
 # Password resetting
@@ -118,10 +118,10 @@ resetting.flash.error: There was a problem submitting your request. Please try a
 
 # the first line is the subject of the email
 resetting.email: |
-    CloudCamp - Reset Password
+    Campsite - Reset Password
     <h3>Hello %username%!</h3>
 
-    <p>We have received a password change request for your CloudCamp account.</p>
+    <p>We have received a password change request for your Campsite account.</p>
 
     <p>
         To reset your password - please click on the link below <br />
@@ -132,14 +132,14 @@ resetting.email: |
 
     <p>This is an automated message. Please do not respond to this email.</p>
 
-    <p>CloudCamp Team</p>
+    <p>Campsite Team</p>
 
 # Password resetted by admin
 resetted.email: |
-    CloudCamp - Reset Password
+    Campsite - Reset Password
     <h3>Hello %username%!</h3>
 
-    <p>We have received a password change request for your CloudCamp account.</p>
+    <p>We have received a password change request for your Campsite account.</p>
 
     <p>
         To reset your password - please click on the link below <br />
@@ -150,7 +150,7 @@ resetted.email: |
 
     <p>This is an automated message. Please do not respond to this email.</p>
 
-    <p>CloudCamp Team</p>
+    <p>Campsite Team</p>
 
 
 # Global strings
