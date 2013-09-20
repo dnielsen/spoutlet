@@ -135,7 +135,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration", "IncompleteUser", "Default"}, message="first_name_not_blank")
+     * //Assert\NotBlank(groups={"Registration", "IncompleteUser", "Default"}, message="first_name_not_blank")
      * @Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser"})
      * @Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser"})
      */
@@ -146,7 +146,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration", "IncompleteUser", "Default"}, message="last_name_not_blank")
+     * //Assert\NotBlank(groups={"Registration", "IncompleteUser", "Default"}, message="last_name_not_blank")
      * @Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser"})
      * @Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser"})
      */
@@ -157,7 +157,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="date", nullable=true)
      *
-     * @Assert\Date(groups={"Registration", "IncompleteUser", "Default"})
+     * //Assert\Date(groups={"Registration", "IncompleteUser", "Default"})
      */
     protected $birthdate;
 
@@ -173,7 +173,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration", "Default"}, message="country_not_blank")
+     * //Assert\NotBlank(groups={"Registration", "Default"}, message="country_not_blank")
      */
     protected $country;
 
@@ -182,7 +182,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", nullable=true)
      *
-     * @Assert\NotBlank(groups={"Registration", "Default"}, message="state_not_blank")
+     * //Assert\NotBlank(groups={"Registration", "Default"}, message="state_not_blank")
      */
     protected $state;
 
@@ -190,7 +190,7 @@ class User extends BaseUser
      * @var boolean $has_alienware_system
      *
      * @ORM\Column(name="has_alienware_system", type="boolean", nullable=true)
-     * @Assert\NotNull(groups={"Registration"}, message="has_system_not_blank")
+     * //Assert\NotNull(groups={"Registration"}, message="has_system_not_blank")
      */
     protected $hasAlienwareSystem;
 
@@ -221,7 +221,7 @@ class User extends BaseUser
     /**
      * @var Boolean $terms_accepted
      *
-     * @Assert\True(message="You must accept the terms and conditions and the privacy policy", groups={"Registration", "IncompleteUser", "Default"})
+     * //Assert\True(message="You must accept the terms and conditions and the privacy policy", groups={"Registration", "IncompleteUser", "Default"})
      */
     protected $termsAccepted;
 
