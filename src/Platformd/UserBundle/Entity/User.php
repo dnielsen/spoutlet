@@ -929,12 +929,12 @@ class User extends BaseUser
      */
     public function getAdminLevel()
     {
-        if ($this->hasRole('ROLE_ORGANIZER')) {
+        if ($this->hasRole('ROLE_SUPER_ADMIN')) {
+            return 'ROLE_SUPER_ADMIN';
+        } elseif ($this->hasRole('ROLE_ORGANIZER')) {
             return 'ROLE_ORGANIZER';
         } elseif ($this->hasRole('ROLE_PARTNER')) {
             return 'ROLE_PARTNER';
-        } elseif ($this->hasRole('ROLE_SUPER_ADMIN')) {
-            return 'ROLE_SUPER_ADMIN';
         } else {
             return null;
         }
@@ -945,12 +945,12 @@ class User extends BaseUser
      */
     public function getAdminLevelString()
     {
-        if ($this->hasRole('ROLE_ORGANIZER')) {
+        if ($this->hasRole('ROLE_SUPER_ADMIN')) {
+            return 'Full Admin';
+        } elseif ($this->hasRole('ROLE_ORGANIZER')) {
             return 'Limited admin';
         } elseif ($this->hasRole('ROLE_PARTNER')) {
             return 'Dell Partner';
-        } elseif ($this->hasRole('ROLE_SUPER_ADMIN')) {
-            return 'Full Admin';
         } elseif ($this->hasRole('ROLE_JAPAN_ADMIN')) {
             return 'Japan Regional Admin';
         } else {

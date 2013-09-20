@@ -596,4 +596,26 @@ class GroupRepository extends EntityRepository
 
         return $qb->getQuery()->execute();
     }
+
+    public function findGroupsForImage($media)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.images', 'i')
+            ->where('i = :media')
+            ->andWhere('g.deleted = false')
+            ->setParameter('media', $media);
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function findGroupsForVideo($media)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.videos', 'v')
+            ->where('v = :media')
+            ->andWhere('g.deleted = false')
+            ->setParameter('media', $media);
+
+        return $qb->getQuery()->execute();
+    }
 }

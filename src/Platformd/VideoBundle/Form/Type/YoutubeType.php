@@ -34,6 +34,7 @@ class YoutubeType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $youtube = $builder->getData();
+        $this->video = $youtube;
         $disableYoutubeId = $youtube->getYoutubeLink() ? 'readonly' : '';
         $referer = $this->request->headers->get('referer');
 
@@ -117,10 +118,19 @@ class YoutubeType extends AbstractType
     {
         $choices    = array();
         $user       = $this->securityContext->getToken()->getUser();
-        $results    = $this->groupRepo->getAllGroupsForUserAndSite($user, $this->siteUtil->getCurrentSite());
 
-        foreach ($results as $group) {
-            $choices[$group[0]->getId()] = $group[0]->getName();
+        if ($this->video->getAuthor() == $user) {
+            $results = $this->groupRepo->getAllGroupsForUserAndSite($user, $this->siteUtil->getCurrentSite());
+            foreach ($results as $group) {
+                $choices[$group[0]->getId()] = $group[0]->getName();
+            }
+        } elseif ($user->getAdminLevel() == 'ROLE_SUPER_ADMIN') {
+            $results = $this->groupRepo->findGroupsForVideo($this->video);
+            foreach ($results as $group) {
+                $choices[$group->getId()] = $group->getName();
+            }
+        } else {
+            return array();
         }
 
         return $choices;
