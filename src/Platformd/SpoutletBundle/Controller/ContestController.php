@@ -28,8 +28,7 @@ class ContestController extends Controller
 {
     public function indexAction()
     {
-        $site = $this->getCurrentSite();
-
+        $site     = $this->getCurrentSite();
         $contests = $this->getContestRepository()->findAllBySite($site);
 
         return $this->render('SpoutletBundle:Contest:index.html.twig', array(
