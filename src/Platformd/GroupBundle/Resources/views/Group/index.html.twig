@@ -176,6 +176,9 @@
             var baseDiv = $('<div class="items-wrapper"></div>');
 
             for (var i = 0; i < num; i++) {
+
+                var index = groupsLoaded + i;
+
                 if(list.length <= groupsLoaded + i)
                 {
                     groupsLoaded+=i;
@@ -187,26 +190,26 @@
                     currDiv.appendTo(scrollContainer);
                 }
 
-                if (list[i].thumbnail) {
-                    image = '<img src="' + list[i].thumbnail + '" alt="' + list[i].name + '" title="' + list[i].name + '" />';
+                if (list[index].thumbnail) {
+                    image = '<img src="' + list[index].thumbnail + '" alt="' + list[index].name + '" title="' + list[index].name + '" />';
                 } else {
-                    image = '<img src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" alt="' + list[i].name + '" title="' + list[i].name + '" />';
+                    image = '<img src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" alt="' + list[index].name + '" title="' + list[index].name + '" />';
                 }
 
-                ownerName = list[i].owner.adminLevel ? '{{ 'platformd.groups.index.staff' | pd_trans }}' : list[i].owner.username;
+                ownerName = list[index].owner.adminLevel ? '{{ 'platformd.groups.index.staff' | pd_trans }}' : list[index].owner.username;
 
                 currDiv.append('<div class="group-list-item"> \
-                    <a href="' + basePath + list[i].slug + '"> \
+                    <a href="' + basePath + list[index].slug + '"> \
                         ' + image + ' \
                     </a> \
-                    <a href="' + basePath + list[i].slug + '" class="group-index-link" title="' + list[i].name + '"> \
-                        ' + list[i].name + ' \
+                    <a href="' + basePath + list[index].slug + '" class="group-index-link" title="' + list[index].name + '"> \
+                        ' + list[index].name + ' \
                     </a> \
                     <div class="details"> \
-                        <div class="item-detail">{{ 'platformd.groups.index.members' | pd_trans }}: ' + list[i].memberCount + '</div> \
+                        <div class="item-detail">{{ 'platformd.groups.index.members' | pd_trans }}: ' + list[index].memberCount + '</div> \
                         <div class="item-detail">{{ 'platformd.groups.index.organizer' | pd_trans }}: ' + ownerName + '</div> \
                         <div class="report-group-caption"> \
-                            <a href="javascript:void(0);" class="report-group" report-data="' + list[i].id + '">{{ 'platformd.groups.index.report_group' | pd_trans }}</a> \
+                            <a href="javascript:void(0);" class="report-group" report-data="' + list[index].id + '">{{ 'platformd.groups.index.report_group' | pd_trans }}</a> \
                         </div> \
                     </div> \
                 </div>');
@@ -215,6 +218,7 @@
             groupsLoaded+=num;
 
             updateCounts(type, groupsLoaded);
+            $('.group-index-link').truncate();
         }
 
         function updateCounts(type, groupsLoaded) {
