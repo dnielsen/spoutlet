@@ -117,7 +117,7 @@ class SweepstakesEntryRepository extends EntityRepository
             ->leftJoin('e.sweepstakes','ss')
             ->leftJoin('e.country', 'c')
             ->leftJoin('c.regions', 'r')
-            ->andWhere('r.site IS NOT NULL')
+            ->andWhere('r.isMetricsRegion = true')
             ->addGroupBy('r.name')
             ->addGroupBy('ss.name');
 

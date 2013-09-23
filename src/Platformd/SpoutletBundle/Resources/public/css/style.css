@@ -1393,14 +1393,16 @@ html body .lastBlurb {
     margin: 0 0 10px 70px;
     text-transform: capitalize;
 }
-.xnotices p {
+.xnotices p,
+.xnotices ol,
+.xnotices ul {
     margin: 0 0 10px 70px;
     font-size: 12px;
     color: #000000;
 }
 
 .xnotices .infoNotice {
-    background: url(/bundles/spoutlet/images/errors/notice-info-bg.png) 0px 0px no-repeat #97d0e0;
+    background: url(/bundles/spoutlet/images/errors/notice-info-bg.png) 7px 7px no-repeat #97d0e0;
 }
 .xnotices .infoNotice h3 {
     color: #0f5ea7;

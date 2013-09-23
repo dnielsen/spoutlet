@@ -1,17 +1,27 @@
 sweepstakes_rules:
     pattern: /contest-sweeps/{slug}/contestrules
-    defaults: { _controller: SweepstakesBundle:Frontend:rules, slug: null }
+    defaults: { _controller: SweepstakesBundle:Frontend:sweepstakesRules, slug: null }
 
 _sweeps_admin:
     resource: "routing/admin.yml"
     prefix:   "/admin/sweepstakes"
+
+_promo_code_admin:
+    resource: "routing/promoCodeAdmin.yml"
+    prefix:   "/admin/promocode"
 
 sweepstakes_index:
     pattern: /contest-sweeps
     defaults: { _controller: SweepstakesBundle:Frontend:index }
 
 sweepstakes_show:
-    pattern: /contest-sweeps/{slug}/{entryId}
-    defaults: { _controller: SweepstakesBundle:Frontend:show, entryId: null }
+    pattern: /contest-sweeps/{slug}
+    defaults: { _controller: SweepstakesBundle:Frontend:showSweepstakes }
 
+promo_code_contest_show:
+    pattern: /promocode/{slug}
+    defaults: { _controller: SweepstakesBundle:Frontend:showPromoCodeContest }
 
+promo_code_contest_rules:
+    pattern: /promocode/{slug}/contestrules
+    defaults: { _controller: SweepstakesBundle:Frontend:promoCodeContestRules }

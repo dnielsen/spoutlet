@@ -18,6 +18,9 @@ class SweepstakesEntryType extends AbstractType
 
     public function buildForm(FormBuilder $builder, array $options)
     {
+        $entry = $builder->getData();
+        $sweeps = $entry->getSweepstakes();
+
         if (!$this->securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $builder->add('registrationDetails', 'platformd_sweeps_registration', array(
                 'property_path' => false,
@@ -35,6 +38,12 @@ class SweepstakesEntryType extends AbstractType
                 'label' => 'sweepstakes.entry.form.read_and_agreed_to_rules',
             ))
         ;
+
+        if ($sweeps->getHasOptionalCheckbox()) {
+            $builder->add('optionalCheckboxAnswer', 'checkbox', array(
+                'label' => $sweeps->getOptionalCheckboxLabel(),
+            ));
+        }
     }
 
     public function getName()

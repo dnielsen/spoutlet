@@ -1,0 +1,104 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+<h1>
+    Edit/Create Promo Code Contest
+</h1>
+
+<form action="{{ route }}" method="post" {{ form_enctype(form) }} class="form sweepstakesForm form-horizontal">
+
+{{ form_errors(form) }}
+
+    <fieldset>
+        <legend>a) Basic Information</legend>
+        <div class="row-fluid">
+            <div class="span6">
+                {{ form_row(form.name) }}
+                {{ form_row(form.slug) }}
+                {{ form_row(form.testOnly) }}
+                {{ form_row(form.hidden) }}
+
+            </div>
+            <div class="span6">
+                {{ form_row(form.sites) }}
+                {{ form_row(form.startsAt) }}
+                {{ form_row(form.endsAt) }}
+                {{ form_row(form.timezone) }}
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>b) Content</legend>
+        {{ form_row(form.content) }}
+        {{ form_row(form.backgroundImage) }}
+        {{ form_row(form.tags) }}
+        {{ form_row(form.metaDescription) }}
+        {{ form_row(form.hasOptionalCheckbox) }}
+
+        <div id="optional-checkbox-label" style="display:none">
+            {{ form_row(form.optionalCheckboxLabel) }}
+        </div>
+
+        {{ form_row(form.winnerMessage) }}
+        {{ form_row(form.loserMessage) }}
+        {{ form_row(form.backupLoserMessage) }}
+    </fieldset>
+
+    <fieldset id="files">
+        <legend>c) Files</legend>
+        {{ form_row(form.winningCodesFile) }}
+        {{ form_row(form.consolationCodesFile) }}
+        {{ form_row(form.affidavit) }}
+
+        {% if contest.affidavit and media_path(contest.affidavit) %}
+            <div class="controls"><p class="alert alert-info help"><i class="icon-info-sign"></i>
+                <a href="{{ media_path(contest.affidavit) }}">{{ media_path(contest.affidavit) }}</a>
+            </p></div>
+        {% endif %}
+
+        {{ form_row(form.w9form) }}
+
+        {% if contest.w9form and media_path(contest.w9form) %}
+            <div class="controls"><p class="alert alert-info help"><i class="icon-info-sign"></i>
+                <a href="{{ media_path(contest.w9form) }}">{{ media_path(contest.w9form) }}</a>
+            </p></div>
+        {% endif %}
+    </fieldset>
+
+    <fieldset>
+        <legend>d) Rules</legend>
+        {{ form_row(form.officialRules) }}
+    </fieldset>
+
+    <fieldset>
+        <legend>e) Status</legend>
+        {{ form_row(form.published) }}
+    </fieldset>
+
+    <div style="display:none;">
+        {{ form_rest(form) }}
+    </div>
+
+    <div class="form-actions">
+        <input type="submit" class="btn btn-primary" value="{{ "save" | trans }}" formnovalidate />
+    </div>
+</form>
+<script type="text/javascript">
+    $(function () {
+
+        if ($('.has-optional-checkbox').is(':checked')) {
+            $('#optional-checkbox-label').slideDown();
+        }
+
+        $('.has-optional-checkbox').change(function() {
+            if ($(this).is(':checked')) {
+                $('#optional-checkbox-label').slideDown();
+            } else {
+                $('#optional-checkbox-label').slideUp();
+            }
+        });
+
+
+    });
+</script>

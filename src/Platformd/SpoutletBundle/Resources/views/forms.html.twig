@@ -78,7 +78,7 @@
 
             {% set objPath = media_path(form.get('mediaObject')) %}
 
-            {% if not ends_with(objPath, '.zip') %}
+            {% if ends_with(objPath, '.png') or ends_with(objPath, '.jpg') or ends_with(objPath, '.jpeg') or ends_with(objPath, '.gif') %}
                 <img src="{{ objPath }}" />
             {% endif %}
         {% endif %}

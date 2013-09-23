@@ -143,6 +143,14 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li>
+                                <a href="{{ path('admin_promo_code_contest_index') }}">Promo Code Contests</a>
+                                <ul>
+                                    <li>
+                                        <a href="{{ path('admin_promo_code_contest_new') }}">Add new</a>
+                                    </li>
+                                </ul>
+                            </li>
 
                             {% if not is_granted('ROLE_JAPAN_ADMIN') %}
                                 <li>
@@ -157,7 +165,7 @@
                                     </ul>
                                 </li>
                                 <li>
-                                    <a href="{{ path('admin_contest_index') }}">Contests</a>
+                                    <a href="{{ path('admin_contest_index') }}">Image/Group Contests</a>
                                     <ul>
                                         <li>
                                             <a href="{{ path('admin_contest_new') }}">Add new</a>
@@ -307,6 +315,7 @@
                             </ul>
 
                             <li><a href="{{ path('admin_sweepstakes_metrics') }}">Sweepstakes</a></li>
+                            <li><a href="{{ path('admin_promo_code_contest_metrics') }}">Promo Code Contests</a></li>
 
                             {% if not is_granted('ROLE_JAPAN_ADMIN') %}
                                 <li><a href="{{ path('admin_group_find') }}">Find Groups</a></li>
@@ -350,7 +359,7 @@
 
                         <div class="alert alert-{{ flash.type }}">
                             <i class="icon-ok"></i>
-                            {{ flash.message | trans }}
+                            {{ flash.message | trans | raw }}
                         </div>
 
                     {% endif %}

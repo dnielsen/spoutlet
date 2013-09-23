@@ -9,33 +9,47 @@ use Gedmo\Mapping\Annotation as Gedmo,
     Gedmo\Sluggable\Util\Urlizer;
 
 use Symfony\Component\Validator\Constraints as Assert,
-    Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+    Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity,
+    Symfony\Component\Validator\ExecutionContext
+;
 
 use DateTime;
 
 use Platformd\UserBundle\Entity\User,
     Platformd\TagBundle\Model\TaggableInterface,
     Platformd\SpoutletBundle\Link\LinkableInterface,
-    Platformd\SweepstakesBundle\Entity\SweepstakesQuestion;
+    Platformd\SweepstakesBundle\Entity\SweepstakesQuestion,
+    Platformd\MediaBundle\Entity\Media
+;
 
 /**
  * Platformd\SweepstakesBundle\Entity\Sweepstakes
- * @ORM\Table(name="pd_sweepstakes", uniqueConstraints={@ORM\UniqueConstraint(name="slug_unique", columns={"slug"})})
+ * @ORM\Table(name="pd_sweepstakes", indexes={@ORM\index(name="event_type_idx", columns={"event_type"})}, uniqueConstraints={@ORM\UniqueConstraint(name="slug_unique", columns={"slug"})})
  * @ORM\Entity(repositoryClass="Platformd\SweepstakesBundle\Entity\SweepstakesRepository")
  *
+ * @Assert\Callback(methods={"validatePromoCodeFields"})
  * @UniqueEntity(fields={"slug"}, message="sweepstakes.errors.slug_unique")
  * @UniqueEntity(fields={"name"}, message="sweepstakes.errors.name_unique")
  */
 class Sweepstakes implements TaggableInterface, LinkableInterface
 {
     const COMMENT_PREFIX  = 'sweepstake-';
+    const FORMS_S3_PREFIX = 'promo_code/';
+
+    const SWEEPSTAKES_TYPE_SWEEPSTAKES = 'sweepstakes';
+    const SWEEPSTAKES_TYPE_PROMO_CODE  = 'promocode';
+
+    static protected $validTypes = array(
+        self::SWEEPSTAKES_TYPE_SWEEPSTAKES,
+        self::SWEEPSTAKES_TYPE_PROMO_CODE,
+    );
 
     /**
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @Assert\NotBlank()
@@ -62,7 +76,7 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
      * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Site")
      * @ORM\JoinTable(name="pd_sweepstakes_site")
      */
-     private $sites;
+     protected $sites;
 
      /**
      * @Gedmo\Timestampable(on="create")
@@ -85,27 +99,31 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
      * @Assert\Url
      * @ORM\Column(name="external_url", length="255", nullable=true)
      */
-    private $externalUrl;
+    protected $externalUrl;
 
     /**
+     * @Assert\DateTime()
+     * @Assert\NotBlank()
      * @ORM\Column(name="starts_at", type="datetime")
      */
-    private $startsAt;
+    protected $startsAt;
 
     /**
+     * @Assert\DateTime()
+     * @Assert\NotBlank()
      * @ORM\Column(name="ends_at", type="datetime")
      */
-    private $endsAt;
+    protected $endsAt;
 
     /**
      * @ORM\Column(name="hidden", type="boolean")
      */
-    private $hidden = false;
+    protected $hidden = false;
 
     /**
      * @ORM\Column(name="content", type="text", nullable=true)
      */
-    private $content;
+    protected $content;
 
     /**
      * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"persist"})
@@ -115,12 +133,12 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
     /**
      * @ORM\Column(name="official_rules", type="text", nullable=true)
      */
-    private $officialRules;
+    protected $officialRules;
 
     /**
      * @ORM\OneToMany(targetEntity="Platformd\SweepstakesBundle\Entity\SweepstakesEntry", mappedBy="sweepstakes")
      */
-    private $entries;
+    protected $entries;
 
     /**
      * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group")
@@ -132,7 +150,7 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
      * @ORM\OneToMany(targetEntity="Platformd\SweepstakesBundle\Entity\SweepstakesQuestion", mappedBy="sweepstakes", cascade={"persist"})
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
-    private $questions;
+    protected $questions;
 
     /**
      * @ORM\Column(name="test_only", type="boolean", nullable=true)
@@ -146,7 +164,82 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
      */
     protected $metaDescription = false;
 
-    private $tags;
+    /**
+     * @ORM\Column(name="has_optional_checkbox", type="boolean")
+     *
+     */
+    protected $hasOptionalCheckbox = false;
+
+    /**
+     * @ORM\Column(name="optional_checkbox_label", type="string", length=255, nullable=true)
+     *
+     */
+    protected $optionalCheckboxLabel;
+
+    /**
+     * @ORM\Column(name="event_type", type="string", length=20)
+     *
+     */
+    protected $eventType = self::SWEEPSTAKES_TYPE_SWEEPSTAKES;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\SweepstakesBundle\Entity\PromoCodeContestCode", mappedBy="contest", cascade={"persist"})
+     */
+    protected $winningCodes;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\SweepstakesBundle\Entity\PromoCodeContestConsolationCode", mappedBy="contest", cascade={"persist"})
+     */
+    protected $consolationCodes;
+
+    /**
+     * @ORM\Column(name="winning_codes_count", type="integer", nullable=true)
+     */
+    protected $winningCodesCount;
+
+    /**
+     * @ORM\Column(name="consolation_codes_count", type="integer", nullable=true)
+     */
+    protected $consolationCodesCount;
+
+    protected $tags;
+
+    /**
+     * @Assert\File(maxSize="6000000")
+     */
+    protected $winningCodesFile;
+
+    /**
+     * @Assert\File(maxSize="6000000")
+     */
+    protected $consolationCodesFile;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $affidavit;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $w9form;
+
+    /**
+     * @ORM\Column(name="winner_message", type="text", nullable="true")
+     */
+    protected $winnerMessage;
+
+    /**
+     * @ORM\Column(name="loser_message", type="text", nullable=true)
+     */
+    protected $loserMessage;
+
+    /**
+     * @ORM\Column(name="backup_loser_message", type="text", nullable=true)
+     */
+    protected $backupLoserMessage;
 
     public function __construct()
     {
@@ -251,10 +344,115 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
     public function getMetaDescription()       { return $this->metaDescription;  }
     public function setMetaDescription($value) { $this->metaDescription = $value; }
 
+    public function getHasOptionalCheckbox()       { return $this->hasOptionalCheckbox;  }
+    public function setHasOptionalCheckbox($value) { $this->hasOptionalCheckbox = $value; }
+
+    public function getOptionalCheckboxLabel()       { return $this->optionalCheckboxLabel;  }
+    public function setOptionalCheckboxLabel($value) { $this->optionalCheckboxLabel = $value; }
+
+    public function setEventType($value)
+    {
+        if ($value && !in_array($value, self::$validTypes)) {
+            throw new \InvalidArgumentException(sprintf('Invalid Event Type "%s" given', $value));
+        }
+
+        $this->eventType = $value;
+    }
+
+    public function getEventType()       { return $this->eventType; }
+
+    public function setWinningCodes($value) { $this->winningCodes = $value; }
+    public function getWinningCodes()       { return $this->winningCodes; }
+
+    public function setConsolationCodes($value) { $this->consolationCodes = $value; }
+    public function getConsolationCodes()       { return $this->consolationCodes; }
+
+    public function setWinningCodesCount($value) { $this->winningCodesCount = $value; }
+    public function getWinningCodesCount()       { return $this->winningCodesCount ?: 0; }
+
+    public function setConsolationCodesCount($value) { $this->consolationCodesCount = $value; }
+    public function getConsolationCodesCount()       { return $this->consolationCodesCount ?: 0; }
+
+    public function incrementWinningCodesCount($amount = 1)
+    {
+        $this->winningCodesCount = (null === $this->winningCodesCount ? $amount : $this->winningCodesCount + $amount);
+    }
+
+    public function incrementConsolationCodesCount($amount = 1)
+    {
+        $this->consolationCodesCount = (null === $this->consolationCodesCount ? $amount : $this->consolationCodesCount + $amount);
+    }
+
+    public function getWinningCodesFile()       { return $this->winningCodesFile;  }
+    public function setWinningCodesFile($value) { $this->winningCodesFile = $value; }
+
+    public function getConsolationCodesFile()       { return $this->consolationCodesFile;  }
+    public function setConsolationCodesFile($value) { $this->consolationCodesFile = $value; }
+
+    public function getAffidavit()
+    {
+        if (null === $this->affidavit) {
+            $this->affidavit = new Media(true);
+        }
+
+        return $this->affidavit;
+    }
+
+    public function setAffidavit($value) { $this->affidavit = $value; }
+
+    public function getW9form()
+    {
+        if (null === $this->w9form) {
+            $this->w9form    = new Media(true);
+        }
+
+        return $this->w9form;
+    }
+
+    public function setW9form($value) { $this->w9form = $value; }
+
+    public function getWinnerMessage()       { return $this->winnerMessage;  }
+    public function setWinnerMessage($value) { $this->winnerMessage = $value; }
+
+    public function getLoserMessage()       { return $this->loserMessage;  }
+    public function setLoserMessage($value) { $this->loserMessage = $value; }
+
+    public function getBackupLoserMessage()       { return $this->backupLoserMessage;  }
+    public function setBackupLoserMessage($value) { $this->backupLoserMessage = $value; }
+
+    public function addWinningCode(PromoCodeContestCode $code)
+    {
+        if (!$this->winningCodes) {
+            $this->winningCodes = new ArrayCollection();
+            $this->winningCodesCount = 0;
+        }
+
+        $code->setContest($this);
+        $this->winningCodes->add($code);
+        $this->winningCodesCount++;
+    }
+
+    public function addConsolationCode(PromoCodeContestConsolationCode $code)
+    {
+        if (!$this->consolationCodes) {
+            $this->consolationCodes = new ArrayCollection();
+            $this->consolationCodesCount = 0;
+        }
+
+        $code->setContest($this);
+        $this->consolationCodes->add($code);
+        $this->consolationCodesCount++;
+    }
+
     public function getEntriesCount() { return count($this->entries); }
 
     public function getLinkableOverrideUrl()     { return $this->getExternalUrl(); }
-    public function getLinkableRouteName()       { return 'sweepstakes_show';  }
+
+    public function getLinkableRouteName()
+    {
+        return $this->eventType == self::SWEEPSTAKES_TYPE_SWEEPSTAKES ? 'sweepstakes_show' : 'promo_code_contest_show';
+    }
+
     public function getLinkableRouteParameters() { return array('slug' => $this->getSlug()); }
 
     public function getThreadId()
@@ -330,5 +528,60 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
         }
 
         return false;
+    }
+
+    static public function getValidTypes()
+    {
+        return self::$validTypes;
+    }
+
+    public function validatePromoCodeFields(ExecutionContext $executionContext)
+    {
+        if ($this->getEventType() == self::SWEEPSTAKES_TYPE_SWEEPSTAKES) {
+            return;
+        }
+
+        $winnerMessage = $this->getWinnerMessage();
+        $loserMessage = $this->getLoserMessage();
+
+        if (empty($winnerMessage)) {
+            $this->addError($executionContext, 'winnerMessage', 'Please fill in the winner message.');
+        }
+
+        if (empty($loserMessage)) {
+            $this->addError($executionContext, 'loserMessage', 'Please fill in the loser message.');
+        }
+
+        if (!$this->getWinningCodesCount() && null === $this->getWinningCodesFile()) {
+            $this->addError($executionContext, 'winningCodesFile', 'Please attach a .csv file containing the winning code(s).');
+        }
+
+        if (!$this->getConsolationCodesCount() && null === $this->getConsolationCodesFile()) {
+            $this->addError($executionContext, 'consolationCodesFile', 'Please attach a .csv file containing the consolation code(s).');
+        }
+
+        if (null === $this->getAffidavit()->getFileName() && null === $this->getAffidavit()->getFileObject()) {
+            $this->addError($executionContext, 'affidavit.fileObject', 'Please attach an Affidavit file.');
+        }
+
+        if (null === $this->getW9Form()->getFileName() && null === $this->getW9Form()->getFileObject()) {
+            $this->addError($executionContext, 'w9form.fileObject', 'Please attach a W9 form.');
+        }
+    }
+
+    private function addError(ExecutionContext $executionContext, $path, $message)
+    {
+        $oldPath = $executionContext->getPropertyPath();
+        $executionContext->setPropertyPath($oldPath.'.'.$path);
+
+        $executionContext->addViolation(
+            $message,
+            array(),
+            $path
+        );
+
+        $executionContext->setPropertyPath($oldPath);
+
+        return $executionContext;
     }
 }

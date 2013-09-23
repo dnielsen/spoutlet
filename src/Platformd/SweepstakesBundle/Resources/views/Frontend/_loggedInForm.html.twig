@@ -1,5 +1,5 @@
 <div id="sweepstakes-wrapper">
-    <form action="{{ path('sweepstakes_show', { 'slug': sweepstakes.slug }) }}" method="post" {{ form_enctype(entryForm) }} class="form form-horizontal">
+    <form action="{{ sweepstakes | pd_link }}" method="post" {{ form_enctype(entryForm) }} class="form form-horizontal">
         <table id="sweepstakes-tbl">
             <tr><td>&nbsp;</td><td id="sweeps-entry-form-title">{{ 'sweepstakes.entry.form.title' | pd_trans }}</td></tr>
             <tr class="sweepsform-row">
@@ -14,14 +14,27 @@
                 </tr>
             {% endfor %}
             {% endif %}
+
             <tr class="sweepsform-row">
                 <td class="sweepsform-left"></td>
                 <td class="sweepsform-right">
                     {{ form_widget(entryForm.termsAccepted) }}
-                    <span class="checkbox-label">{{ 'sweepstakes.entry.form.read_and_agreed_to_rules'|pd_trans({'%rules_url%': path('sweepstakes_rules', {'slug': sweepstakes.slug})})|raw }}</span>
+                    <span class="checkbox-label">{{ 'sweepstakes.entry.form.read_and_agreed_to_rules'|pd_trans({'%rules_url%': path(rulesRoute, {'slug': sweepstakes.slug})})|raw }}</span>
                     {{ form_errors(entryForm.termsAccepted) }}
                 </td>
             </tr>
+
+            {% if entryForm.optionalCheckboxAnswer is defined %}
+                <tr class="sweepsform-row">
+                    <td class="sweepsform-left"></td>
+                    <td class="sweepsform-right">
+                        {{ form_widget(entryForm.optionalCheckboxAnswer) }}
+                        <span id="additional-checkbox" class="checkbox-label">{{ sweepstakes.optionalCheckboxLabel | raw }}</span>
+                        {{ form_errors(entryForm.optionalCheckboxAnswer) }}
+                    </td>
+                </tr>
+            {% endif %}
+
             <tr class="sweepsform-row">
                 <td class="sweepsform-left"></td>
                 <td class="sweepsform-right"><button type="submit" class="btn btn-primary" formnovalidate>{{ "enter" | pd_trans }}</button></td>

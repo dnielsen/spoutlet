@@ -1,0 +1,31 @@
+admin_promo_code_contest_index:
+    pattern: /
+    defaults: { _controller: SweepstakesBundle:Admin:index, type: promocode }
+
+admin_promo_code_contest_list:
+    pattern: /list/{site}
+    defaults: { _controller: SweepstakesBundle:Admin:list, type: promocode }
+
+admin_promo_code_contest_new:
+    pattern: /new
+    defaults: { _controller: SweepstakesBundle:Admin:new, type: promocode }
+
+admin_promo_code_contest_edit:
+    pattern: /edit/{id}
+    defaults: { _controller: SweepstakesBundle:Admin:edit, type: promocode }
+
+admin_promo_code_contest_approve:
+    pattern: /admin/events/approve/{id}
+    defaults: { _controller: SweepstakesBundle:Admin:approve, type: promocode }
+
+admin_promo_code_contest_unpublish:
+    pattern: /admin/events/unpublish/{id}
+    defaults: { _controller: SweepstakesBundle:Admin:unpublish, type: promocode }
+
+admin_promo_code_contest_metrics:
+    pattern: /metrics
+    defaults: { _controller: SweepstakesBundle:Admin:metrics, type: promocode }
+
+admin_promo_code_contest_metrics_csv:
+    pattern: /metrics/{id}/{region}
+    defaults: { _controller: SweepstakesBundle:Admin:getMetrics }

@@ -25,34 +25,29 @@ class SweepstakesRepository extends EntityRepository
         return $entry;
     }
 
-    public function findAllForSite($site)
+    public function findAllForSite($site, $type=Sweepstakes::SWEEPSTAKES_TYPE_SWEEPSTAKES)
     {
         $qb = $this->getSiteQueryBuilder($site)
             ->orderBy('ss.created', 'DESC');
 
+        $this->addTypeQuery($qb, $type);
+
         return $qb->getQuery()->getResult();
     }
 
-    public function findAllOrderedByNewest()
-    {
-        return $this->createQueryBuilder('ss')
-            ->orderBy('ss.created', 'DESC')
-            ->getQuery()
-            ->execute()
-        ;
-    }
-
-    public function findOneBySlugForSite($slug, $site)
+    public function findOneBySlugForSite($slug, $site, $type=Sweepstakes::SWEEPSTAKES_TYPE_SWEEPSTAKES)
     {
         $qb = $this->getSiteQueryBuilder($site)
             ->andWhere('ss.slug = :slug')
             ->setParameter('slug', $slug)
         ;
 
+        $this->addTypeQuery($qb, $type);
+
         return $qb->getQuery()->getOneOrNullResult();
     }
 
-    public function getCurrentSweepstakes($site, $limit = null)
+    public function getCurrentSweepstakes($site, $limit = null, $type=Sweepstakes::SWEEPSTAKES_TYPE_SWEEPSTAKES)
     {
         $qb = $this->getSiteQueryBuilder($site)
             ->andWhere('ss.published = true')
@@ -61,10 +56,12 @@ class SweepstakesRepository extends EntityRepository
             ->setParameter('now', new DateTime())
         ;
 
+        $this->addTypeQuery($qb, $type);
+
         return $qb->getQuery()->execute();
     }
 
-    public function getPastSweepstakes($site, $limit = null)
+    public function getPastSweepstakes($site, $limit = null, $type=Sweepstakes::SWEEPSTAKES_TYPE_SWEEPSTAKES)
     {
         $qb = $this->getSiteQueryBuilder($site)
             ->andWhere('ss.published = true')
@@ -73,21 +70,26 @@ class SweepstakesRepository extends EntityRepository
             ->setParameter('now', new DateTime())
         ;
 
+        $this->addTypeQuery($qb, $type);
+
         return $qb->getQuery()->execute();
     }
 
     protected function getSiteQueryBuilder($site, $alias='ss')
     {
-        $qb = $this->createQueryBuilder($alias)
-            ->leftJoin($alias.'.sites', 's')
-            ->andWhere(is_string($site) ? 's.name = :site' : 's = :site')
-            ->setParameter('site', $site)
-        ;
+        $qb = $this->createQueryBuilder($alias);
+
+        if ($site) {
+            $qb->leftJoin($alias.'.sites', 's')
+                ->andWhere(is_string($site) ? 's.name = :site' : 's = :site')
+                ->setParameter('site', $site)
+            ;
+        }
 
         return $qb;
     }
 
-    public function findPublished($site)
+    public function findPublished($site, $type=Sweepstakes::SWEEPSTAKES_TYPE_SWEEPSTAKES)
     {
         $qb = $this->getSiteQueryBuilder($site)
             ->orderBy('ss.startsAt', 'DESC')
@@ -95,6 +97,14 @@ class SweepstakesRepository extends EntityRepository
             ->andWhere('ss.published = true')
         ;
 
+        $this->addTypeQuery($qb, $type);
+
         return $qb->getQuery()->execute();
+    }
+
+    private function addTypeQuery($qb, $type, $alias='ss')
+    {
+        $qb->andWhere($alias.'.eventType = :type')
+            ->setParameter('type', $type);
     }
 }

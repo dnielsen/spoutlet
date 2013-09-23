@@ -16,7 +16,7 @@ Feature: Contest Admin
             And there is a game called "Diablo 3"
 
     Scenario: Add a new contest
-        When I click to add new "Contests"
+        When I click to add new "Image/Group Contests"
             And I select "Diablo 3" from "Game"
             And I fill in the following:
                 | Contest name                 | New Image Contest  |
@@ -36,7 +36,7 @@ Feature: Contest Admin
         Then I should see "The contest was created!"
 
     Scenario: List existing contests
-        Given I click on "Contests"
+        Given I click on "Image/Group Contests"
         When I click on "Demo"
         Then I should see 4 data rows in "image-contest-list"
             And I should see "Diablo 3 Image Contest"
@@ -44,7 +44,7 @@ Feature: Contest Admin
             And I should not see "NA Contest"
 
     Scenario: Edit existing contest
-        Given I click on "Contests"
+        Given I click on "Image/Group Contests"
         When I click on "Demo"
             And I click on "Diablo 3 Image Contest"
             And I fill in the following:
@@ -53,7 +53,7 @@ Feature: Contest Admin
         Then I should see "The contest was saved!"
 
     Scenario: Preview the contest
-        Given I click on "Contests"
+        Given I click on "Image/Group Contests"
         When I click on "Demo"
             And I click on the URL for "Diablo 3 Image Contest"
         Then I should be on the contest called "Diablo 3 Image Contest" in "en"

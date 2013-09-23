@@ -19,7 +19,15 @@
 
 {% block content %}
 
-    {% if user is null %}
+    {% for key, message in app.session.getFlashes() %}
+        {% include 'SpoutletBundle::_flashMessage.html.twig' with { 'type': key, 'message': message } %}
+    {% endfor %}
+
+    {% if entryFlash %}
+        {% include 'SpoutletBundle::_flashMessage.html.twig' with entryFlash %}
+    {% endif %}
+
+    {% if user is null or user is not null %}
         {% if registered|default(false) %}
             {% include 'SpoutletBundle::_flashMessage.html.twig' with { 'type': 'success', 'message': 'sweepstakes.entry.registration.flash' } %}
         {% endif %}
@@ -35,17 +43,24 @@
 
     <div class="std_1col">
 
-        <div class="page-header">
-            <h1 class="controlled-spacing">{{ sweepstakes.name }}</h1>
-        </div>
+        {% if sweepstakes.eventType != 'promocode' %}
+            <div class="page-header">
+                <h1 class="controlled-spacing">{{ sweepstakes.name }}</h1>
+            </div>
+        {% endif %}
 
         <div id="sweepstakes-content">
+
+            {% if sweepstakes.eventType == 'promocode' %}
+                <h1 class="controlled-spacing">{{ sweepstakes.name }}</h1>
+            {% endif %}
+
             {{ sweepstakes.content | raw }}
 
             <div class="clear"></div>
 
             <div id="sweepstakes-rules">
-                {{ 'sweepstakes.entry.links.rules'|pd_trans({'%rules_url%': path('sweepstakes_rules', {'slug': sweepstakes.slug})})|raw }}
+                {{ 'sweepstakes.entry.links.rules'|pd_trans({'%rules_url%': path(rulesRoute, {'slug': sweepstakes.slug})})|raw }}
             </div>
         </div>
 
@@ -84,16 +99,9 @@
             $('.reg-source').click(function() {
                 addSourceInfo(this, '{{ regSourceData | base64_encode }}');
             });
-        });
 
-        jQuery(document).ready(function() {
-            // make the terms content display in a modal
-            $('.sweeps-terms-modal').click(function() {
-                $.modal($('#sweeps-terms-modal-content'), {
-                    overlayClose: true
-                });
-
-                return false;
+            $('#additional-checkbox a').click(function() {
+                $(this).attr('target', '_blank');
             });
 
             $('.not-entered #use-existing-account').click(function(e) {

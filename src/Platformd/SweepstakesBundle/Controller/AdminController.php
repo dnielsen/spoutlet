@@ -3,81 +3,108 @@
 namespace Platformd\SweepstakesBundle\Controller;
 
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
+use Platformd\SweepstakesBundle\Entity\SweepstakesQuestion;
 use Platformd\SweepstakesBundle\Form\Type\SweepstakesAdminType;
+use Platformd\SpoutletBundle\Controller\Controller;
+use Platformd\SpoutletBundle\Util\CsvResponseFactory;
+
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
+
 use DateTime;
-use Platformd\SpoutletBundle\Util\CsvResponseFactory;
+
 use Knp\MediaBundle\Util\MediaUtil;
 
 class AdminController extends Controller
 {
-    public function indexAction()
+    public function indexAction($type)
     {
+        $route = $type == Sweepstakes::SWEEPSTAKES_TYPE_PROMO_CODE ? 'admin_promo_code_contest_list' : 'admin_sweepstakes_list';
+        $title = $this->getTypeText($type);
+
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-            $url = $this->generateUrl('admin_sweepstakes_list', array('site' => 2));
+            $url = $this->generateUrl($route, array('site' => 2));
             return $this->redirect($url);
         }
 
-        $this->addSweepstakesBreadcrumb();
+        $this->addSweepstakesBreadcrumb($type);
 
         return $this->render('SweepstakesBundle:Admin:index.html.twig', array(
-            'sites' => $this->getSiteManager()->getSiteChoices()
+            'sites' => $this->getSiteManager()->getSiteChoices(),
+            'route' => $route,
+            'type'  => $type,
         ));
     }
 
-    public function listAction($site)
+    public function listAction($site, $type)
     {
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
             $site = 2;
         }
 
-        $this->addSweepstakesBreadcrumb();
-        $this->addSiteBreadcrumbs($site);
+        $this->addSweepstakesBreadcrumb($type);
+        $this->addSiteBreadcrumbs($site, $type);
 
         $em = $this->getDoctrine()->getEntityManager();
 
         $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
-        $sweepstakess = $this->getSweepstakesRepo()->findAllForSite($site);
+        $sweepstakess = $this->getSweepstakesRepo()->findAllForSite($site, $type);
 
         return $this->render('SweepstakesBundle:Admin:list.html.twig', array(
-            'sweepstakess'  => $sweepstakess,
-            'site'          => $site,
+            'sweepstakess' => $sweepstakess,
+            'site'         => $site,
+            'type'         => $type,
         ));
     }
 
-    public function newAction(Request $request)
+    public function newAction(Request $request, $type)
     {
-        $this->addSweepstakesBreadcrumb()->addChild('New');
+        $type = in_array($type, Sweepstakes::getValidTypes()) ? $type : Sweepstakes::SWEEPSTAKES_TYPE_SWEEPSTAKES;
+        $isPromo = $type == Sweepstakes::SWEEPSTAKES_TYPE_PROMO_CODE;
+
+        $this->addSweepstakesBreadcrumb($type)->addChild('New');
 
         $tagManager    = $this->getTagManager();
-    	$sweepstakes   = new Sweepstakes();
+        $sweepstakes   = new Sweepstakes();
 
-    	$form = $this->createForm(new SweepstakesAdminType($sweepstakes, $tagManager), $sweepstakes);
+        if ($isPromo) {
+            $question   = new SweepstakesQuestion();
 
-    	if($request->getMethod() == 'POST') {
-    		$form->bindRequest($request);
+            $question->setContent($this->trans('sweepstakes.promocode.question'));
+            $sweepstakes->addSweepstakesQuestion($question);
+            $sweepstakes->setEventType(Sweepstakes::SWEEPSTAKES_TYPE_PROMO_CODE);
+        }
 
-    		if($form->isValid()) {
-    			$this->saveSweepstakes($form);
-                return $this->redirect($this->generateUrl('admin_sweepstakes_edit', array('id' => $sweepstakes->getId())));
-    		}
-    	}
+        $form = $this->createForm(new SweepstakesAdminType($sweepstakes, $this->getSweepstakesManager(), $tagManager), $sweepstakes);
 
-    	return $this->render('SweepstakesBundle:Admin:new.html.twig', array(
+        if($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if($form->isValid()) {
+                $this->saveSweepstakes($form);
+
+                $route = $isPromo ? 'admin_promo_code_contest_edit' : 'admin_sweepstakes_edit';
+                return $this->redirect($this->generateUrl($route, array('id' => $sweepstakes->getId())));
+            }
+        }
+
+        return $this->render('SweepstakesBundle:Admin:new.html.twig', array(
             'form'        => $form->createView(),
             'sweepstakes' => $sweepstakes,
             'group'       => null,
+            'type'        => $type,
         ));
     }
 
-    public function editAction(Request $request, $id)
+    public function editAction(Request $request, $id, $type)
     {
-        $this->addSweepstakesBreadcrumb()->addChild('Edit');
+        $isPromo = $type == Sweepstakes::SWEEPSTAKES_TYPE_PROMO_CODE;
+
+        $this->addSweepstakesBreadcrumb($type)->addChild('Edit');
 
         $tagManager     = $this->getTagManager();
         $sweepstakes    = $this->getSweepstakesRepo()->findOneById($id);
@@ -90,19 +117,23 @@ class AdminController extends Controller
 
         $originalQuestions = array();
 
-        // Create an array of the current Tag objects in the database
-        foreach ($sweepstakes->getQuestions() as $question) {
-            $originalQuestions[] = $question;
+        if ($type == Sweepstakes::SWEEPSTAKES_TYPE_SWEEPSTAKES) {
+            // Create an array of the current Tag objects in the database
+            foreach ($sweepstakes->getQuestions() as $question) {
+                $originalQuestions[] = $question;
+            }
         }
 
-        $form = $this->createForm(new SweepstakesAdminType($sweepstakes, $tagManager), $sweepstakes);
+        $form = $this->createForm(new SweepstakesAdminType($sweepstakes, $this->getSweepstakesManager(), $tagManager), $sweepstakes);
 
         if($request->getMethod() == 'POST') {
         	$form->bindRequest($request);
 
         	if($form->isValid()) {
         		$this->saveSweepstakes($form, $originalQuestions);
-        		return $this->redirect($this->generateUrl('admin_sweepstakes_edit', array('id' => $sweepstakes->getId())));
+
+                $route = $isPromo ? 'admin_promo_code_contest_edit' : 'admin_sweepstakes_edit';
+        		return $this->redirect($this->generateUrl($route, array('id' => $sweepstakes->getId())));
         	}
         }
 
@@ -112,7 +143,7 @@ class AdminController extends Controller
             'form'        => $form->createView(),
             'sweepstakes' => $sweepstakes,
             'group'       => $group,
-            'hasEntries'  => $sweepstakes->getEntries()->first() !== false,
+            'type'        => $type,
         ));
     }
 
@@ -140,16 +171,23 @@ class AdminController extends Controller
     }
 
     /**
-     * Shows key sweepstakes metrics
      * @Template()
-     * @return array
      */
-    public function metricsAction(Request $request)
+    public function metricsAction(Request $request, $type)
     {
-        $this->addMetricsBreadcrumbs();
+        $this->addMetricsBreadcrumbs($type);
 
-        $em = $this->getDoctrine()->getEntityManager();
-        $site = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : null;
+        $em          = $this->getDoctrine()->getEntityManager();
+        $site        = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : null;
+
+        $type = in_array($type, Sweepstakes::getValidTypes()) ? $type : Sweepstakes::SWEEPSTAKES_TYPE_SWEEPSTAKES;
+
+        $allSweeps   = $this->getSweepstakesRepo()->findAllForSite($site, $type);
+        $sweepstakes = array();
+
+        foreach ($allSweeps as $sweeps) {
+            $sweepstakes[$sweeps->getId()] = $sweeps->getName();
+        }
 
         $regionCounts = $this->getEntryRepo()->getRegionCounts($site);
         $totalCounts  = $this->getEntryRepo()->getTotalEntryCounts($site);
@@ -173,12 +211,17 @@ class AdminController extends Controller
             }
         }
 
-        $sites = $this->container->get('platformd.metric_manager')->getSiteRegions();
+        $sites = $this->container->get('platformd.metric_manager')->getRegions();
+
+        $csvRoute = $type == Sweepstakes::SWEEPSTAKES_TYPE_SWEEPSTAKES ? 'admin_sweepstakes_metrics_csv' : 'admin_promo_code_contest_metrics_csv';
 
         return array(
-            'metrics' => $data,
-            'sites'   => $sites,
+            'metrics'              => $data,
+            'sites'                => $sites,
+            'sweepstakes'          => $sweepstakes,
             'regionAssignedCounts' => $regionAssignedCounts,
+            'csvRoute'             => $csvRoute,
+            'type'                 => $type,
         );
     }
 
@@ -209,18 +252,28 @@ class AdminController extends Controller
             $entries = $this->getEntryRepo()->findAllForRegionOrderedByNewest($sweepstakes, $regionId);
         }
 
-        return $this->generateMetricsCsvResponse($entries, $sweepstakes->getSlug(), $region);
+        return $this->generateMetricsCsvResponse($sweepstakes, $entries, $region);
     }
 
     /**
      * Downloads a CSV of the entries for a particular sweepstakes
      */
-    private function generateMetricsCsvResponse($entries, $sweepstakesSlug, $region)
+    private function generateMetricsCsvResponse($sweepstakes, $entries, $region)
     {
         // generate CSV content from the rows of data
         $factory = new CsvResponseFactory();
 
-        $factory->addRow(array(
+        $questions = array();
+
+        foreach ($sweepstakes->getQuestions() as $question) {
+            $questions[] = $question->getContent();
+        }
+
+        if ($sweepstakes->getHasOptionalCheckbox()) {
+            $questions[] = 'Additional Checkbox';
+        }
+
+        $factory->addRow(array_merge(array(
             'Username',
             'Id',
             'First Name',
@@ -233,12 +286,9 @@ class AdminController extends Controller
             'Acct Created',
             'Last Logged In',
             'IP Address',
-            'Question 1',
-            'Question 2',
-            'Question 3',
-            'Question 4',
-            'Question 5',
-        ));
+            'Created Account to Enter',
+            'Phone Number',
+        ), $questions));
 
         foreach ($entries as $entry) {
 
@@ -246,6 +296,10 @@ class AdminController extends Controller
 
             foreach ($entry[0]->getAnswers() as $answer) {
                 $answers[] = $answer->getContent();
+            }
+
+            if ($sweepstakes->getHasOptionalCheckbox()) {
+                $answers[] = $entry[0]->getOptionalCheckboxAnswer() ? 'Y' : 'N';
             }
 
             $rowData = array_merge(array(
@@ -261,22 +315,22 @@ class AdminController extends Controller
                 $entry[0]->getUser()->getCreated()->format('Y-m-d'),
                 ($entry[0]->getUser()->getLastLogin()) ? $entry[0]->getUser()->getLastLogin()->format('Y-m-d') : '',
                 $entry[0]->getIpAddress(),
+                $entry[0]->getCreatedAccount() ? 'Y' : 'N',
+                $entry[0]->getPhoneNumber(),
             ), $answers);
 
             $factory->addRow($rowData);
         }
 
-        $filename = sprintf('%s-%s-%s.csv', $sweepstakesSlug, date('Y-m-d'), $region);
+        $filename = sprintf('%s-%s-%s.csv', $sweepstakes->getSlug(), date('Y-m-d'), $region);
         return $factory->createResponse($filename);
 
     }
 
-    private function addMetricsBreadcrumbs()
+    private function addMetricsBreadcrumbs($type=Sweepstakes::SWEEPSTAKES_TYPE_SWEEPSTAKES)
     {
         $this->getBreadcrumbs()->addChild('Metrics');
-        $this->getBreadcrumbs()->addChild('Sweepstakes', array(
-            'route' => 'admin_sweepstakes_metrics',
-        ));
+        $this->getBreadcrumbs()->addChild($type == Sweepstakes::SWEEPSTAKES_TYPE_PROMO_CODE ? 'Promo Code Contests' : 'Sweepstakes');
 
         return $this->getBreadcrumbs();
     }
@@ -292,49 +346,7 @@ class AdminController extends Controller
 
     private function saveSweepstakes(Form $sweepstakesForm, $originalQuestions = array())
     {
-        $em          = $this->getDoctrine()->getEntityManager();
-        $sweepstakes = $sweepstakesForm->getData();
-
-        $groupId = $sweepstakesForm['group']->getData();
-        if($groupId) {
-            $group = $em->getRepository('GroupBundle:Group')->find($groupId);
-
-            if($group) {
-                $sweepstakes->setGroup($group);
-            }
-        }
-
-        $tagManager = $this->getTagManager();
-        $tags       = $tagManager->loadOrCreateTags($tagManager->splitTagNames($sweepstakesForm['tags']->getData()));
-
-        $sweepstakes->getId() ? $tagManager->replaceTags($tags, $sweepstakes) : $tagManager->addTags($tags, $sweepstakes);
-
-        $mUtil = new MediaUtil($this->getDoctrine()->getEntityManager());
-
-        if (!$mUtil->persistRelatedMedia($sweepstakes->getBackgroundImage())) {
-            $sweepstakes->setBackgroundImage(null);
-        }
-
-        foreach ($sweepstakes->getQuestions() as $question) {
-            foreach ($originalQuestions as $key => $toDel) {
-                if ($toDel->getId() === $question->getId()) {
-                    unset($originalQuestions[$key]);
-                }
-            }
-        }
-
-        // remove the relationship between the question and the sweepstakes
-        foreach ($originalQuestions as $question) {
-            $em->remove($question);
-        }
-
-        $em->persist($sweepstakes);
-        $em->flush();
-
-        $tagManager->saveTagging($sweepstakes);
-        $tagManager->loadTagging($sweepstakes);
-
-        $this->setFlash('success', 'Sweepstakes Saved');
+        $this->getSweepstakesManager()->saveSweepstakes($sweepstakesForm, $originalQuestions);
     }
 
     private function getEntityManager()
@@ -346,10 +358,13 @@ class AdminController extends Controller
     /**
      * @return \Knp\Menu\ItemInterface
      */
-    private function addSweepstakesBreadcrumb()
+    private function addSweepstakesBreadcrumb($type=Sweepstakes::SWEEPSTAKES_TYPE_SWEEPSTAKES)
     {
-        $this->getBreadcrumbs()->addChild('Sweepstakes', array(
-            'route' => 'admin_sweepstakes_index'
+        $text  = $type == Sweepstakes::SWEEPSTAKES_TYPE_PROMO_CODE ? 'Promo Code Contests' : 'Sweepstakes';
+        $route = $type == Sweepstakes::SWEEPSTAKES_TYPE_PROMO_CODE ? 'admin_promo_code_contest_index' : 'admin_sweepstakes_index';
+
+        $this->getBreadcrumbs()->addChild($text, array(
+            'route' => $route
         ));
 
         return $this->getBreadcrumbs();
@@ -366,12 +381,14 @@ class AdminController extends Controller
         ;
     }
 
-    private function addSiteBreadcrumbs($site)
+    private function addSiteBreadcrumbs($site, $type=Sweepstakes::SWEEPSTAKES_TYPE_SWEEPSTAKES)
     {
         if ($site) {
 
+            $route = ($type == Sweepstakes::SWEEPSTAKES_TYPE_PROMO_CODE ? 'admin_promo_code_contest_list' : 'admin_sweepstakes_list');
+
             $this->getBreadcrumbs()->addChild($this->getSiteManager()->getSiteName($site), array(
-                'route' => 'admin_sweepstakes_list',
+                'route' => $route,
                 'routeParameters' => array('site' => $site)
             ));
         }
@@ -382,5 +399,15 @@ class AdminController extends Controller
     private function getTagManager()
     {
         return $this->get('platformd.tags.model.tag_manager');
+    }
+
+    private function getSweepstakesManager()
+    {
+        return $this->get('platformd_sweeps.model.sweepstakes_manager');
+    }
+
+    private function getTypeText($type)
+    {
+        return $type == Sweepstakes::SWEEPSTAKES_TYPE_PROMO_CODE ? 'Promo Code Contest' : 'Sweepstakes';
     }
 }
