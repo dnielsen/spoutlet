@@ -9,20 +9,14 @@ probe healthcheck {
     .timeout = 3s;
 }
 
-backend awaWeb1  { .host = "ec2-23-22-229-200.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
-backend awaWeb2  { .host = "ec2-54-226-103-0.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
-backend awaWeb3  { .host = "ec2-50-19-47-216.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
-backend awaWeb4  { .host = "ec2-54-227-50-4.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
-backend awaWeb5  { .host = "ec2-50-16-16-111.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
-backend awaWeb6  { .host = "ec2-54-242-110-246.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
-backend awaWeb7  { .host = "ec2-107-22-123-147.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
-backend awaWeb8  { .host = "ec2-50-17-67-206.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
-backend awaWeb9  { .host = "ec2-54-235-20-209.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
-backend awaWeb10 { .host = "ec2-54-227-135-171.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
-backend awaWeb11 { .host = "ec2-54-225-33-100.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
-backend awaWeb12 { .host = "ec2-54-243-0-223.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
-backend awaWeb13 { .host = "ec2-54-225-62-40.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
-//backend awaWeb14 { .host = "ec2-54-242-4-69.compute-1.amazonaws.com"; .port = "http"; .probe = healthcheck; }
+backend awaWeb1  { .host = "ec2-107-21-151-104.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb2  { .host = "ec2-54-224-205-112.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb3  { .host = "ec2-54-211-45-28.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb4  { .host = "ec2-75-101-237-222.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb5  { .host = "ec2-23-20-89-12.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb6  { .host = "ec2-54-234-209-50.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb7  { .host = "ec2-54-211-73-130.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+
 backend cevo { .host = "www.alienwarearena.com"; .port = "http"; }
 
 director awaWeb random {
@@ -33,31 +27,18 @@ director awaWeb random {
     { .backend = awaWeb5; .weight = 1; }
     { .backend = awaWeb6; .weight = 1; }
     { .backend = awaWeb7; .weight = 1; }
-    { .backend = awaWeb8; .weight = 1; }
-    { .backend = awaWeb9; .weight = 1; }
-    { .backend = awaWeb10; .weight = 1; }
-    { .backend = awaWeb11; .weight = 1; }
-    { .backend = awaWeb12; .weight = 1; }
-    { .backend = awaWeb13; .weight = 1; }
-    //{ .backend = awaWeb14; .weight = 1; }
 }
 
 acl ban {
     "ec2-75-101-139-101.compute-1.amazonaws.com";
-    "ec2-23-22-229-200.compute-1.amazonaws.com";
-    "ec2-54-226-103-0.compute-1.amazonaws.com";
-    "ec2-50-19-47-216.compute-1.amazonaws.com";
-    "ec2-54-227-50-4.compute-1.amazonaws.com";
-    "ec2-50-16-16-111.compute-1.amazonaws.com";
-    "ec2-54-242-110-246.compute-1.amazonaws.com";
-    "ec2-107-22-123-147.compute-1.amazonaws.com";
-    "ec2-50-17-67-206.compute-1.amazonaws.com";
-    "ec2-54-235-20-209.compute-1.amazonaws.com";
-    "ec2-54-227-135-171.compute-1.amazonaws.com";
-    "ec2-54-225-33-100.compute-1.amazonaws.com";
-    "ec2-54-243-0-223.compute-1.amazonaws.com";
-    "ec2-54-225-62-40.compute-1.amazonaws.com";
-    "ec2-54-242-4-69.compute-1.amazonaws.com";
+
+    "ec2-107-21-151-104.compute-1.amazonaws.com";
+    "ec2-54-224-205-112.compute-1.amazonaws.com";
+    "ec2-54-211-45-28.compute-1.amazonaws.com";
+    "ec2-75-101-237-222.compute-1.amazonaws.com";
+    "ec2-23-20-89-12.compute-1.amazonaws.com";
+    "ec2-54-234-209-50.compute-1.amazonaws.com";
+    "ec2-54-211-73-130.compute-1.amazonaws.com";
 }
 
 sub vcl_recv {
@@ -310,7 +291,7 @@ sub vcl_fetch {
     // set so that we can utilize the ban lurker to test against the host of cached items
     set beresp.http.x-host = req.http.host;
 
-    if (req.url !~ "^/contest-sweeps/" && req.url !~ "^/allowMigrationTesting$" && req.url !~ "^/siteSpringboard[/]?$" && req.url !~ "^/(set|refresh)ApiSessionCookie" && req.url !~ "^/age/verify$" && req.url !~ "^/login(\?f=.*|_check)?$" && req.url !~ "^/logout$" && req.url !~ "^/sessionCookie$" && req.url !~ "^/account/register[/]?$" && req.url !~ "^/register/confirm/" && req.url !~ "^/reset/") { # the only exceptions to the "remove all set-cookies rule"
+    if (req.url !~ "^/promo/" && req.url !~ "^/contest-sweeps/" && req.url !~ "^/allowMigrationTesting$" && req.url !~ "^/siteSpringboard[/]?$" && req.url !~ "^/(set|refresh)ApiSessionCookie" && req.url !~ "^/age/verify$" && req.url !~ "^/login(\?f=.*|_check)?$" && req.url !~ "^/logout$" && req.url !~ "^/sessionCookie$" && req.url !~ "^/account/register[/]?$" && req.url !~ "^/register/confirm/" && req.url !~ "^/reset/") { # the only exceptions to the "remove all set-cookies rule"
         unset beresp.http.set-cookie;
     }
 
