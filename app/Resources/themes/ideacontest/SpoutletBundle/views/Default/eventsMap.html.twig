@@ -1,0 +1,28 @@
+<div id="map">
+    <h2 class="spcr-b2">Find a Camp Near You</h2>
+        <div>
+            <input id="map-location-search" type="text" size="50" placeholder="Enter your location" autocomplete="off">
+        </div>
+    <div id="map-canvas"></div>
+</div>
+
+<script type="text/javascript">
+    var eventsArray = [];
+
+    $(function () {
+
+        {% for event in events %}
+
+            singleEvent = [];
+            singleEvent['name'] = '{{ event.name }}';
+            singleEvent['lat'] = '{{ event.lat }}';
+            singleEvent['long'] = '{{ event.long }}';
+            singleEvent['location'] = '{{ event.location }}';
+            singleEvent['address1'] = '{{ event.address1 }}';
+            singleEvent['address2'] = '{{ event.address2 }}';
+            singleEvent['url'] = '{{ event.url }}';
+
+            eventsArray.push(singleEvent);
+        {% endfor %}
+    });
+</script>

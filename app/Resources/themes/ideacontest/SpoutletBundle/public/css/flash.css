@@ -1,0 +1,22 @@
+/* notices */
+.xnotices { width:95%; margin:0 auto; }
+.xnotices .notice {
+    margin-bottom:6px;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+.xnotices h3 { font-size:18px; font-weight:bold; margin:0 0 0 70px; }
+.xnotices p { margin:0 0 10px 70px; font-size:12px; color:#000000; }
+
+.xnotices .infoNotice { background:url(/bundles/spoutlet/images/errors/notice-info-bg.png) 0px 0px no-repeat #97d0e0; }
+.xnotices .infoNotice h3 { color:#0f5ea7; }
+
+.xnotices .successNotice { background:url(/bundles/spoutlet/images/errors/notice-success-bg.png) 7px 7px no-repeat #a5e49b; }
+.xnotices .successNotice h3 { color:#25641b; }
+
+.xnotices .warningNotice { background:url(/bundles/spoutlet/images/errors/notice-warning-bg.png) 4px 4px no-repeat #e0c797; }
+.xnotices .warningNotice h3 { color:#604717; }
+
+.xnotices .errorNotice { background:url(/bundles/spoutlet/images/errors/notice-error-bg.png) 7px 7px no-repeat #fcb3b3; }
+.xnotices .errorNotice h3 { color:#7c3333; }

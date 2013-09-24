@@ -6,3 +6,250 @@ platformd:
                 <br /><br />
                 <strong>Important: Check Your Spam Folder!</strong>
 
+site_takeover:
+    continue: Continue to Campsite
+
+platformd:
+
+    comment:
+        add_your_comment: Add Your Comment (or press <i class="icon-cog"></i> to reply to a specific comment)
+
+    create_account_or_login: Create or log in to a Campsite account.
+
+    layout:
+        # title used by default (if not overridden)
+        default_title: Campsite
+        # title user by default in Admin area (if not overridden)
+        default_admin_title: Campsite Admin Area
+        # suffixed after an overridden title (e.g. "My title | Title Suffix")
+        title_suffix: Campsite
+
+
+    events:
+        event_listings:
+            header: "Campsite Events"
+            legend_sponsored: Campsite Sponsored Event
+
+    about:
+        title: About Campsite&trade;
+
+    user:
+        register_title: Create Campsite Account
+
+        register:
+            requirements: Participation in Campsite requires an account.
+            already: "Already have a Campsite Account? Skip this step and <login now>."
+
+    giveaway:
+        max_ip_limit: No more keys can be claimed by your IP address. If you believe this is an error, please contact info@Campsite.org
+        assigned:
+            message: |
+                You have been assigned a key. You may review this key at any
+                time by visiting your giveaway key page from your Campsite
+                user account panel.
+
+    event:
+        email:
+            global_event_contact:
+                message: |
+                    The following message has been sent to you for the event – %eventName%:
+
+                    %content%
+
+                    Campsite Team
+
+                    Important: Campsite will never ask you for personal information such as your username, password, date of birth, email address, etc.  Please do not share that with anyone.  If you suspect this email to be a scam or inappropriate, please report it to info@Campsite.org.
+                    Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
+
+            attendees_contact:
+                message: |
+                    The following message has been sent to you for the event – %eventName%:
+
+                    %content%
+
+                    Sent from Campsite on behalf of %organizerName%.
+
+                    Important: Campsite will never ask you for personal information such as your username, password, date of birth, email address, etc.  Please do not share that with anyone.  If you suspect this email to be a scam or inappropriate, please report it to info@Campsite.org.
+                    Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
+
+            approved:
+                message: |
+                    Congratulations, <a href="%eventUrl%">%eventName%</a> has been approved and is now listed on Campsite.
+
+                    We encourage you to share this event with your friends. For your convenience, we invited all group members to sign up for your event.
+
+                    Note: You are receiving this email because you submitted an event for approval.
+
+                    Sent from Campsite on behalf of %organizerName%.
+            cancel:
+                message: |
+                    This is an automated email to inform you that %eventName% has been cancelled.
+
+                    Campsite Team
+            activate:
+                message: |
+                    This is an automated email to inform you that %eventName% is now active again and scheduled to start on %eventStartsAt%.
+
+                    Campsite Team
+
+            group_announcement:
+                message: |
+                    %groupName% added a new event – <a href="%url%">%eventName%</a>
+
+                    <strong><u>When</u></strong>
+
+                    %startDate%
+                    %startTime% %timezone%
+
+                    <strong><u>Location</u></strong>
+
+                    %location%
+
+                    <a href="%url%">Click here</a> for instructions on how to RSVP for the event.
+
+                    Note: To unsubscribe from similar emails from this group, you must leave the group by going to the group page and click “leave group”.
+
+                    Sent from Campsite on behalf of %organizerName%.
+
+            require_approval:
+                message: |
+                    Hi %groupOwnerName%,
+
+                    Please approve my upcoming event - <a href="%eventUrl%">%eventName%</a> to be listed on the "%groupName%" page.
+
+                    <strong><u>When</u></strong>
+
+                    %dateRange%
+                    %startTime% %timezone%
+
+                    <strong><u>Location</u></strong>
+
+                    %location%
+
+                    <strong><u>Action Required</u></strong>
+
+                    Click <a href="%approvalUrl%">here</a> to approve the event.
+
+                    Note: You are receiving this email because you are the group organizer. To stop receiving similar emails, please email info@Campsite.org if you no longer want to be the group organizer for this group.
+
+                    Sent from Campsite on behalf of %organizerName%.
+
+
+            group_join_application_from_event:
+                message: |
+                    %userName% would like to be part of your group - <a href="%groupUrl%">%groupName%</a>.
+
+                    <strong><u>Action Required</u></strong>
+
+                    Click <a href="%approvalUrl%">here</a> to review their request.
+
+                    Note: You are receiving this email because you are the group organizer. To stop receiving similar emails, please email info@Campsite.org if you no longer want to be the group organizer for this group.
+
+                    Sent from Campsite on behalf of %userName%.
+
+            group_application_accepted_event_registered:
+                message: |
+                    Congratulations! You’re now a member of <a href="%groupUrl%">%groupName%</a>. Visit the group's page to join the conversation and share information with your fellow group members.
+
+                    You are now registered for %eventName%. Click <a href="%eventUrl%">here</a> to change your RSVP.
+
+                    Note: You are receiving this email because you submitted a request to join a private group.  To unsubscribe from similar emails from this group, you must leave the group by going to the group page and click “leave group”.
+
+                    Sent from Campsite on behalf of %groupOwnerName%.
+
+            event_reminder:
+                message: |
+                    Hi %username%,
+
+                    Your event is almost here!
+
+                    <a href="%eventUrl%">%eventName%</a>
+                    %dateString% - %timeString% %timezone%
+
+                    %location%
+
+                    Have questions about the event?
+                    Contact the event organizer, <a href="%organizerUrl%">%organizerName%</a>.
+
+                    Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
+
+                    Sent from Campsite on behalf of %organizerName%.
+
+            attendee_removed:
+                message: |
+                    Hello %username%
+
+                    This email confirms that you no longer attending <a href="%url%">%eventName%</a>.
+
+                    If you believe this to be an error, please send contact the event organizer.
+
+                    Campsite Team
+
+    groups:
+        index:
+            recommended_groups: Recommended Campsite Groups
+
+news_and_announcements: Campsite News & Announcements
+
+content_reporting:
+    report_success: The content will be reviewed by our staff within 72 hours. If you have additional information for your report, please email us at info@Campsite.org with additional details.
+    reported_email: |
+        An item posted by you on Campsite has been flagged as inappropriate and removed.
+
+        Type: %s
+        Content: %s
+        Reason: %s
+        Link: <a href="%s">%s</a>
+
+        The content has been temporarily removed from Campsite and will be reviewed by our Staff within 72 hours. If the content does not violate our Terms of Service, we will enable it on our website and you will receive an automated email with this update.
+
+        Thank you for your patience. Should you have any questions, please contact us at <a href="mailto:info@Campsite.org">info@Campsite.org</a>.
+
+        Campsite Team
+
+    restored_email: |
+        This is an automated email to inform you that the content below does not violate our Terms of Service and has been restored on Campsite.
+
+        Type: %s
+        Content: %s
+
+        Campsite Team
+
+    removed_email: |
+        The following content has been removed from Campsite due to a violation of our Terms of Service.
+
+        Type: %s
+        Content: %s
+        Reason: %s
+        Link: <a href="%s">%s</a>
+
+        Should you have any questions, please contact us at <a href="mailto:info@Campsite.org">info@Campsite.org</a>.
+
+        Campsite Team
+
+deals_alienware_title: Campsite Deal
+featured_deals: Campsite Featured Deals
+
+groups.opengraph.description: Check out Campsite's Groups! Join a wide variety of gamer related communities and share your thoughts on your favorite topics.
+groups.opengraph.title: Campsite Groups - Join Now!
+
+galleries:
+    index_page_header: Campsite Images
+
+    submit_photo_file_restrictions: |
+        <p><span style="font-weight:bold;">Campsite File Standards for Product Images</span></p>
+        <p>Technical Requirements:</p>
+        <ul><li>Files supported: JPG, GIF and PNG.</li>
+        <li>Max file size per image is 5MB.</li></ul>
+        <p>Campsite maintains the following site product image standards:</p>
+        <ul><li>No commercial images without written consent of the owner.</li>
+        <li>No copyrighted material.</li>
+        <li>No images of children ages 13 years and under.</li>
+        <li>Gaming-related images only.</li>
+        <li>Pornographic and offensive materials are not allowed.</li></ul>
+        <p>Campsite and its affliliates reserve the right to delete images without notice that do not comply with restrictions.</p>
+        <p>By posting or submitting an image you grant Campsite and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify, sublicense, distribute, have distributed, and promote the image in any form, anywhere and for any purpose.</p>
+
+
+contests:
+    index_page_title_long: Campsite Contests

@@ -184,6 +184,7 @@ parameters:
         # this will change in the future
         - en_campsite       # www.
         - en_sjsu           # sjsu.
+        - en_bigdatacamp    # bigdatacamp.
         - en_dataminingcamp # dataminingcamp.
         - en_hackomaha      # hackomaha.
         - en_toyota         # toyota.
@@ -194,6 +195,7 @@ parameters:
         # %host_suffix% might be something like "staging"
         en_campsite:        www%host_suffix%.%base_host%
         en_sjsu:            sjsu%host_suffix%.%base_host%
+        en_bigdatacamp:     bigdatacamp%host_suffix%.%base_host%
         en_dataminingcamp:  dataminingcamp%host_suffix%.%base_host%
         en_hackomaha:       hackomaha%host_suffix%.%base_host%
         en_toyota:          toyota%host_suffix%.%base_host%
@@ -203,6 +205,7 @@ parameters:
     platformd_sites:
         en_campsite:        Campsite
         en_sjsu:            SanJoseStateUniversity
+        en_bigdatacamp:     BigDataCamp 
         en_dataminingcamp:  DataMiningCamp
         en_hackomaha:       HackOmaha
         en_toyota:          Toyota

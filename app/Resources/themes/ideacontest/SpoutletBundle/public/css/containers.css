@@ -1,5 +1,3 @@
-
-
 /*::::::::::::::: PAGE CONTAINER :::::::::::::::*/
 
 #wrapper-ht { /* sets up properties for bottom fixed footer */
@@ -21,7 +19,7 @@
 	height: 655px;
 }
 #header {
-	height: 220px;
+	height: 160px;
 
 }
 	#topSocial { /* For styling, see list-links.css */
@@ -36,7 +34,7 @@
 			font-size: 12px;
 		}
 	#brand {
-		margin-top: -10px;
+		margin-top: -30px;
 		padding-bottom: 10px;
 	}
 	#tagline {
@@ -61,6 +59,19 @@
 		border-top: 1px dashed #ccc;
 		border-bottom: 1px dashed #ccc;
 	}
+	#nav-wrapper {
+		width: 1050px;
+		height: 32px;
+		padding-top: 12px;
+		margin: 0 auto 20px;
+		border-top: 1px dashed #ccc;
+		border-bottom: 1px dashed #ccc;
+	}
+
+	#nav ul#nav-list {
+		width: 1050px;
+		height: 32px;
+	}
 
 	/*::::::::::::::: END NAV :::::::::::::::*/
 
@@ -76,6 +87,42 @@
 		text-align: center;
 	}
 
+/*::::::::::::::: CONTENT HEADER :::::::::::::::*/
+
+#content-header {
+	width: 1050px;
+	height: 340;
+	margin: 0 auto 20px;
+}
+
+#map {
+	float: right;
+	width: 408px;
+	padding: 10px 0;
+	background: #f7f7f7;
+	text-align: center;
+}
+
+#map-canvas {
+	width:370px;
+	height:300px;
+	margin-left: 19px;
+}
+
+/*::::::::::::::: ACCOUNT HEADER :::::::::::::::*/
+
+#accountHeader {
+	height: 25px;
+	margin-bottom: 10px;
+	background-color: #f7f7f9;
+	border: 1px solid #e1e1e8;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding: 5px 0 0 0;
+	display: inline-block;
+}
+
 /*::::::::::::::: PAGE CONTENT CONTAINERs :::::::::::::::*/
 
 #content {
@@ -90,30 +137,26 @@
 }
 #row1, #row2 {
 	float: left;
-	width: 757px;
-	margin-bottom: 15px;
+	width: 1050px;
 	border-top: 1px dashed #ccc;
 }
 #row1 {
-	height: 210px;
+    margin: 0 auto;
 }
 #row2 {
 	padding-top: 15px;
 }
 	.cBx1 {
 		float: left;
-		width: 644px;
-		padding-top: 8px;
+		width: 744px;
+		padding-top: 15px;
+		padding-right: 15px;
+		border-right: 1px dashed #ccc;
 	}
 	.cBx2 {
 		float: right;
+		width: 275px;
 		padding-top: 15px;
-		padding-left: 15px;
-		border-left: 1px dashed #ccc;
-	}
-	.cBx2 {
-		width: 364px;
-		height: 195px;
 	}
 		.cBx2 #sponsors  {
 			display: block;

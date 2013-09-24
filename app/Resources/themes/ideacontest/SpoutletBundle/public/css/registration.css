@@ -1,0 +1,36 @@
+.fos_user_registration_register label, .label_space {
+    width: 300px;
+    margin-right: 10px;
+}
+
+.fos_user_registration_register input.button {
+    margin-left: 310px;
+    margin-top: 10px;
+}
+
+.fos_user_registration_register ul.form-msg-error, .fos_user_registration_register #recaptcha_widget_div {
+    margin-left: 310px;
+}
+
+.floating_form_container {
+    margin-left: 313px;
+}
+
+.fos_user_registration_register #recaptcha_widget_div {
+    margin-bottom: 10px;
+}
+
+#fos_user_registration_form_birthdate_year,
+#fos_user_registration_form_birthdate_month,
+#fos_user_registration_form_birthdate_day {
+    width: 100px;
+}
+
+#fos_user_registration_form_hasAlienwareSystem label {
+    width: auto;
+    margin-left: 5px;
+}
+
+#fos_user_registration_form_hasAlienwareSystem {
+    display: inline;
+}

@@ -1,0 +1,165 @@
+#new-groups-widget,
+#popular-groups-widget {
+    margin-top: 15px;
+}
+
+#new-groups-widget .widget-content,
+#popular-groups-widget .widget-content {
+    height: 200px;
+}
+
+.default-group-thumbnail {
+    width: 135px;
+    height: 80px;
+    background:url('../img/default_group_thumbnail.png') top left no-repeat;
+    border: 1px solid #e1e1e8;
+}
+
+.groups-category-header {
+    width: 100%;
+    font-weight: bold;
+    font-size: 14px;
+    margin: 10px 0 10px 0;
+}
+
+.group-list-item {
+    display: inline-table;
+    width: 135px;
+    height: 130px;
+    margin: 5px;
+    position: relative;
+}
+
+.group-list-item .details {
+    margin-top: 2px;
+    line-height: 14px;
+}
+
+.group-list-item .item-detail {
+    font-size: 10px;
+}
+
+.group-list-item img {
+    width: 135px;
+    height: 80px;
+    border: 1px solid #e1e1e8;
+}
+
+.group-list-item .report-group-caption {
+    /* hide it by default */
+}
+
+.group-list-item .report-group-caption a {
+    font-size: 10px;
+}
+
+#group-avatar img {
+    width: 1050px;
+    height: 120px;
+}
+
+.browse {
+    cursor: pointer;
+}
+
+.disabled {
+    display: none;
+}
+
+#scrollable-topic-groups,
+#scrollable-location-groups {
+    background-color: #e1e1e8;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    height: 310px;
+}
+
+#group-widget-content {
+    min-height: 560px;
+    overflow: hidden;
+}
+
+#group-content {
+    height: 550px;
+}
+
+#group-images .scrollable {
+    height: 540px;
+    width: 600px;
+}
+
+.group-event-actions {
+    font-size: 10px;
+}
+
+.group-event-item {
+    background-color: #e1e1e8;
+    padding: 10px;
+    border-radius: 5px;
+    margin: 7px 0;
+}
+
+.group-event-date {
+    display:inline-table;
+    width: 200px;
+}
+
+.group-event-title,
+.group-event-date {
+    font-size: 15px;
+}
+
+.group-event-details {
+    display:inline-table;
+    width: 350px;
+}
+
+.group-event-title,
+.group-event-location {
+    padding-bottom: 10px;
+}
+
+.group-upcoming-events,
+.group-past-events {
+    padding-top: 10px;
+}
+
+#group-content #theater_screen {
+     width:100%;
+     height:100%;
+}
+
+#group-content #theater-screen-wrapper {
+    width:600px;
+    height:350px;
+    margin: 10px auto;
+}
+
+.group-image-item {
+    display: inline-table;
+    width: 135px;
+    height: 100px;
+    margin: 5px;
+}
+
+#map_canvas {
+    width: 290px;
+    height: 250px;
+    margin: 10px auto;
+}
+
+button#join-group-button,
+.join-group-options a {
+    background: url('/bundles/spoutlet/images/groups/join_group.png') no-repeat 0 0;
+    width: 230px;
+    height: 62px;
+    margin: 0px auto;
+    border: none;
+    cursor: pointer;
+    filter: none;
+}
+
+.join-group-options {
+    text-align: center;
+}

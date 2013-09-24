@@ -1,0 +1,24 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title %}{{ 'news_and_announcements' | trans }}{% endblock %}
+
+{% block content %}
+
+<div id="news" class="std_1col">
+
+    {% for newsItem in news %}
+        {% include 'NewsBundle:Default:_news.html.twig' with {
+            'item' : newsItem
+        }%}
+    {% endfor %}
+
+</div>
+
+<script type="text/javascript">
+    $(function() {
+
+
+    });
+</script>
+
+{% endblock %}

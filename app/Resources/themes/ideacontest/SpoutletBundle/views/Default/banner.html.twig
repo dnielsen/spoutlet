@@ -1,0 +1,79 @@
+<div id="homepage-gallery" class="ad-gallery">
+    <div class="top-background"></div>
+    <div class="ad-image-wrapper">
+    </div>
+
+    <div class="ad-controls">
+    </div>
+
+    <div class="ad-nav">
+        <div class="ad-thumbs">
+            <ul class="ad-thumb-list">
+            {% for index, banner in banners %}
+                <li>
+                    <a href="{{ media_path(banner, { "size" : "banner" }) }}">
+                        <img src="{{ media_path(banner) }}" class="image{{ index }}" data-url="{{ banner.url }}" data-new="{{ banner.newWindow }}" />
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+/**
+ * Todo : move this in a global javascript file
+ */
+jQuery(function($) {
+
+  var galleries = $('.ad-gallery').adGallery({
+    width: 620,
+    height: 341,
+    loader_image: '{{ asset('plugins/jquery.ad-gallery/loader.gif') }}',
+    display_next_and_prev: false,
+    display_back_and_forward: false,
+    slideshow: {
+
+
+        enable: true,
+        autostart: true,
+        speed: 7000,
+        stop_on_scroll: false
+    },
+    effect: 'slide-hori',
+
+    callbacks: {
+      afterImageVisible: function() {
+
+        var
+          current = this.images[this.current_index].thumb,
+          url = $("img[src='" + current + "']").data("url");
+          newWindow = $("img[src='" + current + "']").data("new");
+
+        /**
+         * Redirects user to a specific URL
+         *
+         * @param event
+         */
+        function handleFullsizeClick(event) {
+          event.stopPropagation();
+          event.preventDefault();
+
+          if (newWindow) {
+            window.open(url);
+          } else {
+            window.location = url;
+          }
+        }
+
+        if (url) {
+          $("div.ad-image img").css("cursor", "pointer").bind("click", handleFullsizeClick);
+        } else {
+          $("div.ad-image img").css("cursor", "default").unbind("unclick", handleFullsizeClick);
+        }
+      }
+    }
+  });
+});
+</script>

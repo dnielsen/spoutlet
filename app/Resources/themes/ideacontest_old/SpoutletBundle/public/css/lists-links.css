@@ -1,0 +1,324 @@
+
+/*::::::::::::::: GLOBAL LINK STYLES :::::::::::::::*/
+
+a {
+	color: #2faad9;
+	text-decoration: none;
+}
+a:hover {
+	color: #ca43bb;
+	text-decoration: underline;
+}
+
+a:active, a:focus { outline: none; }
+
+a img {
+	vertical-align: middle;
+}
+
+a.submit {
+    padding: 20px;
+    border: 0 none;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    behavior: url("PIE.htc");
+    background: #2faad9;
+    font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    width: 100px;
+    text-align: center;
+}
+a.submit:hover {
+    background: #ca43bb;
+    text-decoration: none;
+}
+
+
+
+a.btn, a.btnLg, a.btnLg2 {
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	behavior: url("PIE.htc");
+	background: #2faad9;
+	font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
+	color: #fff;
+}
+a.btn, a.btnLg {
+	padding: 5px 10px;
+}
+a.btnLg {
+	font-size: 17px;
+	font-weight: bold;
+}
+a.btnLg2 {
+	display: block;
+	padding: 15px 20px;
+	font-size: 24px;
+	font-weight: bold;
+	line-height: 30px;
+	text-align: center;
+}
+	a.btn:hover, a.btnLg:hover, a.btnLg2:hover {
+		background: #ca43bb;
+		text-decoration: none;
+	}
+
+
+a.btnTny {
+    display: block;
+    width: 75px;
+    margin-top: 5px;
+    padding: 2px 0;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background: #2faad9;
+    behavior: url("PIE.php");
+    font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 1px 0 rgba(146, 146, 146, 1.0);
+}
+
+a.btnTny:hover {
+    background: #d757c8;
+    text-decoration: none;
+    color: #fff;
+}
+
+input.btnTny {
+    display: block;
+    width: 75px;
+    margin-top: 5px;
+    padding: 2px 0;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background: #2faad9;
+    behavior: url("PIE.php");
+    font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 1px 0 rgba(146, 146, 146, 1.0);
+}
+input.btnTnyInv {
+    display: block;
+    width: 75px;
+    margin-top: 5px;
+    padding: 2px 0;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background: #ee0000;
+    behavior: url("PIE.php");
+    font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 1px 0 rgba(146, 146, 146, 1.0);
+}
+
+input.btnTny:hover {
+    background: #d757c8;
+    text-decoration: none;
+    color: #fff;
+}
+
+
+input.btnMdm {
+    display: block;
+    width: 75px;
+    height: 36px;
+    padding: 2px 0;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background: #2faad9;
+    behavior: url("PIE.php");
+    font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 1px 0 rgba(146, 146, 146, 1.0);
+}
+
+input.btnMdm:hover {
+    background: #d757c8;
+    text-decoration: none;
+    color: #fff;
+}
+
+input.auth, password.auth {
+    	display: block;
+	margin-bottom: 10px;
+	padding: 8px;
+	border: 1px solid #ccc;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+	behavior: url("PIE.htc");
+	font: normal 15px/22px 'ProximaNova-Regular', Arial, sans-serif;
+	color: #414141;
+}
+
+input.username:focus, password.auth:focus {
+	-webkit-box-shadow: #51cbee 0px 0px 4px;
+	-moz-box-shadow: #51cbee 0px 0px 4px;
+	box-shadow: #51cbee 0px 0px 4px;
+	behavior: url("PIE.htc");
+}
+
+
+.tblStyle2 td a {
+	color: #1799c1;
+}
+
+/* unordered lists: links */
+
+ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+ul.bulleted {
+    list-style-type: circle;
+    list-style-position: inside;
+    padding: 0;
+    margin: 0;
+}
+
+ol {
+    list-style-position: inside;
+}
+
+/*::::::::::::::: topNav LIST STYLES :::::::::::::::*/
+
+#topNav ul {
+	height: 30px;
+}
+#topNav li {
+	float: right;
+	padding-top: 5px;
+	padding-left: 15px;
+}
+#topNav li { /* , #topReg */
+	font-family: 'Muli', Arial, sans-serif;
+	font-size: 11px;
+	color: #777;
+	text-transform: uppercase;
+}
+	#topNav li a {
+		display: inline;
+	}
+
+/*::::::::::::::: nav LIST STYLES :::::::::::::::*/
+
+#nav ul {
+	width: 1050px;
+}
+#nav li {
+	float: left;
+	padding-left: 71px;
+	white-space: nowrap;
+}
+	#nav li:first-child {
+		padding-left: 0;
+	}
+#nav li a, #nav li a:visited, #nav li a:active {
+	display: block;
+	height: 32px;
+	font: bold 18px/20px 'Century Gothic', 'AvalonMediumRegular', sans-serif;
+}
+#nav li a:hover {
+	text-decoration: none;
+}
+
+/*::::::::::::::: PAGE CONTENT LIST STYLES :::::::::::::::*/
+
+.col2 ul {
+	margin-bottom: 15px;
+}
+.col1 ul {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.kWords ul {
+	height: 25px;
+}
+	.kWords ul li {
+		display: inline;
+		margin-left: 1px;
+	}
+		.kWords ul li:first-child {
+			padding: 0;
+			margin-left: 0;
+			background: none;
+			font-size: 11px;
+			text-transform: uppercase;
+		}
+	.kWords ul li a {
+		padding: 2px 3px;
+		border: 1px solid #bfedff;
+		-webkit-border-radius: 4px;
+		-moz-border-radius: 4px;
+		border-radius: 4px;
+		background: #fff;
+		behavior: url("PIE.php");
+		font-size: 11px;
+	}
+	.kWords ul li a:hover {
+		border: 1px solid #ca43bb;
+		text-decoration: none;
+	}
+
+ul.topics li {
+	font-size: 13px;
+	line-height: 18px;
+}
+
+ul.pdf li {
+	padding: 0 0 5px 24px;
+	background: url("../img/acrobat.png") 0 3px no-repeat;
+}
+
+/*::::::::::::::: sdbrNav LIST STYLES :::::::::::::::*/
+
+ul.sdbrNav li, ul.cLnks li {
+	background: url("../img/arrow-sm.png") 0 7px no-repeat;
+}
+ul.sdbrNav li {
+	padding: 0 0 2px 9px;
+}
+ul.cLnks li {
+	padding: 0 0 10px 9px;
+}
+
+/*::::::::::::::: FOOTER COLUMN LIST STYLES :::::::::::::::*/
+
+.ftrcol ul {
+	margin-bottom: 10px;
+}
+.ftrcol a, .ftrcol a:visited, .ftrcol a:active {
+	font-size: 12px;
+	line-height: 19px;
+}
+#credit a {
+	font-size: 11px;
+	line-height: 16px;
+	color: #ccc;
+}
+#credit a:hover {
+	color: #777;
+}

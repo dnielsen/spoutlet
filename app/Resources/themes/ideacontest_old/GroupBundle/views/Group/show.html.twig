@@ -1,0 +1,23 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title %}{{ group.name }}{% endblock %}
+
+{% block content %}
+
+    <a href="{{ path('idea_admin_event', {'groupSlug': group.slug}) }}">Create a new Event</a><br/>
+
+    <h2>Events</h2><hr/>
+    {% if group.events|length > 0 %}
+        {% for event in group.events %}
+            <a href="{{ path('idea_index', { 'groupSlug': group.slug, 'eventSlug': event.slug }) }}">{{ event.name }}</a>
+             - {{ event.content | truncate(120) }}<br/><hr/>
+        {% endfor %}
+    {% endif %}
+
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'GroupBundle:Group:_css_assets.html.twig' %}
+{% endblock %}

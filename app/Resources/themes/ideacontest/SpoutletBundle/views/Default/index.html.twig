@@ -2,10 +2,15 @@
 
 {% block content %}
 
-    <a href="{{ path('group_new') }}">Create a new group</a><br/>
+    {% include 'SpoutletBundle::content_header.html.twig' %}
 
-    <h2 class="spcr-b">Groups</h2><hr/>
+    <div id="row1">
+        <div class="cBx1">
+            {% render 'HtmlWidgetBundle:HtmlWidget:show' with { 'slug': 'recent-campout-sessions' } %}
+        </div>
 
-    {%  render url('_all_groups') %}
+        {% render 'SpoutletBundle:Default:events' %}
+
+    </div>
 
 {% endblock %}

@@ -1,0 +1,30 @@
+<div id="map">
+    <h2 class="spcr-b2">Find a Camp Near You</h2>
+        <div>
+            <input id="map-location-search" type="text" size="50" placeholder="Enter your location" autocomplete="off">
+        </div>
+    <div id="map-canvas"></div>
+</div>
+
+<script type="text/javascript">
+    var groupsArray = [];
+
+    $(function () {
+
+        {% for group in groups %}
+
+            singleGroup = [];
+            singleGroup['name'] = '{{ group.name }}';
+            singleGroup['lat'] = '{{ group.location.latitude }}';
+            singleGroup['long'] = '{{ group.location.longitude }}';
+            singleGroup['city'] = '{{ group.location.city }}';
+            singleGroup['address1'] = '{{ group.location.address1 }}';
+            singleGroup['address2'] = '{{ group.location.address2 }}';
+            singleGroup['stateProvince'] = '{{ group.location.stateProvince }}';
+            singleGroup['metroArea'] = '{{ group.location.metroArea }}';
+            singleGroup['url'] = '{{ group.url }}';
+
+            groupsArray.push(singleGroup);
+        {% endfor %}
+    });
+</script>
