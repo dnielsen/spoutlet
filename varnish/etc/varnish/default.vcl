@@ -44,7 +44,7 @@ acl ban {
 sub vcl_recv {
 
     // TODO - remove staging-only check below once going live
-    if (req.http.host ~ "(.*staging.alienwarearena.com|local:8080)" && req.http.Cookie !~ "awa_bypass_redirection=1" && req.url !~ "^/siteSpringboard[/]?$") {
+    if (req.http.host ~ "staging.alienwarearena.com" && req.http.user-agent !~ "^facebookexternalhit" && req.http.Cookie !~ "awa_bypass_redirection=1" && req.url !~ "^/siteSpringboard[/]?$") {
         set req.http.X-Return-Url = req.url;
         set req.url = "/siteSpringboard";
     }
