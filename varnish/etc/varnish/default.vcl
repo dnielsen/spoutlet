@@ -276,6 +276,10 @@ sub vcl_recv {
         remove req.http.Cookie;
     }
 
+    if (req.url ~ "^/comments/thread/") {
+        remove req.http.Cookie;
+    }
+
     if (req.http.Cookie) {
         return (pass);
     }

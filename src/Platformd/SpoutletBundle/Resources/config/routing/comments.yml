@@ -1,48 +1,30 @@
 comments_thread:
-    pattern: /thread/{threadId}
+    pattern: /esi/comments/thread/{threadId}
     defaults: { _controller: "SpoutletBundle:Comments:thread" }
 
-comments_sort_thread:
-    pattern: /sort-thread
-    defaults: { _controller: "SpoutletBundle:Comments:threadSort" }
-    requirements:
-        _format: json
-        _method: GET
-
-comments_update_thread:
-    pattern: /update-thread
-    defaults: { _controller: "SpoutletBundle:Comments:updateThread" }
-    requirements:
-        _format: json
-        _method: GET
-
-comments_replies:
-    pattern: /replies/{commentId}
-    defaults: { _controller: "SpoutletBundle:Comments:replies" }
-
 comments_new:
-    pattern: /new
+    pattern: /comments/new
     defaults: { _controller: "SpoutletBundle:Comments:new" }
     requirements:
         _format: json
         _method: POST
 
 comments_edit:
-    pattern: /edit
+    pattern: /comments/edit
     defaults: { _controller: "SpoutletBundle:Comments:edit" }
     requirements:
         _format: json
         _method: POST
 
 comments_delete:
-    pattern: /delete
+    pattern: /comments/delete
     defaults: { _controller: "SpoutletBundle:Comments:delete" }
     requirements:
         _format: json
         _method: POST
 
 comments_vote:
-    pattern: /vote
+    pattern: /comments/vote
     defaults: { _controller: "SpoutletBundle:Vote:vote" }
     requirements:
         _format: json

@@ -17,7 +17,6 @@ FOSUserBundle d54053fd32d07ae183d607b3eb0de0180f210249
 doctrine-fixtures v1.0.0-ALPHA1~4
 DoctrineFixturesBundle a66be2f077f3a4e5c3801b356b42b8782f1abbd6
 JMSI18nRoutingBundle ad91318b3439e1a9e1a28735a63e07957754060b
-FOSCommentBundle v0.9.1~12
 EWZRecaptchaBundle 4fdc71168f5a091e84ab38acf2ba97b6e0215348
 DoctrineExtensions v2.2.0~57
 StofDoctrineExtensionsBundle 1.0.0

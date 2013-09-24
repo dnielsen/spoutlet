@@ -62,7 +62,7 @@ class GiveawayController extends Controller
                 'data' => $data
             ));
 
-            $this->varnishCache($response, 86400);
+            $this->varnishCache($response, 2628000);
 
             return $response;
         }
@@ -77,7 +77,7 @@ class GiveawayController extends Controller
             $data->current_state        = $state->getCurrentState();
             $data->current_state_reason = $state->getStateReason();
 
-            $cacheFor = 86400;
+            $cacheFor = 2628000;
 
             if ($state->getCurrentState() != KeyRequestState::STATE_IN_QUEUE) {
 

@@ -204,5 +204,69 @@ class CommentRepository extends EntityRepository
 
         return $data;
     }
+
+    public function getCommentCountByThread($thread, $fromDate=null, $thruDate=null)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('COUNT(c.id)');
+        $qb->where('c.thread = :thread');
+        $qb->setParameter('thread', $thread);
+
+        if($fromDate != null and $thruDate != null)
+        {
+            $qb->andWhere('c.createdAt >= :fromDate')
+               ->andWhere('c.createdAt <= :thruDate')
+               ->setParameter('fromDate', $fromDate)
+               ->setParameter('thruDate', $thruDate);
+        }
+        try {
+        $total = $qb->getQuery()->getSingleScalarResult();
+        }
+        catch (NoResultException $e) {
+            return 0;
+        }
+
+        return $total;
+    }
+
+    public function findCommentsForThreadSortedBy($thread, $sort)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->select('c, (SELECT COUNT(v1.id) FROM SpoutletBundle:CommentVote v1 WHERE v1.voteType=:up AND v1.comment=c) AS upvotes, (SELECT COUNT(v2.id) FROM SpoutletBundle:CommentVote v2 WHERE v2.voteType=:down AND v2.comment=c) AS downvotes')
+            ->leftJoin('c.thread', 't')
+            ->leftJoin('c.votes', 'v')
+            ->andWhere('t.id = :thread')
+            ->andWhere('c.parent IS NULL')
+            ->andWhere('c.deleted <> true')
+            ->setParameter('thread', $thread)
+            ->setParameter('up', 'up')
+            ->setParameter('down', 'down')
+            ->distinct('c.id');
+
+        switch ($sort) {
+            case 'votes':
+                $qb->addOrderBy('upvotes', 'DESC')
+                    ->addOrderBy('downvotes', 'ASC')
+                    ->addOrderBy('c.createdAt', 'DESC');
+                break;
+
+            case 'recent':
+                $qb->addOrderBy('c.createdAt', 'DESC');
+                break;
+
+            case 'oldest':
+                $qb->addOrderBy('c.createdAt', 'ASC');
+                break;
+
+            default:
+                die('invalid sort method supplied - '.$sort);
+                break;
+        }
+
+        $result = $qb->getQuery()
+            ->execute();
+
+        return $result;
+    }
 }
 

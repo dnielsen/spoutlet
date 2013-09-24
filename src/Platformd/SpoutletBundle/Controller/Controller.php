@@ -391,6 +391,11 @@ class Controller extends BaseController
         return $this->container->get('platformd.model.email_manager');
     }
 
+    protected  function getCommentManager()
+    {
+        return $this->container->get('platformd.model.comment_manager');
+    }
+
     protected function getErrorMessages(Form $form) {
         $errors = array();
         foreach ($form->getErrors() as $key => $error) {

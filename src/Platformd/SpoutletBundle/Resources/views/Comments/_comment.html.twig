@@ -1,0 +1,101 @@
+{% set upVotes = comment.getUpVoteCount %}
+{% set downVotes = comment.getDownVoteCount %}
+
+<div class="post-wrapper" id="post-id-{{ comment.id }}" data-posted="{{ comment.createdAt | date('Y-m-d H:i:s') }}" data-votes="{{ upVotes }}">
+    <div class="comment-wrapper" id="comment-wrapper-{{ comment.id }}">
+        <input type="hidden" id="comment-{{ comment.id }}" value="{{ comment.id }}" />
+        <div class="comment-author">
+            <a href="{{ account_link(comment.author.username) }}">
+                {% if get_avatar_url(comment.author) != false %}
+                    <img src="{{ asset(get_avatar_url(comment.author)) }}" alt="{{ comment.author.username }}" />
+                {% else %}
+                    <div class="default-avatar avatar84"></div>
+                {% endif %}
+            </a>
+
+            <div class="author-link"><a href="{{ account_link(comment.author.username) }}">{{ comment.author.username }}</a></div>
+            <!--  Placeholders for ARP/Level when we handle this ourselves
+                <div class="author-level">Level 7</div>
+                <div class="level-img"><div>5477 ARP</div></div>
+            -->
+        </div>
+        <div class="comment-body">
+            <div class="comment-errors" id="comment-errors-{{ comment.id }}"></div>
+            <div class="editable" id="comment-body-{{ comment.id }}" style="padding-bottom: 20px;">{{ comment.body | nl2br }}</div>
+        </div>
+
+        <div class="comment-footer">
+
+            <div class="comment-vote">
+                <div style="display:inline-table;">
+                    <span id="comment-upvotes-{{ comment.id }}">{{ upVotes }}</span>
+                    <a href="javascript:void(0);" class="comment-voting-button up" id="comment-voting-vote-up" data-id="{{ comment.id }}" data-votetype="up"></a>
+                </div>
+                <div style="display:inline-table;">
+                    <span id="comment-downvotes-{{ comment.id }}">{{ downVotes }}</span>
+                    <a href="javascript:void(0);" class="comment-voting-button down" id="comment-voting-vote-down" data-id="{{ comment.id }}" data-votetype="down"></a>
+                </div>
+                <div style="display:inline-table; margin-left: 10px;">
+                    <span id="comment-points-{{ comment.id }}">{{ 'platformd.comment.points' | pd_trans }} {{ (upVotes - downVotes) | number_format(0, '.', ',') }}</span>
+                </div>
+            </div>
+
+            <div class="comment-at" title="{{ comment.createdAt | date }}Z" style="margin-left: 90px;"></div>
+
+            <div class="options" data-id="{{ comment.id }}" style="right:0;">
+                <div class="choices" id="choices-{{ comment.id }}">
+                    <ul>
+                        <li>
+                            <span data-logged-in="true"><a href="javascript:void(0)" class="comment-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.reply' | pd_trans }}</a></span>
+                            <span data-logged-in="false"><a href="{{ login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }}">{{ 'platformd.comment.reply' | pd_trans }}</a></span>
+                        </li>
+                        <span data-comment-admin="true" data-comment-owner="{{ comment.author.id }}" style="display:none;">
+                            <li class="edit-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">{{ 'platformd.comment.edit' | pd_trans }}</a></li>
+                            <li><a href="javascript:void(0);" class="delete-link" data-id="{{ comment.id }}">{{ 'platformd.comment.delete' | pd_trans }}</a></li>
+                        </span>
+                        <li class="report-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">{{ 'content_reporting.report' | pd_trans }}</a></li>
+                        <div class="report-options" id="report-options-{{ comment.id }}">
+                            <ul>
+                                <span data-logged-in="true">
+                                    <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ comment.id }}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | pd_trans }}</a></li>
+                                    <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ comment.id }}" data-reason="spam">{{ 'content_reporting.spam' | pd_trans }}</a></li>
+                                    <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ comment.id }}" data-reason="violates_intellectual_property">{{ 'content_reporting.violates_intellectual_property' | pd_trans }}</a></li>
+                                    <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ comment.id }}" data-reason="individual_harrassing_me">{{ 'content_reporting.individual_harrassing_me' | pd_trans }}</a></li>
+                                </span>
+                                <span data-logged-in="false">
+                                    <li><a href="{{ login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }}" data-id="{{ comment.id }}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | pd_trans }}</a></li>
+                                    <li><a href="{{ login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }}" data-id="{{ comment.id }}" data-reason="spam">{{ 'content_reporting.spam' | pd_trans }}</a></li>
+                                    <li><a href="{{ login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }}" data-id="{{ comment.id }}" data-reason="violates_intellectual_property">{{ 'content_reporting.violates_intellectual_property' | pd_trans }}</a></li>
+                                    <li><a href="{{ login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }}" data-id="{{ comment.id }}" data-reason="individual_harrassing_me">{{ 'content_reporting.individual_harrassing_me' | pd_trans }}</a></li>
+                                </span>
+                            </ul>
+                        </div>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="comment-replies-wrapper" id="replies-{{ comment.id }}">
+        <div class="comment-tri{% if comment.getPublishedReplyCount == 0 %} hidden{% endif %}"></div>
+        <div class="comment-replies" id="comment-replies-{{ comment.id }}">
+            <textarea id="reply-text-{{ comment.id }}" type="text"></textarea><a href="javascript:void(0);" class="comment-post-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.post' | pd_trans }}</a>
+        </div>
+
+        {% set replyCounter = 0 %}
+        {% for reply in comment.replies %}
+            {% if reply.deleted == false %}
+                {% set replyCounter = replyCounter + 1 %}
+
+                {% include 'SpoutletBundle:Comments:_reply.html.twig' with { 'reply': reply, 'replyCounter': replyCounter } %}
+
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% if replyCounter   > 3 %}
+        <div class="more-comments" id="more-comments-{{ comment.id }}">
+            <a href="javascript:void(0);" class="more-comments-link" id="more-comments-{{ comment.id }}" data-id="{{ comment.id }}">{{ 'platformd.comment.more_replies' | pd_trans }}</a>
+        </div>
+    {% endif %}
+</div>

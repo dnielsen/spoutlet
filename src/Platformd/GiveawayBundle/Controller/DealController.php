@@ -328,14 +328,6 @@ class DealController extends Controller
     }
 
     /**
-     * @return \Platformd\CommentBundle\Model\CommentManager
-     */
-    protected function getCommentManager()
-    {
-        return $this->container->get('fos_comment.manager.comment');
-    }
-
-    /**
      * @return \Platformd\GroupBundle\Model\GroupManager
      */
     private function getGroupManager()

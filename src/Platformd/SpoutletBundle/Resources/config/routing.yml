@@ -154,7 +154,7 @@ SpoutletBundle_admin_wallpapers:
 
 SpoutletBundle_comments:
     resource: "@SpoutletBundle/Resources/config/routing/comments.yml"
-    prefix: /comments
+    prefix: /
 
 SpoutletBundle_admin_gallery:
     resource: "@SpoutletBundle/Resources/config/routing/admin_gallery.yml"

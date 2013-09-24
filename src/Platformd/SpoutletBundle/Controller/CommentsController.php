@@ -48,7 +48,6 @@ class CommentsController extends Controller
         }
 
         $em     = $this->getDoctrine()->getEntityManager();
-
         $thread = $em->getRepository('SpoutletBundle:Thread')->find($params['thread']);
 
         if (!$thread) {
@@ -59,11 +58,10 @@ class CommentsController extends Controller
         $parent = $params['parent'] ? $em->getRepository('SpoutletBundle:Comment')->find((int) $params['parent']) : null;
         $author = $this->getUser();
         $body   = $params['body'];
-        $threadId = $thread->getId();
-        $commentCount = $params['commentCount'];
 
         if ($parent !== null) {
             $comment->setParent($parent);
+            $replyCount = $parent->getReplies()->count();
         }
 
         $comment->setAuthor($author);
@@ -81,12 +79,19 @@ class CommentsController extends Controller
 
         $this->createAcl($comment);
 
-        $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByVotes($threadId, $commentCount);
+        $path = $this->generateUrl('comments_thread', array('threadId' => $params['thread']));
+        $this->getVarnishUtil()->banCachedObject($path);
 
-        return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
-            'thread'    => $threadId,
-            'comments'  => $comments,
-            'offset'    => $commentCount,
+        if ($parent !== null) {
+            return $this->render('SpoutletBundle:Comments:_reply.html.twig', array(
+                'reply'        => $comment,
+                'replyCounter' => $replyCount,
+                'permalink'    => $thread->getPermalink(),
+            ));
+        }
+
+        return $this->render('SpoutletBundle:Comments:_comment.html.twig', array(
+            'comment'   => $comment,
             'permalink' => $thread->getPermalink(),
         ));
     }
@@ -143,6 +148,9 @@ class CommentsController extends Controller
         $em->persist($comment);
         $em->flush();
 
+        $path = $this->generateUrl('comments_thread', array('threadId' => $comment->getThread()->getId()));
+        $this->getVarnishUtil()->banCachedObject($path);
+
         $response->setContent(json_encode(array("success" => true, "details" => nl2br($body))));
         return $response;
     }
@@ -193,148 +201,31 @@ class CommentsController extends Controller
 
         $this->removeUserArp($comment);
 
-        $commentCount = $comment->getParent() ? $params['commentCount'] : $params['commentCount'] - 1;
+        $path = $this->generateUrl('comments_thread', array('threadId' => $comment->getThread()->getId()));
+        $this->getVarnishUtil()->banCachedObject($path);
 
-        $threadId = $comment->getThread()->getId();
-
-        $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByVotes($threadId, $commentCount);
-
-        return $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
-            'thread'    => $threadId,
-            'comments'  => $comments,
-            'offset'    => $commentCount,
-            'permalink' => $comment->getThread()->getPermalink(),
-        ));
-    }
-
-    public function threadAction($threadId, $object, $commentLimit=5)
-    {
-        $em         = $this->getDoctrine()->getEntityManager();
-        $thread     = $em->getRepository('SpoutletBundle:Thread')->find($threadId);
-
-        if (!$thread) {
-            $thread = $this->createThread($threadId, $object);
-        }
-
-        $correctPermalink = $this->generateUrl($object->getLinkableRouteName(), $object->getLinkableRouteParameters()).'#comments';
-
-        if ($thread->getPermalink() != $correctPermalink) {
-            $thread->setPermalink($correctPermalink);
-            $em->persist($thread);
-            $em->flush();
-        }
-
-        $comments = null; # this should be null because of caching... ALL comments are loaded DYNAMICALLY now
-
-        $response = $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
-            'thread'    => $threadId,
-            'comments'  => $comments,
-            'offset'    => 0,
-            'permalink' => $thread->getPermalink(),
-        ));
-
-        $this->varnishCache($response, 1);
-
+        $response->setContent(json_encode(array("success" => true)));
         return $response;
     }
 
-    public function threadSortAction(Request $request)
+    public function threadAction($threadId)
     {
-        $response = new Response();
-        $response->headers->set('Content-type', 'text/json; charset=utf-8');
-
-        $params = array('thread' => $request->get('thread'), 'method' => $request->get('method'), 'commentLimit' => $request->get('commentLimit'));
-
-        if (!isset($params['thread']) || !isset($params['method'])) {
-            $response->setContent(json_encode(array("message" => "error", "details" => "required content missing")));
-            return $response;
-        }
-
-        $threadId       = $params['thread'];
-        $method         = $params['method'];
-        $commentLimit   = $params['commentLimit'];
-
-        $em         = $this->getDoctrine()->getEntityManager();
-        $thread     = $em->getRepository('SpoutletBundle:Thread')->find($threadId);
+        $em     = $this->getDoctrine()->getEntityManager();
+        $thread = $em->getRepository('SpoutletBundle:Thread')->find($threadId);
 
         if (!$thread) {
-            $response->setContent(json_encode(array("message" => "error", "details" => "comment thread not found")));
-            return $response;
+            return new Response();
         }
 
-        switch ($method) {
-            case 'votes':
-                $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByVotes($threadId, $commentLimit);
-                break;
-
-            case 'recent':
-                $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByDate($threadId, $commentLimit);
-                break;
-
-            case 'oldest':
-                $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByDate($threadId, $commentLimit, 'ASC');
-                break;
-
-            default:
-                $response->setContent(json_encode(array("message" => "error", "details" => "invalid method passed")));
-                return $response;
-                break;
-        }
+        $comments = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedBy($threadId, 'recent');
 
         $response = $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
-            'thread'    => $threadId,
+            'thread'    => $thread,
             'comments'  => $comments,
-            'offset'    => $commentLimit,
-            'method'    => $method,
             'permalink' => $thread->getPermalink(),
         ));
 
-        $this->varnishCache($response, 1);
-
-        return $response;
-    }
-
-    public function updateThreadAction(Request $request)
-    {
-        $response = new Response();
-        $response->headers->set('Content-type', 'text/json; charset=utf-8');
-
-        $params = array('threadId' => $request->get('threadId'), 'increment' => $request->get('increment'), 'offset' => $request->get('offset'), 'sort' => $request->get('sort'));
-
-        if (!isset($params['threadId']) || !isset($params['increment']) || !isset($params['offset']) || !isset($params['sort'])) {
-            $response->setContent(json_encode(array("message" => "error", "details" => "required content missing")));
-            return $response;
-        }
-
-        $threadId    = $params['threadId'];
-        $increment   = $params['increment'];
-        $offset      = $params['offset'];
-        $sort        = $params['sort'];
-
-        $em         = $this->getDoctrine()->getEntityManager();
-        $thread     = $em->getRepository('SpoutletBundle:Thread')->find($threadId);
-
-        if (!$thread) {
-            $response->setContent(json_encode(array("message" => "error", "details" => "thread not found")));
-            return $response;
-        }
-
-        $comments   = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedByWithOffset($threadId, $sort, $offset, $increment);
-
-        if (!$comments) {
-            $response->setContent(json_encode(array("message" => "no_more_comments")));
-            return $response;
-        }
-
-        $response = $this->render('SpoutletBundle:Comments:_comments.html.twig', array(
-            'thread'    => $threadId,
-            'comments'  => $comments,
-            'offset'    => $offset + count($comments),
-            'permalink' => $thread->getPermalink(),
-        ));
-
-        $this->varnishCache($response, 1);
-
+        $this->varnishCache($response, 2628000);
         return $response;
     }
 
@@ -343,7 +234,6 @@ class CommentsController extends Controller
         $thread = new Thread();
         $thread->setId($threadId);
         $thread->setPermalink($this->getUrlForObject($object).'#comments');
-        $thread->setSite($this->getCurrentSite());
 
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($thread);

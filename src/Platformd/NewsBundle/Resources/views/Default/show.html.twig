@@ -33,7 +33,7 @@
             </div>
 
             {% if features.hasComments %}
-                {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : news.threadId, 'comments' : null, 'offset' : 0, 'permalink' : permalink } %}
+                {% render url('comments_thread', { 'threadId': news.threadId }) with {}, {'standalone': true } %}
             {% endif %}
         </div>
     </div>
