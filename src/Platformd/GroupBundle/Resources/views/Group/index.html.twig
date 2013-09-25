@@ -113,8 +113,8 @@
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
     <script type="text/javascript">
 
-        var topicGroups    = JSON.parse('{{ topicGroups | raw }}');
-        var locationGroups = JSON.parse('{{ locationGroups | raw }}');
+        var topicGroups    = {{ topicGroups | raw }};
+        var locationGroups = {{ locationGroups | raw }};
         var topicGroupsLoaded   = 0;
         var locationGroupsLoaded   = 0;
         var basePath       = '{{  path('default_index') }}';
