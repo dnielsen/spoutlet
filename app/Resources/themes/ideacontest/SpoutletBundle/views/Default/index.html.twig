@@ -6,10 +6,11 @@
 
     <div id="row1">
         <div class="cBx1">
-            {% render 'HtmlWidgetBundle:HtmlWidget:show' with { 'slug': 'recent-campout-sessions' } %}
+            <h2 class="spcr-b">Groups</h2><hr/>
+            {%  render url('_all_groups') %}
         </div>
 
-        {% render 'SpoutletBundle:Default:events' %}
+        {% render 'SpoutletBundle:Default:groupEvents' %}
 
     </div>
 

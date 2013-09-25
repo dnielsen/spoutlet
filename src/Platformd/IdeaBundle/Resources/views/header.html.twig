@@ -13,9 +13,6 @@
         {% else %}
             <li><a href="{{ path('_fos_user_security_logout') }}">Sign out</a></li>
         {% endif %}
-        {% block extra_user_controls %}
-            <li><a href="{{ path('default_index') }}">Home</a></li>
-        {% endblock %}
     </ul>
 
     {% if app.user %}

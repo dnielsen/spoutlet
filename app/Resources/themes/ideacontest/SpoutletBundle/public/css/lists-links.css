@@ -246,8 +246,8 @@ ol {
 
 /*::::::::::::::: PAGE CONTENT LIST STYLES :::::::::::::::*/
 
-.col2 ul {
-	margin-bottom: 15px;
+.col2 ul, .std_2col ul {
+    margin-bottom: 15px;
 }
 .col1 ul {
 	margin-top: 5px;

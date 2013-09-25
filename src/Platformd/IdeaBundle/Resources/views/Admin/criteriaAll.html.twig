@@ -1,6 +1,6 @@
 {% extends 'IdeaBundle::event_layout.html.twig' %}
 
-{% block content %}
+{% block event_content %}
     <h1>Criteria Configuration Panel</h1>
 
     <form action="{{ path('idea_admin_criteria_all', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}" method="post" {{ form_enctype(form) }}>

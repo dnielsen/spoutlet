@@ -6,8 +6,8 @@
 }
 
 .comments {
-    width: 100%;
-    float: left;
+    margin-left: 75px;
+    width: 605px;
 }
 
 .comment-wrapper {

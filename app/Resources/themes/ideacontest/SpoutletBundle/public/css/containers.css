@@ -91,7 +91,7 @@
 
 #content-header {
 	width: 1050px;
-	height: 340;
+	height: 430px;
 	margin: 0 auto 20px;
 }
 
@@ -148,14 +148,14 @@
 }
 	.cBx1 {
 		float: left;
-		width: 744px;
+		width: 644px;
 		padding-top: 15px;
 		padding-right: 15px;
 		border-right: 1px dashed #ccc;
 	}
 	.cBx2 {
 		float: right;
-		width: 275px;
+		width: 364px;
 		padding-top: 15px;
 	}
 		.cBx2 #sponsors  {
@@ -349,4 +349,67 @@ table.tblStyle2 {
 	float: right;
 	width: 525px;
 	text-align: right;
+}
+
+/* Standard 2 Column */
+.std_2col { clear:both; width:100%; padding:0 0 15px 0; float:left; }
+.std_2col .right {
+    float: right;
+    width: 323px;
+    padding: 0;
+}
+
+.std_2col .left {
+    float: left;
+    width: 690px;
+    padding-right: 18px;
+    padding-bottom: 30px;
+    margin-right: 18px;
+    border-right: 1px dashed #ccc;
+}
+
+/* Standard 1 Column - Full Across */
+.std_1col { clear:both; width:100%; padding:0 0 15px 0; float: left; }
+
+.sub-nav-wrapper {
+    height: 21px;
+    background-color: #f7f7f9;
+    border: 1px solid #e1e1e8;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 5px 0;
+    display: inline-block;
+}
+
+.groups-sub-nav-wrapper {
+    margin: 5px 0;
+}
+
+table.tblSponsor {
+    width: 100%;
+}
+.tblSponsor th {
+    padding: 7px;
+    background: #f0f0f0;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+.tblSponsor td {
+    padding: 7px;
+    border-bottom: 1px solid #e5e5e5;
+    border-left: 1px solid #e5e5e5;
+    font-size: 13px;
+    text-align: center;
+}
+.tblSponsor td:first-child {
+    border-left: 0 none;
+    text-align: left;
+}
+
+.bullet {
+    font-family: Tahoma, sans-serif;
+    font-size: 2em !important;
+    color: #77d9fe;
+
 }

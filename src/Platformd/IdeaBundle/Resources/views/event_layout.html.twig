@@ -5,13 +5,13 @@
     <li><a href="{{ path('group_show', { 'slug': groupSlug }) }}">{{  group.name }}</a></li>
 
     {% if is_granted('ROLE_ADMIN') %}
-        <li><a href="{{ path('idea_admin', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}">Admin Console</a></li>
+        <li><a href="{{ path('idea_admin', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}">Event Administration</a></li>
     {% endif %}
 
 {% endblock %}
 
 {% block banner %}
-    <a href="{{ path('idea_index', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}"><img src="{{ asset('bundles/spoutlet/images/campsitelogo.jpg') }}" alt="{{ event.name }}" width="328" height="126" id="brand"></a>
+    <a href="{{ path('idea_index', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/logo.jpg') }}" alt="{{ event.name }}" width="328" height="126" id="brand"></a>
 {% endblock %}
 
 {% block menu_items %}
@@ -66,3 +66,24 @@
     <li><a href="{{ path('idea_info', {'groupSlug': groupSlug, 'eventSlug': eventSlug, 'page': 'Schedule'}) }}">Schedule</a></li>
     <li><a href="{{ path('idea_info', {'groupSlug': groupSlug, 'eventSlug': eventSlug, 'page': 'FAQ'}) }}">Event FAQ</a></li>
 {% endblock %}
+
+{% block content %}
+
+    {% if no_sidebar is not defined %}
+        <div class="col1">
+    {% endif %}
+
+    {% block event_content %}
+    {% endblock %}
+
+    {% if no_sidebar is not defined %}
+        </div>
+        <div class="col2">
+            {% block sidebar %}
+                {% include 'IdeaBundle::sidebar.html.twig' %}
+            {% endblock %}
+        </div>
+    {% endif %}
+
+{% endblock %}
+

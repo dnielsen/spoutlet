@@ -30,7 +30,7 @@
 
 /* custom progress bar for the gallery */
 #rotator .ad-gallery .ad-image-wrapper {
-    margin 0px auto 3px;
+    margin: 0px auto 3px;
 }
 
 #rotator {
@@ -55,6 +55,7 @@
 
 #map-location-search {
     width: 352px;
+    margin: 0px auto 10px;
 }
 
 .attending {

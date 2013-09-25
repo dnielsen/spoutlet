@@ -4,16 +4,18 @@
 
 {% block content %}
 
-    <a href="{{ path('idea_admin_event', {'groupSlug': group.slug}) }}">Create a new Event</a><br/>
+    <h2>{{ group.name }}</h2>
+    <p>{{ group.description | striptags }}</p><br/>
 
-    <h2>Events</h2><hr/>
+    <h2 class = "left">Events</h3>
+    <a href="{{ path('idea_admin_event', {'groupSlug': group.slug}) }}" class="left spcr-l2 btn">Create Event</a><br/>
+    <hr/>
     {% if group.events|length > 0 %}
         {% for event in group.events %}
             <a href="{{ path('idea_index', { 'groupSlug': group.slug, 'eventSlug': event.slug }) }}">{{ event.name }}</a>
-             - {{ event.content | truncate(120) }}<br/><hr/>
+             - {{ event.content|truncate(120) }}<br/><hr/>
         {% endfor %}
     {% endif %}
-
 
 {% endblock %}
 

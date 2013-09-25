@@ -558,6 +558,25 @@ class DefaultController extends Controller
         return $this->render('SpoutletBundle:Default:events.html.twig', array('events' => $events));
     }
 
+    public function groupEventsAction()
+    {
+        $site = $this->getCurrentSite();
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $groupRepo = $em->getRepository('GroupBundle:Group');
+
+        $groups  = $groupRepo->findAllGroupsRelevantForSite($site);
+
+        $events = array();
+        foreach ($groups as $group) {
+            $events[] = $group->getEvents();
+        }
+        uasort($events, array($this->getGlobalEventService(), 'eventCompare'));
+        $events = array_slice($events, 0, 6);
+
+        return $this->render('SpoutletBundle:Default:events.html.twig', array('events' => $events));
+    }
+
     public function groupsMapAction()
     {
         $site = $this->getCurrentSite();
