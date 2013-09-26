@@ -62,7 +62,7 @@
 
             {% if features.hasComments %}
                 <div class="event-comments">
-                    {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : event.threadId, 'object' : event } %}
+                    {% render url('comments_thread', { 'threadId': event.threadId }) with {}, {'standalone': true }  %}
                 </div>
             {% endif %}
 
