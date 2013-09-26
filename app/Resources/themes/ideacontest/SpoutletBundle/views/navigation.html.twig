@@ -3,30 +3,26 @@
         <ul class="sf-menu sf-js-enabled sf-list" id="nav-list">
             <li><a href="{{ path('about') }}">About</a></li>
 
-            {% if features.hasEvents %}
-                <li class="more">
-                    <a>Events</a>
-                    <ul>
-                        <li><a href="{{ path('global_events_index') }}">Events</a></li>
-                        <li><a href="{{ path('html_widget_page', { 'slug': 'event-overview' }) }}">Event Overview</a></li>
-                        <li><a href="{{ path('html_widget_page', { 'slug': 'what-to-expect' }) }}">What to Expect</a></li>
-                        <li><a href="{{ path('html_widget_page', { 'slug': 'what-to-bring' }) }}">What to Bring</a></li>
-                        <li><a href="{{ path('html_widget_page', { 'slug': 'more-faqs' }) }}">More FAQs</a></li>
-                        <li><a class="text-error" href="#">Session Schedule</a></li>
-                    </ul>
-                </li>
-            {% endif %}
+            <li class="more">
+                <a>Events</a>
+                <ul>
+                    <li><a href="{{ path('global_events_index') }}">Events</a></li>
+                    <li><a href="{{ path('html_widget_page', { 'slug': 'event-overview' }) }}">Event Overview</a></li>
+                    <li><a href="{{ path('html_widget_page', { 'slug': 'what-to-expect' }) }}">What to Expect</a></li>
+                    <li><a href="{{ path('html_widget_page', { 'slug': 'what-to-bring' }) }}">What to Bring</a></li>
+                    <li><a href="{{ path('html_widget_page', { 'slug': 'more-faqs' }) }}">More FAQs</a></li>
+                    <li><a class="text-error" href="#">Session Schedule</a></li>
+                </ul>
+            </li>
 
-            {% if features.hasGroups %}
-                <li class="more">
-                    <a>{{ 'platformd.layout.main_menu.groups' | trans }}</a>
-                    <ul>
-                        <li><a href="{{ path('groups') }}">All Groups</a></li>
-                        <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
-                        <li><a href="{{ path('group_new') }}">Create Group</a></li>
-                    </ul>
-                </li>
-            {% endif %}
+            <li class="more">
+                <a>{{ 'platformd.layout.main_menu.groups' | trans }}</a>
+                <ul>
+                    <li><a href="{{ path('groups') }}">All Groups</a></li>
+                    <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
+                    <li><a href="{{ path('group_new') }}">Create Group</a></li>
+                </ul>
+            </li>
 
             <li><a href="{{ path('html_widget_page', { 'slug': 'sponsors' }) }}">Sponsors</a></li>
 

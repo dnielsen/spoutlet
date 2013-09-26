@@ -968,6 +968,17 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
 
         return $this->owner === $user;
     }
+    public function isMember($user)
+    {
+        if (!$user) {
+            return false;
+        }
+        if (in_array($user, $this->members->toArray())){
+            return true;
+        }
+
+        return false;
+    }
 
     public function getReportThreshold()
     {

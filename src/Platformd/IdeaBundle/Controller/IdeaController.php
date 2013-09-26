@@ -2,13 +2,13 @@
 
 namespace Platformd\IdeaBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
 
+use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\IdeaBundle\Entity\Idea;
 use Platformd\IdeaBundle\Entity\Comment;
 use Platformd\IdeaBundle\Entity\Tag;
@@ -24,18 +24,11 @@ class IdeaController extends Controller
 
     public function indexAction($groupSlug, $eventSlug) {
 
+        $group = $this->getGroup($groupSlug);
 		$event = $this->getEvent($groupSlug, $eventSlug);
 
-		if(!$event) {
-			return  $this->redirect($this->generateUrl('idea_admin_event', array(
-                'groupSlug' => $groupSlug,
-            )));
-		}
-
     	$params = array(
-            'groupSlug' => $groupSlug,
-            'eventSlug' => $eventSlug,
-            'no_sidebar' => true,
+            'group' => $group,
             'event' => $event,
         );
         return $this->render('IdeaBundle:Idea:index.html.twig', $params);
@@ -44,13 +37,8 @@ class IdeaController extends Controller
 
 	public function showAllAction($groupSlug, $eventSlug) {
 
+        $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
-
-		if(!$event) {
-			return  $this->redirect($this->generateUrl('idea_admin_event', array(
-                'groupSlug' => $groupSlug,
-            )));
-		}
 
 		$tag = $this->getRequest()->query->get('tag');
         $submitActive = $event->getIsSubmissionActive();
@@ -60,12 +48,13 @@ class IdeaController extends Controller
         $ideaRepo->sortByFollows($ideaList);
 
         $params = array(
-            'groupSlug' => $groupSlug,
-            'eventSlug' => $eventSlug,
+            'group' => $group,
+            'event' => $event,
             'ideas' => $ideaList,
             'submitActive' => $submitActive,
             'tag' => $tag,
             'round' => $event->getCurrentRound(),
+            'sidebar' => true,
         );
 
         return $this->render('IdeaBundle:Idea:showAll.html.twig', $params);
@@ -74,17 +63,12 @@ class IdeaController extends Controller
 
 	public function showAction($groupSlug, $eventSlug, $id) {
 
-        $doctrine = $this->getDoctrine();
+        $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
-
-        if(!$event) {
-            return  $this->redirect($this->generateUrl('idea_admin_event', array(
-                        'groupSlug' => $groupSlug,
-                    )));
-        }
 
 		$currentRound = $event->getCurrentRound();
 
+        $doctrine = $this->getDoctrine();
 		$ideaRepo = $doctrine->getRepository('IdeaBundle:Idea');
 
 		$idea = $ideaRepo->find($id);
@@ -94,10 +78,11 @@ class IdeaController extends Controller
 		}
 
         $params = array(
-            'groupSlug' => $groupSlug,
-            'eventSlug' => $eventSlug,
+            'group' => $group,
+            'event' => $event,
             'idea' => $idea,
             'canEdit' => $this->canEdit($idea, $event),
+            'sidebar' => true,
         );
 
 
@@ -113,6 +98,7 @@ class IdeaController extends Controller
             $currentIdeaFound = false;
             $previousIdea = null;
             $nextIdea = null;
+
             foreach($ideas as $currentIdea) {
                 if($currentIdeaFound) {
                     $nextIdea = $currentIdea;
@@ -158,32 +144,24 @@ class IdeaController extends Controller
 
 
 	public function createFormAction($groupSlug, $eventSlug) {
+
+        $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
-        if(!$event) {
-            return  $this->redirect($this->generateUrl('idea_admin_event', array(
-                        'groupSlug' => $groupSlug,
-                    )));
-        }
 
         if (!$this->canCreate($event)) {
             //throw new AccessDeniedException();
             return new RedirectResponse($this->generateUrl('login'));
         }
         return $this->render('IdeaBundle:Idea:createForm.html.twig', array(
-                'groupSlug' => $groupSlug,
-                'eventSlug' => $eventSlug,
+                'group' => $group,
+                'event' => $event,
+                'sidebar' => true,
             ));
 	}
 
 	public function createAction(Request $request, $groupSlug, $eventSlug) {
 
         $event = $this->getEvent($groupSlug, $eventSlug);
-
-        if(!$event) {
-            return  $this->redirect($this->generateUrl('idea_admin_event', array(
-                        'groupSlug' => $groupSlug,
-                    )));
-        }
 
         if (!$this->canCreate($event)) {
             //throw new AccessDeniedException();
@@ -243,13 +221,8 @@ class IdeaController extends Controller
 
     public function editFormAction($groupSlug, $eventSlug, $id) {
 
+        $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
-
-        if(!$event) {
-            return  $this->redirect($this->generateUrl('idea_admin_event', array(
-                        'groupSlug' => $groupSlug,
-                    )));
-        }
 
         $idea = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($id);
 
@@ -260,10 +233,12 @@ class IdeaController extends Controller
         if (!$idea) {
             throw $this->createNotFoundException('No idea found for id '.$id);
         }
+
         return $this->render('IdeaBundle:Idea:createForm.html.twig', array(
                 'idea' => $idea,
-                'groupSlug' => $groupSlug,
-                'eventSlug' => $eventSlug,
+                'group' => $group,
+                'event' => $event,
+                'sidebar' => true,
             ));
     }
 
@@ -271,11 +246,6 @@ class IdeaController extends Controller
     public function editAction($groupSlug, $eventSlug, $id) {
 
         $event = $this->getEvent($groupSlug, $eventSlug);
-        if(!$event) {
-            return  $this->redirect($this->generateUrl('idea_admin_event', array(
-                        'groupSlug' => $groupSlug,
-                    )));
-        }
 
         $idea = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($id);
 
@@ -330,6 +300,9 @@ class IdeaController extends Controller
 
     public function uploadAction($groupSlug, $eventSlug, $id = null){
 
+        $group = $this->getGroup($groupSlug);
+        $event = $this->getEvent($groupSlug, $eventSlug);
+
         $document = new Document();
         $form = $this->createFormBuilder($document)
             ->add('file')
@@ -374,8 +347,9 @@ class IdeaController extends Controller
         return $this->render('IdeaBundle:Idea:upload.html.twig', array(
                 'form'=>$form->createView(),
                 'id'=>$id,
-                'groupSlug' => $groupSlug,
-                'eventSlug' => $eventSlug,
+                'group' => $group,
+                'event' => $event,
+                'sidebar' => true,
             ));
     }
 
@@ -404,6 +378,8 @@ class IdeaController extends Controller
 
     public function addLinkAction($groupSlug, $eventSlug, $id = null)
     {
+        $group = $this->getGroup($groupSlug);
+        $event = $this->getEvent($groupSlug, $eventSlug);
 
         $link = new Link();
         $form = $this->createFormBuilder($link)
@@ -449,8 +425,9 @@ class IdeaController extends Controller
         return $this->render('IdeaBundle:Idea:addLink.html.twig', array(
                 'form'=>$form->createView(),
                 'id'=>$id,
-                'groupSlug' => $groupSlug,
-                'eventSlug' => $eventSlug,
+                'group' => $group,
+                'event' => $event,
+                'sidebar' => true,
             ));
     }
 
@@ -476,15 +453,9 @@ class IdeaController extends Controller
     }
 
 
-
     public function voteAction($groupSlug, $eventSlug) {
 
         $event = $this->getEvent($groupSlug, $eventSlug);
-        if(!$event) {
-            return  $this->redirect($this->generateUrl('idea_admin_event', array(
-                        'groupSlug' => $groupSlug,
-                    )));
-        }
 
         //check for judge role here
         if (!$this->canJudge($event)) {
@@ -638,12 +609,8 @@ class IdeaController extends Controller
 
 
     public function deleteAction($groupSlug, $eventSlug) {
+
         $event = $this->getEvent($groupSlug, $eventSlug);
-        if(!$event) {
-            return  $this->redirect($this->generateUrl('idea_admin_event', array(
-                        'groupSlug' => $groupSlug,
-                    )));
-        }
 
         $id = $this->getRequest()->request->get('id');
 		$idea = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($id);
@@ -668,31 +635,6 @@ class IdeaController extends Controller
     }
 
 
-	public function loginAction() {
-        $request = $this->getRequest();
-        $session = $request->getSession();
-
-        // get the login error if there is one
-        if ($request->attributes->has(SecurityContext::AUTHENTICATION_ERROR)) {
-            $error = $request->attributes->get(
-                SecurityContext::AUTHENTICATION_ERROR
-            );
-        } else {
-            $error = $session->get(SecurityContext::AUTHENTICATION_ERROR);
-            $session->remove(SecurityContext::AUTHENTICATION_ERROR);
-        }
-
-        return $this->render(
-            'IdeaBundle:Idea:login.html.twig', array(
-                'last_username' => $session->get(SecurityContext::LAST_USERNAME),
-                'error'         => $error,
-                'groupSlug'     => $groupSlug,
-                'eventSlug'     => $eventSlug,
-            )
-        );
-    }
-
-
     public function profileAction($username = null) {
 
         $currentUser = $this->get('security.context')->getToken()->getUser();
@@ -710,13 +652,19 @@ class IdeaController extends Controller
         return $this->render('IdeaBundle:Idea:profile.html.twig', array(
                 'user'=>$user,
                 'ownProfile'=>$ownProfile,
+                'sidebar' => true,
             ));
     }
 
     public function infoAction($groupSlug, $eventSlug, $page) {
+
+        $group = $this->getGroup($groupSlug);
+        $event = $this->getEvent($groupSlug, $eventSlug);
+
         return $this->render('IdeaBundle:Idea:info'.$page.'.html.twig', array(
-                'groupSlug' => $groupSlug,
-                'eventSlug' => $eventSlug,
+                'group' => $group,
+                'event' => $event,
+                'sidebar' => true,
             ));
     }
 
@@ -732,21 +680,25 @@ class IdeaController extends Controller
     }
 
     public function canJudge($event) {
+
     	if(!$this->isLoggedIn())
     		return false;
 
-        $securityContext = $this->get('security.context');
         if (!$event->getIsVotingActive())
             return false;
 
+        $securityContext = $this->get('security.context');
         $username = $securityContext->getToken()->getUser()->getUsername();
+
         return $event->containsVoter($username);
     }
 
     public function canCreate($event) {
+
         if (!$event->getIsSubmissionActive())
             return false;
-        return $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY');
+
+        return $this->isLoggedIn();
     }
 
     public function canEdit($idea, $event) {
@@ -810,6 +762,11 @@ class IdeaController extends Controller
     {
         $groupEm = $this->getDoctrine()->getRepository('GroupBundle:Group');
         $group = $groupEm->findOneBySlug($groupSlug);
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group not found.');
+        }
+
         return $group;
     }
 
@@ -824,6 +781,11 @@ class IdeaController extends Controller
                 'slug' => $eventSlug,
             )
         );
+
+        if (!$event) {
+            throw new NotFoundHttpException('Event not found.');
+        }
+
         return $event;
     }
 

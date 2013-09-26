@@ -1,0 +1,23 @@
+<div class="fos_user_user_show memberProfile">
+    <div class="memberProfileLeft">
+        <div class="profileAvatar_big">
+            {% if asset(user.avatar) and user.isAvatarApproved %}
+                <img src="{{ media_path(user) }}" alt="" />
+            {% else %}
+                <div class="defaultAvatar"></div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="memberProfileRight">
+        <h2>{{ "profile.show.title" | trans({
+                "%username%": user.username,
+            }, 'FOSUserBundle') }}</h2>
+
+        <div class="profileBloc">
+            <h3>Profile to be added...</h3>
+        </div>
+    </div>
+
+    <hr class="clear" />
+</div>

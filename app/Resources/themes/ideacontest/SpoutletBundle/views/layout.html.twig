@@ -43,8 +43,10 @@
 
         <div id="wrapper-ht">
 
-            {% include 'SpoutletBundle::header.html.twig' %}
-            {% include 'SpoutletBundle::navigation.html.twig' %}
+            {%  block header %}
+                {% embed 'SpoutletBundle::header.html.twig' %}{% endembed %}
+                {% embed 'SpoutletBundle::navigation.html.twig' %}{% endembed %}
+            {%  endblock %}
 
             <div id="content">
 

@@ -2,14 +2,14 @@
 
 namespace Platformd\IdeaBundle\Controller;
 
-
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\IdeaBundle\Entity\VoteCriteria;
 use Platformd\IdeaBundle\Entity\Idea;
 use Platformd\IdeaBundle\Entity\Comment;
@@ -53,7 +53,7 @@ class AdminController extends Controller
             ->add('isSubmissionActive', 'choice', array('choices' => array('1' => 'Enabled', '0' => 'Disabled'), 'label' => 'Submissions'))
             ->add('isVotingActive', 'choice', array('choices' => array('1' => 'Enabled', '0' => 'Disabled'), 'label' => 'Voting'))
             ->add('registrationOption', 'text', array('attr' => array('value'=>Event::REGISTRATION_ENABLED,'style'=>'display:none')))
-            ->add('private', 'text', array('attr' => array('value' => '1', 'style'=>'display:none')))
+            ->add('private', 'text', array('attr' => array('value' => '0', 'style'=>'display:none')))
 			->getForm();
 
 		if($request->getMethod() == 'POST') {
@@ -78,22 +78,25 @@ class AdminController extends Controller
 		return $this->render('IdeaBundle:Admin:eventForm.html.twig', array(
                 'form' => $form->createView(),
                 'isNew' => $isNew,
-                'groupSlug' => $groupSlug,
-                'eventSlug' => $eventSlug,
+                'group' => $group,
+                'event' => $event,
             ));
 	}
 
 	public function adminAction(Request $request, $groupSlug, $eventSlug) {
-		$event = $this->getEvent($groupSlug, $eventSlug);
-		if(!$event) {
-			return  $this->redirect($this->generateUrl('idea_admin_event', array(
-                    'groupSlug' => $groupSlug,
-                )));
-		}
+
+		$this->basicSecurityCheck('ROLE_USER');
+
+        $group = $this->getGroup($groupSlug);
+        $event = $this->getEvent($groupSlug, $eventSlug);
+
+        if (!$this->isGranted('ROLE_SUPER_ADMIN') && $this->getCurrentUser() !== $group->getOwner()) {
+            throw new AccessDeniedException();
+        }
 
 		return $this->render('IdeaBundle:Admin:admin.html.twig', array(
-                'groupSlug' => $groupSlug,
-                'eventSlug' => $eventSlug,
+                'group' => $group,
+                'event' => $event,
             ));
 	}
 
@@ -101,6 +104,7 @@ class AdminController extends Controller
 	// New request will not provide id using GET
 	// Save request will have displayName and description parameters using POST
 	public function criteriaAction(Request $request, $groupSlug, $eventSlug, $id = null) {
+
 		// test if submission is from a 'cancel' button press
 		if($request->get('cancel') == 'Cancel') {
 			return $this->redirect($this->generateUrl('idea_admin_criteria_all', array(
@@ -108,6 +112,9 @@ class AdminController extends Controller
                     'eventSlug' => $eventSlug,
                 )));
 		}
+
+        $group = $this->getGroup($groupSlug);
+        $event = $this->getEvent($groupSlug, $eventSlug);
 
 		$vcRepo = $this->getDoctrine()->getRepository('IdeaBundle:VoteCriteria');
 
@@ -132,7 +139,7 @@ class AdminController extends Controller
 				$em = $this->getDoctrine()->getEntityManager();
 
 				if($vc->getId() == null) {
-                    $vc->setEvent($this->getEvent($groupSlug, $eventSlug));
+                    $vc->setEvent($event);
 					$em->persist($vc);
 				}
                 else {
@@ -151,14 +158,15 @@ class AdminController extends Controller
 			}
 		}
 		return $this->render('IdeaBundle:Admin:criteriaForm.html.twig', array(
-                'groupSlug' => $groupSlug,
-                'eventSlug' => $eventSlug,
+                'group' => $group,
+                'event' => $event,
                 'form' => $form->createView(),
                 'id' => $id));
 	}
 
 
 	public function criteriaListAction(Request $request, $groupSlug, $eventSlug) {
+
 		// test if submission is from a 'new' button press
 		if($request->get('new') == 'New') {
 			return $this->redirect($this->generateUrl('idea_admin_criteria', array(
@@ -167,10 +175,13 @@ class AdminController extends Controller
                 )));
 		}
 
+        $group = $this->getGroup($groupSlug);
+        $event = $this->getEvent($groupSlug, $eventSlug);
+
 		$doc = $this->getDoctrine();
 		$vcRepo = $doc->getRepository('IdeaBundle:VoteCriteria');
 
-		$criteriaList = $vcRepo->findByEventId($this->getEvent($groupSlug, $eventSlug)->getId());
+		$criteriaList = $vcRepo->findByEventId($event->getId());
 
 		$choices = array();
 		foreach($criteriaList as $criteria) {
@@ -213,6 +224,7 @@ class AdminController extends Controller
   			$doc->getRepository('IdeaBundle:Vote')->removeAllByCriteria($selectedCriteria);
 			$doc->getEntityManager()->remove($selectedCriteria);
 			$doc->getEntityManager()->flush();
+
 			return $this->redirect($this->generateUrl('idea_admin_criteria_all', array(
                     'groupSlug' => $groupSlug,
                     'eventSlug' => $eventSlug,
@@ -222,27 +234,20 @@ class AdminController extends Controller
 
 		return $this->render('IdeaBundle:Admin:criteriaAll.html.twig', array(
                 'form' => $form->createView(),
-                'groupSlug' => $groupSlug,
-                'eventSlug' => $eventSlug,
+                'group' => $group,
+                'event' => $event,
             ));
 	}
 
 
-	public function summaryAction($groupSlug, $eventSlug) {
+	public function summaryAction(Request $request, $groupSlug, $eventSlug) {
 
+        $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
-		if(!$event) {
-			return  $this->redirect($this->generateUrl('idea_admin_event', array(
-                    'groupSlug' => $groupSlug,
-                )));
-		}
-
-        $request = $this->getRequest();
 
 		$params = array(
-            'groupSlug' => $groupSlug,
-            'eventSlug' => $eventSlug,
-            'no_sidebar' => true,
+            'group' => $group,
+            'event' => $event,
         );
 
 
@@ -285,12 +290,7 @@ class AdminController extends Controller
 
 	public function advanceAction($groupSlug, $eventSlug) {
 
-		$event = $this->getEvent($groupSlug, $eventSlug);
-		if(!$event) {
-			return  $this->redirect($this->generateUrl('idea_admin_event', array(
-                    'groupSlug' => $groupSlug,
-                )));
-		}
+        $event = $this->getEvent($groupSlug, $eventSlug);
 
 		//update current round
 		$currentRound = $event->getCurrentRound() + 1;
@@ -298,8 +298,10 @@ class AdminController extends Controller
 
 		//update last round for each selected idea
 		$params = $this->getRequest()->request->all();
+
 		if(count($params) > 0 ) {
 			$ideaEm = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
+
 			foreach($params as $key => $value) {
 				$idea = $ideaEm->find($key);
 				$idea->setHighestRound($currentRound);
@@ -337,7 +339,6 @@ class AdminController extends Controller
     public function getEvent($groupSlug, $eventSlug)
     {
         $group = $this->getGroup($groupSlug);
-
         if (!$group){
             return false;
         }
@@ -349,11 +350,9 @@ class AdminController extends Controller
                 'slug' => $eventSlug,
             )
         );
-
         if ($event == null){
             return false;
         }
-
         return $event;
     }
 }

@@ -34,7 +34,7 @@ fos_user_registration_form_termsAccepted: |
     I have read and agreed to the
     <a href="%terms_url%" target="_blank">Terms & Conditions</a> and
     <a href="%privacy_url%" target="_blank">Privacy Policy</a>.
-fos_user_registration_form_subscribedAlienwareEvents: "Subscribe me to receive news on the latest giveaways, contests, events and more from Alienware Arena via email."
+fos_user_registration_form_subscribedAlienwareEvents: "Subscribe me to receive news on the latest giveaways, contests, events and more from Campsire via email."
 fos_user_registration_form_subscribedGamingNews: Subscribe me to receive Alienware/Dell gaming news and special offers via email. <a href="http://www.dell.com/learn/us/en/19/policies-privacy?c=us&l=en&s=gen&delphi:gr=true" target="_blank">View Dell Privacy Policy</a>.
 
 giveaway_name: "Name"
@@ -66,16 +66,16 @@ account_settings_currentPassword: "Current password: "
 account_settings_plainPassword_first: "New password: "
 account_settings_plainPassword_second: "Confirm new password: "
 account_settings_subscribedGamingNews: "Yes, I would like to receive Alienware/Dell Gaming news and special offers via email."
-subscription_settings_subscribedAlienwareEvents: "Subscribe me to the Alienware Arena email newsletter."
+subscription_settings_subscribedAlienwareEvents: "Subscribe me to the Campsite email newsletter."
 
 # unsubscribe stuff
 platformd.unsubscribe.title: Edit Your Email Subscription Preferences
 platformd.unsubscribe.your_email: "Your email address:"
-platformd_unsubscribe_form_unsubscribe: Please unsubscribe me from receiving Alienware Arena news and announcements.
+platformd_unsubscribe_form_unsubscribe: Please unsubscribe me from receiving Campsite news and announcements.
 platformd.unsubscribe.note: Please note that you will continue to receive event-specific notices for any events you are registered to participate in for the duration of the respective events.
 platformd.unsubscribe.user_not_found: Your email address was not found.
 platformd.unsubscribe.success: Your email preferences have been updated.
-platformd.unsubscribe.failure: A username has never been assigned to your account. Please email contact@alienwarearena.com with the username you would like to have in order to complete your password reset.
+platformd.unsubscribe.failure: A username has never been assigned to your account. Please email osman@platformd.com with the username you would like to have in order to complete your password reset.
 form_displayName: Criteria Name
 form_description: Criteria Description
 form_name: Event Title

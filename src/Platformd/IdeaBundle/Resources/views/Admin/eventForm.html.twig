@@ -4,10 +4,10 @@
 
     {% if isNew %}
         {% set verb = 'Create' %}
-        {% set formpath = path('idea_admin_event', {'groupSlug': groupSlug}) %}
+        {% set formpath = path('idea_admin_event', {'groupSlug': group.slug}) %}
     {% else %}
         {% set verb = 'Modify' %}
-        {% set formpath = path('idea_admin_event', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) %}
+        {% set formpath = path('idea_admin_event', {'groupSlug': group.slug, 'eventSlug': event.slug}) %}
     {% endif %}
 
     <h1>{{ verb }} Your Event</h1>

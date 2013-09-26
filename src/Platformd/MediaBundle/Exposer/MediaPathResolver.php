@@ -44,12 +44,7 @@ class MediaPathResolver implements PathResolver
             return $media->getFilename();
         }
 
-        // TODO: this needs to be a config param
-        if ($this->bucketName == "platformd") {
-            $cf = $this->getIsHttps() ? "https://d2ssnvre2e87xh.cloudfront.net" : "http://media.alienwarearena.com";
-        } else {
-            $cf = $this->getIsHttps() ? "https://d3klgvi09f3c52.cloudfront.net" : "http://mediastaging.alienwarearena.com";
-        }
+        $cf = 'http://'.$this->bucketName.'.s3.amazonaws.com';
 
         return sprintf('%s%s/%s', $cf, $this->prefix, $media->getFilename());
     }

@@ -35,10 +35,11 @@ a.submit:hover {
     background: #ca43bb;
     text-decoration: none;
 }
+#event_button {
+    margin: 0px 20px 5px;
+}
 
-
-
-a.btn, a.btnLg, a.btnLg2 {
+a.btn, a.btnLg, a.btnLg2, button.btn {
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
 	border-radius: 6px;
@@ -47,7 +48,7 @@ a.btn, a.btnLg, a.btnLg2 {
 	font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
 	color: #fff;
 }
-a.btn, a.btnLg {
+a.btn, a.btnLg, button.btn {
 	padding: 5px 10px;
 }
 a.btnLg {
@@ -62,7 +63,7 @@ a.btnLg2 {
 	line-height: 30px;
 	text-align: center;
 }
-	a.btn:hover, a.btnLg:hover, a.btnLg2:hover {
+	a.btn:hover, a.btnLg:hover, a.btnLg2:hover, button.btn:hover {
 		background: #ca43bb;
 		text-decoration: none;
 	}
@@ -321,4 +322,14 @@ ul.cLnks li {
 }
 #credit a:hover {
 	color: #777;
+}
+
+#accountHeader li {
+    padding: 0 10px;
+}
+
+.sub-nav ul li {
+    padding: 0 7px !important;
+    display: inline;
+    background: none !important;
 }

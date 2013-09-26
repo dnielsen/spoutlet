@@ -103,15 +103,14 @@ class DefaultController extends Controller
         return $response;
     }
 
-    public function _allGroupsAction(Request $request)
+    public function _popularGroupsAction(Request $request)
     {
-        $em     = $this->getDoctrine()->getEntityManager();
-        $repo   = $em->getRepository('GroupBundle:Group');
-        $site   = $this->getCurrentSite();
+        $groupRepo = $this->getDoctrine()->getEntityManager()->getRepository('GroupBundle:Group');
+        $site      = $this->getCurrentSite();
 
-        $groups  = $repo->findAllGroupsRelevantForSite($site);
+        $groups    = $groupRepo->findMostPopularGroupsForSite($site);
 
-        $response = $this->render('SpoutletBundle:Default:_allGroups.html.twig', array(
+        $response = $this->render('SpoutletBundle:Default:popularGroups.html.twig', array(
                 'groups' => $groups,
             ));
 
@@ -561,18 +560,7 @@ class DefaultController extends Controller
     public function groupEventsAction()
     {
         $site = $this->getCurrentSite();
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $groupRepo = $em->getRepository('GroupBundle:Group');
-
-        $groups  = $groupRepo->findAllGroupsRelevantForSite($site);
-
-        $events = array();
-        foreach ($groups as $group) {
-            $events[] = $group->getEvents();
-        }
-        uasort($events, array($this->getGlobalEventService(), 'eventCompare'));
-        $events = array_slice($events, 0, 6);
+        $events  = $this->getGroupEventService()->findUpcomingEventsForSiteLimited($site);
 
         return $this->render('SpoutletBundle:Default:events.html.twig', array('events' => $events));
     }

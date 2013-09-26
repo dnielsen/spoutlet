@@ -4,7 +4,7 @@
 
     <h1>Add Link</h1>
 
-    <form action="{{ path('idea_add_link', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ path('idea_add_link', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
 
         <br><br>

@@ -4,15 +4,15 @@
     <table summary="Upcoming Event Dates" class="tblStyle">
     <thead>
         <tr>
+            <th>Name</th>
             <th>Date</th>
-            <th>Location</th>
         </tr>
     </thead>
     <tbody>
         {% for event in events %}
             <tr class="fill">
+                <td><a href="{{ event | pd_link }}">{{ event.name }}</a></td>
                 <td>{{ event.startsAt|date('m.d.y') }}</td>
-                <td><a href="{{ event | pd_link }}">{% if event.location %}{{ event.location }}{% else %}Online{% endif %}</a></td>
             </tr>
         {% else %}
             <tr>

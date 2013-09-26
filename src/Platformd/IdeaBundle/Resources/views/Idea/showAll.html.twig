@@ -5,19 +5,19 @@
     <div class="left"><h1>Proposed Ideas - Round {{ round }}</h1></div>
 
     {% if submitActive %}
-        <form action = {{ path('idea_create_form', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }} method="get" class="right">
+        <form action = {{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get" class="right">
             <input type="submit" value="Add Idea" class="right">
         </form>
     {%  endif %}
 
     <br><br><br>
 
-    <form action = {{ path('idea_show_all', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }} id='filterForm' method="get">
+    <form action = {{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} id='filterForm' method="get">
         <table>
         <tr>
             <td><input type="text" name="tag" tabindex="1" placeholder="Filter by tag" value="{{tag}}" /></td>
             <td><input type="submit" value="Filter" class="btnMdm" /></td>
-            {% if tag %}<td style="padding-left: 5px"><a href="{{ path('idea_show_all', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}"><input type="button" value="View All" class="btnMdm" /></a></td>{% endif %}
+            {% if tag %}<td style="padding-left: 5px"><a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}"><input type="button" value="View All" class="btnMdm" /></a></td>{% endif %}
         </tr>
         </table><br>
     </form>
@@ -27,7 +27,7 @@
             <div class="voteBx">
                 <p><strong class="lrgtxt">{{  idea.numFollowers }}</strong><br>
                     <span class="tnytxt gry">followers</span></p>
-                <form action = "{{ path('idea_follow', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}" method="POST">
+                <form action = "{{ path('idea_follow', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="POST">
                     <input type="hidden" name="id" value="{{idea.id}}">
                     <input type="hidden" name="source" value="list">
                     <input type="hidden" name="tag" value="{{ tag }}">
@@ -36,7 +36,7 @@
             </div>
 
             <div class="session" style="overflow:hidden">
-                <a href="{{ path('idea_show', {'groupSlug': groupSlug, 'eventSlug': eventSlug, 'id': idea.id}) }}">
+                <a href="{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': idea.id}) }}">
                     <h3>{{ idea.name }}</h3>
                 </a>
                 <p>{{ idea.description|truncate(300) }}</p>
@@ -46,7 +46,7 @@
                     <ul>
                         <li>Tags</li>
                         {% for tag in idea.tags %}
-                            <li><a href="{{ path('idea_show_all', {'groupSlug': groupSlug, 'eventSlug': eventSlug, 'tag': tag.tagName}) }}">{{ tag.tagName }}</a></li>
+                            <li><a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'tag': tag.tagName}) }}">{{ tag.tagName }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -57,7 +57,7 @@
 
 	{% endfor %}
 
-    <form action = {{ path('idea_index', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }} method="get">
+    <form action = {{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get">
         <input type="submit" value="Home">
     </form>
 

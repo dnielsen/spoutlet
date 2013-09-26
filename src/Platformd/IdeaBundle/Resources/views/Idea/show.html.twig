@@ -6,7 +6,7 @@
     <div class="voteBx">
         <p><strong class="lrgtxt">{{ idea.numFollowers }}</strong><br>
             <span class="tnytxt gry">followers</span></p>
-        <form action = "{{ path('idea_follow', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}" method="POST">
+        <form action = "{{ path('idea_follow', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="POST">
               <input type="hidden" name="id" value="{{idea.id}}">
               <input type="hidden" name="source" value="detail">
               <input type="hidden" name="tag">
@@ -19,7 +19,7 @@
             <ul>
                 <li>Tags</li>
                 {% for tag in idea.tags %}
-                    <li><a href="{{ path('idea_show_all', {'groupSlug': groupSlug, 'eventSlug': eventSlug, 'tag': tag.tagName}) }}">{{ tag.tagName }}</a></li>
+                    <li><a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'tag': tag.tagName}) }}">{{ tag.tagName }}</a></li>
                 {% endfor %}
             </ul>
         </div>
@@ -35,7 +35,7 @@
         </div>
 
         {% if canEdit %}
-            <a href = "{{ path('idea_edit_form', {'groupSlug': groupSlug, 'eventSlug': eventSlug, 'id': idea.id}) }}" class="right">Edit</a>
+            <a href = "{{ path('idea_edit_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': idea.id}) }}" class="right">Edit</a>
         {% endif %}
         <br class="clr"><br>
 
@@ -48,14 +48,14 @@
                 <img src="{{ asset(idea.image.getWebPath()) }}" style="max-width:100%">
 
                 {% if canEdit %}
-                    <form action="{{ path('idea_image_delete', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}" method="post">
+                    <form action="{{ path('idea_image_delete', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post">
                         <input type="hidden" name="idea" value="{{ idea.id }}">
                         <input type="submit" value="Delete" class="btnTnyInv">
                     </form>
                 {% endif %}
 
             {% elseif canEdit %}
-                <a href="{{ path('idea_upload_form', {'groupSlug': groupSlug, 'eventSlug': eventSlug, 'id': idea.id}) }}">Add Image</a>
+                <a href="{{ path('idea_upload_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': idea.id}) }}">Add Image</a>
             {% endif %}
         </div>
         <div id="links" style="padding-bottom: 15px;float: left">
@@ -64,7 +64,7 @@
                 {% for link in idea.links %}
                     <hr>
                     {% if canEdit %}
-                        <form action="{{ path('idea_link_delete', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}" method="post" class="left padrt">
+                        <form action="{{ path('idea_link_delete', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" class="left padrt">
                             <input type="hidden" name="idea" value="{{ idea.id }}">
                             <input type="hidden" name="link" value="{{ link.id }}">
                             <input type="submit" value="Remove" class="btnTnyInv">
@@ -76,7 +76,7 @@
             {% endif %}
 
             {% if canEdit %}
-                <a href = "{{ path('idea_add_link_form', {'groupSlug': groupSlug, 'eventSlug': eventSlug, 'id': idea.id}) }}" style="clear: both">Add Link</a>
+                <a href = "{{ path('idea_add_link_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': idea.id}) }}" style="clear: both">Add Link</a>
             {% endif %}
         </div>
     </div>
@@ -90,7 +90,7 @@
                 <hr>
                 <a href="{{ path('profile', {'username': comment.user.username}) }}">{{ comment.user.name }}</a> commented on <em>{{ comment.timestamp }}</em>
                 {% if canEdit %}
-                    <form action="{{ path('idea_comment_delete', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}" method="post" class="left padrt">
+                    <form action="{{ path('idea_comment_delete', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" class="left padrt">
                         <input type="hidden" name="idea" value="{{ idea.id }}">
                         <input type="hidden" name="comment" value="{{ comment.id }}">
                         <input type="submit" value="Remove" class="btnTnyInv">
@@ -102,7 +102,7 @@
             <hr>
         </div>
 
-        <form action="{{ path('idea_comment', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}" method="post" class="spcr-b2 right">
+        <form action="{{ path('idea_comment', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" class="spcr-b2 right">
             <input type="hidden" name="idea" value="{{idea.id}}">
             <textarea name="comment" rows="6" tabindex="3" placeholder="Add a comment" class="comments"></textarea>
             <input type="submit" class="right" value="Post Comment">
@@ -114,12 +114,12 @@
 
     <table class="paddedTable">
     <td>
-        <form action = {{ path('idea_index', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }} method="get">
+        <form action = {{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get">
             <input type="submit" value="Home">
         </form>
     </td>
     <td>
-        <form action="{{ path('idea_show_all', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}" method="get">
+        <form action="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="get">
             <input type="submit" value="View Ideas">
         </form>
     </td>
@@ -136,14 +136,14 @@
     <table class="prevNext">
     <td>
         {% if previous is defined %}
-        <form action="{{ path('idea_show', {'groupSlug': groupSlug, 'eventSlug': eventSlug, 'id': previous}) }}">
+        <form action="{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': previous}) }}">
             <input type="submit" value="Previous">
         </form>
         {% endif %}
     </td>
     <td>
         {% if next is defined %}
-        <form action="{{ path('idea_show', {'groupSlug': groupSlug, 'eventSlug': eventSlug, 'id': next}) }}">
+        <form action="{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': next}) }}">
             <input type="submit" value="Next">
         </form>
         {% endif %}
@@ -151,7 +151,7 @@
     </table>
     <br>
 
-    <form action="{{ path('idea_vote', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}" method="post">
+    <form action="{{ path('idea_vote', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post">
         <input type="hidden" name="id" value='{{idea.id}}'>
 
         <table class = "paddedTable">

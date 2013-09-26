@@ -3,7 +3,7 @@
 {% block event_content %}
 
     <h1>{% if idea is defined %}Edit Your Idea{% else %}Submit Your Idea{% endif %}</h1>
-    <form action="{% if idea is defined %}{{ path('idea_edit', {'groupSlug': groupSlug, 'eventSlug': eventSlug, 'id': idea.id}) }}{% else %}{{ path('idea_create', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}{% endif %}" method="post" id="submit" enctype="multipart/form-data">
+    <form action="{% if idea is defined %}{{ path('idea_edit', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': idea.id}) }}{% else %}{{ path('idea_create', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}{% endif %}" method="post" id="submit" enctype="multipart/form-data">
         <label>Idea Title</label>
         <input type="text" name="title" {% if idea is defined %}value="{{ idea.name }}"{% endif %} tabindex="1" class="inPt">
 
@@ -49,11 +49,11 @@
 
     <br class="clr">
 
-    <form action="{% if idea is defined %}{{ path('idea_show', {'groupSlug': groupSlug, 'eventSlug': eventSlug, 'id': idea.id}) }}{% else %}{{ path('idea_index', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}{% endif %}" id="cancel"></form>
+    <form action="{% if idea is defined %}{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': idea.id}) }}{% else %}{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}{% endif %}" id="cancel"></form>
 
     {% if idea is defined %}
     <br>
-    <form action="{{ path('idea_delete', {'groupSlug': groupSlug, 'eventSlug': eventSlug}) }}" method="post" id="delete">
+    <form action="{{ path('idea_delete', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" id="delete">
         <input type="hidden" name="id" value='{{idea.id}}'>
     </form>
     {% endif %}
