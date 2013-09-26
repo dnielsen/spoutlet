@@ -300,6 +300,8 @@ class GiveawayController extends Controller
             $em->getConnection()->rollback();
             $em->close();
 
+            $this->getCache()->releaseNamedLock($lockKey);
+
             return $this->redirect($this->generateUrl('giveaway_show', array('slug' => $slug)));
         }
 

@@ -324,6 +324,8 @@ class DealController extends Controller
             $em->getConnection()->rollback();
             $em->close();
 
+            $this->getCache()->releaseNamedLock($lockKey);
+
             return $this->redirect($this->generateUrl('deal_show', array('slug' => $slug)));
         }
 
