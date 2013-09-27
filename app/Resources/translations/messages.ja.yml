@@ -785,6 +785,7 @@ age_confirm:
     message: このコンテンツは年齢制限が適応されています。ご自身の誕生日をご確認ください。
     content_for_mature_audiences: このコンテンツは年齢制限が適応されています。
     too_young_message: 申し訳ありませんがアクセスできません。
+    return_to_previous: Return to previous page
     date_format: %year%年%month%月%day%日
 confirm: 確認
 

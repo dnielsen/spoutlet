@@ -425,7 +425,7 @@ platformd:
             terms_label: Terms & Conditions
             dell_privacy_label: Dell Privacy Policy
             country_label: Choose a country
-            underage_message: Sorry, we are not able to accept your registration at this time.
+            underage_message: Sorry, it appears that you do not meet the minimum age requirement. We are unable to complete your request at this time. .
             please_wait: The system is currently processing multiple account creations and cannot process your creation request at this time, please try again later.
             ip_suspended: Your IP address is currently suspended. If you believe this to be in error, please contact %contact_email%.
             oops: Error!
@@ -871,6 +871,7 @@ age_confirm:
     message: The content is intended for mature audiences. Please confirm your age below
     content_for_mature_audiences: Content Intended for Mature Audiences
     too_young_message: Sorry, it appears that you do not meet the minimum age requirement. We are unable to complete your request at this time.
+    return_to_previous_page: Return to previous page
     date_format: %month% %day% %year%
 confirm: Confirm
 

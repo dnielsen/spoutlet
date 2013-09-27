@@ -588,6 +588,7 @@ age_confirm:
     message: El contenido está dirigido a un público maduro.
     content_for_mature_audiences: Contenido recomendado para audiencia adulta.
     too_young_message: Lo sentimos, no podemos ofrecerle acceso en este momento
+    return_to_previous: Return to previous page
     date_format: %month% %day% %year%
 confirm: Confirmar
 
