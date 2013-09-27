@@ -161,17 +161,16 @@ class CommentManager
 
     public function getCommentData($thread, $sort='recent')
     {
-        $commentRepo    = $this->em->getRepository('SpoutletBundle:Comment');
-        $commentQuery   = $commentRepo->getCommentsForThreadSortedByQuery($thread, $sort);
-        $iterableResult = $commentQuery->iterate();
-        $comments       = array();
+        $commentRepo      = $this->em->getRepository('SpoutletBundle:Comment');
+        $commentsEntities = $commentRepo->getCommentsForThreadSortedByQuery($thread, $sort);
+        $comments         = array();
 
-        foreach ($iterableResult as $commentData) {
-            $comment   = $commentData[0][0];
+        foreach ($commentsEntities as $commentData) {
+            $comment   = $commentData[0];
 
-            if (isset($commentData[0]['upvotes']) && isset($commentData[0]['downvotes'])) {
-                $votes['upvotes'] = $commentData[0]['upvotes'];
-                $votes['downvotes'] = $commentData[0]['downvotes'];
+            if (isset($commentData['upvotes']) && isset($commentData['downvotes'])) {
+                $votes['upvotes'] = $commentData['upvotes'];
+                $votes['downvotes'] = $commentData['downvotes'];
             } else {
                 $votes = end($commentData);
             }
@@ -186,6 +185,7 @@ class CommentManager
             $data->createdAt           = $comment->getCreatedAt();
             $data->authorId            = $author->getId();
             $data->authorUsername      = $author->getUsername();
+            $data->authorAccountLink   = sprintf('http://www.alienwarearena.com/member/%s', $author->getUuid());
             $data->authorAvatar        = $this->exposer->getPath($author) ?: null;
             $data->body                = $comment->getBody();
             $data->publishedReplyCount = $comment->getPublishedReplyCount();

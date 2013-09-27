@@ -5,7 +5,7 @@
     <div class="comment-wrapper" id="comment-wrapper-{{ comment.id }}">
         <input type="hidden" id="comment-{{ comment.id }}" value="{{ comment.id }}" />
         <div class="comment-author">
-            <a href="{{ account_link(comment.authorUsername) }}">
+            <a href="{{ comment.authorAccountLink }}">
                 {% if comment.authorAvatar %}
                     <img src="{{ comment.authorAvatar }}" alt="{{ comment.authorUsername }}" />
                 {% else %}
@@ -13,7 +13,7 @@
                 {% endif %}
             </a>
 
-            <div class="author-link"><a href="{{ account_link(comment.authorUsername) }}">{{ comment.authorUsername }}</a></div>
+            <div class="author-link"><a href="{{ comment.authorAccountLink }}">{{ comment.authorUsername }}</a></div>
             <!--  Placeholders for ARP/Level when we handle this ourselves
                 <div class="author-level">Level 7</div>
                 <div class="level-img"><div>5477 ARP</div></div>

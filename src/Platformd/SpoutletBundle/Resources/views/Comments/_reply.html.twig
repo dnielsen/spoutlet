@@ -1,5 +1,5 @@
 <div class="comment-reply{% if replyCounter > 3 %} hidden{% endif %}{% if replyCounter == 1 %} first{% endif %}" id="post-id-{{ reply.id }}">
-    <a href="{{ account_link(reply.authorUsername) }}">
+    <a href="{{ comment.authorAccountLink }}">
         {% if get_avatar_url(reply.author, 32) != false %}
             <img src="{{ asset(get_avatar_url(reply.author, 32)) }}" alt="{{ reply.authorUsername }}" />
         {% else %}
@@ -7,7 +7,7 @@
         {% endif %}
     </a>
     <div class="reply-body">
-        <a href="{{ account_link(reply.authorUsername) }}">{{ reply.authorUsername }}</a>
+        <a href="{{ comment.authorAccountLink }}">{{ reply.authorUsername }}</a>
         <div class="editable" id="comment-body-{{ reply.id }}" style="display: inline;">{{ reply.body | nl2br }}</div>
     </div>
     <div class="comment-footer">

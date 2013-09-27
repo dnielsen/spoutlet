@@ -12,6 +12,7 @@ class comment_data
     public $createdAt;
     public $authorId;
     public $authorUsername;
+    public $authorAccountLink;
     public $authorAvatar;
     public $body;
     public $publishedReplyCount;

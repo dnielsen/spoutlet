@@ -136,9 +136,11 @@ class CommentRepository extends EntityRepository
     public function getCommentsForThreadSortedByQuery($thread, $sort='recent')
     {
         $qb = $this->createQueryBuilder('c')
-            ->select('c, (SELECT COUNT(v1.id) FROM SpoutletBundle:CommentVote v1 WHERE v1.voteType=:up AND v1.comment=c) AS upvotes, (SELECT COUNT(v2.id) FROM SpoutletBundle:CommentVote v2 WHERE v2.voteType=:down AND v2.comment=c) AS downvotes')
+            ->select('c, (SELECT COUNT(v1.id) FROM SpoutletBundle:CommentVote v1 WHERE v1.voteType=:up AND v1.comment=c) AS upvotes, (SELECT COUNT(v2.id) FROM SpoutletBundle:CommentVote v2 WHERE v2.voteType=:down AND v2.comment=c) AS downvotes, u.id, u.uuid, u.username, r')
             ->leftJoin('c.thread', 't')
             ->leftJoin('c.votes', 'v')
+            ->leftJoin('c.author', 'u')
+            ->leftJoin('c.replies', 'r')
             ->andWhere('t.id = :thread')
             ->andWhere('c.parent IS NULL')
             ->andWhere('c.deleted <> true')
@@ -167,7 +169,9 @@ class CommentRepository extends EntityRepository
                 break;
         }
 
-        return $qb->getQuery();
+        $query = $qb->getQuery();
+
+        return $qb->getQuery()->getResult();
     }
 }
 
