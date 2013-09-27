@@ -46,8 +46,12 @@ class InsufficientAgeListener
         $template = ($referer == $regPath || $sweepsReg) ? 'UserBundle:Registration:tooYoung.html.twig' : 'SpoutletBundle:Age:insufficientAge.html.twig';
 
         if ($this->ageManager->isUsersAgeVerified()) {
+
+            $returnUrl = $event->getRequest()->getUri();
+
             $content = $this->templating->render(
-                $template
+                $template,
+                array('return_url' => $returnUrl)
             );
 
             $event->setResponse(new Response($content));
