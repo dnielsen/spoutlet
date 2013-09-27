@@ -393,8 +393,10 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
     {
         if (null === $this->affidavit) {
             $this->affidavit = new Media(true);
+            return $this->affidavit;
         }
 
+        $this->affadavit->setIgnoreMime(true);
         return $this->affidavit;
     }
 
@@ -403,9 +405,11 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
     public function getW9form()
     {
         if (null === $this->w9form) {
-            $this->w9form    = new Media(true);
+            $this->w9form = new Media(true);
+            return $this->w9form;
         }
 
+        $this->w9form->setIgnoreMime(true);
         return $this->w9form;
     }
 
