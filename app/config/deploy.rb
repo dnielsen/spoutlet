@@ -6,7 +6,7 @@ ssh_options[:port] = "22"
 ssh_options[:forward_agent] = true
 default_run_options[:pty] = true
 
-set :awaProcessor1, "ec2-75-101-139-101.compute-1.amazonaws.com"
+set :awaProcessor1, "ec2-23-22-81-238.compute-1.amazonaws.com"
 
 set :awaWeb1, "ec2-107-21-151-104.compute-1.amazonaws.com"
 set :awaWeb2, "ec2-54-224-205-112.compute-1.amazonaws.com"
@@ -18,14 +18,18 @@ set :awaWeb7, "ec2-54-211-73-130.compute-1.amazonaws.com"
 set :awaWeb8, "ec2-54-226-59-37.compute-1.amazonaws.com"
 set :awaWeb9, "ec2-54-227-179-26.compute-1.amazonaws.com"
 set :awaWeb10, "ec2-54-211-138-117.compute-1.amazonaws.com"
+set :awaWeb11, "ec2-23-22-17-125.compute-1.amazonaws.com"
+set :awaWeb12, "ec2-23-21-28-38.compute-1.amazonaws.com"
+set :awaWeb13, "ec2-107-22-8-195.compute-1.amazonaws.com"
+set :awaWeb14, "ec2-23-22-9-5.compute-1.amazonaws.com"
 
 set :scm,         :git
 set :repository,  "git@github.com:platformd/spoutlet.git"
 set :user,        "ubuntu"
 set :branch,      "master"
 
-role :web,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, awaWeb5, awaWeb6, awaWeb7, awaWeb8, awaWeb9, awaWeb10
-role :app,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, awaWeb5, awaWeb6, awaWeb7, awaWeb8, awaWeb9, awaWeb10
+role :web,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, awaWeb5, awaWeb6, awaWeb7, awaWeb8, awaWeb9, awaWeb10, awaWeb11, awaWeb12, awaWeb13, awaWeb14
+role :app,        awaProcessor1, awaWeb1, awaWeb2, awaWeb3, awaWeb4, awaWeb5, awaWeb6, awaWeb7, awaWeb8, awaWeb9, awaWeb10, awaWeb11, awaWeb12, awaWeb13, awaWeb14
 
 role :db,         awaProcessor1, :primary => true
 
