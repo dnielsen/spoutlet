@@ -53,7 +53,7 @@ acl ban {
 sub vcl_recv {
 
     if (req.url ~ "^/sweeps/lolchampionship") {
-        error 750 "http://" + req.http.host + "/promocode/123";
+        error 750 "http://" + req.http.host + "/promocode/lolchampionship";
     }
 
     // TODO - remove staging-only check below once going live
