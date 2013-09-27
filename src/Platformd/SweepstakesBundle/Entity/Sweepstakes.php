@@ -396,7 +396,7 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
             return $this->affidavit;
         }
 
-        $this->affadavit->setIgnoreMime(true);
+        $this->affidavit->setIgnoreMime(true);
         return $this->affidavit;
     }
 
