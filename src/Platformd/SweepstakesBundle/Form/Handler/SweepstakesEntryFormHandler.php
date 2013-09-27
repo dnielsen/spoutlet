@@ -104,9 +104,10 @@ class SweepstakesEntryFormHandler
                     $ipAddress  = $this->request->getClientIp(true);
                     $user->setIpAddress($ipAddress);
 
-                    if ($this->checkRegistrationTimeoutPassed() === false) {
-                        throw new UserRegistrationTimeoutException();
-                    }
+                    #This has been commented out because alienware had 10+ machines at a show in the UK and timeouts were frequent... we need a more robust solution here to allow this kind of usage
+                    #if ($this->checkRegistrationTimeoutPassed() === false) {
+                    #    throw new UserRegistrationTimeoutException();
+                    #}
 
                     if ($this->container->getParameter('api_authentication')) {
                         if (false === $this->apiManager->createRemoteUser($user, $user->getPlainPassword())) {
