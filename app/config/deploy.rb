@@ -6,7 +6,7 @@ ssh_options[:port] = "22"
 ssh_options[:forward_agent] = true
 default_run_options[:pty] = true
 
-set :awaProcessor1, "ec2-23-22-81-238.compute-1.amazonaws.com"
+set :awaProcessor1, "ec2-75-101-139-101.compute-1.amazonaws.com"
 
 set :awaWeb1, "ec2-107-21-151-104.compute-1.amazonaws.com"
 set :awaWeb2, "ec2-54-224-205-112.compute-1.amazonaws.com"
