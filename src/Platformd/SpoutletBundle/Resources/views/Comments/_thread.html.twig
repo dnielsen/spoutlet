@@ -1,34 +1,32 @@
-<div class="thread">
-    <a id="comments"></a>
+<a id="comments"></a>
 
-    <div data-logged-in="true">
-        <h3 class="add-comment">{{ 'platformd.comment.add_your_comment' | pd_trans | raw }}</h3>
-        <textarea id="new-comment-body" name="new-comment-body" required="required"></textarea>
-    </div>
+<div data-logged-in="true">
+    <h3 class="add-comment">{{ 'platformd.comment.add_your_comment' | pd_trans | raw }}</h3>
+    <textarea id="new-comment-body" name="new-comment-body" required="required"></textarea>
+</div>
 
-    <div data-logged-in="false">
-        <p>{{ 'platformd.comment.login_to_comment' | pd_trans({ '%login_url%' : login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }) | raw }}</p>
-    </div>
+<div data-logged-in="false">
+    <p>{{ 'platformd.comment.login_to_comment' | pd_trans({ '%login_url%' : login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }) | raw }}</p>
+</div>
 
-    <div class="comment-sorting">
-        <label for="comment-sort-method">{{ 'platformd.comment.sort_by' | pd_trans }}</label>
-        <select name="comment-sort-method" id="comment-sort-method">
-            <option value="recent" selected>{{ 'platformd.comment.sort_by_newest' | pd_trans }}</option>
-            <option value="votes">{{ 'platformd.comment.sort_by_votes' | pd_trans }}</option>
-            <option value="oldest">{{ 'platformd.comment.sort_by_oldest' | pd_trans }}</option>
-        </select>
+<div class="comment-sorting">
+    <label for="comment-sort-method">{{ 'platformd.comment.sort_by' | pd_trans }}</label>
+    <select name="comment-sort-method" id="comment-sort-method">
+        <option value="recent" selected>{{ 'platformd.comment.sort_by_newest' | pd_trans }}</option>
+        <option value="votes">{{ 'platformd.comment.sort_by_votes' | pd_trans }}</option>
+        <option value="oldest">{{ 'platformd.comment.sort_by_oldest' | pd_trans }}</option>
+    </select>
+</div>
+<div data-logged-in="true">
+    <div class="comment-form-submit" style="text-align: right;">
+        <button id="new-comment-submit" class="btn btn-primary" type="submit">{{ 'platformd.comment.add_comment' | pd_trans }}</button>
     </div>
-    <div data-logged-in="true">
-        <div class="comment-form-submit" style="text-align: right;">
-            <button id="new-comment-submit" class="btn btn-primary" type="submit">{{ 'platformd.comment.add_comment' | pd_trans }}</button>
-        </div>
-    </div>
-    <div class="comments">
-        {% include 'SpoutletBundle:Comments:_comments.html.twig' %}
-    </div>
-    <div id="more-comments-loader" data-offset="0" data-increment="5">
-        <img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />
-    </div>
+</div>
+<div class="comments">
+    {% include 'SpoutletBundle:Comments:_comments.html.twig' %}
+</div>
+<div id="more-comments-loader" data-offset="0" data-increment="5">
+    <img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />
 </div>
 
 <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.blockUI.js') }}"></script>
@@ -170,8 +168,9 @@
         }
 
         $('#more-comments-loader').show();
-        $('.comment-group:hidden:first').fadeIn();
-        $('#more-comments-loader').hide();
+        $('.comment-group:hidden:first').fadeIn(400, function() {
+            $('#more-comments-loader').hide();
+        });
     }
 
     function setupListeners()

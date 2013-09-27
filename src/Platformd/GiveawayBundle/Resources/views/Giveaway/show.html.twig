@@ -72,7 +72,7 @@
             </div><!-- giveaway-info -->
 
             {% if features.hasComments %}
-                {% render url('comments_thread', { 'threadId': data.giveaway_comment_thread_id }) with {}, {'standalone': true }  %}
+                {% include 'SpoutletBundle:Comments:_commentsLoader.html.twig' with({ 'threadId': data.giveaway_comment_thread_id }) %}
             {% endif %}
 
         </div><!-- left -->

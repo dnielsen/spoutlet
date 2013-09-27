@@ -1,5 +1,5 @@
 comments_thread:
-    pattern: /esi/comments/thread/{threadId}
+    pattern: /comments/thread/{threadId}
     defaults: { _controller: "SpoutletBundle:Comments:thread" }
 
 comments_new:

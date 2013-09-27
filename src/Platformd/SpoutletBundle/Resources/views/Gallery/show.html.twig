@@ -77,7 +77,7 @@
             <img id="main-photo" src="{{ media.image | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" style="display:none;" />
 
             {% if features.hasComments %}
-                {% render url('comments_thread', { 'threadId': media.threadId }) with {}, {'standalone': true } %}
+                {% include 'SpoutletBundle:Comments:_commentsLoader.html.twig' with({ 'threadId': media.threadId }) %}
             {% endif %}
         </div>
 

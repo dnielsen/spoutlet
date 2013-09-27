@@ -62,7 +62,7 @@
 
             {% if features.hasComments %}
                 <div class="event-comments">
-                    {% render url('comments_thread', { 'threadId': event.threadId }) with {}, {'standalone': true }  %}
+                    {% include 'SpoutletBundle:Comments:_commentsLoader.html.twig' with({ 'threadId': event.threadId }) %}
                 </div>
             {% endif %}
 

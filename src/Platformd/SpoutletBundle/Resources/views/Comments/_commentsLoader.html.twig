@@ -1,0 +1,22 @@
+<div id="comments-loading">
+    <img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />
+</div>
+<div class="thread" id="thread-{{ threadId }}" style="display:none;">
+</div>
+
+<script type="text/javascript">
+
+    $(function() {
+        $.ajax({
+            url: '{{ path('comments_thread', { 'threadId': threadId }) }}',
+            type: 'get',
+            success: function (html) {
+                $('#thread-{{ threadId }}').html(html);
+                $('#comments-loading').fadeOut(400, function() {
+                    $('#thread-{{ threadId }}').fadeIn();
+                });
+            }
+        });
+    });
+
+</script>

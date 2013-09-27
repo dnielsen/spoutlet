@@ -203,7 +203,7 @@
             {% if features.hasComments %}
                 <div data-view-group-content="true">
                     <div id="group-comments">
-                        {% render url('comments_thread', { 'threadId': group.threadId }) with {}, {'standalone': true }  %}
+                        {% include 'SpoutletBundle:Comments:_commentsLoader.html.twig' with({ 'threadId': group.threadId }) %}
                     </div>
                 </div>
                 <div data-view-group-content="false">

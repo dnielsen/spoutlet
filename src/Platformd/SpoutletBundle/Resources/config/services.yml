@@ -362,6 +362,7 @@ services:
             - "@platformd.repository.comment_thread"
             - "@platformd.link.linkable_manager"
             - "@doctrine.orm.entity_manager"
+            - "@media_exposer"
 
     platformd.tags.model.tag_manager:
         class: Platformd\TagBundle\Model\TagManager

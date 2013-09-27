@@ -1,18 +1,14 @@
-{% if comments | length > 0 %}
-    {% for commentArray in comments %}
-        {% set comment = commentArray[0] %}
+{% for comment in comments %}
+    {% if (loop.index - 1) % 5 == 0 %}<div class="comment-group" id="comment-group-{{ (loop.index - 1) / 5 }}" style="display:none;">{% endif %}
 
-        {% if (loop.index - 1) % 5 == 0 %}<div class="comment-group" id="comment-group-{{ (loop.index - 1) / 5 }}" style="display:none;">{% endif %}
+    {% if comment.parent is null and comment.deleted == false %}
+        {% include 'SpoutletBundle:Comments:_comment.html.twig' with { 'comment': comment } %}
+    {% endif %}
 
-        {% if comment.parent is null and comment.deleted == false %}
-            {% include 'SpoutletBundle:Comments:_comment.html.twig' with { 'comment': comment } %}
-        {% endif %}
-
-        {% if (loop.index) % 5 == 0 or loop.last %}</div>{% endif %}
-    {% endfor %}
+    {% if (loop.index) % 5 == 0 or loop.last %}</div>{% endif %}
 {% else %}
     <div class="comment-group" id="comment-group-0" style="display:none;"></div>
-{% endif %}
+{% endfor %}
 
 {% if app.session.locale == "es" or app.session.locale == "zh" or app.session.locale == "ja" %}
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.timeago.{{ app.session.locale }}.js"></script>

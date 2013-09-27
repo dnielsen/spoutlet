@@ -86,7 +86,7 @@
         {% if features.hasComments %}
             <div class="std_2col">
                 <div class="left">
-                    {% render url('comments_thread', { 'threadId': data.deal_comment_thread_id }) with {}, {'standalone': true } %}
+                    {% include 'SpoutletBundle:Comments:_commentsLoader.html.twig' with({ 'threadId': data.deal_comment_thread_id }) %}
                 </div>
             </div>
         {% endif %}

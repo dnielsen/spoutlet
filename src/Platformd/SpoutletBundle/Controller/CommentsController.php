@@ -217,7 +217,7 @@ class CommentsController extends Controller
             return new Response();
         }
 
-        $comments = $em->getRepository('SpoutletBundle:Comment')->findCommentsForThreadSortedBy($threadId, 'recent');
+        $comments = $this->getCommentManager()->getCommentData($thread);
 
         $response = $this->render('SpoutletBundle:Comments:_thread.html.twig', array(
             'thread'    => $thread,

@@ -1,19 +1,19 @@
-{% set upVotes = comment.getUpVoteCount %}
-{% set downVotes = comment.getDownVoteCount %}
+{% set upVotes = comment.upVoteCount %}
+{% set downVotes = comment.downVoteCount %}
 
 <div class="post-wrapper" id="post-id-{{ comment.id }}" data-posted="{{ comment.createdAt | date('Y-m-d H:i:s') }}" data-votes="{{ upVotes }}">
     <div class="comment-wrapper" id="comment-wrapper-{{ comment.id }}">
         <input type="hidden" id="comment-{{ comment.id }}" value="{{ comment.id }}" />
         <div class="comment-author">
-            <a href="{{ account_link(comment.author.username) }}">
-                {% if get_avatar_url(comment.author) != false %}
-                    <img src="{{ asset(get_avatar_url(comment.author)) }}" alt="{{ comment.author.username }}" />
+            <a href="{{ account_link(comment.authorUsername) }}">
+                {% if comment.authorAvatar %}
+                    <img src="{{ comment.authorAvatar }}" alt="{{ comment.authorUsername }}" />
                 {% else %}
                     <div class="default-avatar avatar84"></div>
                 {% endif %}
             </a>
 
-            <div class="author-link"><a href="{{ account_link(comment.author.username) }}">{{ comment.author.username }}</a></div>
+            <div class="author-link"><a href="{{ account_link(comment.authorUsername) }}">{{ comment.authorUsername }}</a></div>
             <!--  Placeholders for ARP/Level when we handle this ourselves
                 <div class="author-level">Level 7</div>
                 <div class="level-img"><div>5477 ARP</div></div>
@@ -49,7 +49,7 @@
                             <span data-logged-in="true"><a href="javascript:void(0)" class="comment-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.reply' | pd_trans }}</a></span>
                             <span data-logged-in="false"><a href="{{ login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }}">{{ 'platformd.comment.reply' | pd_trans }}</a></span>
                         </li>
-                        <span data-comment-admin="true" data-comment-owner="{{ comment.author.id }}" style="display:none;">
+                        <span data-comment-admin="true" data-comment-owner="{{ comment.authorId }}" style="display:none;">
                             <li class="edit-options-link" data-id="{{ comment.id }}"><a href="javascript:void(0);">{{ 'platformd.comment.edit' | pd_trans }}</a></li>
                             <li><a href="javascript:void(0);" class="delete-link" data-id="{{ comment.id }}">{{ 'platformd.comment.delete' | pd_trans }}</a></li>
                         </span>
@@ -78,7 +78,7 @@
 
     </div>
     <div class="comment-replies-wrapper" id="replies-{{ comment.id }}">
-        <div class="comment-tri{% if comment.getPublishedReplyCount == 0 %} hidden{% endif %}"></div>
+        <div class="comment-tri{% if comment.publishedReplyCount == 0 %} hidden{% endif %}"></div>
         <div class="comment-replies" id="comment-replies-{{ comment.id }}">
             <textarea id="reply-text-{{ comment.id }}" type="text"></textarea><a href="javascript:void(0);" class="comment-post-reply-link" data-id="{{ comment.id }}">{{ 'platformd.comment.post' | pd_trans }}</a>
         </div>

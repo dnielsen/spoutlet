@@ -3,17 +3,21 @@
 namespace Platformd\SpoutletBundle\Model;
 
 use Platformd\SpoutletBundle\Entity\Thread;
+use Platformd\SpoutletBundle\Entity\Comment;
+use Platformd\SpoutletBundle\ViewModel\comment_data;
 
 class CommentManager
 {
     private $threadRepo;
     private $linkableManager;
     private $em;
+    private $exposer;
 
-    function __construct($threadRepo, $linkableManager, $em) {
-        $this->threadRepo       = $threadRepo;
-        $this->linkableManager  = $linkableManager;
-        $this->em               = $em;
+    function __construct($threadRepo, $linkableManager, $em, $exposer) {
+        $this->threadRepo      = $threadRepo;
+        $this->linkableManager = $linkableManager;
+        $this->em              = $em;
+        $this->exposer         = $exposer;
     }
 
     public function checkThread($object)
@@ -153,5 +157,55 @@ class CommentManager
             ->findOneBy(array('slug' => $id));
 
         return $event;
+    }
+
+    public function getCommentData($thread, $sort='recent')
+    {
+        $commentRepo    = $this->em->getRepository('SpoutletBundle:Comment');
+        $commentQuery   = $commentRepo->getCommentsForThreadSortedByQuery($thread, $sort);
+        $iterableResult = $commentQuery->iterate();
+        $comments       = array();
+
+        foreach ($iterableResult as $commentData) {
+            $comment   = $commentData[0][0];
+
+            if (isset($commentData[0]['upvotes']) && isset($commentData[0]['downvotes'])) {
+                $votes['upvotes'] = $commentData[0]['upvotes'];
+                $votes['downvotes'] = $commentData[0]['downvotes'];
+            } else {
+                $votes = end($commentData);
+            }
+
+            $author  = $comment->getAuthor();
+            $data    = new comment_data();
+
+            $data->deleted             = $comment->getDeleted();
+            $data->upVoteCount         = $votes['upvotes'];
+            $data->downVoteCount       = $votes['downvotes'];
+            $data->id                  = $comment->getId();
+            $data->createdAt           = $comment->getCreatedAt();
+            $data->authorId            = $author->getId();
+            $data->authorUsername      = $author->getUsername();
+            $data->authorAvatar        = $this->exposer->getPath($author) ?: null;
+            $data->body                = $comment->getBody();
+            $data->publishedReplyCount = $comment->getPublishedReplyCount();
+            $data->parent              = $comment->getParent() ? $comment->getParent()->getId() : null;
+
+            if ($data->parent) {
+                if (!isset($comments[$data->parent])) {
+                    $comments[$data->parent] = new comment_data();
+                }
+
+                $comments[$data->parent]->replies[] = $data;
+            } else {
+                if (isset($comments[$data->id])) {
+                    $data->replies = $comments[$data->id]->replies;
+                }
+
+                $comments[$data->id] = $data;
+            }
+        }
+
+        return $comments;
     }
 }
