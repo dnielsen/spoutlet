@@ -16,6 +16,9 @@ backend awaWeb4  { .host = "ec2-75-101-237-222.compute-1.amazonaws.com";  .port 
 backend awaWeb5  { .host = "ec2-23-20-89-12.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 backend awaWeb6  { .host = "ec2-54-234-209-50.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 backend awaWeb7  { .host = "ec2-54-211-73-130.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb8  { .host = "ec2-54-226-59-37.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb9  { .host = "ec2-54-227-179-26.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb10  { .host = "ec2-54-211-138-117.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 
 backend cevo { .host = "www.alienwarearena.com"; .port = "http"; }
 
@@ -27,6 +30,9 @@ director awaWeb random {
     { .backend = awaWeb5; .weight = 1; }
     { .backend = awaWeb6; .weight = 1; }
     { .backend = awaWeb7; .weight = 1; }
+    { .backend = awaWeb8; .weight = 1; }
+    { .backend = awaWeb9; .weight = 1; }
+    { .backend = awaWeb10; .weight = 1; }
 }
 
 acl ban {
@@ -39,12 +45,15 @@ acl ban {
     "ec2-23-20-89-12.compute-1.amazonaws.com";
     "ec2-54-234-209-50.compute-1.amazonaws.com";
     "ec2-54-211-73-130.compute-1.amazonaws.com";
+    "ec2-54-226-59-37.compute-1.amazonaws.com";
+    "ec2-54-227-179-26.compute-1.amazonaws.com";
+    "ec2-54-211-138-117.compute-1.amazonaws.com";
 }
 
 sub vcl_recv {
 
     if (req.url ~ "^/sweeps/lolchampionship") {
-         error 750 "http://" + req.http.host + "/promocode/123";
+        error 750 "http://" + req.http.host + "/promocode/123";
     }
 
     // TODO - remove staging-only check below once going live
