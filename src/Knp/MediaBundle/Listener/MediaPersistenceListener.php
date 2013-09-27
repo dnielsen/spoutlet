@@ -202,8 +202,10 @@ class MediaPersistenceListener implements EventSubscriber
         // iterate until we find a unique filename of format original_filename-n.ext where n is an integer
         $i = 1;
         while (true) {
-            $basename = str_replace('.'.$file->guessExtension(), '', $cleanedName);
-            $newFilename = sprintf('%s-%s.%s', $basename, $this->generateRandomString($i), $file->guessExtension());
+            $pathParts = pathinfo($cleanedName);
+
+            $basename = str_replace('.'.$pathParts['extension'], '', $cleanedName);
+            $newFilename = sprintf('%s-%s.%s', $pathParts['filename'], $this->generateRandomString($i), $pathParts['extension']);
             if (!$this->filesystem->has($newFilename)) {
                 $this->log(sprintf('Found unique filename "%s"', $newFilename));
 
