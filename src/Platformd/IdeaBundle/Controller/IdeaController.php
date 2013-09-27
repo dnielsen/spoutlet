@@ -739,6 +739,11 @@ class IdeaController extends Controller
 
         foreach ($tagStrings as $tagString)
         {
+            $tagString = trim($tagString);
+            if (empty($tagString)){
+                continue;
+            }
+
             if (!in_array($tagString, $allTagNames))
             {
                 $newTag = new Tag($tagString);
