@@ -81,6 +81,7 @@
                     <td width="25%"><strong>Date:</strong></td>
                     <td width="75%">{{event.DateRangeString}}</td>
                 </tr>
+                {% if not event.getOnline %}
                 <tr>
                     <td width="25%"><strong>Location:</strong></td>
                     <td width="75%">{{ event.location }}</td>
@@ -89,6 +90,7 @@
                     <td width="25%"><strong>Address:</strong></td>
                     <td width="75%">{{ event.address1 }}<br/>{{ event.address2 }}</td>
                 </tr>
+                {% endif %}
                 </tbody>
             </table>
 

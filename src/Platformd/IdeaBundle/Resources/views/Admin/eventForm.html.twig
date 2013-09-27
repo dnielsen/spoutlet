@@ -1,6 +1,28 @@
-{% extends 'IdeaBundle::event_layout.html.twig' %}
+{% extends 'IdeaBundle::group_layout.html.twig' %}
 
-{% block event_content %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $(function () {
+            $('#form_online').change(function (){
+                var isOnline = $(this).val();
+                if(isOnline == '1') {
+                    $('#location-controls').slideUp();
+                } else {
+                    $('#location-controls').slideDown();
+                }
+            });
+
+            var isOnline = $('#form_online').val();
+            if(isOnline == '1') {
+                $('#location-controls').slideUp();
+            }
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
 
     {% if isNew %}
         {% set verb = 'Create' %}
@@ -13,7 +35,24 @@
     <h1>{{ verb }} Your Event</h1>
 
     <form action="{{ formpath }}" method="post" {{ form_enctype(form) }}>
-	    {{ form_widget(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.content) }}
+        {{ form_row(form.startsAt) }}
+        {{ form_row(form.endsAt) }}
+        {{ form_row(form.online) }}
+        <div id="location-controls">
+        {{ form_row(form.location) }}
+        {{ form_row(form.address1) }}
+        {{ form_row(form.address2) }}
+        </div>
+        {{ form_row(form.allowedVoters) }}
+        {{ form_row(form.isSubmissionActive) }}
+        {{ form_row(form.isVotingActive) }}
+        {{ form_row(form.registrationOption) }}
+        {{ form_row(form.private) }}
+
+        {{ form_rest(form) }}
+
 	    <input type="submit" value="Submit"/>
         <input type="submit" value="Cancel" name="cancel" formnovalidate/>
 	</form>

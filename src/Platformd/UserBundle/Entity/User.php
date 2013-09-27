@@ -446,22 +446,22 @@ class User extends BaseUser
     protected $name = null;
 
     /**
-     * @ORM\Column(type="string", length="255")
+     * @ORM\Column(type="string", length="255", nullable=true)
      */
     protected $school = null;
 
     /**
-     * @ORM\Column(type="string", length="255")
+     * @ORM\Column(type="string", length="255", nullable=true)
      */
     protected $major = null;
 
     /**
-     * @ORM\Column(type="string", length="255")
+     * @ORM\Column(type="string", length="255", nullable=true)
      */
     protected $affiliation = null;
 
     /**
-     * @ORM\Column(type="string", length="255")
+     * @ORM\Column(type="string", length="255", nullable=true)
      */
     protected $svicRole = null;
 
@@ -1346,8 +1346,8 @@ class User extends BaseUser
     {
         $this->registrationSource = $value;
     }
-    
-    
+
+
 
 
     public function setName($name)
@@ -1417,5 +1417,5 @@ class User extends BaseUser
     {
         return $this->ideas;
     }
-    
+
 }

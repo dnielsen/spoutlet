@@ -4,16 +4,7 @@
 }
 
 .fos_user_registration_register input.button {
-    margin-left: 310px;
     margin-top: 10px;
-}
-
-.fos_user_registration_register ul.form-msg-error, .fos_user_registration_register #recaptcha_widget_div {
-    margin-left: 310px;
-}
-
-.floating_form_container {
-    margin-left: 313px;
 }
 
 .fos_user_registration_register #recaptcha_widget_div {

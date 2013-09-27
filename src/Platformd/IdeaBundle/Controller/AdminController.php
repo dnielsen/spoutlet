@@ -46,10 +46,11 @@ class AdminController extends Controller
 			->add('content', 'textarea', array('label' => 'Welcome Description', 'attr' => array('cols' => '75%', 'rows' => '4')))
 			->add('startsAt', 'date', array('label' => 'Start of Event', 'attr' => array('size' => '60%')))
 			->add('endsAt', 'date', array('label' => 'End of Event', 'attr' => array('size' => '60%')))
-            ->add('location', 'text', array('label' => 'Location', 'attr' => array('size' => '60%')))
-			->add('address1', 'text', array('label' => 'Address', 'attr' => array('size' => '60%')))
-			->add('address2', 'text', array('label' => 'Address Line 2', 'attr' => array('size' => '60%')))
-			->add('allowedVoters', 'text', array('label' => 'Current Judges', 'attr' => array('size' => '60%')))
+            ->add('online', 'choice', array('choices' => array('1' => 'Online', '0' => 'Location'), 'label'=>'Event Type'))
+            ->add('location', 'text', array('label' => 'Location', 'attr' => array('size' => '60%'), 'required' => '0'))
+			->add('address1', 'text', array('label' => 'Address', 'attr' => array('size' => '60%'), 'required' => '0'))
+			->add('address2', 'text', array('label' => 'Address Line 2', 'attr' => array('size' => '60%'), 'required' => '0'))
+			->add('allowedVoters', 'text', array('label' => 'Current Judges', 'attr' => array('size' => '60%'), 'required' => '0'))
             ->add('isSubmissionActive', 'choice', array('choices' => array('1' => 'Enabled', '0' => 'Disabled'), 'label' => 'Submissions'))
             ->add('isVotingActive', 'choice', array('choices' => array('1' => 'Enabled', '0' => 'Disabled'), 'label' => 'Voting'))
             ->add('registrationOption', 'text', array('attr' => array('value'=>Event::REGISTRATION_ENABLED,'style'=>'display:none')))
@@ -61,8 +62,9 @@ class AdminController extends Controller
 			if($form->isValid()) {
                 $group->addEvent($event);
 
-                $event->setOnline(false);
                 $event->setTimezone('UTC');
+                $event->setActive(true);
+                $event->setApproved(true);
 
 				$em = $this->getDoctrine()->getEntityManager();
 				$em->persist($event);

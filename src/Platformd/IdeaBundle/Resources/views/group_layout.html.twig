@@ -1,0 +1,22 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{%  block header %}
+
+    {% embed 'SpoutletBundle::header.html.twig' %}
+
+        {% block banner %}
+            <a href="{{ path('group_show', { 'slug': group.slug }) }}"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/logo.jpg') }}" alt="{{ group.name }}" width="328" height="126" id="brand"></a>
+        {% endblock %}
+
+        {% block extra_user_controls %}
+            {% if is_granted('ROLE_ADMIN') and group.isOwner(app.user) %}
+                <li><a href="{{ path('group_edit', {'slug': group.slug} ) }}">Edit Group</a></li>
+            {% endif %}
+        {% endblock %}
+
+    {% endembed %}
+
+    {% embed 'SpoutletBundle::navigation.html.twig' %}
+    {% endembed %}
+
+{%  endblock %}

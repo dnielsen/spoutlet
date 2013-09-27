@@ -4,16 +4,12 @@
 
 <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register form form-horizontal">
 
+    {{ form_row(form.name) }}
     {{ form_row(form.username) }}
     {{ form_row(form.email) }}
     {{ form_row(form.plainPassword.first) }}
     {{ form_row(form.plainPassword.second) }}
 
-    {{ form_row(form.name) }}
-    {{ form_row(form.school) }}
-    {{ form_row(form.major) }}
-    {{ form_row(form.svicRole) }}
-    {{ form_row(form.affiliation) }}
 
     <div>
         <div style="display:none;">{{ form_rest(form) }}</div>

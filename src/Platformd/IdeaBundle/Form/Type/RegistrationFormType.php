@@ -11,8 +11,9 @@ class RegistrationFormType extends BaseType
     public function buildForm(FormBuilder $builder, array $options)
     {
         parent::buildForm($builder, $options);
-        $user = new User();
         $builder->add('name');
+        /*
+        $user = new User();
         $builder->add('school');
         $builder->add('major');
         $builder->add('svicRole', 'choice',
@@ -33,6 +34,7 @@ class RegistrationFormType extends BaseType
                 'Mentor'=>'Mentor',
                 'Partner'=>'Partner',
                 'Other'=>'Other')) );
+        */
 
     }
 

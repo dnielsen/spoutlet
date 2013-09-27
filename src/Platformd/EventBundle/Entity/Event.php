@@ -283,7 +283,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     protected $isSubmissionActive;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable="true")
      */
     protected $allowedVoters;
 
