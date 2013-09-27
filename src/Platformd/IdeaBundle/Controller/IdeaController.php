@@ -722,17 +722,17 @@ class IdeaController extends Controller
     /**
      * Takes the user submitted string of tags, parses it, and returns an array of new tag objects
      */
-    public function parseTags($tagString)
+    public function parseTags($allTagsString)
     {
         $newTags = array();
 
-        $tagString = trim($tagString);
+        $allTagsString = trim(strtolower($allTagsString));
 
-        if(empty($tagString)){
+        if(empty($allTagsString)){
             return $newTags;
         }
 
-        $tagStrings = preg_split("/[\s,]+/", $tagString);
+        $tagStrings = preg_split("/[\s,]+/", $allTagsString);
         $allTagNames = $this->getAllTagNames();
 
 		$em = $this->getDoctrine()->getEntityManager();
