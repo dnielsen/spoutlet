@@ -32,6 +32,11 @@ class MediaPersistenceListener implements EventSubscriber
      */
     public static $replaceCharacter = '-';
 
+    private static $mimeTypeOverrides = array(
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    );
+
     /**
      * @var \Gaufrette\Filesystem
      */
@@ -125,7 +130,11 @@ class MediaPersistenceListener implements EventSubscriber
 
             // create a metadata array to be sent to S3
             $metadata = array();
-            if ($mimeType = $file->getMimeType()) {
+
+            $clientMimeType = $file->getClientMimeType();
+            $mimeType = in_array($clientMimeType, self::$mimeTypeOverrides) ? $clientMimeType : $file->getMimeType();
+
+            if ($mimeType) {
                 $metadata['content-type'] = $file->getMimeType();
                 $media->setMimeType($mimeType);
             }
