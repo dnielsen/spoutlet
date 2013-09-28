@@ -145,13 +145,11 @@ class IdeaController extends Controller
 
 	public function createFormAction($groupSlug, $eventSlug) {
 
+        $this->basicSecurityCheck('ROLE_USER');
+
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
-        if (!$this->canCreate($event)) {
-            //throw new AccessDeniedException();
-            return new RedirectResponse($this->generateUrl('login'));
-        }
         return $this->render('IdeaBundle:Idea:createForm.html.twig', array(
                 'group' => $group,
                 'event' => $event,
@@ -161,11 +159,14 @@ class IdeaController extends Controller
 
 	public function createAction(Request $request, $groupSlug, $eventSlug) {
 
+        $this->basicSecurityCheck('ROLE_USER');
+
         $event = $this->getEvent($groupSlug, $eventSlug);
 
         if (!$this->canCreate($event)) {
-            //throw new AccessDeniedException();
-            return new RedirectResponse($this->generateUrl('login'));
+            return new RedirectResponse($this->generateUrl('idea_create_form', array(
+                    'groupSlug' => $groupSlug,
+                    'eventSlug' => $eventSlug)));
         }
 
 		$params = $request->request->all();
@@ -173,10 +174,14 @@ class IdeaController extends Controller
 		$idea = new Idea();
 
         $idea->setEvent($event);
+        $idea->setCreator($this->getCurrentUser());
         $idea->setName($params['title']);
-        $idea->setMembers($params['members']);
         $idea->setDescription($params['desc']);
-        $idea->setStage($params['stage']);
+        $idea->setMembers($params['members']);
+
+        if (array_key_exists('stage', $params)){
+            $idea->setStage($params['stage']);
+        }
 
         if (array_key_exists('forCourse', $params)){
             $idea->setForCourse(true);
@@ -184,14 +189,12 @@ class IdeaController extends Controller
         }
         else{
             $idea->setForCourse(false);
-            $idea->setProfessors('');
         }
 
-        if (!empty($params['amount'])){
-            $idea->setAmount($params['amount']);
-        }
-        else{
-            $idea->setAmount(0);
+        if (array_key_exists('amount', $params)) {
+            if (!empty($params['amount'])){
+                $idea->setAmount($params['amount']);
+            }
         }
 
         $idea->addTags($this->parseTags($params['tags']));
@@ -200,11 +203,7 @@ class IdeaController extends Controller
             $idea->setIsPrivate(true);
         }
 
-        $user = $this->get('security.context')->getToken()->getUser();
-        $idea->setCreator($user);
-
-        $currentRound = $event->getCurrentRound();
-        $idea->setHighestRound($currentRound);
+        $idea->setHighestRound($event->getCurrentRound());
 
 		$em = $this->getDoctrine()->getEntityManager();
 		$em->persist($idea);
@@ -221,17 +220,19 @@ class IdeaController extends Controller
 
     public function editFormAction($groupSlug, $eventSlug, $id) {
 
+        $this->basicSecurityCheck('ROLE_USER');
+
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
         $idea = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($id);
 
-        if(!$this->canEdit($idea, $event)) {
-            throw new AccessDeniedException();
-        }
-
         if (!$idea) {
             throw $this->createNotFoundException('No idea found for id '.$id);
+        }
+
+        if(!$this->canEdit($idea, $event)) {
+            throw new AccessDeniedException();
         }
 
         return $this->render('IdeaBundle:Idea:createForm.html.twig', array(
@@ -245,6 +246,8 @@ class IdeaController extends Controller
 
     public function editAction($groupSlug, $eventSlug, $id) {
 
+        $this->basicSecurityCheck('ROLE_USER');
+
         $event = $this->getEvent($groupSlug, $eventSlug);
 
         $idea = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($id);
@@ -256,9 +259,12 @@ class IdeaController extends Controller
         $params = $this->getRequest()->request->all();
 
         $idea->setName($params['title']);
-        $idea->setMembers($params['members']);
         $idea->setDescription($params['desc']);
-        $idea->setStage($params['stage']);
+        $idea->setMembers($params['members']);
+
+        if (array_key_exists('stage', $params)){
+            $idea->setStage($params['stage']);
+        }
 
         if (array_key_exists('forCourse', $params)){
             $idea->setForCourse(true);
@@ -266,14 +272,12 @@ class IdeaController extends Controller
         }
         else{
             $idea->setForCourse(false);
-            $idea->setProfessors('');
         }
 
-        if (!empty($params['amount'])){
-            $idea->setAmount($params['amount']);
-        }
-        else {
-            $idea->setAmount(0);
+        if (array_key_exists('amount', $params)) {
+            if (!empty($params['amount'])) {
+                $idea->setAmount($params['amount']);
+            }
         }
 
         $idea->removeAllTags();
@@ -299,6 +303,8 @@ class IdeaController extends Controller
 
 
     public function uploadAction($groupSlug, $eventSlug, $id = null){
+
+        $this->basicSecurityCheck('ROLE_USER');
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
@@ -355,6 +361,8 @@ class IdeaController extends Controller
 
     public function deleteImageAction($groupSlug, $eventSlug)
     {
+        $this->basicSecurityCheck('ROLE_USER');
+
         $params = $this->getRequest()->request->all();
 
         $ideaId = $params['idea'];
@@ -378,6 +386,9 @@ class IdeaController extends Controller
 
     public function addLinkAction($groupSlug, $eventSlug, $id = null)
     {
+
+        $this->basicSecurityCheck('ROLE_USER');
+
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
@@ -387,12 +398,12 @@ class IdeaController extends Controller
             ->add('linkDescription', 'textarea')
             ->add('url')
             ->add('type', 'choice', array(
-                'choices' => array (
-                    'youtube'   =>  'YouTube',
-                    'flickr'    =>  'Flickr',
-                    'twitter'   =>  'Twitter',
-                    'slideshare'=>  'SlideShare',
-                    'other'     =>  'Other'
+                    'choices' => array (
+                        'youtube'   =>  'YouTube',
+                        'flickr'    =>  'Flickr',
+                        'twitter'   =>  'Twitter',
+                        'slideshare'=>  'SlideShare',
+                        'other'     =>  'Other'
                     )
                 ))
             ->getForm()
@@ -432,6 +443,9 @@ class IdeaController extends Controller
     }
 
     public function deleteLinkAction($groupSlug, $eventSlug) {
+
+        $this->basicSecurityCheck('ROLE_USER');
+
         $params = $this->getRequest()->request->all();
 
         $ideaId = $params['idea'];
@@ -455,16 +469,19 @@ class IdeaController extends Controller
 
     public function voteAction($groupSlug, $eventSlug) {
 
+        $this->basicSecurityCheck('ROLE_USER');
+
         $event = $this->getEvent($groupSlug, $eventSlug);
 
         //check for judge role here
         if (!$this->canJudge($event)) {
-           throw new AccessDeniedException();
+            throw new AccessDeniedException();
         }
+
         $params = $this->getRequest()->request->all();
         $idea = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($params['id']);
-        $userName = $this->get('security.context')->getToken()->getUser()->getUsername();
-		$currentRound = $event->getCurrentRound();
+        $userName = $this->getCurrentUser()->getUsername();
+        $currentRound = $event->getCurrentRound();
 
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -473,26 +490,26 @@ class IdeaController extends Controller
 
         $criteriaList = $this->getDoctrine()->getRepository('IdeaBundle:VoteCriteria')->findByEventId($event->getId());
         foreach($criteriaList as $criteria) {
-        	$vote = null;
-        	if(count($votes) == 0) {
-        		//create vote object using $criteria->getid() assigned to Vote::IdeaId()
-        		$vote = new Vote($idea, $criteria, $currentRound);
-        		$vote->setVoter($userName);
-        	} else {
-        		//find the vote for this particular criteria
-        		foreach($votes as $criteriaVote) {
-        			if($criteriaVote->getCriteria()->getId() == $criteria->getId()) {
-        				$vote = $criteriaVote;
-        				break;
-        			}
-        		}
-        	}
+            $vote = null;
+            if(count($votes) == 0) {
+                //create vote object using $criteria->getid() assigned to Vote::IdeaId()
+                $vote = new Vote($idea, $criteria, $currentRound);
+                $vote->setVoter($userName);
+            } else {
+                //find the vote for this particular criteria
+                foreach($votes as $criteriaVote) {
+                    if($criteriaVote->getCriteria()->getId() == $criteria->getId()) {
+                        $vote = $criteriaVote;
+                        break;
+                    }
+                }
+            }
 
-        	//POST params keyed by criteria id
-			$value = $params[strval($criteria->getId())];
-			$vote->setValue($value);
+            //POST params keyed by criteria id
+            $value = $params[strval($criteria->getId())];
+            $vote->setValue($value);
 
-			$em->persist($vote);
+            $em->persist($vote);
         }
 
         $em->flush();
@@ -509,26 +526,23 @@ class IdeaController extends Controller
 
     public function commentAction($groupSlug, $eventSlug) {
 
-    	if (!$this->isLoggedIn()) {
-            return new RedirectResponse($this->generateUrl('login'));
-        }
+        $this->basicSecurityCheck('ROLE_USER');
 
         $params = $this->getRequest()->request->all();
 
         $commentText = $params['comment'];
-        $id = $params['idea'];
+        $ideaId = $params['idea'];
 
-        $idea = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($id);
-        $user = $this->get('security.context')->getToken()->getUser();
+        $idea = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($ideaId);
 
-        $comment = new Comment($user, $commentText, $idea);
+        $comment = new Comment($this->getCurrentUser(), $commentText, $idea);
 
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($comment);
         $em->flush();
 
         $ideaUrl = $this->generateUrl('idea_show', array(
-                'id' => $id,
+                'id' => $ideaId,
                 'groupSlug' => $groupSlug,
                 'eventSlug' => $eventSlug,
             ));
@@ -537,6 +551,8 @@ class IdeaController extends Controller
     }
 
     public function commentDeleteAction($groupSlug, $eventSlug) {
+
+        $this->basicSecurityCheck('ROLE_USER');
 
         $params = $this->getRequest()->request->all();
 
@@ -560,18 +576,14 @@ class IdeaController extends Controller
 
     public function followAction($groupSlug, $eventSlug, Request $request) {
 
-        if (!$this->isLoggedIn()) {
-            return new RedirectResponse($this->generateURL('login'));
-        }
+        $this->basicSecurityCheck('ROLE_USER');
 
         $params = $request->request->all();
         $ideaId = $params['id'];
         $source = $params['source'];
-        $tag = $params['tag'];
 
         $idea = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($ideaId);
-        $userName = $this->get('security.context')->getToken()->getUser()->getUsername();
-
+        $userName = $this->getCurrentUser()->getUsername();
 
         $em = $this->getDoctrine()->getEntityManager();
 
@@ -599,7 +611,7 @@ class IdeaController extends Controller
                 ));
         elseif ($source == 'list')
             $url = $this->generateUrl('idea_show_all', array(
-                    'tag' => $tag,
+                    'tag' => $params['tag'],
                     'groupSlug' => $groupSlug,
                     'eventSlug' => $eventSlug,
                 ));
@@ -610,10 +622,12 @@ class IdeaController extends Controller
 
     public function deleteAction($groupSlug, $eventSlug) {
 
+        $this->basicSecurityCheck('ROLE_USER');
+
         $event = $this->getEvent($groupSlug, $eventSlug);
 
         $id = $this->getRequest()->request->get('id');
-		$idea = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($id);
+        $idea = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($id);
 
         if (!$this->canEdit($idea, $event)) {
             throw new AccessDeniedException();
@@ -627,8 +641,8 @@ class IdeaController extends Controller
         $em->flush();
 
         $ideaListUrl = $this->generateUrl('idea_show_all', array(
-             'groupSlug' => $groupSlug,
-             'eventSlug' => $eventSlug,
+                'groupSlug' => $groupSlug,
+                'eventSlug' => $eventSlug,
             ));
         return new RedirectResponse($ideaListUrl);
 
@@ -637,7 +651,7 @@ class IdeaController extends Controller
 
     public function profileAction($username = null) {
 
-        $currentUser = $this->get('security.context')->getToken()->getUser();
+        $currentUser = $this->getCurrentUser();
 
         if ($username == null){
             $user = $currentUser;
@@ -669,10 +683,10 @@ class IdeaController extends Controller
     }
 
 
-    //TODO: Move this to a model file
+    //TODO: Move this to a model file?
     /******************************************************
-    ****************    MODEL STUFF HERE    ***************
-    *******************************************************/
+     ****************    MODEL STUFF HERE    ***************
+     *******************************************************/
 
 
     public function isLoggedIn() {
@@ -681,42 +695,40 @@ class IdeaController extends Controller
 
     public function canJudge($event) {
 
-    	if(!$this->isLoggedIn())
-    		return false;
+        if(!$this->isLoggedIn())
+            return false;
 
         if (!$event->getIsVotingActive())
             return false;
 
-        $securityContext = $this->get('security.context');
-        $username = $securityContext->getToken()->getUser()->getUsername();
+        $username = $this->getCurrentUser()->getUsername();
 
         return $event->containsVoter($username);
     }
 
     public function canCreate($event) {
 
-        if (!$event->getIsSubmissionActive())
+        if (!$event->getIsSubmissionActive()){
             return false;
+        }
 
-        return $this->isLoggedIn();
+        //TODO: Check to see if user is member of group/has joined event
+        return true;
     }
 
-    public function canEdit($idea, $event) {
-
-        if(!$this->isLoggedIn())
+    public function canEdit($idea, $event)
+    {
+        if(!$this->isLoggedIn() or !$this->canCreate($event))
             return false;
 
-        if (!$event->getIsSubmissionActive())
-            return false;
+        $security = $this->getSecurity();
+        $username = $security->getToken()->getUser()->getUsername();
 
-        $securityContext = $this->get('security.context');
-        $username = $securityContext->getToken()->getUser()->getUsername();
-
-        $isUserAllowed = false;
-        if($username === $idea->getCreator()->getUsername() || $securityContext->isGranted('ROLE_ADMIN')) {
-            $isUserAllowed = true;
+        if($username === $idea->getCreator()->getUsername() || $security->isGranted('ROLE_ADMIN')) {
+            return true;
         }
-        return $isUserAllowed;
+
+        return false;
     }
 
     /**
@@ -735,7 +747,7 @@ class IdeaController extends Controller
         $tagStrings = preg_split("/[\s,]+/", $allTagsString);
         $allTagNames = $this->getAllTagNames();
 
-		$em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getEntityManager();
 
         foreach ($tagStrings as $tagString)
         {
@@ -758,7 +770,7 @@ class IdeaController extends Controller
                 $newTags[] = $this->getDoctrine()->getRepository('IdeaBundle:Tag')->find($tagString);
             }
         }
-		$em->flush();
+        $em->flush();
         return $newTags;
     }
 

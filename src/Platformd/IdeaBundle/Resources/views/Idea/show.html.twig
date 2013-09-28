@@ -102,12 +102,20 @@
             <hr>
         </div>
 
+        {% if app.user %}
+
         <form action="{{ path('idea_comment', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" class="spcr-b2 right">
             <input type="hidden" name="idea" value="{{idea.id}}">
             <textarea name="comment" rows="6" tabindex="3" placeholder="Add a comment" class="comments"></textarea>
             <input type="submit" class="right" value="Post Comment">
             <br class="clr">
         </form>
+
+        {% else %}
+            <div class="spcr-l2">
+                You must <a href="{{ path('login') }}">login</a> to join the discussion.<br/>
+            </div>
+        {% endif %}
 
         <br class="clr">
     {% endif %}

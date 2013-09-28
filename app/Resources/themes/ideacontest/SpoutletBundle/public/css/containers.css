@@ -250,6 +250,9 @@ table.tblStyle {
 #eventDetails {
     margin-top: 20px;
 }
+#profile {
+    width: 60%;
+}
 
 table.tblStyle2 {
 	width: 100%;

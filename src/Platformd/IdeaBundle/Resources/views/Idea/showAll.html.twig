@@ -2,7 +2,7 @@
 
 {% block event_content %}
 
-    <div class="left"><h1>Proposed Ideas - Round {{ round }}</h1></div>
+    <div class="left"><h1>Proposed Ideas{% if round > 1 %} - Round {{ round }}{% endif %}</h1></div>
 
     {% if submitActive %}
         <form action = {{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get" class="right">

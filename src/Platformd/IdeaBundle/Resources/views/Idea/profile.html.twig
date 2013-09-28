@@ -1,8 +1,8 @@
-{% extends 'IdeaBundle::event_layout.html.twig' %}
+{% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block event_content %}
+{% block content %}
 
-    <table class="tblStyle">
+    <table class="tblStyle" id="profile">
         {% if ownProfile %}
             <tr>
                 <td><a href="{{ path('change_password') }}">Change Password</a></td><td></td>
@@ -46,7 +46,7 @@
                 {% for idea in user.ideas %}
                     {% set event = idea.getEvent %}
                     {% set group = event.getGroup %}
-                    {% if idea.canUserView(app.user) %}<a href="{{ path('idea_show', {'groupSlug': group.getSlug, 'eventSlug': event.getSlug, 'id': idea.id}) }}">{{ group.name }} - {{ event.name }} - {{ idea.name }}</a><br>{% endif %}
+                    {% if idea.canUserView(app.user) %}<a href="{{ path('idea_show', {'groupSlug': group.getSlug, 'eventSlug': event.getSlug, 'id': idea.id}) }}">{{ event.name }} - {{ idea.name }}</a><br>{% endif %}
                 {% endfor %}
             </td>
         </tr>
