@@ -167,6 +167,7 @@ sub vcl_recv {
 
     if (req.url ~ "^/(bundles|css|js|images|plugins)/" || req.url ~ "\.(png|gif|jpg|jpeg|swf|css|js|ico|htm|html)$") {
         unset req.http.cookie;
+        set req.url = regsub(req.url, "\?.*$", "");
     }
 
     if (req.http.Cookie) {
