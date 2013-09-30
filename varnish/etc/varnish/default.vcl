@@ -19,6 +19,10 @@ backend awaWeb7  { .host = "ec2-54-211-73-130.compute-1.amazonaws.com";  .port =
 backend awaWeb8  { .host = "ec2-54-226-59-37.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 backend awaWeb9  { .host = "ec2-54-227-179-26.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 backend awaWeb10  { .host = "ec2-54-211-138-117.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb11  { .host = "ec2-23-22-17-125.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb12  { .host = "ec2-23-21-28-38.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb13  { .host = "ec2-107-22-8-195.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
+backend awaWeb14  { .host = "ec2-23-22-9-5.compute-1.amazonaws.com";  .port = "http"; .probe = healthcheck; }
 
 backend cevo { .host = "www.alienwarearena.com"; .port = "http"; }
 
@@ -33,6 +37,10 @@ director awaWeb random {
     { .backend = awaWeb8; .weight = 1; }
     { .backend = awaWeb9; .weight = 1; }
     { .backend = awaWeb10; .weight = 1; }
+    { .backend = awaWeb11; .weight = 1; }
+    { .backend = awaWeb12; .weight = 1; }
+    { .backend = awaWeb13; .weight = 1; }
+    { .backend = awaWeb14; .weight = 1; }
 }
 
 acl ban {
@@ -48,6 +56,11 @@ acl ban {
     "ec2-54-226-59-37.compute-1.amazonaws.com";
     "ec2-54-227-179-26.compute-1.amazonaws.com";
     "ec2-54-211-138-117.compute-1.amazonaws.com";
+
+    "ec2-23-22-17-125.compute-1.amazonaws.com";
+    "ec2-23-21-28-38.compute-1.amazonaws.com";
+    "ec2-107-22-8-195.compute-1.amazonaws.com";
+    "ec2-23-22-9-5.compute-1.amazonaws.com";
 }
 
 sub vcl_recv {
@@ -154,6 +167,7 @@ sub vcl_recv {
 
     if (req.url ~ "^/(bundles|css|js|images|plugins)/" || req.url ~ "\.(png|gif|jpg|jpeg|swf|css|js|ico|htm|html)$") {
         unset req.http.cookie;
+        set req.url = regsub(req.url, "\?.*$", "");
     }
 
     if (req.http.Cookie) {
