@@ -45,4 +45,19 @@ class GroupMassEmail extends MassEmail
     {
         return 'Group Mass Email';
     }
+
+    public function getLinkedEntityClass()
+    {
+        return 'GroupBundle:Group';
+    }
+
+    public function getLinkedEntity()
+    {
+        return $this->group;
+    }
+
+    public function getLinkedEntityAllRecipientsField()
+    {
+        return 'members';
+    }
 }

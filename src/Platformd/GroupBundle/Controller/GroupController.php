@@ -1921,7 +1921,7 @@ Alienware Arena Team
 
                 $email->setSender($user);
                 $email->setSite($this->getCurrentSite());
-                $email->setRecipients($group->getMembers()->toArray());
+                $email->setSentToAll(true);
 
                 $content = $email->getMessage();
 

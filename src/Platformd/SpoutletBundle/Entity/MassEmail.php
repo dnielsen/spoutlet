@@ -18,7 +18,7 @@ use Platformd\UserBundle\Entity\User;
  */
 abstract class MassEmail
 {
-    const EMAIL_LIMIT_COUNT = 2;
+    const EMAIL_LIMIT_COUNT  = 2;
     const EMAIL_LIMIT_PERIOD = '24 hours';
 
     /**
@@ -83,6 +83,11 @@ abstract class MassEmail
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $site;
+
+    /**
+     * @ORM\Column(name="sent_to_all", type="boolean")
+     */
+    protected $sentToAll;
 
     public function __construct()
     {
@@ -219,8 +224,28 @@ abstract class MassEmail
         $this->site = $site;
     }
 
+    /**
+     * @return boolean
+     */
+    public function getSentToAll()
+    {
+        return $this->sentToAll;
+    }
+
+    /**
+     * @param boolean $value
+     */
+    public function setSentToAll($value)
+    {
+        $this->sentToAll = $value;
+    }
+
     public function getEmailType()
     {
         return 'Mass Email';
     }
+
+    abstract protected function getLinkedEntityClass();
+    abstract protected function getLinkedEntity();
+    abstract protected function getLinkedEntityAllRecipientsField();
 }

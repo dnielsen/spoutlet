@@ -402,14 +402,14 @@ class GroupEventController extends Controller
 
             if ($form->isValid()) {
 
+                $email = $form->getData();
+
                 $recipientsString = $form->get('users')->getData();
                 $recipients = array();
 
                 if ($recipientsString === null) {
 
-                    foreach ($groupEvent->getAttendees() as $recipient) {
-                        $recipients[] = $recipient;
-                    }
+                    $email->setSentToAll(true);
 
                 } else {
 
@@ -426,7 +426,7 @@ class GroupEventController extends Controller
 
                 $recipientCount = count($recipients);
 
-                if ($recipientCount < 1) {
+                if ($recipientCount < 1 && $recipientsString !== null) {
 
                     $this->setFlash('error', 'No valid recipients found.');
 
@@ -436,8 +436,6 @@ class GroupEventController extends Controller
                         'form'  => $form->createView(),
                     ));
                 }
-
-                $email = $form->getData();
 
                 $email->setEvent($groupEvent);
                 $email->setSender($this->getUser());
@@ -464,7 +462,7 @@ class GroupEventController extends Controller
                 $this->setFlash('success', $this->transChoice(
                     'platformd.events.event_contact.confirmation',
                     $recipientCount,
-                    array('%attendeeCount%' => $recipientCount),
+                    array('%attendeeCount%' => ($recipientCount > 0 ? $recipientCount : 'all')),
                     'messages',
                     $emailLocale
                 ));

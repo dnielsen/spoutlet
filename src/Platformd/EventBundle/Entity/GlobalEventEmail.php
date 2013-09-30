@@ -58,4 +58,19 @@ class GlobalEventEmail extends MassEmail
     {
         return 'Global Event Mass Email';
     }
+
+    public function getLinkedEntityClass()
+    {
+        return 'EventBundle:GlobalEvent';
+    }
+
+    public function getLinkedEntity()
+    {
+        return $this->event;
+    }
+
+    public function getLinkedEntityAllRecipientsField()
+    {
+        return 'attendees';
+    }
 }
