@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Table(name="commenting_vote")
+ * @ORM\Table(name="commenting_vote", indexes={@ORM\index(name="votetype_idx", columns={"vote_type"})})
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\CommentVoteRepository")
  */
 

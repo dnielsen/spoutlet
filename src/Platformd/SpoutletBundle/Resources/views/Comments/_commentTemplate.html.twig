@@ -1,0 +1,140 @@
+<script id="comment-template" type="text/x-handlebars-template">
+
+{% raw %}{{#each comments}}{% endraw %}
+
+<div class="post-wrapper" id="post-id-{% raw %}{{id}}{% endraw %}" data-posted="{% raw %}{{createdAt}}{% endraw %}" data-votes="{% raw %}{{upVoteCount}}{% endraw %}">
+    <div class="comment-wrapper" id="comment-wrapper-{% raw %}{{id}}{% endraw %}">
+        <input type="hidden" id="comment-{% raw %}{{id}}{% endraw %}" value="{% raw %}{{id}}{% endraw %}" />
+        <div class="comment-author">
+            <a href="{% raw %}{{authorAccountLink}}{% endraw %}">
+                {% raw %}{{#if authorAvatar}}{% endraw %}
+                    <img src="{% raw %}{{ authorAvatar }}{% endraw %}" alt="{% raw %}{{authorUsername}}{% endraw %}" />
+                {% raw %}{{else}}{% endraw %}
+                    <div class="default-avatar avatar84"></div>
+                {% raw %}{{/if}}{% endraw %}
+            </a>
+
+            <div class="author-link"><a href="{% raw %}{{authorAccountLink}}{% endraw %}">{% raw %}{{authorUsername}}{% endraw %}</a></div>
+            {#
+                Placeholders for ARP/Level when we handle this ourselves
+                <div class="author-level">Level 7</div>
+                <div class="level-img"><div>5477 ARP</div></div>
+            #}
+        </div>
+        <div class="comment-body">
+            <div class="comment-errors" id="comment-errors-{% raw %}{{id}}{% endraw %}"></div>
+            <div class="editable" id="comment-body-{% raw %}{{id}}{% endraw %}" style="padding-bottom: 20px;">{% raw %}{{body}}{% endraw %}</div>
+        </div>
+
+        <div class="comment-footer">
+
+            <div class="comment-vote">
+                <div style="display:inline-table;">
+                    <span id="comment-upVoteCount-{% raw %}{{id}}{% endraw %}">{% raw %}{{upVoteCount}}{% endraw %}</span>
+                    <a href="javascript:void(0);" class="comment-voting-button up" id="comment-voting-vote-up" data-id="{% raw %}{{id}}{% endraw %}" data-votetype="up"></a>
+                </div>
+                <div style="display:inline-table;">
+                    <span id="comment-downVoteCount-{% raw %}{{id}}{% endraw %}">{% raw %}{{downVoteCount}}{% endraw %}</span>
+                    <a href="javascript:void(0);" class="comment-voting-button down" id="comment-voting-vote-down" data-id="{% raw %}{{id}}{% endraw %}" data-votetype="down"></a>
+                </div>
+                <div style="display:inline-table; margin-left: 10px;">
+                    <span id="comment-points-{% raw %}{{id}}{% endraw %}">{{ 'platformd.comment.points' | pd_trans }} {% raw %}{{points}}{% endraw %}</span>
+                </div>
+            </div>
+
+            <div class="comment-at" title="{% raw %}{{createdAt}}{% endraw %}Z" style="margin-left: 90px;"></div>
+
+            <div class="options" data-id="{% raw %}{{id}}{% endraw %}" style="right:0;">
+                <div class="choices" id="choices-{% raw %}{{id}}{% endraw %}">
+                    <ul>
+                        <li>
+                            <span data-logged-in="true"><a href="javascript:void(0)" class="comment-reply-link" data-id="{% raw %}{{id}}{% endraw %}">{{ 'platformd.comment.reply' | pd_trans }}</a></span>
+                            <span data-logged-in="false"><a href="{{ login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }}">{{ 'platformd.comment.reply' | pd_trans }}</a></span>
+                        </li>
+                        <span data-comment-admin="true" data-comment-owner="{% raw %}{{authorId}}{% endraw %}" style="display:none;">
+                            <li class="edit-options-link" data-id="{% raw %}{{id}}{% endraw %}"><a href="javascript:void(0);">{{ 'platformd.comment.edit' | pd_trans }}</a></li>
+                            <li><a href="javascript:void(0);" class="delete-link" data-id="{% raw %}{{id}}{% endraw %}">{{ 'platformd.comment.delete' | pd_trans }}</a></li>
+                        </span>
+                        <li class="report-options-link" data-id="{% raw %}{{id}}{% endraw %}"><a href="javascript:void(0);">{{ 'content_reporting.report' | pd_trans }}</a></li>
+                        <div class="report-options" id="report-options-{% raw %}{{id}}{% endraw %}">
+                            <ul>
+                                <span data-logged-in="true">
+                                    <li><a href="javascript:void(0);" class="comment-report-link" data-id="{% raw %}{{id}}{% endraw %}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | pd_trans }}</a></li>
+                                    <li><a href="javascript:void(0);" class="comment-report-link" data-id="{% raw %}{{id}}{% endraw %}" data-reason="spam">{{ 'content_reporting.spam' | pd_trans }}</a></li>
+                                    <li><a href="javascript:void(0);" class="comment-report-link" data-id="{% raw %}{{id}}{% endraw %}" data-reason="violates_intellectual_property">{{ 'content_reporting.violates_intellectual_property' | pd_trans }}</a></li>
+                                    <li><a href="javascript:void(0);" class="comment-report-link" data-id="{% raw %}{{id}}{% endraw %}" data-reason="individual_harrassing_me">{{ 'content_reporting.individual_harrassing_me' | pd_trans }}</a></li>
+                                </span>
+                                <span data-logged-in="false">
+                                    <li><a href="{{ login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }}" data-id="{ id }}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | pd_trans }}</a></li>
+                                    <li><a href="{{ login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }}" data-id="{ id }}" data-reason="spam">{{ 'content_reporting.spam' | pd_trans }}</a></li>
+                                    <li><a href="{{ login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }}" data-id="{ id }}" data-reason="violates_intellectual_property">{{ 'content_reporting.violates_intellectual_property' | pd_trans }}</a></li>
+                                    <li><a href="{{ login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }}" data-id="{ id }}" data-reason="individual_harrassing_me">{{ 'content_reporting.individual_harrassing_me' | pd_trans }}</a></li>
+                                </span>
+                            </ul>
+                        </div>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="comment-replies-wrapper" id="replies-{% raw %}{{id}}{% endraw %}">
+        <div class="comment-tri{% raw %}{{#unless publishedReplyCount}} hidden{{/unless}}{% endraw %}"></div>
+        <div class="comment-replies" id="comment-replies-{% raw %}{{id}}{% endraw %}">
+            <textarea id="reply-text-{% raw %}{{id}}{% endraw %}" type="text"></textarea><a href="javascript:void(0);" class="comment-post-reply-link" data-id="{% raw %}{{id}}{% endraw %}">{{ 'platformd.comment.post' | pd_trans }}</a>
+        </div>
+
+        {% raw %}{{#each this.replies}}{% endraw %}
+
+            <div class="comment-reply{% raw %}{{#if isHidden}} hidden{{/if}}{{#if isFirstReply}} first{{/if}}{% endraw %}" id="post-id-{% raw %}{{id}}{% endraw %}">
+                <a href="{% raw %}{{authorAccountLink}}{% endraw %}">
+                    {% raw %}{{#if authorAvatar}}{% endraw %}
+                        <img src="{% raw %}{{authorAvatar}}{% endraw %}" alt="{% raw %}{{authorUsername}}{% endraw %}" />
+                    {% raw %}{{else}}{% endraw %}
+                        <div class="default-avatar avatar32"></div>
+                    {% raw %}{{/if}}{% endraw %}
+                </a>
+                <div class="reply-body">
+                    <a href="{% raw %}{{authorAccountLink}}{% endraw %}">{% raw %}{{authorUsername }}{% endraw %}</a>
+                    <div class="editable" id="comment-body-{% raw %}{{id}}{% endraw %}" style="display: inline;">{% raw %}{{body}}{% endraw %}</div>
+                </div>
+                <div class="comment-footer">
+                    <div class="replied-at" title="{% raw %}{{createdAt}}{% endraw %}Z"></div>
+                    <div class="options more-replies" data-id="{% raw %}{{id}}{% endraw %}">
+                       <div class="choices" id="choices-{% raw %}{{id}}{% endraw %}">
+                            <ul>
+                                <span data-comment-admin="true" data-comment-owner="{% raw %}{{authorId}}{% endraw %}" style="display:none;">
+                                    <li class="edit-options-link" data-id="{% raw %}{{id}}{% endraw %}"><a href="javascript:void(0);">{{ 'platformd.comment.edit' | pd_trans }}</a></li>
+                                    <li><a href="javascript:void(0);" class="delete-link" data-id="{% raw %}{{id}}{% endraw %}">{{ 'platformd.comment.delete' | pd_trans }}</a></li>
+                                </span>
+                                <li class="report-options-link" data-id="{% raw %}{{id}}{% endraw %}"><a href="javascript:void(0);" class="report">{{ 'content_reporting.report' | pd_trans }}</a></li>
+                                <div class="report-options" id="report-options-{% raw %}{{id}}{% endraw %}">
+                                    <ul>
+                                        <li><a href="javascript:void(0);" class="comment-report-link" data-id="{% raw %}{{id}}{% endraw %}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | pd_trans }}</a></li>
+                                        <li><a href="javascript:void(0);" class="comment-report-link" data-id="{% raw %}{{id}}{% endraw %}" data-reason="spam">{{ 'content_reporting.spam' | pd_trans }}</a></li>
+                                        <li><a href="javascript:void(0);" class="comment-report-link" data-id="{% raw %}{{id}}{% endraw %}" data-reason="violates_intellectual_property">{{ 'content_reporting.violates_intellectual_property' | pd_trans }}</a></li>
+                                        <li><a href="javascript:void(0);" class="comment-report-link" data-id="{% raw %}{{id}}{% endraw %}" data-reason="individual_harrassing_me">{{ 'content_reporting.individual_harrassing_me' | pd_trans }}</a></li>
+                                    </ul>
+                                </div>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        {% raw %}{{/each}}{% endraw %}
+    </div>
+    {% raw %}{{#if hasMoreReplies}}{% endraw %}
+        <div class="more-comments" id="more-comments-{% raw %}{{id}}{% endraw %}">
+            <a href="javascript:void(0);" class="more-comments-link" id="more-comments-{% raw %}{{id}}{% endraw %}" data-id="{% raw %}{{id}}{% endraw %}">{{ 'platformd.comment.more_replies' | pd_trans }}</a>
+        </div>
+    {% raw %}{{/if}}{% endraw %}
+
+</div>
+
+{% raw %}{{/each}}{% endraw %}
+
+</script>

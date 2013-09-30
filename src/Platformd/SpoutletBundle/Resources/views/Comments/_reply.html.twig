@@ -1,13 +1,13 @@
 <div class="comment-reply{% if replyCounter > 3 %} hidden{% endif %}{% if replyCounter == 1 %} first{% endif %}" id="post-id-{{ reply.id }}">
-    <a href="{{ comment.authorAccountLink }}">
+    <a href="{{ account_link(reply.author.username) }}">
         {% if get_avatar_url(reply.author, 32) != false %}
-            <img src="{{ asset(get_avatar_url(reply.author, 32)) }}" alt="{{ reply.authorUsername }}" />
+            <img src="{{ asset(get_avatar_url(reply.author, 32)) }}" alt="{{ reply.author.username }}" />
         {% else %}
             <div class="default-avatar avatar32"></div>
         {% endif %}
     </a>
     <div class="reply-body">
-        <a href="{{ comment.authorAccountLink }}">{{ reply.authorUsername }}</a>
+        <a href="{{ account_link(reply.author.username) }}">{{ reply.author.username }}</a>
         <div class="editable" id="comment-body-{{ reply.id }}" style="display: inline;">{{ reply.body | nl2br }}</div>
     </div>
     <div class="comment-footer">
@@ -15,7 +15,7 @@
         <div class="options more-replies" data-id="{{ reply.id }}">
            <div class="choices" id="choices-{{ reply.id }}">
                 <ul>
-                    <span data-comment-admin="true" data-comment-owner="{{ reply.authorId }}" style="display:none;">
+                    <span data-comment-admin="true" data-comment-owner="{{ reply.author.id }}" style="display:none;">
                         <li class="edit-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);">{{ 'platformd.comment.edit' | pd_trans }}</a></li>
                         <li><a href="javascript:void(0);" class="delete-link" data-id="{{ reply.id }}">{{ 'platformd.comment.delete' | pd_trans }}</a></li>
                     </span>

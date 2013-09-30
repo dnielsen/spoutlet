@@ -142,7 +142,6 @@ class CommentRepository extends EntityRepository
             ->leftJoin('c.author', 'u')
             ->leftJoin('c.replies', 'r')
             ->andWhere('t.id = :thread')
-            ->andWhere('c.parent IS NULL')
             ->andWhere('c.deleted <> true')
             ->setParameter('thread', $thread->getId())
             ->setParameter('up', 'up')

@@ -1,19 +1,14 @@
-{% for comment in comments %}
-    {% if (loop.index - 1) % 5 == 0 %}<div class="comment-group" id="comment-group-{{ (loop.index - 1) / 5 }}" style="display:none;">{% endif %}
-
-    {% if comment.parent is null and comment.deleted == false %}
-        {% include 'SpoutletBundle:Comments:_comment.html.twig' with { 'comment': comment } %}
-    {% endif %}
-
-    {% if (loop.index) % 5 == 0 or loop.last %}</div>{% endif %}
-{% else %}
+<div class="comments">
     <div class="comment-group" id="comment-group-0" style="display:none;"></div>
-{% endfor %}
+</div>
 
 {% if app.session.locale == "es" or app.session.locale == "zh" or app.session.locale == "ja" %}
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.timeago.{{ app.session.locale }}.js"></script>
 {% endif %}
 
+{% include 'SpoutletBundle:Comments:_commentTemplate.html.twig' %}
+
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/handlebars.js') }}"></script>
 <script type="text/javascript">
 
     $(function () {
@@ -22,10 +17,6 @@
             $('.choices').hide();
             $('.report-options').hide();
          });
-
-        $('.comment-at').timeago();
-        $('.replied-at').timeago();
-        $('.author-link > a').truncate({width: 84});
 
         toggleEdit = function(element, id, text) {
             if(element.find('.comment-edit-textarea').length == 0) {
