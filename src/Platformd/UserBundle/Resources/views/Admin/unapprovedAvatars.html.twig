@@ -54,7 +54,7 @@
     {% endif %}
 
     {% if pager.haveToPaginate %}
-        {{ pagerfanta(avatars, 'twitter_bootstrap_translated', {'routeName' : 'admin_unapproved_avatars'}) }}
+        {{ pagerfanta(pager, 'twitter_bootstrap_translated', {'routeName' : 'admin_unapproved_avatars'}) }}
     {% endif %}
 
     <script type="text/javascript">
