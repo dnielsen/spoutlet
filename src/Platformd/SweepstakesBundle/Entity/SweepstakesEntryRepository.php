@@ -54,6 +54,7 @@ class SweepstakesEntryRepository extends EntityRepository
             ->leftJoin('c.regions', 'r')
             ->orderBy('e.created', 'DESC')
             ->andWhere('e.sweepstakes = :sweepstakes')
+            ->addGroupBy('e.id')
             ->setParameter('sweepstakes', $sweepstakes)
             ->getQuery()
             ->execute()
