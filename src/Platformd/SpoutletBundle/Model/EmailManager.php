@@ -146,14 +146,28 @@ class EmailManager
         $emailType  = $email->getEmailType();
         $sendCount  = 0;
 
-        $recipientEmails = $this->em->createQueryBuilder('e')
-            ->select('u.email')
-            ->from(get_class($email), 'e')
-            ->leftJoin('e.recipients', 'u')
-            ->andWhere('e = :email')
-            ->setParameter('email', $email)
-            ->getQuery()
-            ->getResult();
+        if ($email->getSentToAll()) {
+
+            $recipientEmails = $this->em->createQueryBuilder('e')
+                ->select('u.email')
+                ->from($email->getLinkedEntityClass(), 'e')
+                ->leftJoin('e.'.$email->getLinkedEntityAllRecipientsField(), 'u')
+                ->andWhere('e = :linkedEntity')
+                ->setParameter('linkedEntity', $email->getLinkedEntity())
+                ->getQuery()
+                ->getResult();
+
+        } else {
+
+            $recipientEmails = $this->em->createQueryBuilder('e')
+                ->select('u.email')
+                ->from(get_class($email), 'e')
+                ->leftJoin('e.recipients', 'u')
+                ->andWhere('e = :email')
+                ->setParameter('email', $email)
+                ->getQuery()
+                ->getResult();
+        }
 
         foreach ($recipientEmails as $recipient) {
             $this->sendHtmlEmail($recipient['email'], $subject, $message, $emailType, $site, $fromName);

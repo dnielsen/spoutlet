@@ -58,4 +58,19 @@ class GroupEventEmail extends MassEmail
     {
         return 'Group Event Mass Email';
     }
+
+    public function getLinkedEntityClass()
+    {
+        return 'EventBundle:GroupEvent';
+    }
+
+    public function getLinkedEntity()
+    {
+        return $this->event;
+    }
+
+    public function getLinkedEntityAllRecipientsField()
+    {
+        return 'attendees';
+    }
 }
