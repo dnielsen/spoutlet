@@ -216,6 +216,8 @@ class CommentManager
             }
         }
 
+        $return = array();
+
         foreach ($comments as $comment) {
             $return[] = $comment;
         }
