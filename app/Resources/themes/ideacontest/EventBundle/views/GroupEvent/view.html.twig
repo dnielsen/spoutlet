@@ -3,73 +3,14 @@
 {% block event_content %}
     <div class="row1">
         <div class="cBx1">
-
-            <!-- Commenting out slider code for now
-
-            <!-- slider code start
-            <div class="intro">
-                <div id="slideshow" class="pics">
-                    <div class="unicusSlides">
-                        <a href="/" target="_blank">
-                            <img src={{ asset('bundles/idea/img/SVIC_banner_color.jpg') }} alt="" width="644" height="340">
-                        </a>
-                    </div>
-                    <div class="unicusSlides">
-                        <a href="/" target="_blank">
-                            <img src={{ asset('bundles/idea/img/slide2.jpg') }} alt="" width="644" height="340">
-                        </a>
-                    </div>
-                    <div class="unicusSlides">
-                        <a href="/" target="_blank">
-                            <img src={{ asset('bundles/idea/img/slide3.jpg') }} alt="" width="644" height="340">
-                        </a>
-                    </div>
-                    <div class="unicusSlides">
-                        <a href="/" target="_blank">
-                            <img src={{ asset('bundles/idea/img/slide4.jpg') }} alt="" width="644" height="340">
-                        </a>
-                    </div>
-                    <div class="unicusSlides">
-                        <a href="/" target="_blank">
-                            <img src={{ asset('bundles/idea/img/slide5.jpg') }} alt="" width="644" height="340">
-                        </a>
-                    </div>
-                    <div class="unicusSlides">
-                        <a href="/" target="_blank">
-                            <img src={{ asset('bundles/idea/img/slide6.jpg') }} alt="" width="644" height="340">
-                        </a>
-                    </div>
-
-                </div><!-- end jQuery Cycle
-
-                <ul id="bullets"></ul> <!-- nav bullets
-             </div>
-
-            <script type="text/javascript">
-                $(function() {
-                    $('#slideshow').cycle({
-                        fx:     'scrollHorz',
-                        speed:  400,
-                        timeout: 6000,
-                        cleartypeNoBg: true,
-                        pager:  '#bullets',
-                        pagerAnchorBuilder: function paginate(idx, el) {
-                            return '<a class="service' + idx + '" href="#" >&bull;</a>';
-                        }
-                    });
-                });
-            </script>
-
-        Remember to fix all the html endcomment tags when you remove this one -->
-
             <p>{{event.content | nl2br }}</p>
         </div>
         <div class="cBx2">
             <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="submit left" id="event_button">View Ideas</a>
-            {% if app.user %}
+            {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
                 <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="submit right" id="event_button">Add Idea</a>
             {% else %}
-                <a href="{{ path('fos_user_registration_register') }}" class="submit right" id="event_button">Join Now</a>
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="submit right" id="event_button">Join Now</a>
             {% endif %}
             <table id="eventDetails" class="tblStyle">
                 <tbody>

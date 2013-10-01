@@ -9,7 +9,7 @@
         <ul>
             {% if app.user is null %}
                 <li><a href="{{ path('fos_user_security_login') }}">{{ 'platformd.layout.top_menu.sign_in' | trans }}</a></li>
-                <li><a href="{{ path('fos_user_registration_register') }}">{{ 'platformd.layout.top_menu.join' | trans }}</a></li>
+                <li><a href="{{ path('fos_user_registration_register') }}">Register</a></li>
             {% else %}
                 <li><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | trans }}</a></li>
                 {% if is_granted("ROLE_ADMIN") %}

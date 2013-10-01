@@ -62,6 +62,7 @@ class AdminController extends Controller
 			if($form->isValid()) {
                 $group->addEvent($event);
 
+                $event->setUser($this->getCurrentUser());
                 $event->setTimezone('UTC');
                 $event->setActive(true);
                 $event->setApproved(true);

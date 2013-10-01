@@ -876,6 +876,10 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
     public function isUserAttending($user)
     {
+        if (!$user){
+            return false;
+        }
+
         foreach ($this->attendees as $attendee) {
             if($attendee->getId() == $user->getId()) {
                 return true;
