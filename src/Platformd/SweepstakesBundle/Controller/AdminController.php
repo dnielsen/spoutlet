@@ -310,7 +310,7 @@ class AdminController extends Controller
                 $entry['name'],
                 $entry['state'],
                 $entry['created'],
-                ($entry['lastLogin']) ? $entry['lastLogin']->format('Y-m-d') : '',
+                (isset($entry['lastLogin']) ? $entry['lastLogin']->format('Y-m-d') : '',
                 $entry['ipAddress'],
                 $entry['createdAccount'] ? 'Y' : 'N',
                 $entry['phoneNumber'],
