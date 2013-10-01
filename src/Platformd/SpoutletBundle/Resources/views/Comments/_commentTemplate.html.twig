@@ -23,7 +23,7 @@
         </div>
         <div class="comment-body">
             <div class="comment-errors" id="comment-errors-{% raw %}{{id}}{% endraw %}"></div>
-            <div class="editable" id="comment-body-{% raw %}{{id}}{% endraw %}" style="padding-bottom: 20px;">{% raw %}{{body}}{% endraw %}</div>
+            <div class="editable" id="comment-body-{% raw %}{{id}}{% endraw %}" style="padding-bottom: 20px;">{% raw %}{{{body}}}{% endraw %}</div>
         </div>
 
         <div class="comment-footer">
@@ -98,7 +98,7 @@
                 </a>
                 <div class="reply-body">
                     <a href="{% raw %}{{authorAccountLink}}{% endraw %}">{% raw %}{{authorUsername }}{% endraw %}</a>
-                    <div class="editable" id="comment-body-{% raw %}{{id}}{% endraw %}" style="display: inline;">{% raw %}{{body}}{% endraw %}</div>
+                    <div class="editable" id="comment-body-{% raw %}{{id}}{% endraw %}" style="display: inline;">{% raw %}{{{body}}}{% endraw %}</div>
                 </div>
                 <div class="comment-footer">
                     <div class="replied-at" title="{% raw %}{{createdAt}}{% endraw %}Z"></div>

@@ -98,8 +98,6 @@
     $(function () {
 
         loadMorePosts();
-        updateContent();
-        setupListeners();
 
         $('.comment-sorting select').change(function() {
             sortPosts();
@@ -164,6 +162,9 @@
         $('.comment-group:last').html(template(currentComments));
 
         currentGroup++;
+
+        updateContent();
+        setupListeners();
 
         $('.comments').append('<div class="comment-group" id="comment-group-'+ currentGroup +'" style="display:none;"></div>')
 
@@ -350,8 +351,6 @@
         $(window).scroll(function() {
             if($(window).scrollTop() >= $(document).height() - $(window).height()) {
                 loadMorePosts();
-                updateContent();
-                setupListeners();
             }
         });
     }
