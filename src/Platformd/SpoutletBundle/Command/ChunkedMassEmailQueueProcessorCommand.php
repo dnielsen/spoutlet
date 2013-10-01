@@ -19,7 +19,7 @@ use DateTime;
 
 class ChunkedMassEmailQueueProcessorCommand extends BaseCommand
 {
-    const ITERATION_COUNT        = 1;
+    const ITERATION_COUNT        = 5;
     const ALL_EMAILS_TARGET_TIME = 600;
 
     protected function configure()
