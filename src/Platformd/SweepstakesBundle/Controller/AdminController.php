@@ -252,7 +252,8 @@ class AdminController extends Controller
             $entries = $this->getEntryRepo()->findAllForRegionOrderedByNewest($sweepstakes, $regionId);
         }
 
-        return $this->generateMetricsCsvResponse($sweepstakes, $entries, $region);
+        $response = $this->generateMetricsCsvResponse($sweepstakes, $entries, $region);
+        return $response;
     }
 
     /**
@@ -280,7 +281,6 @@ class AdminController extends Controller
             'Last Name',
             'Email',
             'Age',
-            'Region',
             'Country',
             'State/Province',
             'Acct Created',
@@ -291,32 +291,29 @@ class AdminController extends Controller
         ), $questions));
 
         foreach ($entries as $entry) {
-
             $answers = array();
-
-            foreach ($entry[0]->getAnswers() as $answer) {
-                $answers[] = $answer->getContent();
+            foreach ($entry[0]['answers'] as $answer) {
+                $answers[] = $answer['content'];
             }
 
             if ($sweepstakes->getHasOptionalCheckbox()) {
-                $answers[] = $entry[0]->getOptionalCheckboxAnswer() ? 'Y' : 'N';
+                $answers[] = $entry[0]['optionalCheckboxAnswer'] ? 'Y' : 'N';
             }
 
             $rowData = array_merge(array(
-                $entry[0]->getUser()->getUsername(),
-                $entry[0]->getUser()->getId(),
-                $entry[0]->getUser()->getFirstName(),
-                $entry[0]->getUser()->getLastName(),
-                $entry[0]->getUser()->getEmail(),
-                $entry[0]->getUser()->getAge(),
-                $entry['regionName'] ?: 'None',
-                $entry[0]->getCountry() ? $entry[0]->getCountry()->getName() : null,
-                $entry[0]->getUser()->getState(),
-                $entry[0]->getUser()->getCreated()->format('Y-m-d'),
-                ($entry[0]->getUser()->getLastLogin()) ? $entry[0]->getUser()->getLastLogin()->format('Y-m-d') : '',
-                $entry[0]->getIpAddress(),
-                $entry[0]->getCreatedAccount() ? 'Y' : 'N',
-                $entry[0]->getPhoneNumber(),
+                $entry['username'],
+                $entry['id'],
+                $entry['firstname'],
+                $entry['lastname'],
+                $entry['email'],
+                $entry['birthdate'],
+                $entry['name'],
+                $entry['state'],
+                $entry['created'],
+                ($entry['lastLogin']) ? $entry['lastLogin']->format('Y-m-d') : '',
+                $entry['ipAddress'],
+                $entry['createdAccount'] ? 'Y' : 'N',
+                $entry['phoneNumber'],
             ), $answers);
 
             $factory->addRow($rowData);
@@ -324,7 +321,6 @@ class AdminController extends Controller
 
         $filename = sprintf('%s-%s-%s.csv', $sweepstakes->getSlug(), date('Y-m-d'), $region);
         return $factory->createResponse($filename);
-
     }
 
     private function addMetricsBreadcrumbs($type=Sweepstakes::SWEEPSTAKES_TYPE_SWEEPSTAKES)
