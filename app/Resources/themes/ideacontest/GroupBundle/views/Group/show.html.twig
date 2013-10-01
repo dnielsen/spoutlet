@@ -17,15 +17,15 @@
         <a href="{{ path('group_' ~ groupAction, {'slug': group.slug}) }}" class="left spcr-l2 btn">{{ groupAction|capitalize }} Group</a>
 
     {% endif %}
-    
+
     <br/><hr/>
 
     <p>{{ group.description | striptags }}</p><br/>
 
     <h2 class="left">Events</h2>
 
-    {% if is_granted('ROLE_ADMIN') and group.isOwner(app.user) %}
-    <a href="{{ path('idea_admin_event', {'groupSlug': group.slug}) }}" class="left spcr-l2 btn">Create Event</a>
+    {% if is_granted('ROLE_ADMIN') or group.isOwner(app.user) %}
+        <a href="{{ path('idea_admin_event', {'groupSlug': group.slug}) }}" class="left spcr-l2 btn">Create Event</a>
     {% endif %}
 
     <br/><hr/>

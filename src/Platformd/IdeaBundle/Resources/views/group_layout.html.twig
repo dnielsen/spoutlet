@@ -5,7 +5,7 @@
     {% embed 'SpoutletBundle::header.html.twig' %}
 
         {% block banner %}
-            <a href="{{ path('group_show', { 'slug': group.slug }) }}"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/logo.jpg') }}" alt="{{ group.name }}" width="328" height="126" id="brand"></a>
+            <a href="{{ path('default_index') }}"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/logo.jpg') }}" alt="{{ group.name }}" width="328" height="126" id="brand"></a>
         {% endblock %}
 
         {% block extra_user_controls %}
