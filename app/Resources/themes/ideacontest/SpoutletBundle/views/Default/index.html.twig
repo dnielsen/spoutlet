@@ -6,8 +6,10 @@
 
     <div id="row1">
         <div class="cBx1">
-            <h2 class="spcr-b">Groups</h2><hr/>
-            {%  render url('_popular_groups') %}
+            <h2 class="left spcr-b">Popular Groups</h2>
+            <a href="{{ path('group_new') }}" class="left spcr-l2 btn">Create Group</a>
+            <br/><hr/>
+            {% render url('_popular_groups') %}
         </div>
 
         {% render 'SpoutletBundle:Default:groupEvents' %}
