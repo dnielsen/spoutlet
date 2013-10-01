@@ -17,17 +17,19 @@ use
 
 use DateTime;
 
-class MassEmailQueueProcessorCommand extends BaseCommand
+class ChunkedMassEmailQueueProcessorCommand extends BaseCommand
 {
-    const ITERATION_COUNT = 25;
+    const ITERATION_COUNT        = 1;
+    const ALL_EMAILS_TARGET_TIME = 600;
 
     protected function configure()
     {
         $this
-            ->setName('pd:massEmails:process')
+            ->setName('pd:massEmails:sendChunks')
             ->setDescription('Processes mass emails queued to be sent via Amazon SES.')
+            ->addOption('spawn-more', null, InputOption::VALUE_NONE, 'Calculates an approximate email count to be sent and spawns additional processes to handle these more quickly.')
             ->setHelp(<<<EOT
-The <info>%command.name%</info> command gets a list of mass emails to be sent from an Amazon SQS queue and queues emails to be sent in batches.
+The <info>%command.name%</info> command gets a list of mass emails to be sent from an Amazon SQS queue and sends them.
 
   <info>php %command.full_name%</info>
 EOT
@@ -57,14 +59,60 @@ EOT
         $this->output(0, 'Processing queue for the Key Requests.');
 
         $iterationCount = 0;
+        $start          = time();
 
-        while ($message = $queueUtil->retrieveFromQueue(new MassEmailQueueMessage())) {
+        if ($input->getOption('spawn-more')) {
+
+            $alreadyRunning = exec('ps aux | grep "pd:massEmails:sendChunks --spawn-more" | grep -v "grep" | wc -l');
+
+            $break = false;
+
+            if ($alreadyRunning > 1) {
+                $this->output(0, 'Email processor with "spawn-more" privileges is already running. Will not launch any more instances.');
+                $break = true;
+            }
+
+            if (!$break) {
+                $this->output();
+                $this->output(0, 'Getting message count.');
+
+                $messageCount = $queueUtil->getMessageCount(new ChunkedMassEmailQueueMessage());
+
+                if (!$messageCount || $messageCount < 1) {
+                    $this->output(1, 'No messages.');
+                } else {
+
+                    $this->output(1, $messageCount.' messages on SQS.');
+
+                    $emailCount     = ChunkedMassEmailQueueMessage::RECIPIENT_CHUNK_SIZE * $messageCount;
+                    $numProcesses   = ceil($emailCount / (self::ALL_EMAILS_TARGET_TIME/1.11)); // Benchmarking results find a speed of approx. 1.11 emails/second per process.
+                    $alreadyRunning = exec('ps aux | grep "pd:massEmails:sendChunks" | grep -v "grep" | wc -l');
+
+                    $needed = $numProcesses - $alreadyRunning;
+                    $needed = $needed > 20 ? 20 : $needed;
+
+                    $this->output(1, $numProcesses.' processes required - '.$alreadyRunning.' already running, '.$needed.' needed.');
+
+                    if ($needed > 0) {
+
+                        $dirParts = explode('src/', dirname(__FILE__));
+
+                        for ($i=0; $i < $needed; $i++) {
+                            $this->output(2, 'Spawning process '.($i + 1).' of '.$needed.'.');
+                            shell_exec('php '.$dirParts[0].'app/console pd:massEmails:sendChunks > /dev/null 2>/dev/null &');
+                        }
+                    }
+                }
+            }
+        }
+
+        while ($message = $queueUtil->retrieveFromQueue(new ChunkedMassEmailQueueMessage())) {
 
             $iterationCount++;
 
             if ($iterationCount > self::ITERATION_COUNT) {
                 $this->output();
-                $this->output(0, 'Maximum iterations reached - exiting.');
+                $this->output(0, 'Maximum iterations reached - exiting after '.(time() - $start).' seconds.');
                 exit;
             }
 
@@ -99,15 +147,16 @@ EOT
                 continue;
             }
 
-            $this->output(3, 'Queueing emails to recipients in chunks of '.ChunkedMassEmailQueueMessage::RECIPIENT_CHUNK_SIZE);
+            $this->output(3, 'Sending emails to recipients.');
 
-            $sendCount = $emailManager->queueEmails($email);
+            $sendCount = $emailManager->sendMassEmail($email, $message);
 
             $this->output(3, 'Email sent to '.$sendCount.' recipients.');
             $this->deleteMessageWithOutput($message);
         }
 
         $this->output();
+        $this->output(0, 'Finished after '.(time() - $start).' seconds.');
         $this->output(1, 'No more emails.');
 
         $this->outputErrors();
