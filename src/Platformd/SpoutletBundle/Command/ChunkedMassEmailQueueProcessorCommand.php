@@ -99,7 +99,7 @@ EOT
 
                         for ($i=0; $i < $needed; $i++) {
                             $this->output(2, 'Spawning process '.($i + 1).' of '.$needed.'.');
-                            shell_exec('php '.$dirParts[0].'app/console pd:massEmails:sendChunks > /dev/null 2>/dev/null &');
+                            shell_exec('php '.$dirParts[0].'app/console pd:massEmails:sendChunks -e prod > /dev/null 2>/dev/null &');
                         }
                     }
                 }
