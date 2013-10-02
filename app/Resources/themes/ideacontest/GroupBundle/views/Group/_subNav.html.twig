@@ -1,0 +1,45 @@
+<div class="sub-nav-wrapper groups-sub-nav-wrapper">
+    <div class="sub-nav groups-sub-nav">
+        <ul>
+            <li><a href="{{ path('group_show', {'slug' : group.slug }) }}">Group Home</a></li>
+            <span data-group-admin="true">
+
+                <li><a href="{{ path('group_edit', { 'slug': group.slug }) }}">Group Settings</a></li>
+                {% if not group.isPublic %}
+                    <li><a href="{{ path('group_applications', { 'slug': group.slug }) }}">Member Approvals</a></li>
+                {% endif %}
+            </span>
+
+            <span data-group-member="true">
+                <li><a href="{{ path('group_leave', { 'slug': group.slug }) }}" onclick="return confirm('Are you sure you want to leave this group?');">Leave Group</a></li>
+            </span>
+            <span data-group-member="false">
+                <li><a href="{{ path('group_join', { 'slug': group.slug }) }}">Join Group</a></li>
+            </span>
+
+            <li><a href="{{ path('groups') }}">See All Groups</a></li>
+        </ul>
+    </div>
+</div>
+
+{% render url('_group_member_check', { 'groupId': group.id }) with {}, {'standalone': true } %}
+
+<script type="text/javascript">
+
+    if (groupAdmin) {
+        $('[data-group-admin="true"]').show();
+        $('[data-group-admin="false"]').hide();
+    } else {
+        $('[data-group-admin="true"]').hide();
+        $('[data-group-admin="false"]').show();
+    }
+
+    if (user_is_group_member) {
+        $('[data-group-member="true"]').show();
+        $('[data-group-member="false"]').hide();
+    } else {
+        $('[data-group-member="true"]').hide();
+        $('[data-group-member="false"]').show();
+    }
+
+</script>

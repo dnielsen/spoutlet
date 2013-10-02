@@ -5,20 +5,9 @@
 {% block content %}
 
     <h2 class="left">{{ group.name }}</h2>
-
-    {% if not group.isOwner(app.user) %}
-
-        {% if group.isMember(app.user) %}
-            {% set groupAction = 'leave' %}
-        {% else %}
-            {% set groupAction = 'join' %}
-        {% endif %}
-
-        <a href="{{ path('group_' ~ groupAction, {'slug': group.slug}) }}" class="left spcr-l2 btn">{{ groupAction|capitalize }} Group</a>
-
-    {% endif %}
-
     <br/><hr/>
+
+    {% include 'GroupBundle:Group:_subNav.html.twig' %}
 
     <p>{{ group.description | striptags }}</p><br/>
 
