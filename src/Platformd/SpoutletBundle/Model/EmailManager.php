@@ -105,6 +105,10 @@ class EmailManager
             $messageId = $response->body->SendEmailResult->MessageId;
             $status    = $response->isOk();
 
+            if (!$status) {
+                $sentEmail->setErrorMessage($response->body->Error->Message);
+            }
+
             $sentEmail->setSendStatusCode((int)$response->status);
             $sentEmail->setSendStatusOk($status);
 

@@ -84,6 +84,11 @@ class SentEmail
      */
     protected $createdAt;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $errorMessage;
+
     public function getId()
     {
         return $this->id;
@@ -177,6 +182,16 @@ class SentEmail
     public function getEmailType()
     {
         return $this->emailType;
+    }
+
+    public function setErrorMessage($value)
+    {
+        $this->errorMessage = $value;
+    }
+
+    public function getErrorMessage()
+    {
+        return $this->errorMessage;
     }
 
     public function getCreatedAt()
