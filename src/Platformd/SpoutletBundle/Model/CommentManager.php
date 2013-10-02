@@ -10,13 +10,13 @@ class CommentManager
     private $threadRepo;
     private $linkableManager;
     private $em;
-    private $exposer;
+    private $avatarPathResolver;
 
-    function __construct($threadRepo, $linkableManager, $em, $exposer) {
-        $this->threadRepo      = $threadRepo;
-        $this->linkableManager = $linkableManager;
-        $this->em              = $em;
-        $this->exposer         = $exposer;
+    function __construct($threadRepo, $linkableManager, $em, $avatarPathResolver) {
+        $this->threadRepo         = $threadRepo;
+        $this->linkableManager    = $linkableManager;
+        $this->em                 = $em;
+        $this->avatarPathResolver = $avatarPathResolver;
     }
 
     public function checkThread($object)
@@ -160,53 +160,47 @@ class CommentManager
 
     public function getCommentData($thread, $sort='recent')
     {
-        $commentRepo      = $this->em->getRepository('SpoutletBundle:Comment');
-        $commentsEntities = $commentRepo->getCommentsForThreadSortedByQuery($thread, $sort);
-        $comments         = array();
+        $commentRepo = $this->em->getRepository('SpoutletBundle:Comment');
+        $commentsArr = $commentRepo->getCommentsForThreadSortedByQuery($thread, $sort);
+        $comments    = array();
 
-        foreach ($commentsEntities as $commentData) {
-            $comment   = $commentData[0];
+        foreach ($commentsArr as $comment) {
 
-            if (isset($commentData['upvotes']) && isset($commentData['downvotes'])) {
-                $votes['upvotes'] = $commentData['upvotes'];
-                $votes['downvotes'] = $commentData['downvotes'];
-            } else {
-                $votes = end($commentData);
-            }
-
-            $author  = $comment->getAuthor();
             $data    = array();
 
-            $data['deleted']             = $comment->getDeleted();
-            $data['upVoteCount']         = $votes['upvotes'];
-            $data['downVoteCount']       = $votes['downvotes'];
-            $data['points']              = number_format($votes['upvotes'] - $votes['downvotes']);
-            $data['id']                  = $comment->getId();
-            $data['parent']              = $comment->getParent() ? $comment->getParent()->getId() : null;
-            $data['createdAt']           = $comment->getCreatedAt()->format('Y-m-d H:i:s');
-            $data['authorId']            = $author->getId();
-            $data['authorUsername']      = $author->getUsername();
-            $data['authorAccountLink']   = sprintf('http://www.alienwarearena.com/member/%s', $author->getUuid());
-            $data['authorAvatar']        = ($data['parent'] ? $this->exposer->getPath($author, array('size' => 32)) : $this->exposer->getPath($author)) ?: null;
-            $data['body']                = nl2br($comment->getBody());
-            $data['publishedReplyCount'] = $comment->getPublishedReplyCount();
+            $data['id']                  = $comment['id'];
+            $data['deleted']             = $comment['deleted'];
+            $data['createdAt']           = $comment['createdAt'];
+            $data['body']                = nl2br($comment['body']);
+            $data['parentId']            = $comment['parentId'];
+            $data['authorId']            = $comment['authorId'];
+            $data['authorUuid']          = $comment['authorUuid'];
+            $data['authorUsername']      = $comment['authorUsername'];
+            $data['upVoteCount']         = (int) $comment['upVoteCount'];
+            $data['downVoteCount']       = (int) $comment['downVoteCount'];
+            $data['publishedReplyCount'] = (int) $comment['publishedReplyCount'];
+            $data['points']              = (int) number_format($data['upVoteCount'] - $data['downVoteCount']);
+            $data['authorAccountLink']   = sprintf('http://www.alienwarearena.com/member/%s', $data['authorUuid']);
             $data['hasMoreReplies']      = $data['publishedReplyCount'] > 3;
             $data['isHidden']            = false;
             $data['isFirstReply']        = false;
             $data['replies']             = array();
 
-            if ($data['parent']) {
-                if (isset($comments[$data['parent']])) {
-                     if (count($comments[$data['parent']]['replies']) > 2) {
+            $hasAvatar            = $comment['avatarId'];
+            $data['authorAvatar'] = $hasAvatar ? ($data['parentId'] ? $this->avatarPathResolver->getPathFromParams($data['authorUuid'], 32) : $this->avatarPathResolver->getPathFromParams($data['authorUuid'])) : null;
+
+            if ($data['parentId']) {
+                if (isset($comments[$data['parentId']])) {
+                     if (count($comments[$data['parentId']]['replies']) > 2) {
                         $data['isHidden'] = true;
                     }
 
-                    if (count($comments[$data['parent']]['replies']) == 0) {
+                    if (count($comments[$data['parentId']]['replies']) == 0) {
                         $data['isFirstReply'] = true;
                     }
                 }
 
-                $comments[$data['parent']]['replies'][] = $data;
+                $comments[$data['parentId']]['replies'][] = $data;
             } else {
                 if (isset($comments[$data['id']])) {
                     $data['replies'] = $comments[$data['id']]['replies'];

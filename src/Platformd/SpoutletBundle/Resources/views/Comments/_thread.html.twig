@@ -335,8 +335,8 @@
                 contentType: 'json',
                 success: function(data) {
                     if(data.success) {
-                        $('#comment-upvotes-'+commentId).html(data.messageForUser.up);
-                        $('#comment-downvotes-'+commentId).html(data.messageForUser.down);
+                        $('#comment-upVoteCount-'+commentId).html(data.messageForUser.up);
+                        $('#comment-downVoteCount-'+commentId).html(data.messageForUser.down);
                     } else {
                         if (data.messageForUser == "FORCE_LOGIN_TO_VOTE") {
                             document.location.href='{{ login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }}';
