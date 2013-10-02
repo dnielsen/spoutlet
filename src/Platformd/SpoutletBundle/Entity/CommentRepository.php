@@ -140,7 +140,7 @@ class CommentRepository extends EntityRepository
             ->addSelect('(SELECT COUNT(v1.id) FROM SpoutletBundle:CommentVote v1 LEFT JOIN v1.comment c1 WHERE v1.voteType=:up AND c1.id=c.id) AS upVoteCount')
             ->addSelect('(SELECT COUNT(v2.id) FROM SpoutletBundle:CommentVote v2 LEFT JOIN v2.comment c2 WHERE v2.voteType=:down AND c2.id=c.id) AS downVoteCount')
             ->addSelect('(SELECT COUNT(r1.id) FROM SpoutletBundle:Comment r1 WHERE r1.parent=c.id AND r1.deleted=false) AS publishedReplyCount')
-            ->addSelect('(SELECT a.id FROM UserBundle:Avatar a LEFT JOIN a.user u1 WHERE u1.id = u.id AND a.approved=true AND a.cropped=true AND a.resized=true AND a.processed=true AND a.reviewed=true AND a.deleted=false) as avatarId')
+            ->addSelect('(SELECT a.id FROM UserBundle:Avatar a LEFT JOIN a.user u1 WHERE u1.id = u.id AND u1.avatar = a AND a.approved=true AND a.cropped=true AND a.resized=true AND a.processed=true AND a.reviewed=true AND a.deleted=false) as avatarId')
             ->leftJoin('c.thread', 't')
             ->leftJoin('c.parent', 'p')
             ->leftJoin('c.votes', 'v')
