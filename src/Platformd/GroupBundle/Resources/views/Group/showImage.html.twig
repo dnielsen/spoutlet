@@ -30,10 +30,11 @@
     </div>
     <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
         <div class="left">
-
             <img id="main-photo" src="{{ media.image | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" style="display:none;" />
-            {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : media.threadId, 'comments' : null, 'offset' : 0, 'permalink' : permalink } %}
 
+            {% if features.hasComments %}
+                {% include 'SpoutletBundle:Comments:_commentsLoader.html.twig' with({ 'threadId': media.threadId }) %}
+            {% endif %}
         </div>
 
         <div class="right">

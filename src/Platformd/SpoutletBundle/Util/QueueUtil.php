@@ -116,4 +116,24 @@ class QueueUtil implements QueueUtilInterface
 
         return $message;
     }
+
+    public function getMessageCount(SqsMessageBase $message) {
+
+        $fullQueueUrl = $this->getFullQueueUrl($message);
+
+        $this->logger->debug(self::LOG_MESSAGE_PREFIX.'getMessageCount - retrieving count from queue "'.$fullQueueUrl.'".');
+
+        $result = $this->sqsClient->get_queue_size($fullQueueUrl);
+
+        if (!is_integer($result)) {
+            if (!$result->isOK()) {
+                $this->logger->err(self::LOG_MESSAGE_PREFIX.'getMessageCount - could not retrieve count from queue "'.$fullQueueUrl.'" because of error => "'.$result->body->Error->Message.'".');
+                return null;
+            }
+        }
+
+        $this->logger->debug(self::LOG_MESSAGE_PREFIX.'getMessageCount - count "'.$result.'" successfully retrieved from queue "'.$fullQueueUrl.'".');
+
+        return $result;
+    }
 }

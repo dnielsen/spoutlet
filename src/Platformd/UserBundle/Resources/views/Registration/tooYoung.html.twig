@@ -4,4 +4,7 @@
 
 {% block content %}
 <p>{{ 'platformd.user.register.underage_message' | trans }}</p>
+    {% if return_url is defined %}
+        <p><a href="{{ return_url }}">Return to previous page</a></p>
+    {% endif %}
 {% endblock %}

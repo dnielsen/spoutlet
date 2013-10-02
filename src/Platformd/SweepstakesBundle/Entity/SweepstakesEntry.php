@@ -81,6 +81,16 @@ class SweepstakesEntry
      */
     protected $answers;
 
+    /**
+     * @ORM\Column(name="optional_checkbox_answer", type="boolean", nullable="true")
+     */
+    protected $optionalCheckboxAnswer;
+
+    /**
+     * @ORM\Column(name="created_account", type="boolean")
+     */
+    protected $createdAccount = false;
+
     public function __construct(Sweepstakes $sweepstakes)
     {
         $this->sweepstakes = $sweepstakes;
@@ -170,6 +180,26 @@ class SweepstakesEntry
     public function setAnswers($value)
     {
         $this->answers = $value;
+    }
+
+    public function getOptionalCheckboxAnswer()
+    {
+        return $this->optionalCheckboxAnswer;
+    }
+
+    public function setOptionalCheckboxAnswer($value)
+    {
+        $this->optionalCheckboxAnswer = $value;
+    }
+
+    public function getCreatedAccount()
+    {
+        return $this->createdAccount;
+    }
+
+    public function setCreatedAccount($value)
+    {
+        $this->createdAccount = $value;
     }
 
     public function addAnswer($answer)

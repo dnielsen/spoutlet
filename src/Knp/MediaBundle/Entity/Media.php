@@ -80,6 +80,12 @@ abstract class Media
     protected $mimeType;
 
     protected $isZip = false;
+    protected $ignoreMime;
+
+    public function __construct($ignoreMime = false)
+    {
+        $this->ignoreMime = $ignoreMime;
+    }
 
     /**
      * Get id
@@ -249,9 +255,19 @@ abstract class Media
         $this->isZip = $value;
     }
 
+    public function getIgnoreMime()
+    {
+        return $this->ignoreMime;
+    }
+
+    public function setIgnoreMime($value)
+    {
+        $this->ignoreMime = $value;
+    }
+
     public function validateMimeTypes(ExecutionContext $executionContext)
     {
-        if (null === $this->getFileObject()) {
+        if (null === $this->getFileObject() || $this->ignoreMime) {
             return;
         }
 

@@ -327,9 +327,13 @@
 
 #more-comments-loader {
     display:none;
+}
+
+#more-comments-loader,
+#comments-loading {
     clear:both;
-     text-align:center;
-     padding-top:15px;
+    text-align:center;
+    padding-top:15px;
 }
 
 .comment-edit-btn {

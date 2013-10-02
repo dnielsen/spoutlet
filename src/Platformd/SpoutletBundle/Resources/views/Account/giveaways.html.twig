@@ -30,36 +30,63 @@
                                 <th>{{ 'platformd.giveaway.assigned.assigned_at' | trans }}</th>
                                 <th>{{ 'platformd.giveaway.assigned.view_giveaway' | trans }}</th>
                             </tr>
-                            {% for keyRequest in keyRequests %}
-                            <tr>
-                                <td>{{ keyRequest.giveaway.name | nl2br }}</td>
-                                <td class="{{ keyRequest.value ? 'nowrap' : '' }}">
-                                    {% if keyRequest.value %}
-                                        {{ keyRequest.value | nl2br }}
-                                    {% else %}
-                                        <em>
-                                             {{ keyRequest.status | trans }} {% if keyRequest.machineCode %}({{ keyRequest.machineCode }}){% endif %}
-                                        </em>
-                                    {% endif %}
-                                </td>
-                                <td class="nowrap">
-                                    {% if keyRequest.assignedAt %}
-                                        {{ 'sweepstakes_date_format' | trans(keyRequest.assignedAtTranslationArray) }}
-                                    {% endif %}
-                                </td>
-                                <td class="nowrap">
+                            {% for key in keys %}
 
-                                    {% if keyRequest.site != null %}
-                                        {% set giveawayLocale = keyRequest.site %}
-                                    {% elseif keyRequest.giveaway.locale != null %}
-                                        {% set giveawayLocale = keyRequest.giveaway.locale %}
-                                    {% else %}
-                                        {% set giveawayLocale = site.defaultLocale %}
-                                    {% endif %}
+                                {% if key['type'] == 'assignedCode' %}
 
-                                    <a href="{{ path('giveaway_show', {'slug': keyRequest.giveaway.slug, '_locale': giveawayLocale } ) }}">{{ 'platformd.giveaway.view_giveaway_site' | trans }}</a>
-                                </td>
-                            </tr>
+                                    {% set keyInfo = key['key'] %}
+                                    <tr>
+                                        <td>{{ key['name'] }}</td>
+                                        <td class="{{ keyInfo.code ? 'nowrap' : '' }}">
+                                            {% if keyInfo.code %}
+                                                {{ keyInfo.code | nl2br }}
+                                            {% else %}
+                                                &nbsp;
+                                            {% endif %}
+                                        </td>
+                                        <td class="nowrap">
+                                            {% if keyInfo.emailSentAt %}
+                                                {{ keyInfo.emailSentAt | date_translate }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="nowrap">
+                                            <a href="{{ keyInfo.assignment.url }}">{{ 'platformd.giveaway.view_giveaway_site' | trans }}</a>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    {% set keyRequest = key['key'] %}
+
+                                    <tr>
+                                        <td>{{ keyRequest.giveaway.name | nl2br }}</td>
+                                        <td class="{{ keyRequest.value ? 'nowrap' : '' }}">
+                                            {% if keyRequest.value %}
+                                                {{ keyRequest.value | nl2br }}
+                                            {% else %}
+                                                <em>
+                                                     {{ keyRequest.status | trans }} {% if keyRequest.machineCode %}({{ keyRequest.machineCode }}){% endif %}
+                                                </em>
+                                            {% endif %}
+                                        </td>
+                                        <td class="nowrap">
+                                            {% if keyRequest.assignedAt %}
+                                                {{ keyRequest.assignedAt | date_translate }}
+                                            {% endif %}
+                                        </td>
+                                        <td class="nowrap">
+
+                                            {% if keyRequest.site != null %}
+                                                {% set giveawayLocale = keyRequest.site %}
+                                            {% elseif keyRequest.giveaway.locale != null %}
+                                                {% set giveawayLocale = keyRequest.giveaway.locale %}
+                                            {% else %}
+                                                {% set giveawayLocale = site.defaultLocale %}
+                                            {% endif %}
+
+                                            <a href="{{ path('giveaway_show', {'slug': keyRequest.giveaway.slug, '_locale': giveawayLocale } ) }}">{{ 'platformd.giveaway.view_giveaway_site' | trans }}</a>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+
                             {% endfor %}
 
                         </tbody>

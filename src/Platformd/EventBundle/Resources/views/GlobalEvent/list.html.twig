@@ -74,7 +74,13 @@
     <script type="text/javascript">
         $(function () {
             $('#show-past-events').click(function () {
-                $('#past-events').slideToggle();
+                $('#past-events').slideToggle(400, function() {
+                    if ($('#past-events').is(':visible')) {
+                        $('html, body').animate({
+                            scrollTop: $("#past-events").offset().top
+                        }, 100);
+                    }
+                });
             });
             $('table.tablesorter').tablesorter();
         });

@@ -59,6 +59,7 @@ class CsvResponseFactory
         $bytes = 0;
         foreach ($this->rows as $row) {
             $bytes += fputcsv($h, $row, $this->delimiter, $this->enclosure);
+
         }
         // close the handle
         fclose($h);

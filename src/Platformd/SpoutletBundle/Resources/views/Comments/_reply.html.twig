@@ -1,0 +1,36 @@
+<div class="comment-reply{% if replyCounter > 3 %} hidden{% endif %}{% if replyCounter == 1 %} first{% endif %}" id="post-id-{{ reply.id }}">
+    <a href="{{ account_link(reply.author.username) }}">
+        {% if get_avatar_url(reply.author, 32) != false %}
+            <img src="{{ asset(get_avatar_url(reply.author, 32)) }}" alt="{{ reply.author.username }}" />
+        {% else %}
+            <div class="default-avatar avatar32"></div>
+        {% endif %}
+    </a>
+    <div class="reply-body">
+        <a href="{{ account_link(reply.author.username) }}">{{ reply.author.username }}</a>
+        <div class="editable" id="comment-body-{{ reply.id }}" style="display: inline;">{{ reply.body | nl2br }}</div>
+    </div>
+    <div class="comment-footer">
+        <div class="replied-at" title="{{ reply.createdAt | date }}Z"></div>
+        <div class="options more-replies" data-id="{{ reply.id }}">
+           <div class="choices" id="choices-{{ reply.id }}">
+                <ul>
+                    <span data-comment-admin="true" data-comment-owner="{{ reply.author.id }}" style="display:none;">
+                        <li class="edit-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);">{{ 'platformd.comment.edit' | pd_trans }}</a></li>
+                        <li><a href="javascript:void(0);" class="delete-link" data-id="{{ reply.id }}">{{ 'platformd.comment.delete' | pd_trans }}</a></li>
+                    </span>
+                    <li class="report-options-link" data-id="{{ reply.id }}"><a href="javascript:void(0);" class="report">{{ 'content_reporting.report' | pd_trans }}</a></li>
+                    <div class="report-options" id="report-options-{{ reply.id }}">
+                        <ul>
+                            <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ reply.id }}" data-reason="inappropriate_content">{{ 'content_reporting.inappropriate_content' | pd_trans }}</a></li>
+                            <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ reply.id }}" data-reason="spam">{{ 'content_reporting.spam' | pd_trans }}</a></li>
+                            <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ reply.id }}" data-reason="violates_intellectual_property">{{ 'content_reporting.violates_intellectual_property' | pd_trans }}</a></li>
+                            <li><a href="javascript:void(0);" class="comment-report-link" data-id="{{ reply.id }}" data-reason="individual_harrassing_me">{{ 'content_reporting.individual_harrassing_me' | pd_trans }}</a></li>
+                        </ul>
+                    </div>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>

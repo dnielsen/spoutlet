@@ -26,102 +26,6 @@ class CommentRepository extends EntityRepository
         ;
     }
 
-    public function findCommentsForThreadSortedByDate($thread, $limit=25, $order='DESC')
-    {
-        $result = $this->createQueryBuilder('c')
-            ->select('c, (SELECT COUNT(v1.id) FROM SpoutletBundle:CommentVote v1 WHERE v1.voteType=:up AND v1.comment=c) AS upvotes, (SELECT COUNT(v2.id) FROM SpoutletBundle:CommentVote v2 WHERE v2.voteType=:down AND v2.comment=c) AS downvotes')
-            ->leftJoin('c.thread', 't')
-            ->leftJoin('c.votes', 'v')
-            ->andWhere('t.id = :thread')
-            ->andWhere('c.parent IS NULL')
-            ->andWhere('c.deleted <> true')
-            ->setParameter('thread', $thread)
-            ->setParameter('up', 'up')
-            ->setParameter('down', 'down')
-            ->addOrderBy('c.createdAt', $order)
-            ->distinct('c.id')
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->execute();
-
-        return $result;
-    }
-
-    public function findCommentsForThreadSortedByVotes($thread, $limit=25)
-    {
-        $result = $this->createQueryBuilder('c')
-            ->select('c, (SELECT COUNT(v1.id) FROM SpoutletBundle:CommentVote v1 WHERE v1.voteType=:up AND v1.comment=c) AS upvotes, (SELECT COUNT(v2.id) FROM SpoutletBundle:CommentVote v2 WHERE v2.voteType=:down AND v2.comment=c) AS downvotes')
-            ->leftJoin('c.thread', 't')
-            ->leftJoin('c.votes', 'v')
-            ->andWhere('t.id = :thread')
-            ->andWhere('c.parent IS NULL')
-            ->andWhere('c.deleted <> true')
-            ->setParameter('thread', $thread)
-            ->setParameter('up', 'up')
-            ->setParameter('down', 'down')
-            ->addOrderBy('upvotes', 'DESC')
-            ->addOrderBy('downvotes', 'ASC')
-            ->addOrderBy('c.createdAt', 'DESC')
-            ->distinct('c.id')
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->execute();
-
-        return $result;
-    }
-
-    public function findCommentsForThreadSortedByWithOffset($thread, $sort, $offset, $limit=25)
-    {
-        $qb = $this->createQueryBuilder('c')
-            ->select('c, (SELECT COUNT(v1.id) FROM SpoutletBundle:CommentVote v1 WHERE v1.voteType=:up AND v1.comment=c) AS upvotes, (SELECT COUNT(v2.id) FROM SpoutletBundle:CommentVote v2 WHERE v2.voteType=:down AND v2.comment=c) AS downvotes')
-            ->leftJoin('c.thread', 't')
-            ->leftJoin('c.votes', 'v')
-            ->andWhere('t.id = :thread')
-            ->andWhere('c.parent IS NULL')
-            ->andWhere('c.deleted <> true')
-            ->setParameter('thread', $thread)
-            ->setParameter('up', 'up')
-            ->setParameter('down', 'down')
-            ->distinct('c.id')
-            ->setFirstResult($offset)
-            ->setMaxResults($limit);
-
-        switch ($sort) {
-            case 'votes':
-                $qb->addOrderBy('upvotes', 'DESC')
-                    ->addOrderBy('downvotes', 'ASC')
-                    ->addOrderBy('c.createdAt', 'DESC');
-                break;
-
-            case 'recent':
-                $qb->addOrderBy('c.createdAt', 'DESC');
-                break;
-
-            case 'oldest':
-                $qb->addOrderBy('c.createdAt', 'ASC');
-                break;
-
-            default:
-                die('invalid sort method supplied - '.$sort);
-                break;
-        }
-
-        $result = $qb->getQuery()
-            ->execute();
-
-        return $result;
-    }
-
-    public function findCommentsForGiveaways($limit=8)
-    {
-        return $this->findCommentsForSiteFeature($limit, 'giveaways');
-    }
-
-    public function findCommentsForDeals($limit=8)
-    {
-        return $this->findCommentsForSiteFeature($limit, 'deal');
-    }
-
     private function findCommentsForSiteFeature($limit, $featureName)
     {
         $result = $this->createQueryBuilder('c')
@@ -204,5 +108,51 @@ class CommentRepository extends EntityRepository
 
         return $data;
     }
-}
 
+    public function getCommentCountByThread($thread, $fromDate=null, $thruDate=null)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('COUNT(c.id)');
+        $qb->where('c.thread = :thread');
+        $qb->setParameter('thread', $thread);
+
+        if($fromDate != null and $thruDate != null)
+        {
+            $qb->andWhere('c.createdAt >= :fromDate')
+               ->andWhere('c.createdAt <= :thruDate')
+               ->setParameter('fromDate', $fromDate)
+               ->setParameter('thruDate', $thruDate);
+        }
+        try {
+        $total = $qb->getQuery()->getSingleScalarResult();
+        }
+        catch (NoResultException $e) {
+            return 0;
+        }
+
+        return $total;
+    }
+
+    public function getCommentsForThreadSortedByQuery($thread)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->select('c.id, c.deleted, c.createdAt, c.body, p.id parentId, u.id authorId, u.uuid authorUuid, u.username authorUsername')
+            ->addSelect('(SELECT COUNT(v1.id) FROM SpoutletBundle:CommentVote v1 LEFT JOIN v1.comment c1 WHERE v1.voteType=:up AND c1.id=c.id) AS upVoteCount')
+            ->addSelect('(SELECT COUNT(v2.id) FROM SpoutletBundle:CommentVote v2 LEFT JOIN v2.comment c2 WHERE v2.voteType=:down AND c2.id=c.id) AS downVoteCount')
+            ->addSelect('(SELECT COUNT(r1.id) FROM SpoutletBundle:Comment r1 WHERE r1.parent=c.id AND r1.deleted=false) AS publishedReplyCount')
+            ->addSelect('(SELECT a.id FROM UserBundle:Avatar a LEFT JOIN a.user u1 WHERE u1.id = u.id AND u1.avatar = a AND a.approved=true AND a.cropped=true AND a.resized=true AND a.processed=true AND a.reviewed=true AND a.deleted=false) as avatarId')
+            ->leftJoin('c.thread', 't')
+            ->leftJoin('c.parent', 'p')
+            ->leftJoin('c.votes', 'v')
+            ->leftJoin('c.author', 'u')
+            ->andWhere('t.id = :thread')
+            ->andWhere('c.deleted <> true')
+            ->andWhere('p.deleted <> true OR p IS NULL')
+            ->setParameter('thread', $thread->getId())
+            ->setParameter('up', 'up')
+            ->setParameter('down', 'down')
+            ->distinct('c.id');
+
+        return $qb->getQuery()->getArrayResult();
+    }
+}

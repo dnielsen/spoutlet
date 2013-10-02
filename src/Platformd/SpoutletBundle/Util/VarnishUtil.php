@@ -52,7 +52,7 @@ class VarnishUtil
 
                 $result = curl_exec($curl);
 
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 if (!$bestEffort) {
                     throw new Exception('Could not ban');
                 } else {

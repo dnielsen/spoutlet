@@ -8,7 +8,6 @@ imports:
     - { resource: "@GroupBundle/Resources/config/services.yml" }
     - { resource: "@KnpMediaBundle/Resources/config/services.yml" }
     - { resource: "@MediaBundle/Resources/config/services.yml" }
-    - { resource: "@CommentBundle/Resources/config/services.yml" }
     - { resource: "@EventBundle/Resources/config/services.yml" }
     - { resource: "@GameBundle/Resources/config/services.yml" }
     - { resource: "@HtmlWidgetBundle/Resources/config/services.yml" }
@@ -225,7 +224,7 @@ parameters:
         es: Spanish
 
     # important to setup the translation DB loader to load things for these domains
-    available_translation_domains: [messages, forms, FOSCommentBundle, FOSUserBundle, messages, validators]
+    available_translation_domains: [messages, forms, FOSUserBundle, messages, validators]
 
     email_destination_override: false
     email_destination_override_with: ""
@@ -344,21 +343,6 @@ jms_i18n_routing:
     locales: %available_locales%
     strategy: custom
     hosts: %site_host_map%
-
-fos_comment:
-    db_driver: orm
-    class:
-        model:
-            comment: Platformd\CommentBundle\Entity\Comment
-            thread: Platformd\CommentBundle\Entity\Thread
-    service:
-        sorting:
-            default: date_desc
-        blamer:
-            comment: fos_comment.blamer.comment.security
-        manager:
-            # our own custom CommentManager
-            comment: platformd.comment.model.comment_manager
 
 ewz_recaptcha:
     public_key: %recaptcha.public_key%
@@ -510,6 +494,11 @@ liip_imagine:
             filters:
                 relative_resize: { heighten: 300 }
                 crop: { start: [0, 0], size: [250, 250] }
+
+        featured_article_thumb:
+            quality: 100
+            filters:
+                crop: { start: [0, 0], size: [274, 92] }
 
 knp_time: ~
 

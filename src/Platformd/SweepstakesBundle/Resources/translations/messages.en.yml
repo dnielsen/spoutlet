@@ -9,6 +9,8 @@ sweepstakes.entry.form.title: Entry Form
 sweepstakes.entry.form.phone_number: 'Phone Number (used to contact the winner)'
 sweepstakes.entry.form.read_and_agreed_to_rules: 'I have read and agree to the <a href="%rules_url%" target="_blank">Official Rules</a>.'
 
+sweepstakes.promocode.question: Promo Code
+
 sweepstakes.entry.links.already_entered: You have been entered into the contest. Thanks for your participation and good luck!
 sweepstakes.entry.links.use_existing: Use Existing Account
 sweepstakes.entry.links.create_new: Create a New Account
@@ -24,3 +26,4 @@ sweepstakes.admin.form.background_image.help: "Recommended size: 2000 x 970 pixe
 sweepstakes.admin.form.slug.help: (Optional) If filled in, this URL will override the destination of any links that would normally point to this Sweepstake page.
 sweepstakes.admin.form.tags.help: Enter keywords to help people discover the sweepstakes.
 
+platformd.sweepstakes.promo_code.flash.loser_no_code: Sorry, you do not have a winning code.  Go to alienware.com to learn more about our new laptops and customize one for you.

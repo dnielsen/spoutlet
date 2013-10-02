@@ -39,15 +39,6 @@ _user_bundle_generic_import:
     resource: "@UserBundle/Resources/config/routing.yml"
     prefix:   /
 
-# commenting bundle import
-fos_comment:
-    resource: "@FOSCommentBundle/Resources/config/routing.yml"
-    prefix:   "/comments"
-
-fos_comment_extra:
-    resource: "@CommentBundle/Resources/config/routing_extra.yml"
-    prefix:   "/comments"
-
 GameBundle:
     resource: "@GameBundle/Resources/config/routing.yml"
     prefix:   /

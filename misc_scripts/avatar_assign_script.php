@@ -210,11 +210,11 @@ class AvatarAssigning
                     $updatedCount++;
                 }
 
-            } catch (PDOException $e) {
+            } catch (\PDOException $e) {
                 $this->error('Connection failed at iteration ['.$iteration.']: ' . $e->getMessage());
                 $skippedCount++;
                 sleep(5);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $this->error($e->getMessage());
                 $skippedCount++;
             }

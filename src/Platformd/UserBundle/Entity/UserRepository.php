@@ -39,13 +39,19 @@ class UserRepository extends EntityRepository
       return  $qb ;
 	}
 
-    public function findUserListByEmail($users)
+    public function getFindUserListByEmailQuery($users)
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.emailCanonical IN (:users)')
             ->setParameter('users', $users)
             ->getQuery()
-            ->execute();
+        ;
+    }
+
+    public function findUserListByEmail($users)
+    {
+        return $getFindUserListByEmailQuery($users)
+            ->execute()
         ;
     }
 
@@ -251,21 +257,6 @@ class UserRepository extends EntityRepository
             ->getQuery()
             ->setMaxResults(1)
             ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
-        ;
-    }
-
-    public function countOtherExpiredUsersByIpAddress($ipAddress, $username)
-    {
-        return $this->createQueryBuilder('u')
-            ->select('COUNT(u.id)')
-            ->andWhere('u.ipAddress = :ipAddress')
-            ->andWhere('u.usernameCanonical != :username')
-            ->andWhere('u.expiresAt > :now')
-            ->setParameter('ipAddress', $ipAddress)
-            ->setParameter('username', $username)
-            ->setParameter('now', new \DateTime)
-            ->getQuery()
-            ->getSingleScalarResult()
         ;
     }
 

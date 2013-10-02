@@ -145,13 +145,38 @@ class AccountController extends Controller
     {
         $this->checkSecurity();
 
+        $combinedKeys = array();
+
         $keyRequests = $this->container
             ->get('pd_giveaway.giveaway_manager')
             ->getGiveawayKeyRequestsForUser($this->getUser())
         ;
 
+        $i = 0;
+
+        foreach ($keyRequests as $request) {
+            $combinedKeys[$i]['type'] = 'keyRequest';
+            $combinedKeys[$i]['name'] = $request->getGiveaway()->getName();
+            $combinedKeys[$i]['key']  = $request;
+            $i++;
+        }
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $assignedCodes = $em->getRepository('GiveawayBundle:CodeAssignmentCode')->getCodesAssignedForUser($this->getUser());
+
+        foreach ($assignedCodes as $assignedCode) {
+            $combinedKeys[$i]['type'] = 'assignedCode';
+            $combinedKeys[$i]['name'] = $assignedCode->getAssignment()->getName();
+            $combinedKeys[$i]['key']  = $assignedCode;
+            $i++;
+        }
+
+        usort($combinedKeys, function($a, $b) {
+            return $a['name'] < $b['name'] ? -1 : 1;
+        });
+
         return $this->render('SpoutletBundle:Account:giveaways.html.twig', array(
-            'keyRequests' => $keyRequests,
+            'keys' => $combinedKeys,
         ));
     }
 

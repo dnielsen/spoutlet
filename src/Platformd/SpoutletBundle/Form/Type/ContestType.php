@@ -110,6 +110,9 @@ class ContestType extends AbstractType
                 ),
                 'label' => 'Allow admin testing?',
                 'help'  => 'This allows admins to still test the operation of the contest IF it is unpublished',
+            ))
+            ->add('hidden', 'checkbox', array(
+                'label' => 'Do not display listing',
             ));
 
             $builder->add('tags', 'text', array(

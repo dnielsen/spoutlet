@@ -3,12 +3,19 @@
 namespace Platformd\SpoutletBundle\Model;
 
 use Doctrine\ORM\EntityManager;
+
 use Platformd\SpoutletBundle\Entity\SentEmail;
+use Platformd\SpoutletBundle\Entity\MassEmail;
+use Platformd\SpoutletBundle\QueueMessage\MassEmailQueueMessage;
+use Platformd\SpoutletBundle\QueueMessage\ChunkedMassEmailQueueMessage;
+
 use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+
 use AmazonSES;
+use DateTime;
 
 class EmailManager
 {
@@ -23,20 +30,20 @@ class EmailManager
         $this->ses              = $ses;
     }
 
-    public function sendHtmlEmail($to, $subject, $body, $emailType = null, $site = null, $fromName = null, $fromEmail = null)
+    public function sendHtmlEmail($to, $subject, $body, $emailType = null, $site = null, $fromName = null, $fromEmail = null, $andFlush = true)
     {
         $params = $this->setupEmail($to, $subject, $body, $emailType, $site, $fromName, $fromEmail);
         $finalEmail     = array('Subject'  => array('Data' => $params['subject'], 'Charset' => 'UTF-8'), 'Body' => array('Html' => array('Data' => $params['body'], 'Charset' => 'UTF-8')));
 
-        $this->processEmail($params, $finalEmail);
+        $this->processEmail($params, $finalEmail, $andFlush);
     }
 
-    public function sendEmail($to, $subject, $body, $emailType = null, $site = null, $fromName = null, $fromEmail = null)
+    public function sendEmail($to, $subject, $body, $emailType = null, $site = null, $fromName = null, $fromEmail = null, $andFlush = true)
     {
         $params = $this->setupEmail($to, $subject, $body, $emailType, $site, $fromName, $fromEmail);
         $finalEmail     = array('Subject'  => array('Data' => $params['subject'], 'Charset' => 'UTF-8'), 'Body' => array('Text' => array('Data' => $params['body'], 'Charset' => 'UTF-8')));
 
-        $this->processEmail($params, $finalEmail);
+        $this->processEmail($params, $finalEmail, $andFlush);
     }
 
     private function setupEmail($to, $subject, $body, $emailType = null, $site = null, $fromName = null, $fromEmail = null) {
@@ -89,28 +96,139 @@ class EmailManager
 
     }
 
-    private function processEmail($params, $finalEmail)
+    private function processEmail($params, $finalEmail, $andFlush)
     {
-        $response       = $this->ses->send_email($params['from'], $params['finalTo'], $finalEmail);
+        $sentEmail = new SentEmail();
 
-        $messageId      = $response->body->SendEmailResult->MessageId;
-        $status         = $response->isOk();
+        try {
+            $response  = $this->ses->send_email($params['from'], $params['finalTo'], $finalEmail);
+            $messageId = $response->body->SendEmailResult->MessageId;
+            $status    = $response->isOk();
 
-        $sentEmail      = new SentEmail();
+            if (!$status) {
+                $sentEmail->setErrorMessage($response->body->Error->Message);
+            }
+
+            $sentEmail->setSendStatusCode((int)$response->status);
+            $sentEmail->setSendStatusOk($status);
+
+        } catch (\Exception $e) {
+            $sentEmail->setSendStatusCode(-500); // Likely a curl exception
+            $sentEmail->setSendStatusOk(false);
+        }
 
         $sentEmail->setRecipient($params['to']);
         $sentEmail->setFromFull($params['from']);
         $sentEmail->setSubject($params['subject']);
         $sentEmail->setBody($params['body']);
         $sentEmail->setSesMessageId($messageId);
-        $sentEmail->setSendStatusCode((int)$response->status);
-        $sentEmail->setSendStatusOk($status);
         $sentEmail->setSiteEmailSentFrom($params['site']);
         $sentEmail->setEmailType($params['emailType']);
 
         $this->em->persist($sentEmail);
-        $this->em->flush();
+
+        if ($andFlush) {
+            $this->em->flush();
+        }
 
         return $sentEmail;
+    }
+
+    public function queueMassEmail(MassEmail $email)
+    {
+        // We persist the email to the DB first so we can use its ID in the QueueMessage
+        $this->em->persist($email);
+        $this->em->flush();
+
+        $message            = new MassEmailQueueMessage();
+        $message->senderId  = $email->getSender()->getId();
+        $message->emailType = $email->getEmailType();
+        $message->emailId   = $email->getId();
+
+        $result = $this->container->get('platformd.util.queue_util')->addToQueue($message);
+
+        return $result;
+    }
+
+    public function queueEmails(MassEmail $email)
+    {
+        $emailId = $email->getId();
+
+        if ($email->getSentToAll()) {
+            $recipientIds = $this->em->createQueryBuilder('e')
+                ->select('u.id')
+                ->from($email->getLinkedEntityClass(), 'e')
+                ->leftJoin('e.'.$email->getLinkedEntityAllRecipientsField(), 'u')
+                ->andWhere('e = :linkedEntity')
+                ->setParameter('linkedEntity', $email->getLinkedEntity())
+                ->getQuery()
+                ->getResult();
+        } else {
+            $recipientIds = $this->em->createQueryBuilder('e')
+                ->select('u.id')
+                ->from(get_class($email), 'e')
+                ->leftJoin('e.recipients', 'u')
+                ->andWhere('e = :email')
+                ->setParameter('email', $email)
+                ->getQuery()
+                ->getResult();
+        }
+
+        $message            = new ChunkedMassEmailQueueMessage();
+        $message->emailId   = $emailId;
+        $message->senderId  = $email->getSender()->getId();
+        $message->emailType = $email->getEmailType();
+        $recipientCount     = 0;
+
+        foreach ($recipientIds as $user) {
+            $message->recipientIds[] = $user['id'];
+            $recipientCount++;
+
+            if ($recipientCount >= ChunkedMassEmailQueueMessage::RECIPIENT_CHUNK_SIZE) {
+                $result = $this->container->get('platformd.util.queue_util')->addToQueue($message);
+
+                $message            = new ChunkedMassEmailQueueMessage();
+                $message->emailId   = $emailId;
+                $message->senderId  = $email->getSender()->getId();
+                $message->emailType = $email->getEmailType();
+
+                $recipientCount     = 0;
+            }
+        }
+
+        if ($recipientCount > 0) {
+            $result = $this->container->get('platformd.util.queue_util')->addToQueue($message);
+        }
+    }
+
+    public function sendMassEmail(MassEmail $email, ChunkedMassEmailQueueMessage $queueMessage)
+    {
+        $subject    = $email->getSubject();
+        $message    = $email->getMessage();
+
+        $fromName   = $email->getSender() ? ($email->getSender()->getAdminLevel() ? null : $email->getSender()->getUsername()) : null;
+        $site       = $email->getSite() ? $email->getSite()->getDefaultLocale() : null;
+        $emailType  = $email->getEmailType();
+        $sendCount  = 0;
+
+        $recipientEmails = $this->em->createQueryBuilder('e')
+            ->select('u.email')
+            ->from('UserBundle:User', 'u')
+            ->andWhere('u.id IN (:ids)')
+            ->setParameter('ids', $queueMessage->recipientIds)
+            ->getQuery()
+            ->getResult();
+
+        foreach ($recipientEmails as $recipient) {
+            $this->sendHtmlEmail($recipient['email'], $subject, $message, $emailType, $site, $fromName, null, false);
+            $sendCount++;
+        }
+
+        $email->setSentAt(new DateTime());
+
+        $this->em->persist($email);
+        $this->em->flush();
+
+        return $sendCount;
     }
 }

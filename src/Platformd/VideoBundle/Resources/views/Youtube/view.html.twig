@@ -26,7 +26,7 @@
 
         {% include 'VideoBundle:Youtube:_player.html.twig' with { 'youtubeId' : video.youtubeId } %}
         {% if features.hasComments %}
-            {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : video.getThreadId, 'object' : video } %}
+            {% include 'SpoutletBundle:Comments:_commentsLoader.html.twig' with({ 'threadId': video.threadId }) %}
         {% endif %}
     </div>
     <div class="right">

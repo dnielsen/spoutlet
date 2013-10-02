@@ -267,7 +267,7 @@ class DealPoolAdminController extends Controller
         try {
             $varnishUtil->banCachedObject($indexPath);
             $varnishUtil->banCachedObject($dealPath);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception('Could not ban.');
         }
     }

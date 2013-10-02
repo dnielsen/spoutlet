@@ -14,13 +14,12 @@ class DefaultController extends Controller
 
     public function indexAction(Request $request)
     {
-        $news = $this->getNewsRepo()->findAllForSite($this->getCurrentSite());
+        $news           = $this->getNewsRepo()->findAllForSite($this->getCurrentSite());
+        $commentCounts  = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Thread')->findCommentCountsForAllThreadsLike('news-%');
 
-        // allows us to preview how this feature would really work
-        $template = 'index.html.twig';
-
-        return $this->render('NewsBundle:Default:'.$template, array(
-            'news' => $news,
+        return $this->render('NewsBundle:Default:index.html.twig', array(
+            'news'          => $news,
+            'commentCounts' => $commentCounts,
             'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_NEWS),
         ));
     }

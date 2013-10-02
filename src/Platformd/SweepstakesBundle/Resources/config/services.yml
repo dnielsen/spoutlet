@@ -37,4 +37,13 @@ services:
             - @platformd.util.site_util
             - @platformd.model.group_manager
             - @pd.cevo.api.api_manager
+            - @platformd.model.translator
+            - @media_exposer
         scope: request
+
+    platformd_sweeps.model.sweepstakes_manager:
+        class: Platformd\SweepstakesBundle\Model\SweepstakesManager
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@platformd.tags.model.tag_manager"
+            - "@platformd.util.flash_util"

@@ -1,16 +1,16 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
 
-{% block title 'Sweepstakes Regions' %}
+{% block title (type == 'promocode' ? 'Promo Code Contest' : 'Sweepstakes') ~ ' Regions' %}
 
 {% block content %}
-<h1>Sweepstakes Regions</h1>
+<h1>{{ (type == 'promocode' ? 'Promo Code Contest' : 'Sweepstakes') }} Regions</h1>
 
 {% include 'SpoutletBundle:Site:_siteAdminSelector.html.twig' with {
     'sites': sites,
-    'route': 'admin_sweepstakes_list'
+    'route': route
 }%}
 
-<a class="btn btn-primary" href="{{ path('admin_sweepstakes_new') }}">
-    Create a new sweepstakes
+<a class="btn btn-primary" href="{{ path(type == 'promocode' ? 'admin_promo_code_contest_new' : 'admin_sweepstakes_new') }}">
+    Create a new {{ (type == 'promocode' ? 'Promo Code Contest' : 'Sweepstakes') }}
 </a>
 {% endblock %}

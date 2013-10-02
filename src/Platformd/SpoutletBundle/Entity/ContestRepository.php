@@ -28,6 +28,7 @@ class ContestRepository extends EntityRepository
             ->where('c.votingEnd > :today')
             ->andWhere('s.defaultLocale = :site')
             ->andWhere($qb->expr()->in('c.status', $status))
+            ->andWhere('c.hidden = 0')
             ->setParameter('site', $site)
             ->setParameter('today', new \DateTime('now'))
             ->orderBy('c.votingEnd', 'DESC')
@@ -88,6 +89,18 @@ class ContestRepository extends EntityRepository
             ->andWhere('c.category = :category')
             ->orderBy('c.votingEnd', 'DESC')
             ->setParameter('category', $category);
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function findAllBySite($site, $status=array('published'))
+    {
+        $qb = $this->createSiteQueryBuilder($site);
+
+        $qb->andWhere($qb->expr()->in('c.status', $status))
+            ->andWhere('c.hidden = 0')
+            ->orderBy('c.votingEnd', 'DESC')
+        ;
 
         return $qb->getQuery()->execute();
     }

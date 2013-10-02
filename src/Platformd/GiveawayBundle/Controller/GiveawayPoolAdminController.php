@@ -296,7 +296,7 @@ class GiveawayPoolAdminController extends Controller
         try {
             $varnishUtil->banCachedObject($indexPath);
             $varnishUtil->banCachedObject($giveawayPath);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception('Could not ban.');
         }
     }

@@ -119,7 +119,7 @@ EOT
 
                         try {
                             $poolLoader->loadKeysFromArray($keysArr, $pool, KeyPoolQueueMessage::$classTypeMap[$message->poolClass]);
-                        } catch(Exception $e) {
+                        } catch(\Exception $e) {
                             $output->writeLn($cross);
                             $output->write("\nException thrown during database loading:\n");
                             $output->write("\n\t<error>".$e->getMessage()."</error>\n");

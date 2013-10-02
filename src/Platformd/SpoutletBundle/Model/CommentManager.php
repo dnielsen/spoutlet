@@ -3,17 +3,20 @@
 namespace Platformd\SpoutletBundle\Model;
 
 use Platformd\SpoutletBundle\Entity\Thread;
+use Platformd\SpoutletBundle\Entity\Comment;
 
 class CommentManager
 {
     private $threadRepo;
     private $linkableManager;
     private $em;
+    private $avatarPathResolver;
 
-    function __construct($threadRepo, $linkableManager, $em) {
-        $this->threadRepo       = $threadRepo;
-        $this->linkableManager  = $linkableManager;
-        $this->em               = $em;
+    function __construct($threadRepo, $linkableManager, $em, $avatarPathResolver) {
+        $this->threadRepo         = $threadRepo;
+        $this->linkableManager    = $linkableManager;
+        $this->em                 = $em;
+        $this->avatarPathResolver = $avatarPathResolver;
     }
 
     public function checkThread($object)
@@ -153,5 +156,66 @@ class CommentManager
             ->findOneBy(array('slug' => $id));
 
         return $event;
+    }
+
+    public function getCommentData($thread, $sort='recent')
+    {
+        $commentRepo = $this->em->getRepository('SpoutletBundle:Comment');
+        $commentsArr = $commentRepo->getCommentsForThreadSortedByQuery($thread, $sort);
+        $comments    = array();
+
+        foreach ($commentsArr as $comment) {
+
+            $data    = array();
+
+            $data['id']                  = $comment['id'];
+            $data['deleted']             = $comment['deleted'];
+            $data['createdAt']           = $comment['createdAt'];
+            $data['body']                = nl2br($comment['body']);
+            $data['parentId']            = $comment['parentId'];
+            $data['authorId']            = $comment['authorId'];
+            $data['authorUuid']          = $comment['authorUuid'];
+            $data['authorUsername']      = $comment['authorUsername'];
+            $data['upVoteCount']         = (int) $comment['upVoteCount'];
+            $data['downVoteCount']       = (int) $comment['downVoteCount'];
+            $data['publishedReplyCount'] = (int) $comment['publishedReplyCount'];
+            $data['points']              = (int) number_format($data['upVoteCount'] - $data['downVoteCount']);
+            $data['authorAccountLink']   = sprintf('http://www.alienwarearena.com/member/%s', $data['authorUuid']);
+            $data['hasMoreReplies']      = $data['publishedReplyCount'] > 3;
+            $data['isHidden']            = false;
+            $data['isFirstReply']        = false;
+            $data['replies']             = array();
+
+            $hasAvatar            = $comment['avatarId'];
+            $data['authorAvatar'] = $hasAvatar ? ($data['parentId'] ? $this->avatarPathResolver->getPathFromParams($data['authorUuid'], 32) : $this->avatarPathResolver->getPathFromParams($data['authorUuid'])) : null;
+
+            if ($data['parentId']) {
+                if (isset($comments[$data['parentId']])) {
+                     if (count($comments[$data['parentId']]['replies']) > 2) {
+                        $data['isHidden'] = true;
+                    }
+
+                    if (count($comments[$data['parentId']]['replies']) == 0) {
+                        $data['isFirstReply'] = true;
+                    }
+                }
+
+                $comments[$data['parentId']]['replies'][] = $data;
+            } else {
+                if (isset($comments[$data['id']])) {
+                    $data['replies'] = $comments[$data['id']]['replies'];
+                }
+
+                $comments[$data['id']] = $data;
+            }
+        }
+
+        $return = array();
+
+        foreach ($comments as $comment) {
+            $return[] = $comment;
+        }
+
+        return $return;
     }
 }

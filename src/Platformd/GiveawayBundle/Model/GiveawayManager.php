@@ -522,7 +522,7 @@ class GiveawayManager
         try {
             $this->varnishUtil->banCachedObject($indexPath);
             $this->varnishUtil->banCachedObject($giveawayPath);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception('Could not ban.');
         }
     }

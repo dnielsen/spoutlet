@@ -1,46 +1,78 @@
-<div class="thread">
-    <a id="comments"></a>
+<a id="comments"></a>
 
-    <div data-logged-in="true">
-        <h3 class="add-comment">{{ 'platformd.comment.add_your_comment' | pd_trans | raw }}</h3>
-        <textarea id="new-comment-body" name="new-comment-body" required="required"></textarea>
-    </div>
+<div data-logged-in="true">
+    <h3 class="add-comment">{{ 'platformd.comment.add_your_comment' | pd_trans | raw }}</h3>
+    <textarea id="new-comment-body" name="new-comment-body" required="required"></textarea>
+</div>
 
-    <div data-logged-in="false">
-        <p>{{ 'platformd.comment.login_to_comment' | pd_trans({ '%login_url%' : login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }) | raw }}</p>
-    </div>
+<div data-logged-in="false">
+    <p>{{ 'platformd.comment.login_to_comment' | pd_trans({ '%login_url%' : login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }) | raw }}</p>
+</div>
 
-    <div class="comment-sorting">
-        <label for="comment-sort-method">{{ 'platformd.comment.sort_by' | pd_trans }}</label>
-        <select name="comment-sort-method" id="comment-sort-method">
-            <option value="votes"{% if method is not defined or method == "votes" %} selected{% endif %}>{{ 'platformd.comment.sort_by_votes' | pd_trans }}</option>
-            <option value="recent"{% if method is defined and method == "recent" %} selected{% endif %}>{{ 'platformd.comment.sort_by_newest' | pd_trans }}</option>
-            <option value="oldest"{% if method is defined and method == "oldest" %} selected{% endif %}>{{ 'platformd.comment.sort_by_oldest' | pd_trans }}</option>
-        </select>
-    </div>
-    <div data-logged-in="true">
-        <div class="comment-form-submit" style="text-align: right;">
-            <button id="new-comment-submit" class="btn btn-primary" type="submit">{{ 'platformd.comment.add_comment' | pd_trans }}</button>
-        </div>
-    </div>
-    <div class="comments">
-        {% include 'SpoutletBundle:Comments:_comments.html.twig' with { 'comments' : comments} %}
-    </div>
-    <div id="more-comments-loader" data-offset="{{ offset }}" data-increment="5">
-        <img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />
+<div class="comment-sorting">
+    <label for="comment-sort-method">{{ 'platformd.comment.sort_by' | pd_trans }}</label>
+    <select name="comment-sort-method" id="comment-sort-method">
+        <option value="recent" selected>{{ 'platformd.comment.sort_by_newest' | pd_trans }}</option>
+        <option value="votes">{{ 'platformd.comment.sort_by_votes' | pd_trans }}</option>
+        <option value="oldest">{{ 'platformd.comment.sort_by_oldest' | pd_trans }}</option>
+    </select>
+</div>
+<div data-logged-in="true">
+    <div class="comment-form-submit" style="text-align: right;">
+        <button id="new-comment-submit" class="btn btn-primary" type="submit">{{ 'platformd.comment.add_comment' | pd_trans }}</button>
     </div>
 </div>
 
-<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.blockUI.js') }}"></script>
+{% include 'SpoutletBundle:Comments:_comments.html.twig' %}
+
+<div id="more-comments-loader" data-offset="0" data-increment="5">
+    <img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />
+</div>
+
 <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.jeditable.min.js') }}"></script>
 
 <script type="text/javascript">
 
-    var commentRequestInProgress = false;
-    var ajaxRequestSent;
+    var commentsJson = {{ comments | raw }};
+    var source   = $("#comment-template").html();
+    var template = Handlebars.compile(source);
+    var currentGroup = 0;
 
-    $(function () {
+    function sortResults(prop, asc) {
+        commentsJson = commentsJson.sort(function(a, b) {
+            if (asc) return (a[prop] > b[prop]) ? 1 : ((a[prop] < b[prop]) ? -1 : 0);
+            else return (b[prop] > a[prop]) ? 1 : ((b[prop] < a[prop]) ? -1 : 0);
+        });
+    }
 
+    function sortPosts() {
+        var method = $('#comment-sort-method').val();
+
+        switch(method) {
+            case 'recent':
+                sortResults('createdAt', false);
+                break;
+            case 'oldest':
+                sortResults('createdAt', true);
+                break;
+            case 'votes':
+                sortResults('upVoteCount', false);
+                break;
+            default:
+                return false;
+        }
+
+        currentGroup = 0;
+        $(".comments").html('<div class="comment-group" id="comment-group-0" style="display:none;"></div>');
+
+        loadMorePosts();
+
+        $('#more-comments-loader').html('<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />').hide();
+        $('.no-more-comments').removeClass('no-more-comments');
+        $('.comment-group:first').fadeIn();
+    }
+
+    function updateContent() {
         if (user_is_logged_in) {
             $('[data-logged-in="true"]').show();
             $('[data-logged-in="false"]').hide();
@@ -49,23 +81,27 @@
             $('[data-logged-in="false"]').show();
         }
 
-        loadPostsOnce();
+        if (is_admin) {
+            $('[data-comment-admin="true"]').show();
+            $('[data-comment-admin="false"]').hide();
+        } else {
+            $('[data-comment-admin="true"]').hide();
+            $('[data-comment-admin="false"]').show();
+        }
+
+        $('[data-comment-owner="'+user_id+'"]').show();
+    }
+
+    var commentRequestInProgress      = false;
+    var commentReplyRequestInProgress = false;
+
+    $(function () {
+
+        sortPosts();
+        loadMorePosts();
 
         $('.comment-sorting select').change(function() {
-            $('.thread').block({message: null});
-            var thread = '{{ thread }}';
-            var method = $('#comment-sort-method').val();
-            var commentLimit = '{{ offset }}';
-
-            $.ajax({
-                url: '{{ path('comments_sort_thread') }}?thread=' + thread + '&method=' + method + '&commentLimit=' + commentLimit,
-                type: 'get',
-                contentType: 'application/json',
-                success: function (html, status, req) {
-                    $('.thread').html(html);
-                    $('.thread').unblock();
-                }
-            });
+            sortPosts();
         });
 
         $('#new-comment-submit').click(function () {
@@ -79,10 +115,9 @@
             $('.thread').block({message: null});
 
             var comment = {
-                'thread' : '{{ thread }}',
+                'thread' : '{{ thread.id }}',
                 'body' : $('#new-comment-body').val(),
-                'parent' : 0,
-                'commentCount' : parseInt($('#more-comments-loader').attr('data-offset'))
+                'parent' : 0
             };
 
             commentRequestInProgress = true;
@@ -93,7 +128,13 @@
                 data: JSON.stringify(comment),
                 controlstentType: 'application/json',
                 success: function (html, status, req) {
-                    $('.thread').html(html);
+                    $('.comment-group:first').prepend(html);
+                    if (!$('.comment-group:first').is(':visible')) {
+                        $('.comment-group:first').fadeIn();
+                    }
+                    $('.comment-at').timeago();
+                    updateContent();
+                    setupListeners('.post-wrapper:first');
                     $('.thread').unblock();
                     $('#new-comment-body').val('');
                     $('.comment-count').text(parseInt($('.comment-count').text())+1);
@@ -103,48 +144,214 @@
         });
     });
 
-    $(window).scroll(function() {
+    function loadMorePosts() {
 
-        if($(window).scrollTop() >= $(document).height() - $(window).height()) {
-            loadPostsOnce();
-        }
-    });
-
-    function loadPostsOnce() {
         if ($('.comment-wrapper:last').hasClass('no-more-comments')) {
             return false;
         }
 
-        if (ajaxRequestSent) {
-            return false; // don't make another request, let the current one complete, or
-            // ajax.abort(); // stop the current request, let it run again
+        offset          = currentGroup * 5;
+        currentComments = { 'comments': commentsJson.slice(offset,offset+5) };
+
+        if (currentComments.comments.length < 1) {
+            $('.comment-wrapper:last').addClass('no-more-comments');
+            $('#more-comments-loader').html('{{ "platformd.comment.no_more_posts" | pd_trans }}');
+            $('#more-comments-loader').show();
+            return false;
         }
 
-        ajaxRequestSent = loadMorePosts();
+        $('.comment-group:last').html(template(currentComments));
+
+        currentGroup++;
+
+        updateContent();
+        setupListeners();
+
+        $('.comments').append('<div class="comment-group" id="comment-group-'+ currentGroup +'" style="display:none;"></div>')
+
+        $('.comment-at').timeago();
+        $('.replied-at').timeago();
+        $('.author-link > a').truncate({width: 84});
+
+        $('#more-comments-loader').show();
+        $('.comment-group:hidden:first').fadeIn(400, function() {
+            $('#more-comments-loader').hide();
+        });
     }
 
-    function loadMorePosts()
+    function setupListeners(element)
     {
-        $('#more-comments-loader').show();
-        var offset = parseInt($('#more-comments-loader').attr('data-offset'));
-        var increment = parseInt($('#more-comments-loader').attr('data-increment'));
-        return $.ajax({
-            url: '{{ path('comments_update_thread') }}?threadId=' + '{{ thread }}&increment=' + increment + '&offset=' + offset + '&sort=' + $('#comment-sort-method option:selected').val(),
-            type: 'get',
-            contentType: 'json',
-            success: function(data)
-            {
-                if(data.message == "no_more_comments") {
-                    $('#more-comments-loader').html('{{ "platformd.comment.no_more_posts" | pd_trans }}');
-                    $('.comment-wrapper:last').addClass('no-more-comments');
-                } else if(data.message == "error") {
-                    $('#more-comments-loader').html('An error has occurred during loading.');
-                } else {
-                    $(".comments").append(data);
-                    $('#more-comments-loader').hide();
-                }
+        if (typeof element === "undefined") element = '#comment-group-'+ (currentGroup - 1);
+        element = element + ' ';
 
-                ajaxRequestSent = false;
+        $(element + '.comment-reply-link').click(function() {
+            $('.choices').hide();
+            var id = $(this).attr('data-id');
+            $('#replies-'+id+' > .comment-tri').removeClass('hidden');
+            $('#comment-replies-'+id).slideDown();
+            $('#reply-text-'+id).focus();
+            $('#replies-'+id+' > .first').removeClass('first');
+        });
+
+        $(element + '.comment-replies textarea').keyup(function() {
+            $(this).css('height', '1px');
+            $(this).css('height', (parseInt($(this).prop('scrollHeight')))+"px");
+        });
+
+        $(element + '.options').off('click').on('click', function (event) {
+            event.stopPropagation();
+            $('.choices').hide();
+            $('.report-options').hide();
+            var id = $(this).attr('data-id');
+            $('#choices-' + id).toggle('fast');
+            window.getSelection().removeAllRanges();
+        });
+
+        $(element + '.report-options-link').off('click').on('click', function (event) {
+            event.stopPropagation();
+            var id = $(this).attr('data-id');
+            $('#report-options-' + id).toggle('fast');
+        });
+
+        $(element + '.choices').click(function (event) {
+            event.stopPropagation();
+        });
+
+        $(element + '.report-options').click(function (event) {
+            event.stopPropagation();
+        });
+
+        $(element + '.more-comments-link').click(function () {
+            var commentId = $(this).attr('data-id');
+            $('#more-comments-' + commentId).hide();
+            $('#replies-' + commentId + ' > .hidden').hide().removeClass('hidden').fadeIn();
+        });
+
+        $(element + '.comment-post-reply-link').click(function () {
+            if (commentReplyRequestInProgress) return;
+
+            var id = $(this).attr('data-id');
+            if ($('#reply-text-' + id).val() == "") {
+                return false;
+            }
+
+            $('.thread').block({message: null});
+            var reply = {
+                'thread' : '{{ thread.id }}',
+                'body' : $('#reply-text-' + id).val(),
+                'parent' : id
+            };
+
+            commentReplyRequestInProgress = true;
+
+            $.ajax({
+                url: '{{ path('comments_new') }}',
+                type: 'post',
+                data: JSON.stringify(reply),
+                contentType: 'application/json',
+                success: function (html, status, req) {
+                    $('#reply-text-'+id).val('');
+                    $('#comment-replies-'+id).slideUp();
+                    $('#replies-' + id + ' .comment-replies').after(html);
+                    $('.replied-at').timeago();
+                    updateContent();
+                    setupListeners('#replies-' + id + ' .comment-reply:first');
+                    $('#replies-' + id + ' .comment-reply:first').removeClass('hidden');
+                    $('.thread').unblock();
+                    $('.comment-count').text(parseInt($('.comment-count').text())+1);
+                    commentReplyRequestInProgress = false;
+                }
+            });
+        });
+
+        $(element + '.comment-report-link').click(function (event) {
+            $('.thread').block({message: null});
+            var contentId = $(this).attr('data-id');
+            $.ajax({
+                url: '{{ path('content_reporting') }}',
+                type: 'post',
+                data: JSON.stringify({
+                    'ContentId' : contentId,
+                    'Reason' : $(this).attr('data-reason'),
+                    'ContentType' : "Comment"
+                }),
+                contentType: 'application/json',
+                success: function(data) {
+                    if(data.success) {
+                        $('#post-id-' + contentId).fadeOut();
+                    } else {
+                        alert(data.messageForUser);
+                    }
+                    $('.choices').hide();
+                    $('.report-options').hide();
+                    $('.thread').unblock();
+                }
+            })
+        });
+
+        $(element + '.edit-options-link').click(function (event) {
+            var contentId = $(this).attr('data-id');
+            toggleEdit($('#comment-body-' + contentId), contentId, $('#comment-body-' + contentId).text());
+            $('#choices-' + contentId).toggle('fast');
+        });
+
+        $(element + '.delete-link').click(function (event) {
+
+            $('.choices').hide();
+
+            var answer = confirm("{{ 'platformd.comment.delete_confirm' | pd_trans }}")
+            if (!answer){
+                return false;
+            }
+
+            $('.thread').block({message: null});
+            var commentId = $(this).attr('data-id');
+            $.ajax({
+                url: '{{ path('comments_delete') }}',
+                type: 'post',
+                data: JSON.stringify({
+                    'commentId' : commentId
+                }),
+                contentType: 'application/json',
+                success: function(html, status, req) {
+                    $('#post-id-' + commentId).fadeOut();
+                    $('.thread').unblock();
+                }
+            })
+        });
+
+        $(element + '.comment-voting-button').click(function () {
+            var commentId = $(this).attr('data-id');
+            var voteType  = $(this).attr('data-votetype');
+            $('#comment-wrapper-' + commentId).block({message: null});
+            $.ajax({
+                url: '{{ path('comments_vote')}}',
+                type: 'post',
+                data: JSON.stringify({
+                    'id' : commentId,
+                    'voteType' : voteType,
+                    'contentType' : 'Comment'
+                }),
+                contentType: 'json',
+                success: function(data) {
+                    if(data.success) {
+                        $('#comment-upVoteCount-'+commentId).html(data.messageForUser.up);
+                        $('#comment-downVoteCount-'+commentId).html(data.messageForUser.down);
+                    } else {
+                        if (data.messageForUser == "FORCE_LOGIN_TO_VOTE") {
+                            document.location.href='{{ login_link("http://" ~ app.request.headers.get('Host') ~ permalink) }}';
+                        } else {
+                            alert(data.messageForUser);
+                        }
+                    }
+                    $('#comment-wrapper-' + commentId).unblock();
+                }
+            })
+        });
+
+        $(window).scroll(function() {
+            if($(window).scrollTop() >= $(document).height() - $(window).height()) {
+                loadMorePosts();
             }
         });
     }

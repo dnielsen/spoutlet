@@ -624,7 +624,7 @@ class GroupAdminController extends Controller
     private function getGroupCommentTotal($groupId, $fromDate, $thruDate)
     {
         $total = $this->getDoctrine()
-            ->getRepository('CommentBundle:Comment')
+            ->getRepository('SpoutletBundle:Comment')
             ->getCommentCountByThread($groupId, $fromDate, $thruDate);
 
         return $total;

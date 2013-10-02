@@ -1,12 +1,25 @@
 {% extends 'SpoutletBundle::adminLayout.html.twig' %}
-{% block title %}Create Sweepstakes{% endblock %}
+
+{% set typeText = (type == 'promocode' ? 'Promo Code Contest' : 'Sweepstakes') %}
+
+{% block title %}Create {{ typeText }}{% endblock %}
 
 {% block content %}
-{% include 'SweepstakesBundle:Admin:sweepstakesForm.html.twig' with {
-    'form': form,
-    'route': path('admin_sweepstakes_new'),
-    'sweepstakes': sweepstakes
-} %}
+
+{% if type == 'promocode' %}
+    {% include 'SweepstakesBundle:PromoCodeAdmin:_form.html.twig' with {
+        'form': form,
+        'route': path('admin_promo_code_contest_new'),
+        'contest': sweepstakes
+    } %}
+{% else %}
+    {% include 'SweepstakesBundle:Admin:sweepstakesForm.html.twig' with {
+        'form': form,
+        'route': path('admin_sweepstakes_new'),
+        'sweepstakes': sweepstakes
+    } %}
+{% endif %}
+
 {% endblock %}
 
 {% block stylesheets %}
@@ -17,7 +30,6 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% include 'SpoutletBundle:CountryAgeRestrictionRule:_formJavascript.html.twig' %}
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.watermark.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.tagsinput.min.js') }}"></script>
     <script type="text/javascript">

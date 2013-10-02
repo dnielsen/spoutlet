@@ -35,6 +35,11 @@ class Controller extends BaseController
         $this->getVarnishUtil()->cacheResponse($response, $sharedMaxAge, $maxAge);
     }
 
+    protected function varnishBan($path, $parameters = array(), $bestEffort = false)
+    {
+        $this->getVarnishUtil()->banCachedObject($path, $parameters, $bestEffort);
+    }
+
     protected function getCurrentSiteId() {
         return $this->getCurrentSiteCached()->getId();
     }
@@ -237,10 +242,10 @@ class Controller extends BaseController
      * @param \Platformd\SpoutletBundle\Link\LinkableInterface $linkableObj
      * @return string
      */
-    protected function getLinkableUrl(LinkableInterface $linkableObj)
+    protected function getLinkableUrl(LinkableInterface $linkableObj, $absolute=false)
     {
         return $this->container->get('platformd.link.linkable_manager')
-            ->link($linkableObj);
+            ->link($linkableObj, $absolute);
     }
 
     /**
@@ -252,6 +257,11 @@ class Controller extends BaseController
     protected function trans($key, $params = array(), $domain = 'messages', $locale = null)
     {
         return $this->container->get('platformd.model.translator')->trans($key, $params, $domain, $locale);
+    }
+
+    protected function transChoice($key, $number, $params = array(), $domain = 'messages', $locale = null)
+    {
+        return $this->container->get('platformd.model.translator')->transChoice($key, $number, $params, $domain, $locale);
     }
 
     /**
@@ -374,6 +384,16 @@ class Controller extends BaseController
     protected function getTwitterProvider()
     {
         return $this->container->get('platformd.twitter.provider');
+    }
+
+    protected  function getEmailManager()
+    {
+        return $this->container->get('platformd.model.email_manager');
+    }
+
+    protected  function getCommentManager()
+    {
+        return $this->container->get('platformd.model.comment_manager');
     }
 
     protected function getErrorMessages(Form $form) {

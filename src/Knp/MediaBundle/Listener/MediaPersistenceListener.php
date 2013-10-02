@@ -32,6 +32,21 @@ class MediaPersistenceListener implements EventSubscriber
      */
     public static $replaceCharacter = '-';
 
+    private static $mimeTypeOverrides = array(
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+        'application/vnd.openxmlformats-officedocument.presentationml.template',
+        'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'application/vnd.openxmlformats-officedocument.presentationml.slide',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+        'application/vnd.ms-excel.addin.macroEnabled.12',
+        'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
+    );
+
     /**
      * @var \Gaufrette\Filesystem
      */
@@ -125,7 +140,11 @@ class MediaPersistenceListener implements EventSubscriber
 
             // create a metadata array to be sent to S3
             $metadata = array();
-            if ($mimeType = $file->getMimeType()) {
+
+            $clientMimeType = $file->getClientMimeType();
+            $mimeType = in_array($clientMimeType, self::$mimeTypeOverrides) ? $clientMimeType : $file->getMimeType();
+
+            if ($mimeType) {
                 $metadata['content-type'] = $file->getMimeType();
                 $media->setMimeType($mimeType);
             }
@@ -202,8 +221,10 @@ class MediaPersistenceListener implements EventSubscriber
         // iterate until we find a unique filename of format original_filename-n.ext where n is an integer
         $i = 1;
         while (true) {
-            $basename = str_replace('.'.$file->guessExtension(), '', $cleanedName);
-            $newFilename = sprintf('%s-%s.%s', $basename, $this->generateRandomString($i), $file->guessExtension());
+            $pathParts = pathinfo($cleanedName);
+
+            $basename = str_replace('.'.$pathParts['extension'], '', $cleanedName);
+            $newFilename = sprintf('%s-%s.%s', $pathParts['filename'], $this->generateRandomString($i), $pathParts['extension']);
             if (!$this->filesystem->has($newFilename)) {
                 $this->log(sprintf('Found unique filename "%s"', $newFilename));
 

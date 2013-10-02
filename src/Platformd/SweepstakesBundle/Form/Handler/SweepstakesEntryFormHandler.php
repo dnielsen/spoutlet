@@ -3,24 +3,28 @@
 namespace Platformd\SweepstakesBundle\Form\Handler;
 
 use FOS\UserBundle\Form\Handler\RegistrationFormHandler as BaseRegistrationFormHandler;
-use Symfony\Component\Form\Form;
-use Symfony\Component\HttpFoundation\Request;
 use FOS\UserBundle\Model\UserManagerInterface;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Mailer\MailerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+
 use Doctrine\ORM\EntityManager;
+
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\Request;
+
 use Platformd\SpoutletBundle\Util\IpLookupUtil;
 use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
-use Platformd\UserBundle\Exception\UserRegistrationTimeoutException;
-use Platformd\UserBundle\Exception\ApiRequestException;
 use Platformd\SpoutletBundle\Util\SiteUtil;
+use Platformd\UserBundle\Exception\ApiRequestException;
+use Platformd\UserBundle\Exception\UserRegistrationTimeoutException;
 use Platformd\CEVOBundle\Api\ApiManager as CevoApiManager;
 use Platformd\CEVOBundle\Api\ApiException as CevoApiException;
 use Platformd\GroupBundle\Model\GroupManager;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Platformd\UserBundle\Entity\RegistrationSource;
+use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 
 class SweepstakesEntryFormHandler
 {
@@ -35,19 +39,23 @@ class SweepstakesEntryFormHandler
     protected $siteUtil;
     protected $groupManager;
     protected $cevoApiManager;
+    protected $translator;
+    protected $exposer;
 
-    public function __construct(Request $request, UserManagerInterface $userManager, MailerInterface $mailer, EntityManager $em, ContainerInterface $container, IpLookupUtil $ipLookupUtil, $apiManager, SiteUtil $siteUtil, GroupManager $groupManager, CevoApiManager $cevoApiManager)
+    public function __construct(Request $request, UserManagerInterface $userManager, MailerInterface $mailer, EntityManager $em, ContainerInterface $container, IpLookupUtil $ipLookupUtil, $apiManager, SiteUtil $siteUtil, GroupManager $groupManager, CevoApiManager $cevoApiManager, $translator, $exposer)
     {
-        $this->request          = $request;
-        $this->userManager      = $userManager;
-        $this->mailer           = $mailer;
-        $this->em               = $em;
-        $this->container        = $container;
-        $this->ipLookupUtil     = $ipLookupUtil;
-        $this->apiManager       = $apiManager;
-        $this->siteUtil         = $siteUtil;
-        $this->groupManager     = $groupManager;
-        $this->cevoApiManager   = $cevoApiManager;
+        $this->request        = $request;
+        $this->userManager    = $userManager;
+        $this->mailer         = $mailer;
+        $this->em             = $em;
+        $this->container      = $container;
+        $this->ipLookupUtil   = $ipLookupUtil;
+        $this->apiManager     = $apiManager;
+        $this->siteUtil       = $siteUtil;
+        $this->groupManager   = $groupManager;
+        $this->cevoApiManager = $cevoApiManager;
+        $this->translator     = $translator;
+        $this->exposer        = $exposer;
     }
 
     public function process($confirmation = false)
@@ -96,9 +104,10 @@ class SweepstakesEntryFormHandler
                     $ipAddress  = $this->request->getClientIp(true);
                     $user->setIpAddress($ipAddress);
 
-                    if ($this->checkRegistrationTimeoutPassed() === false) {
-                        throw new UserRegistrationTimeoutException();
-                    }
+                    #This has been commented out because alienware had 10+ machines at a show in the UK and timeouts were frequent... we need a more robust solution here to allow this kind of usage
+                    #if ($this->checkRegistrationTimeoutPassed() === false) {
+                    #    throw new UserRegistrationTimeoutException();
+                    #}
 
                     if ($this->container->getParameter('api_authentication')) {
                         if (false === $this->apiManager->createRemoteUser($user, $user->getPlainPassword())) {
@@ -152,7 +161,11 @@ class SweepstakesEntryFormHandler
                     throw new AccessDeniedException();
                 }
 
-                $user = $entry->getUser() ? $entry->getUser() : $this->form->get('registrationDetails')->getData();
+                $createdAccount = $this->form->has('registrationDetails') ? true : false;
+                $entry->setCreatedAccount($createdAccount);
+
+                $isLoggedIn = $entry->getUser() ? true : false;
+                $user       = $entry->getUser() ? $entry->getUser() : $this->form->get('registrationDetails')->getData();
 
                 $existing = $user ? $this->em->getRepository('SweepstakesBundle:SweepstakesEntry')->findOneBySweepstakesAndUser($sweepstakes, $user) : null;
                 if ($existing) {
@@ -169,11 +182,74 @@ class SweepstakesEntryFormHandler
                 $entry->setCountry($country);
 
                 $this->em->persist($entry);
-                $this->em->flush();
 
-                if($this->siteUtil->getCurrentSite()->getSiteFeatures()->getHasGroups() && $sweepstakes->getGroup()) {
+                $site = $this->siteUtil->getCurrentSite();
+
+                if($site->getSiteFeatures()->getHasGroups() && $sweepstakes->getGroup()) {
                     $this->groupManager->autoJoinGroup($sweepstakes->getGroup(), $user);
                 }
+
+                if ($sweepstakes->getEventType() == Sweepstakes::SWEEPSTAKES_TYPE_PROMO_CODE) {
+
+                    $promoCode = $entry->getAnswers()->first();
+
+                    if (!$promoCode) {
+                        $isWinner = false;
+                    } else {
+                        $isWinner = $this->em->getRepository('SweepstakesBundle:PromoCodeContestCode')->findOneBy(array(
+                            'value'   => trim($promoCode->getContent()),
+                            'contest' => $sweepstakes->getId(),
+                            'user'    => null,
+                        ));
+                    }
+
+                    $session = $this->request->getSession();
+
+                    if ($isWinner) {
+                        $winningCode = $isWinner;
+                        $winningCode->assign($user, $clientIp, $site->getDefaultLocale(), $country);
+
+                        $this->em->persist($winningCode);
+
+                        if (!$isLoggedIn) {
+                            $flashMessage = $sweepstakes->getWinnerMessage();
+                            $flashMessage = str_replace(array(
+                                '--contestName--', '--w9Url--', '--affidavitUrl--'
+                            ), array(
+                                $sweepstakes->getName(),
+                                $this->exposer->getPath($sweepstakes->getW9Form()),
+                                $this->exposer->getPath($sweepstakes->getAffidavit())
+                            ), $flashMessage);
+
+                            $session->setFlash('success', $flashMessage);
+                        }
+
+                    } else {
+                        $consolationCode = $this->em->getRepository('SweepstakesBundle:PromoCodeContestConsolationCode')->findOneBy(array(
+                            'contest' => $sweepstakes->getId(),
+                            'user'    => null,
+                        ));
+
+                        if ($consolationCode) {
+                            $consolationCode->assign($user, $clientIp, $site->getDefaultLocale(), $country);
+                            $this->em->persist($consolationCode);
+
+                            if (!$isLoggedIn) {
+                                $flashMessage = str_replace('--code--', $consolationCode->getValue(), $sweepstakes->getLoserMessage());
+                                $session->setFlash('info', $flashMessage);
+                            }
+                        } else {
+                            if (!$isLoggedIn) {
+                                $flashMessage = $sweepstakes->getBackupLoserMessage() ?: $this->translator->trans('platformd.sweepstakes.promo_code.flash.loser_no_code');
+                                $session->setFlash('info', $flashMessage);
+                            }
+                        }
+                    }
+                } else {
+                    $this->setFlash('success', 'platformd.sweepstakes.entered.message');
+                }
+
+                $this->em->flush();
 
                 // arp - enteredsweepstakes
                 try {
@@ -181,8 +257,6 @@ class SweepstakesEntryFormHandler
                 } catch (CevoApiException $e) {
 
                 }
-
-                $this->setFlash('success', 'platformd.sweepstakes.entered.message');
 
                 return true;
             }

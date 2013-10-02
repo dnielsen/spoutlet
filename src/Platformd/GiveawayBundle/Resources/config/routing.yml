@@ -22,7 +22,7 @@ _deal_show_actions:
     pattern: /esi/USER_SPECIFIC/dealShowMainActions/{dealId}
     defaults: { _controller: GiveawayBundle:Deal:_dealShowActions }
 
-giveaway_index: 
+giveaway_index:
     pattern: /giveaways
     defaults: { _controller: GiveawayBundle:Giveaway:index }
 
@@ -48,3 +48,6 @@ GiveawayBundle_deal:
     resource: "@GiveawayBundle/Resources/config/routing/deal.yml"
     prefix:   /deal
 
+GiveawayBundle_admin_code_assignment:
+    resource: "@GiveawayBundle/Resources/config/routing/code_assignment.yml"
+    prefix:   /admin/codes

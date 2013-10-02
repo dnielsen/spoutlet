@@ -16,8 +16,6 @@ use Platformd\UserBundle\Entity\RegistrationSource;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-
 class FrontendController extends Controller
 {
     public function indexAction()
@@ -29,20 +27,26 @@ class FrontendController extends Controller
         ));
     }
 
-    /**
-     * @Template
-     * @param integer $entryId The optiona entrance id that was just assigned
-     * @param $slug
-     * @return array
-     */
-    public function showAction($slug, $entryId = null, Request $request)
+    public function showSweepstakesAction($slug, Request $request)
     {
-        $sweepstakes   = $this->findSweepstakes($slug, false);
+        return $this->show($slug, Sweepstakes::SWEEPSTAKES_TYPE_SWEEPSTAKES, $request);
+    }
+
+    public function showPromoCodeContestAction($slug, Request $request)
+    {
+        return $this->show($slug, Sweepstakes::SWEEPSTAKES_TYPE_PROMO_CODE, $request);
+    }
+
+    private function show($slug, $type, Request $request)
+    {
+        $sweepstakes   = $this->findSweepstakes($slug, false, $type);
         $user          = $this->getCurrentUser();
         $isGroupMember = null;
+        $entryFlash    = null;
         $em            = $this->getDoctrine()->getEntityManager();
         $registered    = $request->query->get('registered');
         $timedout      = $request->query->get('timedout');
+        $suspended     = $request->query->get('suspended');
 
         $canTest = $sweepstakes->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
 
@@ -60,6 +64,41 @@ class FrontendController extends Controller
             $entry->setUser($user);
         }
 
+        if ($isEntered && $sweepstakes->getEventType() == Sweepstakes::SWEEPSTAKES_TYPE_PROMO_CODE) {
+            $isWinner = $this->getCodeRepo()->findOneBy(array(
+                'contest' => $sweepstakes->getId(),
+                'user'    => $user->getId(),
+            ));
+
+            if ($isWinner) {
+                $exposer = $this->container->get('media_exposer');
+
+                $flashMessage = $sweepstakes->getWinnerMessage();
+                $flashMessage = str_replace(array(
+                    '--contestName--', '--w9Url--', '--affidavitUrl--'
+                ), array(
+                    $sweepstakes->getName(),
+                    $exposer->getPath($sweepstakes->getW9Form()),
+                    $exposer->getPath($sweepstakes->getAffidavit())
+                ), $flashMessage);
+
+                $entryFlash = array('type' => 'success', 'message' => $flashMessage);
+            } else {
+                $consolation = $this->getConsolationCodeRepo()->findOneBy(array(
+                    'contest' => $sweepstakes->getId(),
+                    'user'    => $user->getId(),
+                ));
+
+                if ($consolation) {
+                    $flashMessage = str_replace('--code--', $consolation->getValue(), $sweepstakes->getLoserMessage());
+                    $entryFlash = array('type' => 'info', 'message' => $flashMessage);
+                } else {
+                    $flashMessage = $sweepstakes->getBackupLoserMessage() ?: $this->trans('platformd.sweepstakes.promo_code.flash.loser_no_code');
+                    $entryFlash = array('type' => 'info', 'message' => $flashMessage);
+                }
+            }
+        }
+
         foreach ($sweepstakes->getQuestions() as $question) {
             $entry->addAnswer(new SweepstakesAnswer($question, $entry));
         }
@@ -73,29 +112,41 @@ class FrontendController extends Controller
 
             if($process) {
                 if (!$this->isGranted('ROLE_USER')) {
-                    return $this->redirect($this->generateUrl('sweepstakes_show', array('slug' => $slug, 'registered' => '1')));
+                    return $this->redirect($this->generateUrl($sweepstakes->getLinkableRouteName(), array('slug' => $slug, 'registered' => '1')));
                 }
 
-                return $this->redirect($this->generateUrl('sweepstakes_show', array('slug' => $slug)));
+                return $this->redirect($this->generateUrl($sweepstakes->getLinkableRouteName(), array('slug' => $slug)));
             }
         }
 
-        return array(
+        return $this->render('SweepstakesBundle:Frontend:show.html.twig', array(
             'sweepstakes'   => $sweepstakes,
             'isEntered'     => $isEntered,
             'isGroupMember' => $isGroupMember,
-            'entryId'       => $entryId,
             'entryForm'     => $entryForm->createView(),
             'errors'        => $this->getEntryFormErrors($entryForm),
             'registered'    => $registered,
             'timedout'      => $timedout,
+            'suspended'     => $suspended,
+            'entryFlash'    => $entryFlash,
+            'rulesRoute'    => ($sweepstakes->getEventType() == Sweepstakes::SWEEPSTAKES_TYPE_PROMO_CODE ? 'promo_code_contest_rules' : 'sweepstakes_rules'),
             'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_SWEEPSTAKES, 'id'=>$sweepstakes->getId()),
-        );
+        ));
     }
 
-    public function rulesAction(Request $request, $slug)
+    public function sweepstakesRulesAction(Request $request, $slug)
     {
-        $sweepstakes    = $this->findSweepstakes($slug, false);
+        return $this->showRules($request, $slug, Sweepstakes::SWEEPSTAKES_TYPE_SWEEPSTAKES);
+    }
+
+    public function promoCodeContestRulesAction(Request $request, $slug)
+    {
+        return $this->showRules($request, $slug, Sweepstakes::SWEEPSTAKES_TYPE_PROMO_CODE);
+    }
+
+    private function showRules(Request $request, $slug, $type)
+    {
+        $sweepstakes    = $this->findSweepstakes($slug, false, $type);
         $canTest        = $sweepstakes->getTestOnly() && $this->isGranted(array('ROLE_ADMIN', 'ROLE_SUPER_ADMIN'));
 
         if (!$sweepstakes->getPublished() && !$canTest) {
@@ -113,9 +164,9 @@ class FrontendController extends Controller
      * @return \Platformd\SweepstakesBundle\Entity\Sweepstakes
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    private function findSweepstakes($slug, $restrictUnpublished = true)
+    private function findSweepstakes($slug, $restrictUnpublished = true, $type = Sweepstakes::SWEEPSTAKES_TYPE_SWEEPSTAKES)
     {
-        $sweepstakes = $this->getSweepstakesRepo()->findOneBySlugForSite($slug, $this->getCurrentSite());
+        $sweepstakes = $this->getSweepstakesRepo()->findOneBySlugForSite($slug, $this->getCurrentSite(), $type);
 
         if (!$sweepstakes) {
             throw $this->createNotFoundException('No sweepstakes for slug '.$slug);
@@ -171,6 +222,22 @@ class FrontendController extends Controller
         return $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SweepstakesBundle:SweepstakesEntry')
+        ;
+    }
+
+    private function getCodeRepo()
+    {
+        return $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SweepstakesBundle:PromoCodeContestCode')
+        ;
+    }
+
+    private function getConsolationCodeRepo()
+    {
+        return $this->getDoctrine()
+            ->getEntityManager()
+            ->getRepository('SweepstakesBundle:PromoCodeContestConsolationCode')
         ;
     }
 

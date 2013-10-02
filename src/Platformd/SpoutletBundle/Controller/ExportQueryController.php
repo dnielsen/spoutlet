@@ -10,6 +10,8 @@ class ExportQueryController extends Controller
 {
     public function reportsAction(Request $request)
     {
+        set_time_limit(0);
+
         $form = $this->createForm('platformd_export_query_type');
 
         if ($request->getMethod() == 'POST') {
@@ -17,7 +19,7 @@ class ExportQueryController extends Controller
 
             $data   = $form->getData();
             $csv    = $this->getReportResults($data['reportTypes'], array(
-                'fromDate' => $data['fromDate'], 
+                'fromDate' => $data['fromDate'],
                 'thruDate' => $data['thruDate'],
                 'sites'    => $data['sites']
             ));

@@ -23,6 +23,7 @@ use Platformd\GiveawayBundle\ViewModel\deal_show_key_data;
 use Platformd\GiveawayBundle\ViewModel\giveaway_show_current_queue_state;
 use Platformd\GiveawayBundle\QueueMessage\KeyRequestQueueMessage;
 use Platformd\GiveawayBundle\Entity\KeyRequestState;
+use Platformd\SpoutletBundle\Util\CacheUtil;
 
 class DealController extends Controller
 {
@@ -253,6 +254,12 @@ class DealController extends Controller
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
 
+        $lockKey = 'DEAL_QUEUE_ENTRY_' . $slug . '_' . $this->getCurrentUser()->getId();
+
+        if(!$this->getCache()->getLock($lockKey, CacheUtil::DEFAULT_LOCK_DURATION_SECONDS)) {
+            return $this->redirect($this->generateUrl('deal_show', array('slug' => $slug)));
+        }
+
         $site = $this->getCurrentSite();
 
         $deal        = $this->getDealManager()->findOneBySlug($slug, $site);
@@ -294,27 +301,41 @@ class DealController extends Controller
             die('Could not add you to the queue... please try again shortly.');
         }
 
-        if (!$state) {
-            $state = new KeyRequestState();
-
-            $state->setDeal($deal);
-            $state->setUser($currentUser);
-            $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_DEAL);
-        }
-
-        $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
-        $state->setStateReason(null);
-        $state->setUserHasSeenState(false);
-
         $em = $this->getDoctrine()->getEntityManager();
-        $em->persist($state);
-        $em->flush();
+        $em->getConnection()->beginTransaction();
+
+        try {
+            if (!$state) {
+                $state = new KeyRequestState();
+
+                $state->setDeal($deal);
+                $state->setUser($currentUser);
+                $state->setPromotionType(KeyRequestState::PROMOTION_TYPE_DEAL);
+            }
+
+            $state->setCurrentState(KeyRequestState::STATE_IN_QUEUE);
+            $state->setStateReason(null);
+            $state->setUserHasSeenState(false);
+
+            $em->persist($state);
+            $em->flush();
+            $em->getConnection()->commit();
+        } catch (\Exception $e) {
+            $em->getConnection()->rollback();
+            $em->close();
+
+            $this->getCache()->releaseNamedLock($lockKey);
+
+            return $this->redirect($this->generateUrl('deal_show', array('slug' => $slug)));
+        }
 
         $path = $this->generateUrl('_deal_flash_message', array('dealId' => $deal->getId()));
         $this->getVarnishUtil()->banCachedObject($path, array('userId' => $userId), true);
 
         $path = $this->generateUrl('_deal_show_actions', array('dealId' => $deal->getId()));
         $this->getVarnishUtil()->banCachedObject($path, array('userId' => $userId), true);
+
+        $this->getCache()->releaseNamedLock($lockKey);
 
         return $this->redirect($this->generateUrl('deal_show', array('slug' => $slug)));
     }
@@ -325,14 +346,6 @@ class DealController extends Controller
     private function getDealManager()
     {
         return $this->get('platformd.model.deal_manager');
-    }
-
-    /**
-     * @return \Platformd\CommentBundle\Model\CommentManager
-     */
-    protected function getCommentManager()
-    {
-        return $this->container->get('fos_comment.manager.comment');
     }
 
     /**

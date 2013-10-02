@@ -366,15 +366,30 @@ class ContestAdminController extends Controller
 
     public function generateContestEntriesCsvAction($slug)
     {
-        $contestEntryRepo   = $this->getDoctrine()->getRepository('SpoutletBundle:ContestEntry');
-        $contestRepo        = $this->getDoctrine()->getRepository('SpoutletBundle:Contest');
-        $contest            = $contestRepo->findOneBySlug($slug);
+        $contestEntryRepo          = $this->getDoctrine()->getRepository('SpoutletBundle:ContestEntry');
+        $contestRepo               = $this->getDoctrine()->getRepository('SpoutletBundle:Contest');
+        $contest                   = $contestRepo->findOneBySlug($slug);
+        $groupMembershipActionRepo = $this->getDoctrine()->getRepository('GroupBundle:GroupMembershipAction');
 
         if(!$contest) {
             throw $this->createNotFoundException('Unable to find contest.');
         }
 
         $entries    = $contestEntryRepo->findAllNotDeletedForContest($contest);
+
+        if ($contest->getCategory() == 'group') {
+
+            $ids = array();
+
+            foreach ($entries as $entry) {
+                foreach($entry->getGroups() as $group) {
+                    $ids[] = $group->getId();
+                }
+            }
+
+            $groupMemberCounts = $groupMembershipActionRepo->getMembersJoinedCountForIds($ids, new \DateTime('-30 days'));
+        }
+
         $factory    = new CsvResponseFactory();
 
         $factory->addRow(array(
@@ -384,24 +399,41 @@ class ContestAdminController extends Controller
             'First Name',
             'Last Name',
             'Entry Date',
-            'Votes',
+            $contest->getCategory() == 'group' ? 'New Members' : 'Votes',
             'IP Address',
             'Country Registered',
         ));
 
         foreach($entries as $entry) {
-            foreach($entry->getMedias() as $media) {
-                $factory->addRow(array(
-                    $media->getTitle(),
-                    $this->mediaPathNice($media),
-                    $media->getAuthor()->getUsername(),
-                    $media->getAuthor()->getFirstname(),
-                    $media->getAuthor()->getLastname(),
-                    $media->getCreatedAt()->format('Y-m-d H:i:s'),
-                    $media->getVotes()->count(),
-                    $entry->getIpAddress(),
-                    $media->getAuthor()->getCountry(),
-                ));
+
+            if ($contest->getCategory() == 'group') {
+                foreach($entry->getGroups() as $group) {
+                    $factory->addRow(array(
+                        $group->getName(),
+                        $this->getLinkableUrl($group, true),
+                        $group->getOwner()->getUsername(),
+                        $group->getOwner()->getFirstname(),
+                        $group->getOwner()->getLastname(),
+                        $group->getCreatedAt()->format('Y-m-d H:i:s'),
+                        isset($groupMemberCounts[$group->getId()]) ? $groupMemberCounts[$group->getId()] : 0,
+                        $entry->getIpAddress(),
+                        $group->getOwner()->getCountry(),
+                    ));
+                }
+            } else {
+                foreach($entry->getMedias() as $media) {
+                    $factory->addRow(array(
+                        $media->getTitle(),
+                        $this->mediaPathNice($media),
+                        $media->getAuthor()->getUsername(),
+                        $media->getAuthor()->getFirstname(),
+                        $media->getAuthor()->getLastname(),
+                        $media->getCreatedAt()->format('Y-m-d H:i:s'),
+                        $media->getVotes()->count(),
+                        $entry->getIpAddress(),
+                        $media->getAuthor()->getCountry(),
+                    ));
+                }
             }
         }
 

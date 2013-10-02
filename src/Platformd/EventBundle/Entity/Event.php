@@ -441,18 +441,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      */
     public function setEndsAt($endsAt)
     {
-        if ($endsAt === null) {
-            $this->endsAt = $endsAt;
-        } else {
-            $todayDt = new \DateTime('now');
-            $todayDt->setTime(0, 0, 0);
-
-            if ($endsAt < $todayDt) {
-                $endsAt->setDate($todayDt->format('Y'), $todayDt->format('m'), $todayDt->format('d'));
-            }
-
-            $this->endsAt = $endsAt;
-        }
+        $this->endsAt = $endsAt;
     }
 
     /**
@@ -605,18 +594,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      */
     public function setStartsAt($startsAt, $allowPast = false)
     {
-        if ($startsAt === null || $allowPast) {
-            $this->startsAt = $startsAt;
-        } else {
-            $todayDt = new \DateTime('now');
-            $todayDt->setTime(0, 0, 0);
-
-            if ($startsAt < $todayDt) {
-                $startsAt->setDate($todayDt->format('Y'), $todayDt->format('m'), $todayDt->format('d'));
-            }
-
-            $this->startsAt = $startsAt;
-        }
+        $this->startsAt = $startsAt;
     }
 
     /**

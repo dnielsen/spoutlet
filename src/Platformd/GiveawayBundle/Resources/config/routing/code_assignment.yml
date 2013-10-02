@@ -1,0 +1,3 @@
+admin_assign_codes:
+    pattern: /
+    defaults: { _controller: GiveawayBundle:CodeAssignmentAdmin:index }

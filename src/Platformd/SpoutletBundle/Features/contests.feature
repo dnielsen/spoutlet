@@ -13,24 +13,24 @@ Feature: Contest Frontend
             And I am on the "Demo" site
 
     Scenario: List existing contests for the correct site
-        Given I am on "/contests/image"
+        Given I am on "/contests"
         Then I should see "Diablo 3 Image Contest"
             And I should see "Other Contest"
             And I should not see "NA Contest"
 
     Scenario: View contest page
-        Given I am on "/contests/image"
+        Given I am on "/contests"
         When I click "Diablo 3 Image Contest"
         Then I should be on "/contest/diablo-3"
             And I should see "Diablo 3 Image Contest"
 
     Scenario: Able to enter current contest
         Given I am authenticated as a user
-            And I am on "/contests/image"
+            And I am on "/contests"
         When I click "Diablo 3 Image Contest"
         Then I should be on "/contest/diablo-3"
             And I should see "Diablo 3 Image Contest"
-            And I should see "I have read and agree to the Contest Rules"
+            And I should see "I have read and agree to the Official Rules"
 
     Scenario: Unable to enter an expired contest
         Given I am authenticated as a user
@@ -39,12 +39,8 @@ Feature: Contest Frontend
         And I should see "Submissions are no longer being accepted."
 
     Scenario: Unable to enter an unstarted contest
-        Given I am on "/contests/image"
+        Given I am on "/contests"
         When I click "Unstarted Contest"
         Then I should be on "/contest/unstarted-contest"
             And I should see "Unstarted Contest"
-            And I should not see "I have read and agree to the Contest Rules"
-
-    Scenario: Expired contests should not show up on contest index page
-        Given I am on "/contests/image"
-        Then I should not see "Expired Contest"
+            And I should not see "I have read and agree to the Official Rules"
