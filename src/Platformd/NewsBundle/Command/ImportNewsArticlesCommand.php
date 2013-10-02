@@ -210,7 +210,7 @@ EOT
                 $this->em->flush();
 
                 $persisted = true;
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $this->output(10, 'Error in upload - message was [ '.$e->getMessage().' ] - retrying...');
             }
         }

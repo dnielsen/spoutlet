@@ -149,7 +149,7 @@ class DealManager
         try {
             $this->varnishUtil->banCachedObject($indexPath);
             $this->varnishUtil->banCachedObject($dealPath);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception('Could not ban.');
         }
     }

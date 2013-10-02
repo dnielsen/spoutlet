@@ -108,7 +108,7 @@ class EmailManager
             $sentEmail->setSendStatusCode((int)$response->status);
             $sentEmail->setSendStatusOk($status);
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $sentEmail->setSendStatusCode(-500); // Likely a curl exception
             $sentEmail->setSendStatusOk(false);
         }

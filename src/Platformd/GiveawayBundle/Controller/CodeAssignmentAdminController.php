@@ -37,7 +37,7 @@ class CodeAssignmentAdminController extends Controller
 
                 try {
                     $assignmentData = $this->loadCodesFromFile($assignment->getCodesFile(), $assignment);
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $this->setFlash('error', $e->getMessage());
                     return $this->redirect($this->generateUrl('admin_assign_codes'));
                 }

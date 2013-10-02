@@ -36,7 +36,7 @@ class CacheUtil
         foreach ($this->lockStack as $lock) {
             try {
                 $this->cache->delete($lock);
-            } catch (Exception $ex) {
+            } catch (\Exception $ex) {
                 // just need to give it our best shot... no point logging as logger may already be dead and we are failing because of that
             }
         }
