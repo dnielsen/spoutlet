@@ -13,28 +13,24 @@
         <p>{{ group.description | striptags }}</p><br/>
     </div>
     <div id=row2>
+
         <div class="cBx1">
-
             <h2 class="left">Events</h2>
-
-            {% if is_granted('ROLE_ADMIN') or group.isOwner(app.user) %}
-                <a href="{{ path('idea_admin_event', {'groupSlug': group.slug}) }}" class="left spcr-l2 btn">Create Event</a>
-            {% endif %}
-
             <br/><hr/>
-
-            {% if group.events|length > 0 %}
-                {% for event in group.events %}
-                    <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventSlug': event.slug }) }}">{{ event.name }}</a>
-                     - {{ event.content|truncate(175) }}<br/><hr/>
-                {% endfor %}
-            {% endif %}
-
+            <div id="events">
+                {% if group.events|length > 0 %}
+                    {% for event in group.events %}
+                        <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventSlug': event.slug }) }}">{{ event.name }}</a>
+                         - {{ event.content|truncate(175) }}<br/><hr/>
+                    {% endfor %}
+                {% endif %}
+            </div>
         </div>
+
         <div class="cBx2">
             <h2 class="left">Members</h2>
             <br/><hr/>
-            <div style="overflow-y: auto">
+            <div id="members">
                 {% for member in group.members %}
                         - {{ member.name }}<br/>
                     {% else %}

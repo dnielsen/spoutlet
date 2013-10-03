@@ -162,6 +162,10 @@
 			display: block;
 			margin: 0 auto;
 		}
+#events, #members{
+    height: 150px;
+    overflow-y: auto
+}
 
 /*********** SUBPAGE CONTAINERs ***********/
 
