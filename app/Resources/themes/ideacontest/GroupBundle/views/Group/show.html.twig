@@ -18,12 +18,12 @@
             <h2 class="left">Events</h2>
             <br/><hr/>
             <div id="events">
-                {% if group.events|length > 0 %}
-                    {% for event in group.events %}
-                        <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventSlug': event.slug }) }}">{{ event.name }}</a>
-                         - {{ event.content|truncate(175) }}<br/><hr/>
-                    {% endfor %}
-                {% endif %}
+                {% for event in group.events %}
+                    <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventSlug': event.slug }) }}">{{ event.name }}</a>
+                     - {{ event.content|truncate(175) }}<br/><hr/>
+                {% else %}
+                    There are no events in this group yet.
+                {% endfor %}
             </div>
         </div>
 
@@ -32,10 +32,10 @@
             <br/><hr/>
             <div id="members">
                 {% for member in group.members %}
-                        - {{ member.name }}<br/>
-                    {% else %}
-                        There are no members of this group yet.
-                    {% endfor %}
+                    - {{ member.name }}<br/>
+                {% else %}
+                    There are no members of this group yet.
+                {% endfor %}
             </div>
         </div>
     </div>
