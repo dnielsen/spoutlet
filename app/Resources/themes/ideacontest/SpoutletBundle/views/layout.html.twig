@@ -52,55 +52,18 @@
 
                 {% block pre_content_nav %}{% endblock %}
 
-                {% if app.session.hasFlash('error') %}
-                    {% set sessionFlashType = 'error' %}
-                {% elseif (app.session.hasFlash('success')) %}
-                    {% set sessionFlashType = 'success' %}
-                {% else %}
-                    {% set sessionFlashType = block('flash_type') %}
-                {% endif %}
+                {% render url('_flash_message') with {}, {'standalone': true } %}
 
-                {% if sessionFlashType %}
-                        <div class="xnotices">
-                            <div class="{{ sessionFlashType }}Notice notice">
-                                <div class="pad">
-                                    <div class="pad2">
-                                        <div class="pad3">
-                                            <div class="pad4">
-                                                {#
-                                                    funny, I had to set this as a variable - concatenating
-                                                    and translating the string all in one line was a fail
-                                                #}
-                                                {% set flashTitleKey = 'platformd.flash.'~sessionFlashType~'_title' %}
-                                                <h3>
-                                                    {{ flashTitleKey | trans }}
-                                                </h3>
+                <div class="clear"></div>
 
-                                                {% if app.session.getFlash(sessionFlashType) %}
-                                                    <p>
-                                                        {{ app.session.getFlash(sessionFlashType) | trans }}
-                                                    </p>
-                                                {% else %}
-                                                    {{ block('flash') }}
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
+                {% block content %}
+                {% endblock %}
 
-                    <div class="clear"></div>
+                <div class="clear"></div>
 
-                    {% block content %}
-                    {% endblock %}
+            </div>
 
-                    <div class="clear"></div>
-                </div>
-
-                {% include 'SpoutletBundle::footer.html.twig' %}
-	        </div>
+            {% include 'SpoutletBundle::footer.html.twig' %}
 	    </div>
 	</body>
 </html>
