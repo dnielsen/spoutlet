@@ -2085,11 +2085,6 @@ Alienware Arena Team
         return $this->get('platformd.model.group_manager');
     }
 
-    private function getEmailManager()
-    {
-        return $this->get('platformd.model.email_manager');
-    }
-
     private function getEntityManager() {
         return $this->getDoctrine()->getEntityManager();
     }
