@@ -1653,7 +1653,7 @@ Alienware Arena Team
     public function showAction($slug)
     {
         return $this->render('GroupBundle:Group:show.html.twig', array(
-            'slug' => $slug,
+            'group' => $this->getGroupBySlug($slug),
         ));
     }
 
