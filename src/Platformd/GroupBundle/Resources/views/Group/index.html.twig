@@ -193,7 +193,7 @@
                 if (list[index].thumbnail) {
                     image = '<img src="' + list[index].thumbnail + '" alt="' + list[index].name + '" title="' + list[index].name + '" />';
                 } else {
-                    image = '<img src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" alt="' + list[index].name + '" title="' + list[index].name + '" />';
+                    image = '<div class="default-group-thumbnail"></div>';
                 }
 
                 ownerName = list[index].owner.adminLevel ? '{{ 'platformd.groups.index.staff' | pd_trans }}' : list[index].owner.username;
