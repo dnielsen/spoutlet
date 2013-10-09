@@ -24,7 +24,7 @@
     </div>
 
     {% block banner %}
-        <a href="{{ path('default_index') }}"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/logo.jpg') }}" alt="Campsite" width="328" height="126" id="brand"></a>
+        <a href="{{ path('default_index') }}"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/logo_'~site.defaultLocale~'.jpg') }}" alt="Campsite" id="brand"></a>
     {% endblock %}
 
     <img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/tagline.gif') }}" alt="" width="235" height="31" id="tagline">

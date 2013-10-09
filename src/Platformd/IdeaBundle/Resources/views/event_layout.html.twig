@@ -4,10 +4,6 @@
 
     {% embed 'SpoutletBundle::header.html.twig' %}
 
-        {% block banner %}
-            <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/logo.jpg') }}" alt="{{ event.name }}" width="328" height="126" id="brand"></a>
-        {% endblock %}
-
         {% block extra_user_controls %}
             <li><a href="{{ path('group_show', { 'slug': group.slug }) }}">Group</a></li>
 
