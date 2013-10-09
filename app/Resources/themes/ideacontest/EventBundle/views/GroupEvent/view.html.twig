@@ -24,16 +24,15 @@
                 </tr>
                 {% if not event.getOnline %}
                 <tr>
-                    <td width="25%"><strong>Location:</strong></td>
-                    <td width="75%">{{ event.location }}</td>
-
-                </tr>
-                <tr>
                     <td width="25%"><strong>Map:</strong></td>
                     <td width="75%">
                         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
                         <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
                     </td>
+                </tr>
+                <tr>
+                    <td width="25%"><strong>Location:</strong></td>
+                    <td width="75%">{{ event.location }}</td>
                 </tr>
                 <tr>
                     <td width="25%"><strong>Address:</strong></td>
