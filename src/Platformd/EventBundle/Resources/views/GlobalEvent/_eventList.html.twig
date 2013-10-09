@@ -53,7 +53,7 @@
                 {% endif %}
             </td>
             <td style="vertical-align:top">
-                {% if event.online|default(true) %}
+                {% if event.online == true %}
                     {{ 'platformd.events.event_listings.online' | pd_trans }}
                 {% else %}
                     {% if event.fullAddress is not null %}
