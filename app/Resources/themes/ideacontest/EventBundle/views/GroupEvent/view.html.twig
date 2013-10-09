@@ -3,7 +3,7 @@
 {% block event_content %}
     <div class="row1">
         <div class="cBx1">
-            <p>{{event.content | nl2br }}</p>
+            <p>{{event.content | raw }}</p>
         </div>
         <div class="cBx2">
             <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="submit left" id="event_button">View Ideas</a>
@@ -26,6 +26,14 @@
                 <tr>
                     <td width="25%"><strong>Location:</strong></td>
                     <td width="75%">{{ event.location }}</td>
+
+                </tr>
+                <tr>
+                    <td width="25%"><strong>Map:</strong></td>
+                    <td width="75%">
+                        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+                        <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
+                    </td>
                 </tr>
                 <tr>
                     <td width="25%"><strong>Address:</strong></td>

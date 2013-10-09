@@ -11,11 +11,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\IdeaBundle\Entity\VoteCriteria;
-use Platformd\IdeaBundle\Entity\Idea;
-use Platformd\IdeaBundle\Entity\Comment;
-use Platformd\IdeaBundle\Entity\Tag;
 use Platformd\EventBundle\Entity\Event;
 use Platformd\EventBundle\Entity\GroupEvent;
+use Platformd\MediaBundle\Entity\Media;
+use Platformd\MediaBundle\Form\Type\MediaType;
+use Knp\MediaBundle\Entity\MediaRepository;
 
 class AdminController extends Controller
 {
@@ -43,7 +43,7 @@ class AdminController extends Controller
 
 		$form = $this->createFormBuilder($event)
 			->add('name', 'text', array('label' => 'Event Title', 'attr' => array('size' => '60%')))
-			->add('content', 'textarea', array('label' => 'Welcome Description', 'attr' => array('cols' => '75%', 'rows' => '4')))
+			->add('content', 'purifiedTextarea', array('label' => 'Welcome Description', 'attr' => array('class' => 'ckeditor', 'cols' => '75%', 'rows' => '4')))
 			->add('startsAt', 'date', array('label' => 'Start of Event', 'attr' => array('size' => '60%')))
 			->add('endsAt', 'date', array('label' => 'End of Event', 'attr' => array('size' => '60%')))
             ->add('online', 'choice', array('choices' => array('1' => 'Online', '0' => 'Location'), 'label'=>'Event Type'))
@@ -321,11 +321,70 @@ class AdminController extends Controller
             )));
 	}
 
+    public function imagesAction($groupSlug, $eventSlug, Request $request) {
+
+        $newImage = new Media();
+        $form = $this->createForm(new MediaType(), $newImage, array('image_label' => 'Image File:'));
+
+        $event = $this->getEvent($groupSlug, $eventSlug);
+
+        $params = array(
+            'group' => $this->getGroup($groupSlug),
+            'event' => $event,
+            'form'  => $form->createView(),
+        );
+
+        if ('POST' === $request->getMethod()) {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $image = $form->getData();
+
+                $mUtil = $this->getMediaUtil();
+                $mUtil->persistRelatedMedia($image);
+
+                $event->getRotatorImages()->add($image);
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->flush();
+            }
+        }
+
+        return $this->render('IdeaBundle:Admin:images.html.twig', $params);
+    }
+
+    public function removeImageAction($groupSlug, $eventSlug, $imageId) {
+
+        $image = $this->getDoctrine()->getRepository('MediaBundle:Media')->find($imageId);
+
+        if (!$image) {
+            throw new NotFoundHttpException();
+        }
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->remove($image);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('idea_admin_images', array(
+            'groupSlug' => $groupSlug,
+            'eventSlug' => $eventSlug,
+        )));
+    }
+
+
 	//------------------------ Helper Functions -----------------------------------
 	public function isAdmin()
     {
 		return $this->get('security.context')->isGranted('ROLE_ADMIN');
 	}
+
+    public function canEditEvent(Event $event)
+    {
+        if ($this->isAdmin() or $this->getCurrentUser() == $event->getUser()){
+            return true;
+        }
+        return false;
+    }
 
     public function getGroup($groupSlug)
     {
