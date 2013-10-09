@@ -9,7 +9,7 @@ INSTALLATION
 
 * Move into the project root and install the required packages
 
-    $ cd spoutlet
+    $ cd spoutlet  
     $ ./install_packages.sh 
 
 * Update the vendors (this will take several minutes the first time you do it)
@@ -20,29 +20,31 @@ INSTALLATION
 
 * Copy the template parameters file to parameters.ini
 
-    $ cp app/config/parameters.ini.dist app/config/parameters.ini
+    $ cp app/config/parameters.ini.dist  app/config/parameters.ini
     
 
 * Open the `app/config/parameters.ini` file and customize the database
     information. All the other settings are fine.
 
 * Create a virtual host and point it at the `web/` directory of your
-    project. For example, suppose I clone the project to "/Users/ryan/Sites/Platformd".
+    project. For example, suppose I clone the project to "/home/user/sites/campsite".
     Then, my Apache virtualhost would look like this:
 
-    <VirtualHost *:80>
-        ServerAdmin webmaster@dummy-host.example.com
-        ServerName campsite.local
-        DirectoryIndex app_dev.php
-        DocumentRoot "/home/user/sites/campsite/web"
-        ErrorLog "/home/user/sites/campsite/logs/error.log"
-        CustomLog "/home/user/sites/campsite/logs/access.log" common
 
-        <Directory "/home/user/sites/campsite/web">
-            AllowOverride All
-            Options FollowSymLinks
-        </Directory>
-    </VirtualHost>
+        <VirtualHost *:80>
+            ServerAdmin webmaster@dummy-host.example.com
+            ServerName campsite.local
+            DirectoryIndex app_dev.php
+            DocumentRoot "/home/user/sites/campsite/web"
+            ErrorLog "/home/user/sites/campsite/logs/error.log"
+            CustomLog "/home/user/sites/campsite/logs/access.log" common
+
+            <Directory "/home/user/sites/campsite/web">
+                AllowOverride All
+                Options FollowSymLinks
+            </Directory>
+        </VirtualHost>
+
 
 * Restart Apache
 
@@ -66,18 +68,18 @@ INSTALLATION
 
 * Create the database, add the schema
 
-    $ php app/console doctrine:database:create
-    $ php app/console doctrine:mig:mig
+    $ php app/console doctrine:database:create  
+    $ php app/console doctrine:mig:mig  
     
-    Connect to database and update:
-        pd_site
-        pd_site_config
-        pd_site_features 
+    Connect to database and update:  
+        pd_site  
+        pd_site_config  
+        pd_site_features   
         
-    You'll need to update app/config/config.yml and add your sites to:
-        available_locales
-        site_host_map
-        platformd_sites
+    You'll need to update app/config/config.yml and add your sites to:  
+        available_locales  
+        site_host_map  
+        platformd_sites  
 
 * Run the following command and just leave it running while you're working.
     This compiles all of the CSS and JS assets. If you don't run this, you
@@ -96,8 +98,8 @@ UPDATING
 * First, update your code. Assuming you're using the master branch, you'd
     do the following:
 
-    git fetch origin
-    git merge origin/master
+    git fetch origin  
+    git merge origin/master  
 
 * Update the vendors:
 
@@ -109,8 +111,8 @@ UPDATING
     
 * Run the refresh scripts to dump assets, install assets, and install themes
 
-    $ ./refreshDev.sh - Dumps assets, installs assets, installs themes
-    $ ./refresh.sh - Does all the above and clears cache for production (takes several minutes to clear cache)
+    $ ./refreshDev.sh - Dumps assets, installs assets, installs themes  
+    $ ./refresh.sh - Does all the above and clears cache for production (takes several minutes to clear cache)  
 
 * Run your asset compiler if not already:
 
