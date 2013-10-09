@@ -20,7 +20,7 @@
             <div id="events">
                 {% for event in group.events %}
                     <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventSlug': event.slug }) }}">{{ event.name }}</a>
-                     - {{ event.content|truncate(175) }}<br/><hr/>
+                     - {{ event.content|striptags|truncate(175) }}<br/><hr/>
                 {% else %}
                     There are no events in this group yet.
                 {% endfor %}
