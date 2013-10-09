@@ -4,38 +4,42 @@
 
 {% block content %}
 
-    <h2 class="left">{{ group.name }}</h2>
+    <div id="row1">
+        <h2 class="left spcr-t">{{ group.name }}</h2>
+        <br/><hr/>
 
-    {% if not group.isOwner(app.user) %}
+        {% include 'GroupBundle:Group:_subNav.html.twig' %}
 
-        {% if group.isMember(app.user) %}
-            {% set groupAction = 'leave' %}
-        {% else %}
-            {% set groupAction = 'join' %}
-        {% endif %}
+        <p>{{ group.description | striptags }}</p><br/>
+    </div>
+    <div id=row2>
 
-        <a href="{{ path('group_' ~ groupAction, {'slug': group.slug}) }}" class="left spcr-l2 btn">{{ groupAction|capitalize }} Group</a>
+        <div class="cBx1">
+            <h2 class="left">Events</h2>
+            <br/><hr/>
+            <div id="events">
+                {% for event in group.events %}
+                    <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventSlug': event.slug }) }}">{{ event.name }}</a>
+                     - {{ event.content|truncate(175) }}<br/><hr/>
+                {% else %}
+                    There are no events in this group yet.
+                {% endfor %}
+            </div>
+        </div>
 
-    {% endif %}
+        <div class="cBx2">
+            <h2 class="left">Members</h2>
+            <br/><hr/>
+            <div id="members">
+                {% for member in group.members %}
+                    - {{ member.name }}<br/>
+                {% else %}
+                    There are no members of this group yet.
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 
-    <br/><hr/>
-
-    <p>{{ group.description | striptags }}</p><br/>
-
-    <h2 class="left">Events</h2>
-
-    {% if is_granted('ROLE_ADMIN') or group.isOwner(app.user) %}
-        <a href="{{ path('idea_admin_event', {'groupSlug': group.slug}) }}" class="left spcr-l2 btn">Create Event</a>
-    {% endif %}
-
-    <br/><hr/>
-
-    {% if group.events|length > 0 %}
-        {% for event in group.events %}
-            <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventSlug': event.slug }) }}">{{ event.name }}</a>
-             - {{ event.content|truncate(120) }}<br/><hr/>
-        {% endfor %}
-    {% endif %}
 
 {% endblock %}
 
