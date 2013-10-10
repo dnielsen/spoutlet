@@ -76,15 +76,16 @@ platformd.unsubscribe.note: Please note that you will continue to receive event-
 platformd.unsubscribe.user_not_found: Your email address was not found.
 platformd.unsubscribe.success: Your email preferences have been updated.
 platformd.unsubscribe.failure: A username has never been assigned to your account. Please email osman@platformd.com with the username you would like to have in order to complete your password reset.
+
 form_displayName: Criteria Name
 form_description: Criteria Description
 form_name: Event Title
 form_content: Event Description
 form_startsAt: Start Date
 form_endsAt: End Date
-form_location: Location
-form_address1: Address Line 1
-form_address2: Address Line 2
+form_location: Location Name
+form_address1: Address
+form_address2: City, State, Zip
 form_allowedVoters: Current Judges
 form_registrationOption: Registration
 form_isSubmissionActive: Submission

@@ -42,19 +42,19 @@ class AdminController extends Controller
 
 
 		$form = $this->createFormBuilder($event)
-			->add('name', 'text', array('label' => 'Event Title', 'attr' => array('size' => '60%')))
-			->add('content', 'purifiedTextarea', array('label' => 'Welcome Description', 'attr' => array('class' => 'ckeditor', 'cols' => '75%', 'rows' => '4')))
-			->add('startsAt', 'date', array('label' => 'Start of Event', 'attr' => array('size' => '60%')))
-			->add('endsAt', 'date', array('label' => 'End of Event', 'attr' => array('size' => '60%')))
-            ->add('online', 'choice', array('choices' => array('1' => 'Online', '0' => 'Location'), 'label'=>'Event Type'))
-            ->add('location', 'text', array('label' => 'Location', 'attr' => array('size' => '60%'), 'required' => '0'))
-			->add('address1', 'text', array('label' => 'Address', 'attr' => array('size' => '60%'), 'required' => '0'))
-			->add('address2', 'text', array('label' => 'Address Line 2', 'attr' => array('size' => '60%'), 'required' => '0'))
-			->add('allowedVoters', 'text', array('label' => 'Current Judges', 'attr' => array('size' => '60%'), 'required' => '0'))
-            ->add('isSubmissionActive', 'choice', array('choices' => array('1' => 'Enabled', '0' => 'Disabled'), 'label' => 'Submissions'))
-            ->add('isVotingActive', 'choice', array('choices' => array('1' => 'Enabled', '0' => 'Disabled'), 'label' => 'Voting'))
-            ->add('registrationOption', 'text', array('attr' => array('value'=>Event::REGISTRATION_ENABLED,'style'=>'display:none')))
-            ->add('private', 'text', array('attr' => array('value' => '0', 'style'=>'display:none')))
+			->add('name', 'text', array('attr' => array('size' => '60%')))
+			->add('content', 'purifiedTextarea', array('attr' => array('class' => 'ckeditor', 'cols' => '75%', 'rows' => '4')))
+			->add('startsAt', 'date', array('attr' => array('size' => '60%')))
+			->add('endsAt', 'date', array('attr' => array('size' => '60%')))
+            ->add('online', 'choice', array('choices' => array('1' => 'Online', '0' => 'Location')))
+            ->add('location', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
+			->add('address1', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
+			->add('address2', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
+			->add('allowedVoters', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
+            ->add('isSubmissionActive', 'choice', array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
+            ->add('isVotingActive', 'choice', array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
+            ->add('registrationOption', 'text', array('attr' => array('value'=>Event::REGISTRATION_ENABLED,'style'=>'display:none'), 'required' => '0'))
+            ->add('private', 'text', array('attr' => array('value' => '0', 'style'=>'display:none', 'required' => '0')))
 			->getForm();
 
 		if($request->getMethod() == 'POST') {
