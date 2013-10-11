@@ -164,7 +164,7 @@
 			margin: 0 auto;
 		}
 #events, #members{
-    height: 150px;
+    height: 250px;
     overflow-y: auto
 }
 
