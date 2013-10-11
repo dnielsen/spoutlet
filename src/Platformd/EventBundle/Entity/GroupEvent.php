@@ -56,7 +56,7 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
      *
      * @var boolean $private
      * @ORM\Column(name="private", type="boolean")
-     * @Assert\NotNull(message="Required")
+     * //@Assert\NotNull(message="Required")
      */
     protected $private;
 

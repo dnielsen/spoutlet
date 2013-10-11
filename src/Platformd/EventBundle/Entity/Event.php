@@ -98,7 +98,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      * Event registration option (enabled, disabled, 3rd party)
      *
      * @var string
-     * @Assert\NotBlank(message="Registration Option Required")
+     * //@Assert\NotBlank(message="Registration Option Required")
      * @ORM\Column(name="registration_option", type="string", length=255)
      */
     protected $registrationOption = self::REGISTRATION_ENABLED;

@@ -48,12 +48,10 @@
         {{ form_row(form.allowedVoters) }}
         {{ form_row(form.isSubmissionActive) }}
         {{ form_row(form.isVotingActive) }}
-        {{ form_row(form.registrationOption) }}
-        {{ form_row(form.private) }}
 
         {{ form_rest(form) }}
 
-	    <input type="submit" value="Submit"/>
+	    <input type="submit" value="Submit" formnovalidate/>
         <input type="submit" value="Cancel" name="cancel" formnovalidate/>
 	</form>
 {% endblock %}

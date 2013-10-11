@@ -43,7 +43,7 @@ class AdminController extends Controller
 
 		$form = $this->createFormBuilder($event)
 			->add('name', 'text', array('attr' => array('size' => '60%')))
-			->add('content', 'purifiedTextarea', array('attr' => array('class' => 'ckeditor', 'cols' => '75%', 'rows' => '4')))
+			->add('content', 'purifiedTextarea', array('attr' => array('class' => 'ckeditor')))
 			->add('startsAt', 'date', array('attr' => array('size' => '60%')))
 			->add('endsAt', 'date', array('attr' => array('size' => '60%')))
             ->add('online', 'choice', array('choices' => array('1' => 'Online', '0' => 'Location')))
@@ -53,8 +53,7 @@ class AdminController extends Controller
 			->add('allowedVoters', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
             ->add('isSubmissionActive', 'choice', array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
             ->add('isVotingActive', 'choice', array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
-            ->add('registrationOption', 'text', array('attr' => array('value'=>Event::REGISTRATION_ENABLED,'style'=>'display:none'), 'required' => '0'))
-            ->add('private', 'text', array('attr' => array('value' => '0', 'style'=>'display:none', 'required' => '0')))
+
 			->getForm();
 
 		if($request->getMethod() == 'POST') {
@@ -66,6 +65,8 @@ class AdminController extends Controller
                 $event->setTimezone('UTC');
                 $event->setActive(true);
                 $event->setApproved(true);
+                $event->setPrivate(false);
+                $event->setRegistrationOption(Event::REGISTRATION_ENABLED);
 
 				$em = $this->getDoctrine()->getEntityManager();
 				$em->persist($event);
