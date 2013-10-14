@@ -94,6 +94,7 @@ services:
             - "%local_auth%"
             - "%secure_url_scheme%"
             - "@platformd.util.flash_util"
+            - "@kernel"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
             - { name: twig.extension }

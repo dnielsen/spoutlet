@@ -16,6 +16,7 @@ use Platformd\UserBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Platformd\SpoutletBundle\Entity\Site;
 
 /**
@@ -43,8 +44,9 @@ class SpoutletExtension extends Twig_Extension
     private $secureUrlScheme;
     private $countryCode;
     private $flashUtil;
+    private $kernel;
 
-    public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager, $contentReportRepo, $siteRepo, $backgroundAdRepo, $localAuth, $secureUrlScheme, $flashUtil)
+    public function __construct($bucketName, $giveawayManager, $linkableManager, $mediaExposer, $router, $securityContext, $siteUtil, $translator, $userManager, $contentReportRepo, $siteRepo, $backgroundAdRepo, $localAuth, $secureUrlScheme, $flashUtil, KernelInterface $kernel)
     {
         $this->bucketName          = $bucketName;
         $this->giveawayManager     = $giveawayManager;
@@ -61,6 +63,7 @@ class SpoutletExtension extends Twig_Extension
         $this->localAuth           = $localAuth;
         $this->secureUrlScheme     = $secureUrlScheme;
         $this->flashUtil           = $flashUtil;
+        $this->kernel              = $kernel;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -126,6 +129,7 @@ class SpoutletExtension extends Twig_Extension
             'country_specific'               => new Twig_Function_Method($this, 'countrySpecific', array('is_safe' => array('html'))),
             'get_flash'                      => new Twig_Function_Method($this, 'getFlash'),
             'has_flash'                      => new Twig_Function_Method($this, 'hasFlash'),
+            'asset_exists'                   => new Twig_Function_Method($this, 'assetExists'),
         );
     }
 
@@ -976,6 +980,19 @@ class SpoutletExtension extends Twig_Extension
     public function hasFlash()
     {
         return $this->flashUtil->hasFlash();
+    }
+
+    public function assetExists($file_path)
+    {
+        $webRoot = realpath($this->kernel->getRootDir() . '/../web/');
+        $fileToCheck = realpath($webRoot . '/' . $file_path);
+
+        if (is_file($fileToCheck))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     public function base64Encode($data)
