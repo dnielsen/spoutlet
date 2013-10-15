@@ -1,0 +1,149 @@
+{% extends 'IdeaBundle::group_layout.html.twig' %}
+
+{% block title %}{{ group.name }}{% endblock %}
+
+{% block content %}
+
+    <div id="contentLft">
+        <h2 class="left spcr-t">{{ group.name }}</h2>
+        <br/><br/>
+        {% include 'GroupBundle:Group:_subNav.html.twig' %}
+        <hr/>
+
+        <!-- royalslider code start
+        <div class="content-slider-bg">
+            <div id="content-slider-1" class="royalSlider contentSlider rsDefault">
+
+                <div>
+                    <a href={{ path('fos_user_registration_register') }}><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-register.jpg') }}" alt="Register" width="740" height="341"></a>
+						<span class="rsTmb">
+							Register
+						</span>
+                </div>
+                <div>
+                    <a href="learn.html" target="_blank"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-learn.jpg') }} alt="Learn" width="740" height="341"></a>
+				        <span class="rsTmb">
+							Learn
+				        </span>
+                </div>
+                <div>
+                    <a href="code.html" target="_blank"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-forum.jpg') }} alt="Code" width="740" height="341"></a>
+				        <span class="rsTmb">
+							API Forum
+				        </span>
+                </div>
+                <div>
+                    <a href="share.html" target="_blank"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-share.jpg') }} alt="Share" width="740" height="341"></a>
+						<span class="rsTmb">
+							App Idea Forum
+						</span>
+                </div>
+
+            </div>
+        </div> <!-- end royalslider
+
+        <script id="addJS">
+            jQuery(document).ready(function($) {
+                // Please note that autoHeight option has some conflicts with options like imageScaleMode, imageAlignCenter and autoScaleSlider
+                // it's recommended to disable them when using autoHeight module
+                $('#content-slider-1').royalSlider({
+                    autoHeight: true,
+                    arrowsNav: false,
+                    fadeinLoadedSlide: false,
+                    controlNavigationSpacing: 0,
+                    controlNavigation: 'tabs',
+                    imageScaleMode: 'none',
+                    imageAlignCenter:false,
+                    loop: false,
+                    loopRewind: true,
+                    numImagesToPreload: 6,
+                    keyboardNavEnabled: true,
+                    usePreloader: false,
+                    autoPlay: {
+                        enabled: true,
+                        pauseOnHover: true,
+                        delay: 5000
+                    }
+                });
+            });
+        </script>
+        -->
+
+
+        {{ group.description | raw }}<br/>
+    </div>
+
+
+    <div id="contentRt">
+        <h2 class="stepBar">Step 1: Register for Hackathon</h2>
+        <p>Join this competition to create apps that utilize the API for vehicle data on either iOS or Android platforms. Toyota-ITC will provide qualified developers with access to Toyota&#8217;s vehicle data streaming API for the first time in the US.</p>
+
+        <p class="right"><a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': 4}) }}"  class="btnTny">register</a></p>
+
+        <p class="bdr spcr-b"><a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': 4}) }}" class="midtxt">Quantified Car Hackathon</a><br>
+            Nov 9th - 10th | Mountain View</p>
+
+        <hr class="clr">
+
+        <h2 class="stepBar">Step 2: Learn about the API</h2>
+
+        <p>Come to one of our API idea brainstorming sessions (aka &ldquo;Ideathons&rdquo;) where you can learn about the API, generate app ideas and form teams. Get some ideas for a startup or new product design.</p>
+        <p class="right"><a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': 1}) }}"  class="btnTny">register</a></p>
+
+        <p class="bdr"><a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': 1}) }}" class="midtxt">Ideathon / Kickoff</a><br>
+            Oct 17th | Mountain View</p>
+
+        <div class="clr"></div>
+
+        <p class="right"><a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': 2}) }}"  class="btnTny">register</a></p>
+
+        <p class="bdr"><a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': 2}) }}" class="midtxt">Ideathon / Kickoff</a><br>
+            Oct 21st | Mountain View</p>
+
+        <div class="clr"></div>
+
+        <p class="right"><a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': 3}) }}"  class="btnTny">register</a></p>
+
+        <p class="bdr spcr-b"><a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': 3}) }}" class="midtxt">Ideathon / Design Emphasis</a><br>
+            Oct 29th | Mountain View</p>
+
+        <div class="clr"></div>
+
+        <p class="bdr"></p>
+
+        <p class="right mgnNeg"><a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': 1}) }}" class="btnTny">register</a></p>
+        <h2>Our First Ideathon</h2>
+
+        <table summary="Event Info" class="tblStyle spcr-b2">
+            <tbody>
+            <tr>
+                <td width="35%"><strong>DATE:</strong></td>
+                <td width="65%">Thursday, October 17th, 2013</td>
+            </tr>
+            <tr>
+                <td><strong>TIME:</strong></td>
+                <td>6:30pm - 9:00pm</td>
+            </tr>
+            <tr>
+                <td><strong>LOCATION:</strong></td>
+                <td>Toyota ITC<br>
+                    465 N Bernardo<br>
+                    Mountain View, CA 94043</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <iframe width="390" height="250" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q=465+N+Bernardo+Mountain+View&amp;ie=UTF8&amp;hq=&amp;hnear=465+N+Bernardo+Ave,+Mountain+View,+Santa+Clara,+California+94043&amp;gl=us&amp;t=m&amp;z=14&amp;ll=37.389122,-122.049545&amp;output=embed"></iframe>
+        <p class="smtxt txtrt spcr-n"><a href="https://maps.google.com/maps?q=465+N+Bernardo+Mountain+View&amp;ie=UTF8&amp;hq=&amp;hnear=465+N+Bernardo+Ave,+Mountain+View,+Santa+Clara,+California+94043&amp;gl=us&amp;t=m&amp;z=14&amp;ll=37.389122,-122.049545&amp;source=embed" target="_blank">Get Directions &rsaquo;</a></p>
+
+        <br class="clr">
+
+    </div> <!-- end contentRt -->
+
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'GroupBundle:Group:_css_assets.html.twig' %}
+{% endblock %}

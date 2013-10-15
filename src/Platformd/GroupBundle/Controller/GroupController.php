@@ -1652,8 +1652,15 @@ Alienware Arena Team
 
     public function showAction($slug)
     {
+        $group = $this->getGroupBySlug($slug);
+        $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group, 6);
+        $nextEvent = array_slice($upcomingEvents, 0, 1)[0];
+        $remainingEvents = array_slice($upcomingEvents, 1);
+
         return $this->render('GroupBundle:Group:show.html.twig', array(
-            'group' => $this->getGroupBySlug($slug),
+            'group'          => $group,
+            'nextEvent'      => $nextEvent,
+            'upcomingEvents' => $remainingEvents,
         ));
     }
 

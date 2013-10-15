@@ -1,0 +1,69 @@
+<div id="footer">
+    <a name="sitemap"></a>
+    <div id="ftr-content">
+        <div class="ftrcol">
+            <h5>About</h5>
+            <ul>
+                <li><a href="{{ path('about') }}">About Campsite</a></li>
+                <li><a href="{{ path('html_widget_page', { 'slug': 'mission' }) }}">Mission</a></li>
+                <li><a href="{{ path('html_widget_page', { 'slug': 'leadership-team' }) }}">Leadership Team</a></li>
+
+                <li class="spcr-t"><a href="{{ path('contact') }}">Contact Us</a></li>
+                <li><a href="{{ path('default_index') }}">Home</a></li>
+            </ul>
+        </div>
+        <div class="ftrcol">
+            <h5>Event FAQs</h5>
+            <ul>
+                <li><a href="{{ path('html_widget_page', { 'slug': 'event-overview' }) }}">Event Overview</a></li>
+                <li><a href="{{ path('html_widget_page', { 'slug': 'what-to-expect' }) }}">What to Expect</a></li>
+                <li><a href="{{ path('html_widget_page', { 'slug': 'what-to-bring' }) }}">What to Bring</a></li>
+                <li><a href="{{ path('html_widget_page', { 'slug': 'more-faqs' }) }}">More FAQs</a></li>
+                <li><a class="text-error" href="{{ path('html_widget_page', { 'slug': 'session-schedule' }) }}">Session Schedule</a></li>
+            </ul>
+        </div>
+        <div class="ftrcol">
+            <h5>Get Involved</h5>
+            <ul>
+                <li><a href="{{ path('html_widget_page', { 'slug': 'propose-a-topic' }) }}">How to Propose a Topic</a></li>
+                <li><a href="http://marketingcamp.uservoice.com/forums/193848-welcome-camper-san-francisco-2013-">Vote on Topics</a></li>
+                <li><a href="{{ path('html_widget_page', { 'slug': 'sign-up-to-volunteer' }) }}">Sign Up to Volunteer</a></li>
+                <li><a href="{{ path('html_widget_page', { 'slug': 'become-a-sponsor' }) }}">Become a Sponsor</a></li>
+                <li><a href="{{ path('html_widget_page', { 'slug': 'spread-the-word' }) }}">Spread the Word</a></li>
+                <li><a class="text-error" href="{{ path('html_widget_page', { 'slug': 'start-your-own-camp' }) }}">Start Your Own Camp</a></li>
+            </ul>
+        </div>
+        <div class="ftrcol">
+            <h5>What&#8217;s New</h5>
+            <ul>
+                <li><a href="{{ path('html_widget_page', { 'slug': 'social-mediakit' }) }}">Social Mediakit</a></li>
+                <li><a href="{{ path('html_widget_page', { 'slug': 'press-releases' }) }}">Press Releases</a></li>
+                <li><a href="{{ path('html_widget_page', { 'slug': 'news-updates' }) }}">News &amp; Updates</a></li>
+            </ul>
+
+            <ul>
+                <li><a href="{{ path('global_events_index') }}">RSVP</a></li>
+                <li><a href="{{ path('html_widget_page', { 'slug': 'become-a-sponsor' }) }}">SPONSOR</a></li>
+            </ul>
+        </div>
+        <div id="contactNfo" class="divrt">
+            <h5>Contact Us</h5>
+
+            <p><a href="mailto:&#105;&#110;&#102;&#111;&#064;&#099;&#097;&#109;&#112;&#115;&#105;&#116;&#101;&#046;&#111;&#114;&#103;">&#105;&#110;&#102;&#111;&#064;&#099;&#097;&#109;&#112;&#115;&#105;&#116;&#101;&#046;&#111;&#114;&#103;</a></p>
+
+            <p>Twitter Handle<br>
+            @Campsite<br>
+            <!-- <a href="http://twitterfall.com/?trend=%23mcsv!%23322337&trend=@MarketingCampSV!%23280A5A&trend=@MarketingHero!%23322337&trend=MarketingCamp!%23864C19&trend=MCSV!%23492505" target="_blank">Twitterfall</a> --></p>
+
+        </div>
+
+        <br class="clr" />
+
+        <div id="credit">
+            Site created by <a href="http://www.takeflightgraphics.com" target="_blank">Take Flight Graphics</a> <img src="{{ asset('/themes/' ~ site.theme ~ '/spoutlet/img/icon-tfg.png') }}" width="14" height="8" alt="Take Flight Graphics"></a>
+        </div>
+        <div id="copyright">
+            <script language="JavaScript">document.write(include_copyright(2012));</script>
+        </div>
+    </div><!-- end footer content -->
+</div><!-- end footer -->

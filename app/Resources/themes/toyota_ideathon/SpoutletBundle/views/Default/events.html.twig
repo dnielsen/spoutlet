@@ -1,0 +1,24 @@
+<div class="cBx2">
+    <h2 class="spcr-b">Upcoming Events</h2>
+
+    <table summary="Upcoming Event Dates" class="tblStyle" id="eventList">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in events %}
+            <tr class="fill">
+                <td><a href="{{ event | pd_link }}">{{ event.name }}</a></td>
+                <td>{{ event.startsAt|date('m.d.y') }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="2">No upcoming events</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+</div>

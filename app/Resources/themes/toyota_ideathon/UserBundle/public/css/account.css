@@ -1,0 +1,17 @@
+.profileAvatar_big .defaultAvatar {
+    width: 184px;
+    height: 184px;
+    background:url('../../spoutlet/img/default_avatar_184.png') top left no-repeat;
+    border: none;
+}
+
+.memberProfileLeft {
+    width: 200px;
+    float: left;
+}
+
+.memberProfileRight {
+margin-left: 210px;
+padding-top: 10px;
+width: 420px;
+}

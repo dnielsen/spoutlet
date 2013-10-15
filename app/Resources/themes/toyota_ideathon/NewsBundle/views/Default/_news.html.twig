@@ -1,0 +1,22 @@
+<article class="news-item">
+    <h2>
+        <a class="controlled-spacing" href="{{ item | pd_link }}" {{ item is external ? 'target="_blank"' : '' }}>{{ item.title }}</a>
+    </h2>
+
+    <div class="news-reply">
+        <a href="{{ item | pd_link }}#comments">Leave a reply</a>
+    </div>
+
+    <div class="article-content">
+        {% if item.image %}
+            <img style="float:left;" class="article-image" src="{{ item.image.filename | imagine_filter('article_list')  }}" alt="{{ item.title }}" />
+        {% endif %}
+
+        {{  item.body | raw }}
+
+        <div class="news-footer">
+            <p>This entry was posted on {{ item.postedAt | date('F d, Y') }} by <span class="text-error">Username to be added</span>.</p>
+        </div>
+
+    </div>
+</article>
