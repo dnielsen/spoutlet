@@ -74,6 +74,7 @@
     </div>
 
     <div id="contentRt">
+        {% if nextEvent %}
         <h2 class="stepBar"><a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': nextEvent.slug}) }}">{{ nextEvent.name }}</a></h2>
         <table summary="Next Event" class="tblStyle">
             <tbody>
@@ -121,7 +122,9 @@
             {% endif %}
             </tbody>
         </table>
+        {% endif %}
 
+        {% if upcomingEvents %}
         <h2 class="stepBar">More Upcoming Events</h2>
         <div id="events">
             {% for event in upcomingEvents %}
@@ -142,11 +145,9 @@
                 </p>
 
             <div class="clr"></div>
-
-            {% else %}
-                There are no events in this group yet.
             {% endfor %}
         </div>
+        {% endif %}
 
         <h2 class="stepBar">Members</h2>
         <div id="members">
