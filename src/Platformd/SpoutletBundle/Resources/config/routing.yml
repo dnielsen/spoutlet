@@ -58,6 +58,18 @@ api_session_cookie_refresh:
     pattern: /refreshApiSessionCookie/{uuid}
     defaults: { _controller: SpoutletBundle:Default:refreshApiSessionCookie, uuid: ~ }
 
+site_springboard:
+    pattern: /siteSpringboard
+    defaults: { _controller: SpoutletBundle:Default:siteSpringboard }
+
+change_domain:
+    pattern: /changeDomain/{locale}
+    defaults: { _controller: SpoutletBundle:Default:changeDomain, locale: ~ }
+
+country_state_options:
+    pattern: /countryStateOptions/{countryCode}
+    defaults: { _controller: SpoutletBundle:Default:countryStateOptions, countryCode: ~ }
+
 default_index:
     pattern:  /
     defaults: { _controller: SpoutletBundle:Default:index }

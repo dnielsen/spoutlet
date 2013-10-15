@@ -26,6 +26,26 @@ class CommentRepository extends EntityRepository
         ;
     }
 
+    public function findCommentsForThreadSortedByDate($thread, $limit=25, $order='DESC')
+    {
+       return $this->createQueryBuilder('c')
+            ->andWhere('c.author = :user')
+            ->setParameter('user', $user)
+            ->orderBy('c.createdAt', $dateSort)
+            ->getQuery()
+        ;
+    }
+
+    public function getAllActiveCommentsForUserQuery($user)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.author = :user')
+            ->andWhere('c.deleted = false')
+            ->setParameter('user', $user)
+            ->getQuery()
+        ;
+    }
+
     private function findCommentsForSiteFeature($limit, $featureName)
     {
         $result = $this->createQueryBuilder('c')

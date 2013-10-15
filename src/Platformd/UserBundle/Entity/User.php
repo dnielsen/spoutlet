@@ -455,6 +455,7 @@ class User extends BaseUser
      */
     protected $registrationSource;
 
+
     /**
      * @ORM\Column(type="string", length="255", nullable=true)
      * @Assert\NotBlank(message="Please enter your name.", groups={"Registration", "Profile"})

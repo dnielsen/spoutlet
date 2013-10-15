@@ -102,6 +102,17 @@
 
             $('#additional-checkbox a').click(function() {
                 $(this).attr('target', '_blank');
+
+        });
+
+        jQuery(document).ready(function() {
+            // make the terms content display in a modal
+            $('.sweeps-terms-modal').click(function() {
+                $.modal($('#sweeps-terms-modal-content'), {
+                    overlayClose: true
+                });
+
+                return false;
             });
 
             $('.not-entered #use-existing-account').click(function(e) {

@@ -18,6 +18,7 @@
 /web/themes/*
 VERSION
 /external_data/ip2location/overrideCountry
+/external_data/maxmind/overrideCountry
 /bin/AwaReset.log
 /misc_scripts/youtube_upload/client_secrets.json
 /misc_scripts/youtube_upload/upload_video.py-oauth2.json

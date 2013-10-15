@@ -64,6 +64,7 @@ AnnotationRegistry::registerLoader(function($class) use ($loader) {
 AnnotationRegistry::registerFile(__DIR__.'/../vendor/doctrine/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
 
 require __DIR__.'/../vendor/swiftmailer/lib/swift_required.php';
+require __DIR__.'/../external_data/maxmind/GeoIP.inc';
 
 // uncomment to see stack traces in PHPUnit
 // xdebug_enable();

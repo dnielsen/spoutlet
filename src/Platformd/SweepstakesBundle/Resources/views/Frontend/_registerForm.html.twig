@@ -121,7 +121,7 @@
                 {% include 'UserBundle:Registration:_register_dob.html.twig' with { 'form': entryForm.registrationDetails, 'birthdate_error': birthdate_error, 'locale': site.defaultLocale} %}
             </td>
         </tr>
-        <tr class="sweepsform-row aligned">
+        <tr id="row_address_country" class="sweepsform-row aligned">
             <td class="sweepsform-left">
                 <label for="" class="control-label">
                     <span class="required">*</span>
@@ -132,7 +132,7 @@
                 {{ form_widget(entryForm.registrationDetails.country) }}
             </td>
         </tr>
-        <tr class="sweepsform-row aligned">
+        <tr id="row_address_state" class="sweepsform-row aligned">
             <td class="sweepsform-left">
                 <label for="" class="control-label">
                     <span class="required">*</span>
@@ -275,4 +275,34 @@
         $('#platformd_sweeps_entry_registrationDetails_birthdate_month option:contains("--")').text('{{ 'month' | trans({}, 'forms') }}');
         $('#platformd_sweeps_entry_registrationDetails_birthdate_day option:contains("--")').text('{{ 'day' | trans({}, 'forms') }}');
     });
+
+    updateStateChoices();
+
+    $('#row_address_country select').change(function() {
+        updateStateChoices();
+    });
+
+    function updateStateChoices() {
+
+        $('#row_address_state select').html('<option>...</option>');
+
+        $.ajax({
+            url: '{{ path('country_state_options') }}' + '/' + $('#row_address_country select option:selected').val(),
+            action: 'get',
+            success: function(data) {
+                $('#row_address_state select').html(data);
+
+                {% if regFormData.state | default(null) %}
+                    if ($('#row_address_state select option[value={{ regFormData.state }}]').length > 0) {
+                        $('#row_address_state select').val({{ regFormData.state }});
+                    }
+                {% endif %}
+            },
+            error: function() {
+                $('#row_address_state select').html('');
+                alert('An error occured while loading states choices.');
+            }
+        });
+    }
 </script>
+

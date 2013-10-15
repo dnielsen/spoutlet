@@ -100,9 +100,6 @@ class VarnishUtil
 
         $response = $event->getResponse();
 
-        $response->headers->set('X-Ip2L-Client-IP', $this->ipAddress);
-        $response->headers->set('X-Ip2L-Country-Code', $this->ipLookupUtil->getCountryCode($this->ipAddress));
-
         $userId = 0;
 
         if ($token = $this->securityContext->getToken()) {
