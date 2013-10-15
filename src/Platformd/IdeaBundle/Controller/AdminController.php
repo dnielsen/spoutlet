@@ -46,7 +46,7 @@ class AdminController extends Controller
 			->add('content', 'purifiedTextarea', array('attr' => array('class' => 'ckeditor')))
 			->add('startsAt', 'date', array('attr' => array('size' => '60%')))
 			->add('endsAt', 'date', array('attr' => array('size' => '60%')))
-            ->add('online', 'choice', array('choices' => array('1' => 'Online', '0' => 'Location')))
+            ->add('online', 'choice', array('choices' => array('1' => 'Yes', '0' => 'No')))
             ->add('location', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
 			->add('address1', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
 			->add('address2', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))

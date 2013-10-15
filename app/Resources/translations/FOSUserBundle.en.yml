@@ -18,10 +18,11 @@ fos_user_registration_form_subscribedAlienwareEvent: Subscribe me to the Campsit
 
 fos_user_registration_form_name: "Full Name:"
 fos_user_registration_form_plainPassword_second: "Confirm Password:"
-fos_user_registration_form_school: "School, Institution or Organization:"
-fos_user_registration_form_major: "Major, Profession, or Area of Expertise:"
-fos_user_registration_form_svicRole: "Group Role:"
+fos_user_registration_form_eventRole: "Event Role:"
 fos_user_registration_form_affiliation: "Affiliation:"
+fos_user_registration_form_organization: Company/Organization
+fos_user_registration_form_title: Job Title
+fos_user_registration_form_industry: Industry
 
 fos_user_profile_form_user_lastname: "Last Name"
 fos_user_profile_form_user_firstname: "First Name"

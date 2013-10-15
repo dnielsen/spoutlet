@@ -12,6 +12,10 @@ class RegistrationFormType extends BaseType
     {
         parent::buildForm($builder, $options);
         $builder->add('name');
+        $builder->add('organization');
+        $builder->add('title');
+        $builder->add('industry');
+
         /*
         $user = new User();
         $builder->add('school');
