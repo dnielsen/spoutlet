@@ -4,11 +4,13 @@ namespace Platformd\SweepstakesBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\ExecutionContext;
 
 /**
  * Platformd\SweepstakesBundle\Entity\SweepstakesAnswer
  * @ORM\Table(name="pd_sweepstakes_answer")
  * @ORM\Entity(repositoryClass="Platformd\SweepstakesBundle\Entity\SweepsetakesAnswerRepository")
+ * @Assert\Callback(methods={"validateAnswers"})
  */
 class SweepstakesAnswer
 {
@@ -20,7 +22,6 @@ class SweepstakesAnswer
     private $id;
 
     /**
-     * @Assert\NotBlank(message="sweepstakes.errors.answer_blank")
      * @ORM\Column(name="content", type="string", length=255)
      */
     protected $content;
@@ -50,4 +51,26 @@ class SweepstakesAnswer
     public function setQuestion($value)    { $this->question = $value; }
     public function getEntry()             { return $this->entry; }
     public function setEntry($value)       { $this->entry = $value; }
+
+    public function validateAnswers(ExecutionContext $executionContext)
+    {
+        $isPromoCode = $this->question->getSweepstakes()->getEventType() == Sweepstakes::SWEEPSTAKES_TYPE_PROMO_CODE;
+        $message = $isPromoCode ? 'sweepstakes.errors.promo_code_blank' : 'sweepstakes.errors.answer_blank';
+
+        $content = $this->getContent();
+
+        if (empty($content)) {
+            $oldPath = $executionContext->getPropertyPath();
+            $propertyPath = $oldPath . '.content';
+            $executionContext->setPropertyPath($propertyPath);
+
+            $executionContext->addViolation(
+                $message,
+                array(),
+                "answer"
+            );
+
+            $executionContext->setPropertyPath($oldPath);
+        }
+    }
 }

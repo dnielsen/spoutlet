@@ -21,6 +21,10 @@
 </div>
 {% endif %}
 
+{% if suspended %}
+    {% include 'SpoutletBundle::_flashMessage.html.twig' with { 'type': 'error', 'message': ('fos_user.account_banned_no_date' | pd_trans({}, 'validators')) } %}
+{% endif %}
+
 {% include "FOSUserBundle:Registration:register_content.html.twig" %}
 {% endblock content %}
 

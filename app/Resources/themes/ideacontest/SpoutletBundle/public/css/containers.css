@@ -1,11 +1,13 @@
+
+
 /*::::::::::::::: PAGE CONTAINER :::::::::::::::*/
 
-#wrapper-ht { /* sets up properties for bottom fixed footer */
+#wrapper-ht { /* sets up properties for sticky footer */
 	width: 100%;
 	min-height: 100%; /* ie6 hack */
 	height: auto !important; /* ie6 hack */
 	height: 100%;
-	margin: 0 auto -350px;
+	margin: 0 auto -250px;
 }
 
 /*::::::::::::::: HEADER :::::::::::::::*/
@@ -19,73 +21,57 @@
 	height: 655px;
 }
 #header {
-	height: 160px;
-
+	height: 225px;
 }
-	#topSocial { /* For styling, see list-links.css */
-		width: 1050px;
-		height: 35px;
-		text-align: right;
-	}
-		#topNav {
-			position: absolute;
-			top: 35px;
-			right: 0;
-			font-size: 12px;
-		}
-	#brand {
-		margin-top: -30px;
-		padding-bottom: 10px;
-	}
-	#tagline {
-		position: absolute;
-		top: 123px;
-		right: 0;
-	}
-		#tagline span {
-			font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
-			font-size: 32px;
-			font-weight: bold;
-			letter-spacing: -1px;
-		}
 
-	/*::::::::::::::: NAV :::::::::::::::*/
+#topNav { /* For styling, see list-links.css */
+    position: absolute;
+    top: 5px;
+    right: 0;
+    font-size: 12px;
+}
+#brand {
+    margin-top: 55px;
+    padding-bottom: 10px;
+    max-width: 1050px;
+}
+#brand_small {
+    margin-top: 35px;
+    padding-bottom: 10px;
+    max-width: 800px;
+    max-height: 175px;
+}
+#tagline {
+    position: absolute;
+    top: 194px;
+    right: 0;
+}
 
-	#navWrap {
-		width: 1050px;
-		height: 32px;
-		padding-top: 12px;
-		margin: 0 auto 20px;
-		border-top: 1px dashed #ccc;
-		border-bottom: 1px dashed #ccc;
-	}
-	#nav-wrapper {
-		width: 1050px;
-		height: 32px;
-		padding-top: 12px;
-		margin: 0 auto 20px;
-		border-top: 1px dashed #ccc;
-		border-bottom: 1px dashed #ccc;
-	}
+/*::::::::::::::: NAV :::::::::::::::*/
 
-	#nav ul#nav-list {
-		width: 1050px;
-		height: 32px;
-	}
+#navWrap, #nav-wrapper {
+    width: 1050px;
+    height: 32px;
+    padding-top: 12px;
+    margin: 0 auto 20px;
+    border-top: 1px dashed #ccc;
+    border-bottom: 1px dashed #ccc;
+}
 
-	/*::::::::::::::: END NAV :::::::::::::::*/
+#nav ul, #nav-list {
+    width: 1050px;
+    height: 32px;
+}
 
-	/* see rs-default.css for content-slider styles for royal slider element */
-
-	#intro {
-		float: right;
-		width: 644px;
-		height: 340px;
-		padding: 20px;
-		padding-top: 40px;
-		border: 1px dashed #ccc;
-		text-align: center;
-	}
+#intro {
+    float: right;
+    width: 644px;
+    height: 340px;
+    padding: 20px;
+    padding-top: 40px;
+    border: 1px dashed #ccc;
+    text-align: center;
+}
 
 /*::::::::::::::: CONTENT HEADER :::::::::::::::*/
 
@@ -146,29 +132,59 @@
 #row2 {
 	padding-top: 15px;
 }
-	.cBx1 {
-		float: left;
-		width: 644px;
-		padding-top: 15px;
-		padding-right: 15px;
-		border-right: 1px dashed #ccc;
-	}
-	.cBx2 {
-		float: right;
-		width: 364px;
-		padding-top: 15px;
-	}
-		.cBx2 #sponsors  {
-			display: block;
-			margin: 0 auto;
-		}
-#events, #members{
-    height: 150px;
+
+
+/*::::::::::::::: CONTENT HEADER CONTAINERS :::::::::::::::*/
+
+#contentLft { /* see rs-default.css, royalslider.css for content-slider styles for royal slider element */
+    float: left;
+    width: 640px;
+}
+    .rowBx {
+        width: 640px;
+        margin-top: 25px;
+        padding-top: 15px;
+        border-top: 1px dashed #ccc;
+    }
+
+    .qList > .row {
+        width: 99%;
+        padding: 5px;
+        border-top: 1px dotted #ccc;
+    }
+    .qList > .row:nth-child(even) {
+        background: #f9f9f9;
+    }
+
+#contentRt { /* see lists-links.css for button positioning */
+    position: relative;
+    float: right;
+    width: 390px;
+}
+    .cBx1 {
+        float: left;
+        width: 644px;
+        padding-top: 15px;
+        padding-right: 15px;
+        border-right: 1px dashed #ccc;
+    }
+    .cBx2 {
+        float: right;
+        width: 364px;
+        padding-top: 15px;
+    }
+    .cBx2 #sponsors  {
+        display: block;
+        margin: 0 auto;
+    }
+#events, #members {
+    max-height: 250px;
     overflow-y: auto
 }
+	
 
 /*********** SUBPAGE CONTAINERs ***********/
-
+		
 	.col1 {
 		float: left;
 		width: 698px;
@@ -231,26 +247,23 @@
 /*::::::::::::::: TABLE :::::::::::::::*/
 
 table.tblStyle {
-	width: 100%;
+    width: 100%;
 }
-	.tblStyle td {
-		padding: 2px;
-		text-align: right;
-		border-bottom: 1px solid #e5e5e5;
-	}
-        .tblStyle td:first-child {
-            text-align: left;
-        }
+.tblStyle td {
+    padding: 5px 2px;
+    font-size: 13px;
+    border-bottom: 1px solid #e5e5e5;
+    text-align: right;
+}
+.tblStyle td:first-child {
+    text-align: left;
+}
 
-    .tblStyle th {
-		padding: 5px;
-        border-bottom: 1px solid #e5e5e5;
-		text-align: right;
-	}
-        .tblStyle th:first-child {
-            font-size: 18px;
-            text-align: left;
-        }
+.tblStyle th {
+    padding: 5px;
+    border-bottom: 1px solid #e5e5e5;
+    text-align: left;
+}
 #eventDetails {
     margin-top: 20px;
 }
@@ -281,13 +294,12 @@ table.tblStyle2 {
 		text-transform: uppercase;
 		text-align: right;
 	}
-    		.tblStyle2 th:first-child {
-                 text-align: left;
-            }
+		.tblStyle2 th:first-child {
+             text-align: left;
+        }
 .fill {
 	background: #f5f5f5;
 }
-
 .paddedTable td {
 	padding: 5px 10px;
 	font-size: 16px;
@@ -298,20 +310,19 @@ table.tblStyle2 {
     font-size: 16px;
     width: 115px;
 }
+	
+/*::::::::::::::: FOOTER :::::::::::::::*/ 
 
 
-/*::::::::::::::: FOOTER :::::::::::::::*/
-
-
-#footer, .push {  /* sets up properties for bottom fixed footer */
-	height: 350px;
+#footer, .push {  /* sets up properties for sticky footer */
+	height: 250px;
 }
 #footer { /* For footer link lists refer to lists-links.css */
 	width: 100%;
 	border-top: 1px dashed #ccc;
 	background: #f9f9f9;
 }
-	#ftr-content {
+	#ftr-content { 
 		width: 1050px;
 		margin: 0 auto;
 		padding-top: 35px;
@@ -323,7 +334,7 @@ table.tblStyle2 {
 	.ftrcol {
 		float: left;
 		width: 150px;
-		height: 267px;
+		height: 167px;	
 		padding-left: 40px;
 	}
 		#ftr-content .ftrcol:first-child {
@@ -333,90 +344,17 @@ table.tblStyle2 {
 		float: right;
 		width: 250px;
 		padding-left: 20px;
-		border-left: 1px dashed #ccc;
+		border-left: 1px dashed #ccc;	
 	}
 
 /*::::::::::::::: SITE CREDIT, COPYRIGHT :::::::::::::::*/
 
-#credit, #copyright {
+#copyright {
+	width: 1050px;
 	height: 10px;
 	border-top: 1px dashed #ccc;
 	padding-top: 10px;
 	font: 11px/16px 'Muli', Arial, sans-serif;
 	font-weight: 400;
-}
-#credit { /* see links-lists.css for link properties */
-	clear: both;
-	float: left;
-	width: 525px;
-	color: #ccc;
-}
-
-#copyright {
-	float: right;
-	width: 525px;
-	text-align: right;
-}
-
-/* Standard 2 Column */
-.std_2col { clear:both; width:100%; padding:0 0 15px 0; float:left; }
-.std_2col .right {
-    float: right;
-    width: 323px;
-    padding: 0;
-}
-
-.std_2col .left {
-    float: left;
-    width: 690px;
-    padding-right: 18px;
-    padding-bottom: 30px;
-    margin-right: 18px;
-    border-right: 1px dashed #ccc;
-}
-
-/* Standard 1 Column - Full Across */
-.std_1col { clear:both; width:100%; padding:0 0 15px 0; float: left; }
-
-.sub-nav-wrapper {
-    height: 21px;
-    background-color: #f7f7f9;
-    border: 1px solid #e1e1e8;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    padding: 5px 0;
-    display: inline-block;
-}
-
-.groups-sub-nav-wrapper {
-    margin: 5px 0;
-}
-
-table.tblSponsor {
-    width: 100%;
-}
-.tblSponsor th {
-    padding: 7px;
-    background: #f0f0f0;
-    font-size: 12px;
-    text-transform: uppercase;
-}
-.tblSponsor td {
-    padding: 7px;
-    border-bottom: 1px solid #e5e5e5;
-    border-left: 1px solid #e5e5e5;
-    font-size: 13px;
-    text-align: center;
-}
-.tblSponsor td:first-child {
-    border-left: 0 none;
-    text-align: left;
-}
-
-.bullet {
-    font-family: Tahoma, sans-serif;
-    font-size: 2em !important;
-    color: #77d9fe;
-
+	text-align: center;
 }

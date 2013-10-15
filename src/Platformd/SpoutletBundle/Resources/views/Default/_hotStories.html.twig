@@ -1,32 +1,49 @@
 <div class="widget-33" id="hs-widget" style="height: auto;">
     <div class="widget-header" style="height: 36px;">
         <div class="widget-title" style="width: 200px; float: left;">
-            {{ 'platformd.homepage.news_title' | trans }}<br />
+            {{ 'platformd.news.widget.title' | trans }}<br />
         </div>
         <div class="widget-icon"><img src="/bundles/spoutlet/images/article-icon.png" /></div>
         <div class="clear"></div>
     </div>
     {# height is a hack for positioning  - see featuredContent.html.twig #}
     <div class="widget-content" id="news-content" style="height: 288px;">
-        {% if news %}
-            {% for news_item in news %}
-                {% if loop.first and news_item.image %}
-                    <div class="title">
-                        <a class="news-ellipse-first" {{ news_item | pd_link_target }} href="{{ news_item | pd_link }}">{{ news_item.title }}</a>
-                    </div>
-                    <div class="image">
-                        <a href="{{ news_item | pd_link }}"><img src="{{ news_item.image.filename | imagine_filter('article_list')  }}" alt="{{ news_item.title }}" /></a>
+        {% if featuredArticle %}
+            <div class="widget-item">
+
+                {% if featuredArticle.thumbnail %}
+                    <div class="title"><a class="widget-link news-ellipse-title" {{ featuredArticle | pd_link_target }} href="{{ featuredArticle | pd_link }}">{{ featuredArticle.title }}</a></div>
+                    <div class="article-thumbnail">
+                        <a href="{{ featuredArticle | pd_link }}" {{ featuredArticle | pd_link_target }}>
+                            <img src="{{ featuredArticle.thumbnail.filename | imagine_filter('featured_article_thumb') }}" alt="{{ featuredArticle.title }}" />
+                        </a>
                     </div>
                 {% else %}
-                    <div class="widget-item">
-                        <a class="widget-link news-ellipse" {{ news_item | pd_link_target }} href="{{ news_item | pd_link }}">{{ news_item.title }}</a>
-                    </div>
+                    <a class="widget-link news-ellipse" {{ featuredArticle | pd_link_target }} href="{{ featuredArticle | pd_link }}">{{ featuredArticle.title }}</a>
+                    <div class="article-type">{{ 'platformd.news.widget.article' | trans }}</div>
                 {% endif %}
+            </div>
+        {% endif %}
+
+        {% if news %}
+            {% for news_item in news if featuredArticle.id is not defined or news_item.id != featuredArticle.id %}
+                <div class="widget-item">
+                    <a class="widget-link news-ellipse" {{ news_item | pd_link_target }} href="{{ news_item | pd_link }}">{{ news_item.title }}</a>
+                    <div class="article-type">{{ ('platformd.news.widget.' ~ news_item.type|default('article')) | trans }}</div>
+                </div>
             {% endfor %}
         {% endif %}
     </div>
     <div class="widget-footer">
-        <a href="{{ path('news') }}" class="aw-link" id="more-news-link">{{ 'platformd.layout.page_content.see_more' | trans }}</a>
-        <div class="clear"></div>
+        <a href="{{ path('news') }}" class="aw-link" id="more-news-link">{{ 'platformd.layout.page_content.read_more' | trans }}</a>
     </div>
 </div>
+
+<script type="text/javascript">
+    $('.news-ellipse-title').truncate({
+        width: '245'
+    });
+    $('.news-ellipse').truncate({
+        width: '270'
+    });
+</script>

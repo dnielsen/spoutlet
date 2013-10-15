@@ -56,7 +56,7 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
      *
      * @var boolean $private
      * @ORM\Column(name="private", type="boolean")
-     * @Assert\NotNull(message="Required")
+     * //@Assert\NotNull(message="Required")
      */
     protected $private;
 
@@ -128,6 +128,12 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
     protected $contentReports;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Platformd\MediaBundle\Entity\Media")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $rotatorImages;
+
+    /**
      * Constructor
      */
     public function __construct(Group $group)
@@ -137,6 +143,7 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
         $this->sites            = new ArrayCollection();
         $this->contentReports   = new ArrayCollection();
         $this->rsvpActions      = new ArrayCollection();
+        $this->rotatorImages    = new ArrayCollection();
 
         foreach ($this->getGroup()->getSites() as $site) {
             $this->sites->add($site);
@@ -404,5 +411,15 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
     public function getSearchId()
     {
         return self::SEARCH_PREFIX.$this->id;
+    }
+
+    public function getRotatorImages()
+    {
+        return $this->rotatorImages;
+    }
+
+    public function setRotatorImages($value)
+    {
+        $this->rotatorImages = $value;
     }
 }

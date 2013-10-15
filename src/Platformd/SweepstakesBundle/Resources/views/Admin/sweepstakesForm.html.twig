@@ -49,9 +49,12 @@
         {{ form_row(form.backgroundImage) }}
         {{ form_row(form.tags) }}
         {{ form_row(form.metaDescription) }}
-    </fieldset>
+        {{ form_row(form.hasOptionalCheckbox) }}
 
-    {% set hasEntries = hasEntries|default(false) %}
+        <div id="optional-checkbox-label" style="display:none">
+            {{ form_row(form.optionalCheckboxLabel) }}
+        </div>
+    </fieldset>
 
     <fieldset>
         <legend>c) Questions</legend>
@@ -98,6 +101,10 @@
 
     $(function () {
 
+        if ($('.has-optional-checkbox').is(':checked')) {
+            $('#optional-checkbox-label').slideDown();
+        }
+
         questionList.find('div.control-group').each(function() {
             addDeleteLink($(this));
         });
@@ -124,6 +131,14 @@
                 $(this).val(ui.item.label);
                 $('#sweepstakes_group').val(ui.item.value);
                 event.preventDefault();
+            }
+        });
+
+        $('.has-optional-checkbox').change(function() {
+            if ($(this).is(':checked')) {
+                $('#optional-checkbox-label').slideDown();
+            } else {
+                $('#optional-checkbox-label').slideUp();
             }
         });
     });

@@ -21,13 +21,7 @@
             </div>
 
             <table class="table table-bordered" id="avatar-approval">
-                <thead>
-                    <tr>
-                        {% for i in 1..(pager.nbResults >= numPerLine ? pager.nbResults : numPerLine) %}
-                            <th></th>
-                        {% endfor %}
-                    </tr>
-                </thead>
+
                 <tbody>
                     {% for avatar in avatars %}
                         {% if (loop.index - 1) is divisibleby(numPerLine) %}<tr>{% endif %}
@@ -60,7 +54,7 @@
     {% endif %}
 
     {% if pager.haveToPaginate %}
-        {{ pagerfanta(avatars, 'twitter_bootstrap_translated', {'routeName' : 'admin_unapproved_avatars'}) }}
+        {{ pagerfanta(pager, 'twitter_bootstrap_translated', {'routeName' : 'admin_unapproved_avatars'}) }}
     {% endif %}
 
     <script type="text/javascript">

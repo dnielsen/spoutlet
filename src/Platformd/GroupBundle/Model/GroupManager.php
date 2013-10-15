@@ -60,9 +60,10 @@ class GroupManager
 
     private $isMemberCache;
     private $isApplicantCache;
+    private $mediaExposer;
 
-    static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications', 'AddEvent', 'ApproveEvent', 'CancelEvent', 'ViewEvent', 'JoinEvent', 'DeleteEvent', 'JoinGroup', 'ApplyToGroup', 'LeaveGroup');
-    static private $ownerIsAllowedTo             = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications', 'AddEvent', 'ApproveEvent', 'ViewEvent', 'JoinEvent', 'DeleteEvent');
+    static private $superAdminIsAllowedTo        = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'EditImage', 'DeleteImage', 'AddVideo', 'EditVideo', 'DeleteVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications', 'AddEvent', 'ApproveEvent', 'CancelEvent', 'ViewEvent', 'JoinEvent', 'DeleteEvent', 'JoinGroup', 'ApplyToGroup', 'LeaveGroup', 'ContactGroup');
+    static private $ownerIsAllowedTo             = array('ViewGroupContent', 'ViewGroup', 'EditGroup', 'DeleteGroup', 'AddNews', 'EditNews', 'DeleteNews', 'AddImage', 'AddVideo', 'ManageDiscussions', 'AddDiscussion', 'EditDiscussion', 'DeleteDiscussion', 'ViewDiscussion', 'ManageApplications', 'AddEvent', 'ApproveEvent', 'ViewEvent', 'JoinEvent', 'DeleteEvent', 'ContactGroup');
     static private $memberIsAllowedTo            = array('ViewGroupContent', 'ViewGroup', 'AddImage', 'AddVideo', 'AddDiscussion', 'ViewDiscussion', 'AddEvent', 'ViewEvent', 'JoinEvent', 'LeaveGroup');
     static private $nonMemberPublicIsAllowedTo   = array('ViewGroupContent', 'ViewGroup', 'JoinGroup', 'ViewEvent', 'JoinEvent');
     static private $nonMemberPrivateIsAllowedTo  = array('ViewGroup', 'ApplyToGroup');
@@ -76,7 +77,8 @@ class GroupManager
         ApiManager $CEVOApiManager,
         SecurityContextInterface $securityContext,
         EventDispatcherInterface $eventDispatcher,
-        GroupEventService $groupEventService
+        GroupEventService $groupEventService,
+        $mediaExposer
     )
     {
         $this->em = $em;
@@ -89,6 +91,7 @@ class GroupManager
         $this->groupEventService = $groupEventService;
         $this->isMemberCache = array();
         $this->isApplicantCache = array();
+        $this->mediaExposer = $mediaExposer;
     }
 
     /**
@@ -319,7 +322,7 @@ class GroupManager
             $response = $this->CEVOApiManager->GiveUserXp('addcomment', $groupDiscussion->getAuthor()->getCevoUserId());
         } catch (ApiException $e) {
 
-        }        
+        }
     }
 
     /**
@@ -691,5 +694,25 @@ class GroupManager
             'youTubeVideoId'    => $youtubeId,
             'author'            => $user->getId(),
         ));
+    }
+
+    public function getGroupIndexData($group)
+    {
+        if (!$group || !$group instanceof Group) {
+            return false;
+        }
+
+        $owner       = $group->getOwner();
+
+        return array(
+            'id' => $group->getId(),
+            'slug' => $group->getSlug(),
+            'thumbnail' => $group->getThumbnail() ? $this->mediaExposer->getPath($group->getThumbnail(), array()) : null,
+            'name' => $group->getName(),
+            'owner' => array(
+                'adminLevel' => $owner->getAdminLevel() == 'ROLE_SUPER_ADMIN',
+                'username' => $owner->getUsername(),
+            ),
+        );
     }
 }

@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManager,
 
 use Platformd\EventBundle\Entity\Event;
 use Platformd\EventBundle\Entity\GroupEventRepository;
-use Platformd\EventBundle\Entity\EventEmail;
+use Platformd\SpoutletBundle\Entity\MassEmail;
 use Platformd\EventBundle\Entity\EventRsvpAction;
 use Platformd\UserBundle\Entity\User;
 use DateTime;
@@ -142,9 +142,9 @@ class EventRepository extends EntityRepository
     /**
      * Persists EventEmail in the DB
      *
-     * @param \Platformd\EventBundle\Entity\EventEmail $email
+     * @param \Platformd\SpoutletBundle\Entity\MassEmail $email
      */
-    public function saveEmail(EventEmail $email)
+    public function saveEmail(MassEmail $email)
     {
         $this->_em->persist($email);
         $this->_em->flush();

@@ -4,6 +4,7 @@ edit: Editar
 submit: Enviar
 cancel: Cancelar
 delete: Borrar
+enter: Participar
 
 recaptcha:
     visual_challenge: Obtener un desafío visual
@@ -134,6 +135,7 @@ platformd:
             giveaways: Regalos
             all: Todos
             see_more: Ver Más
+            read_more: Seguir Leyendo
             photo_gallery: Galería de imágenes
             view_all: Ver todos
             competitions: Competencias
@@ -226,7 +228,8 @@ platformd:
             cancel: Cancelar
             attending: Asistiendo
             error: Hubo un error al previsualizar tu correo electrónico!
-            confirmation: Correo electrónico enviado a %attendeeCount% asistente(s).
+            limit_hit: You have reached the maximum number of emails you can send to event attendees within a 24-hour period.
+            confirmation: Correo electrónico enviado a %attendeeCount% asistente.|Correo electrónico enviado a %attendeeCount% asistentes.
             form:
                 recipients: Destinatarios
                 message: Mensaje
@@ -429,27 +432,35 @@ platformd:
             global_event_contact:
                 title: Mensaje del organizador del evento sobre %eventName%
                 message: |
-                    El siguiente mensaje ha sido enviado a ti para el evento - %eventName%:
-
+                    El siguiente mensaje ha sido enviado a ti para el evento - <a href="%eventUrl%">%eventName%</a>:
+                    <br /><br />
+                    <hr>
                     %content%
-
+                    <br />
+                    <hr>
+                    <br />
                     Equipo Alienware Arena
-
+                    <br /><br />
                     Importante: Alienware Arena nunca te pedirá información personal como tu nombre de usuario, contraseña, fecha de nacimiento, dirección de correo electrónico, etc. Por favor, no la compartas con nadie.  Si sospechas que este correo electrónico de ser una estafa o inapropiado, por favor repórtalo a contact@alienwarearena.com.
+                    <br /><br />
                     Nota: Si no deseas recibir correos electrónicos similares, ya no debes asistir al evento, cambia tu RSVP en la página del evento.
-
+                    <br />
             attendees_contact:
                 title: Mensaje del organizador del evento sobre %eventName%
                 message: |
-                    El siguiente mensaje ha sido enviado a ti para el evento - %eventName%:
-
+                    El siguiente mensaje ha sido enviado a ti para el evento - <a href="%eventUrl%">%eventName%</a>:
+                    <br /><br />
+                    <hr>
                     %content%
-
+                    <br />
+                    <hr>
+                    <br />
                     Enviado desde Alienware Arena en nombre de %organizerName%.
-
+                    <br /><br />
                     Importante: Alienware Arena nunca te pedirá información personal como tu nombre de usuario, contraseña, fecha de nacimiento, dirección de correo electrónico, etc. Por favor, no la compartas con nadie.  Si sospechas que este correo electrónico de ser una estafa o inapropiado, por favor repórtalo a contact@alienwarearena.com.
+                    <br /><br />
                     Nota: Si no deseas recibir correos electrónicos similares, ya no debes asistir al evento, cambia tu RSVP en la página del evento.
-
+                    <br />
             approved:
                 title: Your Event Has Been Approved
                 message: |
@@ -577,6 +588,7 @@ age_confirm:
     message: El contenido está dirigido a un público maduro.
     content_for_mature_audiences: Contenido recomendado para audiencia adulta.
     too_young_message: Lo sentimos, no podemos ofrecerle acceso en este momento
+    return_to_previous: Return to previous page
     date_format: %month% %day% %year%
 confirm: Confirmar
 
@@ -888,7 +900,7 @@ platformd.giveaway.queue.you_are_queued: Estás en la cola!
 platformd.giveaway.queue.queue_explanation: 'Tu tiempo de espera aproximado es de menos de 60 minutos. Serás notificado por correo electrónico si usted haz sido asignado un código. Si no recibes un correo electrónico dentro de 24 horas, favor de envíar un correo electrónico al departamento de apoyo <a href="mailto:%contact_email%">%contact_email%</a>. Por lo tanto, visita nuestra <a href="%events_index_page_link%">página de eventos</a> para ver los próximos eventos en línea y en el lugar en tu área.'
 platformd.giveaway.queue.you_are_queued: Estás en la cola!
 platformd.giveaway.queue.rejected_with_examples: |
-    <p>Desafortunadamente, no pudismos asignarte una clave. Esto puede ocurrir por una de varias razones, incluyendo:
+    <p>Desafortunadamente, no pudimos asignarte una clave. Esto puede ocurrir por una de varias razones, incluyendo:
     <br /><br />
     1) Se nos acabaron las claves antes de que pudieramos asignarte una mientras estabas en la cola.<br />
     2) Estás en un país o región que no es elegible para recibir una clave.<br />
@@ -926,7 +938,7 @@ platformd.key_request_processor_command.key_assigned_email_body: |
 
 platformd.key_request_processor_command.key_not_assigned_generic_email_subject: No es posible asignar una clave para %promotion_title%
 platformd.key_request_processor_command.key_not_assigned_generic_email_body: |
-    <p>Desafortunadamente, no pudismos asignarte una clave. Esto puede ocurrir por una de varias razones, incluyendo:<br />
+    <p>Desafortunadamente, no pudimos asignarte una clave. Esto puede ocurrir por una de varias razones, incluyendo:<br />
         <br />
         1) Se nos acabaron las claves antes de que pudieramos asignarte una mientras estabas en la cola.<br />
         2) Estás en un país o región que no es elegible para recibir una clave.<br />

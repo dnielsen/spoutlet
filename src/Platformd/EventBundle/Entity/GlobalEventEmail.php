@@ -5,14 +5,15 @@ namespace Platformd\EventBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Platformd\SpoutletBundle\Entity\MassEmail;
 
 /**
  * Platformd\EventBundle\Entity\GlobalEventEmail
  *
  * @ORM\Table(name="global_event_email")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Platformd\EventBundle\Repository\GlobalEventEmailRepository")
  */
-class GlobalEventEmail extends EventEmail
+class GlobalEventEmail extends MassEmail
 {
     /**
      * Email recipients
@@ -51,5 +52,25 @@ class GlobalEventEmail extends EventEmail
     public function setEvent($event)
     {
         $this->event = $event;
+    }
+
+    public function getEmailType()
+    {
+        return 'Global Event Mass Email';
+    }
+
+    public function getLinkedEntityClass()
+    {
+        return 'EventBundle:GlobalEvent';
+    }
+
+    public function getLinkedEntity()
+    {
+        return $this->event;
+    }
+
+    public function getLinkedEntityAllRecipientsField()
+    {
+        return 'attendees';
     }
 }

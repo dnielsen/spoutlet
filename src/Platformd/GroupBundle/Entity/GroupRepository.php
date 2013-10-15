@@ -556,13 +556,15 @@ class GroupRepository extends EntityRepository
 
     public function getMembershipCountByGroup($group)
     {
-        return $this->createQueryBuilder('g')
+        $result = $this->createQueryBuilder('g')
             ->select('COUNT(m.id) as membershipCount')
             ->leftJoin('g.members', 'm')
             ->where('g.id = :groupId')
             ->setParameter('groupId', $group->getId())
             ->getQuery()
             ->execute();
+
+        return $result[0]['membershipCount'];
     }
 
     public function isUserMemberOfGroup($user, $group)
@@ -591,6 +593,28 @@ class GroupRepository extends EntityRepository
             ->setMaxResults($limit)
             ->setParameter('site', $site)
             ->groupBy('g.id');
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function findGroupsForImage($media)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.images', 'i')
+            ->where('i = :media')
+            ->andWhere('g.deleted = false')
+            ->setParameter('media', $media);
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function findGroupsForVideo($media)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.videos', 'v')
+            ->where('v = :media')
+            ->andWhere('g.deleted = false')
+            ->setParameter('media', $media);
 
         return $qb->getQuery()->execute();
     }

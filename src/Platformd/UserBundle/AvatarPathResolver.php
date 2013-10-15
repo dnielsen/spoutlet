@@ -50,6 +50,22 @@ class AvatarPathResolver extends PathResolver
     return $url;
   }
 
+  public function getPathFromParams($userUuid, $size=84)
+  {
+    $filename  = $size.'x'.$size.'.png';
+    $directory ='by_size';
+
+    if ($this->bucketName == "platformd") {
+        $cf = "http://media.alienwarearena.com";
+    } else {
+        $cf = "http://mediastaging.alienwarearena.com";
+    }
+
+    $url = $cf.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$directory.'/'.$filename;
+
+    return $url;
+  }
+
   public function supports($media, array $options)
   {
     return $media instanceof User || $media instanceof Avatar;

@@ -1,0 +1,360 @@
+
+
+/*::::::::::::::: PAGE CONTAINER :::::::::::::::*/
+
+#wrapper-ht { /* sets up properties for sticky footer */
+	width: 100%;
+	min-height: 100%; /* ie6 hack */
+	height: auto !important; /* ie6 hack */
+	height: 100%;
+	margin: 0 auto -250px;
+}
+
+/*::::::::::::::: HEADER :::::::::::::::*/
+
+#header-mp, #header {
+	position: relative;
+	width: 1050px;
+	margin: 0 auto;
+}
+#header-mp {
+	height: 655px;
+}
+#header {
+	height: 225px;
+}
+
+#topNav { /* For styling, see list-links.css */
+    position: absolute;
+    top: 5px;
+    right: 0;
+    font-size: 12px;
+}
+#brand {
+    margin-top: 55px;
+    padding-bottom: 10px;
+    max-width: 1050px;
+}
+#brand_small {
+    margin-top: 35px;
+    padding-bottom: 10px;
+    max-width: 800px;
+    max-height: 175px;
+}
+#tagline {
+    position: absolute;
+    top: 194px;
+    right: 0;
+}
+
+/*::::::::::::::: NAV :::::::::::::::*/
+
+#navWrap, #nav-wrapper {
+    width: 1050px;
+    height: 32px;
+    padding-top: 12px;
+    margin: 0 auto 20px;
+    border-top: 1px dashed #ccc;
+    border-bottom: 1px dashed #ccc;
+}
+
+#nav ul, #nav-list {
+    width: 1050px;
+    height: 32px;
+}
+
+#intro {
+    float: right;
+    width: 644px;
+    height: 340px;
+    padding: 20px;
+    padding-top: 40px;
+    border: 1px dashed #ccc;
+    text-align: center;
+}
+
+/*::::::::::::::: CONTENT HEADER :::::::::::::::*/
+
+#content-header {
+	width: 1050px;
+	height: 430px;
+	margin: 0 auto 20px;
+}
+
+#map {
+	float: right;
+	width: 408px;
+	padding: 10px 0;
+	background: #f7f7f7;
+	text-align: center;
+}
+
+#map-canvas {
+	width:370px;
+	height:300px;
+	margin-left: 19px;
+}
+
+/*::::::::::::::: ACCOUNT HEADER :::::::::::::::*/
+
+#accountHeader {
+	height: 25px;
+	margin-bottom: 10px;
+	background-color: #f7f7f9;
+	border: 1px solid #e1e1e8;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding: 5px 0 0 0;
+	display: inline-block;
+}
+
+/*::::::::::::::: PAGE CONTENT CONTAINERs :::::::::::::::*/
+
+#content {
+	width: 1050px;
+	margin: 0 auto;
+	margin-bottom: 50px;
+}
+#colRt {
+	float: right;
+	width: 271px;
+	height: 425px;
+}
+#row1, #row2 {
+	float: left;
+	width: 1050px;
+	border-top: 1px dashed #ccc;
+}
+#row1 {
+    margin: 0 auto;
+}
+#row2 {
+	padding-top: 15px;
+}
+
+
+/*::::::::::::::: CONTENT HEADER CONTAINERS :::::::::::::::*/
+
+#contentLft { /* see rs-default.css, royalslider.css for content-slider styles for royal slider element */
+    float: left;
+    width: 640px;
+}
+    .rowBx {
+        width: 640px;
+        margin-top: 25px;
+        padding-top: 15px;
+        border-top: 1px dashed #ccc;
+    }
+
+    .qList > .row {
+        width: 99%;
+        padding: 5px;
+        border-top: 1px dotted #ccc;
+    }
+    .qList > .row:nth-child(even) {
+        background: #f9f9f9;
+    }
+
+#contentRt { /* see lists-links.css for button positioning */
+    position: relative;
+    float: right;
+    width: 390px;
+}
+    .cBx1 {
+        float: left;
+        width: 644px;
+        padding-top: 15px;
+        padding-right: 15px;
+        border-right: 1px dashed #ccc;
+    }
+    .cBx2 {
+        float: right;
+        width: 364px;
+        padding-top: 15px;
+    }
+    .cBx2 #sponsors  {
+        display: block;
+        margin: 0 auto;
+    }
+#events, #members {
+    max-height: 250px;
+    overflow-y: auto
+}
+	
+
+/*********** SUBPAGE CONTAINERs ***********/
+		
+	.col1 {
+		float: left;
+		width: 698px;
+		padding-right: 20px;
+		padding-bottom: 30px;
+		margin-right: 15px;
+		border-right: 1px dashed #ccc;
+	}
+		.col1 > h2 {
+			margin-top: 15px;
+		}
+		.col1 h2 + p {
+			margin-top: 0;
+			padding-top: 3px;
+		}
+	.col2 {
+		float: left;
+		width: 275px;
+		padding: 0 15px 15px;
+	}
+
+	.kWords p {
+		padding-top: 0;
+	}
+	.voteBx {
+		float: left;
+		width: 75px; /* margin-right: 20px; */
+		background: #fbfbfb;
+	}
+		.voteBx p {
+			border: 1px solid #e2e2e2;
+			-webkit-border-radius: 4px;
+			-moz-border-radius: 4px;
+			border-radius: 4px;
+			behavior: url("PIE.php");
+			font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
+			font-size: 18px;
+			color: #616161;
+			text-align: center;
+		}
+	.session {
+		float: right;
+		width: 605px;
+	}
+	.session-mp {
+		float: right;
+		width: 665px;
+	}
+
+	.sponsorLogo a {
+		display: block;
+		width: 190px;
+		height: 135px;
+		margin: 0 auto;
+	}
+		.sponsorLogo img {
+			margin-top: 20px;
+		}
+
+/*::::::::::::::: TABLE :::::::::::::::*/
+
+table.tblStyle {
+	width: 100%;
+}
+	.tblStyle td {
+		padding: 5px 2px;
+		font-size: 13px;
+		border-bottom: 1px solid #e5e5e5;
+		text-align: right;
+	}
+        .tblStyle td:first-child {
+            text-align: left;
+        }
+
+	.tblStyle th {
+		padding: 5px;
+		border-bottom: 1px solid #e5e5e5;
+		text-align: left;
+	}
+#eventDetails {
+    margin-top: 20px;
+}
+#profile {
+    width: 60%;
+}
+
+table.tblStyle2 {
+	width: 100%;
+}
+	.tblStyle2 td {
+		font-size: 12px;
+		line-height: 15px;
+        text-align: right;
+	}
+		.tblStyle2 td:first-child {
+			font-size: 14px;
+			line-height: 20px;
+             text-align: left;
+		}
+	.tblStyle2 td, tblStyle2 th {
+		padding: 15px 3px;
+		border-bottom: 1px solid #e5e5e5;
+	}
+	.tblStyle2 th {
+		font-size: 11px;
+		font-weight: normal;
+		text-transform: uppercase;
+		text-align: right;
+	}
+		.tblStyle2 th:first-child {
+             text-align: left;
+        }
+.fill {
+	background: #f5f5f5;
+}
+.paddedTable td {
+	padding: 5px 10px;
+	font-size: 16px;
+}
+
+.prevNext td {
+    padding: 5px 10px;
+    font-size: 16px;
+    width: 115px;
+}
+	
+/*::::::::::::::: FOOTER :::::::::::::::*/ 
+
+
+#footer, .push {  /* sets up properties for sticky footer */
+	height: 250px;
+}
+#footer { /* For footer link lists refer to lists-links.css */
+	width: 100%;
+	border-top: 1px dashed #ccc;
+	background: #f9f9f9;
+}
+	#ftr-content { 
+		width: 1050px;
+		margin: 0 auto;
+		padding-top: 35px;
+	}
+	#ftr-content, #ftr-content p {
+		font: normal 12px/19px 'Muli', Arial, sans-serif;
+		font-weight: 400;
+	}
+	.ftrcol {
+		float: left;
+		width: 150px;
+		height: 167px;	
+		padding-left: 40px;
+	}
+		#ftr-content .ftrcol:first-child {
+			padding-left: 0;
+		}
+	#contactNfo {
+		float: right;
+		width: 250px;
+		padding-left: 20px;
+		border-left: 1px dashed #ccc;	
+	}
+
+/*::::::::::::::: SITE CREDIT, COPYRIGHT :::::::::::::::*/
+
+#copyright {
+	width: 1050px;
+	height: 10px;
+	border-top: 1px dashed #ccc;
+	padding-top: 10px;
+	font: 11px/16px 'Muli', Arial, sans-serif;
+	font-weight: 400;
+	text-align: center;
+}

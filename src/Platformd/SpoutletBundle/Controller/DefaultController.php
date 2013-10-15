@@ -22,7 +22,7 @@ class DefaultController extends Controller
             'incompleteAccount' => $incompleteAccount,
         ));
 
-        $this->varnishCache($response, 86400);
+        $this->varnishCache($response, 2628000);
 
         return $response;
     }
@@ -31,7 +31,7 @@ class DefaultController extends Controller
     {
         if (!$this->isGranted('ROLE_USER')) {
             $response = new Response();
-            $this->varnishCache($response, 86400);
+            $this->varnishCache($response, 2628000);
 
             return $response;
         }
@@ -41,7 +41,7 @@ class DefaultController extends Controller
 
         if ($accountComplete) {
             $response = new Response();
-            $this->varnishCache($response, 86400);
+            $this->varnishCache($response, 2628000);
 
             return $response;
         }
@@ -55,7 +55,7 @@ class DefaultController extends Controller
     {
         if (!$this->isGranted('ROLE_USER')) {
             $response = new Response();
-            $this->varnishCache($response, 86400);
+            $this->varnishCache($response, 2628000);
 
             return $response;
         }
@@ -64,7 +64,7 @@ class DefaultController extends Controller
 
         if (!$flashes) {
             $response = new Response();
-            $this->varnishCache($response, 86400);
+            $this->varnishCache($response, 2628000);
 
             return $response;
         }
@@ -81,7 +81,7 @@ class DefaultController extends Controller
     public function _layoutFooterAction() {
         $response = $this->render('SpoutletBundle::_footer.html.twig');
 
-        $this->varnishCache($response, 86400);
+        $this->varnishCache($response, 2628000);
 
         return $response;
     }
@@ -303,12 +303,19 @@ class DefaultController extends Controller
      */
     public function hotStoriesAction()
     {
+        $featuredArticle = $this->getNewsRepo()
+            ->findMostRecentArticleForSite($this->getCurrentSite());
+
+        $exceptId = $featuredArticle ? $featuredArticle->getId() : null;
+        $articleCount = $featuredArticle ? ($featuredArticle->getThumbnail() ? 4 : 6) : 6;
+
         $news = $this->getNewsRepo()
-            ->findMostRecentForSite($this->getCurrentSite(), 13)
+            ->findMostRecentForSiteExcept($this->getCurrentSite(), $articleCount, $exceptId)
         ;
 
         $response = $this->render('SpoutletBundle:Default:_hotStories.html.twig', array(
-            'news'     => $news,
+            'featuredArticle' => $featuredArticle,
+            'news'            => $news,
         ));
 
         $this->varnishCache($response, 30);
@@ -376,7 +383,7 @@ class DefaultController extends Controller
         $deals = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Deal')
-            ->findAllActiveDealsForSiteId($site->getId())
+            ->findAllActiveDealsForSiteId($site->getId(), false)
         ;
 
         $deals_list = array();

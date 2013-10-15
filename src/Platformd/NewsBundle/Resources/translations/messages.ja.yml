@@ -1,0 +1,24 @@
+platformd.news.admin.heading: Manage news
+platformd.news.admin.title: Title
+platformd.news.admin.edit:  Edit
+platformd.news.admin.delete: Delete
+platformd.news.admin.delete_confirm: Are you sure you want to delete this news item?
+platformd.news.admin.create: Create a new item
+platformd.news.admin.save_news: Save news
+platformd.news.admin.create_title: Create a news item
+platformd.news.admin.created: Your news item has been created !
+platformd.news.admin.modified: Your news item has been modified !
+platformd.news.admin.deleted: Your news item has been deleted !
+platformd.news.admin.edit_title: Edit a news item
+platformd.news.admin.upload_image: Upload an image
+platformd.news.admin.image_dimensions: Used on news listings page (recommended size: 634x400)
+platformd.news.admin.article_thumbnail: Article Thumbnail
+platformd.news.admin.thumbnail_dimensions: Used in news widgets (recommended size: 274x92)
+platformd.news.announced_date: %posted_date%
+platformd.news.published_date: %posted_date%
+platformd.news.comment_count: (%comment_count% コメント)|(%comment_count% コメント)
+platformd.news.widget.title: ニュース
+platformd.news.widget.article: 記事
+platformd.news.widget.news: ニュース
+platformd.news.listings.page_title: ニュースと記事
+platformd.news.listings.read_more: 詳細

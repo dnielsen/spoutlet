@@ -72,7 +72,7 @@
             </div><!-- giveaway-info -->
 
             {% if features.hasComments %}
-                {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : data.giveaway_comment_thread_id, 'comments' : null, 'offset' : 0, 'permalink' : data.giveaway_comment_permalink } %}
+                {% include 'SpoutletBundle:Comments:_commentsLoader.html.twig' with({ 'threadId': data.giveaway_comment_thread_id }) %}
             {% endif %}
 
         </div><!-- left -->

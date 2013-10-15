@@ -60,7 +60,7 @@ class TwitterProvider implements UserProviderInterface
 
         try {
              $info = $this->twitter_oauth->get('account/verify_credentials');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
              $info = null;
         }
 
@@ -86,7 +86,7 @@ class TwitterProvider implements UserProviderInterface
         try {
              $info = $this->twitter_oauth->get('account/verify_credentials');
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
              $info = null;
         }
 
@@ -127,7 +127,7 @@ class TwitterProvider implements UserProviderInterface
         try {
              $info = $this->twitter_oauth->get('account/verify_credentials');
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
              return false;
         }
 
@@ -141,7 +141,7 @@ class TwitterProvider implements UserProviderInterface
 
             return $info->id;
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return '0';
         }
     }
@@ -150,7 +150,7 @@ class TwitterProvider implements UserProviderInterface
         try {
             $this->twitter_oauth->setOAuthToken($this->session->get('access_token'), $this->session->get('access_token_secret'));
             $tweet = $this->twitter_oauth->post('statuses/update', array('status' => $status));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
 
         }
     }

@@ -41,6 +41,18 @@ idea_advance:
     requirements:
       _method:  POST
 
+idea_admin_images:
+    pattern:    /{groupSlug}/event/{eventSlug}/admin/images
+    defaults:   { _controller: IdeaBundle:Admin:images }
+    requirements:
+      _method: GET|POST
+
+idea_admin_remove_image:
+    pattern:    /{groupSlug}/event/{eventSlug}/admin/images/remove/{imageId}
+    defaults:   { _controller: IdeaBundle:Admin:removeImage }
+    requirements:
+      _method: GET
+
 # NON-ADMIN
 
 idea_show_all:

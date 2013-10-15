@@ -22,7 +22,7 @@
         </div>
     {% endif %}
 
-    {% if user.expiredUntil %}
+    {% if not user.expired and user.expiredUntil %}
         <div class="flash-message flash-error">
             <i class="icon-ok"></i>
             <span>User is suspended until {{ user.expiredUntil|date('F d, Y') }}</span>

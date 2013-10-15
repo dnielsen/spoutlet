@@ -21,7 +21,6 @@ class AppKernel extends Kernel
             // third part bundles
             new FOS\UserBundle\FOSUserBundle(),
             new JMS\I18nRoutingBundle\JMSI18nRoutingBundle(),
-            new FOS\CommentBundle\FOSCommentBundle(),
             new EWZ\Bundle\RecaptchaBundle\EWZRecaptchaBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
@@ -43,7 +42,6 @@ class AppKernel extends Kernel
             // my bundles
             new Platformd\SpoutletBundle\SpoutletBundle(),
             new Platformd\UserBundle\UserBundle(),
-            new Platformd\CommentBundle\CommentBundle(),
             new Platformd\GiveawayBundle\GiveawayBundle(),
             new Platformd\GroupBundle\GroupBundle(),
             new Platformd\NewsBundle\NewsBundle(),

@@ -1,0 +1,170 @@
+.event-comments {
+    margin-top: 15px;
+}
+
+#event-location-online {
+    font-style: italic;
+}
+
+#event-location-map {
+    padding: 10px;
+}
+
+#event-registration {
+    margin: 10px 0 0 0;
+    text-align: center;
+}
+
+#event-attending-message {
+    font-size: 18px;
+    font-style: italic;
+}
+
+#event-location-name,
+#event-location-address1,
+#event-location-address2,
+#event-directions-link {
+    margin: 5px 0 5px 10px;
+}
+
+#event-location-name {
+    font-weight: bold;
+}
+
+#event-banner {
+    width: 100%;
+    height: 120px;
+    border: none;
+}
+
+#event-registration-button {
+    padding: 2px 0;
+}
+
+.event-attendee {
+    position: relative;
+    margin: 10px;
+    cursor: pointer;
+}
+
+#event-attendee-list img,
+#event-attendee-list .default-avatar {
+    width: 48px;
+    height: 48px;
+    display: inline-block;
+}
+
+#event-attendee-list a,
+#event-host-tag {
+    position: absolute;
+    margin-left: 15px;
+}
+
+#event-host-tag {
+    bottom: 5px;
+    background-color: #2075ae;
+    font-weight: bold;
+    color: white;
+    padding: 2px 4px;
+    font-size: 10px;
+    border-radius: 3px;
+}
+
+#event-contact-page input[type="text"] {
+    width: 510px;
+}
+
+#event-contact-page .form-horizontal .control-label {
+    width: 80px;
+}
+
+#event-contact-page .form-horizontal .controls {
+    margin-left: 100px;
+}
+
+.event-hover-div {
+    position:absolute;
+    width:100%;
+    height:100%;
+    display:none;
+    opacity:0.3;
+    background-color: #2faad9;
+    padding: 7px;
+    top: -7px;
+    left: -7px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+
+.events-sub-nav ul {
+    padding: 0;
+    margin: 0;
+}
+
+.events-sub-nav ul li {
+    float:none;
+    background-repeat:no-repeat;
+    margin: 2px 0 0 0;
+    padding: 0 7px;
+    display: inline;
+    padding-top: 5px;
+    padding-bottom: 4px;
+}
+
+.events-sub-nav ul li.first { background: none; }
+
+#event-registration-closed,
+#registration-response,
+#event-attending-message {
+    color: red;
+}
+
+#event-report-link {
+    margin: 10px 0;
+}
+
+#groupEvent_location,
+#groupEvent_address1,
+#groupEvent_address2 {
+    width: 450px;
+}
+
+#groupEvent_name {
+    width: 300px;
+}
+
+.time-selection {
+    display: inline-block;
+    margin: 0 0 0 7px;
+}
+
+.minute-selection select {
+    width: 75px;
+}
+
+.hour-selection select {
+    width: 105px;
+    margin: 0 0 0 7px;
+}
+
+.event-timezone select {
+    width: 303px;
+}
+
+#groupEvent_endsAt,
+#groupEvent_startsAt {
+    display:inline-block;
+}
+
+.event-date-picker {
+    width: 100px;
+}
+
+.global-event-link {
+    color: #9BC744;
+}
+
+.global-event-link:hover {
+    color: #9BC744;
+}

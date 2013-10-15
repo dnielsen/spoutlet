@@ -1,0 +1,18 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title %}{{ news.title | trans }}{% endblock %}
+
+{% block content %}
+
+<div id="news-show" class="std_1col">
+
+    {% include 'NewsBundle:Default:_news.html.twig' with {
+            'item' : news
+    }%}
+
+    {% if features.hasComments %}
+        {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : news.commentThreadId, 'object' : news } %}
+    {% endif %}
+
+</div>
+{% endblock %}

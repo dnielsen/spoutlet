@@ -19,7 +19,7 @@
                         <div class="group-list-item">
                             <a href="{{ path('group_show', { slug: group[0].slug}) }}">
                                 {% if group[0].thumbNail %}
-                                <img  class="lazy" src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" data-src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
+                                <img src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
                                 {% else %}
                                 <div class="default-group-thumbnail"></div>
                                 {% endif %}
@@ -43,34 +43,6 @@
             <h4 class="groups-category-header">{{ 'platformd.groups.index.topic_groups' | pd_trans }}</h4>
             <div class="scrollable" id="scrollable-topic-groups">
                 <div class="items">
-                    {% for page in topicGroups %}
-                        {% set lazyImages = loop.index > 0 %}
-                        <div class="items-wrapper">
-                        {% for groupList in page %}
-                            {% for group in groupList %}
-                                <div class="group-list-item">
-                                    <a href="{{ path('group_show', { slug: group[0].slug}) }}">
-                                        {% if group[0].thumbNail %}
-                                        <img class="lazy" src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" data-src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
-                                        {% else %}
-                                        <div class="default-group-thumbnail"></div>
-                                        {% endif %}
-                                    </a>
-                                    <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
-                                        {{ group[0].name }}
-                                    </a>
-                                    <div class="details">
-                                        <div class="item-detail">{{ 'platformd.groups.index.members' | pd_trans }}: {{ group['memberCount'] }}</div>
-                                        <div class="item-detail">{{ 'platformd.groups.index.organizer' | pd_trans }}: {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'platformd.groups.index.staff' | pd_trans : group[0].owner.username }}</div>
-                                        <div class="report-group-caption">
-                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group[0].id }}">{{ 'platformd.groups.index.report_group' | pd_trans }}</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% endfor %}
-                        </div>
-                    {% endfor %}
                 </div>
             </div>
             <div id="scroll-actions" style="margin-top: 0px;">
@@ -82,35 +54,7 @@
             <h4 class="groups-category-header">{{ 'platformd.groups.index.location_groups' | pd_trans }}</h4>
             <div class="scrollable" id="scrollable-location-groups">
                 <div class="items">
-                    {% for page in locationGroups %}
-                        <div class="items-wrapper">
-                        {% for groupList in page %}
-                            {% for group in groupList %}
-                                <div class="group-list-item">
-                                    <a href="{{ path('group_show', { slug: group[0].slug}) }}">
-                                        {% if group[0].thumbNail %}
-                                        <img  class="lazy" src="{{ asset('bundles/spoutlet/images/alienwarelogothumb-140x85.png') }}" data-src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
-                                        {% else %}
-                                        <div class="default-group-thumbnail"></div>
-                                        {% endif %}
-                                    </a>
-                                    <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
-                                        {{ group[0].name }}
-                                    </a>
-                                    <div class="details">
-                                        <div class="item-detail">{{ 'platformd.groups.index.members' | pd_trans }}: {{ group['memberCount'] }}</div>
-                                        <div class="item-detail">{{ 'platformd.groups.index.organizer' | pd_trans }}: {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'platformd.groups.index.staff' | pd_trans : group[0].owner.username }}</div>
-                                        <div class="report-group-caption">
-                                            <a href="javascript:void(0);" class="report-group" report-data="{{ group[0].id }}">{{ 'platformd.groups.index.report_group' | pd_trans }}</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% endfor %}
-                        </div>
-                    {% endfor %}
                 </div>
-
             </div>
             <div id="scroll-actions" style="margin-top: 10px;">
                 <a id="location-prev" class="prev browse" style="float: left;">{{ 'platformd.groups.index.previous' | pd_trans }}</a>
@@ -167,36 +111,124 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
-    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.truncate.min.js"></script>
     <script type="text/javascript">
+
+        var topicGroups    = {{ topicGroups | raw }};
+        var locationGroups = {{ locationGroups | raw }};
+        var topicGroupsLoaded   = 0;
+        var locationGroupsLoaded   = 0;
+        var basePath       = '{{  path('default_index') }}';
+
         $(function () {
             $('.reg-source').click(function() {
                 addSourceInfo(this, '{{ regSourceData | base64_encode }}');
             });
 
-            locationScrollable = $('#scrollable-location-groups').scrollable({
+            initGroups();
+
+            $('#scrollable-location-groups').scrollable({
                 next: '#location-next',
                 prev: '#location-prev',
-                onSeek: function() {
-                    this.getItems().eq(this.getIndex()).find('img.lazy').lazyLoad();
-                }
-            }).data('scrollable');
-            topicScrollable = $('#scrollable-topic-groups').scrollable({
+            });
+            $('#scrollable-topic-groups').scrollable({
                 next: '#topic-next',
                 prev: '#topic-prev',
-                onSeek: function() {
-                    this.getItems().eq(this.getIndex()).find('img.lazy').lazyLoad();
-                }
-            }).data('scrollable');
+            });
+
+            $('#location-next').click(function() {
+                loadNextGroupsAjax('location');
+            });
+
+            $('#topic-next').click(function() {
+                loadNextGroupsAjax('topic');
+            });
 
             $('.group-index-link').truncate();
             $('.item-detail').truncate({width:130});
             $('.widget-item .news-ellipse').truncate();
 
-            locationScrollable.getItems().eq(locationScrollable.getIndex()).find('img.lazy').lazyLoad();
-            topicScrollable.getItems().eq(topicScrollable.getIndex()).find('img.lazy').lazyLoad();
-            $('#featured-groups img.lazy').lazyLoad();
         });
+
+        function initGroups() {
+            loadNextGroupsAjax('topic', 16);
+            loadNextGroupsAjax('location', 16);
+        }
+
+        function loadNextGroupsAjax(type, num) {
+
+            if(typeof(num)==='undefined') num = 8;
+
+            scrollContainer = null;
+
+            if (type == 'location') {
+                list = locationGroups;
+                scrollContainer = '#scrollable-location-groups .items';
+                groupsLoaded = locationGroupsLoaded;
+            } else if (type == 'topic') {
+                list = topicGroups;
+                scrollContainer = '#scrollable-topic-groups .items';
+                groupsLoaded = topicGroupsLoaded;
+            } else {
+                return;
+            }
+
+            var currDiv = null;
+            var baseDiv = $('<div class="items-wrapper"></div>');
+
+            for (var i = 0; i < num; i++) {
+
+                var index = groupsLoaded + i;
+
+                if(list.length <= groupsLoaded + i)
+                {
+                    groupsLoaded+=i;
+                    updateCounts(type, groupsLoaded);
+                    return;
+                }
+                if (i % 8 == 0) {
+                    currDiv = baseDiv.clone();
+                    currDiv.appendTo(scrollContainer);
+                }
+
+                if (list[index].thumbnail) {
+                    image = '<img src="' + list[index].thumbnail + '" alt="' + list[index].name + '" title="' + list[index].name + '" />';
+                } else {
+                    image = '<div class="default-group-thumbnail"></div>';
+                }
+
+                ownerName = list[index].owner.adminLevel ? '{{ 'platformd.groups.index.staff' | pd_trans }}' : list[index].owner.username;
+
+                currDiv.append('<div class="group-list-item"> \
+                    <a href="' + basePath + list[index].slug + '"> \
+                        ' + image + ' \
+                    </a> \
+                    <a href="' + basePath + list[index].slug + '" class="group-index-link" title="' + list[index].name + '"> \
+                        ' + list[index].name + ' \
+                    </a> \
+                    <div class="details"> \
+                        <div class="item-detail">{{ 'platformd.groups.index.members' | pd_trans }}: ' + list[index].memberCount + '</div> \
+                        <div class="item-detail">{{ 'platformd.groups.index.organizer' | pd_trans }}: ' + ownerName + '</div> \
+                        <div class="report-group-caption"> \
+                            <a href="javascript:void(0);" class="report-group" report-data="' + list[index].id + '">{{ 'platformd.groups.index.report_group' | pd_trans }}</a> \
+                        </div> \
+                    </div> \
+                </div>');
+            }
+
+            groupsLoaded+=num;
+
+            updateCounts(type, groupsLoaded);
+            $('.group-index-link').truncate();
+        }
+
+        function updateCounts(type, groupsLoaded) {
+            if (type == 'location') {
+                locationGroupsLoaded = groupsLoaded;
+            } else if (type == 'topic') {
+                topicGroupsLoaded = groupsLoaded;
+            }
+        }
+
     </script>
 
 {% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+{% if group.backgroundImage %}
+    {% set customPageBackgroundImage = media_path(group.backgroundImage) %}
+{% else %}
+    {% set customPageBackgroundImage = false %}
+{% endif %}
+
+{% block page_background_image customPageBackgroundImage %}
+
+{% block title group.name %}
+
+{% block content %}
+
+    <div id="group-contact-page">
+
+        <div class="std_1col" style="padding:0;">
+            <div id="group-avatar">
+                {% if group.groupAvatar %}
+                    <img src="{{ media_path(group.groupAvatar) }}" />
+                {% else %}
+                    <div id="groups-main-banner"></div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="std_1col" style="padding: 0;">
+            {% include 'GroupBundle:Group:_subNav.html.twig' %}
+        </div>
+
+        <div class="std_2col" style="min-height: 500px; margin-top: 10px;">
+            <div class="left">
+                <div class="widget-66">
+                    <div class="widget-header" style="padding-bottom:10px;">
+                        <div class="widget-title">
+                            <div>{{ 'platformd.groups.contact.form.title' | pd_trans }}</div>
+                        </div>
+                    </div>
+                    <div class="widget-content">
+
+                        <div id="group-contact-instructions">
+                            <p class="alert alert-info help"><i class="icon-info-sign"></i>
+                                {{ 'platformd.groups.contact.form.instructions' | pd_trans }}
+                            </p>
+                        </div>
+
+                        <form id="group-contact-form" action="{{ path('group_contact', { 'slug': group.slug }) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+                            {{ form_widget(form) }}
+                            <div class="form-actions" style="padding-left: 100px;">
+                                <button type="submit" id="preview" class="btn btn-primary" formnovalidate>{{ 'platformd.groups.contact.form.preview' | pd_trans }}</button>
+                                <button type="submit" id="submit" class="btn btn-primary" style="margin-left: 10px;" formnovalidate>{{ 'platformd.groups.contact.form.send' | pd_trans }}</button>
+                                <button id="cancel" class="btn btn-primary" rel="{{ path('group_show', { 'slug': group.slug }) }}" style="margin-left: 10px;">{{ 'platformd.groups.contact.form.cancel' | pd_trans }}</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="right">
+                {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+            </div>
+
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $('#preview').click(function(){
+                $('#group-contact-form').attr('action', '{{ path('group_email_preview', {'slug': group.slug }) }}');
+                $('#group-contact-form').attr('target', '_blank');
+            });
+
+            $('#submit').click(function(){
+                $('#group-contact-form').attr('action', '{{ path('group_contact', {'slug': group.slug }) }}');
+                $('#group-contact-form').removeAttr('target');
+            });
+
+            $('#cancel').click(function(e){
+                e.preventDefault();
+                document.location.href = '{{ path('group_show', { 'slug': group.slug }) }}';
+            });
+        });
+    </script>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'GroupBundle:Group:_css_assets.html.twig' %}
+{% endblock %}

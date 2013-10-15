@@ -1,0 +1,124 @@
+@charset "UTF-8";
+
+#boardList { width:100%;}
+#boardList table { width:100%; border-spacing:2px; border-collapse: separate;}
+#boardList table td { margin:1px; height: 32px;}
+#boardList.cant-add { height:534px; }
+#boardList.can-add { height:518px; }
+#boardList h2 { color:#ffffff; font-weight:bold; font-size:16px; margin:0; padding:8px 0 5px 55px; }
+
+#boardList td {padding:3px 10px; }
+
+#boardList .row1 td { background: #e1e1e8; }
+#boardList .row2 td { background: #d1d1d1; }
+
+/** topic list **/
+
+#boardList .forumTopic td {padding:3px 10px; }
+#boardList .forumTopic .icon { width:48px; text-align:center; background:none;  }
+#boardList .forumTopic .name { width: 300px;}
+#boardList .forumTopic .name h3 { margin:0; padding:2px 0; font-size:13px; font-weight:bold; }
+#boardList .forumTopic .replies { font-size:12px; width: 40px; text-align: center;}
+#boardList .forumTopic .views { font-size:12px; width: 40px; text-align: center;}
+#boardList .forumTopic .last { font-size:12px; width: 100px; text-align: left;}
+#boardList .forumTopic .topics { font-size:12px; margin:0; text-align:center; }
+#boardList .forumTopic .last { font-size:12px; margin:0; }
+
+.currentPage { font-weight:bold; }
+
+#topicView { width:640px; padding-right:32px; float:left; }
+#topicView h1 { font-size:26px; font-weight:normal; }
+
+#topicComments { width:640px; float:left;}
+
+.group-discussion-actions {
+    padding: 0 0 10px 0;
+}
+
+#discussion-reply-form {
+    float: left;
+    width: 100%;
+    margin: 15px 0 0 0;
+}
+
+#discussion-reply-form textarea {
+    width: 485px;
+    height: 180px;
+}
+
+.reply-form-actions {
+    width: 485px;
+    padding: 18px 0 18px 0;
+    text-align: center;
+}
+
+#group-discussion-form-wrapper #form_content {
+    width: 440px;
+    height: 180px;
+}
+
+#group-discussion-form-wrapper #form_title {
+    width: 440px;
+}
+
+.forumComment { padding-bottom:19px;}
+.forumComment .left { float:left; width:146px; }
+.forumComment .right { float:right; width:738px; }
+
+.row1 .profileInfo { background:url(/bundles/spoutlet/images/forums/profile-arrow-bg.png) top right no-repeat; }
+.row2 .profileInfo { background:url(/bundles/spoutlet/images/forums/profile-arrow2-bg.png) top right no-repeat; }
+
+.profileAvatar { position:relative; height:84px; background-position:top left; background-repeat:no-repeat;  }
+.profileAvatar span { display:block; position:absolute; width:84px; height:84px; background:url(/bundles/spoutlet/images/forums/avatar-frame.png) top left no-repeat; }
+.profileName { font-size:14px; font-weight:bold; padding:10px 0; width:130px; overflow:hidden; }
+.profileName a { display:block; min-height:16px; width:100%; }
+
+.profileAvatar img,
+.profileAvatar .default-avatar {
+    width: 84px;
+    height: 84px;
+    display: inline-block;
+}
+
+.forumTextWrapper {  }
+.forumText { padding:10px 20px 0 20px; overflow: auto; }
+.forumText p { padding-top:10px; margin:0; }
+.row1 .forumTextWrapper, .row1 .forumBottom { background:url(/bundles/spoutlet/images/forums/text-bg.png) top left repeat; }
+.row2 .forumTextWrapper, .row2 .forumBottom { background:url(/bundles/spoutlet/images/forums/text2-bg.png) top left repeat; }
+
+.forumTextWrapper {
+    -moz-border-radius-topleft: 5px;
+    -webkit-border-top-left-radius: 5px;
+    border-top-left-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    -webkit-border-top-right-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.forumBottom {
+    -moz-border-radius-bottomleft: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.forumNumber {
+    float:right;
+    width:48px;
+    height:20px;
+    margin-top:20px;
+    text-align:center;
+    border-bottom-right-radius: 5px;
+    -moz-border-radius-bottomright: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    border-top-left-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -webkit-border-top-left-radius: 5px;
+    background-color: #2faad9;
+}
+
+.forumSig { padding:10px 20px 0 20px; }
+.forumSig p { margin:0; padding-top:10px;  background:url(/bundles/spoutlet/images/forums/sig-liner2.png) top left repeat-x; color:#9b9b9b; }
+.forumInfo { color:#6f6f6f; padding:10px 10px 10px 10px; }

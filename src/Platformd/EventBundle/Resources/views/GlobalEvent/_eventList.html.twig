@@ -45,7 +45,7 @@
                 {% if event.hostedBy|default(null) %}
                     {{ event.hostedBy }}
                 {% else %}
-                    {% if event.group|default(null) and (event.taggableType == 'platformd_global_event' or event.taggableType == 'group_event') %}
+                    {% if event.group|default(null) and (event.taggableType == 'platformd_global_event' or event.taggableType == 'platformd_group_event') %}
                         <a href="{{ path('group_show', {'slug' : event.group.slug }) ~ '#events' }}">{{ event.group.name }}</a>
                     {% else %}
                         {{ 'na'|pd_trans }}
@@ -53,7 +53,7 @@
                 {% endif %}
             </td>
             <td style="vertical-align:top">
-                {% if event.online|default(true) %}
+                {% if event.online == true %}
                     {{ 'platformd.events.event_listings.online' | pd_trans }}
                 {% else %}
                     {% if event.fullAddress is not null %}

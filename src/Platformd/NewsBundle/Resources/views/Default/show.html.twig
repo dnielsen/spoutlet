@@ -11,7 +11,7 @@
         </div>
 
         <div class="std-item">
-            {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' %}
+            {% render url('hot_stories') %}
         </div>
     </div>
     <div class="left">
@@ -19,8 +19,8 @@
             <h1 class="controlled-spacing">{{ news.title }}</h1>
 
             <h6>
-                {{ 'announced_date' | pd_trans({
-                    '%posted_date%': ('sweepstakes_date_format' | pd_trans(news.postedAtArray))
+                {{ (news.type == 'article' ? 'platformd.news.published_date' : 'platformd.news.announced_date') | pd_trans({
+                    '%posted_date%': (news.postedAt|date_translate)
                 })}}
             </h6>
             {% if news.image %}
@@ -33,7 +33,7 @@
             </div>
 
             {% if features.hasComments %}
-                {% include 'SpoutletBundle:Comments:_thread.html.twig' with { 'thread' : news.threadId, 'comments' : null, 'offset' : 0, 'permalink' : permalink } %}
+                {% include 'SpoutletBundle:Comments:_commentsLoader.html.twig' with({ 'threadId': news.threadId }) %}
             {% endif %}
         </div>
     </div>

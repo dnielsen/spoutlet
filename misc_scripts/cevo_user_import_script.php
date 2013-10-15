@@ -292,7 +292,7 @@ class CevoUserImportCommand
 
         try {
             $dbh = new PDO($dsn, $dbUser, $dbPassword, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"));
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $this->error('Connection failed: ' . $e->getMessage(), true);
         }
 
@@ -619,12 +619,12 @@ class CevoUserImportCommand
                         $updatedCount++;
                     }
 
-                } catch (PDOException $e) {
+                } catch (\PDOException $e) {
                     $this->error('Connection failed at iteration ['.$iteration.']: ' . $e->getMessage());
                     $this->writeNonImportedUserCsvRow('PDOException caught', $data);
                     $skippedCount++;
                     sleep(5);
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $this->error($e->getMessage());
                     $this->writeNonImportedUserCsvRow($e->getMessage(), $data);
                     $skippedCount++;

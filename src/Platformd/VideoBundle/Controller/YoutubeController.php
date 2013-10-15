@@ -211,6 +211,8 @@ class YoutubeController extends Controller
 
         $this->getYoutubeManager()->updateVideo($video);
 
+        $permalink = $this->get('platformd.model.comment_manager')->checkThread($video);
+
         return $this->render('VideoBundle:Youtube:view.html.twig', array(
             'video'               => $video,
             'videos'              => $videos,

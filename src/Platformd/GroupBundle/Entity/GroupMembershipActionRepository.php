@@ -53,4 +53,40 @@ class GroupMembershipActionRepository extends EntityRepository
 
         return count($total);
     }
+
+    public function getMembersJoinedCountForIds($ids, $fromDate=null, $thruDate=null)
+    {
+        if (count($ids) < 1) {
+            return array();
+        }
+
+        $qb = $this->createQueryBuilder('gma');
+        $qb->select('g.id');
+        $qb->addSelect('COUNT(DISTINCT gma.user) AS memberCount');
+        $qb->leftJoin('gma.group', 'g');
+        $qb->where('g.id IN (:ids)');
+        $qb->andWhere('gma.action = :action1 OR gma.action = :action2');
+        $qb->setParameter('ids', $ids);
+        $qb->setParameter('action1', 'JOINED');
+        $qb->setParameter('action2', 'JOINED_APPLICATION_ACCEPTED');
+
+        if($fromDate) {
+            $qb->andWhere('gma.createdAt >= :fromDate')
+               ->setParameter('fromDate', $fromDate);
+        }
+
+        if ($thruDate) {
+            $qb->andWhere('gma.createdAt <= :thruDate')
+            ->setParameter('thruDate', $thruDate);
+        }
+
+        $result = $qb->getQuery()->getResult();
+        $return = array();
+
+        foreach ($result as $groupInfo) {
+            $return[$groupInfo['id']] = $groupInfo['memberCount'];
+        }
+
+        return $return;
+    }
 }

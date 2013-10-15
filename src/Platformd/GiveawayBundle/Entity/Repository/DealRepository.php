@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use DateTime;
 use DateTimeZone;
+use Doctrine\ORM\Query\Expr\Join;
 
 class DealRepository extends EntityRepository
 {
@@ -128,6 +129,12 @@ class DealRepository extends EntityRepository
             ->leftJoin('d.thumbnailLarge', 't')
             ->addSelect('b, t');
 
+        $qb->leftJoin('d.pools', 'p')
+            ->leftJoin('p.codes', 'c')
+            ->andWhere('c.user IS NULL')
+            ->andHaving('COUNT(c.id) > 0')
+            ->addGroupBy('d.id');
+
         return $qb
             ->getQuery()
             ->setMaxResults(4)
@@ -135,31 +142,32 @@ class DealRepository extends EntityRepository
         ;
     }
 
-    public function findAllActiveNonFeatureDealsForSite($site, array $featuredDeals)
-    {
-        $qb = $this->createSiteQueryBuilder($site);
-        $this->addActiveQueryBuilder($qb);
-        $this->addOrderByQuery($qb);
-
-        if (!empty($featuredDeals)) {
-            $qb->andWhere($qb->expr()->notIn('d.id', self::objectsToIdsArray($featuredDeals)));
-        }
-
-        return $qb->getQuery()
-            ->execute()
-        ;
-    }
-
-    public function findAllActiveDealsForSiteId($siteId)
+    public function findAllActiveDealsForSiteId($siteId, $ignoreFeatured=false, $featuredToIgnore=null)
     {
         $qb = $this->createSiteIdQueryBuilder($siteId);
         $this->addActiveQueryBuilder($qb);
         $this->addOrderByQuery($qb);
-        $qb->andWhere('d.featured <> 1');
+
+        if ($ignoreFeatured && $featuredToIgnore) {
+
+            foreach ($featuredToIgnore as $featuredDeal) {
+                $featuredIds[] = $featuredDeal->getId();
+            }
+
+            if (count($featuredIds) > 0) {
+                $qb->andWhere($qb->expr()->notIn('d.id', $featuredIds));
+            }
+        }
 
         $qb->leftJoin('d.banner', 'b')
             ->leftJoin('d.thumbnailLarge', 't')
             ->addSelect('b, t');
+
+        $qb->leftJoin('d.pools', 'p')
+            ->leftJoin('p.codes', 'c')
+            ->andWhere('c.user IS NULL')
+            ->andHaving('COUNT(c.id) > 0')
+            ->addGroupBy('d.id');
 
         return $qb->getQuery()
             ->execute()
@@ -274,7 +282,12 @@ class DealRepository extends EntityRepository
             $qb = $this->createQueryBuilder('d');
         }
 
-        $qb->andWhere('d.endsAt < :now AND d.endsAt IS NOT NULL');
+        $qb->leftJoin('d.pools', 'p')
+            ->leftJoin('p.codes', 'c', Join::WITH, 'p.id = c.pool AND c.user IS NULL')
+            ->andWhere('c.user IS NULL')
+            ->addGroupBy('d.id');
+
+        $qb->andHaving('(d.endsAt < :now AND d.endsAt IS NOT NULL) OR COUNT(c.id) < 1 OR COUNT(p.id) < 1');
         $qb->setParameter('now', new DateTime('now', new DateTimeZone('UTC')));
 
         return $qb;

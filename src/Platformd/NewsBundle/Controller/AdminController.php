@@ -51,8 +51,6 @@ class AdminController extends Controller
         $pager = new PagerFanta(new DoctrineORMAdapter($query));
         $pager->setCurrentPage($this->getRequest()->get('page', 1));
 
-        $giveaways = $this->getGiveawayRepo()->findAllForSite($site);
-
         return $this->render('NewsBundle:Admin:list.html.twig', array(
             'news'  => $pager,
             'site'  => $site,
@@ -68,9 +66,7 @@ class AdminController extends Controller
         $request    = $this->getRequest();
 
         if ($this->processForm($form, $request)) {
-
-            $this->setFlash('success', $this->trans('platformd.admin.news.created'));
-
+            $this->setFlash('success', $this->trans('platformd.news.admin.created'));
             return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
         }
 
@@ -100,8 +96,7 @@ class AdminController extends Controller
         $request = $this->getRequest();
 
         if ($this->processForm($form, $request)) {
-            $this->setFlash('success', $this->trans('platformd.admin.news.modified'));
-
+            $this->setFlash('success', $this->trans('platformd.news.admin.modified'));
             return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
         }
 
@@ -126,8 +121,7 @@ class AdminController extends Controller
         $em->remove($news);
         $em->flush();
 
-        $this->setFlash('success', $this->trans('platformd.admin.news.deleted'));
-
+        $this->setFlash('success', $this->trans('platformd.news.admin.deleted'));
         return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
     }
 
@@ -154,6 +148,10 @@ class AdminController extends Controller
                 $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
 
                 $isEdit = $news->getId();
+
+                if (!$mUtil->persistRelatedMedia($news->getThumbnail())) {
+                    $news->setThumbnail(null);
+                }
 
                 $em->persist($news);
                 $em->flush();

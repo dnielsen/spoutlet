@@ -68,6 +68,9 @@ class VoteController extends Controller
                 $em->persist($vote);
                 $em->flush();
 
+                $path = $this->generateUrl('comments_thread', array('threadId' => $comment->getThread()->getId()));
+                $this->getVarnishUtil()->banCachedObject($path);
+
                 $votes      = $voteRepo->getVoteCountsForComment($comment);
 
                 break;

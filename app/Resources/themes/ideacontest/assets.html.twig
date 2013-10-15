@@ -7,32 +7,33 @@ dynamically set the output filename for packed css/js files
 
 {% block stylesheets %}
     {% stylesheets
-        'themes/ideacontest/spoutlet/css/custom.css'
+        'themes/ideacontest/spoutlet/css/comments.css'
         'themes/ideacontest/spoutlet/css/containers.css'
+        'themes/ideacontest/spoutlet/css/custom.css'
         'themes/ideacontest/spoutlet/css/cycle.css'
+        'themes/ideacontest/spoutlet/css/flash.css'
         'themes/ideacontest/spoutlet/css/forms.css'
+        'themes/ideacontest/spoutlet/css/hack-global.css'
         'themes/ideacontest/spoutlet/css/jkmegamenu.css'
         'themes/ideacontest/spoutlet/css/lists-links.css'
-        'themes/ideacontest/spoutlet/css/mcsv-global.css'
+        'themes/ideacontest/spoutlet/css/news.css'
+        'themes/ideacontest/spoutlet/css/nivo-slider.css'
+        'themes/ideacontest/spoutlet/css/registration.css'
         'themes/ideacontest/spoutlet/css/royalslider.css'
         'themes/ideacontest/spoutlet/css/rs-default.css'
+        'themes/ideacontest/spoutlet/css/superfish.css'
         'themes/ideacontest/spoutlet/css/toggle.css'
         'themes/ideacontest/spoutlet/css/webFonts.css'
-        'themes/ideacontest/spoutlet/css/nivo-slider.css'
-        'themes/ideacontest/spoutlet/css/superfish.css'
-        'plugins/jquery.ad-gallery/jquery.ad-gallery.css'
-        'themes/ideacontest/spoutlet/css/registration.css'
         'themes/ideacontest/spoutlet/css/widgets.css'
-        'themes/ideacontest/spoutlet/css/comments.css'
-        'themes/ideacontest/spoutlet/css/news.css'
-        'themes/ideacontest/spoutlet/css/flash.css'
         'themes/ideacontest/spoutlet/css/jquery_ui/jquery-ui-1.8.16.custom.css'
+        'themes/ideacontest/user/css/account.css'
         'bundles/spoutlet/css/jquery.mCustomScrollbar.css'
         'bundles/spoutlet/css/qtip.css'
-        'themes/ideacontest/user/css/account.css'
+        'plugins/jquery.ad-gallery/jquery.ad-gallery.css'
         filter='cssrewrite'
         output='css/packed/layout_ideacontest.css'
     %}
+
     <link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 {% endblock %}
@@ -41,7 +42,6 @@ dynamically set the output filename for packed css/js files
 
     {% javascripts
         'bundles/spoutlet/js/ie8.js'
-        'bundles/spoutlet/js/jquery-1.7.2.min.js'
         'bundles/spoutlet/js/jquery-ui-1.8.16.custom.min.js'
         'bundles/spoutlet/js/jquery.ajaxfileupload.js'
         'bundles/spoutlet/js/jquery.cycle.all.js'
@@ -50,34 +50,34 @@ dynamically set the output filename for packed css/js files
         'bundles/spoutlet/js/jquery.simplemodal.js'
         'bundles/spoutlet/js/jquery.simpletip.js'
         'bundles/spoutlet/js/jquery.truncate.min.js'
-        'bundles/spoutlet/js/progressbar.js'
-        'themes/ideacontest/spoutlet/js/superfish.js'
-        'themes/ideacontest/spoutlet/js/supersubs.js'
-        'themes/ideacontest/spoutlet/js/hoverIntent.js'
-        'bundles/spoutlet/js/custom.js'
-        'bundles/spoutlet/js/google-dfp.js'
+        'bundles/spoutlet/js/jquery.blockUI.js'
         'bundles/spoutlet/js/jquery.countdown.min.js'
         'bundles/spoutlet/js/jquery.ddslick.min.js'
-        'bundles/spoutlet/alt_js/*'
-        'bundles/comment/js/comments.js'
         'bundles/spoutlet/js/jquery.timeago.min.js'
+        'bundles/spoutlet/js/jquery.tools.min.js'
+        'bundles/spoutlet/js/nivo-slider/jquery.nivo.slider.pack.js'
+        'bundles/spoutlet/js/progressbar.js'
+        'bundles/spoutlet/js/custom.js'
+        'bundles/spoutlet/js/google-dfp.js'
+        'bundles/spoutlet/admin/js/jquery.tablesorter.min.js'
+        'bundles/spoutlet/alt_js/*'
         'ckeditor/ckeditor.js'
         'ckeditor/config.js'
         'ckeditor/lang/en.js'
-        'plugins/jquery.ad-gallery/jquery.ad-gallery.js'
-        'bundles/spoutlet/js/jquery.blockUI.js'
-        'bundles/spoutlet/js/nivo-slider/jquery.nivo.slider.pack.js'
         'themes/ideacontest/spoutlet/js/datescript.js'
+        'themes/ideacontest/spoutlet/js/gmaps_custom.js'
+        'themes/ideacontest/spoutlet/js/hoverIntent.js'
         'themes/ideacontest/spoutlet/js/jkmegamenu.js'
         'themes/ideacontest/spoutlet/js/jquery.cycle.all.min.js'
         'themes/ideacontest/spoutlet/js/jquery.royalslider.min.js'
-        'bundles/spoutlet/admin/js/jquery.tablesorter.min.js'
-        'bundles/spoutlet/js/jquery.tools.min.js'
+        'themes/ideacontest/spoutlet/js/jquery-1.8.3.min.js'
+        'themes/ideacontest/spoutlet/js/superfish.js'
+        'themes/ideacontest/spoutlet/js/supersubs.js'
+        'plugins/jquery.ad-gallery/jquery.ad-gallery.js'
         output='js/packed/layout_ideacontest.js'
     %}
 
     <script type="text/javascript" src="{{ asset_url }}"></script>
-
     {% endjavascripts %}
 
     <script type="text/javascript">

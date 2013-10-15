@@ -2,8 +2,10 @@
 
 {% block content %}
 
-<p>
-    {{ 'age_confirm.too_young_message' | trans }}
-</p>
+<p>{{ 'age_confirm.too_young_message' | pd_trans }}</p>
+{# locale hacked in for now until we get translations #}
+{% if return_url is defined and app.session.locale != 'es' and app.session.locale != 'ja' %}
+<p><a href="{{ return_url }}">{{ 'age_confirm.return_to_previous_page' | pd_trans }}</a></p>
+{% endif %}
 
 {% endblock %}

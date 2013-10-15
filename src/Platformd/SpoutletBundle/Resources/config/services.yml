@@ -94,6 +94,7 @@ services:
             - "%local_auth%"
             - "%secure_url_scheme%"
             - "@platformd.util.flash_util"
+            - "@kernel"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
             - { name: twig.extension }
@@ -362,6 +363,7 @@ services:
             - "@platformd.repository.comment_thread"
             - "@platformd.link.linkable_manager"
             - "@doctrine.orm.entity_manager"
+            - "@platformd.avatar_resolver"
 
     platformd.tags.model.tag_manager:
         class: Platformd\TagBundle\Model\TagManager

@@ -39,6 +39,10 @@
     margin-bottom: 5px;
 }
 
+#leave-group {
+    margin-left: 15px;
+}
+
 #report-group-wrapper {
     padding: 5px 0 10px 0;
     margin-left: 15px;
@@ -243,6 +247,10 @@ button#join-group-button:hover {
     width: 135px;
     height: 100px;
     margin: 5px;
+}
+
+.group-image-image {
+    border: 1px solid #4A4A4A;
 }
 
 .group-image-image img {
@@ -465,6 +473,14 @@ button#join-group-button:hover {
     width: 185px;
     height: 104px;
     border: 1px solid #aaa;
+}
+
+#group-contact-page .form-horizontal .control-label {
+    width: 80px;
+}
+
+#group-contact-page .form-horizontal .controls {
+    margin-left: 100px;
 }
 
 #group-details {

@@ -1,30 +1,30 @@
 admin_sweepstakes_index:
     pattern: /
-    defaults: { _controller: SweepstakesBundle:Admin:index }
+    defaults: { _controller: SweepstakesBundle:Admin:index, type: sweepstakes }
 
 admin_sweepstakes_list:
     pattern: /list/{site}
-    defaults: { _controller: SweepstakesBundle:Admin:list }
+    defaults: { _controller: SweepstakesBundle:Admin:list, type: sweepstakes }
 
 admin_sweepstakes_new:
     pattern: /new
-    defaults: { _controller: SweepstakesBundle:Admin:new }
+    defaults: { _controller: SweepstakesBundle:Admin:new, type: sweepstakes }
 
 admin_sweepstakes_edit:
     pattern: /edit/{id}
-    defaults: { _controller: SweepstakesBundle:Admin:edit }
+    defaults: { _controller: SweepstakesBundle:Admin:edit, type: sweepstakes }
 
 admin_sweepstakes_approve:
     pattern: /admin/events/approve/{id}
-    defaults: { _controller: SweepstakesBundle:Admin:approve }
+    defaults: { _controller: SweepstakesBundle:Admin:approve, type: sweepstakes }
 
 admin_sweepstakes_unpublish:
     pattern: /admin/events/unpublish/{id}
-    defaults: { _controller: SweepstakesBundle:Admin:unpublish }
+    defaults: { _controller: SweepstakesBundle:Admin:unpublish, type: sweepstakes }
 
 admin_sweepstakes_metrics:
     pattern: /metrics
-    defaults: { _controller: SweepstakesBundle:Admin:metrics }
+    defaults: { _controller: SweepstakesBundle:Admin:metrics, type: sweepstakes }
 
 admin_sweepstakes_metrics_csv:
     pattern: /metrics/{id}/{region}

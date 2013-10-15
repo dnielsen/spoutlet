@@ -751,11 +751,11 @@ class CevoFailedUserImportCommand
                     $updatedCount++;
                 }
 
-            } catch (PDOException $e) {
+            } catch (\PDOException $e) {
                 $this->error('[ '.$iteration.' ] - '.'Connection failed at iteration ['.$iteration.']: ' . $e->getMessage());
                 $skippedCount++;
                 sleep(5);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $this->error('[ '.$iteration.' ] - '.$e->getMessage());
                 $this->writeNonImportedUserCsvRow($e->getMessage(), $userData['dataRow']);
                 $skippedCount++;

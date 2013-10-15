@@ -358,6 +358,23 @@ class GroupEventController extends Controller
             throw new AccessDeniedException();
         }
 
+        $hitEmailLimit = $this->getDoctrine()->getEntityManager()->getRepository('EventBundle:GroupEventEmail')->hasUserHitEmailLimitForEvent($this->getCurrentUser(), $groupEvent);
+
+        if ($hitEmailLimit) {
+            $this->setFlash('error', 'platformd.events.event_contact.limit_hit');
+
+            if ($groupEvent->getExternalUrl()) {
+                return $this->redirect($this->generateUrl('group_show', array(
+                    'slug' => $group->getSlug()
+                )) . '#events');
+            }
+
+            return $this->redirect($this->generateUrl('group_event_view', array(
+                'groupSlug' => $groupSlug,
+                'eventSlug' => $groupEvent->getSlug()
+            )));
+        }
+
         $email = new GroupEventEmail();
 
         $emailLocale = $group->getOwner()->getLocale() ?: 'en';
@@ -385,14 +402,14 @@ class GroupEventController extends Controller
 
             if ($form->isValid()) {
 
+                $email = $form->getData();
+
                 $recipientsString = $form->get('users')->getData();
                 $recipients = array();
 
                 if ($recipientsString === null) {
 
-                    foreach ($groupEvent->getAttendees() as $recipient) {
-                        $recipients[] = $recipient;
-                    }
+                    $email->setSentToAll(true);
 
                 } else {
 
@@ -407,7 +424,9 @@ class GroupEventController extends Controller
                     }
                 }
 
-                if (count($recipients) < 1) {
+                $recipientCount = count($recipients);
+
+                if ($recipientCount < 1 && $recipientsString !== null) {
 
                     $this->setFlash('error', 'No valid recipients found.');
 
@@ -418,8 +437,6 @@ class GroupEventController extends Controller
                     ));
                 }
 
-                $email = $form->getData();
-
                 $email->setEvent($groupEvent);
                 $email->setSender($this->getUser());
                 $email->setSite($this->getCurrentSite());
@@ -427,21 +444,25 @@ class GroupEventController extends Controller
 
                 $content = $email->getMessage();
 
-                $email->setMessage(str_replace('%content%', '------'.$content.'------', nl2br($this->trans(
+                $email->setMessage($this->trans(
                     'platformd.event.email.attendees_contact.message',
                     array(
+                        '%content%' => $content,
                         '%eventName%' => $groupEvent->getName(),
+                        '%eventUrl%' => $this->generateUrl('group_event_view', array('groupSlug' => $groupSlug, 'eventSlug' => $eventSlug), true),
                         '%organizerName%' => $this->getUser()->getUsername(),
                     ),
                     'messages',
                     $emailLocale
-                ))));
+                ));
 
-                $sendCount = $this->getGroupEventService()->sendEmail($email);
+                $emailManager = $this->container->get('platformd.model.email_manager');
+                $queueResult  = $emailManager->queueMassEmail($email);
 
-                $this->setFlash('success', $this->trans(
+                $this->setFlash('success', $this->transChoice(
                     'platformd.events.event_contact.confirmation',
-                    array('%attendeeCount%' => $sendCount),
+                    $recipientCount,
+                    array('%attendeeCount%' => ($recipientCount > 0 ? $recipientCount : 'all')),
                     'messages',
                     $emailLocale
                 ));
@@ -507,15 +528,17 @@ class GroupEventController extends Controller
 
                 $content = $email->getMessage();
 
-                $email->setMessage(str_replace('%content%', '------'.$content.'------', nl2br($this->trans(
+                $email->setMessage($this->trans(
                     'platformd.event.email.attendees_contact.message',
                     array(
+                        '%content%' => $content,
                         '%eventName%' => $event->getName(),
+                        '%eventUrl%' => $this->generateUrl('group_event_view', array('groupSlug' => $groupSlug, 'eventSlug' => $eventSlug), true),
                         '%organizerName%' => $this->getUser()->getUsername(),
                     ),
                     'messages',
                     $emailLocale
-                ))));
+                ));
 
                 return $this->render('EventBundle::contactPreview.html.twig', array(
                     'subject' => $email->getSubject(),

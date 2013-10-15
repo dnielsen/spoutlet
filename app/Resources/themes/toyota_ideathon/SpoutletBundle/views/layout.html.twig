@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Campsite{% endblock %}</title>
+
+        <script type="text/javascript">
+            var CKEDITOR_BASEPATH = '/ckeditor/';
+        </script>
+
+        <link rel="shortcut icon" type="image/png" href="{{ asset('themes/ideacontest/spoutlet/img/favicon.ico') }}">
+
+        {# Here we include assets for the current active theme #}
+        {% include '::theme_' ~ site.theme ~ '_assets.html.twig' ignore missing %}
+
+        {{ block('javascripts') }}
+        {{ block('stylesheets') }}
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("ul.sf-list").supersubs({
+                    minWidth:    10,   // minimum width of submenus in em units
+                    maxWidth:    27,   // maximum width of submenus in em units
+                    extraWidth:  1     // extra width can ensure lines don't sometimes turn over
+                                       // due to slight rounding differences and font-family
+                }).superfish({
+                    delay:      150,
+                    animation:  {opacity:'show',height:'show'},
+                    speed:      'fast'
+                });
+
+                $('.tablesorter').tablesorter();
+
+                // clearing overlay defaults so they can be loaded in from css (div.blockOverlay)
+                $.blockUI.defaults.overlayCSS = {};
+                $.fn.qtip.defaults.style.classes = 'qtip-green qtip-shadow qtip-rounded';
+            });
+        </script>
+
+    </head>
+    <body>
+        <noscript>For optimal site interaction, please turn javascript on in your browser. For Firefox, go to Tools &rsaquo; Options &rsaquo; Content. For Internet Explorer, go to Tools &rsaquo; Internet Options &rsaquo; Security &rsaquo; Internet &rsaquo; Custom Level &rsaquo; Enable Active Scripting.<br>Otherwise, please visit our <a href="#sitemap">sitemap</a> for easier navigation.</noscript>
+
+        <div id="wrapper-ht">
+
+            {%  block header %}
+                {% embed 'SpoutletBundle::header.html.twig' %}{% endembed %}
+                {% embed 'SpoutletBundle::navigation.html.twig' %}{% endembed %}
+            {%  endblock %}
+
+            <div id="content">
+
+                {% block pre_content_nav %}{% endblock %}
+
+                {% render url('_flash_message') with {}, {'standalone': true } %}
+
+                <div class="clear"></div>
+
+                {% block content %}
+                {% endblock %}
+
+                <div class="clear"></div>
+
+            </div>
+
+            {% include 'SpoutletBundle::footer.html.twig' %}
+	    </div>
+	</body>
+</html>

@@ -6,6 +6,7 @@ use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\UserBundle\Form\Type\SuspendUserType;
 use Platformd\UserBundle\Exception\ApiRequestException;
+use Platformd\UserBundle\Entity\SuspendedIpAddress;
 
 class SuspendController extends Controller
 {
@@ -34,6 +35,15 @@ class SuspendController extends Controller
 
             $this->getUserManager()->updateUser($user);
 
+            $ipAddress = $user->getLoginRecords()->first() ? $user->getLoginRecords()->first()->getIpAddress() : ($user->getIpAddress() ?: null);
+
+            if ($ipAddress) {
+                $suspendedIp = new SuspendedIpAddress($ipAddress, $user->getExpiredUntil());
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($suspendedIp);
+                $em->flush();
+            }
+
             if ($user->getExpiredUntil()) {
                 $this->setFlash('success', 'This user is suspended through '.$user->getExpiredUntil()->format('Y-m-d H:i:s'));
             } else {
@@ -61,6 +71,16 @@ class SuspendController extends Controller
 
         $user->setExpired(true);
         $this->getUserManager()->updateUser($user);
+
+        $ipAddress = $user->getLoginRecords()->first() ? $user->getLoginRecords()->first()->getIpAddress() : ($user->getIpAddress() ?: null);
+
+        if ($ipAddress) {
+            $suspendedIp = new SuspendedIpAddress($ipAddress);
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($suspendedIp);
+            $em->flush();
+        }
+
         $this->setFlash('success', 'This user is suspended indefinitely.');
 
         return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array('id' => $id)));
@@ -88,6 +108,24 @@ class SuspendController extends Controller
         $user->setExpired(false);
         $user->setExpiredUntil(null);
         $this->getUserManager()->updateUser($user);
+
+        $ipAddress = $user->getLoginRecords()->first() ? $user->getLoginRecords()->first()->getIpAddress() : ($user->getIpAddress() ?: null);
+
+        if ($ipAddress) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $suspendedIpRepo = $em->getRepository('UserBundle:SuspendedIpAddress');
+            $suspendedIps = $suspendedIpRepo->findByIpAddress($ipAddress);
+
+            if ($suspendedIps) {
+                foreach ($suspendedIps as $entry) {
+                    $entry->setSuspendedUntil(new \DateTime());
+                    $em->persist($entry);
+                }
+
+                $em->flush();
+            }
+        }
+
         $this->setFlash('success', 'This user is unbanned.');
 
         return $this->redirect($this->generateUrl('Platformd_UserBundle_admin_edit', array('id' => $id)));

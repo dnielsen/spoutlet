@@ -10,7 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 use Platformd\SweepstakesBundle\Entity\SweepstakesQuestion;
-
+use Platformd\SweepstakesBundle\Entity\SweepstakesEntry;
+use Platformd\SweepstakesBundle\Entity\SweepstakesAnswer;
 use DateTime;
 
 class LoadSweepstakes extends AbstractFixture implements OrderedFixtureInterface, ContainerAwareInterface
@@ -43,6 +44,85 @@ class LoadSweepstakes extends AbstractFixture implements OrderedFixtureInterface
       return $sweeps;
     }
 
+    private function loadEntries3($sweeps)
+    {
+      $user = $this->manager->getRepository('UserBundle:User')->find(1);
+      $questions = $sweeps->getQuestions();
+      $question1 = $questions[0];
+      $question2 = $questions[1];
+      // 5000 seems to break the metrics so im adding this here for now to help debug the problem.
+      for ($i=0; $i < 100; $i++) {
+        $entry = new SweepstakesEntry($sweeps);
+        $entry->setUser($user);
+        $entry->setIpAddress('192.168.1.1');
+        $entry->setPhoneNumber(sprintf('(%s)5551212', $i));
+
+        $answer1 = new SweepstakesAnswer($question1, $entry);
+        $answer1->setContent(sprintf('no region answer1 content %s', $i));
+        $answer2 = new SweepstakesAnswer($question2, $entry);
+        $answer2->setContent(sprintf('no region answer2 content %s', $i));
+
+        $this->manager->persist($entry);
+        $this->manager->persist($answer1);
+        $this->manager->persist($answer2);
+      }
+      $this->manager->flush();
+    }
+
+    private function loadEntries2($sweeps)
+    {
+      $user = $this->manager->getRepository('UserBundle:User')->find(1);
+      $country = $this->manager->getRepository('SpoutletBundle:Country')->find(182);
+      $questions = $sweeps->getQuestions();
+      $question1 = $questions[0];
+      $question2 = $questions[1];
+      // 5000 seems to break the metrics so im adding this here for now to help debug the problem.
+      for ($i=0; $i < 200; $i++) {
+        $entry = new SweepstakesEntry($sweeps);
+        $entry->setUser($user);
+        $entry->setIpAddress('192.168.1.1');
+        $entry->setCountry($country);
+        $entry->setPhoneNumber(sprintf('(%s)5551212', $i));
+
+        $answer1 = new SweepstakesAnswer($question1, $entry);
+        $answer1->setContent(sprintf('poland answer1 content %s', $i));
+        $answer2 = new SweepstakesAnswer($question2, $entry);
+        $answer2->setContent(sprintf('poland answer2 content %s', $i));
+
+        $this->manager->persist($entry);
+        $this->manager->persist($answer1);
+        $this->manager->persist($answer2);
+      }
+      $this->manager->flush();
+    }
+
+    private function loadEntries($sweeps)
+    {
+      $user = $this->manager->getRepository('UserBundle:User')->find(1);
+      $country = $this->manager->getRepository('SpoutletBundle:Country')->find(244);
+      $questions = $sweeps->getQuestions();
+      $question1 = $questions[0];
+      $question2 = $questions[1];
+      // 5000 seems to break the metrics so im adding this here for now to help debug the problem.
+      for ($i=0; $i < 5000; $i++) {
+        $entry = new SweepstakesEntry($sweeps);
+        $entry->setUser($user);
+        $entry->setIpAddress('192.168.1.1');
+        $entry->setCountry($country);
+        $entry->setPhoneNumber(sprintf('(%s)5551212', $i));
+
+        $answer1 = new SweepstakesAnswer($question1, $entry);
+        $answer1->setContent(sprintf('answer1 content %s', $i));
+        $answer2 = new SweepstakesAnswer($question2, $entry);
+        $answer2->setContent(sprintf('answer2 content %s', $i));
+
+        $this->manager->persist($entry);
+        $this->manager->persist($answer1);
+        $this->manager->persist($answer2);
+      }
+      $this->manager->flush();
+    }
+
     private function resetAutoIncrementId()
     {
         $con = $this->manager->getConnection();
@@ -63,7 +143,13 @@ class LoadSweepstakes extends AbstractFixture implements OrderedFixtureInterface
 
         $sweeps = $this->createSweepstakes('Sweepola ', $site);
 
+
         $this->manager->flush();
+
+        // helps benchmarking metrics reports
+        //$this->loadEntries($sweeps);
+        //$this->loadEntries2($sweeps);
+        //$this->loadEntries3($sweeps);
     }
 
     public function setContainer(ContainerInterface $container = null)

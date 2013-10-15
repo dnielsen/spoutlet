@@ -6,6 +6,16 @@ group_slug_show:
     pattern:  /{slug}/
     defaults: { _controller: "GroupBundle:Group:show", site: ~ }
 
+group_contact:
+    pattern:  /{slug}/contact
+    defaults: { _controller: "GroupBundle:Group:contact" }
+
+group_email_preview:
+    pattern: /{slug}/contact-preview
+    defaults: { _controller:"GroupBundle:Group:emailPreview" }
+    requirements:
+        _method: POST
+
 group_event_register_and_join:
     pattern: /{groupSlug}/event/register/{eventId}
     defaults: { _controller:"EventBundle:GroupEvent:register", site: ~ }
@@ -55,8 +65,6 @@ group_event_remove_attendee:
 group_event_view:
     pattern: /{groupSlug}/event/{eventSlug}
     defaults: { _controller:"EventBundle:GroupEvent:view", site: ~ }
-
-# New additions
 
 group_edit:
     pattern:  /{slug}/edit/

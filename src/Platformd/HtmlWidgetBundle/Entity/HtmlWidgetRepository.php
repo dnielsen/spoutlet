@@ -37,7 +37,7 @@ class HtmlWidgetRepository extends EntityRepository
 
         try {
             return $qb->getQuery()->execute();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // catching exception thrown most likely by an invalid criterion being provided
             die('Exception thrown when trying to call HtmlWidgetRepository->findCountBy. Check the criteria passed is valid. Error said: '.$e->getMessage());
         }

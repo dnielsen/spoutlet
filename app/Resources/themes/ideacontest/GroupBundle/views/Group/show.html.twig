@@ -4,40 +4,159 @@
 
 {% block content %}
 
-    <div id="row1">
+    <div id="contentLft">
         <h2 class="left spcr-t">{{ group.name }}</h2>
-        <br/><hr/>
-
+        <br/><br/>
         {% include 'GroupBundle:Group:_subNav.html.twig' %}
+        <hr/>
 
-        <p>{{ group.description | striptags }}</p><br/>
+        <!-- royalslider code start
+        <div class="content-slider-bg">
+            <div id="content-slider-1" class="royalSlider contentSlider rsDefault">
+
+                <div>
+                    <a href={{ path('fos_user_registration_register') }}><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-register.jpg') }}" alt="Register" width="740" height="341"></a>
+						<span class="rsTmb">
+							Register
+						</span>
+                </div>
+                <div>
+                    <a href="learn.html" target="_blank"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-learn.jpg') }} alt="Learn" width="740" height="341"></a>
+				        <span class="rsTmb">
+							Learn
+				        </span>
+                </div>
+                <div>
+                    <a href="code.html" target="_blank"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-forum.jpg') }} alt="Code" width="740" height="341"></a>
+				        <span class="rsTmb">
+							API Forum
+				        </span>
+                </div>
+                <div>
+                    <a href="share.html" target="_blank"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-share.jpg') }} alt="Share" width="740" height="341"></a>
+						<span class="rsTmb">
+							App Idea Forum
+						</span>
+                </div>
+
+            </div>
+        </div> <!-- end royalslider
+
+        <script id="addJS">
+            jQuery(document).ready(function($) {
+                // Please note that autoHeight option has some conflicts with options like imageScaleMode, imageAlignCenter and autoScaleSlider
+                // it's recommended to disable them when using autoHeight module
+                $('#content-slider-1').royalSlider({
+                    autoHeight: true,
+                    arrowsNav: false,
+                    fadeinLoadedSlide: false,
+                    controlNavigationSpacing: 0,
+                    controlNavigation: 'tabs',
+                    imageScaleMode: 'none',
+                    imageAlignCenter:false,
+                    loop: false,
+                    loopRewind: true,
+                    numImagesToPreload: 6,
+                    keyboardNavEnabled: true,
+                    usePreloader: false,
+                    autoPlay: {
+                        enabled: true,
+                        pauseOnHover: true,
+                        delay: 5000
+                    }
+                });
+            });
+        </script>
+        -->
+
+
+        {{ group.description | raw }}<br/>
     </div>
-    <div id=row2>
 
-        <div class="cBx1">
-            <h2 class="left">Events</h2>
-            <br/><hr/>
-            <div id="events">
-                {% for event in group.events %}
-                    <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventSlug': event.slug }) }}">{{ event.name }}</a>
-                     - {{ event.content|truncate(175) }}<br/><hr/>
-                {% else %}
-                    There are no events in this group yet.
-                {% endfor %}
-            </div>
+    <div id="contentRt">
+        <h2 class="stepBar"><a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': nextEvent.slug}) }}">{{ nextEvent.name }}</a></h2>
+        <table summary="Next Event" class="tblStyle">
+            <tbody>
+            <tr>
+                <td width="25%"><strong>DATE:</strong></td>
+                <td width="75%">{{ nextEvent.DateRangeString }}</td>
+            </tr>
+            {% if not nextEvent.getOnline %}
+            <tr>
+                <td width="25%"><strong>LOCATION:</strong></td>
+                <td width="75%">
+                    {{ nextEvent.location }}<br>
+                    {{ nextEvent.address1 }}<br>
+                    {{ nextEvent.address2 }}
+                </td>
+            </tr>
+            <tr>
+                <td width="25%"><strong>MAP:</strong></td>
+                <td width="75%">
+                    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+                    <div id="event-location-map">{{ vichgeo_map_for('location', nextEvent) }}</div>
+                </td>
+            </tr>
+            <tr>
+                <td width="25%">{{ nextEvent.attendeeCount }} attendees</td>
+                <td width="75%%">
+                    {% if nextEvent.isUserAttending(app.user) or nextEvent.getUser() == app.user %}
+                        <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': nextEvent.slug}) }}" class="btnTny right">View Ideas</a>
+                    {% else %}
+                        <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right">Register</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td width="25%">{{ nextEvent.attendeeCount }} attendees</td>
+                <td width="75%">
+                    {% if nextEvent.isUserAttending(app.user) or nextEvent.getUser() == app.user %}
+                        <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': nextEvent.slug}) }}" class="btnTny">View Ideas</a>
+                    {% else %}
+                        <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny">Register</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endif %}
+            </tbody>
+        </table>
+
+        <h2 class="stepBar">More Upcoming Events</h2>
+        <div id="events">
+            {% for event in upcomingEvents %}
+
+                <p class="bdr">
+                    <div class="left">
+                        <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventSlug': event.slug }) }}" class="midtxt">{{ event.name }}</a><br>
+                        {{event.DateRangeString}} | {% if event.getOnline %}Online Event{% else %}{{ event.location }}{% endif %}
+                    </div>
+                    <div class="right">
+                        {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
+                            <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="btnTny">View Ideas</a>
+                        {% else %}
+                            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny">Register</a>
+                        {% endif %}
+                    </div>
+
+                </p>
+
+            <div class="clr"></div>
+
+            {% else %}
+                There are no events in this group yet.
+            {% endfor %}
         </div>
 
-        <div class="cBx2">
-            <h2 class="left">Members</h2>
-            <br/><hr/>
-            <div id="members">
-                {% for member in group.members %}
-                    - {{ member.name }}<br/>
-                {% else %}
-                    There are no members of this group yet.
-                {% endfor %}
-            </div>
+        <h2 class="stepBar">Members</h2>
+        <div id="members">
+            {% for member in group.members %}
+                - <a href="{{ path('profile', {'username': member.username}) }}">{{ member.name }}</a><br/>
+            {% else %}
+                There are no members of this group yet.
+            {% endfor %}
         </div>
+
     </div>
 
 

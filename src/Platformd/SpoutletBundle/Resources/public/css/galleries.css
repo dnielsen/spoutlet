@@ -383,3 +383,7 @@ a.media-voting-button {
 #media-wrapper {
     width: 100%;
 }
+
+.media-show-page #main-photo {
+    border: 1px solid #4A4A4A;
+}

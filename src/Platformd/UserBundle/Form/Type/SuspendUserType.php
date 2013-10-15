@@ -25,5 +25,12 @@ class SuspendUserType extends AbstractType
     {
         return 'user_suspend';
     }
+
+    public function getDefaultOptions(array $options)
+    {
+        return array_merge($options, array(
+            'validation_groups' => array('AdminSuspend')
+        ));
+    }
 }
 

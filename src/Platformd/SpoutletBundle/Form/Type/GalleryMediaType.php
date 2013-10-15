@@ -99,10 +99,18 @@ class GalleryMediaType extends AbstractType
     {
         $choices = array();
 
-        $results = $this->groupRepo->getAllGroupsForUserAndSite($this->user, $this->currentSite);
-
-        foreach ($results as $group) {
-            $choices[$group[0]->getId()] = $group[0]->getName();
+        if ($this->galleryMedia->getAuthor() == $this->user) {
+            $results = $this->groupRepo->getAllGroupsForUserAndSite($this->user, $this->currentSite);
+            foreach ($results as $group) {
+                $choices[$group[0]->getId()] = $group[0]->getName();
+            }
+        } elseif ($this->user->getAdminLevel() == 'ROLE_SUPER_ADMIN') {
+            $results = $this->groupRepo->findGroupsForImage($this->galleryMedia);
+            foreach ($results as $group) {
+                $choices[$group->getId()] = $group->getName();
+            }
+        } else {
+            return array();
         }
 
         return $choices;

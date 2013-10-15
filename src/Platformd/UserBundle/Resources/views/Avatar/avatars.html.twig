@@ -107,7 +107,7 @@
                 url: '{{ path('avatar_delete') }}',
                 type: 'post',
                 data: JSON.stringify({'id' : this.id}),
-                controlstentType: 'application/json',
+                contentType: 'application/json',
                 success: function (data) {
                     if (data.success) $('#avatar-' + id).fadeOut();
                     ajaxRequestSent = false;

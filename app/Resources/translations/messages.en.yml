@@ -2,7 +2,9 @@ edit: Edit
 submit: Submit
 cancel: Cancel
 delete: Delete
+enter: Enter
 date_format: M j, Y
+datetime_format: M j, Y @ H:i
 
 recaptcha:
     visual_challenge: Get a visual challenge
@@ -17,7 +19,7 @@ recaptcha:
     incorrect_try_again: Incorrect. Try again.
     image_alt_text: reCAPTCHA challenge image
 
-site_takeover.continue: Continue to Campsite
+site_takeover.continue: Continue to Alienware Arena
 
 platformd.user.account.account_home: Account Home
 platformd.user.account.edit_account: Edit Account
@@ -120,11 +122,11 @@ platformd:
 
     layout:
         # title used by default (if not overridden)
-        default_title: Campsite
+        default_title: Alienware Arena - Gamers Wanted
         # title user by default in Admin area (if not overridden)
-        default_admin_title: Campsite Admin Area
+        default_admin_title: Alienware Admin Area
         # suffixed after an overridden title (e.g. "My title | Title Suffix")
-        title_suffix: Campsite
+        title_suffix: Alienware Arena
 
         #translations that are not used yet
         region:
@@ -190,6 +192,7 @@ platformd:
             giveaways: Giveaways
             all: All
             see_more: More
+            read_more: Read More
             photo_gallery: Image Gallery
             view_all: View All
             competitions: Events
@@ -220,7 +223,7 @@ platformd:
     events:
         event_listings:
             events: Events
-            header: "Campsite Events"
+            header: "Alienware Arena Events"
             create: Create Event
             show_map: Show Map
             organizer: Organizer
@@ -260,7 +263,7 @@ platformd:
             no_active_giveaways: There are no active giveaways at this moment.
             create_event_message: To add an event, you must <a href="%1">select a group</a> or <a href="%2">create a new group</a>.
             legend_registered: Means you are registered to attend this event.
-            legend_sponsored: Campsite Sponsored Event
+            legend_sponsored: Alienware Arena Sponsored Event
             legend_group: Group Event
         event_show:
             register_event: Register for event
@@ -289,7 +292,8 @@ platformd:
             cancel: Cancel
             attending: Attending
             error: There was an error previewing your email!
-            confirmation: Email sent to %attendeeCount% attendee(s).
+            limit_hit: You have reached the maximum number of emails you can send to event attendees within a 24-hour period.
+            confirmation: Email sent to %attendeeCount% attendee.|Email sent to %attendeeCount% attendees.
             form:
                 recipients: Recipients
                 message: Message
@@ -337,9 +341,9 @@ platformd:
         account:
             welcome_to_control: Welcome to your Control Panel
             hello_user: "Hello %firstname%! You are logged in with the username %username%."
-            ready_to_game: "Are you ready to game? The Campsite Control Panel is your primary method of interacting with the Arena. For now, you can sign up for an event, and leave comments. We will add new features each month, so stay tuned. If you have any problems, please feel free to contact the Arena Support Team."
-            warning: "Warning: Never give your password to anyone! They might comment on an event and say something stupid on your behalf! Campsite is not responsible, and might not be able to fix problems caused by others using your password. So protect yourself and keep your account password secret."
-            under_construction: "Note: Campsite is currently under construction, so come back later if a feature is not enabled yet."
+            ready_to_game: "Are you ready to game? The Alienware Arena Control Panel is your primary method of interacting with the Arena. For now, you can sign up for an event, and leave comments. We will add new features each month, so stay tuned. If you have any problems, please feel free to contact the Arena Support Team."
+            warning: "Warning: Never give your password to anyone! They might comment on an event and say something stupid on your behalf! Alienware Arena is not responsible, and might not be able to fix problems caused by others using your password. So protect yourself and keep your account password secret."
+            under_construction: "Note: Alienware Arena is currently under construction, so come back later if a feature is not enabled yet."
             change_your_password: Change your password
         giveaway:
             your_giveaway_keys: My Giveaway Keys
@@ -354,11 +358,11 @@ platformd:
             yes: "Yes"
             no: "No"
             agree_to_terms: |
-                I have read and agreed to the
+                I have read and agree to the
                 <a href="%terms_url%" target="_blank">Terms & Conditions</a> and
                 <a href="%privacy_url%" target="_blank">Privacy Policy</a>.
             subscribe_dell: Subscribe me to receive Alienware/Dell gaming news and special offers via email. <a href="http://www.dell.com/learn/us/en/19/policies-privacy?c=us&l=en&s=gen&delphi:gr=true" target="_blank">View Dell Privacy Policy</a>.
-            subscribe_alienware_arena: "Subscribe me to receive news on the latest giveaways, contests, events and more from Campsite via email."
+            subscribe_alienware_arena: "Subscribe me to receive news on the latest giveaways, contests, events and more from Alienware Arena via email."
 
     # used only in the admin area
     homepage_banner:
@@ -383,7 +387,7 @@ platformd:
                 a totally black background.
 
     about:
-        title: About Campsite&trade;
+        title: About Alienware Arena&trade;
 
     # used only in the admin area
     navigation:
@@ -391,11 +395,11 @@ platformd:
 
     comment:
         add_your_comment: Add Your Comment
-        login_to_comment: To post a comment, please <a href="%login_url%">log in.</a>
+        login_to_comment: To post a comment, please <a class="reg-source" href="%login_url%">log in.</a>
         comments: Comments
         sort_by: Sort By:
         sort_by_votes: Votes
-        sort_by_newest: Most Recent
+        sort_by_newest: Recent
         sort_by_oldest: Oldest
         add_comment: Add Comment
         login_to_reply: Log in to Reply
@@ -421,18 +425,19 @@ platformd:
         name_fields_order: %first_name% %last_name%
 
         register:
-            requirements: Participation in the Campsite requires an account.
-            already: "Already have an Campsite Account? <Sign In>"
+            requirements: Participation in the Alienware Arena requires an account.
+            already: "Already have an Alienware Arena Account? <Sign In>"
             terms_label: Terms & Conditions
             dell_privacy_label: Dell Privacy Policy
             country_label: Choose a country
-            underage_message: Sorry, we are not able to accept your registration at this time.
+            underage_message: Sorry, it appears that you do not meet the minimum age requirement. We are unable to complete your request at this time. .
             please_wait: The system is currently processing multiple account creations and cannot process your creation request at this time, please try again later.
+            ip_suspended: Your IP address is currently suspended. If you believe this to be in error, please contact %contact_email%.
             oops: Error!
             cannot_process: We were unable to create your account. Please complete or correct the required fields below.
             problems_found: We found the following problems:
             last_step: |
-                You’re almost there! A confirmation email has been sent. Follow the instructions in the email to activate your Campsite account. If you do not receive an email within 15 minutes, please email <a href="mailto:osman@platformd.com">osman@platformd.com</a> for support.
+                You’re almost there! A confirmation email has been sent. Follow the instructions in the email to activate your Alienware Arena account. If you do not receive an email within 15 minutes, please email <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a> for support.
                 <br /><br />
                 <strong>Important: Check Your Spam Folder!</strong>
 
@@ -461,7 +466,7 @@ platformd:
 
         request_reset:
             title: Forgot Your Password?
-            help_message: To reset your password, please enter the email address used to create your Campsite account.
+            help_message: To reset your password, please enter the email address used to create your Alienware Arena account.
             spam_message: If you can’t find the password reset email, be sure to check your email’s spam folder. It can take up to 30 minutes before a password reset email is received. If you haven’t received your password reset email after 30 minutes or you require additional support, please email <a href="mailto:contact@alienwarearena.com">contact@alienwarearena.com</a>.
 
         account:
@@ -535,25 +540,7 @@ platformd:
 
         first_active_used: NOTE: The first "active" pool will be the one that is currently used on the site
 
-    # used only in the admin area
     admin:
-        news:
-            heading: Manage news
-            title: Title
-            edit:  Edit
-            delete: Delete
-            delete_confirm: Are you sure you want to delete this news item?
-            create: Create a new item
-            save_news: Save news
-            create_title: Create a news item
-            created: Your news item has been created !
-            modified: Your news item has been modified !
-            deleted: Your news item has been deleted !
-            edit_title: Edit a news item
-            upload_image: Upload an image
-            image_dimensions: (recommended size: 634x400)
-            tags: Tags
-            tags_help: Enter keywords to help people discover this article.
         games:
             category:
                 action:     Action
@@ -612,49 +599,57 @@ platformd:
             global_event_contact:
                 title: Message from the event organizer about %eventName%
                 message: |
-                    The following message has been sent to you for the event – %eventName%:
-
+                    The following message has been sent to you for the event – <a href="%eventUrl%">%eventName%</a>:
+                    <br /><br />
+                    <hr>
                     %content%
-
-                    Campsite Team
-
-                    Important: Campsite will never ask you for personal information such as your username, password, date of birth, email address, etc.  Please do not share that with anyone.  If you suspect this email to be a scam or inappropriate, please report it to contact@alienwarearena.com.
+                    <br />
+                    <hr>
+                    <br />
+                    Alienware Arena Team
+                    <br /><br />
+                    Important: Alienware Arena will never ask you for personal information such as your username, password, date of birth, email address, etc.  Please do not share that with anyone.  If you suspect this email to be a scam or inappropriate, please report it to contact@alienwarearena.com.
+                    <br /><br />
                     Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
-
+                    <br />
             attendees_contact:
                 title: Message from the event organizer about %eventName%
                 message: |
-                    The following message has been sent to you for the event – %eventName%:
-
+                    The following message has been sent to you for the event – <a href="%eventUrl%">%eventName%</a>:
+                    <br /><br />
+                    <hr>
                     %content%
-
-                    Sent from Campsite on behalf of %organizerName%.
-
-                    Important: Campsite will never ask you for personal information such as your username, password, date of birth, email address, etc.  Please do not share that with anyone.  If you suspect this email to be a scam or inappropriate, please report it to contact@alienwarearena.com.
+                    <br />
+                    <hr>
+                    <br />
+                    Sent from Alienware Arena on behalf of %organizerName%.
+                    <br /><br />
+                    Important: Alienware Arena will never ask you for personal information such as your username, password, date of birth, email address, etc.  Please do not share that with anyone.  If you suspect this email to be a scam or inappropriate, please report it to contact@alienwarearena.com.
+                    <br /><br />
                     Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
-
+                    <br />
             approved:
                 title: Your Event Has Been Approved
                 message: |
-                    Congratulations, <a href="%eventUrl%">%eventName%</a> has been approved and is now listed on Campsite.
+                    Congratulations, <a href="%eventUrl%">%eventName%</a> has been approved and is now listed on Alienware Arena.
 
                     We encourage you to share this event with your friends. For your convenience, we invited all group members to sign up for your event.
 
                     Note: You are receiving this email because you submitted an event for approval.
 
-                    Sent from Campsite on behalf of %organizerName%.
+                    Sent from Alienware Arena on behalf of %organizerName%.
             cancel:
                 title: %eventName% has been canceled
                 message: |
                     This is an automated email to inform you that %eventName% has been cancelled.
 
-                    Campsite Team
+                    Alienware Arena Team
             activate:
                 title: %eventName% is active again
                 message: |
                     This is an automated email to inform you that %eventName% is now active again and scheduled to start on %eventStartsAt%.
 
-                    Campsite Team
+                    Alienware Arena Team
 
             group_announcement:
                 title: You’re Invited to %eventName%
@@ -674,7 +669,7 @@ platformd:
 
                     Note: To unsubscribe from similar emails from this group, you must leave the group by going to the group page and click “leave group”.
 
-                    Sent from Campsite on behalf of %organizerName%.
+                    Sent from Alienware Arena on behalf of %organizerName%.
 
             require_approval:
                 title:  Request to Approve My Event for %groupName%
@@ -698,7 +693,7 @@ platformd:
 
                     Note: You are receiving this email because you are the group organizer. To stop receiving similar emails, please email contact@alienwarearena.com if you no longer want to be the group organizer for this group.
 
-                    Sent from Campsite on behalf of %organizerName%.
+                    Sent from Alienware Arena on behalf of %organizerName%.
 
 
             group_join_application_from_event:
@@ -712,7 +707,7 @@ platformd:
 
                     Note: You are receiving this email because you are the group organizer. To stop receiving similar emails, please email contact@alienwarearena.com if you no longer want to be the group organizer for this group.
 
-                    Sent from Campsite on behalf of %userName%.
+                    Sent from Alienware Arena on behalf of %userName%.
 
             group_application_accepted_event_registered:
                 title: You’re approved to be in %groupName%!
@@ -723,7 +718,7 @@ platformd:
 
                     Note: You are receiving this email because you submitted a request to join a private group.  To unsubscribe from similar emails from this group, you must leave the group by going to the group page and click “leave group”.
 
-                    Sent from Campsite on behalf of %groupOwnerName%.
+                    Sent from Alienware Arena on behalf of %groupOwnerName%.
 
             event_reminder:
                 title: Upcoming Event Reminder for %eventName%
@@ -742,7 +737,7 @@ platformd:
 
                     Note: To unsubscribe from similar emails, you must no longer be attending the event by changing your RSVP on the event page.
 
-                    Sent from Campsite on behalf of %organizerName%.
+                    Sent from Alienware Arena on behalf of %organizerName%.
 
             attendee_removed:
                 title: You are no longer attending %eventName%
@@ -753,94 +748,7 @@ platformd:
 
                     If you believe this to be an error, please send contact the event organizer.
 
-                    Campsite Team
-
-    groups:
-        index:
-            my_groups: My Groups
-            create_group: Create Group
-            recommended_groups: Campsite Groups
-            featured_groups: Featured Groups
-            members: Members
-            organizer: Organizer
-            report_group: Report this Group
-            topic_groups: Topic Groups
-            previous: Previous
-            see_more: See More
-            location_groups: Location Groups
-            welcome_new: Welcome New Groups
-            no_groups_found: No groups found. Check back soon!
-            most_popular: Most Popular Groups
-            staff: Staff
-        show:
-            waiting_on_approval: Waiting on Approval
-            founded: Founded
-            organizer: Organizer
-            staff: Staff
-            members: Members
-            upcoming_events: Upcoming Events
-            past_events: Past Events
-            comments: Comments
-            group_type: Group
-            new_members: New Members Acquired
-            invite: Invite Friends
-            report_group: Report this Group
-            location: LOCATION
-            news: News
-            events: Events
-            images: Images
-            videos: Videos
-            discussions: Discussions
-            about: About
-            must_be_member_comments: You must be a member of a private group before you can see or post comments.
-            public: Public
-            private: Private
-        news:
-            add: Add News
-            delete: Delete
-            edit: Edit
-            report: Report
-            no_articles: No news articles yet... please come back later!
-        images:
-            submit_images: Submit image(s)
-            non_member_add: Want to add an image? Become a member of our group.
-            member_no_images: There are no images. <a href='%addImageUrl%'>Submit image(s)</a>
-            non_member_no_images: There are no images. Want to add an image? Become a member of our group.
-            delete: Delete
-            edit: Edit
-            report: Report
-            previous: Previous
-            see_more: See More
-        videos:
-            submit: Submit Video
-            non_member_add: Want to add an video? Become a member of our group.
-            member_no_videos: There are no videos. <a href='%url%'>Submit Video</a>
-            non_member_no_videos: There are no videos. Want to add an video? Become a member of our group.
-            delete: delete
-            edit: edit
-            report: report
-        discussions:
-            submit: <a href='%url%'>Submit your topic</a> now.
-            non_member_add: Want to add a topic? Become a member of our group.
-            member_no_discussions: No discussions yet... <a href='%url%'>Submit your topic</a> now.
-            non_member_no_discussions: No discussions yet... Want to add a topic? Become a member of our group.
-            replies: Replies
-            views: Views
-        events:
-            submit: Submit Event
-            member_no_events: No group events yet. <a href="%url%">Submit Event</a>
-            non_member_add: Want to add an event? Become a member of our group.
-            non_member_no_events: No group events yet. Want to add an event? Become a member of our group.
-            time: Time
-            where: Where
-            online: Online
-            edit: Edit
-            delete: Delete
-            report: Report
-            view_past_events: View Past Events
-            no_past_events: No past events!
-            show_more_past: Show More Past Events
-            delete_confirmation: Are you sure you want to delete this event?
+                    Alienware Arena Team
 
 "Bad credentials": "Incorrect username/email or password"
 "The presented password is invalid.": "Incorrect username/email or password"
@@ -857,8 +765,6 @@ agree_to_terms_sweepstakes_step: Agree to the Terms and Conditions
 click_register_sweepstakes_step: Click "Enter" to participate.
 already_entered_sweepstakes: You already entered this sweepstakes.
 not_eligible_sweepstakes: Sorry, you are not eligible to participate in this sweepstakes.
-enter: Enter
-read_and_agreed_to_rules: I have read and agree to the %a_start%Official Rules%a_end%
 official_sweepstakes_rules: Official Sweepstakes Rules
 sweeps_check_both_boxes: Please agree to the Official Rules before entering the sweepstakes.
 overview: Overview
@@ -899,7 +805,6 @@ status:
 
 # More frontend things
 no_news_currently: There is currently no featured news - check back later!
-news_and_announcements: Campsite News & Announcements
 announced_date: Announced %posted_date%
 read_more: Read More
 go_to_website: Go to Website
@@ -931,13 +836,13 @@ email:
 
         Thank you for registering for the %giveawayName%.
 
-        The key has been posted to your Campsite account and can be accessed from here:
+        The key has been posted to your Alienware Arena account and can be accessed from here:
         (%accountUrl%)
 
         If you have any questions, please email us at %supportEmailAddress%.
 
         Thank you,
-        - Campsite Team
+        - Alienware Arena Team
 
     giveaway_machine_code_deny: |
         Hello %userFirstName%,
@@ -954,7 +859,7 @@ email:
         Please allow at least 2 weeks for us to verify your system tag, and post the key to your account. If after 2 weeks it has not been posted, or if you require further assistance, please email us at %supportEmailAddress%.
 
         Thank you,
-        - Campsite Team
+        - Alienware Arena Team
 
     subject:
         giveaway_machine_code_approve:  %giveawayName% System Tag Approval
@@ -971,6 +876,7 @@ age_confirm:
     message: The content is intended for mature audiences. Please confirm your age below
     content_for_mature_audiences: Content Intended for Mature Audiences
     too_young_message: Sorry, it appears that you do not meet the minimum age requirement. We are unable to complete your request at this time.
+    return_to_previous_page: Return to previous page
     date_format: %month% %day% %year%
 confirm: Confirm
 
@@ -1004,31 +910,31 @@ content_reporting:
     report_success: The content will be reviewed by our staff within 72 hours. If you have additional information for your report, please email us at reports@alienwarearena.com with additional details.
     reported_email_title: Your Content Has Been Flagged
     reported_email: |
-        An item posted by you on Campsite has been flagged as inappropriate and removed.
+        An item posted by you on Alienware Arena has been flagged as inappropriate and removed.
 
         Type: %s
         Content: %s
         Reason: %s
         Link: <a href="%s">%s</a>
 
-        The content has been temporarily removed from Campsite and will be reviewed by our Staff within 72 hours. If the content does not violate our Terms of Service, we will enable it on our website and you will receive an automated email with this update.
+        The content has been temporarily removed from Alienware Arena and will be reviewed by our Staff within 72 hours. If the content does not violate our Terms of Service, we will enable it on our website and you will receive an automated email with this update.
 
         Thank you for your patience. Should you have any questions, please contact us at <a href="mailto:reports@alienwarearena.com">reports@alienwarearena.com</a>.
 
-        Campsite Team
+        Alienware Arena Team
 
     restored_email_title: Your Content is Restored
     restored_email: |
-        This is an automated email to inform you that the content below does not violate our Terms of Service and has been restored on Campsite.
+        This is an automated email to inform you that the content below does not violate our Terms of Service and has been restored on Alienware Arena.
 
         Type: %s
         Content: %s
 
-        Campsite Team
+        Alienware Arena Team
 
     removed_email_title: Your Content Has Been Removed
     removed_email: |
-        The following content has been removed from Campsite due to a violation of our Terms of Service.
+        The following content has been removed from Alienware Arena due to a violation of our Terms of Service.
 
         Type: %s
         Content: %s
@@ -1037,7 +943,7 @@ content_reporting:
 
         Should you have any questions, please contact us at <a href="mailto:reports@alienwarearena.com">reports@alienwarearena.com</a>.
 
-        Campsite Team
+        Alienware Arena Team
 
     staff_notification_title: New Content Reported
     staff_notification: |
@@ -1072,7 +978,7 @@ archives: ARCHIVES
 media_gallery: Media Gallery
 more_games: More Games
 
-deals_alienware_title: Campsite DEAL
+deals_alienware_title: ALIENWARE ARENA DEAL
 deals_new: New
 deals_all: Latest
 deals: Deals
@@ -1108,7 +1014,7 @@ choose_country: Choose your country
 deal_join_group: By claiming a code, you will automatically become a member of the <a href="%link%" target="_blank">%group%</a> so you can receive notifications about future offerings. You can leave this group at any time by visiting the group page and clicking "leave group."
 deal_join_group_success: You are now a member of <a href="%link%" target="_blank">%group%</a>.
 
-featured_deals: Campsite Featured Deals
+featured_deals: Alienware Arena Featured Deals
 expired_deals: Previous
 
 platformd.deal.deal: Deal
@@ -1129,8 +1035,8 @@ deny_codes: Deny Codes
 
 platformd.account_page.photos.submit: Submit Images
 
-groups.opengraph.description: "Check out Campsite's Groups! Join a wide variety of gamer related communities and share your thoughts on your favorite topics."
-groups.opengraph.title: Campsite Groups - Join Now!
+groups.opengraph.description: "Check out Alienware Arena's Groups! Join a wide variety of gamer related communities and share your thoughts on your favorite topics."
+groups.opengraph.title: Alienware Arena Groups - Join Now!
 wallpapers: Wallpapers
 exclusive_designs: EXCLUSIVE DESIGNS
 click_to_download: Click to Download
@@ -1144,7 +1050,7 @@ galleries:
     image: Image
     navigation_label: Image Gallery
     index_page_title: Galleries
-    index_page_header: Campsite IMAGES
+    index_page_header: ALIENWARE ARENA IMAGES
     index_page_no_media_found: No images were found.
     submit_photo_page_title: Submit Images
     submit_photo_page_header: Submit Images
@@ -1157,17 +1063,17 @@ galleries:
     submit_photo_step1_instructions: All image submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your image fulfills all the requirements.
 
     submit_photo_file_restrictions: |
-        <p><span style="font-weight:bold;">Campsite File Standards for Product Images</span></p>
+        <p><span style="font-weight:bold;">Alienware Arena File Standards for Product Images</span></p>
         <p>Technical Requirements:</p>
         <ul><li>Files supported: JPG, GIF and PNG.</li>
         <li>Max file size per image is 5MB.</li></ul>
-        <p>Campsite maintains the following site product image standards:</p>
+        <p>Alienware Arena maintains the following site product image standards:</p>
         <ul><li>No commercial images without written consent of the owner.</li>
         <li>No copyrighted material.</li>
         <li>No images of children ages 13 years and under.</li>
         <li>Gaming-related images only.</li>
         <li>Pornographic and offensive materials are not allowed.</li></ul>
-        <p>Campsite, iGames and its affliliates reserve the right to delete images without notice that do not comply with restrictions.</p>
+        <p>Alienware Arena, iGames and its affliliates reserve the right to delete images without notice that do not comply with restrictions.</p>
         <p>By posting or submitting an image you grant iGames and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify, sublicense, distribute, have distributed, and promote the image in any form, anywhere and for any purpose.</p>
 
     submit_photo_add: Add
@@ -1244,7 +1150,7 @@ galleries:
 
 contests:
     contests: Contests
-    index_page_title_long: Campsite Contests
+    index_page_title_long: Alienware Arena Contests
     index_page_title: Contests
     show_page_overview: Overview
     show_page_instructions: How to Enter
@@ -1257,7 +1163,7 @@ contests:
     show_page_vote_now: View Entries
     show_page_entries: Entries
     show_page_my_entries: Enter
-    show_page_agree_text: I have read and agreed to the <a id="contest-official-rules" href="javascript:void(0);">Contest Rules</a>.
+    show_page_agree_text: I have read and agree to the <a id="contest-official-rules" href="javascript:void(0);">Official Rules</a>.
     vote_page_instruction: Voting Instructions
     inform_user_entrycount: You have currently entered %entryCount% entry, but may still enter more.|You have currently entered %entryCount% entries, but may still enter more.
     enter_page_success: You have now entered into %s. Please submit your %s(s) for this contest.
@@ -1279,7 +1185,7 @@ contests:
     photos_max: You can submit a maximum of %s image(s) for this contest.
     photo_submission_message: All image submissions must meet the following criteria to be featured on the website. Please read them carefully and make sure your image fulfills all the requirements
     igames_disclaimer: By posting or submitting a image you grant iGames and its affiliates and licensees a perpetual, irrevocable right and license, with right of sublicense, to use, reproduce, display, perform, adapt, modify,
-    photo_submissions_left: You can submit a maximum of %s images for this contest.
+    photo_submissions_left: You can submit a maximum of %s image(s) for this contest.
     photo_submissions_unlimited: You can submit as many images as you like for this contest.
     congratulations_winners: Congratulations To The Winners!
     winners_page_congrats: Congratulations To The Winners!
@@ -1302,7 +1208,7 @@ platformd.users.avatar_listings.title: User Avatars
 timeline.title: The History of Alienware
 timeline.not_found: No timeline found.
 
-platformd.create_account_or_login: Create or log in to an Campsite account.
+platformd.create_account_or_login: Create or log in to an Alienware Arena account.
 platformd.giveaway.click_for_past_giveaways: Click <a href="%cevo_user_account_giveaway_page%">here</a> to view keys for past giveaways.
 platformd.giveaway.giveaway: Giveaway
 platformd.giveaway.redeem:   Redeem
@@ -1312,7 +1218,7 @@ platformd.giveaway.no_keys_left: There are no keys available for this giveaway
 platformd.giveaway.max_ip_limit: No more keys can be claimed by your IP address. If you believe this is an error, please contact contact@alienwarearena.com
 platformd.giveaway.already_assigned: You were already assigned a key for this giveaway
 platformd.giveaway.view_giveaway_site: View Giveaway Site
-platformd.giveaway.featured_giveaways: Campsite Featured Giveaways
+platformd.giveaway.featured_giveaways: Alienware Arena Featured Giveaways
 platformd.giveaway.all_giveaways: Latest
 platformd.giveaway.previous_giveaways: Previous
 platformd.giveaway.latest_comments: Latest Comments
@@ -1328,7 +1234,14 @@ platformd.giveaway.assigned.assigned_at: Assigned
 platformd.giveaway.assigned.view_giveaway: View Giveaway
 platformd.giveaway.show.availaible_keys: Available Keys: %%count%%
 platformd.giveaway.queue.you_are_queued: "You're in the queue!"
-platformd.giveaway.queue.queue_explanation: 'Your approximate wait time is less than 5 minutes. You will be notified via email if you have been assigned a code.  If you do not receive an email within an hour please email support at <a href="mailto:%contact_email%">%contact_email%</a>.  In the meantime, check out our <a href="%events_index_page_link%">events page</a> to view upcoming online and on-site events in your area.'
+platformd.giveaway.queue.queue_explanation: 'Your approximate wait time is less than 60 minutes. You will be notified via email if you have been assigned a code.  If you do not receive an email within 24 hours, please email support at <a href="mailto:%contact_email%">%contact_email%</a>.  In the meantime, check out our <a href="%events_index_page_link%">events page</a> to view upcoming online and on-site events in your area.'
+platformd.giveaway.queue.rejected_with_examples: |
+    <p>Unfortunately, a key could not be assigned to you. This can occur for one of several reasons, including:
+    <br /><br />
+    1) We've ran out of keys before we could assign one to you while you were in the queue.<br />
+    2) You are in a country or region that is not eligible to receive a key.<br />
+    3) A key has already been assigned to you.</p>
+
 platformd.giveaway.queue.rejected: Sorry, a key could not be assigned to you.
 platformd.giveaway.queue.problem: There was a problem processing your key request.
 platformd.giveaway.queue.reason: Reason
@@ -1354,28 +1267,40 @@ platformd.key_request_processor_command.key_assigned_email_body: |
             For instructions on how to redeem your key, please visit the <a href="%promotion_show_page%">%promotion_title%</a> page.
         </p>
         %group_section%
-        <p>Campsite Team</p>
+        <p>Alienware Arena Team</p>
 platformd.key_request_processor_command.key_assigned_email_body_group_section: "In addition to receiving a key for %promotion_title%, you are now a member of <a href=\"%promotion_group_show_page%\">%promotion_group_name%</a>. While in %promotion_group_name%, you'll be able to view and discuss the newest videos, events, and images."
+
+platformd.key_request_processor_command.key_not_assigned_generic_email_subject: Unable to Assign a Key for %promotion_title%
+platformd.key_request_processor_command.key_not_assigned_generic_email_body: |
+    <p>Unfortunately, a key could not be assigned to you. This can occur for one of several reasons, including:<br />
+        <br />
+        1) We've ran out of keys before we could assign one to you while you were in the queue.<br />
+        2) You are in a country or region that is not eligible to receive a key.<br />
+        3) A key has already been assigned to you.<br />
+        %extra_info%
+    </p>
+    <p>Alienware Arena Team</p>
+
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_subject: %promotion_title% Update
 platformd.key_request_processor_command.key_not_assigned_no_keys_left_email_body: |
     <p>
             Sorry, we ran out of codes for the <a href="%promotion_show_page%">%promotion_title%</a>. %extra_info%
         </p>
-        <p>Campsite Team</p>
+        <p>Alienware Arena Team</p>
 platformd.key_request_processor_command.key_not_assigned_group_section: 'Please join the <a href="%promotion_group_show_page%">%promotion_group_name%</a> group to be notified when new keys and activities are available.'
 platformd.key_request_processor_command.key_not_assigned_no_group_extra_info: Please check back later as more codes may be added!
 
 platformd.facebook.login_label: Login with Facebook
 platformd.facebook.connect: Add Facebook Login
 platformd.facebook.account_created: Your account has been created, however you must update your password before doing anything on the site.
-platformd.facebook.timeline.account_created_message: I just joined Campsite!
+platformd.facebook.timeline.account_created_message: I just joined Alienware Arena!
 platformd.facebook.timeline.account_created_description: Access exclusive closed betas, in-game items, and discounts on your favorite video games. Become a part of the most helpful PC gaming community today!
 platformd.facebook.timeline.create_group_message: I just created the group %s.
 platformd.facebook.timeline.joined_group_message: I joined the group %s.
 platformd.facebook.timeline.video_added: "I just added a video - %s."
 platformd.facebook.timeline.group_event_added: "I just created an event - %s."
 platformd.facebook.timeline.group_event_register: I am attending %s.
-platformd.facebook.timeline.image_added: I just added %s image(s) on Campsite.
+platformd.facebook.timeline.image_added: I just added %s image(s) on Alienware Arena.
 platformd.facebook.timeline.entered_contest: I entered the %s.
 
 platformd.twitter.login_label: Login with Twitter
@@ -1386,7 +1311,7 @@ platformd.twitter.tweets.joined_group_message: I just joined the group %s %s.
 platformd.twitter.tweets.video_added: "I just added a video - %s. %s"
 platformd.twitter.tweets.group_event_added: "I just created an event - %s. %s"
 platformd.twitter.tweets.group_event_register: I am attending %s %s.
-platformd.twitter.tweets.image_added: I just added %s image(s) on Campsite. %s
+platformd.twitter.tweets.image_added: I just added %s image(s) on Alienware Arena. %s
 platformd.twitter.tweets.entered_contest: I entered the %s %s.
 
 # export query types
