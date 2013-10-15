@@ -3,11 +3,6 @@
 {% block content %}
 
     <table class="tblStyle" id="profile">
-        {% if ownProfile %}
-            <tr>
-                <td><a href="{{ path('change_password') }}">Change Password</a></td><td></td>
-            </tr>
-        {% endif %}
         <tr>
             <td class="padrt"><strong>Username:</strong></td>
             <td> {{ user.username }} </td>
@@ -20,26 +15,37 @@
             <td class="padrt"><strong>Email:</strong></td>
             <td> {{ user.email }} </td>
         </tr>
-        {% if user.school %}
+        {% if user.organization %}
         <tr>
             <td class="padrt"><strong>Organization:</strong></td>
-            <td> {{ user.school }} </td>
+            <td> {{ user.organization }} </td>
         </tr>
         {% endif %}
-        {% if user.major %}
+        {% if user.title %}
         <tr>
-            <td class="padrt"><strong>Focus:</strong></td>
-            <td> {{ user.major }} </td>
+            <td class="padrt"><strong>Title:</strong></td>
+            <td> {{ user.title }} </td>
         </tr>
         {% endif %}
+        {% if user.industry %}
+            <tr>
+                <td class="padrt"><strong>Industry:</strong></td>
+                <td> {{ user.industry }} </td>
+            </tr>
+        {% endif %}
+        {% if user.affiliation %}
         <tr>
             <td class="padrt"><strong>Affiliation:</strong></td>
             <td> {{ user.affiliation }} </td>
         </tr>
+        {% endif %}
+        {% if user.eventRole %}
         <tr>
-            <td class="padrt"><strong>Role:</strong></td>
-            <td> {{ user.svicRole }} </td>
+            <td class="padrt"><strong>Event Role:</strong></td>
+            <td> {{ user.eventRole }} </td>
         </tr>
+        {% endif %}
+
         <tr>
             <td class="padrt"><strong>Proposed Ideas:</strong></td>
             <td>

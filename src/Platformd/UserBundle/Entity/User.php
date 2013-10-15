@@ -464,12 +464,17 @@ class User extends BaseUser
     /**
      * @ORM\Column(type="string", length="255", nullable=true)
      */
-    protected $school = null;
+    protected $organization = null;
 
     /**
      * @ORM\Column(type="string", length="255", nullable=true)
      */
-    protected $major = null;
+    protected $title = null;
+
+    /**
+     * @ORM\Column(type="string", length="255", nullable=true)
+     */
+    protected $industry = null;
 
     /**
      * @ORM\Column(type="string", length="255", nullable=true)
@@ -479,7 +484,7 @@ class User extends BaseUser
     /**
      * @ORM\Column(type="string", length="255", nullable=true)
      */
-    protected $svicRole = null;
+    protected $eventRole = null;
 
     /**
      * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\Idea", mappedBy="creator")
@@ -1412,22 +1417,31 @@ class User extends BaseUser
         return $this->name;
     }
 
-    public function setSchool($school)
+    public function setOrganization($value)
     {
-        $this->school = $school;
+        $this->organization = $value;
     }
-    public function getSchool()
+    public function getOrganization()
     {
-        return $this->school;
+        return $this->organization;
     }
 
-    public function setMajor($major)
+    public function setTitle($value)
     {
-        $this->major = $major;
+        $this->title = $value;
     }
-    public function getMajor()
+    public function getTitle()
     {
-        return $this->major;
+        return $this->title;
+    }
+
+    public function setIndustry($value)
+    {
+        $this->industry = $value;
+    }
+    public function getIndustry()
+    {
+        return $this->industry;
     }
 
     public function setAffiliation($affiliation)
@@ -1439,13 +1453,13 @@ class User extends BaseUser
         return $this->affiliation;
     }
 
-    public function setSvicRole($svic_role)
+    public function setEventRole($eventRole)
     {
-        $this->svicRole = $svic_role;
+        $this->$eventRole = $eventRole;
     }
-    public function getSvicRole()
+    public function getEventRole()
     {
-        return $this->svicRole;
+        return $this->eventRole;
     }
 
 

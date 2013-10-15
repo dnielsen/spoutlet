@@ -9,10 +9,15 @@
     {{ form_row(form.email) }}
     {{ form_row(form.plainPassword.first) }}
     {{ form_row(form.plainPassword.second) }}
+    {{ form_row(form.organization) }}
+    {{ form_row(form.title) }}
+    {{ form_row(form.industry) }}
 
+    <strong>I accept the terms and conditions:</strong><br/>
+    <a href="http://bit.ly/18Wj6Lx" target="_blank">Terms & Conditions</a> <input type="checkbox" id="terms" class="spcr-l"><br/><br/>
 
-    <div>
-        <div style="display:none;">{{ form_rest(form) }}</div>
-        <input type="submit" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" class="button btn btn-primary" formnovalidate />
-    </div>
+    <div style="display:none;">{{ form_rest(form) }}</div>
+
+    <input type="submit" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" class="button btn btn-primary" formnovalidate onclick="if(!document.getElementById('terms').checked){alert('You must agree to the terms first.');return false}"/>
+
 </form>
