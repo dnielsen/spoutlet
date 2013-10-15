@@ -125,7 +125,7 @@ fos_user:
             type: platformd_user_registration
             handler: platformd_user.registration.form.handler
         confirmation:
-            enabled: true
+            enabled: false
     profile:
         form:
             type: platformd_user_profile
@@ -178,7 +178,13 @@ parameters:
     # If the file does not exist or is empty, default country is "US".
     ip_lookup_override: false
     ip2location_lookup_directory: %kernel.root_dir%/../external_data/ip2location/
-
+    #object_storage: HpObjectStorage
+    object_storage: AWSObjectStorage
+    hpcloud_accesskey: YS11LX9TT81LNVXKSKM7
+    hpcloud_secreatkey: r8zsRj+i/SfVSXkOiUlVZg2SJBw2p2izogqKlo+W
+    hpcloud_tenantid: 10873218563681
+    hpcloud_url: 'https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/'
+    hpcloud_container: 'cloudcamp'
     available_locales:
         # we're abusing the locales to make our many "sites"
         # this will change in the future
@@ -217,7 +223,7 @@ parameters:
     # an array of "sites" where we host their main site
     # used by the SiteProtectionListener to prevent, for example, Latin America users
     # from accessing pages on our site, other than the few that we host of theirs
-    allowed_sites: [en, ja, zh]
+    allowed_sites: [en, ja1, zh]
 
 
     # Used for the translation admin
@@ -343,7 +349,7 @@ parameters:
             - 台湾省
 
 jms_i18n_routing:
-    default_locale: en_sjsu
+    default_locale: en_campsite
     locales: %available_locales%
     strategy: custom
     hosts: %site_host_map%
@@ -394,6 +400,9 @@ knp_gaufrette:
         platformd.avatar:
             service:
                 id: platformd.avatar.s3.adapter
+        platformd.gallary:
+            service:
+                id: platformd.gallary.s3.adapter
         platformd.event:
             service:
                 id: platformd.event.s3.adapter
@@ -408,6 +417,9 @@ knp_gaufrette:
         platformd.avatar:
             adapter: platformd.avatar
             alias: avatar_filesystem
+        platformd.gallary:
+            adapter: platformd.gallary
+            alias: gallary_filesystem
         platformd.event:
             adapter: platformd.event
             alias: event_filesystem
@@ -526,7 +538,7 @@ exercise_html_purifier:
 
 liip_theme:
     themes: %liip_enabled_themes%
-    active_theme: 'default'
+    active_theme: 'marketingcamp'
     path_patterns:
         app_resource:
             - %%app_path%%/themes/%%current_theme%%/%%template%%

@@ -10,71 +10,68 @@ use Symfony\Component\HttpFoundation\File\File;
 use Gaufrette\Filesystem;
 
 use Platformd\UserBundle\Entity\User,
-    Platformd\UserBundle\Entity\Avatar,
-    Platformd\UserBundle\ViewModel\avatar_index_data,
+    Platformd\UserBundle\Entity\Gallary,
+    Platformd\UserBundle\ViewModel\gallary_index_data,
     Platformd\UserBundle\QueueMessage\AvatarResizeQueueMessage,
     Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage
 ;
 
 use HPCloud\HPCloudPHP;
-class AvatarManager
+class GallaryManager
 {
     const IMAGE_CROP_MAX_WIDTH  = 512;
     const IMAGE_CROP_MAX_HEIGHT = 512;
 
     private $em;
     private $filesystem;
-    private $avatarRepo;
+    private $gallaryRepo;
     private $publicBucket;
     private $privateBucket;
     private $s3;
     private $queueUtil;
     private $userManager;
-    private $objectStorage = '';
 
     public function __construct(EntityManager $em, Filesystem $filesystem, $publicBucket, $privateBucket, $s3, $queueUtil, $userManager,$objectStorage='')
     {
         $this->em            = $em;
         $this->filesystem    = $filesystem;
-        $this->avatarRepo    = $em->getRepository('UserBundle:Avatar');
+        $this->galaryRepo    = $em->getRepository('UserBundle:Gallary');
         $this->publicBucket  = $publicBucket;
         $this->privateBucket = $privateBucket;
         $this->s3            = $s3;
         $this->queueUtil     = $queueUtil;
         $this->userManager   = $userManager;
-       // if($objectStorage == "HpObjectStorage") {
         $this->objectStorage = $objectStorage;
 	$this->hpCloudObj = new HPCloudPHP("YS11LX9TT81LNVXKSKM7","r8zsRj+i/SfVSXkOiUlVZg2SJBw2p2izogqKlo+W","10873218563681");
-  
-        //}
+
     }
 
-    public function save(Avatar $avatar)
+    public function save(Gallary $gallary)
     {
-        if ($avatar->file) {
-            $fileInfo = getimagesize($avatar->file);
+        if ($gallary->file) {
+            $fileInfo = getimagesize($gallary->file);
 
-            $avatar->setInitialFormat($avatar->file->guessExtension());
-            $avatar->setInitialWidth($fileInfo[0]);
-            $avatar->setInitialHeight($fileInfo[1]);
-            $avatar->setUuid($this->upload($avatar->file, $avatar->getUser()));
+            $gallary->setInitialFormat($gallary->file->guessExtension());
+            $gallary->setInitialWidth($fileInfo[0]);
+            $gallary->setInitialHeight($fileInfo[1]);
+            $gallary->setUuid($this->upload($gallary->file, $gallary->getUser()));
         }
 
-        // Avatar is valid
-        if ($avatar->getUuid()) {
-            $this->em->persist($avatar);
+        // Gallary is valid
+        if ($gallary->getUuid()) {
+            $this->em->persist($gallary);
             $this->em->flush();
         }
     }
 
     public function findOneBy(array $criteria = array())
     {
-        return $this->avatarRepo->findOneBy($criteria);
+        return $this->gallaryRepo->findOneBy($criteria);
     }
 
     public function getAllApprovedForUser(User $user)
     {
-        return $this->avatarRepo->findBy(array(
+        return $this->gallaryRepo->findBy(array(
             'user'      => $user->getId(),
             'approved'  => true,
             'deleted'   => false,
@@ -86,17 +83,17 @@ class AvatarManager
 
     public function getUnapprovedCountForUser(User $user)
     {
-        return $this->avatarRepo->getUnapprovedCountForUser($user);
+        return $this->gallaryRepo->getUnapprovedCountForUser($user);
     }
 
     public function getProcessingCountForUser(User $user)
     {
-        return $this->avatarRepo->getProcessingCountForUser($user);
+        return $this->gallaryRepo->getProcessingCountForUser($user);
     }
 
     public function findOneByUuidAndUser($uuid, User $user)
     {
-        return $this->avatarRepo->findOneBy(array(
+        return $this->gallaryRepo->findOneBy(array(
             'uuid' => $uuid,
             'user' => $user->getId(),
         ));
@@ -111,14 +108,17 @@ class AvatarManager
         $opts = array('headers' => array('Cache-Control' => 'max-age=0'));
         $filename = $user->getUuid().'/'.$fileUuid.'/'.$rawFilename;
         
-        $filename = $user->getUuid();
+        $filename = $user->getUuid().".".$file->guessExtension();
         //$filename = $fileUuid;
-        if($this->objectStorage == 'HpObjectStorage') {
-	    $this->hpCloudObj->SaveToObjectStorage('cloudcamp',$filename,$file,"images/avatars");
-	}
-        else {
+         if($this->objectStorage == 'HpObjectStorage') {
+	$this->hpCloudObj->SaveToObjectStorage('cloudcamp',$filename,$file,"images/gallary");
+         }
+         else {
           $data = $this->filesystem->write($filename, file_get_contents($file),$opts);
-        }
+         }
+
+     //   $this->filesystem->write($user->getUuid().'/'.$fileUuid.'/'.$rawFilename, file_get_contents($file), $opts);
+
         unlink($file);
 
         return $fileUuid;
@@ -130,11 +130,11 @@ class AvatarManager
       // return rand(5, 15);
     }
 
-    public function getSignedImageUrl($avatarUuid, $filename, User $user)
+    public function getSignedImageUrl($gallaryUuid, $filename, User $user)
     {
         $this->checkUserUuid($user);
 
-        $filePath = $this->filesystem->getAdapter()->getDirectory().'/'.$user->getUuid().'/'.$avatarUuid.'/'.$filename;
+        $filePath = $this->filesystem->getAdapter()->getDirectory().'/'.$user->getUuid().'/'.$gallaryUuid.'/'.$filename;
         return $this->s3->get_object_url($this->privateBucket, $filePath, '1 hour');
     }
 
@@ -173,26 +173,26 @@ class AvatarManager
 
     }
 
-    public function getAvatarListingData(User $user, $size=84)
+    public function getGallaryListingData(User $user, $size=84)
     {
         $this->checkUserUuid($user);
 
-        $data    = new avatar_index_data();
-        $avatars = $this->getAllApprovedForUser($user);
+        $data    = new gallary_index_data();
+        $gallarys = $this->getAllApprovedForUser($user);
 
-        foreach ($avatars as $avatar) {
-            $url = $this->getAvatarUrl($user->getUuid(), $size, $avatar->getUuid());
+        foreach($gallarys as $gallary) {
+            $url = $this->getGallaryUrl($user->getUuid(), $size, $gallary->getUuid());
 
-            $avatarDetails = array(
-                'id'  => $avatar->getId(),
+            $gallaryDetails = array(
+                'id'  => $gallary->getId(),
                 'url' => $url,
-                'uuid' => $avatar->getUuid(),
+                'uuid' => $gallary->getUuid(),
             );
 
-            if ($avatar == $user->getAvatar()) {
-                $data->activeAvatar = $avatarDetails;
+            if ($gallary == $user->getGallary()) {
+                $data->activeGallary = $gallaryDetails;
             } else {
-                $data->avatars[] = $avatarDetails;
+                $data->gallarys[] = $gallaryDetails;
             }
         }
 
@@ -202,73 +202,71 @@ class AvatarManager
         return $data;
     }
 
-    public function getUnapprovedAvatars($maxPerPage = 64, $currentPage = 1, &$pager = null, $locale = null)
+    public function getUnapprovedGallarys($maxPerPage = 64, $currentPage = 1, &$pager = null, $locale = null)
     {
-        $avatars   = $this->avatarRepo->getUnapprovedAvatars($maxPerPage, $currentPage, $pager, $locale);
-        $avatarArr = array();
+        $gallarys   = $this->gallaryRepo->getUnapprovedGallarys($maxPerPage, $currentPage, $pager, $locale);
+        $galaryArr = array();
 
-        foreach ($avatars as $avatar) {
+        foreach ($gallarys as $gallary) {
 
-            $avatarArr[] = array(
-                'id' => $avatar->getId(),
-                'url' => $this->getSignedImageUrl($avatar->getUuid(), '100x100.png', $avatar->getUser()),
-                'userId' => $avatar->getUser()->getId(),
-                'username' => $avatar->getUser()->getUsername(),
-                'submitted' => $avatar->getCreatedAt(),
+            $gallaryArr[] = array(
+                'id' => $gallary->getId(),
+                'url' => $this->getSignedImageUrl($gallary->getUuid(), '100x100.png', $gallary->getUser()),
+                'userId' => $gallary->getUser()->getId(),
+                'username' => $gallary->getUser()->getUsername(),
+                'submitted' => $gallary->getCreatedAt(),
             );
         }
 
-        return $avatarArr;
+        return $gallaryArr;
     }
 
-    public function processAvatars($avatarIds, $processType)
+    public function processGallarys($gallaryIds, $processType)
     {
-        if (count($avatarIds) < 1) {
+        if (count($gallaryIds) < 1) {
             return 0;
         }
 
         $approved = $processType == 'approve';
-        $avatars  = $this->avatarRepo->findIdsIn($avatarIds);
+        $gallarys  = $this->gallaryRepo->findIdsIn($gallaryIds);
 
-        foreach ($avatars as $avatar) {
+        foreach ($gallarys as $gallary) {
 
             // Avatar is already processed, so just set approval and move on
-            if ($avatar->isProcessed()) {
-                $avatar->setApproved($approved);
-                $this->em->persist($avatar);
+            if ($gallary->isProcessed()) {
+                $gallary->setApproved($approved);
+                $this->em->persist($gallary);
                 continue;
             }
 
-            $avatar->setApproved($approved);
-            $avatar->setReviewed(true);
-            $avatar->setDeleted(!$approved);
-            $this->em->persist($avatar);
+            $gallary->setApproved($approved);
+            $gallary->setReviewed(true);
+            $gallary->setDeleted(!$approved);
+            $this->em->persist($gallary);
 
             if ($approved) {
-                $this->addToFilesystemActionsQueue($avatar->getUuid(), $avatar->getUser(), AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_APPROVE);
+                $this->addToFilesystemActionsQueue($gallary->getUuid(), $gallary->getUser(), AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_APPROVE);
             }
         }
 
         $this->em->flush();
     }
 
-    public function getAvatarUrl($userUuid, $size, $fileUuid = 'by_size',$subDir= null)
+    public function getGallaryUrl($userUuid, $size, $fileUuid = 'by_size',$subDir= null)
     {
         if ($this->publicBucket == "platformd") {
             $cf = "http://media.alienwarearena.com";
         } else {
-	
-            $cf = ($this->objectStorage == "HpObjectStorage") ?  "https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/cloudcamp" : "https://s3.amazonaws.com/platformd-public";
-           // $cf =  "https://s3.amazonaws.com/platformd-public";
+            $cf = ($this->objectStorage == "HpObjectStorage") ? "https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/cloudcamp" :  "https://s3.amazonaws.com/platformd-public" ;
         }
        if($subDir != "") {
-           $url = "https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/cloudcamp/images/avatar/";
+          $url = "https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/cloudcamp/images/gallary/";
            return $url.$userUuid;
 
        }
         
         //return $cf.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$fileUuid.'/'.$size.'x'.$size.'.png';
-       return  $cf.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid;
+       return  $cf.'/'.Gallary::GALLARY_DIRECTORY_PREFIX.'/'.$userUuid.".jpg";
     
 
     }

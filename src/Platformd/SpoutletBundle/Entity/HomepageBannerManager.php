@@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManager;
 use Gaufrette\Filesystem;
 use Platformd\SpoutletBundle\Util\Image;
 
+use HPCloud\HPCloudPHP;
+
 /**
 * 
 */
@@ -23,14 +25,24 @@ class HomepageBannerManager
     */
     private $filesystem;
 
-    public function __construct(EntityManager $manager, Filesystem $filesystem)
+    private $objectStorage = '';
+    public function __construct(EntityManager $manager, Filesystem $filesystem,$objectStorage='')
     {
+       
         $this->manager = $manager;
         $this->filesystem = $filesystem;
+        if($objectStorage == 'HpObjectStorage') {
+	     $this->objectStorage = $objectStorage;
+	     $this->hpCloudObj = new HPCloudPHP("YS11LX9TT81LNVXKSKM7","r8zsRj+i/SfVSXkOiUlVZg2SJBw2p2izogqKlo+W","10873218563681");
+           
+	}
+     
     }
-
-    public function save(HomepageBanner $banner)
+   
+    
+	public function save(HomepageBanner $banner)
     {
+         
         if ($banner->banner_file) {
             $banner->setBanner($this->upload($banner->banner_file, 'banner'));
         }
@@ -53,8 +65,11 @@ class HomepageBannerManager
         $roundedPath = $this->createRoundedImage($file, $size);
 
         $filename = $this->generateFilename($size, $file);
-        $this->filesystem->write($filename, file_get_contents($roundedPath));
-
+        
+         if($this->objectStorage == "HpObjectStorage")
+           $this->hpCloudObj->SaveToObjectStorage('platformd-public',$filename,$roundedPath,"homepage-banners");
+         else
+	   $this->filesystem->write($filename, file_get_contents($roundedPath));
         // remove the founded path
         unlink($roundedPath);
 

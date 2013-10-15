@@ -194,3 +194,6 @@ group_members:
 group_remove_member:
     pattern: /{slug}/remove/{uid}
     defaults: { _controller: "GroupBundle:Group:remove", site: ~ }
+
+
+

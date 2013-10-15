@@ -24,7 +24,7 @@ parameters:
 
     # used in security.yml to disable https for viewing secure pages on dev environment
     secure_url_scheme: http
-    allow_caching: true
+    allow_caching: false
 
     # if set to true, the ipLookupUtil will read the contents of a file named "overrideCountry"
     # in the %ip2location_lookup_directory% directory and return it after an ip address lookup.

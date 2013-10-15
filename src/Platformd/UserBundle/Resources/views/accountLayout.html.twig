@@ -18,7 +18,15 @@
             {% if auth_type == 'local' %}
                 <li><a href="{{ path('accounts_settings') }}">{{ "platformd.user.account.account_settings" | pd_trans }}</a></li>
                 {% if features.hasProfile %}
-                    <li><a href="{{ path('fos_user_profile_show') }}">{{ "platformd.user.account.profile" | pd_trans }}</a></li>
+                 <!--   <li><a href="{{ path('fos_user_profile_show') }}">{{ "platformd.user.account.profile" | pd_trans }}</a></li> -->
+                <li class="more">
+                  <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.user.account.profile' | pd_trans }}</a>
+                    <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
+                      <li><a href="{{ path('fos_user_profile_show') }}">{{ 'platformd.user.account.profile' | pd_trans }}</a></li>
+                      <li><a href="{{ path('fos_user_profile_show') }}avatars">{{ 'platformd.user.account.avatars' | pd_trans }}</a></li>
+                    </ul>
+                </li>
+
                 {% endif %}
             {% else %}
                 <li><a href="http://alienwarearena.com/account/password/">{{ "platformd.user.account.change_password" | trans }}</a></li>

@@ -24,3 +24,10 @@ avatar_delete:
 avatar_switch:
     pattern: /switch/{uuid}
     defaults: { _controller: UserBundle:Avatar:switch }
+avatar_facedetect:
+    pattern: /facedetect/{uuid}
+    defaults: { _controller: UserBundle:Avatar:faceDetect, uuid: ~ }
+avatar_faceprint_save:
+   pattern: /faceprint/{uuid}/{facePrintId}/{facePrintImage}
+   defaults: {_controller: UserBundle:Avatar:facePrint, uuid: ~ , facePrintId: ~, facePrintImage: ~}
+

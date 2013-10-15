@@ -13,20 +13,38 @@ use Platformd\SpoutletBundle\Controller\Controller,
     Platformd\UserBundle\Form\Type\AvatarType,
     Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage
 ;
+use HPCloud\HPCloudPHP;
 
 class AvatarController extends Controller
 {
     public function avatarAction(Request $request)
     {
         $this->checkSecurity();
-
+        
         $avatarManager = $this->getAvatarManager();
         $data          = $avatarManager->getAvatarListingData($this->getUser(), 84);
         $newAvatar     = new Avatar();
-
+      
         $newAvatar->setUser($this->getUser());
 
         $form = $this->createForm(new AvatarType(), $newAvatar);
+        if(isset($_GET['url_pic'])) {
+
+  //  echo "set2";exit;
+        $hpcloud = new HPCloudPHP("YS11LX9TT81LNVXKSKM7","r8zsRj+i/SfVSXkOiUlVZg2SJBw2p2izogqKlo+W","10873218563681");
+   // $url_pic = $avatarUrl;
+        $url_pic = $_GET['url_pic'];
+
+       //$userUuid = $this->getUser()->getUuid();
+     $url = 'https://region-a.geo-1.objects.hpcloudsvc.com/v1/10873218563681/cloudcamp/images/avatar';
+     $hpcloud->faceDetection($url_pic,$url);
+     
+     unset($hpcloud);
+     $response = new Response();
+    // $response->setContent(json_encode($data));
+     return $response;
+     }
+
 
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
@@ -37,9 +55,12 @@ class AvatarController extends Controller
                 $avatarManager->save($newAvatar);
 
                 if ($newAvatar->getUuid()) {
-                    return $this->redirect($this->generateUrl('avatar_crop', array(
-                        'uuid' => $newAvatar->getUuid(),
-                    )));
+                  //  return $this->redirect($this->generateUrl('avatar_crop', array(
+                    //    'uuid' => $newAvatar->getUuid(),
+                    //)));
+                   return $this->redirect($this->generateUrl('avatar_facedetect',array(
+			'uuid' => $newAvatar->getUuid(),
+			)));
                 } else {
                     $this->setFlash('error', 'platformd.user.avatars.invalid_avatar');
                 }
@@ -55,13 +76,14 @@ class AvatarController extends Controller
     public function cropAvatarAction($uuid = null)
     {
         $this->checkSecurity();
-
+        
         if (!$uuid) {
             $this->setFlash('error', 'platformd.user.avatars.invalid_avatar');
             return $this->redirect($this->generateUrl('accounts_settings'));
         }
 
         $avatar = $this->findAvatar($uuid);
+  
 
         if (!$avatar) {
             $this->setFlash('error', 'platformd.user.avatars.invalid_avatar');
@@ -75,10 +97,69 @@ class AvatarController extends Controller
 
         return $this->render('UserBundle:Avatar:cropAvatar.html.twig', array(
             'uuid'          => $uuid,
-            'avatarUrl'     => $this->getAvatarManager()->getSignedImageUrl($uuid, 'raw.'.$avatar->getInitialFormat(), $this->getUser()),
+//            'avatarUrl'     => $this->getAvatarManager()->getSignedImageUrl($uuid, 'raw.'.$avatar->getInitialFormat(), $this->getUser()),
+ 'avatarUrl'     => $this->getAvatarManager()->getAvatarUrl($this->getUser()->getUuid(),0),
+
         ));
     }
 
+    public function faceDetectAction($uuid = null,$render=null)
+    {
+    
+     //$avatarUrl = $this->getAvatarManager()->getAvatarUrl($this->getUser()->getUuid(),0);
+    
+     if(isset($_GET['url_pic'])) {
+
+  //  echo "set2";exit;
+        $hpcloud = new HPCloudPHP("YS11LX9TT81LNVXKSKM7","r8zsRj+i/SfVSXkOiUlVZg2SJBw2p2izogqKlo+W","10873218563681");
+   // $url_pic = $avatarUrl;
+        $url_pic = $_GET['url_pic'];
+         
+       //$userUuid = $this->getUser()->getUuid();
+     $url = 'https://region-a.geo-1.objects.hpcloudsvc.com/v1/10873218563681/cloudcamp/images/avatar';
+     $hpcloud->faceDetection($url_pic,$url);
+     unset($hpcloud);    
+     $response = new Response();
+    // $response->setContent(json_encode($data));
+     return $response;
+     }
+    
+     $userUuid = $this->getUser()->getUuid();
+    
+    //echo $this->getAvatarManager()->getAvatarUrl($uuid,0);exit;i
+    if($render == ""){
+
+     return $this->render('UserBundle:Avatar:faceDetectAvatar.html.twig', array(
+            'uuid'          => $uuid,
+            'avatarUrl'     => $this->getAvatarManager()->getAvatarUrl($this->getUser()->getUuid(),0),
+        ));
+    }
+    else {
+         
+     return $this->render('UserBundle:Avatar:faceDetectAvatarRender.html.twig', array(
+            'uuid'          => $uuid,
+            'avatarUrl'     => $this->getAvatarManager()->getAvatarUrl($this->getUser()->getFaceprintImage(),0,0,"images/avatar"),
+        ));
+
+        }
+
+    }
+    
+    public function facePrintAction ($uuid = null, $facePrintId = null, $facePrintImage = null)
+    {
+      
+      $user = $this->getUser();
+      $em = $this->getDoctrine()->getEntityManager();
+      
+      $user->setFacePrintId($facePrintId);     
+      $user->setFacePrintImage($facePrintImage);
+      $em->persist($user);
+      // $user->save($user);
+      $em->flush();
+       // redirected to face Crop
+      $this->setFlash('success', "Image Set Sucessfully");
+      return $this->redirect($this->generateUrl('avatars'));
+    }
     public function processAvatarAction($uuid, $dimensions)
     {
         $this->checkSecurity();

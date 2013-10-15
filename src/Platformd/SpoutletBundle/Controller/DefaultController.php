@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Controller\Controller as Controller;
 use Symfony\Component\HttpFoundation\Cookie;
 
+use Platformd\UserBundle\Entity\RegistrationSource;
+
 class DefaultController extends Controller
 {
     public function _mainUserStripAction() {
@@ -281,8 +283,11 @@ class DefaultController extends Controller
         if (!$this->getCurrentSite()->getSiteFeatures()->getHasIndex()) {
             throw $this->createNotFoundException();
         }
-
-        return $this->render('SpoutletBundle:Default:index.html.twig');
+ 
+        return $this->render('SpoutletBundle:Default:index.html.twig'
+,array( 'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_NEWS),
+)
+           );
     }
 
     public function healthCheckAction() {

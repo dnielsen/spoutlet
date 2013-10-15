@@ -344,7 +344,10 @@ class Controller extends BaseController
     {
         return $this->get('platformd.model.avatar_manager');
     }
-
+    protected function getGallaryManager()
+    {
+        return $this->get('platformd.model.gallary_manager');
+    }
     protected function getApiManager()
     {
         return $this->get('platformd.user.api.manager');

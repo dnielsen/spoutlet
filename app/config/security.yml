@@ -1,3 +1,5 @@
+parameters:
+    api_authentication: false
 security:
 
     encoders:
