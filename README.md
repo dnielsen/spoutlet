@@ -22,31 +22,44 @@ INSTALLATION
 
     $ cp app/config/parameters.ini.dist  app/config/parameters.ini
     
-
 * Open the `app/config/parameters.ini` file and customize the database
     information. All the other settings are fine.
 
 * Create a virtual host and point it at the `web/` directory of your
-    project. For example, suppose I clone the project to "/home/user/sites/campsite".
-    Then, my Apache virtualhost would look like this:
+    project. For example, suppose I clone the project to "/home/<user>/sites/campsite".
+    Then I would create this file called campsite under "/etc/apache2/sites-available":
 
 
         <VirtualHost *:80>
+
             ServerAdmin webmaster@dummy-host.example.com
-            ServerName campsite.local
-            DirectoryIndex app_dev.php
-            DocumentRoot "/home/user/sites/campsite/web"
-            ErrorLog "/home/user/sites/campsite/logs/error.log"
-            CustomLog "/home/user/sites/campsite/logs/access.log" common
+
+            ServerName  campsite.local
+            ServerAlias <community1>.campsite.local
+            ServerAlias <community2>.campsite.local
+
+            DocumentRoot    "/home/<user>/sites/campsite/web"
+            ErrorLog        "/home/<user>/sites/campsite/logs/error.log"
+            CustomLog       "/home/<user>/sites/campsite/logs/access.log" common
+
+            DirectoryIndex  app_dev.php
 
             <Directory "/home/user/sites/campsite/web">
                 AllowOverride All
                 Options FollowSymLinks
             </Directory>
+
         </VirtualHost>
 
 
+* Enable Campsite and disable the default site
+
+    $ sudo a2ensite campsite
+    $ sudo a2dissite default
+
 * Restart Apache
+
+    $ sudo service apache2 restart
 
 * Open up your `/etc/hosts` file for editing:
 
@@ -54,29 +67,40 @@ INSTALLATION
 
 * Add the following entry to that file and save
 
-    127.0.0.1       campsite.local
+    127.0.0.1       campsite.local <community1>.campsite.local <community2>.campsite.local
 
 * Correct the permissions on a few directories. From your project root:
 
     $ sudo chmod -R 777 app/cache app/logs
 
+* Make sure you set the timezone in your php.ini file
+
+    $ sudo vim /etc/php5/apache2/php.ini
+
+    Update date.timezone with your server's timezone:
+    date.timezone = "America/Los_Angeles"
+
 * Check to see if your system is setup by running the following command.
     If you see any issues, you may need to install more things. You can
     choose to ignore any issues, they may or may not affect you.
 
-    $ php app/check.php
+    $ php app/check.php -c /etc/php5/apache2/php.ini
 
-* Create the database, add the schema
+* Create the database, migrate up to the current schema
 
     $ php app/console doctrine:database:create  
     $ php app/console doctrine:mig:mig  
     
     Connect to database and update:  
-        pd_site  
-        pd_site_config  
-        pd_site_features   
+        pd_site          - Add a site for each community with name, defaultLocale, fullDomain, and theme
+
+        pd_site_config   - Set automatedEmailAddress to your AWS SES account and set emailFromName
+                         - Make sure birthdayRequired is set to 0
+                         - Set the forward_base_url and forwarded_paths
+
+        pd_site_features - Set has_index, has_about, has_contact to 1, and has_forward_on_404 to 0
         
-    You'll need to update app/config/config.yml and add your sites to:  
+    You'll need to update app/config/config.yml and add each of your sites and their locales to:  
         available_locales  
         site_host_map  
         platformd_sites  
@@ -157,13 +181,11 @@ USING MULTIPLE THEMES
 
 * You will place all assets and templates inside this unique theme directory
 
-* To install your assets just run the following:
+* To install your assets, run the ./refresh.sh script:
 
-    .app/console cache:clear
-    .app/console themes:install web --symlink
-    .app/console assetic:dump web
+    $ ./refresh.sh
 
-    This will place your theme assets and assets inclusion template in the proper location
+    This will place your theme assets and assets inclusion template in the proper location and clear the cache
 
 * Be careful to follow the same conventions for your assets file inclusion as the ones in the default theme. Don't use Assetic shorthand for bundles path like @SpoutletBundle.
 
