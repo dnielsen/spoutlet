@@ -35,13 +35,14 @@ dynamically set the output filename for packed css/js files
     %}
 
     <link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
+
     {% endstylesheets %}
 {% endblock %}
 
 {% block javascripts %}
 
     {% javascripts
-    'themes/ideacontest/spoutlet/js/jquery-1.8.3.min.js'
+        'themes/ideacontest/spoutlet/js/jquery-1.8.3.min.js'
         'bundles/spoutlet/js/ie8.js'
         'bundles/spoutlet/js/jquery-ui-1.8.16.custom.min.js'
         'bundles/spoutlet/js/jquery.ajaxfileupload.js'
@@ -78,6 +79,7 @@ dynamically set the output filename for packed css/js files
     %}
 
     <script type="text/javascript" src="{{ asset_url }}"></script>
+
     {% endjavascripts %}
 
     <script type="text/javascript">

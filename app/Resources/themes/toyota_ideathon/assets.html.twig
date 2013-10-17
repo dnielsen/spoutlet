@@ -7,41 +7,42 @@ dynamically set the output filename for packed css/js files
 
 {% block stylesheets %}
     {% stylesheets
-        'themes/ideacontest/spoutlet/css/comments.css'
-        'themes/ideacontest/spoutlet/css/containers.css'
-        'themes/ideacontest/spoutlet/css/custom.css'
-        'themes/ideacontest/spoutlet/css/cycle.css'
-        'themes/ideacontest/spoutlet/css/flash.css'
-        'themes/ideacontest/spoutlet/css/forms.css'
-        'themes/ideacontest/spoutlet/css/hack-global.css'
-        'themes/ideacontest/spoutlet/css/jkmegamenu.css'
-        'themes/ideacontest/spoutlet/css/lists-links.css'
-        'themes/ideacontest/spoutlet/css/news.css'
-        'themes/ideacontest/spoutlet/css/nivo-slider.css'
-        'themes/ideacontest/spoutlet/css/registration.css'
-        'themes/ideacontest/spoutlet/css/royalslider.css'
-        'themes/ideacontest/spoutlet/css/rs-default.css'
-        'themes/ideacontest/spoutlet/css/superfish.css'
-        'themes/ideacontest/spoutlet/css/toggle.css'
-        'themes/ideacontest/spoutlet/css/webFonts.css'
-        'themes/ideacontest/spoutlet/css/widgets.css'
-        'themes/ideacontest/spoutlet/css/jquery_ui/jquery-ui-1.8.16.custom.css'
-        'themes/ideacontest/user/css/account.css'
+        'themes/toyota_ideathon/spoutlet/css/comments.css'
+        'themes/toyota_ideathon/spoutlet/css/containers.css'
+        'themes/toyota_ideathon/spoutlet/css/custom.css'
+        'themes/toyota_ideathon/spoutlet/css/cycle.css'
+        'themes/toyota_ideathon/spoutlet/css/flash.css'
+        'themes/toyota_ideathon/spoutlet/css/forms.css'
+        'themes/toyota_ideathon/spoutlet/css/hack-global.css'
+        'themes/toyota_ideathon/spoutlet/css/jkmegamenu.css'
+        'themes/toyota_ideathon/spoutlet/css/lists-links.css'
+        'themes/toyota_ideathon/spoutlet/css/news.css'
+        'themes/toyota_ideathon/spoutlet/css/nivo-slider.css'
+        'themes/toyota_ideathon/spoutlet/css/registration.css'
+        'themes/toyota_ideathon/spoutlet/css/royalslider.css'
+        'themes/toyota_ideathon/spoutlet/css/rs-default.css'
+        'themes/toyota_ideathon/spoutlet/css/superfish.css'
+        'themes/toyota_ideathon/spoutlet/css/toggle.css'
+        'themes/toyota_ideathon/spoutlet/css/webFonts.css'
+        'themes/toyota_ideathon/spoutlet/css/widgets.css'
+        'themes/toyota_ideathon/spoutlet/css/jquery_ui/jquery-ui-1.8.16.custom.css'
+        'themes/toyota_ideathon/user/css/account.css'
         'bundles/spoutlet/css/jquery.mCustomScrollbar.css'
         'bundles/spoutlet/css/qtip.css'
         'plugins/jquery.ad-gallery/jquery.ad-gallery.css'
         filter='cssrewrite'
-        output='css/packed/layout_ideacontest.css'
+        output='css/packed/layout_toyota_ideathon.css'
     %}
 
     <link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
+
     {% endstylesheets %}
 {% endblock %}
 
 {% block javascripts %}
 
     {% javascripts
-    'themes/ideacontest/spoutlet/js/jquery-1.8.3.min.js'
+        'themes/toyota_ideathon/spoutlet/js/jquery-1.8.3.min.js'
         'bundles/spoutlet/js/ie8.js'
         'bundles/spoutlet/js/jquery-ui-1.8.16.custom.min.js'
         'bundles/spoutlet/js/jquery.ajaxfileupload.js'
@@ -65,19 +66,20 @@ dynamically set the output filename for packed css/js files
         'ckeditor/ckeditor.js'
         'ckeditor/config.js'
         'ckeditor/lang/en.js'
-        'themes/ideacontest/spoutlet/js/datescript.js'
-        'themes/ideacontest/spoutlet/js/gmaps_custom.js'
-        'themes/ideacontest/spoutlet/js/hoverIntent.js'
-        'themes/ideacontest/spoutlet/js/jkmegamenu.js'
-        'themes/ideacontest/spoutlet/js/jquery.cycle.all.min.js'
-        'themes/ideacontest/spoutlet/js/jquery.royalslider.min.js'
-        'themes/ideacontest/spoutlet/js/superfish.js'
-        'themes/ideacontest/spoutlet/js/supersubs.js'
+        'themes/toyota_ideathon/spoutlet/js/datescript.js'
+        'themes/toyota_ideathon/spoutlet/js/gmaps_custom.js'
+        'themes/toyota_ideathon/spoutlet/js/hoverIntent.js'
+        'themes/toyota_ideathon/spoutlet/js/jkmegamenu.js'
+        'themes/toyota_ideathon/spoutlet/js/jquery.cycle.all.min.js'
+        'themes/toyota_ideathon/spoutlet/js/jquery.royalslider.min.js'
+        'themes/toyota_ideathon/spoutlet/js/superfish.js'
+        'themes/toyota_ideathon/spoutlet/js/supersubs.js'
         'plugins/jquery.ad-gallery/jquery.ad-gallery.js'
-        output='js/packed/layout_ideacontest.js'
+        output='js/packed/layout_toyota_ideathon.js'
     %}
 
     <script type="text/javascript" src="{{ asset_url }}"></script>
+
     {% endjavascripts %}
 
     <script type="text/javascript">
