@@ -26,8 +26,8 @@ INSTALLATION
     information. All the other settings are fine.
 
 * Create a virtual host and point it at the `web/` directory of your
-    project. For example, suppose I clone the project to "/home/<user>/sites/campsite".
-    Then I would create this file called campsite under "/etc/apache2/sites-available":
+    project. For example, suppose I clone the project to `/home/<user>/sites/campsite`.
+    Then I would create this file called campsite under `/etc/apache2/sites-available`:
 
 
         <VirtualHost *:80>
@@ -54,7 +54,7 @@ INSTALLATION
 
 * Enable Campsite and disable the default site
 
-    $ sudo a2ensite campsite
+    $ sudo a2ensite campsite  
     $ sudo a2dissite default
 
 * Restart Apache
@@ -67,7 +67,7 @@ INSTALLATION
 
 * Add the following entry to that file and save
 
-    127.0.0.1       campsite.local <community1>.campsite.local <community2>.campsite.local
+    `127.0.0.1       campsite.local <community1>.campsite.local <community2>.campsite.local`
 
 * Correct the permissions on a few directories. From your project root:
 
@@ -77,7 +77,7 @@ INSTALLATION
 
     $ sudo vim /etc/php5/apache2/php.ini
 
-    Update date.timezone with your server's timezone:
+    Update date.timezone with your server's timezone:  
     date.timezone = "America/Los_Angeles"
 
 * Check to see if your system is setup by running the following command.
@@ -92,6 +92,7 @@ INSTALLATION
     $ php app/console doctrine:mig:mig  
     
     Connect to database and update:  
+
         pd_site          - Add a site for each community with name, defaultLocale, fullDomain, and theme
 
         pd_site_config   - Set automatedEmailAddress to your AWS SES account and set emailFromName
