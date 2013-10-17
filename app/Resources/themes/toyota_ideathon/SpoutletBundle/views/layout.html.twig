@@ -32,6 +32,10 @@
 
                 {% render url('_flash_message') with {}, {'standalone': true } %}
 
+                {%  for key, message in app.session.getFlashes() %}
+                    {% include 'SpoutletBundle::_flashMessage.html.twig' with { 'type': key, 'message': message } %}
+                {% endfor %}
+
                 <div class="clear"></div>
 
                 {% block content %}
