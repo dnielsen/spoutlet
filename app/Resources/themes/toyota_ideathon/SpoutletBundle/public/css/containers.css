@@ -60,7 +60,7 @@
 
 #nav ul, #nav-list {
     width: 1050px;
-    height: 32px;
+    /* height: 32px; */
 }
 
 #intro {
@@ -247,23 +247,23 @@
 /*::::::::::::::: TABLE :::::::::::::::*/
 
 table.tblStyle {
-	width: 100%;
+    width: 100%;
 }
-	.tblStyle td {
-		padding: 5px 2px;
-		font-size: 13px;
-		border-bottom: 1px solid #e5e5e5;
-		text-align: right;
-	}
-        .tblStyle td:first-child {
-            text-align: left;
-        }
+.tblStyle td {
+    padding: 5px 2px;
+    font-size: 13px;
+    border-bottom: 1px solid #e5e5e5;
+    text-align: right;
+}
+.tblStyle td:first-child {
+    text-align: left;
+}
 
-	.tblStyle th {
-		padding: 5px;
-		border-bottom: 1px solid #e5e5e5;
-		text-align: left;
-	}
+.tblStyle th {
+    padding: 5px;
+    border-bottom: 1px solid #e5e5e5;
+    text-align: left;
+}
 #eventDetails {
     margin-top: 20px;
 }
@@ -284,7 +284,7 @@ table.tblStyle2 {
 			line-height: 20px;
              text-align: left;
 		}
-	.tblStyle2 td, tblStyle2 th {
+	.tblStyle2 td, .tblStyle2 th {
 		padding: 15px 3px;
 		border-bottom: 1px solid #e5e5e5;
 	}
