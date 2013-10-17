@@ -177,10 +177,15 @@
         display: block;
         margin: 0 auto;
     }
-#events, #members {
-    max-height: 250px;
-    overflow-y: auto
-}
+    .scrollableSidebarWidget {
+        padding-left:5px;
+        max-height: 250px;
+        overflow-y: auto
+    }
+    .scrollableSidebarWidgetItem {
+        padding: 5px 0px 5px 0px;
+        border-bottom: 1px dashed #ccc;
+    }
 	
 
 /*********** SUBPAGE CONTAINERs ***********/
