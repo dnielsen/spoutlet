@@ -11,25 +11,25 @@
             <div id="content-slider-1" class="royalSlider contentSlider rsDefault">
 
                 <div>
-                    <a href={{ path('fos_user_registration_register') }}><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-register.jpg') }}" alt="Register" width="740" height="341"></a>
+                    <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': '4'}) }}"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-register.jpg') }}" alt="Register" width="740" height="341"></a>
 						<span class="rsTmb">
 							Register
 						</span>
                 </div>
                 <div>
-                    <a href="learn.html" target="_blank"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-learn.jpg') }} alt="Learn" width="740" height="341"></a>
+                    <a href="{{ path('group_about', {'slug': group.slug}) }}""><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-learn.jpg') }} alt="Learn" width="740" height="341"></a>
 				        <span class="rsTmb">
 							Learn
 				        </span>
                 </div>
                 <div>
-                    <a href="code.html" target="_blank"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-forum.jpg') }} alt="Code" width="740" height="341"></a>
+                    <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': 'api'}) }}"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-forum.jpg') }} alt="Code" width="740" height="341"></a>
 				        <span class="rsTmb">
 							API Forum
 				        </span>
                 </div>
                 <div>
-                    <a href="share.html" target="_blank"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-share.jpg') }} alt="Share" width="740" height="341"></a>
+                    <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': 'app'}) }}"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-share.jpg') }} alt="Share" width="740" height="341"></a>
 						<span class="rsTmb">
 							App Idea Forum
 						</span>
