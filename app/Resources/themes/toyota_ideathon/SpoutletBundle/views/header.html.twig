@@ -13,9 +13,9 @@
                 <li><a href="{{ path('accounts_index') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
                 <li><a href="{{ path('profile', {'username': app.user.username}) }}">Profile</a></li>
             {% endif %}
-            <li><a href="{{ path('default_index') }}">Home</a></li>
             {% block extra_user_controls %}
             {% endblock %}
+            <li><a href="{{ path('default_index') }}">Home</a></li>
         </ul>
     </div>
 
