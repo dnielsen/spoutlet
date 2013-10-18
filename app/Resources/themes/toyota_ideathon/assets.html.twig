@@ -67,13 +67,12 @@ dynamically set the output filename for packed css/js files
         'ckeditor/config.js'
         'ckeditor/lang/en.js'
         'themes/toyota_ideathon/spoutlet/js/datescript.js'
-        'themes/toyota_ideathon/spoutlet/js/gmaps_custom.js'
-        'themes/toyota_ideathon/spoutlet/js/hoverIntent.js'
         'themes/toyota_ideathon/spoutlet/js/jkmegamenu.js'
         'themes/toyota_ideathon/spoutlet/js/jquery.cycle.all.min.js'
         'themes/toyota_ideathon/spoutlet/js/jquery.royalslider.min.js'
         'themes/toyota_ideathon/spoutlet/js/superfish.js'
         'themes/toyota_ideathon/spoutlet/js/supersubs.js'
+        'themes/toyota_ideathon/spoutlet/js/hoverIntent.js'
         'plugins/jquery.ad-gallery/jquery.ad-gallery.js'
         output='js/packed/layout_toyota_ideathon.js'
     %}
@@ -81,14 +80,6 @@ dynamically set the output filename for packed css/js files
     <script type="text/javascript" src="{{ asset_url }}"></script>
 
     {% endjavascripts %}
-
-    <script type="text/javascript">
-        //jkmegamenu.definemenu("anchorid", "menuid", "mouseover|click")
-        jkmegamenu.definemenu("megaanchor1", "megamenu1", "mouseover")
-        jkmegamenu.definemenu("megaanchor2", "megamenu2", "mouseover")
-        jkmegamenu.definemenu("megaanchor3", "megamenu3", "mouseover")
-        jkmegamenu.definemenu("megaanchor4", "megamenu4", "mouseover")
-    </script>
 
     {% if app.user is not null and app.user.adminLevel == "ROLE_SUPER_ADMIN" %}
         <script type="text/javascript">
