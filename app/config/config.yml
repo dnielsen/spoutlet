@@ -181,25 +181,23 @@ parameters:
     available_locales:
         # we're abusing the locales to make our many "sites"
         # this will change in the future
-        - en_campsite       # www.
+        - en_campsite       # .
         - en_sjsu           # sjsu.
         - en_bigdatacamp    # bigdatacamp.
         - en_dataminingcamp # dataminingcamp.
         - en_hackomaha      # hackomaha.
         - en_platformd      # platformd.
-        - en_staging        # staging.
         - en_toyota         # quantified-car.
 
     # used by the router
     site_host_map:
         # %host_suffix% might be something like "staging"
-        en_campsite:        www%host_suffix%.%base_host%
+        en_campsite:        %host_suffix%.%base_host%
         en_sjsu:            sjsu%host_suffix%.%base_host%
         en_bigdatacamp:     bigdatacamp%host_suffix%.%base_host%
         en_dataminingcamp:  dataminingcamp%host_suffix%.%base_host%
         en_hackomaha:       hackomaha%host_suffix%.%base_host%
         en_platformd:       platformd%host_suffix%.%base_host%
-        en_staging:         staging.%base_host%
         en_toyota:          quantified-car%host_suffix%.%base_host%
 
     # this is repeated in the multitenancy manager - should not be
@@ -210,7 +208,6 @@ parameters:
         en_dataminingcamp:  DataMiningCamp
         en_hackomaha:       HackOmaha
         en_platformd:       PlatformD
-        en_staging:         Staging
         en_toyota:          Toyota
 
     # an array of "sites" where we host their main site
