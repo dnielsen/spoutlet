@@ -2,7 +2,7 @@
 
 {% block event_content %}
 
-    <div class="left"><h1>Proposed Ideas{% if round > 1 %} - Round {{ round }}{% endif %}</h1></div>
+    <div class="left"><h1>{{ event.name }} - Proposed Ideas{% if round > 1 %} - Round {{ round }}{% endif %}</h1></div>
 
     {% if submitActive %}
         <form action = {{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get" class="right">
@@ -12,15 +12,17 @@
 
     <br><br><br>
 
-    <form action = {{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} id='filterForm' method="get">
-        <table>
-        <tr>
-            <td><input type="text" name="tag" tabindex="1" placeholder="Filter by tag" value="{{tag}}" /></td>
-            <td><input type="submit" value="Filter" class="btnMdm" /></td>
-            {% if tag %}<td style="padding-left: 5px"><a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}"><input type="button" value="View All" class="btnMdm" /></a></td>{% endif %}
-        </tr>
-        </table><br>
-    </form>
+    {% if ideas %}
+        <form action = {{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} id='filterForm' method="get">
+            <table>
+            <tr>
+                <td><input type="text" name="tag" tabindex="1" placeholder="Filter by tag" value="{{tag}}" /></td>
+                <td><input type="submit" value="Filter" class="btnMdm" /></td>
+                {% if tag %}<td style="padding-left: 5px"><a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}"><input type="button" value="View All" class="btnMdm" /></a></td>{% endif %}
+            </tr>
+            </table><br>
+        </form>
+    {% endif %}
 
 	{% for idea in ideas %}
         <div id="idea">
@@ -54,7 +56,8 @@
             <div class="clr"></div>
             <hr>
         </div>
-
+    {% else %}
+        <p>There are no ideas yet. </p>
 	{% endfor %}
 
     <form action = {{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get">
