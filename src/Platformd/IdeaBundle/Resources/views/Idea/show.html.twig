@@ -5,12 +5,12 @@
 
     <div class="voteBx">
         <p><strong class="lrgtxt">{{ idea.numFollowers }}</strong><br>
-            <span class="tnytxt gry">followers</span></p>
+            <span class="tnytxt gry">vote{% if idea.numFollowers != 1 %}s{% endif %}</span></p>
         <form action = "{{ path('idea_follow', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="POST">
               <input type="hidden" name="id" value="{{idea.id}}">
               <input type="hidden" name="source" value="detail">
               <input type="hidden" name="tag">
-              <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnTny" value="Follow"{% else %}class="btnTnyInv" value="Unfollow"{% endif %}{% else %}class="btnTny" value="Follow"{% endif %}>
+              <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnTny" value="Vote"{% else %}class="btnTnyInv" value="Remove Vote"{% endif %}{% else %}class="btnTny" value="Vote"{% endif %}>
         </form>
     </div>
     <div class="session">
