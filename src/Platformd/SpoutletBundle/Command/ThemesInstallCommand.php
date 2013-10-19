@@ -130,7 +130,7 @@ EOT
                 $filesystem->symlink($originAssetsTemplateFile, $targetAssetsTemplateFile);
 
                 $translationsDir    = $this->getContainer()->getParameter('kernel.root_dir') . '/Resources/translations';
-                $oldTranslations    = Finder::create()->files()->name('theme_*.*.yml')->in($translationsDir);
+                $oldTranslations    = Finder::create()->files()->name('theme_'.$theme.'*.yml')->in($translationsDir);
 
                 $filesystem->remove($oldTranslations);
 
