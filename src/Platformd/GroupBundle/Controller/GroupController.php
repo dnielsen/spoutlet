@@ -39,13 +39,16 @@ class GroupController extends Controller
 
         $this->ensureGroupExists($group);
 
-        $isMember    = $this->getGroupManager()->isMember($user, $group);
-        $isOwner     = $group->getOwner() == $user;
-        $isApplicant = $this->getGroupManager()->isApplicant($user, $group);
+        $isMember    = false;
+        $isOwner     = false;
+        $isApplicant = false;
+        $isAdmin     = false;
 
-        $isAdmin = false;
         if ($user){
-            $isAdmin = $user->getAdminLevel() == 'ROLE_ADMIN';
+            $isMember    = $this->getGroupManager()->isMember($user, $group);
+            $isOwner     = $group->getOwner() == $user;
+            $isApplicant = $this->getGroupManager()->isApplicant($user, $group);
+            $isAdmin     = $user->getAdminLevel() == 'ROLE_ADMIN';
         }
 
         $response = $this->render('GroupBundle:Group:_groupMemberCheck.html.twig', array(

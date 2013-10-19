@@ -25,18 +25,20 @@
 {% render url('_group_member_check', { 'groupId': group.id }) with {}, {'standalone': true } %}
 
 <script type="text/javascript">
-    if (user_is_group_member) {
-        $('[data-group-member="true"]').show();
-        $('[data-group-member="false"]').hide();
-    } else {
-        $('[data-group-member="true"]').hide();
-        $('[data-group-member="false"]').show();
-    }
-    if (user_is_admin || user_is_group_owner) {
-        $('[data-group-admin="true"]').show();
-        $('[data-group-admin="false"]').hide();
-    } else {
-        $('[data-group-admin="true"]').hide();
-        $('[data-group-admin="false"]').show();
-    }
+    jQuery(document).ready(function($) {
+        if (user_is_group_member) {
+            $('[data-group-member="true"]').show();
+            $('[data-group-member="false"]').hide();
+        } else {
+            $('[data-group-member="true"]').hide();
+            $('[data-group-member="false"]').show();
+        }
+        if (user_is_admin || user_is_group_owner) {
+            $('[data-group-admin="true"]').show();
+            $('[data-group-admin="false"]').hide();
+        } else {
+            $('[data-group-admin="true"]').hide();
+            $('[data-group-admin="false"]').show();
+        }
+    });
 </script>
