@@ -24,10 +24,16 @@ class AdminController extends Controller
 
 		// test if submission is from a 'cancel' button press
 		if ($request->get('cancel') == 'Cancel') {
-            return $this->redirect($this->generateUrl('idea_admin', array(
-                        'groupSlug' => $groupSlug,
-                        'eventSlug' => $eventSlug,
-                    )));
+            if ($eventSlug == 'newEvent'){
+                return $this->redirect($this->generateUrl('group_show', array(
+                    'slug'  => $groupSlug,
+                )));
+            } else {
+                return $this->redirect($this->generateUrl('idea_admin', array(
+                    'groupSlug' => $groupSlug,
+                    'eventSlug' => $eventSlug,
+                )));
+            }
 		}
 
         $group = $this->getGroup($groupSlug);
