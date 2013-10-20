@@ -4,21 +4,90 @@
     {{ parent() }}
 
     <script type="text/javascript">
-        $(function () {
-            $('#form_online').change(function (){
-                var isOnline = $(this).val();
+        $(function() {
+
+            setTypeControls();
+
+            $('#form_type').change(function() {
+                setTypeControls();
+            });
+
+            $('#form_online').change(function() {
+                setLocationControls();
+            });
+
+            function setTypeControls(){
+
+                var type = $('#form_type').val();
+
+                if (type == 'unconference'){
+                    $('#time-controls').slideDown();
+                    $('#idea-controls').slideDown();
+                    $('#voting-controls').slideDown();
+                    $('#online-controls').slideUp();
+                    $('#location-controls').slideDown();
+                }
+                else if (type == 'ideathon'){
+                    $('#time-controls').slideDown();
+                    $('#idea-controls').slideDown();
+                    $('#voting-controls').slideDown();
+                    $('#online-controls').slideDown();
+                    setLocationControls();
+                }
+                else if (type == 'forum'){
+                    $('#time-controls').slideUp();
+                    $('#idea-controls').slideUp();
+                    $('#voting-controls').slideUp();
+                    $('#online-controls').slideUp();
+                    $('#location-controls').slideUp();
+                }
+            }
+
+            function setLocationControls() {
+                var isOnline = $('#form_online').val();
                 if(isOnline == '1') {
                     $('#location-controls').slideUp();
                 } else {
                     $('#location-controls').slideDown();
                 }
-            });
-
-            var isOnline = $('#form_online').val();
-            if(isOnline == '1') {
-                $('#location-controls').slideUp();
             }
-        });
+
+            $('form').submit(function() {
+
+                var type = $('#form_type').val();
+
+                if (type == 'unconference'){
+                    $('#form_online').val('0');
+                }
+                else if (type == 'ideathon'){
+                    if($('#form_online').val() == '1') {
+                        $('#form_location').val(null);
+                        $('#form_address1').val(null);
+                        $('#form_address2').val(null);
+                    }
+                }
+                else if (type == 'forum'){
+                    $('#form_startsAt_date_year').val(null);
+                    $('#form_startsAt_date_month').val(null);
+                    $('#form_startsAt_date_day').val(null);
+                    $('#form_startsAt_time_hour').val(null);
+                    $('#form_startsAt_time_minute').val(null);
+                    $('#form_endsAt_date_year').val(null);
+                    $('#form_endsAt_date_month').val(null);
+                    $('#form_endsAt_date_day').val(null);
+                    $('#form_endsAt_time_hour').val(null);
+                    $('#form_endsAt_time_minute').val(null);
+                    $('#form_endsAt').val(null);
+                    $('#form_online').val(1);
+                    $('#form_location').val(null);
+                    $('#form_address1').val(null);
+                    $('#form_address2').val(null);
+                    $('#form_isSubmissionActive').val(1);
+                    $('#form_isVotingActive').val(0);
+                    $('#form_allowedVoters').val(null);
+                }
+            });
+        })
     </script>
 {% endblock %}
 
@@ -37,17 +106,27 @@
     <form action="{{ formpath }}" method="post" {{ form_enctype(form) }}>
         {{ form_row(form.name) }}
         {{ form_row(form.content) }}
+        {{ form_row(form.type) }}
+        <div id="time-controls">
         {{ form_row(form.startsAt) }}
         {{ form_row(form.endsAt) }}
+        </div>
+        <div id="online-controls">
         {{ form_row(form.online) }}
+        </div>
         <div id="location-controls">
         {{ form_row(form.location) }}
         {{ form_row(form.address1) }}
         {{ form_row(form.address2) }}
         </div>
-        {{ form_row(form.allowedVoters) }}
+        <div id="idea-controls">
         {{ form_row(form.isSubmissionActive) }}
+        </div>
+        <div id="voting-controls">
         {{ form_row(form.isVotingActive) }}
+        {{ form_row(form.allowedVoters) }}
+        </div>
+        {{ form_row(form.private) }}
 
         {{ form_rest(form) }}
 

@@ -2,27 +2,30 @@
 
 {% block event_content %}
 
-    <div class="left"><h1>{{ event.name }} - Proposed Ideas{% if round > 1 %} - Round {{ round }}{% endif %}</h1></div>
+    <h1>{{ event.name }} - {{ ideaType }}s {% if round > 1 %} - Round {{ round }}{% endif %}</h1>
 
-    {% if submitActive %}
-        <form action = {{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get" class="right">
-            <input type="submit" value="Add Idea" class="right">
-        </form>
-    {%  endif %}
-
-    <br><br><br>
-
-    {% if ideas %}
-        <form action = {{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} id='filterForm' method="get">
+    <div>
+        {% if ideas %}
+            <form action = "{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" id='filterForm' method="get" class="left">
             <table>
-            <tr>
-                <td><input type="text" name="tag" tabindex="1" placeholder="Filter by tag" value="{{tag}}" /></td>
-                <td><input type="submit" value="Filter" class="btnMdm" /></td>
-                {% if tag %}<td style="padding-left: 5px"><a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}"><input type="button" value="View All" class="btnMdm" /></a></td>{% endif %}
-            </tr>
+                <tr>
+                    <td><input type="text" name="tag" tabindex="1" placeholder="Filter by tag" value="{{tag}}" /></td>
+                    <td><input type="submit" value="Filter" class="btnMdm" /></td>
+                    {% if tag %}<td style="padding-left: 5px"><a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}"><input type="button" value="View All" class="btnMdm" /></a></td>{% endif %}
+                </tr>
             </table><br>
-        </form>
-    {% endif %}
+            </form>
+        {% endif %}
+
+        {% if submitActive %}
+            <form action = "{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="get" class="right">
+                <input type="submit" value="Add {{ ideaType }}" class="right">
+            </form>
+        {%  endif %}
+    </div>
+    <div class="clear"></div>
+
+    <hr/>
 
 	{% for idea in ideas %}
         <div id="idea">
@@ -57,7 +60,7 @@
             <hr>
         </div>
     {% else %}
-        <p>There are no ideas yet. </p>
+        <p>There are no {{ ideaType }}s yet. </p>
 	{% endfor %}
 
     <form action = {{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get">

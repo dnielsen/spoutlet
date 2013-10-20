@@ -46,19 +46,22 @@ class AdminController extends Controller
             $isNew = true;
         }
 
-
-		$form = $this->createFormBuilder($event)
-			->add('name', 'text', array('attr' => array('size' => '60%')))
-			->add('content', 'purifiedTextarea', array('attr' => array('class' => 'ckeditor')))
-			->add('startsAt', 'date', array('attr' => array('size' => '60%')))
-			->add('endsAt', 'date', array('attr' => array('size' => '60%')))
-            ->add('online', 'choice', array('choices' => array('1' => 'Yes', '0' => 'No')))
-            ->add('location', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
-			->add('address1', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
-			->add('address2', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
-			->add('allowedVoters', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
-            ->add('isSubmissionActive', 'choice', array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
-            ->add('isVotingActive', 'choice', array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
+        $form = $this->createFormBuilder($event)
+            ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
+            ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
+            ->add('type',               'choice',           array('choices' => array('unconference' => 'Unconference',
+                                                                                     'ideathon'     => 'Ideathon',
+                                                                                     'forum'        => 'Forum')))
+            ->add('online',             'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
+            ->add('private',            'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
+            ->add('startsAt',           'datetime',         array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('endsAt',             'datetime',         array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('address2',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('allowedVoters',      'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('isSubmissionActive', 'choice',           array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
+            ->add('isVotingActive',     'choice',           array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
 
 			->getForm();
 
@@ -71,7 +74,6 @@ class AdminController extends Controller
                 $event->setTimezone('UTC');
                 $event->setActive(true);
                 $event->setApproved(true);
-                $event->setPrivate(false);
                 $event->setRegistrationOption(Event::REGISTRATION_ENABLED);
 
 				$em = $this->getDoctrine()->getEntityManager();

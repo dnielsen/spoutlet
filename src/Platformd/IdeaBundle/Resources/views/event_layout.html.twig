@@ -20,6 +20,14 @@
 
 {% block content %}
 
+    {% if event.type == 'unconference' %}
+        {% set ideaType = 'Session' %}
+    {% elseif event.type == 'ideathon' %}
+        {% set ideaType = 'Idea' %}
+    {% elseif event.type == 'forum' %}
+        {% set ideaType = 'Discussion' %}
+    {% endif %}
+
     {% if sidebar is defined and sidebar == true %}
         <div class="col1">
     {% endif %}

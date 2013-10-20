@@ -132,7 +132,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      *
      * @var boolean $online
      * @ORM\Column(name="online", type="boolean")
-     * //Assert\NotNull(message="Required")
+     * //@Assert\NotNull(message="Required")
      */
     protected $online;
 
@@ -140,7 +140,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      * Event starts at
      *
      * @var \DateTime $startsAt
-     * @Assert\NotNull(message="Required")
+     * //@Assert\NotNull(message="Required")
      * @ORM\Column(name="starts_at", type="datetime", nullable=true)
      */
     protected $startsAt;
@@ -149,7 +149,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      * Events ends at
      *
      * @var \DateTime $endsAt
-     * @Assert\NotNull(message="Required")
+     * //@Assert\NotNull(message="Required")
      * @ORM\Column(name="ends_at", type="datetime", nullable=true)
      */
     protected $endsAt;
@@ -158,7 +158,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      * The timezone this event is taking place in
      *
      * @var string
-     * //Assert\NotBlank(message="Required")
+     * //@Assert\NotBlank(message="Required")
      * @ORM\Column(type="string", length=255, nullable=false)
      */
     protected $timezone = 'UTC';
@@ -291,6 +291,11 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      * @ORM\Column(type="integer")
      */
     protected $currentRound;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable="true")
+     */
+    protected $type;
 
 
     /**
@@ -1048,6 +1053,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     {
         $this->currentRound = $currentRound;
     }
+
     public function getIdeas()
     {
         return $this->ideas;
@@ -1055,5 +1061,14 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     public function setIdeas($ideas)
     {
         $this->ideas = $ideas;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+    public function getType()
+    {
+        return $this->type;
     }
 }

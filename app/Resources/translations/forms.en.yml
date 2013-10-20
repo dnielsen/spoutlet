@@ -86,14 +86,16 @@ form_endsAt: End Date
 form_location: Location Name
 form_address1: Address
 form_address2: City, State, Zip
-form_allowedVoters: Current Judges
+form_allowedVoters: List of Judges' Usernames
 form_registrationOption: Registration
 form_isSubmissionActive: Submission
 form_isVotingActive: Judging
+form_file: Image to Upload
+form_online: Online Event
+form_private: Private
+
 form_title: Title
 form_linkDescription: Description
 form_url: URL
 form_type: Type
-form_file: Image to Upload
-form_online: Online Event
 

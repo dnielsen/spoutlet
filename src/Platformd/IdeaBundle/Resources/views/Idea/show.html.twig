@@ -128,7 +128,7 @@
     </td>
     <td>
         <form action="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="get">
-            <input type="submit" value="View Ideas">
+            <input type="submit" value="View {{ ideaType }}">
         </form>
     </td>
     </table>
