@@ -54,6 +54,27 @@
 
 
 <script type="text/javascript">
+    $(document).ready(function(){
+        $("ul.sf-list").supersubs({
+            minWidth:    10,   // minimum width of submenus in em units
+            maxWidth:    27,   // maximum width of submenus in em units
+            extraWidth:  1     // extra width can ensure lines don't sometimes turn over
+            // due to slight rounding differences and font-family
+        }).superfish({
+                    delay:      150,
+                    animation:  {opacity:'show',height:'show'},
+                    speed:      'fast'
+                });
+
+        $('.tablesorter').tablesorter();
+
+        // clearing overlay defaults so they can be loaded in from css (div.blockOverlay)
+        $.blockUI.defaults.overlayCSS = {};
+        $.fn.qtip.defaults.style.classes = 'qtip-green qtip-shadow qtip-rounded';
+    });
+</script>
+
+<script type="text/javascript">
     //jkmegamenu.definemenu("anchorid", "menuid", "mouseover|click")
     jkmegamenu.definemenu("megaanchor1", "megamenu1", "mouseover");
     jkmegamenu.definemenu("megaanchor2", "megamenu2", "mouseover");
