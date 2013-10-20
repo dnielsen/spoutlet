@@ -22,19 +22,6 @@ use Platformd\EventBundle\Entity\Event;
 class IdeaController extends Controller
 {
 
-    public function indexAction($groupSlug, $eventSlug) {
-
-        $group = $this->getGroup($groupSlug);
-		$event = $this->getEvent($groupSlug, $eventSlug);
-
-    	$params = array(
-            'group' => $group,
-            'event' => $event,
-        );
-        return $this->render('IdeaBundle:Idea:index.html.twig', $params);
-    }
-
-
 	public function showAllAction($groupSlug, $eventSlug) {
 
         $group = $this->getGroup($groupSlug);
