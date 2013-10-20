@@ -256,7 +256,6 @@ table.tblStyle {
 }
 .tblStyle td {
     padding: 5px 2px;
-    font-size: 13px;
     border-bottom: 1px solid #e5e5e5;
     text-align: right;
 }

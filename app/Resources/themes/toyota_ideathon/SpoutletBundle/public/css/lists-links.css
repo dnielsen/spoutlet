@@ -16,29 +16,6 @@ a img {
 	vertical-align: middle;
 }
 
-a.submit {
-    padding: 20px;
-    border: 0 none;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    border-radius: 6px;
-    behavior: url("PIE.htc");
-    background: #2faad9;
-    font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff;
-    width: 100px;
-    text-align: center;
-}
-a.submit:hover {
-    background: #ca43bb;
-    text-decoration: none;
-}
-#event_button {
-    margin: 0px 20px 5px;
-}
-
 a.btn, a.btnLg, a.btnLg2, button.btn {
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;

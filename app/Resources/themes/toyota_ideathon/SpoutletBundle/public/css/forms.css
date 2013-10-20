@@ -58,8 +58,8 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 }
 
 
-input[type="submit"], input[type="button"], button[type="submit"], button[type="button"] {
-	padding: 20px;
+input[type="submit"], input[type="button"], button[type="submit"], button[type="button"], a.submit {
+    padding: 10px;
 	border: 0 none;
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
@@ -70,9 +70,15 @@ input[type="submit"], input[type="button"], button[type="submit"], button[type="
 	font-size: 18px;
 	font-weight: bold;
 	color: #fff;
+    text-align: center;
 }
-	input[type="submit"]:hover, input[type="button"]:hover, button[type="submit"]:hover , button[type="button"]:hover {
+	input[type="submit"]:hover, input[type="button"]:hover, button[type="submit"]:hover , button[type="button"]:hover, a.submit:hover {
+        color: #fff;
 		background: #ca43bb;
 		text-decoration: none;
 	}
+    #event_button {
+        width: 155px;
+        padding: 20px 10px;
+    }
 
