@@ -36,7 +36,7 @@ class GallaryPathResolver extends PathResolver
     if ($this->bucketName == "platformd") {
         $cf = "http://media.alienwarearena.com";
     } else {
-       $cf ="https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/cloudcamp/images/gallary";
+      $cf = $this->hpcloud_url.$this->hpcloud_container."/images/gallary";
      //  $cf= "http://h5926e0c7296f55bd19c9ce2d388c71a3.cdn.hpcloudsvc.com";
     }
 

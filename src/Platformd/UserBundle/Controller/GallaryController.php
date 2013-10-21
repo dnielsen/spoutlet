@@ -52,19 +52,19 @@ class GallaryController extends Controller
         $form = $this->createForm(new GallaryType(), $newGallary);
         if(isset($_GET['url_pic'])) {
 
-        //  echo "set2";exit;
-     
+         $hpcloud_accesskey = $this->container->getParameter('hpcloud_accesskey');
+         $hpcloud_secreatekey = $this->container->getParameter('hpcloud_secreatkey');
+         $hpcloud_tenantid = $this->container->getParameter('hpcloud_tenantid');
 
-        $hpcloud = new HPCloudPHP("YS11LX9TT81LNVXKSKM7","r8zsRj+i/SfVSXkOiUlVZg2SJBw2p2izogqKlo+W","10873218563681");
-   // $url_pic = $avatarUrl;
-        $url_pic = $_GET['url_pic'];
+         $hpcloud = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatekey, $hpcloud_tenantid);
 
-       //$userUuid = $this->getUser()->getUuid();
-     $url = 'https://region-a.geo-1.objects.hpcloudsvc.com/v1/10873218563681/cloudcamp/images/avatar';
-     $hpcloud->faceDetection($url_pic,$url);
+        $url_pic = $_GET['url_pic'];       
+        $url = $this->container->getParameter("hpcloud_url").$this->container->getParameter("hpcloud_container")."/"."images/gallary";
+
+        $hpcloud->faceDetection($url_pic,$url);
      
-     unset($hpcloud);
-     $response = new Response();
+        unset($hpcloud);
+        $response = new Response();
     // $response->setContent(json_encode($data));
      return $response;
      }
@@ -112,7 +112,7 @@ class GallaryController extends Controller
         $statement->execute();
         $results = $statement->fetchAll();
 	//var_dump($results);exit;
-        $gallaryUrl = ($this->container->getParameter('object_storage') == 'HpObjectStorage') ? 'https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/cloudcamp/images/gallary/' : 'https://s3.amazonaws.com/platformd-public/images/gallary/';
+        $gallaryUrl = ($this->container->getParameter('object_storage') == 'HpObjectStorage') ? $this->container->getParameter('hpcloud_url').$this->container->getParameter('hpcloud_container').'/images/gallary/' : 'https://s3.amazonaws.com/platformd-public/images/gallary/';
         return $this->render('UserBundle:Gallary:gallaryList.html.twig', array(
             'data' => $results,
             'eventSlug' => $eventSlug,
@@ -177,7 +177,7 @@ class GallaryController extends Controller
      
       $imageUrl = array();
       $name = '';
-      $url = ($this->container->getParameter('object_storage') == 'HpObjectStorage') ? 'https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/cloudcamp/images/avatars/' : 'https://s3.amazonaws.com/platformd-public/images/avatars/';
+      $url = ($this->container->getParameter('object_storage') == 'HpObjectStorage') ? $this->container->getParameter('hpcloud_url').$this->container->getParameter('hpcloud_container').'/images/avatars/' : 'https://s3.amazonaws.com/platformd-public/images/avatars/';
       foreach($attendees as $attendee){
       
           if (@getimagesize($url.$attendee['uuid'])) {
@@ -203,14 +203,19 @@ class GallaryController extends Controller
      if(isset($_GET['url_pic_source'])) {
 
   //    echo "<pre>";var_dump($_GET);
-        $hpcloud = new HPCloudPHP("YS11LX9TT81LNVXKSKM7","r8zsRj+i/SfVSXkOiUlVZg2SJBw2p2izogqKlo+W","10873218563681");
+        $hpcloud_accesskey = $this->container->getParameter('hpcloud_accesskey');
+         $hpcloud_secreatekey = $this->container->getParameter('hpcloud_secreatkey');
+         $hpcloud_tenantid = $this->container->getParameter('hpcloud_tenantid');
+
+         $hpcloud = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatekey, $hpcloud_tenantid);
+
    // $url_pic = $avatarUrl;
         $url_pic = $_GET['url_pic_source'];
        //echo $url_pic;exit;
       // We have to get the attendees image for this event       
       
        //$userUuid = $this->getUser()->getUuid();
-     $url = 'https://region-a.geo-1.objects.hpcloudsvc.com/v1/10873218563681/cloudcamp/images/gallarys';
+     $url = $this->container->getParameter('hpcloud_url').$this->container->getParameter('hpcloud_container').'/images/gallarys';
      $hpcloud->faceVerification($url_pic,$url,$imageUrl);
      unset($hpcloud);    
      $response = new Response();

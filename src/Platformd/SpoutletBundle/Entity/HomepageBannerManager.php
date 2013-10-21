@@ -26,14 +26,18 @@ class HomepageBannerManager
     private $filesystem;
 
     private $objectStorage = '';
-    public function __construct(EntityManager $manager, Filesystem $filesystem,$objectStorage='')
+    public function __construct(EntityManager $manager, Filesystem $filesystem,$hpcloud_accesskey='', $hpcloud_secreatkey='', $hpcloud_tenantid='', $hpcloud_url='', $hpcloud_container='',  $objectStorage='',$bannerDir='')
     {
+
        
         $this->manager = $manager;
         $this->filesystem = $filesystem;
         if($objectStorage == 'HpObjectStorage') {
 	     $this->objectStorage = $objectStorage;
-	     $this->hpCloudObj = new HPCloudPHP("YS11LX9TT81LNVXKSKM7","r8zsRj+i/SfVSXkOiUlVZg2SJBw2p2izogqKlo+W","10873218563681");
+             $this->hpcloud_url = $hpcloud_url;
+             $this->hpcloud_container =  $hpcloud_container;
+             $this->bannerDir = $bannerDir;
+	     $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey,$hpcloud_secreatkey,$hpcloud_tenantid);
            
 	}
      
@@ -67,7 +71,7 @@ class HomepageBannerManager
         $filename = $this->generateFilename($size, $file);
         
          if($this->objectStorage == "HpObjectStorage")
-           $this->hpCloudObj->SaveToObjectStorage('platformd-public',$filename,$roundedPath,"homepage-banners");
+           $this->hpCloudObj->SaveToObjectStorage($this->hpcloud_container,$filename,$roundedPath, $this->bannerDir);
          else
 	   $this->filesystem->write($filename, file_get_contents($roundedPath));
         // remove the founded path

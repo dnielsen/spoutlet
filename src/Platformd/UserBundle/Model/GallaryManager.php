@@ -31,7 +31,7 @@ class GallaryManager
     private $queueUtil;
     private $userManager;
 
-    public function __construct(EntityManager $em, Filesystem $filesystem, $publicBucket, $privateBucket, $s3, $queueUtil, $userManager,$objectStorage='')
+    public function __construct(EntityManager $em, Filesystem $filesystem, $publicBucket, $privateBucket, $s3, $queueUtil, $userManager, $hpcloud_accesskey='', $hpcloud_secreatkey='', $hpcloud_tenantid='', $hpcloud_url='', $hpcloud_container='',$objectStorage='')
     {
         $this->em            = $em;
         $this->filesystem    = $filesystem;
@@ -41,8 +41,11 @@ class GallaryManager
         $this->s3            = $s3;
         $this->queueUtil     = $queueUtil;
         $this->userManager   = $userManager;
+
         $this->objectStorage = $objectStorage;
-	$this->hpCloudObj = new HPCloudPHP("YS11LX9TT81LNVXKSKM7","r8zsRj+i/SfVSXkOiUlVZg2SJBw2p2izogqKlo+W","10873218563681");
+        $this->hpcloud_container =   $hpcloud_container;
+        $this->hpcloud_url = $hpcloud_url;
+        $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey,$hpcloud_secreatkey,$hpcloud_tenantid);
 
     }
 
@@ -111,7 +114,7 @@ class GallaryManager
         $filename = $user->getUuid().".".$file->guessExtension();
         //$filename = $fileUuid;
          if($this->objectStorage == 'HpObjectStorage') {
-	$this->hpCloudObj->SaveToObjectStorage('cloudcamp',$filename,$file,"images/gallary");
+  	  $this->hpCloudObj->SaveToObjectStorage($this->hpcloud_container,$filename,$file,Gallary::GALLARY_DIRECTORY_PREFIX);
          }
          else {
           $data = $this->filesystem->write($filename, file_get_contents($file),$opts);
@@ -257,10 +260,10 @@ class GallaryManager
         if ($this->publicBucket == "platformd") {
             $cf = "http://media.alienwarearena.com";
         } else {
-            $cf = ($this->objectStorage == "HpObjectStorage") ? "https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/cloudcamp" :  "https://s3.amazonaws.com/platformd-public" ;
+            $cf = ($this->objectStorage == "HpObjectStorage") ? $this->hpcloud_url.$this->hpcloud_container :  "https://s3.amazonaws.com/platformd-public" ;
         }
        if($subDir != "") {
-          $url = "https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/cloudcamp/images/gallary/";
+           $url = $this->hpcloud_url.$this->hpcloud_container.'/'.Gallary::GALLARY_DIRECTORY_PREFIX;
            return $url.$userUuid;
 
        }

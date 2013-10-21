@@ -123,6 +123,8 @@ services:
             - @avatar_filesystem
             - avatars
             - "%object_storage%"
+            - "%hpcloud_url%"
+            - "%hpcloud_container%"
         parent: platformd.path_resolver
         tags:
             - { name: 'knp_media_exposer.resolver' }
@@ -133,6 +135,9 @@ services:
             - @gallary_filesystem
             - gallarys
             - "%object_storage%"
+            - "%hpcloud_url%"
+            - "%hpcloud_container%"
+
         parent: platformd.path_resolver
         tags:
             - { name: 'knp_media_exposer.resolver' }
@@ -158,6 +163,11 @@ services:
             - '@platformd.s3'
             - '@platformd.util.queue_util'
             - '@fos_user.user_manager'
+            - '%hpcloud_accesskey%'
+            - '%hpcloud_secreatkey%'
+            - '%hpcloud_tenantid%'
+            - '%hpcloud_url%'
+            - '%hpcloud_container%'
             - '%object_storage%'
 
     platformd.model.gallary_manager:
@@ -170,7 +180,12 @@ services:
             - '@platformd.s3'
             - '@platformd.util.queue_util'
             - '@fos_user.user_manager'
-            - '$object_storage'
+            - '%hpcloud_accesskey%'
+            - '%hpcloud_secreatkey%'
+            - '%hpcloud_tenantid%'
+            - '%hpcloud_url%'
+            - '%hpcloud_container%'
+            - '%object_storage%'
 
     platformd.avatar.s3.adapter:
         class: Gaufrette\Adapter\AmazonS3

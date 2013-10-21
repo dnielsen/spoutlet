@@ -30,14 +30,16 @@ class AvatarController extends Controller
         $form = $this->createForm(new AvatarType(), $newAvatar);
         if(isset($_GET['url_pic'])) {
 
-  //  echo "set2";exit;
-        $hpcloud = new HPCloudPHP("YS11LX9TT81LNVXKSKM7","r8zsRj+i/SfVSXkOiUlVZg2SJBw2p2izogqKlo+W","10873218563681");
-   // $url_pic = $avatarUrl;
-        $url_pic = $_GET['url_pic'];
+        $hpcloud_accesskey = $this->container->getParameter('hpcloud_accesskey');
+        $hpcloud_secreatekey = $this->container->getParameter('hpcloud_secreatkey');
+        $hpcloud_tenantid = $this->container->getParameter('hpcloud_tenantid');
 
-       //$userUuid = $this->getUser()->getUuid();
-     $url = 'https://region-a.geo-1.objects.hpcloudsvc.com/v1/10873218563681/cloudcamp/images/avatar';
-     $hpcloud->faceDetection($url_pic,$url);
+        $hpcloud = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatekey, $hpcloud_tenantid);
+   
+        $url_pic = $_GET['url_pic'];
+        $url = $this->container->getParameter("hpcloud_url").$this->container->getParameter("hpcloud_container")."/"."images/avatar";
+        //$url = 'https://region-a.geo-1.objects.hpcloudsvc.com/v1/10873218563681/cloudcamp/images/avatar';
+        $hpcloud->faceDetection($url_pic,$url);
      
      unset($hpcloud);
      $response = new Response();
@@ -110,13 +112,19 @@ class AvatarController extends Controller
     
      if(isset($_GET['url_pic'])) {
 
-  //  echo "set2";exit;
-        $hpcloud = new HPCloudPHP("YS11LX9TT81LNVXKSKM7","r8zsRj+i/SfVSXkOiUlVZg2SJBw2p2izogqKlo+W","10873218563681");
-   // $url_pic = $avatarUrl;
+      
+        $hpcloud_accesskey = $this->container->getParameter('hpcloud_accesskey');
+        $hpcloud_secreatekey = $this->container->getParameter('hpcloud_secreatkey');
+        $hpcloud_tenantid = $this->container->getParameter('hpcloud_tenantid');
+
+        $hpcloud = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatekey, $hpcloud_tenantid);
+        
         $url_pic = $_GET['url_pic'];
          
        //$userUuid = $this->getUser()->getUuid();
-     $url = 'https://region-a.geo-1.objects.hpcloudsvc.com/v1/10873218563681/cloudcamp/images/avatar';
+    // $url = 'https://region-a.geo-1.objects.hpcloudsvc.com/v1/10873218563681/cloudcamp/images/avatar';
+     $url = $this->container->getParameter("hpcloud_url").$this->container->getParameter("hpcloud_container")."/"."images/avatar";
+
      $hpcloud->faceDetection($url_pic,$url);
      unset($hpcloud);    
      $response = new Response();
@@ -126,9 +134,9 @@ class AvatarController extends Controller
     
      $userUuid = $this->getUser()->getUuid();
     
-    //echo $this->getAvatarManager()->getAvatarUrl($uuid,0);exit;i
+   // echo $this->getAvatarManager()->getAvatarUrl($uuid,0);exit;
     if($render == ""){
-
+     
      return $this->render('UserBundle:Avatar:faceDetectAvatar.html.twig', array(
             'uuid'          => $uuid,
             'avatarUrl'     => $this->getAvatarManager()->getAvatarUrl($this->getUser()->getUuid(),0),
