@@ -1,4 +1,8 @@
 echo '============================='
+echo 'Installing vendors'
+echo
+php bin/vendors install
+echo '============================='
 echo 'Dumping assets'
 echo
 php app/console assetic:dump --env=prod --no-debug
@@ -10,6 +14,10 @@ echo '============================='
 echo 'Installing themes'
 echo
 php app/console themes:install web --symlink
+echo '============================='
+echo 'Migrating schema'
+echo 
+php app/console doc:mig:mig
 echo '============================='
 echo 'Clearing cache'
 echo 
