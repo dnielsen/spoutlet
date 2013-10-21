@@ -1,0 +1,49 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{%  block header %}
+
+    {% embed 'SpoutletBundle::header.html.twig' %}
+
+        {% block extra_user_controls %}
+            {% if is_granted('ROLE_ADMIN') or event.user == (app.user) %}
+                <li><a href="{{ path('idea_admin', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">Event Admin</a></li>
+            {% endif %}
+
+            <li><a href="{{ path('group_show', { 'slug': group.slug }) }}">Group</a></li>
+
+        {% endblock %}
+
+    {% endembed %}
+
+{%  endblock %}
+
+
+{% block content %}
+
+    {% if event.type == 'unconference' %}
+        {% set ideaType = 'Session' %}
+        {% set personType = 'Speaker' %}
+    {% elseif event.type == 'ideathon' %}
+        {% set ideaType = 'Idea' %}
+        {% set personType = 'Contributor' %}
+    {% elseif event.type == 'forum' %}
+        {% set ideaType = 'Discussion' %}
+    {% endif %}
+
+    {% if sidebar is defined and sidebar == true %}
+        <div class="col1">
+    {% endif %}
+
+    {% block event_content %}
+    {% endblock %}
+
+    {% if sidebar is defined and sidebar == true %}
+        </div>
+        <div class="col2">
+            {% block sidebar %}
+                {% include 'IdeaBundle::sidebar.html.twig' %}
+            {% endblock %}
+        </div>
+    {% endif %}
+
+{% endblock %}
