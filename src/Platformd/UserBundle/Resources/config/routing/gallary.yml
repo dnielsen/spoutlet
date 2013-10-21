@@ -15,7 +15,7 @@ group_event_gallary:
     defaults: { _controller:"UserBundle:Gallary:gallary", site: ~ }
 
 gallary_faceverify:
-    pattern: /faceverify/{uuid}/{gallaryId} /{eventSlug}/{groupSlug}/
+    pattern: /faceverify/{uuid}/{gallaryId}/{eventSlug}/{groupSlug}/
     defaults: { _controller: UserBundle:Gallary:faceVerification, uuid: ~, gallaryId: ~, eventSlug: ~, GroupSlug: ~ }
 
 gallary_faceverify_save:

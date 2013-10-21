@@ -35,11 +35,13 @@ abstract class PathResolver implements BasePathResolver
   /**
    * @param Gaufrette\Filesystem $filesystem
    */
-  public function __construct(Filesystem $filesystem, $prefix = '',$objectStorage = '')
+  public function __construct(Filesystem $filesystem, $prefix = '', $objectStorage = '', $hpcloud_url ='', $hpcloud_container='')
   {
     $this->filesystem = $filesystem;
     $this->prefix = $prefix == '' ?: substr($prefix, 0, 1) == "/" ? $prefix : '/'.$prefix;
     $this->objectStorage = $objectStorage;
+    $this->hpcloud_url = $hpcloud_url;
+    $this->hpcloud_container = $hpcloud_container;
   }
 
   /**

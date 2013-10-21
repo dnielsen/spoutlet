@@ -5,7 +5,7 @@ namespace Platformd\SpoutletBundle;
 use Platformd\SpoutletBundle\PathResolver;
 use Platformd\SpoutletBundle\Entity\HomepageBanner;
 use Gaufrette\Adapter\AmazonS3;
-
+use HPCloud\HPCloudPHP;
 /**
 *
 */
@@ -28,7 +28,7 @@ class HomepageBannerPathResolver extends PathResolver
             $cf = "http://media.alienwarearena.com";
         } else {
 	    if($this->objectStorage == "HpObjectStorage")
-              $cf = "https://region-a.geo-1.objects.hpcloudsvc.com/v1/10873218563681/platformd-public";
+              $cf = $this->hpcloud_url.$this->hpcloud_container;
             else
               $cf = "https://s3.amazonaws.com/platformd-public";
         }
