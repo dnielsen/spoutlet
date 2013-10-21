@@ -1,4 +1,8 @@
 echo '============================='
+echo 'Pulling latest code from git'
+echo
+git pull origin master
+echo '============================='
 echo 'Installing vendors'
 echo
 php bin/vendors install
@@ -15,13 +19,17 @@ echo 'Installing themes'
 echo
 php app/console themes:install web --symlink
 echo '============================='
-echo 'Migrating schema'
+echo 'Migrating Doctrine schema'
 echo 
 php app/console doc:mig:mig
 echo '============================='
-echo 'Clearing cache'
+echo 'Clearing Symfony cache'
 echo 
 php app/console cache:clear --env=prod --no-debug
 echo '============================='
+echo 'Restarting Apache (gracefully)'
 echo 
+sudo apache2ctl graceful
+echo '============================='
+echo
 
