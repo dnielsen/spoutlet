@@ -69,6 +69,11 @@ class GroupEventService extends EventService
         return $this->repository->findUpcomingEventsForGroupMostRecentFirst($group, $limit);
     }
 
+    public function findOngoingEventsForGroup(Group $group, $limit=null)
+    {
+        return $this->repository->findOngoingEventsForGroup($group, $limit);
+    }
+
     public function findPastEventsForGroupMostRecentFirst(Group $group, $limit=null)
     {
         return $this->repository->findPastEventsForGroupMostRecentFirst($group, $limit);

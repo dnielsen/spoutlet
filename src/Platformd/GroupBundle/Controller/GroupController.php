@@ -42,20 +42,17 @@ class GroupController extends Controller
         $isMember    = false;
         $isOwner     = false;
         $isApplicant = false;
-        $isAdmin     = false;
 
         if ($user){
             $isMember    = $this->getGroupManager()->isMember($user, $group);
             $isOwner     = $group->getOwner() == $user;
             $isApplicant = $this->getGroupManager()->isApplicant($user, $group);
-            $isAdmin     = $user->getAdminLevel() == 'ROLE_ADMIN';
         }
 
         $response = $this->render('GroupBundle:Group:_groupMemberCheck.html.twig', array(
             'isMember'    => $isMember,
             'isOwner'     => $isOwner,
             'isApplicant' => $isApplicant,
-            'isAdmin'     => $isAdmin,
         ));
 
         $this->varnishCache($response, 2592000);
@@ -699,8 +696,11 @@ Alienware Arena Team
         $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'ViewGroupContent', false);
 
-        $groupEvents    = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group);
+        $ongoingEvents  = $this->getGroupEventService()->findOngoingEventsForGroup($group);
+        $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group);
         $pastEvents     = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group);
+
+        $groupEvents    = array_merge($ongoingEvents, $upcomingEvents);
 
         $canAdd         = $this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'AddEvent');
 
