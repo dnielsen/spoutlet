@@ -1,7 +1,7 @@
 echo '============================='
 echo 'Pulling latest code from git'
 echo
-git pull origin master
+git pull 
 echo '============================='
 echo 'Installing vendors'
 echo
