@@ -81,16 +81,16 @@ INSTALLATION
 
 * Run the following commands to set up permissions for apache
 
-    $ APACHEUSER=`ps aux | grep -E '[a]pache|[h]ttpd' | grep -v root | head -1 | cut -d\  -f1`
-    $ sudo setfacl -R -m u:$APACHEUSER:rwX -m u:`whoami`:rwX app/cache app/logs
-    $ sudo setfacl -dR -m u:$APACHEUSER:rwX -m u:`whoami`:rwX app/cache app/logs
+    $ APACHEUSER=`ps aux | grep -E '[a]pache|[h]ttpd' | grep -v root | head -1 | cut -d\  -f1`  
+    $ sudo setfacl -R -m u:$APACHEUSER:rwX -m u:`whoami`:rwX app/cache app/logs  
+    $ sudo setfacl -dR -m u:$APACHEUSER:rwX -m u:`whoami`:rwX app/cache app/logs  
 
 * Make sure you set the timezone in your php.ini file
 
     $ sudo vim /etc/php5/apache2/php.ini
 
     Update date.timezone with your server's timezone:  
-    date.timezone = "America/Los_Angeles"
+    `date.timezone = "America/Los_Angeles"`
 
 * Check to see if your system is setup by running the following command.
     If you see any issues, you may need to install more things. You can
