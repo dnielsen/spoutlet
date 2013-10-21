@@ -81,9 +81,23 @@ dynamically set the output filename for packed css/js files
 
     {% endjavascripts %}
 
-    {% if app.user is not null and app.user.adminLevel == "ROLE_SUPER_ADMIN" %}
+    {% if app.user  %}
+        {% if app.user.adminLevel == "ROLE_SUPER_ADMIN" %}
+            <script type="text/javascript">
+                CKEDITOR.config.customConfig = '/ckeditor/config.admin.js';
+                var user_is_logged_in = true;
+                var is_admin = true;
+            </script>
+        {% else %}
+            <script type="text/javascript">
+                var user_is_logged_in = true;
+                var is_admin = false;
+            </script>
+        {% endif %}
+    {% else %}
         <script type="text/javascript">
-            CKEDITOR.config.customConfig = '/ckeditor/config.admin.js';
+            var user_is_logged_in = false;
+            var is_admin = false;
         </script>
     {% endif %}
 

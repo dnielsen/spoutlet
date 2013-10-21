@@ -1,6 +1,9 @@
 <div class="sub-nav-wrapper groups-sub-nav-wrapper">
     <div class="sub-nav groups-sub-nav">
         <ul>
+
+            <li><a href="{{ path('group_show', {'slug': group.slug }) }}">Group Home</a></li>
+
             <span data-group-admin="true">
                 <li><a href="{{ path('group_edit', { 'slug': group.slug }) }}">Group Settings</a></li>
                 <li><a href="{{ path('idea_admin_event', {'groupSlug': group.slug}) }}">Create Event</a></li>
@@ -17,7 +20,10 @@
                     <li><a href="{{ path('group_join', { 'slug': group.slug }) }}">Join Group</a></li>
                 </span>
             </span>
+
+            <li><a href="{{ path('group_events', {'slug': group.slug }) }}">Group Events</a></li>
             <li><a href="{{ path('groups') }}">See All Groups</a></li>
+
         </ul>
     </div>
 </div>
@@ -33,7 +39,7 @@
             $('[data-group-member="true"]').hide();
             $('[data-group-member="false"]').show();
         }
-        if (user_is_admin || user_is_group_owner) {
+        if (is_admin || user_is_group_owner) {
             $('[data-group-admin="true"]').show();
             $('[data-group-admin="false"]').hide();
         } else {
