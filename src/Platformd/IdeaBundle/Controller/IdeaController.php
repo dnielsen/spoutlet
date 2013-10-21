@@ -164,13 +164,16 @@ class IdeaController extends Controller
         $idea->setCreator($this->getCurrentUser());
         $idea->setName($params['title']);
         $idea->setDescription($params['desc']);
-        $idea->setMembers($params['members']);
 
-        if (array_key_exists('stage', $params)){
+        if (array_key_exists('members', $params)) {
+            $idea->setMembers($params['members']);
+        }
+
+        if (array_key_exists('stage', $params)) {
             $idea->setStage($params['stage']);
         }
 
-        if (array_key_exists('forCourse', $params)){
+        if (array_key_exists('forCourse', $params)) {
             $idea->setForCourse(true);
             $idea->setProfessors($params['professors']);
         }
@@ -247,13 +250,16 @@ class IdeaController extends Controller
 
         $idea->setName($params['title']);
         $idea->setDescription($params['desc']);
-        $idea->setMembers($params['members']);
 
-        if (array_key_exists('stage', $params)){
+        if (array_key_exists('members', $params)) {
+            $idea->setMembers($params['members']);
+        }
+
+        if (array_key_exists('stage', $params)) {
             $idea->setStage($params['stage']);
         }
 
-        if (array_key_exists('forCourse', $params)){
+        if (array_key_exists('forCourse', $params)) {
             $idea->setForCourse(true);
             $idea->setProfessors($params['professors']);
         }

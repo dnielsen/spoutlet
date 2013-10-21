@@ -64,7 +64,7 @@ class Idea
     protected $amount;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable="true")
      */
     protected $members;
 

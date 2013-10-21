@@ -29,9 +29,11 @@
         <label>{{ ideaType }} Description</label>
         <textarea name="desc" rows="6" tabindex="2" class="inPt">{% if idea is defined %}{{ idea.description }}{% endif %}</textarea>
 
-        <label>Names of Additional Contributors</label>
-        <textarea name="members" rows="6" tabindex="3"
-            placeholder="Please use this format for names: First Last, First Last, etc&#8230;" class="inPt">{% if idea is defined %}{{ idea.members }}{% endif %}</textarea>
+        {% if event.type == 'unconference' or event.type == 'ideathon' %}
+            <label>Names of Additional {{ personType }}s</label>
+            <textarea name="members" rows="6" tabindex="3"
+                placeholder="Please use this format for names: First Last, First Last, etc&#8230;" class="inPt">{% if idea is defined %}{{ idea.members }}{% endif %}</textarea>
+        {% endif %}
 
         <label>Suggested Categories</label>
         <textarea name="tags" rows="1" tabindex="4" placeholder="Tag list (tag1 tag2 tag3)" class="inPt">{% if idea is defined %}{{ idea.implodedTagString }}{% endif %}</textarea>
