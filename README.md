@@ -82,8 +82,8 @@ INSTALLATION
 * Run the following commands to set up permissions for apache
 
     $ APACHEUSER=\`ps aux | grep -E '[a]pache|[h]ttpd' | grep -v root | head -1 | cut -d\  -f1\`  
-    $ sudo setfacl -R -m u:$APACHEUSER:rwX -m u:`whoami`:rwX app/cache app/logs  
-    $ sudo setfacl -dR -m u:$APACHEUSER:rwX -m u:`whoami`:rwX app/cache app/logs  
+    $ sudo setfacl -R -m u:$APACHEUSER:rwX -m u:\`whoami\`:rwX app/cache app/logs  
+    $ sudo setfacl -dR -m u:$APACHEUSER:rwX -m u:\`whoami\`:rwX app/cache app/logs  
 
 * Make sure you set the timezone in your php.ini file
 
