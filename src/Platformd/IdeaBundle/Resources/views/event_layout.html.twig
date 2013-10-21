@@ -15,6 +15,8 @@
 
     {% endembed %}
 
+    {% embed 'SpoutletBundle::navigation.html.twig' %}{% endembed %}
+
 {%  endblock %}
 
 
@@ -22,8 +24,10 @@
 
     {% if event.type == 'unconference' %}
         {% set ideaType = 'Session' %}
+        {% set personType = 'Speaker' %}
     {% elseif event.type == 'ideathon' %}
         {% set ideaType = 'Idea' %}
+        {% set personType = 'Contributor' %}
     {% elseif event.type == 'forum' %}
         {% set ideaType = 'Discussion' %}
     {% endif %}

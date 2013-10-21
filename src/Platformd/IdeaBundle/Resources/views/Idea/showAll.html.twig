@@ -13,8 +13,10 @@
                     <td><input type="submit" value="Filter" class="btnMdm" /></td>
                     {% if tag %}<td style="padding-left: 5px"><a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}"><input type="button" value="View All" class="btnMdm" /></a></td>{% endif %}
                 </tr>
-            </table><br>
+            </table>
             </form>
+        {% else %}
+            <div class="left">There are no {{ ideaType }}s yet.</div>
         {% endif %}
 
         {% if submitActive %}
@@ -59,8 +61,6 @@
             <div class="clr"></div>
             <hr>
         </div>
-    {% else %}
-        <p>There are no {{ ideaType }}s yet. </p>
 	{% endfor %}
 
     <form action = {{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get">

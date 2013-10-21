@@ -30,7 +30,7 @@
 
         <div class="left">
             {% if idea.canUserView(app.user) %}{{ idea.description | nl2br }}
-            {% else %}[This idea is private]
+            {% else %}[This {{ ideaType }} is private]
             {% endif %}
         </div>
 
@@ -128,7 +128,7 @@
     </td>
     <td>
         <form action="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="get">
-            <input type="submit" value="View {{ ideaType }}">
+            <input type="submit" value="View {{ ideaType }}s">
         </form>
     </td>
     </table>
