@@ -69,9 +69,21 @@ INSTALLATION
 
     `127.0.0.1       campsite.local <community1>.campsite.local <community2>.campsite.local`
 
-* Correct the permissions on a few directories. From your project root:
+* Set up ACL to handle permissions for the cache and logs directories 
 
-    $ sudo chmod -R 777 app/cache app/logs
+* Edit your `/etc/fstab` file to enable ACL on your sites partition
+
+    $ sudo vim /etc/fstab
+
+* Add the `acl` option to the entry for your partition under the `options` column. Your entry should look something like this:
+
+    `UUID=ba4a563f-4f62-4607-97aa-cd42f68aeb86   /home           ext4    defaults,acl        0       2`
+
+* Run the following commands to set up permissions for apache
+
+    $ APACHEUSER=`ps aux | grep -E '[a]pache|[h]ttpd' | grep -v root | head -1 | cut -d\  -f1`
+    $ sudo setfacl -R -m u:$APACHEUSER:rwX -m u:`whoami`:rwX app/cache app/logs
+    $ sudo setfacl -dR -m u:$APACHEUSER:rwX -m u:`whoami`:rwX app/cache app/logs
 
 * Make sure you set the timezone in your php.ini file
 
