@@ -23,7 +23,7 @@ class Comment
      */
     protected $user;
     /**
-     * @ORM\Column(type="string", length=1000)
+     * @ORM\Column(type="string", length=4096)
      */
     protected $text;
     /**
