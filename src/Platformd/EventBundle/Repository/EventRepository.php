@@ -128,6 +128,19 @@ class EventRepository extends EntityRepository
             ->getSingleScalarResult();
     }
 
+    public function getUserRsvpStatus($event, $user)
+    {
+        $qb = $this->_em->createQueryBuilder()
+            ->select('r')
+            ->from('EventBundle:EventRsvpAction', 'r')
+            ->andWhere('r.event = :event')
+            ->andWhere('r.user = :user')
+            ->setParameter('event', $event)
+            ->setParameter('user', $user);
+
+        return $qb->getQuery()->getSingleResult();
+    }
+
     public function getAllEventsUserIsAttending(User $user)
     {
         $qb = $this->createQueryBuilder('e')

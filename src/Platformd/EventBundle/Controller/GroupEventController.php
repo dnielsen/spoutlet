@@ -316,6 +316,10 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Event does not exist.');
         }
 
+        $user = $this->getCurrentUser();
+        $isUserApproved = false;//$this->getGroupEventService()->getUserRsvpStatus($groupEvent, $user);
+
+
         if (!$groupEvent->isApproved()) {
             $this->basicSecurityCheck(array('ROLE_USER'));
             if ($this->getUser() != $groupEvent->getUser() && !$this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'ApproveEvent') && !$this->isGranted('ROLE_SUPER_ADMIN')) {
@@ -327,6 +331,7 @@ class GroupEventController extends Controller
             'group'         => $group,
             'event'         => $groupEvent,
             'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_GROUP, 'id'=>$group->getId()),
+            'isUserApproved' => $isUserApproved,
         ));
     }
 
@@ -874,10 +879,15 @@ class GroupEventController extends Controller
         $this->getGroupEventService()->register($groupEvent, $user);
         $this->getGroupManager()->autoJoinGroup($group, $user);
 
-        $this->setFlash('success', $this->trans(
-            'platformd.events.event_show.group_joined',
-            array('%groupName%' => $group->getName()))
-        );
+        if ($groupEvent->getPrivate()){
+            $this->setFlash('success', "You've been added to the approval queue for ".$groupEvent->getName().". You will be notified when an administrator as reviewed your application.");
+
+        } else {
+            $this->setFlash('success', $this->trans(
+                'platformd.events.event_show.group_joined',
+                array('%groupName%' => $group->getName()))
+            );
+        }
 
         return $this->redirect($this->generateUrl('group_event_view', array(
             'groupSlug' => $groupSlug,

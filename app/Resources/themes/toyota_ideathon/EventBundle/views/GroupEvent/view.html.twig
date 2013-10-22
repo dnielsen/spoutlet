@@ -2,48 +2,59 @@
 
 {% block event_content %}
     <div class="row1">
-        <div class="cBx1">
-            <h2>{{ event.name }}</h2>
-            <p>{{ event.content | raw }}</p>
-        </div>
 
-        <div class="cBx2">
-            <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="submit left" id="event_button">View {{ ideaType }}s</a>
-            {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
-                <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="submit right" id="event_button">Propose {{ ideaType }}</a>
+        {% if event.private and not isUserApproved %}
+            This event is private.<br/><br/>
+            {% if not event.isUserAttending(app.user) %}
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="submit" id="event_button">Register</a>
             {% else %}
-                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="submit right" id="event_button">Register</a>
+                Please wait for an administrator's approval.
             {% endif %}
-            <table id="eventDetails" class="tblStyle">
-                <tbody>
-                {% if event.startsAt %}
-                <tr>
-                    <td width="25%"><strong>Date:</strong></td>
-                    <td width="75%">{{event.DateRangeString}}</td>
-                </tr>
-                {% endif %}
-                {% if event.location %}
-                <tr>
-                    <td width="25%"><strong>Map:</strong></td>
-                    <td width="75%">
-                        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
-                        <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="25%"><strong>Location:</strong></td>
-                    <td width="75%">{{ event.location }}</td>
-                </tr>
-                <tr>
-                    <td width="25%"><strong>Address:</strong></td>
-                    <td width="75%">{{ event.address1 }}<br/>{{ event.address2 }}</td>
-                </tr>
-                {% endif %}
-                </tbody>
-            </table>
+        {% else %}
 
-            <br>
-        </div>
+            <div class="cBx1">
+                <h2>{{ event.name }}</h2>
+                <p>{{ event.content | raw }}</p>
+            </div>
+
+            <div class="cBx2">
+                <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="submit left" id="event_button">View {{ ideaType }}s</a>
+                {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
+                    <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="submit right" id="event_button">Propose {{ ideaType }}</a>
+                {% else %}
+                    <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="submit right" id="event_button">Register</a>
+                {% endif %}
+                <table id="eventDetails" class="tblStyle">
+                    <tbody>
+                    {% if event.startsAt %}
+                    <tr>
+                        <td width="25%"><strong>Date:</strong></td>
+                        <td width="75%">{{event.DateRangeString}}</td>
+                    </tr>
+                    {% endif %}
+                    {% if event.location %}
+                    <tr>
+                        <td width="25%"><strong>Map:</strong></td>
+                        <td width="75%">
+                            <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+                            <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="25%"><strong>Location:</strong></td>
+                        <td width="75%">{{ event.location }}</td>
+                    </tr>
+                    <tr>
+                        <td width="25%"><strong>Address:</strong></td>
+                        <td width="75%">{{ event.address1 }}<br/>{{ event.address2 }}</td>
+                    </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+
+                <br>
+            </div>
+        {% endif %}
     </div>
 
 {% endblock %}
