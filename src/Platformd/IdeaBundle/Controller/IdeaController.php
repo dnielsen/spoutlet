@@ -34,6 +34,8 @@ class IdeaController extends Controller
         $ideaList = $ideaRepo->filter($event->getId(), $event->getCurrentRound(), $tag);
         $ideaRepo->sortByFollows($ideaList);
 
+        $attendance = $this->getCurrentUserApproved($event);
+
         $params = array(
             'group' => $group,
             'event' => $event,
@@ -42,6 +44,7 @@ class IdeaController extends Controller
             'tag' => $tag,
             'round' => $event->getCurrentRound(),
             'sidebar' => true,
+            'attendance' => $attendance,
         );
 
         return $this->render('IdeaBundle:Idea:showAll.html.twig', $params);
@@ -64,12 +67,15 @@ class IdeaController extends Controller
 			throw $this->createNotFoundException('No idea found for id '.$id);
 		}
 
+        $attendance = $this->getCurrentUserApproved($event);
+
         $params = array(
             'group' => $group,
             'event' => $event,
             'idea' => $idea,
             'canEdit' => $this->canEdit($idea, $event),
             'sidebar' => true,
+            'attendance' => $attendance,
         );
 
 
@@ -137,10 +143,13 @@ class IdeaController extends Controller
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
+        $attendance = $this->getCurrentUserApproved($event);
+
         return $this->render('IdeaBundle:Idea:createForm.html.twig', array(
                 'group' => $group,
                 'event' => $event,
                 'sidebar' => true,
+                'attendance' => $attendance,
             ));
 	}
 
@@ -225,11 +234,14 @@ class IdeaController extends Controller
             throw new AccessDeniedException();
         }
 
+        $attendance = $this->getCurrentUserApproved($event);
+
         return $this->render('IdeaBundle:Idea:createForm.html.twig', array(
                 'idea' => $idea,
                 'group' => $group,
                 'event' => $event,
                 'sidebar' => true,
+                'attendance' => $attendance,
             ));
     }
 
@@ -343,12 +355,15 @@ class IdeaController extends Controller
             }
         }
 
+        $attendance = $this->getCurrentUserApproved($event);
+
         return $this->render('IdeaBundle:Idea:upload.html.twig', array(
                 'form'=>$form->createView(),
                 'id'=>$id,
                 'group' => $group,
                 'event' => $event,
                 'sidebar' => true,
+                'attendance' => $attendance,
             ));
     }
 
@@ -426,12 +441,15 @@ class IdeaController extends Controller
             }
         }
 
+        $attendance = $this->getCurrentUserApproved($event);
+
         return $this->render('IdeaBundle:Idea:addLink.html.twig', array(
                 'form'=>$form->createView(),
                 'id'=>$id,
                 'group' => $group,
                 'event' => $event,
                 'sidebar' => true,
+                'attendance' => $attendance,
             ));
     }
 
@@ -656,6 +674,7 @@ class IdeaController extends Controller
 
         $ownProfile = ($currentUser == $user);
 
+
         return $this->render('IdeaBundle:Idea:profile.html.twig', array(
                 'user'=>$user,
                 'ownProfile'=>$ownProfile,
@@ -668,10 +687,13 @@ class IdeaController extends Controller
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
+        $attendance = $this->getCurrentUserApproved($event);
+
         return $this->render('IdeaBundle:Idea:info'.$page.'.html.twig', array(
                 'group' => $group,
                 'event' => $event,
                 'sidebar' => true,
+                'attendance' => $attendance,
             ));
     }
 
@@ -812,6 +834,16 @@ class IdeaController extends Controller
             $tagNames[] = $tag->getTagName();
         }
         return $tagNames;
+    }
+
+
+    public function getCurrentUserApproved($event)
+    {
+        $rsvpRepo = $this->getDoctrine()->getRepository('EventBundle:GroupEventRsvpAction');
+        $user = $this->getCurrentUser();
+        $attendance = $rsvpRepo->getUserApprovedStatus($event, $user);
+
+        return $attendance;
     }
 
 }

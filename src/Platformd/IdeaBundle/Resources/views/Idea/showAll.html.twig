@@ -2,15 +2,6 @@
 
 {% block event_content %}
 
-    {% if event.private %}
-        This event is private.<br/><br/>
-        {% if not event.isUserAttending(app.user) %}
-            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="submit" id="event_button">Register</a>
-        {% else %}
-            Please wait for an administrator's approval.
-        {% endif %}
-    {% else %}
-
     <h1>{{ event.name }} - {{ ideaType }}s {% if round > 1 %} - Round {{ round }}{% endif %}</h1>
 
     <div>
@@ -75,6 +66,5 @@
     <form action = {{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get">
         <input type="submit" value="Home">
     </form>
-    {% endif %}
 
 {% endblock %}

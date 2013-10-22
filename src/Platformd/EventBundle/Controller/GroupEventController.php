@@ -316,9 +316,7 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Event does not exist.');
         }
 
-        $user = $this->getCurrentUser();
-        $isUserApproved = false;//$this->getGroupEventService()->getUserRsvpStatus($groupEvent, $user);
-
+        $attendance = $this->getCurrentUserApproved($groupEvent);
 
         if (!$groupEvent->isApproved()) {
             $this->basicSecurityCheck(array('ROLE_USER'));
@@ -331,7 +329,7 @@ class GroupEventController extends Controller
             'group'         => $group,
             'event'         => $groupEvent,
             'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_GROUP, 'id'=>$group->getId()),
-            'isUserApproved' => $isUserApproved,
+            'attendance'    => $attendance,
         ));
     }
 
@@ -880,7 +878,7 @@ class GroupEventController extends Controller
         $this->getGroupManager()->autoJoinGroup($group, $user);
 
         if ($groupEvent->getPrivate()){
-            $this->setFlash('success', "You've been added to the approval queue for ".$groupEvent->getName().". You will be notified when an administrator as reviewed your application.");
+            $this->setFlash('success', "We have received your request for API access. You will receive a response by email within 1 working day.");
 
         } else {
             $this->setFlash('success', $this->trans(
@@ -993,4 +991,16 @@ class GroupEventController extends Controller
     {
         return $this->get('platformd.tags.model.tag_manager');
     }
+
+
+    public function getCurrentUserApproved($event)
+    {
+        $rsvpRepo = $this->getDoctrine()->getRepository('EventBundle:GroupEventRsvpAction');
+        $user = $this->getCurrentUser();
+        $attendance = $rsvpRepo->getUserApprovedStatus($event, $user);
+
+        return $attendance;
+    }
+
+
 }

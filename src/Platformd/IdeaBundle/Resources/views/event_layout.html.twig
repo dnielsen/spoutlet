@@ -32,23 +32,53 @@
         {% set ideaType = 'Discussion' %}
     {% endif %}
 
-    {% if sidebar is defined and sidebar == true %}
-        <div class="col1">
+    {% if event.private %}
+        {% if app.user is null %}
+            This forum is private. Please log in to view this page.<br/><br/>
+            <a href="{{ path('fos_user_security_login') }}"><input type="button" value="{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}" class="btnMdm left"></a>
+            <a href="{{ path('fos_user_registration_register') }}"><input type="button" value="Register" class="btnMdm left marginlft"></a>
+            {% set show = 'false' %}
+        {% elseif not event.isUserAttending(app.user) %}
+            This forum is private. Please apply for your API key and forum access. We will respond to your request within 1 business day.<br/><br/>
+            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}"><input type="button" value="Apply Now"></a>
+            {% set show = 'false' %}
+        {% elseif attendance == 'pending' %}
+            This forum is private. You have applied for access and are waiting for administrative approval. You will be notified within 1 business day.
+            {% set show = 'false' %}
+        {% elseif attendance == 'rejected' %}
+            This forum is private. You have applied for access and have been denied.
+            {% set show = 'false' %}
+        {% else %}
+            {% set show = 'true' %}
+        {% endif %}
+    {% else %}
+        {% set show = 'true' %}
     {% endif %}
 
-    {% block event_content %}
-    {% endblock %}
+    {% if show == 'true' %}
 
-    {% if sidebar is defined and sidebar == true %}
-        </div>
-        <div class="col2">
-            {% block sidebar %}
-                {% include 'IdeaBundle::sidebar.html.twig' %}
-            {% endblock %}
-        </div>
+        {% if sidebar is defined and sidebar == true %}
+            <div class="col1">
+        {% endif %}
+
+        {% block event_content %}
+        {% endblock %}
+
+        {% if sidebar is defined and sidebar == true %}
+            </div>
+            <div class="col2">
+                {% block sidebar %}
+                    {% include 'IdeaBundle::sidebar.html.twig' %}
+                {% endblock %}
+            </div>
+        {% endif %}
+
     {% endif %}
 
 {% endblock %}
+
+
+
 
 
 

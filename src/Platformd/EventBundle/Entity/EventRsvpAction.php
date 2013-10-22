@@ -17,10 +17,11 @@ use DateTime,
  */
 abstract class EventRsvpAction
 {
-    const ATTENDING_YES     = 'ATTENDING_YES';
-    const ATTENDING_NO      = 'ATTENDING_NO';
-    const ATTENDING_MAYBE   = 'ATTENDING_MAYBE';
-    const ATTENDING_PENDING = 'ATTENDING_PENDING';
+    const ATTENDING_YES      = 'ATTENDING_YES';
+    const ATTENDING_NO       = 'ATTENDING_NO';
+    const ATTENDING_MAYBE    = 'ATTENDING_MAYBE';
+    const ATTENDING_PENDING  = 'ATTENDING_PENDING';
+    const ATTENDING_REJECTED = 'ATTENDING_REJECTED';
 
     /**
      * @var \Platformd\UserBundle\Entity\User

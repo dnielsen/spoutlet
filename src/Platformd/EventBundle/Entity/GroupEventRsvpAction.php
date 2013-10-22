@@ -11,10 +11,10 @@ use DateTime,
 ;
 
 /**
- * Platformd\EventBundle\Entity\GlobalEventRsvpAction
+ * Platformd\EventBundle\Entity\GroupEventRsvpAction
  *
  * @ORM\Table(name="group_event_rsvp_actions")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Platformd\EventBundle\Repository\GroupEventRsvpActionRepository")
  */
 class GroupEventRsvpAction extends EventRsvpAction
 {
