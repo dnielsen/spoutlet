@@ -485,6 +485,32 @@ class User extends BaseUser
      */
     protected $comments;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $linkedIn;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $professionalEmail;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $twitterUsername;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $website;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    protected $mailingAddress;
+
+
     public function __construct()
     {
         parent::__construct();
