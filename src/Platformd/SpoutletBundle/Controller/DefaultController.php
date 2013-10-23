@@ -6,6 +6,7 @@ use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\GiveawayBundle\Entity\Deal;
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 use Platformd\SpoutletBundle\Entity\Contest;
+use Platformd\GroupBundle\Controller\GroupController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -278,11 +279,22 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        if (!$this->getCurrentSite()->getSiteFeatures()->getHasIndex()) {
+        $site = $this->getCurrentSite();
+
+        if (!$site->getSiteFeatures()->getHasIndex()) {
             throw $this->createNotFoundException();
         }
 
-        return $this->render('SpoutletBundle:Default:index.html.twig');
+        $groupRepo = $this->getDoctrine()->getRepository('GroupBundle:Group');
+        $siteGroups = $groupRepo->findAllGroupsRelevantForSite($site);
+
+        if (count($siteGroups) == 1) {
+            $group = reset($siteGroups);
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+        }
+        else {
+            return $this->render('SpoutletBundle:Default:index.html.twig');
+        }
     }
 
     public function healthCheckAction() {
