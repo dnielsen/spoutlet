@@ -6,7 +6,6 @@ use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\GiveawayBundle\Entity\Deal;
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 use Platformd\SpoutletBundle\Entity\Contest;
-use Platformd\GroupBundle\Controller\GroupController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
