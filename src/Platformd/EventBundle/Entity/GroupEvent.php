@@ -128,7 +128,7 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
     protected $contentReports;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Platformd\MediaBundle\Entity\Media")
+     * @ORM\ManyToMany(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove", "persist"})
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $rotatorImages;

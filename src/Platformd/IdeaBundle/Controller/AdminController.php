@@ -349,13 +349,18 @@ class AdminController extends Controller
             if ($form->isValid()) {
                 $image = $form->getData();
 
-                $mUtil = $this->getMediaUtil();
-                $mUtil->persistRelatedMedia($image);
+                if (!$image->getFileObject()) {
+                    $this->setFlash('error', 'You must select an image file');
+                }
+                else {
+                    $mUtil = $this->getMediaUtil();
+                    $mUtil->persistRelatedMedia($image);
 
-                $event->getRotatorImages()->add($image);
+                    $event->getRotatorImages()->add($image);
 
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->flush();
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $em->flush();
+                }
             }
         }
 

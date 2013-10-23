@@ -46,7 +46,6 @@ abstract class Media
 
     /**
      * @var \Symfony\Component\HttpFoundation\File\File
-     * @Assert\NotBlank(message="Please select a file to upload")
      */
     protected $fileObject;
 
