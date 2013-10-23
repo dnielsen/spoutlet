@@ -58,7 +58,7 @@
                 <a href="{{ path('idea_upload_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': idea.id}) }}">Add Image</a>
             {% endif %}
         </div>
-        <div id="links" style="padding-bottom: 15px;float: left">
+        <div id="links" style="padding-bottom: 15px;">
             {% if ((idea.links|length > 0) and (idea.canUserView(app.user)))%}
                 <label class="midtxt" style="margin-top:20px">Additional Resources</label>
                 {% for link in idea.links %}
