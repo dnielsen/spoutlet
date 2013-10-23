@@ -1,0 +1,27 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+
+<h1>Edit Profile</h1>
+
+<form action="{{ path('profile_edit', {'username': username}) }}" {{ form_enctype(form) }} method="POST"">
+
+    {{ form_errors(form) }}
+
+    {{ form_row(form.name) }}
+    {{ form_row(form.title) }}
+    {{ form_row(form.organization) }}
+    {{ form_row(form.industry) }}
+    {{ form_row(form.linkedIn) }}
+    {{ form_row(form.twitterUsername) }}
+    {{ form_row(form.website) }}
+    {{ form_row(form.professionalEmail) }}
+    {{ form_row(form.mailingAddress) }}
+
+    {{ form_rest(form) }}
+
+    <input type="submit" value="Submit" class="button btn btn-primary"/>
+
+</form>
+
+{% endblock %}

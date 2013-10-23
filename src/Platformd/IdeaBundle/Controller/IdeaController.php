@@ -683,6 +683,57 @@ class IdeaController extends Controller
             ));
     }
 
+    public function profileEditAction(Request $request, $username) {
+
+        if ($request->get('cancel') == 'Cancel') {
+            return $this->redirect($this->generateUrl('profile', array(
+                'username' => $username,
+            )));
+        }
+
+        $currentUser = $this->getCurrentUser();
+
+        $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
+        $user = $userRepo->findOneBy(array('username'=>$username));
+
+        if ($currentUser != $user){
+            throw new AccessDeniedException();
+        }
+
+        $form = $this->createFormBuilder($user)
+            ->add('name')
+            ->add('title')
+            ->add('organization')
+            ->add('industry')
+            ->add('linkedIn')
+            ->add('twitterUsername')
+            ->add('website')
+            ->add('professionalEmail')
+            ->add('mailingAddress')
+            ->getForm();
+
+        if($request->getMethod() == 'POST') {
+
+            $form->bindRequest($request);
+
+            if($form->isValid()) {
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('profile', array(
+                    'username' => $username,
+                )));
+            }
+        }
+
+        return $this->render('IdeaBundle:Idea:profileForm.html.twig', array(
+            'form'      => $form->createView(),
+            'username'  => $username,
+        ));
+
+    }
+
 
     public function infoAction($groupSlug, $eventSlug, $page) {
 

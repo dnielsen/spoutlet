@@ -3,6 +3,10 @@ profile:
     pattern:    /profile/{username}
     defaults:   { _controller: IdeaBundle:Idea:profile, username:null }
 
+profile_edit:
+    pattern:    /profile/{username}/edit
+    defaults:   { _controller: IdeaBundle:Idea:profileEdit }
+
 
 # ADMIN ROUTES
 
@@ -56,38 +60,38 @@ idea_admin_remove_image:
 # NON-ADMIN
 
 idea_show_all:
-    pattern:  /{groupSlug}/event/{eventSlug}/idea/show
+    pattern:  /{groupSlug}/event/{eventSlug}/ideas
     defaults: { _controller: IdeaBundle:Idea:showAll }
     requirements:
       _method: GET
 
 idea_show:
-    pattern:  /{groupSlug}/event/{eventSlug}/idea/show/{id}
+    pattern:  /{groupSlug}/event/{eventSlug}/ideas/{id}
     defaults: { _controller: IdeaBundle:Idea:show }
     requirements:
       _method: GET
 
 
 idea_create:
-    pattern:  /{groupSlug}/event/{eventSlug}/idea/create
+    pattern:  /{groupSlug}/event/{eventSlug}/ideas/create
     defaults: { _controller: IdeaBundle:Idea:create }
     requirements:
       _method: POST
 
 idea_create_form:
-    pattern:  /{groupSlug}/event/{eventSlug}/idea/create
+    pattern:  /{groupSlug}/event/{eventSlug}/ideas/create
     defaults: { _controller: IdeaBundle:Idea:createForm}
     requirements:
       _method: GET
 
 idea_edit:
-    pattern:  /{groupSlug}/event/{eventSlug}/idea/edit/{id}
+    pattern:  /{groupSlug}/event/{eventSlug}/ideas/{id}/edit
     defaults: { _controller: IdeaBundle:Idea:edit }
     requirements:
       _method: POST
 
 idea_edit_form:
-    pattern:  /{groupSlug}/event/{eventSlug}/idea/edit/{id}
+    pattern:  /{groupSlug}/event/{eventSlug}/ideas/{id}/edit
     defaults: { _controller: IdeaBundle:Idea:editForm }
     requirements:
       _method: GET

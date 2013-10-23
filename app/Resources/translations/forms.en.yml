@@ -79,7 +79,7 @@ platformd.unsubscribe.failure: A username has never been assigned to your accoun
 
 form_displayName: Criteria Name
 form_description: Criteria Description
-form_name: Event Title
+form_name: Name
 form_content: Event Description
 form_startsAt: Start Date
 form_endsAt: End Date
@@ -98,4 +98,13 @@ form_title: Title
 form_linkDescription: Description
 form_url: URL
 form_type: Type
+
+
+form_organization: Company/Organization
+form_industry: Industry
+form_linkedIn: LinkedIn Profile
+form_twitterUsername: Twitter Username
+form_website: Website URL
+form_professionalEmail: Professional Email
+form_mailingAddress: Mailing Address
 
