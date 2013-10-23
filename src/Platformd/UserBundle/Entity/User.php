@@ -486,27 +486,27 @@ class User extends BaseUser
     protected $comments;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $linkedIn;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $professionalEmail;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $twitterUsername;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $website;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $mailingAddress;
 

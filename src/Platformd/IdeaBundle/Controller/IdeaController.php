@@ -699,16 +699,16 @@ class IdeaController extends Controller
         if ($currentUser != $user){
             throw new AccessDeniedException();
         }
-        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'profile', $user)
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'profile', $user, array('validation_groups' => array('ideaProfile')))
             ->add('name')
             ->add('title')
             ->add('organization')
             ->add('industry')
-            ->add('linkedIn')
             ->add('twitterUsername')
-            ->add('website')
             ->add('professionalEmail')
-            ->add('mailingAddress')
+            ->add('linkedIn', null, array('attr' => array('size' => '60%')))
+            ->add('website', null, array('attr' => array('size' => '60%')))
+            ->add('mailingAddress', null, array('attr' => array('size' => '60%')))
             ->getForm();
 
         if($request->getMethod() == 'POST') {

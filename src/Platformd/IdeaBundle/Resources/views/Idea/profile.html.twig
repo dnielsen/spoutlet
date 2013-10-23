@@ -5,8 +5,13 @@
     <table class="tblStyle" id="profile">
 
         <tr>
-            <td colspan=2>
+            <td>
                 <strong>Public Profile</strong>
+            </td>
+            <td>
+                {% if ownProfile %}
+                    <a href="{{ path('profile_edit', {'username': user.username}) }}">Edit Profile</a>
+                {% endif %}
             </td>
         </tr>
 
