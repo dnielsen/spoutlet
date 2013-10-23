@@ -3,7 +3,43 @@
 {% block event_content %}
     <div class="row1">
         <div class="cBx1">
-            <h2>{{ event.name }}</h2>
+            <h1 class="ctr">{{ event.name }}</h1>
+
+            {% if event.rotatorImages | length > 0 %}
+                <div class="intro">
+                    <div id="slideshow" class="pics">
+
+                        {% for image in event.rotatorImages %}
+
+                        <div class="unicusSlides">
+                            <a href="/" target="_blank">
+                                <img src="{{  media_path(image) }}" width="644" height="340"/>
+                            </a>
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                    <ul id="bullets"></ul> <!-- nav bullets -->
+                 </div>
+
+                <script type="text/javascript">
+                    $(function() {
+                        $('#slideshow').cycle({
+                            fx:     'scrollHorz',
+                            speed:  400,
+                            timeout: 6000,
+                            cleartypeNoBg: true,
+                            pager:  '#bullets',
+                            pagerAnchorBuilder: function paginate(idx, el) {
+                                return '<a class="service' + idx + '" href="#" >&bull;</a>';
+                            }
+                        });
+                    });
+                </script>
+            {% endif %}
+
             <p>{{ event.content | raw }}</p>
         </div>
 
