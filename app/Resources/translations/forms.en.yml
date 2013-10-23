@@ -1,13 +1,15 @@
 event_name: "Name"
 event_slug: "URL string - /events/"
+event_content: "Description"
 event_ready: "Ready?"
 event_published: "Published?"
-event_starts_at: "Starts at"
-event_ends_at: "Ends date"
+event_startsAt: "Start Date"
+event_endsAt: "End date"
 event_city: "City"
 event_location: "Location"
+event_address1: "Address"
+event_address2: "City, State, Zip"
 event_country: "Country"
-event_content: "Description"
 event_hosted_by: "Hosted by"
 event_game: "Game"
 event_url_redirect: "URL Redirect"
@@ -15,6 +17,14 @@ event_bannerImageFile: "Banner Image"
 event_locale: "Site"
 event_generalImageFile: General Image
 event_timezone: Timezone
+event_allowedVoters: "List of Judges' Usernames"
+event_registrationOption: "Registration"
+event_isSubmissionActive: "Submission"
+event_isVotingActive: "Judging"
+event_file: "Image to Upload"
+event_online: "Online Event"
+event_private: "Private"
+event_type: "Event Type"
 
 platformd_spoutletbundle_homepagebannertype_thumb_file: Thumb
 platformd_spoutletbundle_homepagebannertype_banner_file: Fullsize banner
@@ -77,34 +87,23 @@ platformd.unsubscribe.user_not_found: Your email address was not found.
 platformd.unsubscribe.success: Your email preferences have been updated.
 platformd.unsubscribe.failure: A username has never been assigned to your account. Please email osman@platformd.com with the username you would like to have in order to complete your password reset.
 
-form_displayName: Criteria Name
-form_description: Criteria Description
-form_name: Name
-form_content: Event Description
-form_startsAt: Start Date
-form_endsAt: End Date
-form_location: Location Name
-form_address1: Address
-form_address2: City, State, Zip
-form_allowedVoters: List of Judges' Usernames
-form_registrationOption: Registration
-form_isSubmissionActive: Submission
-form_isVotingActive: Judging
-form_file: Image to Upload
-form_online: Online Event
-form_private: Private
-
-form_title: Title
-form_linkDescription: Description
-form_url: URL
-form_type: Type
+criteria_displayName: Criteria Name
+criteria_description: Criteria Description
 
 
-form_organization: Company/Organization
-form_industry: Industry
-form_linkedIn: LinkedIn Profile
-form_twitterUsername: Twitter Username
-form_website: Website URL
-form_professionalEmail: Professional Email
-form_mailingAddress: Mailing Address
+link_title: Title
+link_linkDescription: Description
+link_url: URL
+link_type: Link Type
 
+profile_name: Full Name
+profile_title: Job Title
+profile_organization: Company / Organization
+profile_industry: Industry
+profile_linkedIn: LinkedIn Profile
+profile_twitterUsername: Twitter Username
+profile_website: Website URL
+profile_professionalEmail: Professional Email
+profile_mailingAddress: Mailing Address
+
+knp_media_fileObject: Image to Upload

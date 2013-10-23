@@ -46,7 +46,7 @@ class AdminController extends Controller
             $isNew = true;
         }
 
-        $form = $this->createFormBuilder($event)
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
             ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
             ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
             ->add('type',               'choice',           array('choices' => array('unconference' => 'Unconference',
@@ -138,9 +138,9 @@ class AdminController extends Controller
 			$vc = new VoteCriteria();
 		}
 
-		$form = $this->createFormBuilder($vc)
-			->add('displayName', 'text', array('label' => 'Display Name'))
-			->add('description', 'textarea', array('attr' => array('cols' => '60%', 'rows' => '3')))
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'criteria', $vc)
+			->add('displayName', 'text', array('label' => 'criteria_displayName'))
+			->add('description', 'textarea', array('label' => 'criteria_description', 'attr' => array('cols' => '60%', 'rows' => '3')))
 			->add('id', 'hidden')
 			->getForm();
 
@@ -201,11 +201,11 @@ class AdminController extends Controller
 		}
 		$formAttributes = array('size' => count($choices) <= 10 ? count($choices) : 10, 'style' => 'width: 50%');
 
-		$form = $this->createFormBuilder()->add('displayName', 'choice',
-				array('choices' => $choices,
-						'label' => 'Criteria Specification',
-						'attr' => $formAttributes))
-						->getForm();
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'criteria')
+            ->add('displayName', 'choice', array('choices' => $choices,
+                                                 'label' => 'criteria_displayName',
+                                                 'attr' => $formAttributes))
+            ->getForm();
 
 		if($request->getMethod() == 'POST') {
 			$form->bindRequest($request);
