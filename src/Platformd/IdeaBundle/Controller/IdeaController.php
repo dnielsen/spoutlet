@@ -673,14 +673,16 @@ class IdeaController extends Controller
         }
 
         $ownProfile = ($currentUser == $user);
-
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:profile.html.twig', array(
-                'user'=>$user,
-                'ownProfile'=>$ownProfile,
-                'sidebar' => true,
+                'user'       => $user,
+                'ownProfile' => $ownProfile,
+                'isAdmin'    => $isAdmin,
+                'sidebar'    => true,
             ));
     }
+
 
     public function infoAction($groupSlug, $eventSlug, $page) {
 
