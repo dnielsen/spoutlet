@@ -1469,4 +1469,37 @@ class User extends BaseUser
     {
         $this->codeAssignmentCodes = $value;
     }
+
+
+    public function getLinkedIn() {
+        return $this->linkedIn;
+    }
+    public function setLinkedIn($value) {
+        $this->linkedIn = $value;
+    }
+    public function getProfessionalEmail() {
+        return $this->professionalEmail;
+    }
+    public function setProfessionalEmail($value) {
+        $this->professionalEmail = $value;
+    }
+    public function getTwitterUsername() {
+        return $this->twitterUsername;
+    }
+    public function setTwitterUsername($value) {
+        $this->twitterUsername = $value;
+    }
+    public function getWebsite() {
+        return $this->website;
+    }
+    public function setWebsite($value) {
+        $this->website = $value;
+    }
+    public function getMailingAddress() {
+        return $this->mailingAddress;
+    }
+    public function setMailingAddress($value) {
+        $this->mailingAddress = $value;
+    }
+
 }
