@@ -325,11 +325,14 @@ class GroupEventController extends Controller
             }
         }
 
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+
         return $this->render('EventBundle:GroupEvent:view.html.twig', array(
             'group'         => $group,
             'event'         => $groupEvent,
             'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_GROUP, 'id'=>$group->getId()),
             'attendance'    => $attendance,
+            'isAdmin'       => $isAdmin,
         ));
     }
 

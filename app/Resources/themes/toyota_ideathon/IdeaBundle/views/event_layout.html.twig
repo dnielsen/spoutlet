@@ -30,7 +30,7 @@
         {% set ideaType = 'Discussion' %}
     {% endif %}
 
-    {% if event.private %}
+    {% if event.private and not isAdmin %}
         {% if app.user is null %}
             This forum is private. Please log in to view this page.<br/><br/>
             <a href="{{ path('fos_user_security_login') }}"><input type="button" value="{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}" class="btnMdm left"></a>

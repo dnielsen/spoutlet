@@ -35,16 +35,18 @@ class IdeaController extends Controller
         $ideaRepo->sortByFollows($ideaList);
 
         $attendance = $this->getCurrentUserApproved($event);
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
 
         $params = array(
-            'group' => $group,
-            'event' => $event,
-            'ideas' => $ideaList,
-            'submitActive' => $submitActive,
-            'tag' => $tag,
-            'round' => $event->getCurrentRound(),
-            'sidebar' => true,
-            'attendance' => $attendance,
+            'group'         => $group,
+            'event'         => $event,
+            'ideas'         => $ideaList,
+            'submitActive'  => $submitActive,
+            'tag'           => $tag,
+            'round'         => $event->getCurrentRound(),
+            'sidebar'       => true,
+            'attendance'    => $attendance,
+            'isAdmin'       => $isAdmin,
         );
 
         return $this->render('IdeaBundle:Idea:showAll.html.twig', $params);
@@ -68,6 +70,7 @@ class IdeaController extends Controller
 		}
 
         $attendance = $this->getCurrentUserApproved($event);
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
 
         $params = array(
             'group' => $group,
@@ -76,6 +79,7 @@ class IdeaController extends Controller
             'canEdit' => $this->canEdit($idea, $event),
             'sidebar' => true,
             'attendance' => $attendance,
+            'isAdmin'       => $isAdmin,
         );
 
 
@@ -144,12 +148,14 @@ class IdeaController extends Controller
         $event = $this->getEvent($groupSlug, $eventSlug);
 
         $attendance = $this->getCurrentUserApproved($event);
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:createForm.html.twig', array(
                 'group' => $group,
                 'event' => $event,
                 'sidebar' => true,
                 'attendance' => $attendance,
+                'isAdmin'       => $isAdmin,
             ));
 	}
 
@@ -235,6 +241,7 @@ class IdeaController extends Controller
         }
 
         $attendance = $this->getCurrentUserApproved($event);
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:createForm.html.twig', array(
                 'idea' => $idea,
@@ -242,6 +249,7 @@ class IdeaController extends Controller
                 'event' => $event,
                 'sidebar' => true,
                 'attendance' => $attendance,
+                'isAdmin'       => $isAdmin,
             ));
     }
 
@@ -356,6 +364,7 @@ class IdeaController extends Controller
         }
 
         $attendance = $this->getCurrentUserApproved($event);
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:upload.html.twig', array(
                 'form'=>$form->createView(),
@@ -364,6 +373,7 @@ class IdeaController extends Controller
                 'event' => $event,
                 'sidebar' => true,
                 'attendance' => $attendance,
+                'isAdmin'       => $isAdmin,
             ));
     }
 
@@ -442,14 +452,16 @@ class IdeaController extends Controller
         }
 
         $attendance = $this->getCurrentUserApproved($event);
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:addLink.html.twig', array(
-                'form'=>$form->createView(),
-                'id'=>$id,
-                'group' => $group,
-                'event' => $event,
-                'sidebar' => true,
-                'attendance' => $attendance,
+                'form'      => $form->createView(),
+                'id'        => $id,
+                'group'     => $group,
+                'event'     => $event,
+                'sidebar'   => true,
+                'attendance'=> $attendance,
+                'isAdmin'   => $isAdmin,
             ));
     }
 
@@ -526,7 +538,7 @@ class IdeaController extends Controller
         $em->flush();
 
         $ideaUrl = $this->generateUrl('idea_show', array(
-                'id' => $idea->getId(),
+                'id'        => $idea->getId(),
                 'groupSlug' => $groupSlug,
                 'eventSlug' => $eventSlug,
             ));
@@ -553,7 +565,7 @@ class IdeaController extends Controller
         $em->flush();
 
         $ideaUrl = $this->generateUrl('idea_show', array(
-                'id' => $ideaId,
+                'id'        => $ideaId,
                 'groupSlug' => $groupSlug,
                 'eventSlug' => $eventSlug,
             ));
@@ -578,7 +590,7 @@ class IdeaController extends Controller
         $em->flush();
 
         $ideaUrl = $this->generateUrl('idea_show', array(
-                'id' => $ideaId,
+                'id'        => $ideaId,
                 'groupSlug' => $groupSlug,
                 'eventSlug' => $eventSlug,
             ));
@@ -616,13 +628,13 @@ class IdeaController extends Controller
 
         if ($source == 'detail')
             $url = $this->generateUrl('idea_show', array(
-                    'id' => $ideaId,
+                    'id'        => $ideaId,
                     'groupSlug' => $groupSlug,
                     'eventSlug' => $eventSlug,
                 ));
         elseif ($source == 'list')
             $url = $this->generateUrl('idea_show_all', array(
-                    'tag' => $params['tag'],
+                    'tag'       => $params['tag'],
                     'groupSlug' => $groupSlug,
                     'eventSlug' => $eventSlug,
                 ));
@@ -726,9 +738,12 @@ class IdeaController extends Controller
             }
         }
 
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+
         return $this->render('IdeaBundle:Idea:profileForm.html.twig', array(
             'form'      => $form->createView(),
             'username'  => $username,
+            'isAdmin'   => $isAdmin,
         ));
 
     }
@@ -740,12 +755,14 @@ class IdeaController extends Controller
         $event = $this->getEvent($groupSlug, $eventSlug);
 
         $attendance = $this->getCurrentUserApproved($event);
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:info'.$page.'.html.twig', array(
-                'group' => $group,
-                'event' => $event,
-                'sidebar' => true,
+                'group'      => $group,
+                'event'      => $event,
+                'sidebar'    => true,
                 'attendance' => $attendance,
+                'isAdmin'    => $isAdmin,
             ));
     }
 

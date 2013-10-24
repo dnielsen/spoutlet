@@ -2,6 +2,7 @@
 
 namespace Platformd\IdeaBundle\Controller;
 
+use Platformd\EventBundle\Entity\EventRsvpAction;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -87,11 +88,14 @@ class AdminController extends Controller
 			}
 		}
 
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+
 		return $this->render('IdeaBundle:Admin:eventForm.html.twig', array(
                 'form' => $form->createView(),
                 'isNew' => $isNew,
                 'group' => $group,
                 'event' => $event,
+                'isAdmin'    => $isAdmin,
             ));
 	}
 
@@ -102,13 +106,16 @@ class AdminController extends Controller
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
-        if (!$this->isGranted('ROLE_SUPER_ADMIN') && $this->getCurrentUser() !== $group->getOwner()) {
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+
+        if (!$isAdmin && $this->getCurrentUser() !== $event->getUser()) {
             throw new AccessDeniedException();
         }
 
 		return $this->render('IdeaBundle:Admin:admin.html.twig', array(
-                'group' => $group,
-                'event' => $event,
+                'group'     => $group,
+                'event'     => $event,
+                'isAdmin'   => $isAdmin,
             ));
 	}
 
@@ -169,11 +176,16 @@ class AdminController extends Controller
                         )));
 			}
 		}
+
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+
 		return $this->render('IdeaBundle:Admin:criteriaForm.html.twig', array(
-                'group' => $group,
-                'event' => $event,
-                'form' => $form->createView(),
-                'id' => $id));
+                'group'     => $group,
+                'event'     => $event,
+                'form'      => $form->createView(),
+                'id'        => $id,
+                'isAdmin'   => $isAdmin,
+        ));
 	}
 
 
@@ -243,11 +255,13 @@ class AdminController extends Controller
                 )));
 		}
 
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
 
 		return $this->render('IdeaBundle:Admin:criteriaAll.html.twig', array(
-                'form' => $form->createView(),
-                'group' => $group,
-                'event' => $event,
+                'form'      => $form->createView(),
+                'group'     => $group,
+                'event'     => $event,
+                'isAdmin'   => $isAdmin,
             ));
 	}
 
@@ -257,9 +271,12 @@ class AdminController extends Controller
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+
 		$params = array(
-            'group' => $group,
-            'event' => $event,
+            'group'     => $group,
+            'event'     => $event,
+            'isAdmin'   => $isAdmin,
         );
 
 
@@ -337,10 +354,13 @@ class AdminController extends Controller
 
         $event = $this->getEvent($groupSlug, $eventSlug);
 
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+
         $params = array(
-            'group' => $this->getGroup($groupSlug),
-            'event' => $event,
-            'form'  => $form->createView(),
+            'group'     => $this->getGroup($groupSlug),
+            'event'     => $event,
+            'form'      => $form->createView(),
+            'isAdmin'   => $isAdmin,
         );
 
         if ('POST' === $request->getMethod()) {
@@ -365,6 +385,67 @@ class AdminController extends Controller
         }
 
         return $this->render('IdeaBundle:Admin:images.html.twig', $params);
+    }
+
+    public function approvalsAction($groupSlug, $eventSlug) {
+
+        $event = $this->getEvent($groupSlug, $eventSlug);
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+
+        $attendees = $event->getAttendees();
+        $awaitingApproval = array();
+
+        $rsvpRepo = $this->getDoctrine()->getRepository('EventBundle:GroupEventRsvpAction');
+
+        foreach ($attendees as $attendee) {
+            $userRsvpStatus = $rsvpRepo->getUserApprovedStatus($event, $attendee);
+
+            if ($userRsvpStatus == 'pending'){
+                $awaitingApproval[] = $attendee;
+            }
+
+        }
+
+        $params = array(
+            'group'             => $this->getGroup($groupSlug),
+            'event'             => $event,
+            'awaitingApproval'  => $awaitingApproval,
+            'isAdmin'           => $isAdmin,
+        );
+
+        return $this->render('IdeaBundle:Admin:approvals.html.twig', $params);
+    }
+
+    public function processApprovalAction($groupSlug, $eventSlug, $userId, $approval) {
+
+        $eventId = $this->getEvent($groupSlug, $eventSlug)->getId();
+        $user = $this->getDoctrine()->getRepository('UserBundle:User')->findOneBy(array('id'=>$userId));
+
+        $rsvpRepo = $this->getDoctrine()->getRepository('EventBundle:GroupEventRsvpAction');
+        $userRsvpStatus = $rsvpRepo->findOneBy( array('user' => $userId,'event' => $eventId) );
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        if ($userRsvpStatus){
+            if ($approval == 'approve'){
+                $userRsvpStatus->setAttendance(EventRsvpAction::ATTENDING_YES);
+                $em->flush();
+                $this->setFlash('success', $user->getName().' has been approved for the event.');
+            }
+            else {
+                $userRsvpStatus->setAttendance(EventRsvpAction::ATTENDING_REJECTED);
+                $em->flush();
+                $this->setFlash('success', $user->getName().' has been rejected for the event.');
+            }
+        } else {
+            $this->setFlash('error', $user->getName().' is not attending this event.');
+        }
+
+        return $this->redirect($this->generateUrl('idea_admin_member_approvals', array(
+            'groupSlug' => $groupSlug,
+            'eventSlug' => $eventSlug,
+        )));
+
     }
 
     public function removeImageAction($groupSlug, $eventSlug, $imageId) {
