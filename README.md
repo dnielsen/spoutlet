@@ -25,6 +25,14 @@ INSTALLATION
 * Open the `app/config/parameters.ini` file and customize the database
     information. All the other settings are fine.
 
+* Open up your `/etc/hosts` file for editing:
+
+    $ sudo vim /etc/hosts
+
+* Add the following entry to that file and save
+
+    `127.0.0.1       campsite.local <community1>.campsite.local <community2>.campsite.local`
+
 * Create a virtual host and point it at the `web/` directory of your
     project. For example, suppose I clone the project to `/home/<user>/sites/campsite`.
     Then I would create this file called campsite under `/etc/apache2/sites-available`:
@@ -60,14 +68,6 @@ INSTALLATION
 * Restart Apache
 
     $ sudo service apache2 restart
-
-* Open up your `/etc/hosts` file for editing:
-
-    $ sudo vim /etc/hosts
-
-* Add the following entry to that file and save
-
-    `127.0.0.1       campsite.local <community1>.campsite.local <community2>.campsite.local`
 
 * Set up ACL to handle permissions for the cache and logs directories 
 
