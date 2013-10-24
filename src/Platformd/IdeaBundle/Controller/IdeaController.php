@@ -414,7 +414,7 @@ class IdeaController extends Controller
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'link', $link)
             ->add('title')
             ->add('linkDescription', 'textarea', array('attr' => array('cols' => '60%')))
-            ->add('url','text', array('attr' => array('size' => '60%')))
+            ->add('url','text', array('attr' => array('size' => '60%', 'value' => 'http://')))
             ->add('type', 'choice', array(
                     'choices' => array (
                         'youtube'   =>  'YouTube',
