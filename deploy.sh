@@ -1,5 +1,6 @@
 echo
 echo 'This will update the code, alter the database, and restart Apache. It may take several minutes to complete.'
+echo 
 read -p "Are you sure you wish to proceed? (y/n) " -r
 echo 
 if [[ ! $REPLY =~ ^[Yy]$ ]]
