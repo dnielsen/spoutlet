@@ -44,7 +44,7 @@ INSTALLATION
 
             DirectoryIndex  app_dev.php
 
-            <Directory "/home/user/sites/campsite/web">
+            <Directory "/home/<user>/sites/campsite/web">
                 AllowOverride All
                 Options FollowSymLinks
             </Directory>
