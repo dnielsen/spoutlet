@@ -32,6 +32,13 @@ idea_admin_criteria:
     pattern:  /{groupSlug}/event/{eventSlug}/admin/criteria
     defaults: { _controller: IdeaBundle:Admin:criteria }
 
+idea_admin_member_approvals:
+    pattern:  /{groupSlug}/event/{eventSlug}/admin/approvals
+    defaults: { _controller: IdeaBundle:Admin:approvals }
+
+idea_admin_process_approval:
+    pattern:  /{groupSlug}/event/{eventSlug}/admin/approvals/{userId}/{approval}
+    defaults: { _controller: IdeaBundle:Admin:processApproval }
 
 idea_summary:
     pattern:    /{groupSlug}/event/{eventSlug}/admin/summary
@@ -59,6 +66,18 @@ idea_admin_remove_image:
 
 # NON-ADMIN
 
+idea_create:
+    pattern:  /{groupSlug}/event/{eventSlug}/ideas/create
+    defaults: { _controller: IdeaBundle:Idea:create }
+    requirements:
+      _method: POST
+
+idea_create_form:
+    pattern:  /{groupSlug}/event/{eventSlug}/ideas/create
+    defaults: { _controller: IdeaBundle:Idea:createForm}
+    requirements:
+      _method: GET
+
 idea_show_all:
     pattern:  /{groupSlug}/event/{eventSlug}/ideas
     defaults: { _controller: IdeaBundle:Idea:showAll }
@@ -71,18 +90,6 @@ idea_show:
     requirements:
       _method: GET
 
-
-idea_create:
-    pattern:  /{groupSlug}/event/{eventSlug}/ideas/create
-    defaults: { _controller: IdeaBundle:Idea:create }
-    requirements:
-      _method: POST
-
-idea_create_form:
-    pattern:  /{groupSlug}/event/{eventSlug}/ideas/create
-    defaults: { _controller: IdeaBundle:Idea:createForm}
-    requirements:
-      _method: GET
 
 idea_edit:
     pattern:  /{groupSlug}/event/{eventSlug}/ideas/{id}/edit
