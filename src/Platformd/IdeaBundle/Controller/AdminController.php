@@ -370,7 +370,7 @@ class AdminController extends Controller
             if ($form->isValid()) {
                 $image = $form->getData();
 
-                if (!$image->getFileObject()) {
+                if ($image->getFileObject() == null) {
                     $this->setFlash('error', 'You must select an image file');
                 }
                 else {
