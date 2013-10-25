@@ -323,13 +323,15 @@ class IdeaController extends Controller
         $event = $this->getEvent($groupSlug, $eventSlug);
 
         $document = new Document();
-        $form = $this->createFormBuilder($document)
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'image', $document)
             ->add('file')
             ->getForm()
         ;
 
         if ($this->getRequest()->getMethod() === 'POST') {
+
             $form->bindRequest($this->getRequest());
+
             if ($form->isValid()) {
 
                 $em = $this->getDoctrine()->getEntityManager();
@@ -341,6 +343,9 @@ class IdeaController extends Controller
                     $document->upload($id);
                 }
                 else{
+
+                    $this->setFlash('error', 'You must select an image file');
+
                     return new RedirectResponse($this->generateUrl('idea_upload_form', array(
                             'id' => $id,
                             'groupSlug' => $groupSlug,
