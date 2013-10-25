@@ -22,13 +22,13 @@
 
 {% block content %}
 
-    {% if event.type == 'unconference' %}
+    {% if event.type == constant('\\Platformd\\EventBundle\\Entity\\Event::TYPE_UNCONFERENCE') %}
         {% set ideaType = 'Session' %}
         {% set personType = 'Speaker' %}
-    {% elseif event.type == 'ideathon' %}
+    {% elseif event.type == constant('Platformd\\EventBundle\\Entity\\Event::TYPE_IDEATHON') %}
         {% set ideaType = 'Idea' %}
         {% set personType = 'Contributor' %}
-    {% elseif event.type == 'forum' %}
+    {% elseif event.type == constant('Platformd\\EventBundle\\Entity\\Event::TYPE_FORUM') %}
         {% set ideaType = 'Discussion' %}
     {% endif %}
 

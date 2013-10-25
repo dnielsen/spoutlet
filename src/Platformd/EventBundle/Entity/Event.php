@@ -42,6 +42,9 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     const REGISTRATION_ENABLED      = 'REGISTRATION_ENABLED';
     const REGISTRATION_DISABLED     = 'REGISTRATION_DISABLED';
     const REGISTRATION_3RD_PARTY    = 'REGISTRATION_3RDPARTY';
+    const TYPE_UNCONFERENCE         = 'unconference';
+    const TYPE_IDEATHON             = 'ideathon';
+    const TYPE_FORUM                = 'forum';
 
     // overridden in group and global event entities
     const SEARCH_PREFIX             = 'event_';

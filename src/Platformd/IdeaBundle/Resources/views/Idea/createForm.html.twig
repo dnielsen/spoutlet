@@ -29,7 +29,7 @@
         <label>{{ ideaType }} Description</label>
         <textarea name="desc" rows="6" tabindex="2" class="inPt">{% if idea is defined %}{{ idea.description }}{% endif %}</textarea>
 
-        {% if event.type == 'unconference' or event.type == 'ideathon' %}
+        {% if event.type == constant('\\Platformd\\EventBundle\\Entity\\Event::TYPE_UNCONFERENCE') or event.type == constant('\\Platformd\\EventBundle\\Entity\\Event::TYPE_IDEATHON') %}
             <label>Names of Additional {{ personType }}s</label>
             <textarea name="members" rows="6" tabindex="3"
                 placeholder="Please use this format for names: First Last, First Last, etc&#8230;" class="inPt">{% if idea is defined %}{{ idea.members }}{% endif %}</textarea>
