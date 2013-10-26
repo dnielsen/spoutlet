@@ -20,17 +20,18 @@ class IdeaRepository extends EntityRepository
      * Filters idea list by event, current round, optional tag, and isPrivate
      * @return array
      */
-    public function filter($eventId, $round, $tag = null) {
+    public function filter($eventId, $round, $tag = null, $private = false) {
 
          $qb = $this->createQueryBuilder('i')
             ->select      ('i')
             ->where       ('i.event = :eventId')
             ->andWhere    ('i.highestRound >= :round')
-            ->andWhere    ('i.isPrivate = false')
+            ->andWhere    ('i.isPrivate = :private')
             ->setParameters(
                  array(
                      'eventId' => $eventId,
                      'round' => $round,
+                     'private' => $private,
                  ));
 
 
@@ -41,6 +42,26 @@ class IdeaRepository extends EntityRepository
 
 		return $qb->getQuery()->getResult();
 	}
+
+    public function toCSV() {
+
+        foreach($this->findAll() as $idea) {
+            echo "\"".addslashes($idea->getId())."\",";
+            echo "\"".addslashes($idea->getEvent())."\",";
+            echo "\"".addslashes($idea->getCreator()->getUsername())."\",";
+            echo "\"".addslashes($idea->getName())."\",";
+            echo "\"".addslashes($idea->getCreatedAt()->format('Y-m-d H:i:s'))."\",";
+            echo "\"".addslashes($idea->getDescription())."\",";
+            echo "\"".addslashes($idea->getStage())."\",";
+            echo "\"".addslashes($idea->getForCourse())."\",";
+            echo "\"".addslashes($idea->getProfessors())."\",";
+            echo "\"".addslashes($idea->getAmount())."\",";
+            echo "\"".addslashes($idea->getMembers())."\"";
+            echo "\"".addslashes($idea->getHighestRound())."\",";
+            echo "\"".addslashes($idea->getIsPrivate())."\"";
+            echo "\n";
+        }
+    }
 
 	public function sortByVotes(&$ideas, $desc = true, VoteCriteria $criteria = null) {
 		usort($ideas, function($a, $b) use ($desc, $criteria) {

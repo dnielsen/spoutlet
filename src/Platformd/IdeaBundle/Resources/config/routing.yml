@@ -58,6 +58,12 @@ idea_admin_images:
     requirements:
       _method: GET|POST
 
+idea_admin_export:
+    pattern:    /{groupSlug}/event/{eventSlug}/admin/export
+    defaults:   { _controller: IdeaBundle:Admin:exportIdeas }
+    requirements:
+      _method: GET
+
 idea_admin_remove_image:
     pattern:    /{groupSlug}/event/{eventSlug}/admin/images/remove/{imageId}
     defaults:   { _controller: IdeaBundle:Admin:removeImage }

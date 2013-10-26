@@ -348,6 +348,13 @@ class AdminController extends Controller
             )));
 	}
 
+    public function exportIdeasAction($groupSlug, $eventSlug) {
+        $event = $this->getEvent($groupSlug, $eventSlug);
+        $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
+        $csvString = $ideaRepo->toCSV();
+        return new Response();
+    }
+
     public function imagesAction($groupSlug, $eventSlug, Request $request) {
 
         $newImage = new Media();
