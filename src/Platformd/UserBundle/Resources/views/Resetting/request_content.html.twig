@@ -1,26 +1,26 @@
-<h1>{{ 'platformd.user.request_reset.title' | trans }}</h1>
+<h1>{{ 'platformd.user.request_reset.title' | pd_trans }}</h1>
 
 <div class="std_2col">
     <div class="left">
         <p>
-            {{ 'platformd.user.request_reset.help_message' | trans | raw }}
+            {{ 'platformd.user.request_reset.help_message' | pd_trans | raw }}
         </p>
         {% if invalid_username is defined %}
-            <p style="color: #c62828;font-weight:bold;font-style:italic;">{{ 'resetting.request.invalid_username'|trans({'%username%': invalid_username}, 'FOSUserBundle')|raw }}</p>
+            <p style="color: #c62828;font-weight:bold;font-style:italic;">{{ 'resetting.request.invalid_username'|pd_trans({'%username%': invalid_username}, 'FOSUserBundle')|raw }}</p>
         {% endif %}
         <form action="{{ path('fos_user_resetting_send_email') }}" method="POST" class="form-horizontal fos_user_resetting_request">
             <div class="control-group">
-                <label class="control-label" for="username" style="width:auto;">{{ 'resetting.request.username'|trans({}, 'FOSUserBundle') }}</label>
+                <label class="control-label" for="username" style="width:auto;">{{ 'resetting.request.username'|pd_trans({}, 'FOSUserBundle') }}</label>
                 <div class="controls" style="margin-left:0;">
                     <input type="text" id="username" name="username" required="required" class="form-txt" />
-                    <button class="btn btn-primary" type="submit" style="margin-left: 10px">{{ 'resetting.request.submit'|trans({}, 'FOSUserBundle') }}</button>
+                    <button class="btn btn-primary" type="submit" style="margin-left: 10px">{{ 'resetting.request.submit'|pd_trans({}, 'FOSUserBundle') }}</button>
                 </div>
             </div>
             <p><a href="{{ path('fos_user_registration_register') }}">{{ 'platformd.user.login.not_a_member_join' | pd_trans }}</a></p>
         </form>
 
         <p>
-            {{ 'platformd.user.request_reset.spam_message' | trans | raw }}
+            {{ 'platformd.user.request_reset.spam_message' | pd_trans | raw }}
         </p>
     </div>
     <div class="right">
