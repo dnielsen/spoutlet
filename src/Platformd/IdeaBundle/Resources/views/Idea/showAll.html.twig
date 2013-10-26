@@ -4,6 +4,7 @@
 
     <h1>{{ event.name }} - {{ ideaType }}s {% if round > 1 %} - Round {{ round }}{% endif %}</h1>
 
+
     <div>
         {% if ideas %}
             <form action = "{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" id='filterForm' method="get" class="left">
@@ -14,6 +15,32 @@
                     {% if tag %}<td style="padding-left: 5px"><a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}"><input type="button" value="View All" class="btnMdm" /></a></td>{% endif %}
                 </tr>
             </table>
+            {% if isAdmin %}
+                {% if viewPrivate %}
+                    <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'viewPrivate': false, 'sortBy': sortBy}) }}">Public Ideas</a>
+                {% else %}
+                    <strong>Public Ideas</strong>
+                {% endif %}
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                {% if not viewPrivate %}
+                    <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'viewPrivate': true, 'sortBy': sortBy}) }}">Private Ideas</a>
+                {% else %}
+                    <strong>Private Ideas</strong>
+                {% endif %}
+                &nbsp;&nbsp;&nbsp;&nbsp;
+            {% endif %}
+                {% if sortBy == 'vote' %}
+                    <strong>Sort By Votes</strong>
+                {% else %}
+                    <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'sortBy': 'vote', 'viewPrivate': viewPrivate}) }}">Sort By Votes</a>
+                {% endif %}
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                {% if sortBy == 'createdAt' %}
+                    <strong>Sort By Newest</strong>
+                {% else %}
+                    <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'sortBy': 'createdAt', 'viewPrivate': viewPrivate}) }}">Sort By Newest</a>
+                {% endif %}
+            </td>
             </form>
         {% else %}
             <div class="left">There are no {{ ideaType }}s yet.</div>

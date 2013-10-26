@@ -22,20 +22,34 @@ use Platformd\EventBundle\Entity\Event;
 class IdeaController extends Controller
 {
 
-	public function showAllAction($groupSlug, $eventSlug) {
+	public function showAllAction(Request $request, $groupSlug, $eventSlug) {
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
-		$tag = $this->getRequest()->query->get('tag');
+        $tag         = $request->query->get('tag');
+        $viewPrivate = $request->query->get('viewPrivate', false);
+        $sortBy      = $request->query->get('sortBy', 'vote');
+
         $submitActive = $event->getIsSubmissionActive();
 
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+
+        if (!$isAdmin) {
+            $viewPrivate = false;
+        }
+
 		$ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
-        $ideaList = $ideaRepo->filter($event->getId(), $event->getCurrentRound(), $tag);
-        $ideaRepo->sortByFollows($ideaList);
+        $ideaList = $ideaRepo->filter($event->getId(), $event->getCurrentRound(), $tag, $viewPrivate);
+
+        if ($sortBy == 'vote') {
+            $ideaRepo->sortByFollows($ideaList);
+        }
+        else if ($sortBy == 'createdAt') {
+            $ideaRepo->sortByCreatedAt($ideaList);
+        }
 
         $attendance = $this->getCurrentUserApproved($event);
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
 
         $params = array(
             'group'         => $group,
@@ -47,6 +61,8 @@ class IdeaController extends Controller
             'sidebar'       => true,
             'attendance'    => $attendance,
             'isAdmin'       => $isAdmin,
+            'viewPrivate'   => $viewPrivate,
+            'sortBy'        => $sortBy,
         );
 
         return $this->render('IdeaBundle:Idea:showAll.html.twig', $params);
