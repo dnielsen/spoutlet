@@ -43,24 +43,41 @@ class IdeaRepository extends EntityRepository
 		return $qb->getQuery()->getResult();
 	}
 
-    public function toCSV() {
+    private function createCsvString($data) {
+        // Open temp file pointer
+        if (!$fp = fopen('php://temp', 'w+')) return FALSE;
 
+        // Loop data and write to file pointer
+        foreach ($data as $line) fputcsv($fp, $line);
+
+        // Place stream pointer at beginning
+        rewind($fp);
+
+        // Return the data
+        return stream_get_contents($fp);
+    }
+
+    public function toCSV() {
+        $ideasArray = array();
         foreach($this->findAll() as $idea) {
-            echo "\"".addslashes($idea->getId())."\",";
-            echo "\"".addslashes($idea->getEvent())."\",";
-            echo "\"".addslashes($idea->getCreator()->getUsername())."\",";
-            echo "\"".addslashes($idea->getName())."\",";
-            echo "\"".addslashes($idea->getCreatedAt()->format('Y-m-d H:i:s'))."\",";
-            echo "\"".addslashes($idea->getDescription())."\",";
-            echo "\"".addslashes($idea->getStage())."\",";
-            echo "\"".addslashes($idea->getForCourse())."\",";
-            echo "\"".addslashes($idea->getProfessors())."\",";
-            echo "\"".addslashes($idea->getAmount())."\",";
-            echo "\"".addslashes($idea->getMembers())."\"";
-            echo "\"".addslashes($idea->getHighestRound())."\",";
-            echo "\"".addslashes($idea->getIsPrivate())."\"";
-            echo "\n";
+            $ideaArray = array(
+                $idea->getId(),
+                $idea->getEvent()->getName(),
+                $idea->getCreator()->getUsername(),
+                $idea->getName(),
+                $idea->getCreatedAt()->format('Y-m-d H:i:s'),
+                $idea->getDescription(),
+                $idea->getStage(),
+                $idea->getForCourse(),
+                $idea->getProfessors(),
+                $idea->getAmount(),
+                $idea->getMembers(),
+                $idea->getHighestRound(),
+                $idea->getIsPrivate()
+            );
+            $ideasArray[] = $ideaArray;
         }
+        return $this->createCsvString($ideasArray);
     }
 
 	public function sortByVotes(&$ideas, $desc = true, VoteCriteria $criteria = null) {

@@ -352,7 +352,12 @@ class AdminController extends Controller
         $event = $this->getEvent($groupSlug, $eventSlug);
         $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
         $csvString = $ideaRepo->toCSV();
-        return new Response();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="teams.csv"');
+        $response->setContent($csvString);
+        return $response;
     }
 
     public function imagesAction($groupSlug, $eventSlug, Request $request) {
