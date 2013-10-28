@@ -59,6 +59,15 @@ class IdeaRepository extends EntityRepository
 
     public function toCSV() {
         $ideasArray = array();
+
+        //Add header
+        $headerArray = array(
+            "Idea","Event", "Creator", "Title", "Creation Time",
+            "Description", "Stage", "For Course", "Professors",
+            "Amount", "Members", "HighestRound", "IsPrivate"
+        );
+        $ideasArray[] = $headerArray;
+
         foreach($this->findAll() as $idea) {
             $ideaArray = array(
                 $idea->getId(),
