@@ -4,7 +4,7 @@
 
 <h1>Edit Profile</h1>
 
-<form action="{{ path('profile_edit', {'username': username}) }}" {{ form_enctype(form) }} method="POST"">
+<form action="{{ path('profile_edit', {'username': username}) }}" {{ form_enctype(form) }} method="POST">
 
     {{ form_errors(form) }}
 
@@ -21,7 +21,7 @@
     {{ form_rest(form) }}
 
     <input type="submit" value="Submit" class="button btn btn-primary"/>
-    <input type="submit" value="Cancel" name="cancel" formnovalidate/>
+    <button type="submit" value="Cancel" name="cancel" formnovalidate>Cancel</button>
 
 </form>
 
