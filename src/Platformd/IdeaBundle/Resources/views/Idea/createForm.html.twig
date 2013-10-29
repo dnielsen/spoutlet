@@ -86,7 +86,9 @@
     <table>
         <input type="submit" class="right spcr-r2" value="{% if idea is defined %}Save Changes{% else %}Submit {{ ideaType }}{% endif %}" tabindex="6" onclick="document.forms['submit'].submit();">
         <input type="submit" class="right spcr-r" value="Cancel" onclick="document.forms['cancel'].submit();">
-        {% if idea is defined %}<input type="submit" class="right spcr-r" value="Delete" onclick="document.forms['delete'].submit();">{% endif %}
+        {% if idea is defined %}
+            <input type="submit" class="right spcr-r redButton" value="Delete" onclick="if (confirm('Are you sure you want to delete this {{ ideaType }}?')) { document.forms['delete'].submit(); } ">
+        {% endif %}
     </table>
 
     {% endif %} {# End if not event.isSubmissionsActive #}
