@@ -20,21 +20,25 @@ class IdeaRepository extends EntityRepository
      * Filters idea list by event, current round, optional tag, and isPrivate
      * @return array
      */
-    public function filter($eventId, $round, $tag = null, $private = false) {
-
+    public function filter($eventId, $round, $tag = null, $private = false, $userId = null)
+    {
          $qb = $this->createQueryBuilder('i')
             ->select      ('i')
             ->where       ('i.event = :eventId')
             ->andWhere    ('i.highestRound >= :round')
             ->andWhere    ('i.isPrivate = :private')
+
             ->setParameters(
                  array(
-                     'eventId' => $eventId,
-                     'round' => $round,
-                     'private' => $private,
+                     'eventId'  => $eventId,
+                     'round'    => $round,
+                     'private'  => $private,
                  ));
 
-
+        if ($private and $userId) {
+            $qb->andWhere ('i.creator = :userId');
+            $qb->setParameter('userId', $userId);
+        }
 
 		if(!is_null($tag) && $tag <> '') {
 			$qb->innerJoin('i.tags', 't', 'WITH', 't.tagName = :tag')->setParameter('tag', $tag);

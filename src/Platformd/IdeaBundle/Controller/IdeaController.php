@@ -32,15 +32,17 @@ class IdeaController extends Controller
         $sortBy      = $request->query->get('sortBy', 'vote');
 
         $submitActive = $event->getIsSubmissionActive();
+        $isVoting     = $this->canJudge($event);
 
         $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+        $userId = null;
 
         if (!$isAdmin) {
-            $viewPrivate = false;
+            $userId = $this->getCurrentUser()->getId();
         }
 
 		$ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
-        $ideaList = $ideaRepo->filter($event->getId(), $event->getCurrentRound(), $tag, $viewPrivate);
+        $ideaList = $ideaRepo->filter($event->getId(), $event->getCurrentRound(), $tag, $viewPrivate, $userId);
 
         if ($sortBy == 'vote') {
             $ideaRepo->sortByFollows($ideaList);
@@ -61,6 +63,7 @@ class IdeaController extends Controller
             'sidebar'       => true,
             'attendance'    => $attendance,
             'isAdmin'       => $isAdmin,
+            'isVoting'      => $isVoting,
             'viewPrivate'   => $viewPrivate,
             'sortBy'        => $sortBy,
         );
