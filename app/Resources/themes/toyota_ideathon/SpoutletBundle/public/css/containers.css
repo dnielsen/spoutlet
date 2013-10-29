@@ -271,8 +271,12 @@ table.tblStyle {
 .tblStyle th {
     padding: 5px;
     border-bottom: 1px solid #e5e5e5;
+    text-align: right;
+}
+.tblStyle th:first-child {
     text-align: left;
 }
+
 #eventDetails {
     margin-top: 20px;
 }

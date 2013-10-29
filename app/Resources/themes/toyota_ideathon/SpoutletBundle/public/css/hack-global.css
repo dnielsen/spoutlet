@@ -115,6 +115,12 @@ h5 {
 .grn { color: #abe224; }
 .gry { color: #929292; }
 
+.form_error {
+    color: white;
+    background-color: red;
+    width: 300px;
+}
+
 .bld { font-weight: bold; }
 
 #colRt .twtr-tweet .twtr-tweet-text p {
