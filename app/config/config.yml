@@ -15,6 +15,7 @@ imports:
     - { resource: "@TagBundle/Resources/config/services.yml" }
     - { resource: "@SweepstakesBundle/Resources/config/services.yml" }
     - { resource: "@IdeaBundle/Resources/config/services.yml" }
+   # - { resource: "@UserBundle/Resources/config/services.yml" }
 
 framework:
     #esi:             ~
@@ -183,6 +184,7 @@ parameters:
     hpcloud_secreatkey: r8zsRj+i/SfVSXkOiUlVZg2SJBw2p2izogqKlo+W
     hpcloud_tenantid: 10873218563681
     hpcloud_url: 'https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/'
+    hpcloud_messaging_url: 'https://region-a.geo-1.messaging.hpcloudsvc.com/v1.1/10873218563681'
     hpcloud_container: 'platformd-public'
 
     maxmind_lookup_directory: %kernel.root_dir%/../external_data/maxmind/
