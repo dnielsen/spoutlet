@@ -15,41 +15,6 @@
                 </tr>
             </table>
 
-            {% if app.user %}
-                {% if viewPrivate %}
-                    <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'viewPrivate': false, 'sortBy': sortBy}) }}">Public {{ ideaType }}s</a>
-                    &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <strong>{% if not isAdmin %}My {% endif %}Private {{ ideaType }}s</strong>
-
-                {% else %}
-                    <strong>Public {{ ideaType }}s</strong>
-                    &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'viewPrivate': true, 'sortBy': sortBy}) }}">{% if not isAdmin %}My {% endif %}Private {{ ideaType }}s</a>
-
-                {% endif %}
-
-                &nbsp;&nbsp;&nbsp;&nbsp;
-            {% endif %}
-
-
-            {% if sortBy == 'vote' %}
-                <strong>Sort By Votes</strong>
-
-            {% else %}
-                <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'sortBy': 'vote', 'viewPrivate': viewPrivate}) }}">Sort By Votes</a>
-
-            {% endif %}
-
-            &nbsp;&nbsp;|&nbsp;&nbsp;
-
-            {% if sortBy == 'createdAt' %}
-                <strong>Sort By Newest</strong>
-
-            {% else %}
-                <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'sortBy': 'createdAt', 'viewPrivate': viewPrivate}) }}">Sort By Newest</a>
-
-            {% endif %}
-
         </form>
 
         {% if submitActive %}
@@ -57,9 +22,44 @@
                 <input type="submit" value="Add {{ ideaType }}" class="right">
             </form>
         {%  endif %}
-
+        
     </div>
-    <div class="clear"></div>
+    <div class="clr"></div>
+
+    {% if app.user %}
+        {% if viewPrivate %}
+            <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'viewPrivate': false, 'sortBy': sortBy}) }}">Public {{ ideaType }}s</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <strong>{% if not isAdmin %}My {% endif %}Private {{ ideaType }}s</strong>
+
+        {% else %}
+            <strong>Public {{ ideaType }}s</strong>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'viewPrivate': true, 'sortBy': sortBy}) }}">{% if not isAdmin %}My {% endif %}Private {{ ideaType }}s</a>
+
+        {% endif %}
+
+        &nbsp;&nbsp;&nbsp;&nbsp;
+    {% endif %}
+
+
+    {% if sortBy == 'vote' %}
+        <strong>Sort By Votes</strong>
+
+    {% else %}
+        <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'sortBy': 'vote', 'viewPrivate': viewPrivate}) }}">Sort By Votes</a>
+
+    {% endif %}
+
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+
+    {% if sortBy == 'createdAt' %}
+        <strong>Sort By Newest</strong>
+
+    {% else %}
+        <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'sortBy': 'createdAt', 'viewPrivate': viewPrivate}) }}">Sort By Newest</a>
+
+    {% endif %}
 
     <hr/>
 
