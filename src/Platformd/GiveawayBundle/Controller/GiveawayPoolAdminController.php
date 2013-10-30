@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\GiveawayBundle\QueueMessage\KeyPoolQueueMessage;
 
+use HPCloud\HPCloudPHP;
+
 /**
 *
 */
@@ -204,12 +206,24 @@ class GiveawayPoolAdminController extends Controller
                     $message->poolId    = $pool->getId();
                     $message->poolClass = implode('', array_slice(explode('\\', get_class($pool)), -1, 1));
 
+                    if($this->container->getParameter('object_storage') == 'HpObjectStorage') {
+                       
+                     $this->hpCloudObj = new HPCloudPHP($this->container->getParameter('hpcloud_accesskey'),$this->container->getParameter('hpcloud_secreatkey'),$this->container->getParameter('hpcloud_tenantid')); 
+                     $queue_response = $this->hpCloudObj->sendMessageToQueue(KeyPoolQueueMessage::QUEUE_NAME, json_encode($message));
+                     $queue_response_data = json_decode($queue_response);
+                     $queue_response_id = $queue_response_data->{'id'};
+                     $this->setFlash($queue_response_id != '' ? 'success' : 'error', $queue_response_id != ''  ? 'platformd.giveaway_pool.admin.queued' : 'platformd.giveaway_pool.admin.queue_error');
+                     return $queue_response_id ? true : false;
+
+                    } else {
+
                     $sqs = $this->container->get('aws_sqs');
                     $queue_url = $this->container->getParameter('queue_prefix').KeyPoolQueueMessage::QUEUE_NAME;
                     $queue_response = $sqs->send_message($queue_url, json_encode($message));
 
                     $this->setFlash($queue_response->isOk() ? 'success' : 'error', $queue_response->isOk() ? 'platformd.giveaway_pool.admin.queued' : 'platformd.giveaway_pool.admin.queue_error');
                     return $queue_response->isOk() ? true : false;
+                  }
                 } else {
                     $this->setFlash('error', 'platformd.giveaway_pool.adminupload_error');
                     return false;
