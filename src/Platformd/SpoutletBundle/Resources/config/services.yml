@@ -167,6 +167,11 @@ services:
             - "@logger"
             - "%queue_prefix%"
             - "%mock_queue_util_full_filename%"
+            - "%hpcloud_accesskey%"
+            - "%hpcloud_secreatkey%"
+            - "%hpcloud_tenantid%"
+            - "%hpcloud_messaging_url%"
+            - "%object_storage%"
 
     platformd.model.ip_lookup_util:
         class: Platformd\SpoutletBundle\Util\IpLookupUtil
