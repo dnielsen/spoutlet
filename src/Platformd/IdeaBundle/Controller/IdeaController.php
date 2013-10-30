@@ -22,8 +22,8 @@ use Platformd\EventBundle\Entity\Event;
 class IdeaController extends Controller
 {
 
-	public function showAllAction(Request $request, $groupSlug, $eventSlug) {
-
+    public function showAllAction(Request $request, $groupSlug, $eventSlug)
+    {
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
@@ -35,14 +35,20 @@ class IdeaController extends Controller
         $isVoting     = $this->canJudge($event);
 
         $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
-        $userId = null;
-
-        if (!$isAdmin) {
-            $userId = $this->getCurrentUser()->getId();
-        }
-
 		$ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
-        $ideaList = $ideaRepo->filter($event->getId(), $event->getCurrentRound(), $tag, $viewPrivate, $userId);
+
+        if ($isAdmin) {
+            $ideaList = $ideaRepo->filter($event->getId(), $event->getCurrentRound(), $tag, $viewPrivate);
+        }
+        else {
+            $user = $this->getCurrentUser();
+            if ($user) {
+                $ideaList = $ideaRepo->filter($event->getId(), $event->getCurrentRound(), $tag, $viewPrivate, $user->getId());
+            }
+            else {
+                $ideaList = $ideaRepo->filter($event->getId(), $event->getCurrentRound(), $tag);
+            }
+        }
 
         if ($sortBy == 'vote') {
             $ideaRepo->sortByFollows($ideaList);
