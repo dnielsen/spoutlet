@@ -36,7 +36,8 @@ $loader->registerNamespaces(array(
     'Cybernox'                      => __DIR__.'/../vendor/bundles',
     'Exercise'                      => __DIR__. '/../vendor/bundles',
     'Vich'                          => __DIR__.'/../vendor/bundles',
-    'HPCloud'                       => __DIR__.'/../vendor/HpCloudPhp/src' 
+    'HPCloud'                       => __DIR__.'/../vendor/HpCloudPhp/src',
+    'SendGrid'	                    => __DIR__.'/../vendor/sendgrid-php'	 
 ));
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
