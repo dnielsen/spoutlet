@@ -194,7 +194,10 @@ services:
             - "@service_container"
             - "@doctrine.orm.entity_manager"
             - "@aws_ses"
-
+            - "%sendgrid_username%"
+            - "%sendgrid_password%"
+            - "%email_service%"
+        
     platformd.model.group_manager:
         class: Platformd\GroupBundle\Model\GroupManager
         arguments:

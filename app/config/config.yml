@@ -186,6 +186,11 @@ parameters:
     hpcloud_url: 'https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/'
     hpcloud_messaging_url: 'https://region-a.geo-1.messaging.hpcloudsvc.com/v1.1/10873218563681'
     hpcloud_container: 'platformd-public'
+    #email_service (1) AWS_SES (2) SendGrid
+    email_service: 'SendGrid'
+    sendgrid_username: 'dnielsen'
+    sendgrid_password: 'Deepblue1'
+
     available_locales:
         # we're abusing the locales to make our many "sites"
         # this will change in the future
