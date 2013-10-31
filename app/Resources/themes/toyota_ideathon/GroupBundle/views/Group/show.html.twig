@@ -13,25 +13,25 @@
                 <div>
                     <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': '4'}) }}"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-register.jpg') }}" alt="Register" width="740" height="341"></a>
 						<span class="rsTmb">
-							Register
+							<a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': '4'}) }}" class="wht">Register</a>
 						</span>
                 </div>
                 <div>
-                    <a href="{{ path('group_about', {'slug': group.slug}) }}""><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-learn.jpg') }} alt="Learn" width="740" height="341"></a>
+                    <a href="{{ path('group_about', {'slug': group.slug}) }}"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-learn.jpg') }} alt="Learn" width="740" height="341"></a>
 				        <span class="rsTmb">
-							Learn
+							<a href="{{ path('group_about', {'slug': group.slug}) }}" class="wht">Learn</a>
 				        </span>
                 </div>
                 <div>
                     <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': 'api'}) }}"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-forum.jpg') }} alt="Code" width="740" height="341"></a>
 				        <span class="rsTmb">
-							API Forum
+							<a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': 'api'}) }}" class="wht">API Forum</a>
 				        </span>
                 </div>
                 <div>
                     <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': 'app'}) }}"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-share.jpg') }} alt="Share" width="740" height="341"></a>
 						<span class="rsTmb">
-							App Idea Forum
+							<a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': 'app'}) }}" class="wht">App Idea Forum</a>
 						</span>
                 </div>
 
