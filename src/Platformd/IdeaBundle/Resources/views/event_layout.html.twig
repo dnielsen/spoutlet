@@ -39,14 +39,14 @@
             <a href="{{ path('fos_user_registration_register') }}"><input type="button" value="Register" class="btnMdm left marginlft"></a>
             {% set show = 'false' %}
         {% elseif not event.isUserAttending(app.user) %}
-            This forum is private. Please apply for your API key and forum access. We will respond to your request within 1 business day.<br/><br/>
+            This event is private. Please apply for access and an administrator will review your application. <br/><br/>
             <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}"><input type="button" value="Apply Now"></a>
             {% set show = 'false' %}
         {% elseif attendance == 'pending' %}
-            This forum is private. You have applied for access and are waiting for administrative approval. You will be notified within 1 business day.
+            This event is private. You have applied for access and are waiting for administrative approval.
             {% set show = 'false' %}
         {% elseif attendance == 'rejected' %}
-            This forum is private. You have applied for access and have been denied.
+            This event is private. You have applied for access and have been denied.
             {% set show = 'false' %}
         {% else %}
             {% set show = 'true' %}
