@@ -61,7 +61,7 @@ class AdminController extends Controller
             ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address2',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
-            ->add('allowedVoters',      'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('allowedVoters',      'text',             array('attr'    => array('size' => '60%'), 'required' => '0', 'placeholder' => 'username1, username2, ...'))
             ->add('isSubmissionActive', 'choice',           array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
             ->add('isVotingActive',     'choice',           array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
 
