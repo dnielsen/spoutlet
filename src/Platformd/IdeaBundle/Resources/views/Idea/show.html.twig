@@ -50,7 +50,7 @@
                 {% if canEdit %}
                     <form action="{{ path('idea_image_delete', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post">
                         <input type="hidden" name="idea" value="{{ idea.id }}">
-                        <input type="submit" value="Delete" class="btnTnyInv">
+                        <input type="submit" value="Delete" class="redButton" onclick="return confirm('Are you sure you want to delete this image?');">
                     </form>
                 {% endif %}
 
@@ -67,7 +67,7 @@
                         <form action="{{ path('idea_link_delete', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" class="left padrt">
                             <input type="hidden" name="idea" value="{{ idea.id }}">
                             <input type="hidden" name="link" value="{{ link.id }}">
-                            <input type="submit" value="Remove" class="btnTnyInv">
+                            <input type="submit" value="Remove" class="redButton" onclick="return confirm('Are you sure you want to delete this link?');">
                         </form>
                     {% endif %}
                     <a href="{{ link.url }}">{{ link.title }}</a> - {{ link.linkDescription }}<br>
@@ -93,7 +93,7 @@
                     <form action="{{ path('idea_comment_delete', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" class="left padrt">
                         <input type="hidden" name="idea" value="{{ idea.id }}">
                         <input type="hidden" name="comment" value="{{ comment.id }}">
-                        <input type="submit" value="Remove" class="btnTnyInv">
+                        <input type="submit" value="Remove" class="redButton" onclick="return confirm('Are you sure you want to delete this comment?');">
                     </form>
                 {% endif %}
                 <br>
