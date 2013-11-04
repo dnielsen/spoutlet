@@ -35,7 +35,7 @@ class IdeaController extends Controller
         $isVoting     = $this->canJudge($event);
 
         $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
-		$ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
+        $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
 
         if ($isAdmin) {
             $ideaList = $ideaRepo->filter($event->getId(), $event->getCurrentRound(), $tag, $viewPrivate);
@@ -75,24 +75,24 @@ class IdeaController extends Controller
         );
 
         return $this->render('IdeaBundle:Idea:showAll.html.twig', $params);
-	}
+    }
 
 
-	public function showAction($groupSlug, $eventSlug, $id) {
+    public function showAction($groupSlug, $eventSlug, $id) {
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
-		$currentRound = $event->getCurrentRound();
+        $currentRound = $event->getCurrentRound();
 
         $doctrine = $this->getDoctrine();
-		$ideaRepo = $doctrine->getRepository('IdeaBundle:Idea');
+        $ideaRepo = $doctrine->getRepository('IdeaBundle:Idea');
 
-		$idea = $ideaRepo->find($id);
+        $idea = $ideaRepo->find($id);
 
-		if (!$idea) {
-			throw $this->createNotFoundException('No idea found for id '.$id);
-		}
+        if (!$idea) {
+            throw $this->createNotFoundException('No idea found for id '.$id);
+        }
 
         $attendance = $this->getCurrentUserApproved($event);
         $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
@@ -111,7 +111,7 @@ class IdeaController extends Controller
         // Do vote sidebar stuff
         $criteriaList = $doctrine->getRepository('IdeaBundle:VoteCriteria')->findByEventId($event->getId());
         $params['isVoting'] = $this->canJudge($event) && count($criteriaList) > 0;
-		if( $params['isVoting'] ) {
+        if( $params['isVoting'] ) {
 
             // determine previous idea, next idea
             $ideas = $ideaRepo->filter($event->getId(), $currentRound);
@@ -152,20 +152,20 @@ class IdeaController extends Controller
 
             $votes = $voteRepo->findBy(array('idea' => $idea->getId(), 'voter' => $userName, 'round' => $currentRound));
 
-	        if(count($votes) > 0) {
-	        	$valuesByCriteria = array();
-	        	foreach($votes as $criteriaVote) {
-	        		$valuesByCriteria[strval($criteriaVote->getCriteria()->getId())] = $criteriaVote->getValue();
-	        	}
-	        	$params['values'] = $valuesByCriteria;
-	        }
+            if(count($votes) > 0) {
+                $valuesByCriteria = array();
+                foreach($votes as $criteriaVote) {
+                    $valuesByCriteria[strval($criteriaVote->getCriteria()->getId())] = $criteriaVote->getValue();
+                }
+                $params['values'] = $valuesByCriteria;
+            }
 
         }
-		return $this->render('IdeaBundle:Idea:show.html.twig', $params);
-	}
+        return $this->render('IdeaBundle:Idea:show.html.twig', $params);
+    }
 
 
-	public function createFormAction($groupSlug, $eventSlug) {
+    public function createFormAction($groupSlug, $eventSlug) {
 
         $this->basicSecurityCheck('ROLE_USER');
 
@@ -182,9 +182,9 @@ class IdeaController extends Controller
                 'attendance' => $attendance,
                 'isAdmin'       => $isAdmin,
             ));
-	}
+    }
 
-	public function createAction(Request $request, $groupSlug, $eventSlug) {
+    public function createAction(Request $request, $groupSlug, $eventSlug) {
 
         $this->basicSecurityCheck('ROLE_USER');
 
@@ -196,9 +196,9 @@ class IdeaController extends Controller
                     'eventSlug' => $eventSlug)));
         }
 
-		$params = $request->request->all();
+        $params = $request->request->all();
 
-		$idea = new Idea();
+        $idea = new Idea();
 
         $idea->setEvent($event);
         $idea->setCreator($this->getCurrentUser());
@@ -235,17 +235,17 @@ class IdeaController extends Controller
 
         $idea->setHighestRound($event->getCurrentRound());
 
-		$em = $this->getDoctrine()->getEntityManager();
-		$em->persist($idea);
-		$em->flush();
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->persist($idea);
+        $em->flush();
 
-		$ideaUrl = $this->generateUrl('idea_show', array(
+        $ideaUrl = $this->generateUrl('idea_show', array(
              'id' => $idea->getId(),
              'groupSlug' => $groupSlug,
              'eventSlug' => $eventSlug,
             ));
         return new RedirectResponse($ideaUrl);
-	}
+    }
 
 
     public function editFormAction($groupSlug, $eventSlug, $id) {
@@ -844,6 +844,8 @@ class IdeaController extends Controller
 
         return false;
     }
+
+
 
     /**
      * Takes the user submitted string of tags, parses it, and returns an array of new tag objects
