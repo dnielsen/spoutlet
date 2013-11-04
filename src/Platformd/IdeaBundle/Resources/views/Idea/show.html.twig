@@ -50,7 +50,7 @@
                 {% if canEdit %}
                     <form action="{{ path('idea_image_delete', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post">
                         <input type="hidden" name="idea" value="{{ idea.id }}">
-                        <input type="submit" value="Delete" class="redButton" onclick="return confirm('Are you sure you want to delete this image?');">
+                        <input type="submit" value="Delete Image" class="redButton" onclick="return confirm('Are you sure you want to delete this image?');">
                     </form>
                 {% endif %}
 
