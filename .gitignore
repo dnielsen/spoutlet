@@ -8,7 +8,6 @@
 /app/config/config_*_local.yml
 /vendor/
 /app/config/parameters.ini
-/web/uploads/*
 /web/css/packed
 /web/js/packed
 /web/css/*
@@ -27,4 +26,3 @@ VERSION
 /app/Resources/views/
 /app/Resources/translations/theme_*
 /app/config/config_server.yml
-/logs/
