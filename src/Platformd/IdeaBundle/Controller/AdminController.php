@@ -359,16 +359,27 @@ class AdminController extends Controller
     }
 
     public function exportIdeasAction($groupSlug, $eventSlug) {
-        $event = $this->getEvent($groupSlug, $eventSlug);
         $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
         $csvString = $ideaRepo->toCSV();
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', 'attachment; filename="teams.csv"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$eventSlug.'-ideas.csv"');
         $response->setContent($csvString);
         return $response;
     }
+
+    public function exportUsersAction() {
+        $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
+        $csvString = $userRepo->toCSV();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="users.csv"');
+        $response->setContent($csvString);
+        return $response;
+     }
+
 
     public function imagesAction($groupSlug, $eventSlug, Request $request) {
 

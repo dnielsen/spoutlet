@@ -66,7 +66,7 @@ class IdeaRepository extends EntityRepository
 
         //Add header
         $headerArray = array(
-            "Idea","Event", "Creator", "Title", "Creation Time",
+            "id","Event", "Creator", "Title", "Creation Time",
             "Description", "Stage", "For Course", "Professors",
             "Amount", "Members", "HighestRound", "IsPrivate"
         );
