@@ -58,9 +58,15 @@ idea_admin_images:
     requirements:
       _method: GET|POST
 
-idea_admin_export:
+idea_admin_export_ideas:
     pattern:    /{groupSlug}/event/{eventSlug}/admin/export
     defaults:   { _controller: IdeaBundle:Admin:exportIdeas }
+    requirements:
+      _method: GET
+
+idea_admin_export_users:
+    pattern:    /admin/exportUsers
+    defaults:   { _controller: IdeaBundle:Admin:exportUsers }
     requirements:
       _method: GET
 

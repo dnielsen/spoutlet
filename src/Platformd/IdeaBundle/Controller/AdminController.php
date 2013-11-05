@@ -61,7 +61,7 @@ class AdminController extends Controller
             ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address2',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
-            ->add('allowedVoters',      'text',             array('attr'    => array('size' => '60%'), 'required' => '0', 'placeholder' => 'username1, username2, ...'))
+            ->add('allowedVoters',      'text',             array('attr'    => array('size' => '60%', 'placeholder' => 'username1, username2, ...'), 'required' => '0',))
             ->add('isSubmissionActive', 'choice',           array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
             ->add('isVotingActive',     'choice',           array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
 
@@ -78,6 +78,16 @@ class AdminController extends Controller
                 $event->setApproved(true);
                 $event->setRegistrationOption(Event::REGISTRATION_ENABLED);
 
+                //validate and clean up allowedVoters
+                $validatedJudges = array();
+                $candidateJudges = array_map('trim',explode(",",$event->getAllowedVoters()));
+                $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
+                foreach($candidateJudges as $candidate) {
+                    if($userRepo->findOneBy(array('username'=> $candidate)) != null)
+                        $validatedJudges[] = $candidate;
+                }
+                $event->setAllowedVoters(implode(",",$validatedJudges));
+                
                 $em = $this->getDoctrine()->getEntityManager();
                 $em->persist($event);
                 $em->flush();
@@ -349,16 +359,27 @@ class AdminController extends Controller
     }
 
     public function exportIdeasAction($groupSlug, $eventSlug) {
-        $event = $this->getEvent($groupSlug, $eventSlug);
         $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
         $csvString = $ideaRepo->toCSV();
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', 'attachment; filename="teams.csv"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$eventSlug.'-ideas.csv"');
         $response->setContent($csvString);
         return $response;
     }
+
+    public function exportUsersAction() {
+        $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
+        $csvString = $userRepo->toCSV();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="users.csv"');
+        $response->setContent($csvString);
+        return $response;
+     }
+
 
     public function imagesAction($groupSlug, $eventSlug, Request $request) {
 
