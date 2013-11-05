@@ -55,11 +55,6 @@ class IdeaRepository extends EntityRepository
             $qb->andWhere('i.creator = :creator')->setParameter('creator', $user->getId());
         }
 
-        // admin case, private ideas for all users
-        if($isAdmin) {
-            $qb->andWhere('i.isPrivate = true');
-        }
-
         //process he query
         $result = $qb->getQuery()->getResult();
 

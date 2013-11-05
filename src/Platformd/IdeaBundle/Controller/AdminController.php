@@ -276,19 +276,6 @@ class AdminController extends Controller
             ));
     }
 
-    private function filter($event, $currentRound, $tag, $sortCriteria) {
-        $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
-
-        $admin = $this->container->get('security.context')->getToken()->getUser();
-        $privateIdea = $ideaRepo->filter($event, $currentRound, $tag, $admin);
-        $publicIdeas = $ideaRepo->filter($event, $currentRound, $tag, null);
-        $ideaList = array_merge($privateIdea, $publicIdeas);
-
-        $ideaRepo->sortByVotes($ideaList, true, $sortCriteria);
-
-        return $ideaList;
-    }
-
     public function summaryAction(Request $request, $groupSlug, $eventSlug) {
 
         $group = $this->getGroup($groupSlug);
@@ -315,10 +302,12 @@ class AdminController extends Controller
         $tag = $request->query->get('tag');
         $params['tag'] = $tag;
 
-        //perform filter and sort
         $currentRound = $event->getCurrentRound();
-        $ideaList = $this->filter($event, $currentRound, $tag, $sortCriteria);
 
+        //perform filter and sort
+        $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
+        $ideaList = $ideaRepo->filter($event, $currentRound, $tag, $this->getCurrentUser());
+        $ideaRepo->sortByVotes($ideaList, true, $sortCriteria);
 
         //save the resulting ordered list of ideas
         $params['ideas'] = $ideaList;
