@@ -87,11 +87,11 @@ input[type="submit"], input[type="button"], button[type="submit"], button[type="
     background: red !important;
     border: 1px solid red !important;
     color: white !important;
-    padding: 4px !important;
 }
 .redButton:hover {
     background: white !important;
     border: 1px solid red !important;
     color: red !important;
-    padding: 4px !important;
 }
+
+
