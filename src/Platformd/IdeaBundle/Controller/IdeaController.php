@@ -42,8 +42,10 @@ class IdeaController extends Controller
         $ideaRepo 	= $this->getDoctrine()->getRepository('IdeaBundle:Idea');
         $ideaList 	= $ideaRepo->filter($event, $roundParam, $tag, $userParam);
 
+        $isAdmin    = $this->getSecurity()->isGranted('ROLE_ADMIN');
+
         //For admin remove the public ideas from the full list to just show private ideas
-        if($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+        if ($viewPrivate && $isAdmin) {
             $publicList 	= $ideaRepo->filter($event, $roundParam, $tag, null);
             foreach($publicList as $publicIdea) {
                 $index = array_search($publicIdea,$ideaList);
@@ -57,8 +59,6 @@ class IdeaController extends Controller
         else if ($sortBy == 'createdAt') {
             $ideaRepo->sortByCreatedAt($ideaList);
         }
-
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
 
         $attendance = $this->getCurrentUserApproved($event);
 
