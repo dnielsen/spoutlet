@@ -28,6 +28,13 @@ idea_admin_criteria_get:
     requirements:
       _method: GET
 
+idea_admin_assign:
+    pattern:  /{groupSlug}/event/{eventSlug}/admin/assign/{ideaId}
+    defaults: { _controller: IdeaBundle:Admin:assignJudges }
+    requirements:
+     _method: POST
+
+#Criteria POST requests (new, delete & edit) and GET all
 idea_admin_criteria:
     pattern:  /{groupSlug}/event/{eventSlug}/admin/criteria
     defaults: { _controller: IdeaBundle:Admin:criteria }
@@ -59,13 +66,13 @@ idea_admin_images:
       _method: GET|POST
 
 idea_admin_export_ideas:
-    pattern:    /{groupSlug}/event/{eventSlug}/admin/export
+    pattern:    /{groupSlug}/event/{eventSlug}/admin/exportIdeas
     defaults:   { _controller: IdeaBundle:Admin:exportIdeas }
     requirements:
       _method: GET
 
 idea_admin_export_users:
-    pattern:    /admin/exportUsers
+    pattern:    /{groupSlug}/event/{eventSlug}/admin/exportUsers
     defaults:   { _controller: IdeaBundle:Admin:exportUsers }
     requirements:
       _method: GET

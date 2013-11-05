@@ -14,38 +14,68 @@ use Platformd\IdeaBundle\Entity\VoteCriteria;
 class IdeaRepository extends EntityRepository
 {
 
-    /**
-     * @param $event
-     * @param null $tag
-     * Filters idea list by event, current round, optional tag, and isPrivate
+/**
+     * User specific idea filter mode:
+     *   Admin show only private ideas for all users.
+     *   Normal user only ideas you authored (private and public)
+     *   Judge user only ideas assigned to you for judging (private and public)
+     * @param $event Used to determine if user is a judge
+     * @param null $round If null ideas from all rounds are
+     * returned, otherwise ideas from this round and above are returned.
+     * @param null $tag Returns all ideas containing this tag
+     * @param null $user If null show public ideas otherwise show user specific filtered idea.
      * @return array
      */
-    public function filter($eventId, $round, $tag = null, $private = false, $userId = null)
+    public function filter($event, $round = null, $tag = null, $user = null)
     {
-         $qb = $this->createQueryBuilder('i')
+        $qb = $this->createQueryBuilder('i')
             ->select      ('i')
             ->where       ('i.event = :eventId')
-            ->andWhere    ('i.highestRound >= :round')
-            ->andWhere    ('i.isPrivate = :private')
+            ->andWhere       ('i.highestRound >= :round')
+            ->setParameters( array(
+               'round'    => ($round == null ? 1 : $round),
+               'eventId'  => $event->getId(),
+ 			));
 
-            ->setParameters(
-                 array(
-                     'eventId'  => $eventId,
-                     'round'    => $round,
-                     'private'  => $private,
-                 ));
-
-        if ($private and $userId) {
-            $qb->andWhere ('i.creator = :userId');
-            $qb->setParameter('userId', $userId);
+        if(!is_null($tag) && $tag <> '') {
+            $qb->innerJoin('i.tags', 't', 'WITH', 't.tagName = :tag')->setParameter('tag', $tag);
         }
 
-		if(!is_null($tag) && $tag <> '') {
-			$qb->innerJoin('i.tags', 't', 'WITH', 't.tagName = :tag')->setParameter('tag', $tag);
-		}
+        //Handle anon or "public" ideas
+        if($user == null) {
+            $qb->andWhere('i.isPrivate = false');
+            return $qb->getQuery()->getResult();
+        }
 
-		return $qb->getQuery()->getResult();
-	}
+        $isAdmin = $user->hasRole('ROLE_SUPER_ADMIN');
+        $isJudge = !$isAdmin && $event->getIsVotingActive() && $event->containsVoter($user->getUsername());
+
+        //for normal users filter out other peoples ideas
+        if(!$isAdmin && !$isJudge) {
+            $qb->andWhere('i.creator = :creator')->setParameter('creator', $user->getId());
+        }
+
+        // admin case, private ideas for all users
+        if($isAdmin) {
+            $qb->andWhere('i.isPrivate = true');
+        }
+
+        //process he query
+        $result = $qb->getQuery()->getResult();
+
+        // judge case, all ideas assigned to this judge
+        if($isJudge) {
+            $ideasAssignedToJudge = array();
+            foreach($result as $idea) {
+                if( $idea->isJudgeAssigned($user) ){
+                    $ideasAssignedToJudge[] = $idea;
+                }
+            }
+            $result = $ideasAssignedToJudge;
+        }
+
+        return $result;
+    }
 
     private function createCsvString($data) {
         // Open temp file pointer

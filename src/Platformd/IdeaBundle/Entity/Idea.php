@@ -83,6 +83,15 @@ class Idea
     protected $tags;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\JoinTable(name="JudgeIdeaMap",
+     *      joinColumns={@ORM\JoinColumn(name="idea", referencedColumnName="id", onDelete="cascade")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="judge", referencedColumnName="id", onDelete="cascade")}
+     *      )
+     */
+    protected $judges;
+
+    /**
      * @ORM\OneToMany(targetEntity="Vote", mappedBy="idea", cascade={"remove"})
      */
     protected $votes;
@@ -121,6 +130,7 @@ class Idea
         $this->votes = new ArrayCollection();
         $this->followMappings = new ArrayCollection();
         $this->links = new ArrayCollection();
+        $this->judges = new ArrayCollection();
         $this->isPrivate = false;
         $this->createdAt = new \DateTime();
     }
@@ -541,8 +551,10 @@ class Idea
         if ($user == null){
             return false;
         }
-        // logged in as creator or admin
-        if ($this->getCreator() == $user || in_array('ROLE_SUPER_ADMIN', $user->getRoles())){
+        // logged in as creator or admin or assigned judge
+        if ($this->getCreator() == $user ||
+            in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
+            $this->isJudgeAssigned($user)){
             return true;
         }
 
@@ -736,5 +748,33 @@ class Idea
     public function setCreatedAt($time)
     {
         $this->createdAt = $time;
+    }
+
+    /**
+     * Get judges
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getJudges()
+    {
+        return $this->judges;
+}
+
+    public function setJudges($judges) {
+        $currentJudges = $this->getJudges();
+        $currentJudges->clear();
+        foreach($judges as $judge) {
+            $currentJudges->add($judge);
+        }
+    }
+
+    /**
+     * Answers is the provided judge assigned to vote for this idea
+     *
+     * @param Platformd\UserBundle\Entity\User $judge
+     */
+    public function isJudgeAssigned(\Platformd\UserBundle\Entity\User $judge)
+    {
+        return $this->getJudges()->contains($judge);
     }
 }

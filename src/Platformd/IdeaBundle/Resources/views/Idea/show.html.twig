@@ -89,7 +89,7 @@
             {% for comment in idea.comments %}
                 <hr>
                 <a href="{{ path('profile', {'username': comment.user.username}) }}">{{ comment.user.name }}</a> commented on <em>{{ comment.timestamp }}</em>
-                {% if canEdit %}
+                {% if canRemoveComments %}
                     <form action="{{ path('idea_comment_delete', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" class="left padrt">
                         <input type="hidden" name="idea" value="{{ idea.id }}">
                         <input type="hidden" name="comment" value="{{ comment.id }}">
@@ -137,48 +137,62 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% if isVoting %}
-    <h2>Judges' Sidebar</h2>
-    <br>
-
-    <table class="prevNext">
-    <td>
-        {% if previous is defined %}
-        <form action="{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': previous}) }}">
-            <input type="submit" value="Previous">
-        </form>
-        {% endif %}
-    </td>
-    <td>
-        {% if next is defined %}
-        <form action="{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': next}) }}">
-            <input type="submit" value="Next">
-        </form>
-        {% endif %}
-    </td>
-    </table>
-    <br>
-
-    <form action="{{ path('idea_vote', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post">
-        <input type="hidden" name="id" value='{{idea.id}}'>
-
-        <table class = "paddedTable">
-        {% for criteria in criteriaList %}
-            <td><select name="{{criteria.id}}">
-                {% for j in 0..5 %}
-                    <option value={{ j }} {% if (values is defined) and (values[criteria.id] == j) %}selected{%endif%}>{{ j }}</option>
-                {% endfor %}
-                </select>
-            </td>
-            <td colspan="2"> {{criteria.description}}</td>
-            </tr>
-        {% endfor %}
-        </table>
-
-        <input type="submit" value="Submit Scores">
-    </form>
-
-    {% else %}
+    {% if sidebarState == constant('\\Platformd\\IdeaBundle\\Controller\\IdeaController::SIDEBAR_NONE') %}
         {% include 'IdeaBundle::sidebar.html.twig' %}
+    {% else %}
+
+
+    <br>
+        {% if sidebarState == constant('\\Platformd\\IdeaBundle\\Controller\\IdeaController::SIDEBAR_JUDGE') %}
+            <h2>Judges' Sidebar</h2>
+
+		<form action="{{ path('idea_vote', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post">
+		    <input type="hidden" name="id" value='{{idea.id}}'>
+
+		    <table class = "paddedTable">
+		    {% for criteria in criteriaList %}
+		        <td><select name="{{criteria.id}}">
+		            {% for j in 0..5 %}
+		                <option value={{ j }} {% if (values is defined) and (values[criteria.id] == j) %}selected{%endif%}>{{ j }}</option>
+		            {% endfor %}
+		            </select>
+		        </td>
+		        <td colspan="2"> {{criteria.description}}</td>
+		        </tr>
+		    {% endfor %}
+		    </table>
+
+		    <input type="submit" value="Submit Scores">
+		</form>
+
+		{% elseif sidebarState == constant('\\Platformd\\IdeaBundle\\Controller\\IdeaController::SIDEBAR_ADMIN') %}
+		    <h2>Admins' Sidebar</h2>
+
+		    <form action="{{ path('idea_admin_assign', {'groupSlug': group.slug, 'eventSlug': event.slug, 'ideaId': idea.id}) }}" method="post" {{ form_enctype(form) }}>
+		        {{ form_widget(form) }}
+
+		       <button type="submit" name="submit" formnovalidate>Submit</button>
+		    </form>
+		{% endif %}
+
+        <hr/>
+		<table class="prevNext">
+		<td>
+		    {% if previous is defined %}
+		    <form action="{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': previous}) }}">
+		        <input type="submit" value="Previous">
+		    </form>
+		    {% endif %}
+		</td>
+		<td>
+		    {% if next is defined %}
+		    <form action="{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': next}) }}">
+		        <input type="submit" value="Next">
+		    </form>
+		    {% endif %}
+		</td>
+		</table>
+
     {% endif %}
+
 {% endblock %}

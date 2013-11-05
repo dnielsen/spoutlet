@@ -61,7 +61,7 @@ class AdminController extends Controller
             ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address2',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
-            ->add('allowedVoters',      'text',             array('attr'    => array('size' => '60%', 'placeholder' => 'username1, username2, ...'), 'required' => '0',))
+            ->add('allowedVoters',      'text',             array('max_length' => '5000', 'attr'    => array('size' => '60%', 'placeholder' => 'username1, username2, ...'), 'required' => '0',))
             ->add('isSubmissionActive', 'choice',           array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
             ->add('isVotingActive',     'choice',           array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
 
@@ -276,6 +276,18 @@ class AdminController extends Controller
             ));
     }
 
+    private function filter($event, $currentRound, $tag, $sortCriteria) {
+        $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
+
+        $admin = $this->container->get('security.context')->getToken()->getUser();
+        $privateIdea = $ideaRepo->filter($event, $currentRound, $tag, $admin);
+        $publicIdeas = $ideaRepo->filter($event, $currentRound, $tag, null);
+        $ideaList = array_merge($privateIdea, $publicIdeas);
+
+        $ideaRepo->sortByVotes($ideaList, true, $sortCriteria);
+
+        return $ideaList;
+    }
 
     public function summaryAction(Request $request, $groupSlug, $eventSlug) {
 
@@ -305,10 +317,7 @@ class AdminController extends Controller
 
         //perform filter and sort
         $currentRound = $event->getCurrentRound();
-
-        $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
-        $ideaList = $ideaRepo->filter($event->getId(), $currentRound, $tag);
-        $ideaRepo->sortByVotes($ideaList, true, $sortCriteria);
+        $ideaList = $this->filter($event, $currentRound, $tag, $sortCriteria);
 
 
         //save the resulting ordered list of ideas
@@ -357,29 +366,6 @@ class AdminController extends Controller
                 'eventSlug' => $eventSlug,
             )));
     }
-
-    public function exportIdeasAction($groupSlug, $eventSlug) {
-        $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
-        $csvString = $ideaRepo->toCSV();
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$eventSlug.'-ideas.csv"');
-        $response->setContent($csvString);
-        return $response;
-    }
-
-    public function exportUsersAction() {
-        $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
-        $csvString = $userRepo->toCSV();
-
-        $response = new Response();
-        $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', 'attachment; filename="users.csv"');
-        $response->setContent($csvString);
-        return $response;
-     }
-
 
     public function imagesAction($groupSlug, $eventSlug, Request $request) {
 
@@ -546,5 +532,66 @@ class AdminController extends Controller
         }
         return $event;
     }
+
+    public function assignJudgesAction(Request $request, $groupSlug, $eventSlug, $ideaId)
+    {
+        $doc = $this->getDoctrine();
+
+        if (!$this->isAdmin()) {
+            throw new AccessDeniedException();
+        }
+
+        $judgeAssignment = $request->request->get('judgeAssignment');
+        $idea = $doc->getRepository('IdeaBundle:Idea')->findOneBy(array('id' => $ideaId));
+
+        $judges = array();
+
+        //Check if any judges are being assigned at all
+        if ( array_key_exists('judges',$judgeAssignment)) {
+
+            $judgeUserNames = $judgeAssignment['judges'];
+
+            $userRepo = $doc->getRepository('UserBundle:User');
+            foreach($judgeUserNames as $judgeUsername) {
+                $judge = $userRepo->findOneBy(array('username' => $judgeUsername));
+                if($judge != null)
+                    $judges[] = $judge;
+            }
+
+        }
+
+        $idea->setJudges($judges);
+
+        $em = $doc->getEntityManager();
+        $em->flush();
+
+        return  $this->redirect($this->generateUrl('idea_show', array(
+            'groupSlug' => $groupSlug,
+            'eventSlug' => $eventSlug,
+            'id' => $ideaId,
+        )));
+    }
+
+	public function exportIdeasAction($groupSlug, $eventSlug) {
+        $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
+        $csvString = $ideaRepo->toCSV();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$eventSlug.'-ideas.csv"');
+        $response->setContent($csvString);
+        return $response;
+    }
+
+    public function exportUsersAction() {
+        $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
+        $csvString = $userRepo->toCSV();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="users.csv"');
+        $response->setContent($csvString);
+        return $response;
+     }
 }
 

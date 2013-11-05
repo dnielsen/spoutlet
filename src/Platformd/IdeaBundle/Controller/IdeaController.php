@@ -22,33 +22,25 @@ use Platformd\EventBundle\Entity\Event;
 class IdeaController extends Controller
 {
 
+	const SIDEBAR_NONE = 0;
+    const SIDEBAR_JUDGE = 1;
+    const SIDEBAR_ADMIN = 2;
+
     public function showAllAction(Request $request, $groupSlug, $eventSlug)
     {
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
-        $tag         = $request->query->get('tag');
-        $viewPrivate = $request->query->get('viewPrivate', false);
-        $sortBy      = $request->query->get('sortBy', 'vote');
+        $tag         	= $request->query->get('tag');
+        $viewPrivate 	= $request->query->get('viewPrivate', false);
+        $sortBy      	= $request->query->get('sortBy', 'vote');
+        $showAllRounds  = $request->query->get('showAllRounds', 'false');
 
-        $submitActive = $event->getIsSubmissionActive();
-        $isVoting     = $this->canJudge($event);
-
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
-        $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
-
-        if ($isAdmin) {
-            $ideaList = $ideaRepo->filter($event->getId(), $event->getCurrentRound(), $tag, $viewPrivate);
-        }
-        else {
-            $user = $this->getCurrentUser();
-            if ($user) {
-                $ideaList = $ideaRepo->filter($event->getId(), $event->getCurrentRound(), $tag, $viewPrivate, $user->getId());
-            }
-            else {
-                $ideaList = $ideaRepo->filter($event->getId(), $event->getCurrentRound(), $tag);
-            }
-        }
+        //filter the idea list using the query parameters
+        $userParam  = $viewPrivate ? $this->getCurrentUser() : null;
+        $roundParam = $showAllRounds == 'true' ? null : $event->getCurrentRound();
+        $ideaRepo 	= $this->getDoctrine()->getRepository('IdeaBundle:Idea');
+        $ideaList 	= $ideaRepo->filter($event, $roundParam, $tag, $userParam);
 
         if ($sortBy == 'vote') {
             $ideaRepo->sortByFollows($ideaList);
@@ -57,21 +49,24 @@ class IdeaController extends Controller
             $ideaRepo->sortByCreatedAt($ideaList);
         }
 
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+
         $attendance = $this->getCurrentUserApproved($event);
 
         $params = array(
             'group'         => $group,
             'event'         => $event,
             'ideas'         => $ideaList,
-            'submitActive'  => $submitActive,
+            'submitActive'  => $event->getIsSubmissionActive(),
             'tag'           => $tag,
             'round'         => $event->getCurrentRound(),
             'sidebar'       => true,
             'attendance'    => $attendance,
-            'isAdmin'       => $isAdmin,
-            'isVoting'      => $isVoting,
             'viewPrivate'   => $viewPrivate,
             'sortBy'        => $sortBy,
+            'isAdmin'       => $isAdmin,
+            'isJudge'       => $this->isJudge($event),
+            'showAllRounds' => $showAllRounds,
         );
 
         return $this->render('IdeaBundle:Idea:showAll.html.twig', $params);
@@ -98,41 +93,87 @@ class IdeaController extends Controller
         $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
 
         $params = array(
-            'group' => $group,
-            'event' => $event,
-            'idea' => $idea,
-            'canEdit' => $this->canEdit($idea, $event),
-            'sidebar' => true,
-            'attendance' => $attendance,
-            'isAdmin'       => $isAdmin,
+            'group' 			=> $group,
+            'event' 			=> $event,
+            'idea' 				=> $idea,
+            'canEdit' 			=> $this->canEditIdea($idea, $event),
+			'canRemoveComments' => $this->canRemoveComment($idea),
+            'sidebar' 			=> true,
+            'attendance' 		=> $attendance,
+            'isAdmin'       	=> $isAdmin,
         );
 
 
         // Do vote sidebar stuff
-        $criteriaList = $doctrine->getRepository('IdeaBundle:VoteCriteria')->findByEventId($event->getId());
-        $params['isVoting'] = $this->canJudge($event) && count($criteriaList) > 0;
-        if( $params['isVoting'] ) {
+        $sidebarState = $this->getSidebarState($idea, $event);
+
+        //Disable Judge mode if no criteria defined yet
+        $criteriaList = $doctrine->getRepository('IdeaBundle:VoteCriteria')->findAll();
+        if($sidebarState == IdeaController::SIDEBAR_JUDGE && count($criteriaList) <= 0)
+            $sidebarState = IdeaController::SIDEBAR_NONE;
+
+        //pass state into twig
+        $params['sidebarState'] = $sidebarState;
+
+        $user = $this->getCurrentUser();
+
+        //For Admin sidebar
+        if( $sidebarState == IdeaController::SIDEBAR_ADMIN) {
+
+            //join the disjoint sets of public and private ideas into $ideas
+            $publicIdeas = $ideaRepo->filter($event, $currentRound, null, null);
+            $privateIdeas = $ideaRepo->filter($event, $currentRound, null, $user);
+            $ideas = array_merge($publicIdeas, $privateIdeas);
 
             // determine previous idea, next idea
-            $ideas = $ideaRepo->filter($event->getId(), $currentRound);
             $ideaRepo->sortByFollows($ideas);
 
-            $currentIdeaFound = false;
-            $previousIdea = null;
-            $nextIdea = null;
+            list($previousIdea, $nextIdea) = $this->findNextAndPrevious($ideas, $idea);
 
-            foreach($ideas as $currentIdea) {
-                if($currentIdeaFound) {
-                    $nextIdea = $currentIdea;
-                    break;
-                }
+            if($nextIdea){
+                $params['next'] = $nextIdea->getId();
+            }
+            if($previousIdea){
+                $params['previous'] = $previousIdea->getId();
+            }
 
-                if($idea->getId() == $currentIdea->getId()) {
-                    $currentIdeaFound = true;
-                } else {
-                    $previousIdea = $currentIdea;
+            $userRepo = $doctrine->getRepository('UserBundle:User');
+
+            //Get list of event judges and populate form widget
+            $choices = array();
+            $allowedVoterString = $event->getAllowedVoters();
+            if($allowedVoterString != "") {
+                $allowedVoters = array_map('trim',explode(",",$allowedVoterString));
+                foreach($allowedVoters as $voter) {
+                    $choices[$voter] = $userRepo->findOneBy(array('username' => $voter))->getName();
                 }
             }
+
+            $selected = array();
+            foreach($idea->getJudges() as $judge) {
+                $selected[] = array_search($judge->getName(),$choices);
+            }
+
+            $numRows = count($choices) <= 20 ? count($choices) : 20;
+            $formAttributes = array('multiple' => 'true', 'style' => 'width: 100%', 'size' => $numRows);
+            $choiceOptions = array(
+                'choices' => $choices,
+                'attr' => $formAttributes,
+                'multiple' => 'true',
+                'data' => $selected
+            );
+            $form = $this->container->get('form.factory')->createNamedBuilder('form', 'judgeAssignment')
+                ->add('judges', 'choice', $choiceOptions)
+                ->getForm();
+
+            $params['form'] = $form->createView();
+
+        } elseif( $sidebarState == IdeaController::SIDEBAR_JUDGE ) {
+            // determine previous idea, next idea
+            $ideas = $ideaRepo->filter($event, $currentRound, null, $user);
+            $ideaRepo->sortByFollows($ideas);
+
+            list($previousIdea, $nextIdea) = $this->findNextAndPrevious($ideas, $idea);
 
             if($nextIdea){
                 $params['next'] = $nextIdea->getId();
@@ -146,7 +187,7 @@ class IdeaController extends Controller
 
             //Pass previous vote values to the template keyed by category
 
-            $userName = $this->get('security.context')->getToken()->getUser()->getUsername();
+            $userName = $user->getUsername();
 
             $voteRepo = $doctrine->getRepository('IdeaBundle:Vote');
 
@@ -159,7 +200,6 @@ class IdeaController extends Controller
                 }
                 $params['values'] = $valuesByCriteria;
             }
-
         }
         return $this->render('IdeaBundle:Idea:show.html.twig', $params);
     }
@@ -527,7 +567,7 @@ class IdeaController extends Controller
         $event = $this->getEvent($groupSlug, $eventSlug);
 
         //check for judge role here
-        if (!$this->canJudge($event)) {
+        if (!$this->isJudge($event)) {
             throw new AccessDeniedException();
         }
 
@@ -615,6 +655,10 @@ class IdeaController extends Controller
         $idea = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($ideaId);
         $comment = $this->getDoctrine()->getRepository('IdeaBundle:Comment')->find($commentId);
 
+        if(!$this->canRemoveComment($idea)) {
+            throw new AccessDeniedException();
+        }
+
         $em = $this->getDoctrine()->getEntityManager();
         $em->remove($comment);
         $em->flush();
@@ -682,7 +726,7 @@ class IdeaController extends Controller
         $id = $this->getRequest()->request->get('id');
         $idea = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($id);
 
-        if (!$this->canEdit($idea, $event)) {
+        if (!$this->canEditIdea($idea, $event)) {
             throw new AccessDeniedException();
         }
 
@@ -807,7 +851,31 @@ class IdeaController extends Controller
         return $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY');
     }
 
-    public function canJudge($event) {
+    public function getSidebarState($idea, $event) {
+        if(!$this->isLoggedIn() || !$event->getIsVotingActive())
+            return IdeaController::SIDEBAR_NONE;
+
+        $securityContext = $this->get('security.context');
+        if($securityContext->isGranted('ROLE_ADMIN')) {
+            return IdeaController::SIDEBAR_ADMIN;
+        }
+        $username = $this->getCurrentUser()->getUsername();
+        if($this->canJudge($event, $idea)) {
+            return IdeaController::SIDEBAR_JUDGE;
+        }
+
+        return IdeaController::SIDEBAR_NONE;
+    }
+
+    public function canJudge($event, $idea) {
+
+        $user = $this->getCurrentUser();
+        $isAssignedToIdea =  $idea->isJudgeAssigned($user);
+
+        return $this->isJudge($event) && $isAssignedToIdea;
+    }
+
+    public function isJudge($event) {
 
         if(!$this->isLoggedIn())
             return false;
@@ -815,9 +883,9 @@ class IdeaController extends Controller
         if (!$event->getIsVotingActive())
             return false;
 
-        $username = $this->getCurrentUser()->getUsername();
+        $user = $this->getCurrentUser();
 
-        return $event->containsVoter($username);
+        return $event->containsVoter($user->getUsername());
     }
 
     public function canCreate($event) {
@@ -826,26 +894,32 @@ class IdeaController extends Controller
             return false;
         }
 
-        //TODO: Check to see if user is member of group/has joined event
-        return true;
+        return $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY');
     }
 
-    public function canEdit($idea, $event)
-    {
-        if(!$this->isLoggedIn() or !$this->canCreate($event))
+    public function isCreator($idea) {
+        if(!$this->isLoggedIn()) {
             return false;
-
-        $security = $this->getSecurity();
-        $username = $security->getToken()->getUser()->getUsername();
-
-        if($username === $idea->getCreator()->getUsername() || $security->isGranted('ROLE_ADMIN')) {
-            return true;
-        }
-
-        return false;
+		}
+        $username = $this->getCurrentUser()->getUsername();
+        return $username === $idea->getCreator()->getUsername();
     }
 
+    public function canEditIdea($idea, $event) {
+        $isCreator = $this->isCreator($idea);
+        $securityContext = $this->get('security.context');
 
+        $isUserAllowed = ($isCreator && $event->getIsSubmissionActive()) || $securityContext->isGranted('ROLE_ADMIN');
+        return $isUserAllowed;
+    }
+
+    public function canRemoveComment($idea) {
+        $securityContext = $this->get('security.context');
+        $isCreator = $this->isCreator($idea);
+
+        $isUserAllowed = $isCreator || $securityContext->isGranted('ROLE_ADMIN');
+        return $isUserAllowed;
+    }
 
     /**
      * Takes the user submitted string of tags, parses it, and returns an array of new tag objects
@@ -935,6 +1009,31 @@ class IdeaController extends Controller
             $tagNames[] = $tag->getTagName();
         }
         return $tagNames;
+    }
+
+    /**
+     * @param $ideas
+     * @param $currentIdea
+     * @return array
+     */
+    public function findNextAndPrevious($ideas, $idea)
+    {
+        $ideaFound = false;
+        $previousIdea = null;
+        $nextIdea = null;
+        foreach ($ideas as $currentIdea) {
+            if ($ideaFound) {
+                $nextIdea = $currentIdea;
+                break;
+            }
+
+            if ($currentIdea->getId() == $idea->getId()) {
+                $ideaFound = true;
+            } else {
+                $previousIdea = $currentIdea;
+            }
+        }
+        return array($previousIdea, $nextIdea);
     }
 
 
