@@ -42,6 +42,15 @@ class IdeaController extends Controller
         $ideaRepo 	= $this->getDoctrine()->getRepository('IdeaBundle:Idea');
         $ideaList 	= $ideaRepo->filter($event, $roundParam, $tag, $userParam);
 
+        //For admin remove the public ideas from the full list to just show private ideas
+        if($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            $publicList 	= $ideaRepo->filter($event, $roundParam, $tag, null);
+            foreach($publicList as $publicIdea) {
+                $index = array_search($publicIdea,$ideaList);
+                unset($ideaList[$index]);
+            }
+        }
+
         if ($sortBy == 'vote') {
             $ideaRepo->sortByFollows($ideaList);
         }
@@ -120,10 +129,7 @@ class IdeaController extends Controller
         //For Admin sidebar
         if( $sidebarState == IdeaController::SIDEBAR_ADMIN) {
 
-            //join the disjoint sets of public and private ideas into $ideas
-            $publicIdeas = $ideaRepo->filter($event, $currentRound, null, null);
-            $privateIdeas = $ideaRepo->filter($event, $currentRound, null, $user);
-            $ideas = array_merge($publicIdeas, $privateIdeas);
+            $ideas = $ideaRepo->filter($event, $currentRound, null, $user);
 
             // determine previous idea, next idea
             $ideaRepo->sortByFollows($ideas);
@@ -301,7 +307,7 @@ class IdeaController extends Controller
             throw $this->createNotFoundException('No idea found for id '.$id);
         }
 
-        if(!$this->canEdit($idea, $event)) {
+        if(!$this->canEditIdea($idea, $event)) {
             throw new AccessDeniedException();
         }
 
@@ -327,7 +333,7 @@ class IdeaController extends Controller
 
         $idea = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($id);
 
-        if(!$this->canEdit($idea, $event)) {
+        if(!$this->canEditIdea($idea, $event)) {
             throw new AccessDeniedException();
         }
 
