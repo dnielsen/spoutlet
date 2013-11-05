@@ -86,7 +86,7 @@
             </form>
         </td>
     <td>
-        <input type="submit" value="Advance To Next Round" onclick="document.forms['advance'].submit();">
+        <input type="submit" value="Advance To Next Round" onclick="if (confirm('Are you sure you want to advance these ideas to the next round?')) document.forms['advance'].submit();">
     </td>
 
     </table>
