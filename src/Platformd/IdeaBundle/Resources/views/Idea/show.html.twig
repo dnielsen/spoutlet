@@ -168,11 +168,15 @@
 		{% elseif sidebarState == constant('\\Platformd\\IdeaBundle\\Controller\\IdeaController::SIDEBAR_ADMIN') %}
 		    <h2>Admins' Sidebar</h2>
 
-		    <form action="{{ path('idea_admin_assign', {'groupSlug': group.slug, 'eventSlug': event.slug, 'ideaId': idea.id}) }}" method="post" {{ form_enctype(form) }}>
-		        {{ form_widget(form) }}
+            {% if event.allowedVoters | length > 0 %}
+                <form action="{{ path('idea_admin_assign', {'groupSlug': group.slug, 'eventSlug': event.slug, 'ideaId': idea.id}) }}" method="post" {{ form_enctype(form) }}>
+                    {{ form_widget(form) }}
 
-		       <button type="submit" name="submit" formnovalidate>Submit</button>
-		    </form>
+                   <button type="submit" name="submit" formnovalidate>Submit</button>
+                </form>
+            {% else %}
+                You must <a href="{{ path('idea_admin_event', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">add some judges</a> in order to assign any.
+            {% endif %}
 		{% endif %}
 
         <hr/>
