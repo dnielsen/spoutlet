@@ -858,16 +858,16 @@ class IdeaController extends Controller
     }
 
     public function getSidebarState($idea, $event) {
-        if(!$this->isLoggedIn() || !$event->getIsVotingActive())
-            return IdeaController::SIDEBAR_NONE;
 
-        $securityContext = $this->get('security.context');
-        if($securityContext->isGranted('ROLE_ADMIN')) {
-            return IdeaController::SIDEBAR_ADMIN;
-        }
-        $username = $this->getCurrentUser()->getUsername();
-        if($this->canJudge($event, $idea)) {
-            return IdeaController::SIDEBAR_JUDGE;
+        if ($event->getType() == Event::TYPE_IDEATHON)
+        {
+            if($this->getSecurity()->isGranted('ROLE_ADMIN')) {
+                return IdeaController::SIDEBAR_ADMIN;
+            }
+
+            if($this->canJudge($event, $idea)) {
+                return IdeaController::SIDEBAR_JUDGE;
+            }
         }
 
         return IdeaController::SIDEBAR_NONE;
@@ -876,9 +876,8 @@ class IdeaController extends Controller
     public function canJudge($event, $idea) {
 
         $user = $this->getCurrentUser();
-        $isAssignedToIdea =  $idea->isJudgeAssigned($user);
 
-        return $this->isJudge($event) && $isAssignedToIdea;
+        return $this->isJudge($event) && $idea->isJudgeAssigned($user);
     }
 
     public function isJudge($event) {
