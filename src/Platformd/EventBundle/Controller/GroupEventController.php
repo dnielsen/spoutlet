@@ -985,14 +985,6 @@ class GroupEventController extends Controller
         return $this->redirect($this->generateUrl('group_show', array('slug' => $groupEvent->getGroup()->getSlug())) . '#events');
     }
 
-    /**
-     * @return GroupManager
-     */
-    private function getGroupManager()
-    {
-        return $this->get('platformd.model.group_manager');
-    }
-
     private function getTagManager()
     {
         return $this->get('platformd.tags.model.tag_manager');

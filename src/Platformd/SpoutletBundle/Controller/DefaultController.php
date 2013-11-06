@@ -587,7 +587,7 @@ class DefaultController extends Controller
     {
         $site = $this->getCurrentSite();
 
-        $groups = $this->get('platformd.model.group_manager')->getAllLocationGroupsForSite($site);
+        $groups = $this->getGroupManager()->getAllLocationGroupsForSite($site);
 
         $groupsArray = array();
 

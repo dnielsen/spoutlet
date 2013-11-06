@@ -1077,11 +1077,6 @@ class GalleryController extends Controller
         return $this->get('pd.cevo.api.api_manager');
     }
 
-    private function getGroupManager()
-    {
-        return $this->get('platformd.model.group_manager');
-    }
-
     private function getTagManager()
     {
         return $this->get('platformd.tags.model.tag_manager');

@@ -938,8 +938,4 @@ class GroupAdminController extends Controller
         return $this->get('platformd.metric_manager');
     }
 
-    private function getGroupManager()
-    {
-        return $this->get('platformd.model.group_manager');
-    }
 }
