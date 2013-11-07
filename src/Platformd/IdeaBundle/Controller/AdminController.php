@@ -581,6 +581,19 @@ class AdminController extends Controller
         $response->headers->set('Content-Disposition', 'attachment; filename="users.csv"');
         $response->setContent($csvString);
         return $response;
-     }
+    }
+
+    public function exportVotesAction($groupSlug, $eventSlug) {
+        $event = $this->getEvent($groupSlug, $eventSlug);
+
+        $voteRepo = $this->getDoctrine()->getRepository('IdeaBundle:Vote');
+        $csvString = $voteRepo->toCSV($event);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$eventSlug.'-scores.csv"');
+        $response->setContent($csvString);
+        return $response;
+    }
 }
 
