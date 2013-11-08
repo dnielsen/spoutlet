@@ -91,7 +91,7 @@ class IdeaRepository extends EntityRepository
 
         //Add header
         $headerArray = array(
-            "id","Event", "Creator", "Title", "Creation Time",
+            "id","Event", "Creator", "Email", "Title", "Creation Time",
             "Description", "Stage", "For Course", "Professors",
             "Amount", "Members", "HighestRound", "IsPrivate"
         );
@@ -102,6 +102,7 @@ class IdeaRepository extends EntityRepository
                 $idea->getId(),
                 $idea->getEvent()->getName(),
                 $idea->getCreator()->getUsername(),
+                $idea->getCreator()->getEmail(),
                 $idea->getName(),
                 $idea->getCreatedAt()->format('Y-m-d H:i:s'),
                 $idea->getDescription(),
