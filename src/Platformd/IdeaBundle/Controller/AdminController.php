@@ -296,6 +296,7 @@ class AdminController extends Controller
 
         $vcRepo = $this->getDoctrine()->getRepository('IdeaBundle:VoteCriteria');
         $sortCriteria = $vcRepo->find($critId);
+
         $params['criteriaList'] = $vcRepo->findByEventId($this->getEvent($groupSlug, $eventSlug));
 
         //retrieve tag filter parameter
@@ -304,15 +305,17 @@ class AdminController extends Controller
 
         $currentRound = $event->getCurrentRound();
 
+        $round = $request->query->get('round', $currentRound);
+        $params['round'] = $round;
+        $params['currentRound'] = $currentRound;
+
         //perform filter and sort
         $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
-        $ideaList = $ideaRepo->filter($event, $currentRound, $tag, $this->getCurrentUser());
+        $ideaList = $ideaRepo->filter($event, $round, $tag, $this->getCurrentUser());
         $ideaRepo->sortByVotes($ideaList, true, $sortCriteria);
 
         //save the resulting ordered list of ideas
         $params['ideas'] = $ideaList;
-
-        $params['round'] = $currentRound;
         $params['firstN'] = $request->query->get('firstN');
 
         //caluclate table values if criteria exist
@@ -320,7 +323,7 @@ class AdminController extends Controller
         $criteriaCount =  count($params['criteriaList']);
 
         if($criteriaCount > 0) {
-            $params['avgScore'] = $voteRepo->getIdeaCriteriaTable($ideaList, $criteriaCount, $currentRound);
+            $params['avgScore'] = $voteRepo->getIdeaCriteriaTable($ideaList, $criteriaCount, $round);
         }
 
         return $this->render('IdeaBundle:Admin:summary.html.twig', $params);
