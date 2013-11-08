@@ -131,7 +131,7 @@ class VoteRepository extends EntityRepository
 
         //Add header
         $headerArray = array(
-            "Round", "Judge", "Idea", "Criteria", "Score",
+            "Round", "Idea", "Judge", "Criteria", "Score",
         );
 
         $votesArray[] = $headerArray;
@@ -140,8 +140,8 @@ class VoteRepository extends EntityRepository
 
             $voteArray = array(
                 $vote->getRound(),
-                $vote->getVoter(),
                 $vote->getIdea()->getName(),
+                $vote->getVoter(),
                 $vote->getCriteria()->getDisplayName(),
                 $vote->getValue(),
             );
