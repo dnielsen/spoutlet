@@ -3,21 +3,18 @@
 {% block event_content %}
 
     <div class="adminRow">
-        <h1>Event Configuration</h1>
+        <h1>General</h1>
         <a href="{{ path('idea_admin_event', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">
-            <input type="submit" value="Event Details" class="marginlft" />
+            <input type="submit" value="Configure Details" class="marginlft" />
         </a>
         <a href="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">
             <input type="submit" value="Add Images" class="marginlft" />
         </a>
         <a href="{{ path('idea_admin_export_ideas', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">
-            <input type="submit" value="Export Ideas to CSV" class="marginlft" />
+            <input type="submit" value="Download Ideas (CSV)" class="marginlft" />
         </a>
         <a href="{{ path('idea_admin_export_users', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">
-            <input type="submit" value="Export Users to CSV" class="marginlft" />
-        </a>
-        <a href="{{ path('idea_admin_export_votes', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">
-            <input type="submit" value="Export Scores to CSV" class="marginlft" />
+            <input type="submit" value="Download Users (CSV)" class="marginlft" />
         </a>
         {% if event.private %}
         <a href="{{ path('idea_admin_member_approvals', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">
@@ -28,12 +25,15 @@
 
     {% if event.type == 'ideathon' %}
         <div class="adminRow">
-            <h1>Judging Controls</h1>
+            <h1>Judging</h1>
             <a href="{{ path('idea_admin_criteria_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">
                 <input type="submit" value="Configure Criteria" class="marginlft" />
             </a>
             <a href="{{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">
-                <input type="submit" value="Round Summary" class="marginlft" />
+                <input type="submit" value="Round Manager" class="marginlft" />
+            </a>
+            <a href="{{ path('idea_admin_export_votes', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">
+                <input type="submit" value="Download Results (CSV)" class="marginlft" />
             </a>
         </div>
     {% endif %}
