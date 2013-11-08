@@ -585,7 +585,12 @@ class IdeaController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         //see if this voter has already voted on this idea
-        $votes = $this->getDoctrine()->getRepository('IdeaBundle:Vote')->findBy(array('idea' => $idea->getId(), 'voter' => $userName));
+        $votes = $this->getDoctrine()->getRepository('IdeaBundle:Vote')->findBy(
+            array('idea'  => $idea->getId(),
+                  'voter' => $userName,
+                  'round' => $currentRound,
+            )
+        );
 
         $criteriaList = $this->getDoctrine()->getRepository('IdeaBundle:VoteCriteria')->findByEventId($event->getId());
         foreach($criteriaList as $criteria) {
