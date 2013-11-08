@@ -972,8 +972,7 @@ class IdeaController extends Controller
 
     public function getGroup($groupSlug)
     {
-        $groupEm = $this->getDoctrine()->getRepository('GroupBundle:Group');
-        $group = $groupEm->findOneBySlug($groupSlug);
+        $group = $this->getGroupManager()->getGroupBySlug($groupSlug);
 
         if (!$group) {
             throw new NotFoundHttpException('Group not found.');
@@ -986,6 +985,7 @@ class IdeaController extends Controller
     public function getEvent($groupSlug, $eventSlug)
     {
         $group = $this->getGroup($groupSlug);
+
         $eventEm = $this->getDoctrine()->getRepository('EventBundle:GroupEvent');
         $event = $eventEm->findOneBy(
             array(
