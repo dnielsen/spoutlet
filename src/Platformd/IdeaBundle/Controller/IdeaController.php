@@ -117,7 +117,7 @@ class IdeaController extends Controller
         $sidebarState = $this->getSidebarState($idea, $event);
 
         //Disable Judge mode if no criteria defined yet
-        $criteriaList = $doctrine->getRepository('IdeaBundle:VoteCriteria')->findAll();
+        $criteriaList = $doctrine->getRepository('IdeaBundle:VoteCriteria')->findByEventId($event->getId());
         if($sidebarState == IdeaController::SIDEBAR_JUDGE && count($criteriaList) <= 0)
             $sidebarState = IdeaController::SIDEBAR_NONE;
 
