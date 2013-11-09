@@ -1,7 +1,7 @@
 echo '============================='
 echo 'Dumping assets'
 echo
-php app/console assetic:dump --env=dev 
+php app/console assetic:dump
 echo '============================='
 echo 'Installing assets'
 echo
