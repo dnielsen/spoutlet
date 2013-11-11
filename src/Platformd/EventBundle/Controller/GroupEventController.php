@@ -884,7 +884,7 @@ class GroupEventController extends Controller
         $this->getGroupManager()->autoJoinGroup($group, $user);
 
         if ($groupEvent->getPrivate()){
-            $this->setFlash('success', "We have received your request for API access. You will receive a response by email within 1 working day.");
+            $this->setFlash('success', "We have received your request for access. You will receive a response by email within 1 working day.");
 
         } else {
             $this->setFlash('success', $this->trans(
