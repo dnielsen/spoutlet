@@ -5,7 +5,6 @@ namespace Platformd\IdeaBundle\Controller;
 use Platformd\EventBundle\Entity\EventRsvpAction;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -16,7 +15,6 @@ use Platformd\EventBundle\Entity\Event;
 use Platformd\EventBundle\Entity\GroupEvent;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
-use Knp\MediaBundle\Entity\MediaRepository;
 
 class AdminController extends Controller
 {
@@ -99,7 +97,7 @@ class AdminController extends Controller
             }
         }
 
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Admin:eventForm.html.twig', array(
                 'form' => $form->createView(),
@@ -112,16 +110,14 @@ class AdminController extends Controller
 
     public function adminAction(Request $request, $groupSlug, $eventSlug) {
 
-        $this->basicSecurityCheck('ROLE_USER');
-
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
-
-        if (!$isAdmin && $this->getCurrentUser() !== $event->getUser()) {
+        if (!$this->canEditEvent($event)) {
             throw new AccessDeniedException();
         }
+
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Admin:admin.html.twig', array(
                 'group'     => $group,
@@ -188,7 +184,7 @@ class AdminController extends Controller
             }
         }
 
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Admin:criteriaForm.html.twig', array(
                 'group'     => $group,
@@ -266,7 +262,7 @@ class AdminController extends Controller
                 )));
         }
 
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Admin:criteriaAll.html.twig', array(
                 'form'      => $form->createView(),
@@ -281,7 +277,7 @@ class AdminController extends Controller
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         $params = array(
             'group'     => $group,
@@ -366,7 +362,7 @@ class AdminController extends Controller
 
         $event = $this->getEvent($groupSlug, $eventSlug);
 
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         $params = array(
             'group'     => $this->getGroup($groupSlug),
@@ -402,7 +398,7 @@ class AdminController extends Controller
     public function approvalsAction($groupSlug, $eventSlug) {
 
         $event = $this->getEvent($groupSlug, $eventSlug);
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         $attendees = $event->getAttendees();
         $awaitingApproval = array();
@@ -482,7 +478,8 @@ class AdminController extends Controller
     //------------------------ Helper Functions -----------------------------------
     public function isAdmin()
     {
-        return $this->get('security.context')->isGranted('ROLE_ADMIN');
+        return $this->isGranted('ROLE_ADMIN');
+
     }
 
     public function canEditEvent(Event $event)
@@ -529,7 +526,7 @@ class AdminController extends Controller
     {
         $doc = $this->getDoctrine();
 
-        if (!$this->isAdmin()) {
+        if (!$this->canEditEvent($this->getEvent($groupSlug, $eventSlug))) {
             throw new AccessDeniedException();
         }
 

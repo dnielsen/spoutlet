@@ -16,7 +16,6 @@ use Platformd\IdeaBundle\Entity\Vote;
 use Platformd\IdeaBundle\Entity\FollowMapping;
 use Platformd\IdeaBundle\Entity\Document;
 use Platformd\IdeaBundle\Entity\Link;
-use Platformd\UserBundle\Entity\User;
 use Platformd\EventBundle\Entity\Event;
 
 class IdeaController extends Controller
@@ -42,7 +41,7 @@ class IdeaController extends Controller
         $ideaRepo 	= $this->getDoctrine()->getRepository('IdeaBundle:Idea');
         $ideaList 	= $ideaRepo->filter($event, $roundParam, $tag, $userParam);
 
-        $isAdmin    = $this->getSecurity()->isGranted('ROLE_ADMIN');
+        $isAdmin    = $this->isGranted('ROLE_ADMIN');
 
         //For admin remove the public ideas from the full list to just show private ideas
         if ($viewPrivate && $isAdmin) {
@@ -99,7 +98,7 @@ class IdeaController extends Controller
         }
 
         $attendance = $this->getCurrentUserApproved($event);
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         $params = array(
             'group' 			=> $group,
@@ -213,13 +212,13 @@ class IdeaController extends Controller
 
     public function createFormAction($groupSlug, $eventSlug) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
         $attendance = $this->getCurrentUserApproved($event);
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:createForm.html.twig', array(
                 'group' => $group,
@@ -232,7 +231,7 @@ class IdeaController extends Controller
 
     public function createAction(Request $request, $groupSlug, $eventSlug) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $event = $this->getEvent($groupSlug, $eventSlug);
 
@@ -296,7 +295,7 @@ class IdeaController extends Controller
 
     public function editFormAction($groupSlug, $eventSlug, $id) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
@@ -312,7 +311,7 @@ class IdeaController extends Controller
         }
 
         $attendance = $this->getCurrentUserApproved($event);
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:createForm.html.twig', array(
                 'idea' => $idea,
@@ -327,7 +326,7 @@ class IdeaController extends Controller
 
     public function editAction($groupSlug, $eventSlug, $id) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $event = $this->getEvent($groupSlug, $eventSlug);
 
@@ -388,7 +387,7 @@ class IdeaController extends Controller
 
     public function uploadAction($groupSlug, $eventSlug, $id = null){
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
@@ -440,7 +439,7 @@ class IdeaController extends Controller
         }
 
         $attendance = $this->getCurrentUserApproved($event);
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:upload.html.twig', array(
                 'form'=>$form->createView(),
@@ -455,7 +454,7 @@ class IdeaController extends Controller
 
     public function deleteImageAction($groupSlug, $eventSlug)
     {
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $params = $this->getRequest()->request->all();
 
@@ -481,7 +480,7 @@ class IdeaController extends Controller
     public function addLinkAction($groupSlug, $eventSlug, $id = null)
     {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
@@ -528,7 +527,7 @@ class IdeaController extends Controller
         }
 
         $attendance = $this->getCurrentUserApproved($event);
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:addLink.html.twig', array(
                 'form'      => $form->createView(),
@@ -543,7 +542,7 @@ class IdeaController extends Controller
 
     public function deleteLinkAction($groupSlug, $eventSlug) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $params = $this->getRequest()->request->all();
 
@@ -568,7 +567,7 @@ class IdeaController extends Controller
 
     public function voteAction($groupSlug, $eventSlug) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $event = $this->getEvent($groupSlug, $eventSlug);
 
@@ -630,7 +629,7 @@ class IdeaController extends Controller
 
     public function commentAction($groupSlug, $eventSlug) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $params = $this->getRequest()->request->all();
 
@@ -656,7 +655,7 @@ class IdeaController extends Controller
 
     public function commentDeleteAction($groupSlug, $eventSlug) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $params = $this->getRequest()->request->all();
 
@@ -684,7 +683,7 @@ class IdeaController extends Controller
 
     public function followAction($groupSlug, $eventSlug, Request $request) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $params = $request->request->all();
         $ideaId = $params['id'];
@@ -730,7 +729,7 @@ class IdeaController extends Controller
 
     public function deleteAction($groupSlug, $eventSlug) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $event = $this->getEvent($groupSlug, $eventSlug);
 
@@ -770,7 +769,7 @@ class IdeaController extends Controller
         }
 
         $ownProfile = ($currentUser == $user);
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:profile.html.twig', array(
                 'user'       => $user,
@@ -823,7 +822,7 @@ class IdeaController extends Controller
             }
         }
 
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:profileForm.html.twig', array(
             'form'      => $form->createView(),
@@ -840,7 +839,7 @@ class IdeaController extends Controller
         $event = $this->getEvent($groupSlug, $eventSlug);
 
         $attendance = $this->getCurrentUserApproved($event);
-        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:info'.$page.'.html.twig', array(
                 'group'      => $group,
@@ -859,14 +858,14 @@ class IdeaController extends Controller
 
 
     public function isLoggedIn() {
-        return $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY');
+        return $this->isGranted('IS_AUTHENTICATED_REMEMBERED');
     }
 
     public function getSidebarState($idea, $event) {
 
         if ($event->getType() == Event::TYPE_IDEATHON)
         {
-            if($this->getSecurity()->isGranted('ROLE_ADMIN')) {
+            if($this->isGranted('ROLE_ADMIN')) {
                 return IdeaController::SIDEBAR_ADMIN;
             }
 
@@ -904,7 +903,7 @@ class IdeaController extends Controller
             return false;
         }
 
-        return $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY');
+        return $this->isLoggedIn();
     }
 
     public function isCreator($idea) {
@@ -916,19 +915,13 @@ class IdeaController extends Controller
     }
 
     public function canEditIdea($idea, $event) {
-        $isCreator = $this->isCreator($idea);
-        $securityContext = $this->get('security.context');
 
-        $isUserAllowed = ($isCreator && $event->getIsSubmissionActive()) || $securityContext->isGranted('ROLE_ADMIN');
-        return $isUserAllowed;
+        return $this->isGranted('ROLE_ADMIN') || ($this->isCreator($idea) && $event->getIsSubmissionActive());
     }
 
     public function canRemoveComment($idea) {
-        $securityContext = $this->get('security.context');
-        $isCreator = $this->isCreator($idea);
 
-        $isUserAllowed = $isCreator || $securityContext->isGranted('ROLE_ADMIN');
-        return $isUserAllowed;
+        return $this->isGranted('ROLE_ADMIN') || $this->isCreator($idea);
     }
 
     /**
