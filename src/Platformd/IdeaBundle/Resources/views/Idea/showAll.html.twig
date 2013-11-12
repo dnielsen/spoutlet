@@ -17,10 +17,16 @@
 
         </form>
 
-        {% if submitActive %}
-            <form action = "{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="get" class="right">
-                <input type="submit" value="Add {{ ideaType }}" class="right">
-            </form>
+        {% if submitActive and app.user is not null %}
+            {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
+                <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">
+                    <input type="submit" value="Add {{ ideaType }}" class="right">
+                </a>
+            {% else %}
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}">
+                    <input type="submit" value="Register" class="right">
+                </a>
+            {% endif %}
         {%  endif %}
         
     </div>
