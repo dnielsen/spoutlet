@@ -39,12 +39,12 @@
     margin-top: 35px;
     padding-bottom: 10px;
     max-width: 800px;
-    max-height: 140px;
+    max-height: 160px;
 }
 #tagline {
     position: absolute;
-    top: 144px;
-    right: 0;
+    bottom: 0px;
+    right: 0px;
 }
 
 /*::::::::::::::: NAV :::::::::::::::*/
