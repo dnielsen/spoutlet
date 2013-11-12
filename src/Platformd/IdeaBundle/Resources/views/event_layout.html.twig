@@ -1,6 +1,8 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{%  block header %}
+{% block title %}{{ event.name }}{% endblock %}
+
+{% block header %}
 
     {% embed 'SpoutletBundle::header.html.twig' %}
 
