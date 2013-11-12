@@ -397,6 +397,7 @@ Alienware Arena Team
 
         $ownedEvents = $this->getGroupEventService()->findBy(array(
                 'user' => $user->getId(),
+                'group' => $group->getId(),
                 'active' => 1,
             ));
 
