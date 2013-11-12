@@ -33,7 +33,7 @@ echo
 php app/console doc:mig:mig --no-interaction
 echo '============================='
 echo 'Clearing Symfony cache'
-echo 
+sudo rm -rf app/cache/*
 php app/console cache:clear --env=prod --no-debug
 echo '============================='
 echo 'Restarting Apache (gracefully)'
