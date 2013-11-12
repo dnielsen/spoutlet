@@ -1,5 +1,7 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
+{% block title %}{% if ownProfile %}My{% else %}{{ user.name }}'s{% endif %} Profile{% endblock %}
+
 {% block content %}
 
     <table class="tblStyle" id="profile">
