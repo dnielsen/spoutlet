@@ -880,17 +880,23 @@ class GroupEventController extends Controller
             )));
         }
 
+        $wasGroupMember = $group->isMember($user);
+
         $this->getGroupEventService()->register($groupEvent, $user);
         $this->getGroupManager()->autoJoinGroup($group, $user);
 
         if ($groupEvent->getPrivate()){
-            $this->setFlash('success', "We have received your request for access. You will receive a response by email within 1 working day.");
+            $this->setFlash('success', "We have received your request for private access. You will receive a response by an administrator when your account has been reviewed.");
+        }
+        else {
 
-        } else {
-            $this->setFlash('success', $this->trans(
-                'platformd.events.event_show.group_joined',
-                array('%groupName%' => $group->getName()))
-            );
+            if ($wasGroupMember || $group->isOwner($user)) {
+                $this->setFlash('success', $this->trans('platformd.events.event_show.now_attending'));
+            }
+            else {
+                $this->setFlash('success', $this->trans(
+                        'platformd.events.event_show.group_joined', array('%groupName%' => $group->getName())));
+            }
         }
 
         return $this->redirect($this->generateUrl('group_event_view', array(
