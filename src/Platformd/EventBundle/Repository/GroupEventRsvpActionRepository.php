@@ -16,15 +16,17 @@ class GroupEventRsvpActionRepository extends EntityRepository
             ->andWhere('r.event = :event')
             ->andWhere('r.user = :user')
             ->setParameter('event', $event)
-            ->setParameter('user', $user);
+            ->setParameter('user', $user)
+            ->orderBy('r.updatedAt', 'DESC');
 
-        $queryResult = $qb->getQuery()->getOneOrNullResult();
+        $queryResult = $qb->getQuery()->getResult();
 
         if(!$queryResult){
             return null;
         }
 
-        $attendanceStatus = reset($queryResult);
+        $attendanceStatusArray = reset($queryResult);
+        $attendanceStatus = reset($attendanceStatusArray);
 
         if ($attendanceStatus == EventRsvpAction::ATTENDING_PENDING) {
             return 'pending';
