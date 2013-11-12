@@ -20,7 +20,7 @@
 
         {% if app.user %}
             <ul>
-                <li>Welcome, <a href="{{ path('profile') }}">{% if app.user.name %}{{app.user.name}}{% else %}{{app.user.username}}{% endif %}</a></li>
+                <li>Welcome, <a href="{{ path('profile', {'username': app.user.username}) }}">{% if app.user.name %}{{app.user.name}}{% else %}{{app.user.username}}{% endif %}</a></li>
             </ul>
         {% endif %}
 
