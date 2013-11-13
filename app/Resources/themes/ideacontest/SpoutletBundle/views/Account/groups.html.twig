@@ -26,6 +26,8 @@
                             {% if action != null %}
                                 {% if action == "group_event" %}
                                     <a href="{{ path('group_event_new', { 'groupSlug': group[0].slug }) }}">{{ group[0].name }}</a>
+                                {% elseif action == "campsite_event" %}
+                                    <a href="{{ path('idea_admin_event', { 'groupSlug': group[0].slug, 'eventSlug': 'newEvent' }) }}">{{ group[0].name }}</a>
                                 {% else %}
                                     <a href="{{ path('group_show', { 'slug': group[0].slug }) }}">{{ group[0].name }}</a>
                                 {% endif %}

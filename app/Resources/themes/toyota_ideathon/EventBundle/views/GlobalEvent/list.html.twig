@@ -1,0 +1,93 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title 'platformd.events.event_listings.events' | pd_trans %}
+
+{% block content %}
+
+    <h1>{{ 'platformd.events.event_listings.header' | pd_trans }}</h1>
+
+    {% if features.hasGroups %}
+        <div class="std_1col" style="padding:0 0 10px 0">
+            <div>
+                {{ 'platformd.events.event_listings.create_event_message' | pd_trans | replace({'%1': path('accounts_groups', { 'then': "campsite_event" }), '%2' : path('group_new', { 'then': "campsite_event" }) }) | raw  }}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if features.hasSearch %}
+        <div class="std_1col">
+            {% render url('search_form', {'category': 'event', 'watermark': 'platformd.search.form.default.all'}) %}
+        </div>
+    {% endif %}
+
+    <div class="std_1col">
+
+        <div class="widget-100">
+            <div class="widget-header">
+                <div class="widget-title">
+                    {{ 'platformd.events.event_listings.current_events' | pd_trans }}<a style="float:right;font-size: 12px;" href="{{ path('accounts_events') }}">{{ 'platformd.events.event_listings.my_events' | pd_trans }}</a>
+                </div>
+            </div>
+            <div class="widget-content">
+                {% include 'EventBundle:GlobalEvent:_eventList.html.twig' with {
+                'events': upcomingEvents,
+                'no_events_message': 'platformd.events.event_listings.no_current_events'
+                } %}
+            </div>
+
+            <div class="widget-footer">
+                <div style="width:100%;position:relative;height:16px;">
+                    <a id="show-past-events" style="margin-right:10px;position:absolute;right:0px;" href="javascript:void(0);">{{ 'platformd.events.event_listings.view_past_events' | pd_trans }}</a>
+                    <div style="position:absolute;left:0px;">
+                        <img src="{{ asset('/bundles/spoutlet/images/form-ic-success-small.png') }}" alt="Attending" /><span class="attending">{{ 'platformd.events.event_listings.legend_registered' | pd_trans }}</span>
+                        <div style="display:inline-table; background-color:#9BC744; height: 10px; width:10px; margin:0 5px 0 35px;"></div>{{ 'platformd.events.event_listings.legend_sponsored' | pd_trans }}
+                        {% if features.hasGroups %}<div style="display:inline-table; background-color:#009cda; height: 10px; width:10px; margin:0 5px 0 35px;"></div>{{ 'platformd.events.event_listings.legend_group' | pd_trans }}{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="past-events" class="widget-100" style="margin-top:15px;display:none;">
+        <div class="widget-header">
+            <div class="widget-title">
+                {{ 'platformd.events.event_listings.past_events' | pd_trans }}
+            </div>
+        </div>
+
+        <div class="widget-content">
+            {% include 'EventBundle:GlobalEvent:_eventList.html.twig' with {
+            'events': pastEvents,
+            'no_events_message': 'platformd.events.event_listings.no_past_events'
+            } %}
+        </div>
+
+        <div class="widget-footer">
+            &nbsp;
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/admin/js/jquery.tablesorter.min.js') }}"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#show-past-events').click(function () {
+                $('#past-events').slideToggle(400, function() {
+                    if ($('#past-events').is(':visible')) {
+                        $('html, body').animate({
+                            scrollTop: $("#past-events").offset().top
+                        }, 100);
+                    }
+                });
+            });
+            $('table.tablesorter').tablesorter();
+        });
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'EventBundle::_css_assets.html.twig' %}
+{% endblock %}

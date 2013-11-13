@@ -1780,6 +1780,14 @@ Alienware Arena Team
                     $request->getSession()->remove('PostCreateAction');
                     return $this->redirect($url);
                 }
+                elseif ($then == "campsite_event") {
+
+                    $this->setFlash('success', 'Your group was created. Fill in the details below to list your upcoming event.');
+
+                    $url = $this->generateUrl('idea_admin_event', array('groupSlug' => $group->getSlug(), 'eventSlug' => 'newEvent'));
+                    $request->getSession()->remove('PostCreateAction');
+                    return $this->redirect($url);
+                }
             }
 
             $this->setFlash('success', 'The group was created!');
