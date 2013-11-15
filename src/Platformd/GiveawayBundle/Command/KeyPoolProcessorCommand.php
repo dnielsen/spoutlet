@@ -79,25 +79,17 @@ EOT
         // Get the first message in the queue
       
         if( $hpObject == 1) {
-           // get Recieve Message From HP Cloud Messaging  
-         // $hpcloud->sendMessageToQueue(KeyPoolQueueMessage::QUEUE_NAME, 'Helo Check this Is Test',$queue_url);
-           $result = $hpcloud->getMessageFromQueue(KeyPoolQueueMessage::QUEUE_NAME,$queue_url);
-        
+           $result = $hpcloud->getMessageFromQueue(KeyPoolQueueMessage::QUEUE_NAME,$queue_url);        
         } else {
              $messageResponse = $sqs->receive_message($queue_url, array(
               'VisibilityTimeout' => 5,
              ));
         }
         if ($hpObject == 1) {
-           $messageResponse = $result;
-      
-           $result1=explode("\n",$messageResponse);
-       
+           $messageResponse = $result;     
+           $result1=explode("\n",$messageResponse);       
            $message = (isset($result1[3])) ? json_decode($result1[3]) : '';
-           
-          // $message        = json_decode($messageResponse->body->ReceiveMessageResult->Message->Body);
-           $receiptHandle  = '';
-     
+           $receiptHandle  = '';    
         }
         else {
           $messageResponse = $messageResponse->isOk();
@@ -128,10 +120,15 @@ EOT
                 $repo       = $em->getRepository('GiveawayBundle:'.$message->poolClass);
                 $keyRepo    = $em->getRepository('GiveawayBundle:'.KeyPoolQueueMessage::$classKeyEntityMap[$message->poolClass]);
                 $pool       = $repo->find($message->poolId);
-
-                $response   = $s3->get_object($message->bucket, $message->filename);
-
-                if ($response->isOk()) { // We retrieved the key file from S3
+                if($hpObject == 1){
+                  $response   = $hpcloud->get_object($message->bucket, $message->filename);
+                  $response_data = $response;
+                } else {
+                  $response   = $s3->get_object($message->bucket, $message->filename);
+                  $response_data=$response->isOk();
+                }
+                
+                if ($response_data) { // We retrieved the key file from S3
 
                     $output->writeLn($tick);
                     $output->write("Finding key pool...");
