@@ -9,6 +9,7 @@ use Platformd\TagBundle\Model\TaggableInterface;
 use Platformd\SearchBundle\QueueMessage\SearchIndexQueueMessage;
 
 use Symfony\Component\HttpFoundation\Response;
+use HPCloud\HPCloudPHP;
 
 class SearchManager
 {
@@ -39,19 +40,25 @@ class SearchManager
 
     const SEARCH_RESULTS_PER_PAGE = 10;
 
-    public function __construct($domainName, $domainId, $allowIndex, $devMode, $devUser, EntityManager $em, $tagManager, $translator, $s3, $privateBucket, $queueUtil, $searchPrefix) {
-        $this->domainName    = $domainName;
-        $this->domainId      = $domainId;
-        $this->allowIndex    = $allowIndex;
-        $this->devMode       = $devMode;
-        $this->devUser       = $devUser;
-        $this->em            = $em;
-        $this->tagManager    = $tagManager;
-        $this->translator    = $translator;
-        $this->s3            = $s3;
-        $this->privateBucket = $privateBucket;
-        $this->queueUtil     = $queueUtil;
-        $this->searchPrefix  = $searchPrefix;
+    public function __construct($domainName, $domainId, $allowIndex, $devMode, $devUser, EntityManager $em, $tagManager, $translator, $s3, $privateBucket, $queueUtil, $searchPrefix, $hpcloud_accesskey='', $hpcloud_secreatkey='', $hpcloud_tenantid='', $hpcloud_url='', $hpcloud_container='',$objectStorage='') {
+        $this->domainName        = $domainName;
+        $this->domainId          = $domainId;
+        $this->allowIndex        = $allowIndex;
+        $this->devMode           = $devMode;
+        $this->devUser           = $devUser;
+        $this->em                = $em;
+        $this->tagManager        = $tagManager;
+        $this->translator        = $translator;
+        $this->s3                = $s3;
+        $this->privateBucket     = $privateBucket;
+        $this->queueUtil         = $queueUtil;
+        $this->searchPrefix      = $searchPrefix;
+      
+        $this->objectStorage     = $objectStorage;
+        $this->hpcloud_container = $hpcloud_container;
+        $this->hpcloud_url       = $hpcloud_url;
+	      $this->hpCloudObj        = new HPCloudPHP($hpcloud_accesskey,$hpcloud_secreatkey,$hpcloud_tenantid);
+        
     }
 
     public function search($criteria, $params = array(), $site, $category = null)
@@ -314,21 +321,31 @@ class SearchManager
                 }
 
             } else {
-
                 $indexData = $this->getEntityIndexData($entity);
             }
 
             $jsonData = json_encode($indexData);
             $filename = SearchIndexQueueMessage::SEARCH_INDEX_S3_PREFIX.'/'.md5($jsonData.time()).'.json';
-
-            $response = $this->s3->create_object($bucket, $filename, array(
+            
+           if($this->objectStorage == 'HpObjectStorage') {
+             $response = $this->hpCloudObj->create_object($bucket, $filename,array(
+                'body'          => $jsonData,
+                'encryption'    => 'AES256',
+                'contentType'   => 'text/json',            
+             ));
+           } else {
+           
+              $response = $this->s3->create_object($bucket, $filename, array(
                 'body'          => $jsonData,
                 'acl'           => \AmazonS3::ACL_PRIVATE,
                 'encryption'    => 'AES256',
                 'contentType'   => 'text/json',
-            ));
-
-            if ($response->isOk()) {
+              ));
+            
+            $response_data = $response->isOk();
+           }
+           
+            if ($response_data) {
 
                 $message = new SearchIndexQueueMessage();
                 $message->bucket = $bucket;

@@ -11,6 +11,7 @@ use
 ;
 
 use Platformd\UserBundle\Entity\Avatar;
+use HPCloud\HPCloudPHP;
 
 class AvatarGenerateNewSizeCommand extends ContainerAwareCommand
 {
@@ -18,7 +19,8 @@ class AvatarGenerateNewSizeCommand extends ContainerAwareCommand
     private $s3;
     private $publicBucket;
     private $privateBucket;
-
+    private $hpObject;
+    private $hpcloud;
     protected function configure()
     {
         $this
@@ -89,7 +91,7 @@ EOT
         $userUuid    = $user->getUuid();
         $avatarUuid  = $avatar->getUuid();
         $newFilename = $size.'x'.$size.'.png';
-
+        
         $cropDetails = array();
         list($cropDetails['width'], $cropDetails['height'], $cropDetails['x'], $cropDetails['y']) = explode(',', $avatar->getCropDimensions());
 
@@ -98,25 +100,42 @@ EOT
         $directory   = $isCurrentAvatar ? 'by_size' : $avatarUuid;
         $basePath    = Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$directory;
         $filepath    = $basePath.'/'.$rawFilename;
-
-        $alreadyExistsOnS3 = $this->s3->if_object_exists($bucket, $basePath.'/'.$newFilename);
-
+        if($this->hpObject ==0 ) {
+          $alreadyExistsOnS3 = $this->s3->if_object_exists($bucket, $basePath.'/'.$newFilename);
+        } else {
+          $basePath = Avatar::AVATAR_DIRECTORY_PREFIX;
+          $newFilename = $userUuid;
+          $alreadyExistsOnS3 = $this->hpcloud->if_object_exists($bucket, $basePath.'/'.$newFilename);          
+        } 
         if ($alreadyExistsOnS3) {
             $this->output(6, 'File already exists on s3 - skipping.');
             return false;
         }
 
         $this->output(6, 'Retrieving "'.$rawFilename.'" from s3...', false);
-
-        $response = $this->s3->get_object($bucket, $filepath);
-
-        if (!$response->isOk()) { // We retrieved the image file from S3
+        if($this->hpObject == 0) {
+          $response = $this->s3->get_object($bucket, $filepath);
+        
+        if (!$response->isOk()) { // We does not retrieved the image file from S3
             $this->output();
             $this->output(8, 'Error whilst downloading file from s3.');
             $error = $response->status == 404 ? "File not found on S3." : $response->body->Error->Message;
             $this->error($error);
             return false;
         }
+        
+        } else {
+           $response = $this->hpcloud->get_object($bucket, $filepath);           
+           if($response) {
+            $this->output();
+            $this->output(8, 'Error whilst downloading file from s3.');
+            //$error = $response->status == 404 ? "File not found on S3." : $response->body->Error->Message;
+            $error = 'File not found on S3';
+            $this->error($error);
+            return false;
+           }     
+        }
+        
 
         $this->tick();
         $this->output(6, 'Processing image...');
@@ -126,20 +145,35 @@ EOT
         $resizedFile = $this->resizeImage($imageResource, $size, $cropDetails);
 
         $this->output(6, 'Uploading image...', false);
-
-        $response = $this->s3->create_object($bucket, $basePath.'/'.$newFilename, array(
-            'fileUpload' => $resizedFile,
-            'contentType' => 'image/png',
-            'headers' => array('Cache-Control' => 'max-age=0'),
-        ));
-
-        if (!$response->isOk()) {
-            $this->output();
-            $this->output(8, 'Error whilst uploading file to s3.');
-            $this->error($response->body->Error->Message);
-            return false;
+        if($this->hpObject == 0) {
+          
+          $response = $this->s3->create_object($bucket, $basePath.'/'.$newFilename, array(
+              'fileUpload' => $resizedFile,
+              'contentType' => 'image/png',
+              'headers' => array('Cache-Control' => 'max-age=0'),
+          ));
+  
+          if (!$response->isOk()) {
+              $this->output();
+              $this->output(8, 'Error whilst uploading file to s3.');
+              $this->error($response->body->Error->Message);
+              return false;
+          }
+        } else {
+        
+            $response = $this->hpcloud->create_object($bucket, $basePath.'/'.$newFilename, array(
+                'fileUpload' => $resizedFile,
+                'contentType' => 'image/png',
+                'headers' => array('Cache-Control' => 'max-age=0'),
+            ));
+            if($response == false){
+              $this->output();
+              $this->output(8, 'Error whilst uploading file to s3.');
+              $this->error('Error whilst uploading file to s3.');
+              return false;
+            }
+          
         }
-
         $this->tick();
     }
 
@@ -151,10 +185,15 @@ EOT
         if (!$currentAvatar) {
             return true;
         }
-
-        $basePath = Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$user->getUuid().'/by_size';
-        $currentAvatarProcessed = $this->s3->if_object_exists($this->publicBucket, $basePath.'/'.$newFilename);
-
+        if($this->hpObject == 0){
+          $basePath = Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$user->getUuid().'/by_size';
+          $currentAvatarProcessed = $this->s3->if_object_exists($this->publicBucket, $basePath.'/'.$newFilename);
+        } else {
+          $basePath = Avatar::AVATAR_DIRECTORY_PREFIX;
+          $newFilename = $user->getUuid();
+          $currentAvatarProcessed = $this->s3->if_object_exists($this->publicBucket, $basePath.'/'.$newFilename);
+        }
+        
         if ($currentAvatarProcessed) {
             $this->output(6, 'Avatar already exists - skipping.');
             return true;
@@ -185,6 +224,16 @@ EOT
         $avatars = $avatarRepo->findAll();
         $this->tick();
         $this->output();
+        $this->hpObject = 0;
+        
+        if($container->getParameter('object_storage') == 'HpObjectStorage') {
+          $hpcloud_accesskey = $this->getContainer()->getParameter('hpcloud_accesskey');
+          $hpcloud_secreatekey = $this->getContainer()->getParameter('hpcloud_secreatkey');
+          $hpcloud_tenantid = $this->getContainer()->getParameter('hpcloud_tenantid');
+
+          $this->hpcloud = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatekey, $hpcloud_tenantid);
+          $this->hpObject = 1 ;       
+        }
 
         foreach ($avatars as $avatar) {
 
