@@ -1,0 +1,42 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "1024"]
+  end
+
+  config.vm.synced_folder "synced_folders/app_resources", "/home/vagrant/app_resources", owner: "vagrant", group: "vagrant" 
+  config.vm.synced_folder "synced_folders/app_resources_backup", "/home/vagrant/app_resources_backup", owner: "vagrant", group: "vagrant" 
+
+  config.vm.box = "opscode-ubuntu-12.04"
+  config.vm.box_url = "https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box"
+
+  config.vm.network :forwarded_port, guest: 80, host: 8080
+
+  config.vm.provision :shell, :inline => "echo \"America/Los_Angeles\" | sudo tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata"
+ 
+  config.omnibus.chef_version = :latest
+  config.vm.provision :chef_solo do |chef|
+    chef.add_recipe "apt"
+    chef.add_recipe "ntp"
+    chef.add_recipe "locale"
+    chef.add_recipe "vim"
+    chef.add_recipe "curl"
+
+    config.vm.provision :shell, :path => "custom.sh"
+
+    chef.json = { 
+    	:apache => { :default_site_enabled => true }, 
+      :mysql => { :server_root_password => "platformd",
+                  :server_debian_password => "platformd",
+                  :server_repl_password => "platformd" },
+      :campsite => { :db_password => "platformd" }
+    }
+    chef.add_recipe "campsite"
+  end
+
+end
