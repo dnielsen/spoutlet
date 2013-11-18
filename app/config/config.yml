@@ -181,7 +181,7 @@ parameters:
     available_locales:
         # we're abusing the locales to make our many "sites"
         # this will change in the future
-        - en_campsite       # .
+        - en_campsite       # www.
         - en_sjsu           # sjsu.
         - en_bigdatacamp    # bigdatacamp.
         - en_dataminingcamp # dataminingcamp.
@@ -193,7 +193,7 @@ parameters:
     # used by the router
     site_host_map:
         # %host_suffix% might be something like "staging"
-        en_campsite:        %host_suffix%.%base_host%
+        en_campsite:        www%host_suffix%.%base_host%
         en_sjsu:            sjsu%host_suffix%.%base_host%
         en_bigdatacamp:     bigdatacamp%host_suffix%.%base_host%
         en_dataminingcamp:  dataminingcamp%host_suffix%.%base_host%
