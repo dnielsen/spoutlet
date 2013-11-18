@@ -800,6 +800,7 @@ class IdeaController extends Controller
             ->add('title')
             ->add('organization')
             ->add('industry')
+            ->add('aboutMe', null, array('attr' => array('rows' => '4', 'cols' => '60', 'maxlength' => '2000')))
             ->add('twitterUsername')
             ->add('professionalEmail')
             ->add('linkedIn', null, array('attr' => array('size' => '60%')))
