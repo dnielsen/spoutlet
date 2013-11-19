@@ -109,7 +109,7 @@ if [ ! -f $PROJ/app/config/parameters.ini ]; then
   echo "---------------------------------------"
 else 
   echo "---------------------------------------"
-  echo "Skipping parameteres.ini install -- already exists"
+  echo "Skipping parameters.ini install -- already exists"
   echo "---------------------------------------"
 fi
 
@@ -149,7 +149,7 @@ cd $OLD_DIR
 echo "---------------------------------------"
 echo "Refresh the cache"
 rm -rf $PROJ/app/cache/*
-sudo -u vagrant -g vagrant php $PROJ/app/console cache:clear --env=dev 
+sudo -u vagrant -g vagrant php $PROJ/app/console cache:clear 
 echo "---------------------------------------"
 
 echo "Configuration complete! Access the site at:"
