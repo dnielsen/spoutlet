@@ -151,3 +151,9 @@ echo "Refresh the cache"
 rm -rf $PROJ/app/cache/*
 sudo -u vagrant -g vagrant php $PROJ/app/console cache:clear --env=dev 
 echo "---------------------------------------"
+
+echo "Configuration complete! Access the site at:"
+echo
+echo "http://192.168.56.3/app_dev.php"
+echo
+echo "---------------------------------------"
