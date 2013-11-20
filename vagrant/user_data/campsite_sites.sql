@@ -73,7 +73,7 @@ CREATE TABLE `pd_site_config` (
 
 LOCK TABLES `pd_site_config` WRITE;
 /*!40000 ALTER TABLE `pd_site_config` DISABLE KEYS */;
-INSERT INTO `pd_site_config` VALUES (1,1,NULL,NULL,'support@campsite.org','noreply@campsite.org','Campsite',0,'www.campsite.org',NULL,0),(2,2,NULL,NULL,'support@campsite.org','noreply@campsite.org','Campsite',0,'www.campsite.org',NULL,0),(3,3,NULL,NULL,'support@campsite.org','noreply@campsite.org','Campsite',0,'www.campsite.org',NULL,0);
+INSERT INTO `pd_site_config` VALUES (1,1,NULL,NULL,'support@campsite.org','noreply@cloudcamp.org','Campsite',0,'www.campsite.org',NULL,0),(2,2,NULL,NULL,'support@campsite.org','noreply@cloudcamp.org','Campsite',0,'www.campsite.org',NULL,0),(3,3,NULL,NULL,'support@campsite.org','noreply@cloudcamp.org','Campsite',0,'www.campsite.org',NULL,0);
 /*!40000 ALTER TABLE `pd_site_config` ENABLE KEYS */;
 UNLOCK TABLES;
 
