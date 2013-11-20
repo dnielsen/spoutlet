@@ -103,9 +103,9 @@ if [ ! -f $PROJ/app/config/parameters.ini ]; then
   echo "---------------------------------------"
   echo "Adding parameters.ini from user_data"
   sudo -u vagrant -g vagrant cp /vagrant/user_data/parameters.ini $PROJ/app/config/parameters.ini
-  sudo -u vagrant -g vagrant sed -i "s/\(database_name *= *\).*/\1$DB_NAME/" $PROJ/app/config/parameters.ini
-  sudo -u vagrant -g vagrant sed -i "s/\(database_user *= *\).*/\1$DB_USER/" $PROJ/app/config/parameters.ini
-  sudo -u vagrant -g vagrant sed -i "s/\(database_password*= *\).*/\1$DB_PASSWORD/" $PROJ/app/config/parameters.ini
+  sudo -u vagrant -g vagrant sed -i "s/\(^\s*database_name\s*=\s*\).*/\1$DB_NAME/" $PROJ/app/config/parameters.ini
+  sudo -u vagrant -g vagrant sed -i "s/\(^\s*database_user\s*=\s*\).*/\1$DB_USER/" $PROJ/app/config/parameters.ini
+  sudo -u vagrant -g vagrant sed -i "s/\(^\s*database_password\s*=\s*\).*/\1$DB_PASS/" $PROJ/app/config/parameters.ini
   echo "---------------------------------------"
 else 
   echo "---------------------------------------"
