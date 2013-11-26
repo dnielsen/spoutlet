@@ -8,17 +8,17 @@
 
             setTypeControls();
 
-            $('#form_type').change(function() {
+            $('#event_type').change(function() {
                 setTypeControls();
             });
 
-            $('#form_online').change(function() {
+            $('#event_online').change(function() {
                 setLocationControls();
             });
 
             function setTypeControls(){
 
-                var type = $('#form_type').val();
+                var type = $('#event_type').val();
 
                 if (type == 'unconference'){
                     $('#time-controls').slideDown();
@@ -44,7 +44,7 @@
             }
 
             function setLocationControls() {
-                var isOnline = $('#form_online').val();
+                var isOnline = $('#event_online').val();
                 if(isOnline == '1') {
                     $('#location-controls').slideUp();
                 } else {
@@ -54,37 +54,37 @@
 
             $('form').submit(function() {
 
-                var type = $('#form_type').val();
+                var type = $('#event_type').val();
 
                 if (type == 'unconference'){
-                    $('#form_online').val('0');
+                    $('#event_online').val('0');
                 }
                 else if (type == 'ideathon'){
-                    if($('#form_online').val() == '1') {
-                        $('#form_location').val(null);
-                        $('#form_address1').val(null);
-                        $('#form_address2').val(null);
+                    if($('#event_online').val() == '1') {
+                        $('#event_location').val(null);
+                        $('#event_address1').val(null);
+                        $('#event_address2').val(null);
                     }
                 }
                 else if (type == 'forum'){
-                    $('#form_startsAt_date_year').val(null);
-                    $('#form_startsAt_date_month').val(null);
-                    $('#form_startsAt_date_day').val(null);
-                    $('#form_startsAt_time_hour').val(null);
-                    $('#form_startsAt_time_minute').val(null);
-                    $('#form_endsAt_date_year').val(null);
-                    $('#form_endsAt_date_month').val(null);
-                    $('#form_endsAt_date_day').val(null);
-                    $('#form_endsAt_time_hour').val(null);
-                    $('#form_endsAt_time_minute').val(null);
-                    $('#form_endsAt').val(null);
-                    $('#form_online').val(1);
-                    $('#form_location').val(null);
-                    $('#form_address1').val(null);
-                    $('#form_address2').val(null);
-                    $('#form_isSubmissionActive').val(1);
-                    $('#form_isVotingActive').val(0);
-                    $('#form_allowedVoters').val(null);
+                    $('#event_startsAt_date_year').val(null);
+                    $('#event_startsAt_date_month').val(null);
+                    $('#event_startsAt_date_day').val(null);
+                    $('#event_startsAt_time_hour').val(null);
+                    $('#event_startsAt_time_minute').val(null);
+                    $('#event_endsAt_date_year').val(null);
+                    $('#event_endsAt_date_month').val(null);
+                    $('#event_endsAt_date_day').val(null);
+                    $('#event_endsAt_time_hour').val(null);
+                    $('#event_endsAt_time_minute').val(null);
+                    $('#event_endsAt').val(null);
+                    $('#event_online').val(1);
+                    $('#event_location').val(null);
+                    $('#event_address1').val(null);
+                    $('#event_address2').val(null);
+                    $('#event_isSubmissionActive').val(1);
+                    $('#event_isVotingActive').val(0);
+                    $('#event_allowedVoters').val(null);
                 }
             });
         })
