@@ -1663,14 +1663,21 @@ Alienware Arena Team
     public function showAction($slug)
     {
         $group = $this->getGroupBySlug($slug);
+
+        $pastEvents     = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group, 6);
+        $ongoingEvents  = $this->getGroupEventService()->findOngoingEventsForGroup($group, 6);
         $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group, 6);
+
         $nextEvent = reset($upcomingEvents);
-        $remainingEvents = array_slice($upcomingEvents, 1);
+        $moreEvents = array_slice($upcomingEvents, 1);
+
+        $groupEvents = array_merge($ongoingEvents, $moreEvents);
 
         return $this->render('GroupBundle:Group:show.html.twig', array(
             'group'          => $group,
             'nextEvent'      => $nextEvent,
-            'upcomingEvents' => $remainingEvents,
+            'groupEvents'    => $groupEvents,
+            'pastEvents'     => $pastEvents,
         ));
     }
 
