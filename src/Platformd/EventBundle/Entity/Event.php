@@ -689,15 +689,20 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
     public function getDateRangeString()
     {
-        $startsAtDate = $this->getStartsAt()->format('M d');
-        $startsAtYear = $this->getStartsAt()->format('Y');
-        $endsAtDate = $this->getEndsAt()->format('M d');
-        $endsAtYear = $this->getEndsAt()->format('Y');
+        if ($this->getStartsAt() && $this->getEndsAt()) {
+            $startsAtDate = $this->getStartsAt()->format('M d');
+            $startsAtYear = $this->getStartsAt()->format('Y');
+            $endsAtDate = $this->getEndsAt()->format('M d');
+            $endsAtYear = $this->getEndsAt()->format('Y');
 
-        if ($startsAtYear == $endsAtYear) {
-            return ($startsAtDate == $endsAtDate) ? $startsAtDate.', '.$endsAtYear : $startsAtDate.' - '.$endsAtDate.', '.$startsAtYear;
-        } else {
-            return $startsAtDate.', '.$startsAtYear.' - '.$endsAtDate.', '.$endsAtYear;
+            if ($startsAtYear == $endsAtYear) {
+                return ($startsAtDate == $endsAtDate) ? $startsAtDate.', '.$endsAtYear : $startsAtDate.' - '.$endsAtDate.', '.$startsAtYear;
+            } else {
+                return $startsAtDate.', '.$startsAtYear.' - '.$endsAtDate.', '.$endsAtYear;
+            }
+        }
+        else {
+            return null;
         }
     }
 

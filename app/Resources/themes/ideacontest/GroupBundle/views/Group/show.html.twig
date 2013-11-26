@@ -54,14 +54,14 @@
         </table>
         {% endif %}
 
-        {% if upcomingEvents %}
-        <h2 class="stepBar">More Upcoming Events</h2>
+        {% if groupEvents %}
+        <h2 class="stepBar">More Events</h2>
         <div class="scrollableSidebarWidget">
-            {% for event in upcomingEvents %}
+            {% for event in groupEvents %}
                 <div class="scrollableSidebarWidgetItem">
                     <div class="left">
                         <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventSlug': event.slug }) }}" class="midtxt">{{ event.name }}</a><br>
-                        {{event.DateRangeString}} | {% if event.getOnline %}Online Event{% else %}{{ event.location }}{% endif %}
+                        {{ event.DateRangeString | default("Ongoing Event") }} | {% if event.getOnline %}Online Event{% else %}{{ event.location }}{% endif %}
                     </div>
                     <div class="right">
                         {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
@@ -76,11 +76,30 @@
         </div>
         {% endif %}
 
-        <h2 class="stepBar">Members</h2>
+
+        {% if pastEvents %}
+        <h2 class="stepBar">Past Events</h2>
+            <div class="scrollableSidebarWidget">
+                {% for event in pastEvents %}
+                    <div class="scrollableSidebarWidgetItem">
+                        <div class="left">
+                            <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventSlug': event.slug }) }}" class="midtxt">{{ event.name }}</a><br>
+                            {{ event.DateRangeString }} | {% if event.getOnline %}Online Event{% else %}{{ event.location }}{% endif %}
+                        </div>
+                        <div class="right">
+                            <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="btnTny">View Ideas</a>
+                        </div>
+                        <div class="clr"></div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <h2 class="stepBar">{{ group.members|length }} Member{% if group.members|length > 1 %}s{% endif %}</h2>
         <div class="scrollableSidebarWidget">
             {% for member in group.members %}
                 <div class="scrollableSidebarWidgetItem">
-                    - <a href="{{ path('profile', {'username': member.username}) }}">{{ member.name }}</a>
+                    <a href="{{ path('profile', {'username': member.username}) }}">{{ member.name }}</a>
                 </div>
             {% else %}
                 There are no members of this group yet.
