@@ -91,6 +91,8 @@ INSTALLATION
 
     Update date.timezone with your server's timezone:  
     `date.timezone = "America/Los_Angeles"`
+    Prevent <? ?> from functioning the same as <?php ?>, this can confuse some webservers.
+    Set `short_open_tag = Off` 
 
 * Check to see if your system is setup by running the following command.
     If you see any issues, you may need to install more things. You can
