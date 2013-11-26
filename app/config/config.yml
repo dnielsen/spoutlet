@@ -182,6 +182,8 @@ parameters:
         # we're abusing the locales to make our many "sites"
         # this will change in the future
         - en_campsite       # www.
+        - en_dev            # no prefix
+        - en_staging        # staging.
         - en_sjsu           # sjsu.
         - en_bigdatacamp    # bigdatacamp.
         - en_dataminingcamp # dataminingcamp.
@@ -194,6 +196,8 @@ parameters:
     site_host_map:
         # %host_suffix% might be something like "staging"
         en_campsite:        www%host_suffix%.%base_host%
+        en_dev:             %base_host%
+        en_staging:         %host_suffix%.%base_host%
         en_sjsu:            sjsu%host_suffix%.%base_host%
         en_bigdatacamp:     bigdatacamp%host_suffix%.%base_host%
         en_dataminingcamp:  dataminingcamp%host_suffix%.%base_host%
@@ -205,8 +209,10 @@ parameters:
     # this is repeated in the multitenancy manager - should not be
     platformd_sites:
         en_campsite:        Campsite
+        en_dev:             Dev
+        en_staging:         Staging
         en_sjsu:            SanJoseStateUniversity
-        en_bigdatacamp:     BigDataCamp 
+        en_bigdatacamp:     BigDataCamp
         en_dataminingcamp:  DataMiningCamp
         en_hackomaha:       HackOmaha
         en_platformd:       PlatformD

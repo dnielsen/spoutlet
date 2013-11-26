@@ -38,7 +38,7 @@ CREATE TABLE `pd_site` (
 
 LOCK TABLES `pd_site` WRITE;
 /*!40000 ALTER TABLE `pd_site` DISABLE KEYS */;
-INSERT INTO `pd_site` VALUES (1,'Campsite','en_campsite','localhost','ideacontest'),(2,'Toyota','en_toyota','toyota.campsite.local','toyota_ideathon'),(3,'PlaceHolder','en_campsite','','ideacontest');
+INSERT INTO `pd_site` VALUES (1,'Campsite','en_dev','192.168.56.3','ideacontest'),(2,'Toyota','en_toyota','toyota.campsite.local','toyota_ideathon'),(3,'PlaceHolder','en_campsite','','ideacontest');
 /*!40000 ALTER TABLE `pd_site` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -73,7 +73,7 @@ CREATE TABLE `pd_site_config` (
 
 LOCK TABLES `pd_site_config` WRITE;
 /*!40000 ALTER TABLE `pd_site_config` DISABLE KEYS */;
-INSERT INTO `pd_site_config` VALUES (1,1,NULL,NULL,'osman@platformd.com','noreply@cloudcamp.org','Campsite',0,'www.campsite.org',NULL,0),(2,2,NULL,NULL,'osman@platformd.com','noreply@cloudcamp.org','Campsite',0,'www.campsite.org',NULL,0),(3,3,NULL,NULL,'osman@platformd.com','noreply@cloudcamp.org','Campsite',0,'www.campsite.org',NULL,0);
+INSERT INTO `pd_site_config` VALUES (1,1,NULL,NULL,'support@campsite.org','noreply@cloudcamp.org','Campsite',0,'www.campsite.org',NULL,0),(2,2,NULL,NULL,'support@campsite.org','noreply@cloudcamp.org','Campsite',0,'www.campsite.org',NULL,0),(3,3,NULL,NULL,'support@campsite.org','noreply@cloudcamp.org','Campsite',0,'www.campsite.org',NULL,0);
 /*!40000 ALTER TABLE `pd_site_config` ENABLE KEYS */;
 UNLOCK TABLES;
 
