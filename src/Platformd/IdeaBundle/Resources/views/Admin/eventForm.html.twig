@@ -52,7 +52,7 @@
                 }
             }
 
-            $('event').submit(function() {
+            $('#event').submit(function() {
 
                 var type = $('#event_type').val();
 
@@ -102,7 +102,7 @@
 
     <h1>{{ verb }} Your Event</h1>
 
-    <form action="{{ formpath }}" method="post" {{ form_enctype(form) }} novalidate>
+    <form action="{{ formpath }}" method="post" {{ form_enctype(form) }} id="event" novalidate>
         {{ form_row(form.name) }}
         {{ form_row(form.content) }}
         {{ form_row(form.type) }}
