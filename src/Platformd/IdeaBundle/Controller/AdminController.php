@@ -48,11 +48,11 @@ class AdminController extends Controller
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
             ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
             ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
-            ->add('type',               'choice',           array('choices' => array(Event::TYPE_UNCONFERENCE   => 'Unconference',
-                                                                                     Event::TYPE_IDEATHON       => 'Ideathon',
+            ->add('type',               'choice',           array('choices' => array(Event::TYPE_IDEATHON       => 'Ideathon',
+                                                                                     Event::TYPE_UNCONFERENCE   => 'Unconference',
                                                                                      Event::TYPE_FORUM          => 'Forum',
                                                                                     )))
-            ->add('online',             'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
+            ->add('online',             'choice',           array('choices' => array('1' => 'Yes', '0' => 'No')))
             ->add('private',            'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
             ->add('startsAt',           'datetime',         array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('endsAt',             'datetime',         array('attr'    => array('size' => '60%'), 'required' => '0'))
