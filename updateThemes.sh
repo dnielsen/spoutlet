@@ -27,6 +27,9 @@ if [ $ENV == 'dev' ]; then
     php app/console assetic:dump
 elif [ $ENV == 'prod' ]; then 
     php app/console assetic:dump -e prod --no-debug
+    echo '============================='
+    echo
+    php app/console cache:clear -e prod --no-debug
 fi
 echo '============================='
 echo 
