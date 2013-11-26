@@ -79,11 +79,11 @@ INSTALLATION
 
     `UUID=ba4a563f-4f62-4607-97aa-cd42f68aeb86   /home           ext4    defaults,acl        0       2`
 
-* Run the following commands to set up permissions for apache
+* Run the following commands to set up permissions for apache:
 
-    $ APACHEUSER=\`ps aux | grep -E '[a]pache|[h]ttpd' | grep -v root | head -1 | cut -d\  -f1\`  
-    $ sudo setfacl -R -m u:$APACHEUSER:rwX -m u:\`whoami\`:rwX app/cache app/logs  
-    $ sudo setfacl -dR -m u:$APACHEUSER:rwX -m u:\`whoami\`:rwX app/cache app/logs  
+        $ APACHEUSER=\`ps aux | grep -E '[a]pache|[h]ttpd' | grep -v root | head -1 | cut -d\  -f1\`  
+        $ sudo setfacl -R -m u:$APACHEUSER:rwX -m u:\`whoami\`:rwX app/cache app/logs  
+        $ sudo setfacl -dR -m u:$APACHEUSER:rwX -m u:\`whoami\`:rwX app/cache app/logs  
 
 * Make sure you set the timezone in your php.ini file
 
