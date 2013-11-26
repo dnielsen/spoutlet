@@ -52,7 +52,7 @@
                 }
             }
 
-            $('form').submit(function() {
+            $('event').submit(function() {
 
                 var type = $('#event_type').val();
 
@@ -77,7 +77,6 @@
                     $('#event_endsAt_date_day').val(null);
                     $('#event_endsAt_time_hour').val(null);
                     $('#event_endsAt_time_minute').val(null);
-                    $('#event_endsAt').val(null);
                     $('#event_online').val(1);
                     $('#event_location').val(null);
                     $('#event_address1').val(null);
