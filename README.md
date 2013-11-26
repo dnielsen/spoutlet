@@ -12,15 +12,15 @@ INSTALLATION
     $ cd spoutlet  
     $ ./install_packages.sh 
 
+* Copy the template parameters file to parameters.ini
+
+    $ cp app/config/parameters.ini.dist  app/config/parameters.ini
+    
 * Update the vendors (this will take several minutes the first time you do it)
 
     $ php bin/vendors install
 
     - If this command fails, see the last section
-
-* Copy the template parameters file to parameters.ini
-
-    $ cp app/config/parameters.ini.dist  app/config/parameters.ini
     
 * Open the `app/config/parameters.ini` file and customize the database
     information. All the other settings are fine.
