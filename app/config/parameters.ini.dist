@@ -76,18 +76,19 @@
     api_secret_key        = yourSecretKeyHere
 
     varnish_server        = http://demo.alienwarearena.local:8080
+    
     ; used for HP Cloud HpObjectStorage and for aws use AWSObjectStorage
-    object_storage        = HpObjectStorage
-    hpcloud_accesskey     = YS11LX9TT81LNVXKSKM7
-    hpcloud_secreatkey    = r8zsRj+i/SfVSXkOiUlVZg2SJBw2p2izogqKlo+W
-    hpcloud_tenantid      = 10873218563681
-    hpcloud_url           = https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/
-    hpcloud_messaging_url = https://region-a.geo-1.messaging.hpcloudsvc.com/v1.1/10873218563681
-    hpcloud_container     = platformd-public
+    objectStorage        = HpObjectStorage
+    hpcloudAccesskey     = YS11LX9TT81LNVXKSKM7
+    hpcloudSecreatkey    = r8zsRj+i/SfVSXkOiUlVZg2SJBw2p2izogqKlo+W
+    hpcloudTenantid      = 10873218563681
+    hpcloudUrl           = https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/
+    hpcloudMessagingUrl = https://region-a.geo-1.messaging.hpcloudsvc.com/v1.1/10873218563681
+    hpcloudContainer     = platformd-public
     ; For use SendGrid Email service use SendGrid and for Aws use AWS_SES
-    email_service         = SendGrid
-    sendgrid_username     = dnielsen
-    sendgrid_password     = Deepblue1
+    emailService         = SendGrid
+    sendgridUsername     = dnielsen
+    sendgridPassword     = Deepblue1
     
     ; only set to true if you have implemented the API authentication system and have configured it properly
     api_authentication    = false

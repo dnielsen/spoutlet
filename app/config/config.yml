@@ -178,19 +178,20 @@ parameters:
     # If the file does not exist or is empty, default country is "US".
     ip_lookup_override: false
     ip2location_lookup_directory: %kernel.root_dir%/../external_data/ip2location/
-    object_storage: %object_storage%
-    #object_storage: AWSObjectStorage
-    hpcloud_accesskey: %hpcloud_accesskey%
-    hpcloud_secreatkey: %hpcloud_secreatkey%
-    hpcloud_tenantid: %hpcloud_tenantid%
-    hpcloud_url: %hpcloud_url%
-    hpcloud_messaging_url: %hpcloud_messaging_url%
-    hpcloud_container: %hpcloud_container%
+
+    object_storage: %objectStorage%
+   
+    hpcloud_accesskey:  %hpcloudAccesskey%
+    hpcloud_secreatkey: %hpcloudSecreatkey%
+    hpcloud_tenantid:   %hpcloudTenantid%
+    hpcloud_url:        %hpcloudUrl%
+    hpcloud_messaging_url: %hpcloudMessagingUrl%
+    hpcloud_container: %hpcloudContainer%
 
     #email_service (1) AWS_SES (2) SendGrid
-    email_service: %email_service%
-    sendgrid_username: %sendgrid_username%
-    sendgrid_password: %sendgrid_password%
+    email_service: %emailService%
+    sendgrid_username: %sendgridUsername%
+    sendgrid_password: %sendgridPassword%
 
     available_locales:
         # we're abusing the locales to make our many "sites"
