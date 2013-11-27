@@ -178,18 +178,18 @@ parameters:
     ip_lookup_override: false
 
     ip2location_lookup_directory: %kernel.root_dir%/../external_data/ip2location/
-    object_storage: HpObjectStorage
+    object_storage: %object_storage%
     #object_storage: AWSObjectStorage
-    hpcloud_accesskey: YS11LX9TT81LNVXKSKM7
-    hpcloud_secreatkey: r8zsRj+i/SfVSXkOiUlVZg2SJBw2p2izogqKlo+W
-    hpcloud_tenantid: 10873218563681
-    hpcloud_url: 'https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/'
-    hpcloud_messaging_url: 'https://region-a.geo-1.messaging.hpcloudsvc.com/v1.1/10873218563681'
-    hpcloud_container: 'platformd-public'
+    hpcloud_accesskey: %hpcloud_accesskey%
+    hpcloud_secreatkey: %hpcloud_secreatkey%
+    hpcloud_tenantid: %hpcloud_tenantid%
+    hpcloud_url: %hpcloud_url%
+    hpcloud_messaging_url: %hpcloud_messaging_url%
+    hpcloud_container: %hpcloud_container%
     #email_service (1) AWS_SES (2) SendGrid
-    email_service: 'SendGrid'
-    sendgrid_username: 'dnielsen'
-    sendgrid_password: 'Deepblue1'
+    email_service: %email_service%
+    sendgrid_username: %sendgrid_username%
+    sendgrid_password: %sendgrid_password%
     maxmind_lookup_directory: %kernel.root_dir%/../external_data/maxmind/
 
 
