@@ -295,8 +295,7 @@ class Controller extends BaseController
     protected function getSiteFromUserCountry()
     {
         $country = $this->getCurrentCountry();
-
-        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Region')->findSiteByCountry($country);
+        return $country ? $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Region')->findSiteByCountry($country) : null;
     }
 
     protected function getSiteFromCountryCode($countryCode) {
@@ -359,7 +358,10 @@ class Controller extends BaseController
     {
         return $this->get('platformd.model.avatar_manager');
     }
-
+    protected function getGallaryManager()
+    {
+        return $this->get('platformd.model.gallary_manager');
+    }
     protected function getApiManager()
     {
         return $this->get('platformd.user.api.manager');

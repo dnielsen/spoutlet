@@ -16,6 +16,7 @@ use Platformd\UserBundle\Entity\User,
     Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage
 ;
 
+use HPCloud\HPCloudPHP;
 class AvatarManager
 {
     const IMAGE_CROP_MAX_WIDTH  = 512;
@@ -29,8 +30,9 @@ class AvatarManager
     private $s3;
     private $queueUtil;
     private $userManager;
+    private $objectStorage = '';
 
-    public function __construct(EntityManager $em, Filesystem $filesystem, $publicBucket, $privateBucket, $s3, $queueUtil, $userManager)
+    public function __construct(EntityManager $em, Filesystem $filesystem, $publicBucket, $privateBucket, $s3, $queueUtil, $userManager, $hpcloud_accesskey='', $hpcloud_secreatkey='', $hpcloud_tenantid='', $hpcloud_url='', $hpcloud_container='',$objectStorage='')
     {
         $this->em            = $em;
         $this->filesystem    = $filesystem;
@@ -40,6 +42,13 @@ class AvatarManager
         $this->s3            = $s3;
         $this->queueUtil     = $queueUtil;
         $this->userManager   = $userManager;
+       // if($objectStorage == "HpObjectStorage") {
+        $this->objectStorage = $objectStorage;
+        $this->hpcloud_container =   $hpcloud_container;
+        $this->hpcloud_url = $hpcloud_url;
+	$this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey,$hpcloud_secreatkey,$hpcloud_tenantid);
+        
+        //}
     }
 
     public function save(Avatar $avatar)
@@ -102,8 +111,16 @@ class AvatarManager
 
         $rawFilename = 'raw.'.$file->guessExtension();
         $opts = array('headers' => array('Cache-Control' => 'max-age=0'));
-        $this->filesystem->write($user->getUuid().'/'.$fileUuid.'/'.$rawFilename, file_get_contents($file), $opts);
-
+        $filename = $user->getUuid().'/'.$fileUuid.'/'.$rawFilename;
+        
+        $filename = $user->getUuid();
+        //$filename = $fileUuid;
+        if($this->objectStorage == 'HpObjectStorage') {
+	    $this->hpCloudObj->SaveToObjectStorage($this->hpcloud_container,$filename,$file,AVATAR::AVATAR_DIRECTORY_PREFIX);
+	}
+        else {
+          $data = $this->filesystem->write($filename, file_get_contents($file),$opts);
+        }
         unlink($file);
 
         return $fileUuid;
@@ -112,6 +129,7 @@ class AvatarManager
     protected function uuidGen()
     {
         return str_replace("\n", '', `uuidgen -r`);
+      // return rand(5, 15);
     }
 
     public function getSignedImageUrl($avatarUuid, $filename, User $user)
@@ -236,15 +254,25 @@ class AvatarManager
         $this->em->flush();
     }
 
-    public function getAvatarUrl($userUuid, $size, $fileUuid = 'by_size')
+    public function getAvatarUrl($userUuid, $size, $fileUuid = 'by_size',$subDir= null)
     {
         if ($this->publicBucket == "platformd") {
             $cf = "http://media.alienwarearena.com";
         } else {
-            $cf = "http://mediastaging.alienwarearena.com";
+	
+            $cf = ($this->objectStorage == "HpObjectStorage") ?  $this->hpcloud_url.$this->hpcloud_container : "https://s3.amazonaws.com/platformd-public";
+           // $cf =  "https://s3.amazonaws.com/platformd-public";
         }
+       if($subDir != "") {
+           $url = $this->hpcloud_url.$this->hpcloud_container."/images/avatar/";
+           return $url.$userUuid;
 
-        return $cf.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$fileUuid.'/'.$size.'x'.$size.'.png';
+       }
+        
+        //return $cf.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$fileUuid.'/'.$size.'x'.$size.'.png';
+       return  $cf.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid;
+    
+
     }
 
     private function checkUserUuid($user)

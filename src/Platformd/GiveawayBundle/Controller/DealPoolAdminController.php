@@ -11,6 +11,7 @@ use Platformd\GiveawayBundle\Entity\Deal;
 use Symfony\Component\Locale\Locale;
 use Platformd\GiveawayBundle\QueueMessage\KeyPoolQueueMessage;
 
+use HPCloud\HPCloudPHP;
 /**
 *
 */
@@ -91,13 +92,14 @@ class DealPoolAdminController extends Controller
         $this->addDealBreadcrumb($pool->getDeal())->addChild('Edit Pool');
 
         $request = $this->getRequest();
-
-         $form = $this->createForm(new DealPoolType(), $pool);
+        $form = $this->createForm(new DealPoolType(), $pool);
 
         if ('POST' === $request->getMethod()) {
+            
             $form->bindRequest($request);
-
+           
             if ($form->isValid()) {
+                
                 $result = $this->savePool($pool);
 
                 if ($result) {
@@ -147,28 +149,46 @@ class DealPoolAdminController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($pool);
         $em->flush();
-
+      
         $keysFile = $pool->getKeysfile();
-
+        
         if ($keysFile) {
-
-            if ($keysFile->getSize() > DealPool::POOL_SIZE_QUEUE_THRESHOLD) {
+          
+            
+            //if ($keysFile->getSize() > DealPool::POOL_SIZE_QUEUE_THRESHOLD) {
+              if ($keysFile->getSize() > 21) {
 
                 $s3         = $this->container->get('aws_s3');
-                $bucket     = $this->container->getParameter('s3_private_bucket_name');
+               // $bucket     = $this->container->getParameter('s3_private_bucket_name');
+                $bucket     = $this->container->getParameter('s3_bucket_name');
 
                 $handle     = fopen($keysFile, 'r');
                 $filename   = trim(DealPool::POOL_FILE_S3_PREFIX, '/').'/'.md5_file($keysFile).'.'.pathinfo($keysFile->getClientOriginalName(), PATHINFO_EXTENSION);
-
-                $response = $s3->create_object($bucket, $filename, array(
-                    'fileUpload'    => $handle,
-                    'acl'           => \AmazonS3::ACL_PRIVATE,
-                    'encryption'    => 'AES256',
-                    'contentType'   => 'text/plain',
-                ));
-
-                if ($response->isOk()) {
-
+                if($this->container->getParameter('object_storage') == 'HpObjectStorage'){
+                
+                  $hpcloud_accesskey = $this->getContainer()->getParameter('hpcloud_accesskey');
+                  $hpcloud_secreatekey = $this->getContainer()->getParameter('hpcloud_secreatkey');
+                  $hpcloud_tenantid = $this->getContainer()->getParameter('hpcloud_tenantid');
+                  $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatekey, $hpcloud_tenantid);
+                  $response = $this->hpCloudObj->create_object($bucket, $filename, array(
+                        'fileUpload'    => $handle,
+                        'encryption'    => 'AES256',
+                        'contentType'   => 'text/plain',
+                    ));
+                    $resonse_data = $response->isOk();
+                }
+                else {
+                  $response = $s3->create_object($bucket, $filename, array(
+                      'fileUpload'    => $handle,
+                      'acl'           => \AmazonS3::ACL_PRIVATE,
+                      'encryption'    => 'AES256',
+                      'contentType'   => 'text/plain',
+                  ));
+                  $resonse_data = $response->isOk();
+                  
+                }  
+                if ($response_data) {   
+            
                     $message = new KeyPoolQueueMessage();
                     $message->bucket    = $bucket;
                     $message->filename  = $filename;
@@ -177,19 +197,28 @@ class DealPoolAdminController extends Controller
                     $message->poolId    = $pool->getId();
                     $message->poolClass = implode('', array_slice(explode('\\', get_class($pool)), -1, 1));
 
-                    $sqs = $this->container->get('aws_sqs');
-                    $queue_url = $this->container->getParameter('queue_prefix').KeyPoolQueueMessage::QUEUE_NAME;
-                    $queue_response = $sqs->send_message($queue_url, json_encode($message));
+                    if($this->container->getParameter('object_storage') == 'HpObjectStorage'){
+                     $queue_response = $this->hpCloudObj->sendMessageToQueue(KeyPoolQueueMessage::QUEUE_NAME, json_encode($message));
+                     $queue_response_data = json_decode($queue_response);
+                     $queue_response_id = $queue_response_data->{'id'}; 
+                     $this->setFlash($queue_response_id != '' ? 'success' : 'error', $queue_response_id != ''  ? 'platformd.giveaway_pool.admin.queued' : 'platformd.giveaway_pool.admin.queue_error');
+                     return $queue_response_id ? true : false;
 
-                    $this->setFlash($queue_response->isOk() ? 'success' : 'error', $queue_response->isOk() ? 'platformd.giveaway_pool.admin.queued' : 'platformd.giveaway_pool.admin.queue_error');
-                    return $queue_response->isOk() ? true : false;
+                    } else {  
+                      $sqs = $this->container->get('aws_sqs');
+                      $queue_url = $this->container->getParameter('queue_prefix').KeyPoolQueueMessage::QUEUE_NAME;
+                      $queue_response = $sqs->send_message($queue_url, json_encode($message));            
+                      $this->setFlash($queue_response->isOk() ? 'success' : 'error', $queue_response->isOk() ? 'platformd.giveaway_pool.admin.queued' : 'platformd.giveaway_pool.admin.queue_error');
+                      return $queue_response->isOk() ? true : false;
+                   }
                 } else {
+                
                     $this->setFlash('error', 'platformd.giveaway_pool.adminupload_error');
                     return false;
                 }
 
             } else {
-
+              
                 $loader = new \Platformd\GiveawayBundle\Pool\PoolLoader($this->get('database_connection'));
                 $loader->loadKeysFromFile($pool->getKeysfile(), $pool, 'DEAL');
                 $this->setFlash('success', 'platformd.deal_pool.admin.saved');
@@ -198,8 +227,9 @@ class DealPoolAdminController extends Controller
 
                 return true;
             }
+            
         }
-
+       
         $this->banCaches($pool);
     }
 

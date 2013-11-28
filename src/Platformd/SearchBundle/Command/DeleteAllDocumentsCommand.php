@@ -11,11 +11,14 @@ use
 ;
 
 use Platformd\SearchBundle\QueueMessage\SearchIndexQueueMessage;
+use HPCloud\HPCloudPHP;
 
 class DeleteAllDocumentsCommand extends ContainerAwareCommand
 {
     private $stdOutput;
     private $searchManager;
+    private $hpObject;
+    private $hpcloud;
 
     const SLEEP_MILLISECONDS = 10;
 
@@ -68,7 +71,6 @@ EOT
             $this->output(0);
             $this->output(0);
             $this->output(0, 'Amazon CloudSearch returned an error when uploading batch data:');
-            var_dump($result);exit;
         }
 
         $this->tick();
@@ -80,7 +82,11 @@ EOT
         $queueUtil = $this->getContainer()->get('platformd.util.queue_util');
 
         while ($message = $queueUtil->retrieveFromQueue(new SearchIndexQueueMessage())) {
-            $response = $s3->delete_object($message->bucket, $message->filename);
+            if ($this->hpObject == 1){
+                $response = $this->hpcloud->delete_object($message->bucket, $message->filename);
+            } else {
+                $response = $s3->delete_object($message->bucket, $message->filename);
+            }    
             $deleted = $queueUtil->deleteFromQueue($message);
         }
     }
@@ -91,12 +97,23 @@ EOT
         $container           = $this->getContainer();
         $em                  = $container->get('doctrine')->getEntityManager();
         $this->searchManager = $container->get('platformd.model.search_manager');
-
+      
         $confirmDelete       = $input->getOption('confirm-delete');
 
         $this->output(0);
         $this->output(0, 'PlatformD Indexed Search Document Deleter');
         $this->output(0);
+        
+        $this->hpObject = 0;
+        if($this->getContainer()->getParameter('object_storage') == 'HpObjectStorage')
+        {
+          $hpcloud_accesskey = $this->getContainer()->getParameter('hpcloud_accesskey');
+          $hpcloud_secreatekey = $this->getContainer()->getParameter('hpcloud_secreatkey');
+          $hpcloud_tenantid = $this->getContainer()->getParameter('hpcloud_tenantid');
+
+          $this->hpcloud = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatekey, $hpcloud_tenantid);
+          $this->hpObject = 1 ;
+        }
 
         if (!$confirmDelete) {
             $this->error('Please use --confirm-delete to confirm deletion of all search index documents.');

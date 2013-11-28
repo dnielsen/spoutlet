@@ -35,7 +35,9 @@ $loader->registerNamespaces(array(
     'Imagine'                       => __DIR__.'/../vendor/imagine/lib',
     'Cybernox'                      => __DIR__.'/../vendor/bundles',
     'Exercise'                      => __DIR__. '/../vendor/bundles',
-    'Vich'                          => __DIR__.'/../vendor/bundles'
+    'Vich'                          => __DIR__.'/../vendor/bundles',
+    'HPCloud'                       => __DIR__.'/../vendor/HpCloudPhp/src',
+    'SendGrid'	                    => __DIR__.'/../vendor/sendgrid-php'	 
 ));
 $loader->registerPrefixes(array(
     'Twig_Extensions_' => __DIR__.'/../vendor/twig-extensions/lib',
@@ -63,6 +65,7 @@ AnnotationRegistry::registerLoader(function($class) use ($loader) {
 AnnotationRegistry::registerFile(__DIR__.'/../vendor/doctrine/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
 
 require __DIR__.'/../vendor/swiftmailer/lib/swift_required.php';
+require __DIR__.'/../external_data/maxmind/GeoIP.inc';
 
 // uncomment to see stack traces in PHPUnit
 // xdebug_enable();

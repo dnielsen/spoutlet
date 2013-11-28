@@ -1,0 +1,24 @@
+
+gallary_delete:
+    pattern: /delete
+    defaults: { _controller: UserBundle:Gallary:delete }
+    requirements:
+        _format: json
+        _method: POST
+
+group_event_gallary_list:
+    pattern: /{groupSlug}/event/{eventSlug}/gallaryList
+    defaults: { _controller:"UserBundle:Gallary:gallaryList", site: ~ }
+
+group_event_gallary:
+    pattern: /{groupSlug}/event/{eventSlug}/gallary
+    defaults: { _controller:"UserBundle:Gallary:gallary", site: ~ }
+
+gallary_faceverify:
+    pattern: /faceverify/{uuid}/{gallaryId}/{eventSlug}/{groupSlug}/
+    defaults: { _controller: UserBundle:Gallary:faceVerification, uuid: ~, gallaryId: ~, eventSlug: ~, GroupSlug: ~ }
+
+gallary_faceverify_save:
+   pattern: /faceverifysave/{eventSlug}/{groupSlug}/{gallaryId}
+   defaults: {_controller: UserBundle:Gallary:faceverifySave, eventSlug: ~ , groupSlug: ~ , gallaryId: ~}
+

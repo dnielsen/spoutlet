@@ -28,7 +28,6 @@ class MassEmailQueueProcessorCommand extends BaseCommand
             ->setDescription('Processes mass emails queued to be sent via Amazon SES.')
             ->setHelp(<<<EOT
 The <info>%command.name%</info> command gets a list of mass emails to be sent from an Amazon SQS queue and queues emails to be sent in batches.
-
   <info>php %command.full_name%</info>
 EOT
             );

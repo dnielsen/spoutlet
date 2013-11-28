@@ -82,6 +82,9 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
                     }
                 }
 
+                $state = $this->em->getRepository('SpoutletBundle:CountryState')->find($user->getState());
+                $user->setState($state ? $state->getName() : null);
+
                 $this->onSuccess($user, $confirmation);
 
                 $this->apiManager->updateRemoteUserData(array(

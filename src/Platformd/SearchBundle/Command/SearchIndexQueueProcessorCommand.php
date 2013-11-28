@@ -11,12 +11,13 @@ use
 ;
 
 use Platformd\SearchBundle\QueueMessage\SearchIndexQueueMessage;
+use HPCloud\HPCloudPHP;
 
 class SearchIndexQueueProcessorCommand extends ContainerAwareCommand
 {
     private $stdOutput;
     private $searchManager;
-
+    private $hpObject;
     const DELAY_BETWEEN_KEYS_MILLISECONDS = 50;
 
     protected function configure()
@@ -90,6 +91,7 @@ EOT
         $container           = $this->getContainer();
         $em                  = $container->get('doctrine')->getEntityManager();
         $this->searchManager = $container->get('platformd.model.search_manager');
+        
         $s3                  = $container->get('aws_s3');
         $queueUtil           = $container->get('platformd.util.queue_util');
 
@@ -98,6 +100,17 @@ EOT
         $this->output(0);
 
         $this->output(0, 'Processing queue for search index documents.');
+        $this->hpObject = 0;
+        if($this->getContainer()->getParameter('object_storage') == 'HpObjectStorage')
+        {
+          $hpcloud_accesskey = $this->getContainer()->getParameter('hpcloud_accesskey');
+          $hpcloud_secreatekey = $this->getContainer()->getParameter('hpcloud_secreatkey');
+          $hpcloud_tenantid = $this->getContainer()->getParameter('hpcloud_tenantid');
+
+          $this->hpcloud = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatekey, $hpcloud_tenantid);
+          $this->hpObject = 1 ;
+        }
+
 
         while ($message = $queueUtil->retrieveFromQueue(new SearchIndexQueueMessage())) {
 
@@ -109,15 +122,22 @@ EOT
             $this->output(2, $message);
 
             $this->output(4, 'Retrieving message data from s3...', false);
-
-            $response = $s3->get_object($message->bucket, $message->filename);
-
-            if ($response->isOk()) { // We retrieved the json file from S3
+            $response='';
+            
+            if($this->hpObject == 1) {
+              $response_data = $this->hpcloud->get_object($message->bucket,$message->filename);
+            } else {
+              $response = $s3->get_object($message->bucket, $message->filename);
+              $response_data = $response->isOk();
+            }
+            
+                       
+            if ($response_data) { // We retrieved the json file from S3
 
                 $this->tick();
                 $this->output(4, 'Sending document to CloudSearch for indexing...');
 
-                $indexData = $response->body;
+                $indexData =  $response->body;
 
                 $indexDataArr = json_decode($indexData, true);
 
@@ -131,9 +151,14 @@ EOT
                     $deleteMessage = false;
                 } else {
                     $this->output(4, 'Deleting data from s3...', false);
-                    $response = $s3->delete_object($message->bucket, $message->filename);
-
-                    if ($response->isOk()) {
+                    if($this->hpObject == 0) {
+                      $response = $s3->delete_object($message->bucket, $message->filename);
+                      $response_data = $response;
+                    } else {
+                      $response = $this->hpcloud->delete_object($message->bucket, $message->filename);
+                      $response_data = $response->isOk(); 
+                    }         
+                    if ($response_data) {
                         $this->tick();
                     } else {
                         $this->output();
@@ -164,7 +189,6 @@ EOT
                 $this->deleteMessageWithOutput($message);
             }
         }
-
         $this->output();
         $this->output(2, 'No more messages in queue.');
 

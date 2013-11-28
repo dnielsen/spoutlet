@@ -5,7 +5,6 @@ namespace Platformd\SpoutletBundle\Entity;
 use Doctrine\ORM\EntityRepository;
 use Platformd\SpoutletBundle\Entity\Country;
 use Platformd\SpoutletBundle\Entity\Site;
-use Platformd\SpoutletBundle\Location\Ip2LocationRecord;
 
 class RegionRepository extends EntityRepository
 {

@@ -2048,6 +2048,160 @@ Alienware Arena Team
         )));
     }
 
+    public function contactAction($slug, Request $request)
+    {
+        $this->basicSecurityCheck(array('ROLE_USER'));
+
+        $group = $this->getGroupBySlug($slug);
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group does not exist.');
+        }
+
+        $this->ensureAllowed($group, 'ContactGroup');
+
+        $user          = $this->getCurrentUser();
+        $hitEmailLimit = $this->getDoctrine()->getEntityManager()->getRepository('GroupBundle:GroupMassEmail')->hasUserHitEmailLimitForGroup($user, $group);
+
+        if ($hitEmailLimit) {
+            $this->setFlash('error', 'platformd.groups.contact.error.email_limit_hit');
+            return $this->redirect($this->generateUrl('group_show', array(
+                'slug' => $slug
+            )));
+        }
+
+        $email       = new GroupMassEmail($group);
+        $emailLocale = $this->getLocale() ?: 'en';
+
+        $email->setSubject($this->trans(
+            'platformd.groups.contact.title',
+            array('%groupName%' => $group->getName()),
+            'messages',
+            $emailLocale
+        ));
+
+        $form = $this->createFormBuilder($email)
+            ->add('message', 'purifiedTextarea', array(
+                'attr'  => array('class' => 'ckeditor'),
+                'label' => 'platformd.groups.contact.form.message',
+            ))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                $recipientCount = $this->getGroupManager()->getMembershipCountByGroup($group);
+
+                if ($recipientCount < 1) {
+                    $this->setFlash('error', 'platformd.groups.contact.error.no_recipients');
+                    return $this->render('GroupBundle:Group:contact.html.twig', array(
+                        'group' => $group,
+                        'form'  => $form->createView(),
+                    ));
+                }
+
+                $email = $form->getData();
+
+                $email->setSender($user);
+                $email->setSite($this->getCurrentSite());
+                $email->setRecipients($group->getMembers()->toArray());
+
+                $content = $email->getMessage();
+
+                $email->setMessage($this->trans(
+                    'platformd.groups.contact.message',
+                    array(
+                        '%content%' => $content,
+                        '%username%' => $user->getUsername(),
+                        '%groupUrl%' => $this->generateUrl('group_show', array('slug' => $slug), true),
+                        '%groupName%' => $group->getName(),
+                    ),
+                    'messages',
+                    $emailLocale
+                ));
+
+                $emailManager = $this->container->get('platformd.model.email_manager');
+                $queueResult  = $emailManager->queueMassEmail($email);
+
+                $this->setFlash('success', $this->transChoice(
+                    'platformd.groups.contact.confirmation',
+                    $recipientCount,
+                    array('%recipientCount%' => $recipientCount)
+                ));
+
+                return $this->redirect($this->generateUrl('group_show', array(
+                    'slug' => $slug
+                )));
+            }
+
+            $this->setFlash('error', 'platformd.groups.contact.error.generic_error');
+        }
+
+        return $this->render('GroupBundle:Group:contact.html.twig', array(
+            'group' => $group,
+            'form'  => $form->createView(),
+        ));
+    }
+
+    public function emailPreviewAction($slug, Request $request)
+    {
+        $group = $this->getGroupBySlug($slug);
+        $email = new GroupMassEmail($group);
+        $user  = $this->getCurrentUser();
+
+        $emailLocale = $this->getLocale() ?: 'en';
+
+        $email->setSubject($this->trans(
+            'platformd.groups.contact.title',
+            array('%groupName%' => $group->getName()),
+            'messages',
+            $emailLocale
+        ));
+
+        $form = $this->createFormBuilder($email)
+            ->add('message', 'purifiedTextarea', array(
+                'attr'  => array('class' => 'ckeditor'),
+                'label' => 'platformd.groups.contact.form.message',
+            ))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+                $email = $form->getData();
+
+                $content = $email->getMessage();
+
+                $email->setMessage($this->trans(
+                    'platformd.groups.contact.message',
+                    array(
+                        '%content%' => $content,
+                        '%username%' => $user->getUsername(),
+                        '%groupUrl%' => $this->generateUrl('group_show', array('slug' => $slug), true),
+                        '%groupName%' => $group->getName(),
+                    ),
+                    'messages',
+                    $emailLocale
+                ));
+
+                return $this->render('EventBundle::contactPreview.html.twig', array(
+                    'subject' => $email->getSubject(),
+                    'message' => $email->getMessage(),
+                ));
+            }
+        }
+
+        $this->setFlash('error', 'platformd.groups.contact.error.preview_error');
+
+        return $this->redirect($this->generateUrl('group_contact', array(
+            'slug' => $slug,
+        )));
+    }
+
     private function processForm(Form $form, Request $request)
     {
         $em         = $this->getEntityManager();

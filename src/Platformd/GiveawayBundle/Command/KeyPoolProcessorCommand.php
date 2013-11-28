@@ -15,6 +15,8 @@ use Platformd\GiveawayBundle\Entity\GiveawayPool;
 use Platformd\GiveawayBundle\Entity\DealPool;
 use Platformd\GiveawayBundle\QueueMessage\KeyPoolQueueMessage;
 
+use HPCloud\HPCloudPHP;
+
 /**
  * Command that places themes assets into a given directory.
  */
@@ -57,23 +59,49 @@ EOT
         $em             = $this->getContainer()->get('doctrine')->getEntityManager();
         $varnishUtil    = $this->getContainer()->get('platformd.util.varnish_util');
         $router         = $this->getContainer()->get('router');
-
+     
         $tick           = "<info>✔</info>";
         $cross          = "<fg=red>✘</fg=red>";
         $yellowCross    = "<fg=yellow>✘</fg=yellow>";
 
         $output->write("\nRetrieving message from queue...");
-
+        $hpObject = 0;
+        if($this->getContainer()->getParameter('object_storage') == 'HpObjectStorage')
+        {
+          $hpcloud_accesskey = $this->getContainer()->getParameter('hpcloud_accesskey');
+          $hpcloud_secreatekey = $this->getContainer()->getParameter('hpcloud_secreatkey');
+          $hpcloud_tenantid = $this->getContainer()->getParameter('hpcloud_tenantid');
+        
+          $hpcloud = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatekey, $hpcloud_tenantid);
+          $queue_url = $this->getContainer()->getParameter('hpcloud_messaging_url');
+          $hpObject = 1 ; 
+        }
         // Get the first message in the queue
-        $messageResponse = $sqs->receive_message($queue_url, array(
-            'VisibilityTimeout' => 5,
-        ));
+      
+        if( $hpObject == 1) {
+           $result = $hpcloud->getMessageFromQueue(KeyPoolQueueMessage::QUEUE_NAME,$queue_url);        
+        } else {
+             $messageResponse = $sqs->receive_message($queue_url, array(
+              'VisibilityTimeout' => 5,
+             ));
+        }
+        if ($hpObject == 1) {
+           $messageResponse = $result;     
+           $result1=explode("\n",$messageResponse);       
+           $message = (isset($result1[3])) ? json_decode($result1[3]) : '';
+           $receiptHandle  = '';    
+        }
+        else {
+          $messageResponse = $messageResponse->isOk();
+          $message        = json_decode($messageResponse->body->ReceiveMessageResult->Message->Body);
+          $receiptHandle  = $messageResponse->body->ReceiveMessageResult->Message->ReceiptHandle;
 
-        if ($messageResponse->isOk()) { // We retrieved a message from the queue
-
-            $message        = json_decode($messageResponse->body->ReceiveMessageResult->Message->Body);
-            $receiptHandle  = $messageResponse->body->ReceiveMessageResult->Message->ReceiptHandle;
-
+        }
+     
+        if ($messageResponse) { // We retrieved a message from the queue
+          //  $message        = json_decode($messageResponse->body->ReceiveMessageResult->Message->Body);
+          //  $receiptHandle  = $messageResponse->body->ReceiveMessageResult->Message->ReceiptHandle;
+            
             if ($message) {
 
                 $user = $userManager->findUserBy(array('id' => $message->userId));
@@ -92,10 +120,15 @@ EOT
                 $repo       = $em->getRepository('GiveawayBundle:'.$message->poolClass);
                 $keyRepo    = $em->getRepository('GiveawayBundle:'.KeyPoolQueueMessage::$classKeyEntityMap[$message->poolClass]);
                 $pool       = $repo->find($message->poolId);
-
-                $response   = $s3->get_object($message->bucket, $message->filename);
-
-                if ($response->isOk()) { // We retrieved the key file from S3
+                if($hpObject == 1){
+                  $response   = $hpcloud->get_object($message->bucket, $message->filename);
+                  $response_data = $response;
+                } else {
+                  $response   = $s3->get_object($message->bucket, $message->filename);
+                  $response_data=$response->isOk();
+                }
+                
+                if ($response_data) { // We retrieved the key file from S3
 
                     $output->writeLn($tick);
                     $output->write("Finding key pool...");
@@ -224,11 +257,11 @@ EOT
             }
 
         } else {
-
             $output->writeLn($cross);
-            $output->write("\n\t<error>An error occurred whilst retrieving the message.</error>\n");
+            $output->write("\n\t<error>An error occurred while retrieving the message.</error>\n");
             $output->writeLn('');
         }
+     
     }
 
     private function sendErrorEmail($user, $output, $pool = null)

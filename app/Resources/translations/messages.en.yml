@@ -58,7 +58,12 @@ platformd.user.avatars.file_label: File:
 platformd.user.avatars.file_instructions: |
     You can upload any size image file from your hard drive. We will automatically resize large images so you may upload the best quality version you have.
 
-    You will have a chance to crop this image in the next step.
+    You will have a chance to face detection of this image in the next step.
+platformd.user.gallary.file_instructions: |
+    You can upload any size image file from your hard drive. We will automatically resize large images so you may upload the best quality version you have.
+
+    You will have a chance to face verification  of this image in the next step.
+
 platformd.user.avatars.already_cropped: This image has already been processed and cropped.
 platformd.user.avatars.invalid_avatar: Invalid avatar specified.
 platformd.user.avatars.admin_submit_success: Your image has been queued for processing and will be available soon.

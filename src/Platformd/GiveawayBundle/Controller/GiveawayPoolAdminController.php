@@ -10,9 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\GiveawayBundle\QueueMessage\KeyPoolQueueMessage;
 
+use HPCloud\HPCloudPHP;
+
 /**
-*
-*/
+ *
+ */
 class GiveawayPoolAdminController extends Controller
 {
     /**
@@ -181,20 +183,32 @@ class GiveawayPoolAdminController extends Controller
 
             if ($keysFile->getSize() > GiveawayPool::POOL_SIZE_QUEUE_THRESHOLD) {
 
-                $s3         = $this->container->get('aws_s3');
                 $bucket     = $this->container->getParameter('s3_private_bucket_name');
 
                 $handle     = fopen($keysFile, 'r');
                 $filename   = trim(GiveawayPool::POOL_FILE_S3_PREFIX, '/').'/'.md5_file($keysFile).'.'.pathinfo($keysFile->getClientOriginalName(), PATHINFO_EXTENSION);
-
-                $response = $s3->create_object($bucket, $filename, array(
-                    'fileUpload'    => $handle,
-                    'acl'           => \AmazonS3::ACL_PRIVATE,
-                    'encryption'    => 'AES256',
-                    'contentType'   => 'text/plain',
-                ));
-
-                if ($response->isOk()) {
+                if($this->container->getParameter('object_storage') == 'HpObjectStorage'){
+                
+                  $hpcloud_accesskey = $this->getContainer()->getParameter('hpcloud_accesskey');
+                  $hpcloud_secreatekey = $this->getContainer()->getParameter('hpcloud_secreatkey');
+                  $hpcloud_tenantid = $this->getContainer()->getParameter('hpcloud_tenantid');
+                  $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatekey, $hpcloud_tenantid);
+                  $response = $this->hpCloudObj->create_object($bucket, $filename, array(
+                        'fileUpload'    => $handle,
+                        'encryption'    => 'AES256',
+                        'contentType'   => 'text/plain',
+                    ));
+                    $resonse_data = $response->isOk();
+                } else {
+                    $s3         = $this->container->get('aws_s3');               
+                    $response = $s3->create_object($bucket, $filename, array(
+                        'fileUpload'    => $handle,
+                        'acl'           => \AmazonS3::ACL_PRIVATE,
+                        'encryption'    => 'AES256',
+                        'contentType'   => 'text/plain',
+                    ));
+                }
+                if ($response_data) {
 
                     $message = new KeyPoolQueueMessage();
                     $message->bucket    = $bucket;
@@ -204,12 +218,23 @@ class GiveawayPoolAdminController extends Controller
                     $message->poolId    = $pool->getId();
                     $message->poolClass = implode('', array_slice(explode('\\', get_class($pool)), -1, 1));
 
+                    if($this->container->getParameter('object_storage') == 'HpObjectStorage') {
+                       
+                     $queue_response = $this->hpCloudObj->sendMessageToQueue(KeyPoolQueueMessage::QUEUE_NAME, json_encode($message));
+                     $queue_response_data = json_decode($queue_response);
+                     $queue_response_id = $queue_response_data->{'id'};
+                     $this->setFlash($queue_response_id != '' ? 'success' : 'error', $queue_response_id != ''  ? 'platformd.giveaway_pool.admin.queued' : 'platformd.giveaway_pool.admin.queue_error');
+                     return $queue_response_id ? true : false;
+
+                    } else {
+
                     $sqs = $this->container->get('aws_sqs');
                     $queue_url = $this->container->getParameter('queue_prefix').KeyPoolQueueMessage::QUEUE_NAME;
                     $queue_response = $sqs->send_message($queue_url, json_encode($message));
 
                     $this->setFlash($queue_response->isOk() ? 'success' : 'error', $queue_response->isOk() ? 'platformd.giveaway_pool.admin.queued' : 'platformd.giveaway_pool.admin.queue_error');
                     return $queue_response->isOk() ? true : false;
+                  }
                 } else {
                     $this->setFlash('error', 'platformd.giveaway_pool.adminupload_error');
                     return false;

@@ -142,6 +142,19 @@ class FrontendController extends Controller
     public function promoCodeContestRulesAction(Request $request, $slug)
     {
         return $this->showRules($request, $slug, Sweepstakes::SWEEPSTAKES_TYPE_PROMO_CODE);
+        return array(
+            'sweepstakes'       => $sweepstakes,
+            'isEntered'         => $isEntered,
+            'isGroupMember'     => $isGroupMember,
+            'entryId'           => $entryId,
+            'entryForm'         => $entryForm->createView(),
+            'regFormData'       => $entryForm->has('registrationDetails') ? $entryForm->get('registrationDetails')->getData() : null,
+            'errors'            => $this->getEntryFormErrors($entryForm),
+            'registered'        => $registered,
+            'timedout'          => $timedout,
+            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_SWEEPSTAKES, 'id'=>$sweepstakes->getId()),
+        );
+
     }
 
     private function showRules(Request $request, $slug, $type)

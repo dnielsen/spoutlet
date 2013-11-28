@@ -14,7 +14,7 @@ use Platformd\UserBundle\Entity\Avatar,
     Platformd\UserBundle\QueueMessage\AvatarResizeQueueMessage,
     Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage
 ;
-
+use HPCloud\HPCloudPHP;
 class AvatarResizeQueueProcessorCommand extends ContainerAwareCommand
 {
     private $stdOutput;
@@ -99,6 +99,29 @@ EOT
 
     protected function upload($filePath, $userUuid, $fileUuid, $size, $autoApprove = false)
     {
+        if($this->getContainer()->getParameter('object_storage') == 'HpObjectStorage') {
+          
+          $filename = $userUuid;
+          $nm = Avatar::AVATAR_DIRECTORY_PREFIX;
+          $this->output(8, 'Uploading "'.$size.'x'.$size.'" avatar to s3...', false);
+          
+          //$bucket = $autoApprove ? $this->publicBucket : $this->privateBucket;
+          $bucket   = $this->publicBucket;
+          $response = $this->hpcloud->create_object($bucket, $filename,array(
+                'body'          => $jsonData,
+                'contentType'   => 'image/png',      
+                'subDir'        =>  $nm     
+             ));
+         if($response == true){
+           $this->tick();
+           return true;
+         
+         }  else {
+            $this->output();
+            return false;
+         
+           }   
+        } else { 
         $filename = Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$fileUuid.'/'.$size.'x'.$size.'.png';
 
         $this->output(8, 'Uploading "'.$size.'x'.$size.'" avatar to s3...', false);
@@ -118,10 +141,11 @@ EOT
             $this->output();
             return false;
         }
+        }
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
-    {
+    {      
         $this->stdOutput     = $output;
         $container           = $this->getContainer();
         $em                  = $container->get('doctrine')->getEntityManager();
@@ -131,15 +155,23 @@ EOT
         $this->privateBucket = $container->getParameter('s3_private_bucket_name');
         $this->publicBucket  = $container->getParameter('s3_bucket_name');
         $userRepo            = $em->getRepository('UserBundle:User');
-
+      
         $this->output(0);
         $this->output(0, 'PlatformD Avatar Resize Queue Processor');
         $this->output(0);
 
         $this->output(0, 'Processing queue for avatar resizing...');
+        $hpObject = 0;
+        if($this->getContainer()->getParameter('object_storage') == 'HpObjectStorage')  {
+          $hpcloud_accesskey = $this->getContainer()->getParameter('hpcloud_accesskey');
+          $hpcloud_secreatekey = $this->getContainer()->getParameter('hpcloud_secreatkey');
+          $hpcloud_tenantid = $this->getContainer()->getParameter('hpcloud_tenantid');
 
+          $this->hpcloud = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatekey, $hpcloud_tenantid);
+          $hpObject = 1 ;
+        }
         while ($message = $this->queueUtil->retrieveFromQueue(new AvatarResizeQueueMessage())) {
-
+            
             usleep(self::DELAY_BETWEEN_AVATARS_MILLISECONDS);
 
             $deleteMessage = true;
@@ -174,11 +206,17 @@ EOT
 
             $this->output(4, 'Retrieving image "'.$fileUuid.'/raw.'.$extension.'" from s3...', false);
 
-            $filepath = Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$fileUuid.'/'.$rawFilename;
-
-            $response = $this->s3->get_object($this->privateBucket, $filepath);
-
-            if ($response->isOk()) { // We retrieved the image file from S3
+            if($hpObject == 1) {
+              $response_data ='';
+              $filepath = Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid;
+              $response = $this->hpcloud->get_object($this->privateBucket, $filepath);
+              $response_data = $response;
+            } else {   
+                $filepath = Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$fileUuid.'/'.$rawFilename;
+                $response = $this->s3->get_object($this->privateBucket, $filepath);
+                $response_data = $response->isOk(); 
+            }   
+            if ($response_data) { // We retrieved the image file from S3
 
                 $this->tick();
                 $this->output(4, 'Processing image...');
@@ -217,7 +255,17 @@ EOT
                     $switchMessage->fileUuid = $fileUuid;
                     $result = $this->queueUtil->addToQueue($switchMessage);
                     $this->tick();
+                    if($hpObject == 1) {
+                      // Copy raw image to public bucket
+                      $source       = array('bucket' => $this->privateBucket, 'filename' => $filepath);
+                      $destination  = array('bucket' => $this->publicBucket, 'filename' => $filepath);
+                      $response = $this->hpcloud->copy_object($source, $destination);
 
+                      // Delete private bucket raw file as this is now in the public bucket
+                      $response = $this->hpcloud->delete_object($this->privateBucket, $filepath);
+                    }
+                    // if its AWS
+                    else {
                     // Copy raw image to public bucket
                     $source       = array('bucket' => $this->privateBucket, 'filename' => $filepath);
                     $destination  = array('bucket' => $this->publicBucket, 'filename' => $filepath);
@@ -225,25 +273,33 @@ EOT
 
                     // Delete private bucket raw file as this is now in the public bucket
                     $response = $this->s3->delete_object($this->privateBucket, $filepath);
-
+                    
+                    }
+                    
                 } else {
                     $em->persist($avatar);
                     $em->flush();
                 }
 
-            } else {
+            }
+              else {
 
                 $this->output();
                 $this->output(4, "An error occurred whilst downloading image file from S3:");
-
-                if ($response) {
-                    if ($response->status == 404) {
-                        $this->error("File not found on S3.");
-                    } else {
-                        $this->error($response->body->Error->Message);
-                        $deleteMessage = false;
-                    }
+                if($hpObject ==0) {
+                  if ($response) {
+                      if ($response->status == 404) {
+                          $this->error("File not found on S3.");
+                      } else {
+                          $this->error($response->body->Error->Message);
+                          $deleteMessage = false;
+                      }
+                  }
                 }
+                else {
+                          $this->error("File not found on S3.");               
+                }
+                
             }
 
             if ($deleteMessage) {

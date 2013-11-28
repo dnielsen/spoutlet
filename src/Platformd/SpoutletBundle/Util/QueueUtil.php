@@ -7,6 +7,8 @@ use Platformd\SpoutletBundle\Exception\QueueFailureException;
 use Platformd\SpoutletBundle\QueueMessage\SqsMessageBase;
 use Platformd\SpoutletBundle\Util\Interfaces\QueueUtilInterface;
 
+use HPCloud\HPCloudPHP;
+
 class QueueUtil implements QueueUtilInterface
 {
     const LOG_MESSAGE_PREFIX = "[QueueUtil] ";
@@ -14,13 +16,17 @@ class QueueUtil implements QueueUtilInterface
     private $logger;
     private $sqsClient;
     private $queueUrlPrefix;
-
-    public function __construct($sqsClient, $logger, $queueUrlPrefix, $mockWorkingFile)
+    private $hpcloudObj;
+    public function __construct($sqsClient, $logger, $queueUrlPrefix, $mockWorkingFile, $hpcloud_accesskey='', $hpcloud_secreatkey='', $hpcloud_tenantid='', $hpcloud_messaging_url='', $object_storage='')
     {
         $this->sqsClient      = $sqsClient;
         $this->logger         = $logger;
         $this->queueUrlPrefix = $queueUrlPrefix;
-
+        if($object_storage == 'HpObjectStorage') {
+          $this->object_storage = $object_storage;
+          $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey,$hpcloud_secreatkey,$hpcloud_tenantid);
+          $this->hpcloud_messaging_url = $hpcloud_messaging_url; 
+        }
         $this->logger->debug(self::LOG_MESSAGE_PREFIX.'queue prefix is "'.$queueUrlPrefix.'"');
     }
 
@@ -58,11 +64,27 @@ class QueueUtil implements QueueUtilInterface
         $this->logger->debug(self::LOG_MESSAGE_PREFIX.'addToQueue - sending message to queue "'.$fullQueueUrl.'".');
 
         $messageBody = serialize($message);
-        $result      = $this->sqsClient->send_message($fullQueueUrl, base64_encode($messageBody));
+        if($this->object_storage == 'HpObjectStorage') {
+            $queueName = $message->getQueueName();
+            $this->ensureValidQueueName($queueName);
 
+            $result = $this->hpCloudObj->sendMessageToQueue($queueName,base64_encode($messageBody),$this->hpcoud_messaging_url);
+        }
+        else {
+          $result  = $this->sqsClient->send_message($fullQueueUrl, base64_encode($messageBody));
+        }
+
+        if($this->object_storage == 'HpObjectStorage') {
+           if($result == '') {
+          $this->logger->err(self::LOG_MESSAGE_PREFIX.'addToQueue - could not send message to "'.$queueName);
+            return false;
+          }
+
+        } else {
         if (!$result->isOK()) {
             $this->logger->err(self::LOG_MESSAGE_PREFIX.'addToQueue - could not send message to "'.$fullQueueUrl.'" because of error => "'.$result->body->Error->Message.'", while trying to send messageBody => "'.$messageBody.'.".');
             return false;
+        }
         }
 
         $this->logger->debug(self::LOG_MESSAGE_PREFIX.'addToQueue - message successfully sent to queue "'.$fullQueueUrl.'".');
@@ -72,6 +94,13 @@ class QueueUtil implements QueueUtilInterface
 
     public function deleteFromQueue(SqsMessageBase $message) {
 
+
+        if($this->object_storage == 'HpObjectStorage') {
+          $queueName = $message->getQueueName();
+          $this->logger->debug(self::LOG_MESSAGE_PREFIX.'deleteFromHPQueue - deleting message "'.$message->hpQueueSqsId.'" from queue "'.$queueName.'".');
+         
+
+        } else {
         $fullQueueUrl = $this->getFullQueueUrl($message);
 
         $this->logger->debug(self::LOG_MESSAGE_PREFIX.'deleteFromQueue - deleting message "'.$message->amazonSqsId.'" from queue "'.$fullQueueUrl.'".');
@@ -84,11 +113,31 @@ class QueueUtil implements QueueUtilInterface
         }
 
         $this->logger->debug(self::LOG_MESSAGE_PREFIX.'deleteFromQueue - message "'.$fullQueueUrl.'" successfully deleted from queue "'.$fullQueueUrl.'".');
-
+        }
         return true;
     }
 
     public function retrieveFromQueue(SqsMessageBase $message) {
+        
+      if($this->object_storage == 'HpObjectStorage') {
+         $queueName = $message->getQueueName();
+         $this->logger->debug(self::LOG_MESSAGE_PREFIX.'retrieveFromHPQueue - retrieving message from queue "'.$queueName.'".');
+         $result = $this->hpCloudObj->getMessageFromQueue($queueName,$this->hpcloud_messaging_url);
+         // if there is error 
+         if($result == ''){
+          $this->logger->err(self::LOG_MESSAGE_PREFIX.'retrieveFromHPQueue - could not retrieve message from queue "'.$queueName);
+            return null;
+         }
+        if($result['message'] != '') {
+            $this->logger->debug(self::LOG_MESSAGE_PREFIX.'retrieveFromHPQueue - queue is empty "'.$queueName.'"'.$result['message']);
+            return null;
+        } 
+      
+       // $message   = unserialize(base64_decode($result->body->ReceiveMessageResult->Message->Body));
+       $message = $result;
+       $this->logger->debug(self::LOG_MESSAGE_PREFIX.'retrieveFromHPQueue - message successfully retrieved from queue "'.$queueName.'".'); 
+        }
+      else {
 
         $fullQueueUrl = $this->getFullQueueUrl($message);
 
@@ -100,6 +149,7 @@ class QueueUtil implements QueueUtilInterface
             $this->logger->err(self::LOG_MESSAGE_PREFIX.'retrieveFromQueue - could not retrieve message from queue "'.$fullQueueUrl.'" because of error => "'.$result->body->Error->Message.'".');
             return null;
         }
+      
 
         if (!$result->body->ReceiveMessageResult->Message->Body) {
             $this->logger->debug(self::LOG_MESSAGE_PREFIX.'retrieveFromQueue - queue is empty "'.$fullQueueUrl.'".');
@@ -113,6 +163,7 @@ class QueueUtil implements QueueUtilInterface
         $message->amazonReceiptHandle = $receiptHandleInfo[0];
 
         $this->logger->debug(self::LOG_MESSAGE_PREFIX.'retrieveFromQueue - message "'.$message->amazonSqsId.'" successfully retrieved from queue "'.$fullQueueUrl.'".');
+      }
 
         return $message;
     }

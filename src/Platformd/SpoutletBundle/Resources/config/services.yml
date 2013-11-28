@@ -121,7 +121,7 @@ services:
     platformd.model.ip_lookup_util:
         class: Platformd\SpoutletBundle\Util\IpLookupUtil
         arguments:
-            - %ip2location_lookup_directory%
+            - %maxmind_lookup_directory%
             - %ip_lookup_override%
 
 
@@ -167,11 +167,16 @@ services:
             - "@logger"
             - "%queue_prefix%"
             - "%mock_queue_util_full_filename%"
+            - "%hpcloud_accesskey%"
+            - "%hpcloud_secreatkey%"
+            - "%hpcloud_tenantid%"
+            - "%hpcloud_messaging_url%"
+            - "%object_storage%"
 
     platformd.model.ip_lookup_util:
         class: Platformd\SpoutletBundle\Util\IpLookupUtil
         arguments:
-            - %ip2location_lookup_directory%
+            - %maxmind_lookup_directory%
             - %ip_lookup_override%
 
     platformd.util.site_util:
@@ -189,7 +194,10 @@ services:
             - "@service_container"
             - "@doctrine.orm.entity_manager"
             - "@aws_ses"
-
+            - "%sendgrid_username%"
+            - "%sendgrid_password%"
+            - "%email_service%"
+        
     platformd.model.group_manager:
         class: Platformd\GroupBundle\Model\GroupManager
         arguments:

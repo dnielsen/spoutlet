@@ -5,7 +5,9 @@ namespace Platformd\SpoutletBundle;
 use MediaExposer\PathResolver as BasePathResolver;
 use Gaufrette\Adapter\AmazonS3;
 use Gaufrette\Filesystem;
-
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+//use Symfony\Component\DependencyInjection\Container as Container;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Our generic Path resolver that gets things from Gaufrette
  *
@@ -29,14 +31,17 @@ abstract class PathResolver implements BasePathResolver
    */
   protected $bucketName;
 
-
+  protected $objectStorage;
   /**
    * @param Gaufrette\Filesystem $filesystem
    */
-  public function __construct(Filesystem $filesystem, $prefix = '')
+  public function __construct(Filesystem $filesystem, $prefix = '', $objectStorage = '', $hpcloud_url ='', $hpcloud_container='')
   {
     $this->filesystem = $filesystem;
     $this->prefix = $prefix == '' ?: substr($prefix, 0, 1) == "/" ? $prefix : '/'.$prefix;
+    $this->objectStorage = $objectStorage;
+    $this->hpcloud_url = $hpcloud_url;
+    $this->hpcloud_container = $hpcloud_container;
   }
 
   /**

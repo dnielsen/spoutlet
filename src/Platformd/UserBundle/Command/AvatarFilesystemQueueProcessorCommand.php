@@ -13,7 +13,7 @@ use
 use Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage,
     Platformd\UserBundle\Entity\Avatar
 ;
-
+use HPCloud\HPCloudPHP;
 class AvatarFilesystemQueueProcessorCommand extends ContainerAwareCommand
 {
     private $stdOutput;
@@ -99,12 +99,22 @@ EOT
         $userManager     = $container->get('fos_user.user_manager');
         $apiAuth         = $container->getParameter('api_authentication');
         $apiManager      = $container->get('platformd.user.api.manager');
-
+        
         $this->output(0);
         $this->output(0, 'PlatformD Avatar Filesystem Actions Queue Processor');
         $this->output(0);
 
         $this->output(0, 'Processing queue for avatar actions...');
+        $hpObject = 0;
+        if($container->getParameter('object_storage') == 'HpObjectStorage')
+        {
+          $hpcloud_accesskey = $this->getContainer()->getParameter('hpcloud_accesskey');
+          $hpcloud_secreatekey = $this->getContainer()->getParameter('hpcloud_secreatkey');
+          $hpcloud_tenantid = $this->getContainer()->getParameter('hpcloud_tenantid');
+
+          $hpcloud = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatekey, $hpcloud_tenantid);
+          $hpObject = 1 ;
+        }
 
         while ($message = $this->queueUtil->retrieveFromQueue(new AvatarFileSystemActionsQueueMessage())) {
 
@@ -145,7 +155,13 @@ EOT
             $this->output(4, 'Copying resources...');
 
             $sourceBucket = $action == AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_APPROVE ? $privateBucket : $publicBucket;
-            $items        = $s3->get_object_list($sourceBucket, array('prefix' => Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$fileUuid));
+            if($hpObject == 1){
+              $items = $hpcloud->get_object_list($sourceBucket,array('prefix' => Avatar::AVATAR_DIRECTORY_PREFIX));           
+            } 
+            // For AWS Storage
+            else {
+                $items = $s3->get_object_list($sourceBucket, array('prefix' => Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$fileUuid));
+            }
             $deleteItems  = array('objects'=>array());
             $switch       = $action == AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_SWITCH;
 
@@ -154,7 +170,34 @@ EOT
                 $this->deleteMessageWithOutput($message);
                 continue;
             }
-
+            
+            if($hpObject == 1) {                               
+            
+              foreach ($items as $item) {
+                  $filePath        = (string)$item;
+                  $destinationPath = $action == AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_APPROVE ? $filePath : (Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/by_size/'.basename($filePath));
+  
+                  $deleteItems['objects'][]['key'] = $filePath;
+  
+                  $this->output(6, 'Copying "'.$filePath.'"...');
+  
+                  $source       = array('bucket' => $sourceBucket, 'filename' => $filePath);
+                  $destination  = array('bucket' => $publicBucket, 'filename' => $destinationPath);
+                  $opts         = array(
+                      'headers' => array('Cache-Control' => 'max-age=0'),
+                  );
+  
+                  $response = $hpcloud->copy_object($source, $destination, $opts);
+  
+                  if ($response ==false) {  
+                      $switch = false;
+                      $deleteMessage = false;
+                      $this->error("File not found on S3.");               
+                  }
+              } // end for foreach
+              
+            } else {
+                           
             foreach ($items as $item) {
                 $filePath        = (string)$item;
                 $destinationPath = $action == AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_APPROVE ? $filePath : (Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/by_size/'.basename($filePath));
@@ -182,26 +225,33 @@ EOT
                         $deleteMessage = false;
                     }
                 }
-            }
-
+            } // end for foreach
+            } // end of AWS
             $avatar->setProcessed(true);
             $avatarManager->save($avatar);
 
             if ($action == AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_APPROVE) {
 
                 $this->output(4, 'Deleting originals...', false);
-                $response = $s3->delete_objects($sourceBucket, $deleteItems);
-
-                $this->addSwitchActionToQueue($fileUuid, $userUuid);
-
-                if ($response->isOk()) {
-                    $this->tick();
-
+                if($hpObject == 1) {
+                  $response = $hpcloud->delete_objects($sourceBucket, $deleteItems);
                 } else {
-                    $this->output();
-                    $this->error($response->body->Error->Message);
+                  $response = $s3->delete_objects($sourceBucket, $deleteItems);
                 }
-            }
+                $this->addSwitchActionToQueue($fileUuid, $userUuid);
+                
+                 if($hpObject == 1) {
+                 
+                 } else { 
+                    if ($response->isOk()) {
+                        $this->tick();
+    
+                    } else {
+                        $this->output();
+                        $this->error($response->body->Error->Message);
+                    }
+                 }   
+            } // end of if of action
 
             if ($action == AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_SWITCH) {
                 $this->output(4, 'Settings user\' avatar...', false);

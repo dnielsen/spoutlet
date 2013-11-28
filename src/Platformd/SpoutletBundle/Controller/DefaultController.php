@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Controller\Controller as Controller;
 use Symfony\Component\HttpFoundation\Cookie;
+use Platformd\UserBundle\Entity\RegistrationSource;
 
 class DefaultController extends Controller
 {
@@ -262,6 +263,83 @@ class DefaultController extends Controller
         $response->headers->setCookie($cookie);
 
         $this->varnishCache($response, 3600);
+    }
+
+    public function siteSpringboardAction(Request $request)
+    {
+        $fallbackCountry = 'US';
+        $returnPath      = $request->headers->get('X-Return-Url');
+
+        if (!$returnPath) {
+            $returnPath = $this->generateUrl('default_index');
+        }
+
+        $siteFeatures = $this->getCurrentSite()->getSiteFeatures();
+
+        if ($siteFeatures->getHasCountrySiteRedirection()) {
+            $site = $this->getSiteFromUserCountry() ?: $this->getCurrentSite();
+        } else {
+            $site = $this->getCurrentSite();
+        }
+
+        $cookieName   = 'awa_bypass_redirection';
+        $cookieValue  = 1;
+        $cookieExpiry = new \DateTime('+1 week');
+        $cookiePath   = '/';
+        $cookieHost   = '.'.$this->getParameter('base_host');
+        $cookie       = new Cookie($cookieName, $cookieValue, $cookieExpiry, $cookiePath, $cookieHost, false, false);
+
+        $port = $request->getPort() && $request->getPort() != "80" ? $request->getPort() : '';
+        $url  = $request->getScheme().'://'.$site->getFullDomain().$port.$returnPath;
+
+        $response = new RedirectResponse($url);
+        $response->headers->setCookie($cookie);
+
+        return $response;
+    }
+
+    public function changeDomainAction($locale, Request $request)
+    {
+        $path   = $request->query->get('path');
+
+        if (!$path) {
+            $path = $this->generateUrl('default_index');
+        }
+
+        if ($locale) {
+            $site = $this->getSiteFromLocale($locale) ?: $this->getCurrentSite();
+        } else {
+            $site = $this->getCurrentSite();
+        }
+
+        $port     = $request->getPort() && $request->getPort() != "80" ? $request->getPort() : '';
+        $url      = $request->getScheme().'://'.$site->getFullDomain().$port.$path;
+        $response = new RedirectResponse($url);
+
+        return $response;
+    }
+
+    public function countryStateOptionsAction($countryCode)
+    {
+        if (!$countryCode) {
+            $this->varnishCache($response, 604800);
+            return new Response();
+        }
+
+        $country = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
+
+        if (!$country) {
+            $this->varnishCache($response, 604800);
+            return new Response();
+        }
+
+        $states = $country->getStates();
+
+        $response = $this->render('SpoutletBundle:Default:_countryStateOptions.html.twig', array(
+            'states' => $states,
+        ));
+
+        $this->varnishCache($response, 604800);
 
         return $response;
     }
@@ -281,9 +359,9 @@ class DefaultController extends Controller
         $site = $this->getCurrentSite();
 
         if (!$site->getSiteFeatures()->getHasIndex()) {
-            throw $this->createNotFoundException();
+             throw $this->createNotFoundException();
         }
-
+ 
         $groupRepo = $this->getDoctrine()->getRepository('GroupBundle:Group');
         $siteGroups = $groupRepo->findAllGroupsRelevantForSite($site);
 
@@ -292,8 +370,10 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
         }
         else {
-            return $this->render('SpoutletBundle:Default:index.html.twig');
+            return $this->render('SpoutletBundle:Default:index.html.twig', 
+                                array( 'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_NEWS)));
         }
+
     }
 
     public function healthCheckAction() {

@@ -232,6 +232,13 @@ class User extends BaseUser
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $avatar;
+    /**
+     * @var String $gallary
+     *
+     * @ORM\OneToOne(targetEntity="Platformd\UserBundle\Entity\Gallary")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $gallary;
 
     /**
      * @var string
@@ -408,6 +415,10 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="Platformd\UserBundle\Entity\Avatar", mappedBy="user", cascade={"persist"}, orphanRemoval=true)
      */
     protected $avatars;
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\UserBundle\Entity\Gallary", mappedBy="user", cascade={"persist"}, orphanRemoval=true)
+     */
+    protected $gallarys;
 
     /**
      * @ORM\Column(type="string", length=36, nullable=true)
@@ -443,6 +454,7 @@ class User extends BaseUser
      * @ORM\OneToOne(targetEntity="Platformd\UserBundle\Entity\RegistrationSource", cascade={"persist"}, mappedBy="user")
      */
     protected $registrationSource;
+
 
     /**
      * @ORM\Column(type="string", length="255", nullable=true)
@@ -509,7 +521,19 @@ class User extends BaseUser
      * @ORM\Column(type="string", nullable=true)
      */
     protected $mailingAddress;
-
+    
+    /**
+     * The id for facematching
+     *
+     * @var string
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $faceprintId;
+     /**
+     * @ORM\Column(name="faceprint_image", type="string")
+     */
+    protected $faceprintImage = '';
+ 
 
     public function __construct()
     {
@@ -520,6 +544,7 @@ class User extends BaseUser
         $this->loginRecords             = new ArrayCollection();
         $this->pdGroups                 = new ArrayCollection();
         $this->avatars                  = new ArrayCollection();
+        $this->gallarys                 = new ArrayCollection();
         $this->ideas                    = new ArrayCollection();
         $this->comments                 = new ArrayCollection();
     }
@@ -791,6 +816,20 @@ class User extends BaseUser
     public function setAvatar($avatar)
     {
         $this->avatar = $avatar;
+    }
+
+    public function getGallary()
+    {
+        if (!$this->gallary || !$this->gallary->isUsable()) {
+            return false;
+        }
+
+        return $this->gallary;
+    }
+
+    public function setGallary($gallary)
+    {
+        $this->gallary = $gallary;
     }
 
     public function getType()
@@ -1243,6 +1282,15 @@ class User extends BaseUser
         $this->avatars = $value;
     }
 
+     public function getGallarys()
+    {
+        return $this->gallarys;
+    }
+
+    public function setGallarys($value)
+    {
+        $this->gallarys = $value;
+    }
     public function getUuid()
     {
         return $this->uuid;
@@ -1460,6 +1508,32 @@ class User extends BaseUser
         return $this->ideas;
     }
 
+
+   /**
+     * @return string
+     */
+    public function getFaceprintId()
+    {
+        return $this->faceprintId;
+    }
+
+    /**
+     * @param string $faceprintId
+     */
+    public function setFaceprintId($faceprintId)
+    {
+        $this->faceprintId = $faceprintId;
+    } 
+
+    public function getFaceprintImage()
+    {
+        return $this->faceprintImage;
+    }
+
+    public function setFaceprintImage($value)
+    {
+        $this->faceprintImage = $value;
+    }
     public function getCodeAssignmentCodes()
     {
         return $this->codeAssignmentCodes;

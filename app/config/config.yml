@@ -1,4 +1,3 @@
-
 imports:
     - { resource: parameters.ini }
     - { resource: security.yml }
@@ -16,6 +15,7 @@ imports:
     - { resource: "@TagBundle/Resources/config/services.yml" }
     - { resource: "@SweepstakesBundle/Resources/config/services.yml" }
     - { resource: "@IdeaBundle/Resources/config/services.yml" }
+   # - { resource: "@UserBundle/Resources/config/services.yml" }
 
 framework:
     #esi:             ~
@@ -171,12 +171,27 @@ parameters:
     email_destination_override_with: osman@platformd.com
 
     # if set to true, the ipLookupUtil will read the contents of a file named "overrideCountry"
-    # in the %ip2location_lookup_directory% directory and return it after an ip address lookup.
+    # in the %maxmind_lookup_directory_lookup_directory% directory and return it after an ip address lookup.
     # This allows developers to fake the country that they are logged in from by writing a string
     # to this file that is the 2 character country code of the desired country.
     # If the file does not exist or is empty, default country is "US".
     ip_lookup_override: false
+
     ip2location_lookup_directory: %kernel.root_dir%/../external_data/ip2location/
+    object_storage: HpObjectStorage
+    #object_storage: AWSObjectStorage
+    hpcloud_accesskey: YS11LX9TT81LNVXKSKM7
+    hpcloud_secreatkey: r8zsRj+i/SfVSXkOiUlVZg2SJBw2p2izogqKlo+W
+    hpcloud_tenantid: 10873218563681
+    hpcloud_url: 'https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/'
+    hpcloud_messaging_url: 'https://region-a.geo-1.messaging.hpcloudsvc.com/v1.1/10873218563681'
+    hpcloud_container: 'platformd-public'
+    #email_service (1) AWS_SES (2) SendGrid
+    email_service: 'SendGrid'
+    sendgrid_username: 'dnielsen'
+    sendgrid_password: 'Deepblue1'
+    maxmind_lookup_directory: %kernel.root_dir%/../external_data/maxmind/
+
 
     available_locales:
         # we're abusing the locales to make our many "sites"
@@ -348,7 +363,7 @@ parameters:
             - 台湾省
 
 jms_i18n_routing:
-    default_locale: en_sjsu
+    default_locale: en_campsite
     locales: %available_locales%
     strategy: custom
     hosts: %site_host_map%
@@ -384,6 +399,9 @@ knp_gaufrette:
         platformd.avatar:
             service:
                 id: platformd.avatar.s3.adapter
+        platformd.gallary:
+            service:
+                id: platformd.gallary.s3.adapter
         platformd.event:
             service:
                 id: platformd.event.s3.adapter
@@ -398,6 +416,9 @@ knp_gaufrette:
         platformd.avatar:
             adapter: platformd.avatar
             alias: avatar_filesystem
+        platformd.gallary:
+            adapter: platformd.gallary
+            alias: gallary_filesystem
         platformd.event:
             adapter: platformd.event
             alias: event_filesystem
