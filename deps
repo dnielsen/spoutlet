@@ -206,3 +206,10 @@
 [twitteroauth]
     git=git://github.com/kertz/twitteroauth.git
     target=twitteroauth
+
+[HpCloudPhp]
+    git=https://github.com/sandip2451984/HpCloudPHP.git
+    target=/HPCloudPHP
+[SendGrid]
+    git=https://github.com/sandip2451984/SendGrid.git
+    target=/sendgrid-php
