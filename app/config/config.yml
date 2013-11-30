@@ -237,7 +237,7 @@ parameters:
     # an array of "sites" where we host their main site
     # used by the SiteProtectionListener to prevent, for example, Latin America users
     # from accessing pages on our site, other than the few that we host of theirs
-    allowed_sites: [en, ja1, zh]
+    allowed_sites: [en, ja, zh]
 
 
     # Used for the translation admin
@@ -542,7 +542,7 @@ exercise_html_purifier:
 
 liip_theme:
     themes: %liip_enabled_themes%
-    active_theme: 'marketingcamp'
+    active_theme: 'default'
     path_patterns:
         app_resource:
             - %%app_path%%/themes/%%current_theme%%/%%template%%
