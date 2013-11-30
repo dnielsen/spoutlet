@@ -135,7 +135,10 @@ class RegistrationController extends BaseRegistrationController
 
         $this->container->get('fos_user.user_manager')->updateUser($user);
 
-        $this->setFlash('success', $this->trans('platformd.user.register.confirmed_success'));
+        $request = $this->container->get('request');
+        $session = $request->getSession();
+
+        $session->setFlash('success', $this->trans('platformd.user.register.confirmed_success'));
 
         $response = new RedirectResponse($this->container->get('router')->generate('fos_user_security_login', array('f' => 'reg')));
         //$this->authenticateUser($user, $response);

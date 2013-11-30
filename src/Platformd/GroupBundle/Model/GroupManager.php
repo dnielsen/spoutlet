@@ -105,6 +105,11 @@ class GroupManager
         return $this->getRepository()->findOneBy($criteria);
     }
 
+    public function getGroupBySlug($slug)
+    {
+        return $this->getRepository()->findOneBySlug($slug);
+    }
+
     /**
      * Call this to save a Group
      *

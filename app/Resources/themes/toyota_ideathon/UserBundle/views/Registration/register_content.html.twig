@@ -1,16 +1,47 @@
 {% form_theme form theme %}
 
+{% set username_error = '' %}
+{% set email_error = '' %}
+{% set password_error = '' %}
+
+{% for error in errors %}
+    {% if error.messageTemplate == 'fos_user.username.blank' or error.messageTemplate == 'fos_user.username.already_used' or error.messageTemplate == 'fos_user.username.short' %}
+        {% set username_error = error.messageTemplate|pd_trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'fos_user.email.blank' or error.messageTemplate == 'fos_user.email.already_used' or error.messageTemplate == 'fos_user.email.invalid' %}
+        {% set email_error = error.messageTemplate|pd_trans(error.messageParameters, 'validators') %}
+    {% endif %}
+    {% if error.messageTemplate == 'fos_user.password.blank' or error.messageTemplate == 'passwords_do_not_match' or error.messageTemplate == 'password_too_short' %}
+        {% set password_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+    {% endif %}
+{% endfor %}
+
 <h1>Create Your Campsite Account</h1>
 
 <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register form form-horizontal">
 
     {{ form_row(form.name) }}
-    {{ form_row(form.username) }}
-    {{ form_row(form.email) }}
+
+    {{ form_label(form.username) }}
+    <div class="form_error">
+        {{ username_error }}
+    </div>
+    {{ form_widget(form.username) }}
+
+    {{ form_label(form.email) }}
+    <div class="form_error">
+        {{ email_error }}
+    </div>
+    {{ form_widget(form.email) }}
+
+    <div class="form_error">
+        {{ password_error }}
+    </div>
     {{ form_row(form.plainPassword.first) }}
     {{ form_row(form.plainPassword.second) }}
-    {{ form_row(form.organization) }}
+
     {{ form_row(form.title) }}
+    {{ form_row(form.organization) }}
     {{ form_row(form.industry) }}
 
     <strong>I accept the terms and conditions:</strong><br/>

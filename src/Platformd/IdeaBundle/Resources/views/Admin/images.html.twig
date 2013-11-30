@@ -2,28 +2,27 @@
 
 {% block event_content %}
 
-    {% if event.rotatorImages %}
+    <h1>Event Rotator Images</h1>
 
-        <h1>Event Images</h1>
-        {%  for image in event.rotatorImages %}
-            <img src="{{  media_path(image) }}" style="max-width: 150px;max-height: 150px;vertical-align: middle"/>
-            <a href="{{ path('idea_admin_remove_image', {'groupSlug': group.slug, 'eventSlug': event.slug, 'imageId': image.id}) }}">Delete</a>
-            <br/><hr/>
-        {% endfor %}
-
-    {% endif %}
+    <h2>Add Image</h2> (Approximately 644 x 340)
 
     <form action="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" {{  form_enctype(form) }}>
         {{  form_errors(form) }}
         {{  form_row(form.fileObject) }}
         {{  form_rest(form) }}
 
-        <div class="form-actions spcr-t">
-            <button type="submit" class="btn btn-primary" formnovalidate>Add</button>
-        </div>
+        <br/>
+        <input type="submit" value="Add" class="button btn btn-primary"/>
     </form>
 
-    <br/><br/>
+    <hr/>
+
+    {%  for image in event.rotatorImages %}
+        <img src="{{  media_path(image) }}" style="max-width: 150px;max-height: 150px;vertical-align: middle"/>
+        <a href="{{ path('idea_admin_remove_image', {'groupSlug': group.slug, 'eventSlug': event.slug, 'imageId': image.id}) }}">Delete</a>
+        <br/><hr/>
+    {% endfor %}
+
 
     <form action = {{ path('idea_admin', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get">
         <input type="submit" value="Back">

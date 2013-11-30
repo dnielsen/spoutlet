@@ -6,12 +6,8 @@
             <li class="more">
                 <a>Events</a>
                 <ul>
-                    <li><a href="{{ path('global_events_index') }}">Events</a></li>
-                    <li><a href="{{ path('html_widget_page', { 'slug': 'event-overview' }) }}">Event Overview</a></li>
-                    <li><a href="{{ path('html_widget_page', { 'slug': 'what-to-expect' }) }}">What to Expect</a></li>
-                    <li><a href="{{ path('html_widget_page', { 'slug': 'what-to-bring' }) }}">What to Bring</a></li>
-                    <li><a href="{{ path('html_widget_page', { 'slug': 'more-faqs' }) }}">More FAQs</a></li>
-                    <li><a class="text-error" href="#">Session Schedule</a></li>
+                    <li><a href="{{ path('global_events_index') }}">All Events</a></li>
+                    <li><a href="{{ path('accounts_events') }}">My Events</a></li>
                 </ul>
             </li>
 
@@ -24,30 +20,39 @@
                 </ul>
             </li>
 
-            <li><a href="{{ path('html_widget_page', { 'slug': 'sponsors' }) }}">Sponsors</a></li>
-
-            <li class="more">
-                <a>What's New</a>
-                <ul>
-                    <li><a href="{{ path('html_widget_page', { 'slug': 'social-mediakit' }) }}">Social Mediakit</a></li>
-                    <li><a href="{{ path('html_widget_page', { 'slug': 'press-releases' }) }}">Press Releases</a></li>
-                    <li><a href="{{ path('html_widget_page', { 'slug': 'news-updates' }) }}">News &amp; Updates</a></li>
-                </ul>
-            </li>
-
-            <li class="more">
-                <a>Get Involved</a>
-                <ul>
-                    <li><a href="{{ path('html_widget_page', { 'slug': 'propose-a-topic' }) }}">How to Propose a Topic</a></li>
-                    <li><a href="http://marketingcamp.uservoice.com/forums/193848-welcome-camper-san-francisco-2013-">Vote on Topics</a></li>
-                    <li><a href="{{ path('html_widget_page', { 'slug': 'sign-up-to-volunteer' }) }}">Sign Up to Volunteer</a></li>
-                    <li><a href="{{ path('html_widget_page', { 'slug': 'become-a-sponsor' }) }}">Become a Sponsor</a></li>
-                    <li><a href="{{ path('html_widget_page', { 'slug': 'spread-the-word' }) }}">Spread the Word</a></li>
-                    <li><a class="text-error" href="{{ path('html_widget_page', { 'slug': 'start-your-own-camp' }) }}">Start Your Own Camp</a></li>
-                </ul>
-            </li>
+            <li><a href="{{ path('contact') }}">Contact Us</a></li>
 
         </ul>
 
     </div> <!-- end nav -->
 </div> <!-- end nav-wrapper -->
+
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("ul.sf-list").supersubs({
+            minWidth:    10,   // minimum width of submenus in em units
+            maxWidth:    27,   // maximum width of submenus in em units
+            extraWidth:  1     // extra width can ensure lines don't sometimes turn over
+            // due to slight rounding differences and font-family
+        }).superfish({
+                    delay:      150,
+                    animation:  {opacity:'show',height:'show'},
+                    speed:      'fast'
+                });
+
+        $('.tablesorter').tablesorter();
+
+        // clearing overlay defaults so they can be loaded in from css (div.blockOverlay)
+        $.blockUI.defaults.overlayCSS = {};
+        $.fn.qtip.defaults.style.classes = 'qtip-green qtip-shadow qtip-rounded';
+    });
+</script>
+
+<script type="text/javascript">
+    //jkmegamenu.definemenu("anchorid", "menuid", "mouseover|click")
+    jkmegamenu.definemenu("megaanchor1", "megamenu1", "mouseover");
+    jkmegamenu.definemenu("megaanchor2", "megamenu2", "mouseover");
+    jkmegamenu.definemenu("megaanchor3", "megamenu3", "mouseover");
+    jkmegamenu.definemenu("megaanchor4", "megamenu4", "mouseover");
+</script>

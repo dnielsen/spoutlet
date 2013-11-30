@@ -280,14 +280,22 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        if (!$this->getCurrentSite()->getSiteFeatures()->getHasIndex()) {
+        $site = $this->getCurrentSite();
+
+        if (!$site->getSiteFeatures()->getHasIndex()) {
             throw $this->createNotFoundException();
         }
- 
-        return $this->render('SpoutletBundle:Default:index.html.twig'
-,array( 'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_NEWS),
-)
-           );
+
+        $groupRepo = $this->getDoctrine()->getRepository('GroupBundle:Group');
+        $siteGroups = $groupRepo->findAllGroupsRelevantForSite($site);
+
+        if (count($siteGroups) == 1) {
+            $group = reset($siteGroups);
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+        }
+        else {
+            return $this->render('SpoutletBundle:Default:index.html.twig');
+        }
     }
 
     public function healthCheckAction() {
@@ -581,7 +589,7 @@ class DefaultController extends Controller
     {
         $site = $this->getCurrentSite();
 
-        $groups = $this->get('platformd.model.group_manager')->getAllLocationGroupsForSite($site);
+        $groups = $this->getGroupManager()->getAllLocationGroupsForSite($site);
 
         $groupsArray = array();
 

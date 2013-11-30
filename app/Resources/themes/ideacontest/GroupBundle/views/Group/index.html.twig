@@ -1,0 +1,236 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title %}All Groups{% endblock %}
+
+{% block content %}
+
+    <div class="std_2col">
+        {% if features.hasSearch %}<div class="left">{% render url('search_form', {'category': 'group', 'watermark': 'platformd.search.form.default.all' }) %}</div>{% endif %}
+        <div class="right" style="margin:20px 5px;"><a href="{{ path('group_new') }}" class="btn reg-source">{{ 'platformd.groups.index.create_group' | pd_trans }}</a></div>
+    </div>
+
+    <div class="std_2col">
+        <div class="left">
+
+            <h3 id="groups-index-title">{{ 'platformd.groups.index.recommended_groups' | pd_trans }}</h3>
+            {% if featuredGroups|length > 0 %}
+                <div class="group-collection">
+                    <h4 class="groups-category-header">{{ 'platformd.groups.index.featured_groups' | pd_trans }}</h4>
+                    <div id="featured-groups">
+                        {% for group in featuredGroups %}
+                            <div class="group-list-item">
+                                <a href="{{ path('group_show', { slug: group[0].slug}) }}">
+                                    {% if group[0].thumbNail %}
+                                        <img src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
+                                    {% else %}
+                                        <div class="default-group-thumbnail"></div>
+                                    {% endif %}
+                                </a>
+                                <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
+                                    {{ group[0].name }}
+                                </a>
+                                <div class="details">
+                                    <div class="item-detail">{{ 'platformd.groups.index.members' | pd_trans }}: {{ group['memberCount'] }}</div>
+                                    <div class="item-detail">{{ 'platformd.groups.index.organizer' | pd_trans }}: {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'platformd.groups.index.staff' | pd_trans : group[0].owner.username }}</div>
+                                    <div class="report-group-caption">
+                                        <a href="javascript:void(0);" class="report-group" report-data="{{ group[0].id }}">{{ 'platformd.groups.index.report_group' | pd_trans }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            <div class="group-collection">
+                <h4 class="groups-category-header">{{ 'platformd.groups.index.topic_groups' | pd_trans }}</h4>
+                <div class="scrollable" id="scrollable-topic-groups">
+                    <div class="items">
+                    </div>
+                </div>
+                <div id="scroll-actions" style="margin-top: 0px;">
+                    <a id="topic-prev" class="prev browse" style="float: left;">{{ 'platformd.groups.index.previous' | pd_trans }}</a>
+                    <a id="topic-next" class="next browse" style="float: right;">{{ 'platformd.groups.index.see_more' | pd_trans }}</a>
+                </div>
+            </div>
+            <div class="group-collection" style="margin-top: 20px;">
+                <h4 class="groups-category-header">{{ 'platformd.groups.index.location_groups' | pd_trans }}</h4>
+                <div class="scrollable" id="scrollable-location-groups">
+                    <div class="items">
+                    </div>
+                </div>
+                <div id="scroll-actions" style="margin-top: 10px;">
+                    <a id="location-prev" class="prev browse" style="float: left;">{{ 'platformd.groups.index.previous' | pd_trans }}</a>
+                    <a id="location-next" class="next browse" style="float: right;">{{ 'platformd.groups.index.see_more' | pd_trans }}</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="right">
+
+            {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+            <div class="widget-33" id="new-groups-widget">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        {{ 'platformd.groups.index.welcome_new' | pd_trans }}
+                    </div>
+                </div>
+                <div class="widget-content">
+                    {% for recentGroup in recentGroups %}
+                        <div class="widget-item">
+                            <a class="widget-link news-ellipse" href="{{ path('group_show', { 'slug': recentGroup.slug }) }}">{{ recentGroup.name }}</a>
+                        </div>
+                    {% else %}
+                        <p>{{ 'platformd.groups.index.no_groups_found' | pd_trans }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="widget-33" id="popular-groups-widget">
+                <div class="widget-header">
+                    <div class="widget-title">
+                        {{ 'platformd.groups.index.most_popular' | pd_trans }}
+                    </div>
+                </div>
+                <div class="widget-content">
+                    {% for popularGroup in popularGroups %}
+                        <div class="widget-item">
+                            <a class="widget-link news-ellipse" href="{{ path('group_show', { 'slug': popularGroup['slug'] }) }}">{{ popularGroup['group_name'] }}</a>
+                        </div>
+                    {% else %}
+                        <p>{{ 'platformd.groups.index.no_groups_found' | pd_trans }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% include 'GroupBundle:Group:_reportGroupPopup.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'GroupBundle:Group:_css_assets.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
+    <script type="text/javascript">
+
+        var topicGroups    = {{ topicGroups | raw }};
+        var locationGroups = {{ locationGroups | raw }};
+        var topicGroupsLoaded   = 0;
+        var locationGroupsLoaded   = 0;
+        var basePath       = '{{  path('default_index') }}';
+
+        $(function () {
+            $('.reg-source').click(function() {
+                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
+            });
+
+            initGroups();
+
+            $('#scrollable-location-groups').scrollable({
+                next: '#location-next',
+                prev: '#location-prev',
+            });
+            $('#scrollable-topic-groups').scrollable({
+                next: '#topic-next',
+                prev: '#topic-prev',
+            });
+
+            $('#location-next').click(function() {
+                loadNextGroupsAjax('location');
+            });
+
+            $('#topic-next').click(function() {
+                loadNextGroupsAjax('topic');
+            });
+
+            $('.group-index-link').truncate();
+            $('.item-detail').truncate({width:130});
+            $('.widget-item .news-ellipse').truncate();
+
+        });
+
+        function initGroups() {
+            loadNextGroupsAjax('topic', 16);
+            loadNextGroupsAjax('location', 16);
+        }
+
+        function loadNextGroupsAjax(type, num) {
+
+            if(typeof(num)==='undefined') num = 8;
+
+            scrollContainer = null;
+
+            if (type == 'location') {
+                list = locationGroups;
+                scrollContainer = '#scrollable-location-groups .items';
+                groupsLoaded = locationGroupsLoaded;
+            } else if (type == 'topic') {
+                list = topicGroups;
+                scrollContainer = '#scrollable-topic-groups .items';
+                groupsLoaded = topicGroupsLoaded;
+            } else {
+                return;
+            }
+
+            var currDiv = null;
+            var baseDiv = $('<div class="items-wrapper"></div>');
+
+            for (var i = 0; i < num; i++) {
+
+                var index = groupsLoaded + i;
+
+                if(list.length <= groupsLoaded + i)
+                {
+                    groupsLoaded+=i;
+                    updateCounts(type, groupsLoaded);
+                    return;
+                }
+                if (i % 8 == 0) {
+                    currDiv = baseDiv.clone();
+                    currDiv.appendTo(scrollContainer);
+                }
+
+                if (list[index].thumbnail) {
+                    image = '<img src="' + list[index].thumbnail + '" alt="' + list[index].name + '" title="' + list[index].name + '" />';
+                } else {
+                    image = '<div class="default-group-thumbnail"></div>';
+                }
+
+                ownerName = list[index].owner.adminLevel ? '{{ 'platformd.groups.index.staff' | pd_trans }}' : list[index].owner.username;
+
+                currDiv.append('<div class="group-list-item"> \
+                    <a href="' + basePath + list[index].slug + '"> \
+                        ' + image + ' \
+                    </a> \
+                    <a href="' + basePath + list[index].slug + '" class="group-index-link" title="' + list[index].name + '"> \
+                        ' + list[index].name + ' \
+                    </a> \
+                    <div class="details"> \
+                        <div class="item-detail">{{ 'platformd.groups.index.members' | pd_trans }}: ' + list[index].memberCount + '</div> \
+                        <div class="item-detail">{{ 'platformd.groups.index.organizer' | pd_trans }}: ' + ownerName + '</div> \
+                        <div class="report-group-caption"> \
+                            <a href="javascript:void(0);" class="report-group" report-data="' + list[index].id + '">{{ 'platformd.groups.index.report_group' | pd_trans }}</a> \
+                        </div> \
+                    </div> \
+                </div>');
+            }
+
+            groupsLoaded+=num;
+
+            updateCounts(type, groupsLoaded);
+            $('.group-index-link').truncate();
+        }
+
+        function updateCounts(type, groupsLoaded) {
+            if (type == 'location') {
+                locationGroupsLoaded = groupsLoaded;
+            } else if (type == 'topic') {
+                topicGroupsLoaded = groupsLoaded;
+            }
+        }
+
+    </script>
+
+{% endblock %}

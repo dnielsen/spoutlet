@@ -139,4 +139,4 @@ render:function($){
 
 jQuery(document).ready(function($){
 	jkmegamenu.render($)
-})
+});

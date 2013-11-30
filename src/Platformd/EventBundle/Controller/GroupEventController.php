@@ -316,6 +316,10 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Event does not exist.');
         }
 
+        if ($groupEvent->getType() == GroupEvent::TYPE_FORUM){
+            return $this->redirect($this->generateUrl('idea_show_all', array('groupSlug' => $groupSlug, 'eventSlug' => $eventSlug)));
+        }
+
         if (!$groupEvent->isApproved()) {
             $this->basicSecurityCheck(array('ROLE_USER'));
             if ($this->getUser() != $groupEvent->getUser() && !$this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'ApproveEvent') && !$this->isGranted('ROLE_SUPER_ADMIN')) {
@@ -323,10 +327,15 @@ class GroupEventController extends Controller
             }
         }
 
+        $attendance = $this->getCurrentUserApproved($groupEvent);
+        $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
+
         return $this->render('EventBundle:GroupEvent:view.html.twig', array(
             'group'         => $group,
             'event'         => $groupEvent,
             'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_GROUP, 'id'=>$group->getId()),
+            'attendance'    => $attendance,
+            'isAdmin'       => $isAdmin,
         ));
     }
 
@@ -871,13 +880,24 @@ class GroupEventController extends Controller
             )));
         }
 
+        $wasGroupMember = $group->isMember($user);
+
         $this->getGroupEventService()->register($groupEvent, $user);
         $this->getGroupManager()->autoJoinGroup($group, $user);
 
-        $this->setFlash('success', $this->trans(
-            'platformd.events.event_show.group_joined',
-            array('%groupName%' => $group->getName()))
-        );
+        if ($groupEvent->getPrivate()){
+            $this->setFlash('success', "We have received your request for private access. You will receive a response by an administrator when your account has been reviewed.");
+        }
+        else {
+
+            if ($wasGroupMember || $group->isOwner($user)) {
+                $this->setFlash('success', $this->trans('platformd.events.event_show.now_attending'));
+            }
+            else {
+                $this->setFlash('success', $this->trans(
+                        'platformd.events.event_show.group_joined', array('%groupName%' => $group->getName())));
+            }
+        }
 
         return $this->redirect($this->generateUrl('group_event_view', array(
             'groupSlug' => $groupSlug,
@@ -971,16 +991,20 @@ class GroupEventController extends Controller
         return $this->redirect($this->generateUrl('group_show', array('slug' => $groupEvent->getGroup()->getSlug())) . '#events');
     }
 
-    /**
-     * @return GroupManager
-     */
-    private function getGroupManager()
-    {
-        return $this->get('platformd.model.group_manager');
-    }
-
     private function getTagManager()
     {
         return $this->get('platformd.tags.model.tag_manager');
     }
+
+
+    public function getCurrentUserApproved($event)
+    {
+        $rsvpRepo = $this->getDoctrine()->getRepository('EventBundle:GroupEventRsvpAction');
+        $user = $this->getCurrentUser();
+        $attendance = $rsvpRepo->getUserApprovedStatus($event, $user);
+
+        return $attendance;
+    }
+
+
 }

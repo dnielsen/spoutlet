@@ -12,11 +12,30 @@
 
     {% else %}
         <table class="left">
-            <form action = {{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} id='filterForm' method="get">
+            <form action = "{{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" id="filterForm" method="get">
                 <td><input type="text" name="tag" tabindex="1" placeholder="Filter by tag" value="{{tag}}" /></td>
                 <td><input type="submit" value="Filter" class="btnMdm" /></td>
-                {% if tag %}<td style="padding-left: 5px"><a href="{{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}"><input type="button" value="View All" class="btnMdm" /></a></td>{% endif %}
-            <input type="hidden" name="crit" tabindex="1" value='{{crit}}' />
+                {% if tag %}
+                    <td style="padding-left: 5px">
+                        <a href="{{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug, 'crit': crit, 'round': round}) }}"><input type="button" value="View All" class="btnMdm" /></a>
+                    </td>
+                {% endif %}
+                <input type="hidden" name="crit" tabindex="1" value="{{crit}}" />
+                <input type="hidden" name="round" tabindex="1" value="{{round}}" />
+            </form>
+            <form action = "{{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug, 'crit': crit, 'tag': tag}) }}" method="get">
+                <input type="hidden" name="crit" tabindex="1" value="{{crit}}" />
+                <input type="hidden" name="tag" tabindex="1" value="{{tag}}" />
+                <td style="padding:0px 20px">
+                    <strong>View Round</strong>
+                </td>
+                <td>
+                    <select name = "round" onchange="this.form.submit()">
+                        {% for j in 1..currentRound %}
+                            <option value={{ j }} {% if round == j %}selected{%endif%}>{{ j }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
             </form>
         </table>
 
@@ -26,18 +45,20 @@
                 <th>Idea Name</th>
                 {% for criteria in criteriaList %}
                     <th>
-                        <a href="{{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug, 'crit': criteria.id, 'tag': tag}) }}">
+                        <a href="{{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug, 'crit': criteria.id, 'tag': tag, 'round': round}) }}">
                             {{criteria.displayName}}
                         </a>
                     </th>
                 {% endfor %}
-                <th><a href="{{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug, 'tag': tag}) }}">Average</a></th>
-                <th>Promote</th>
+                <th><a href="{{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug, 'tag': tag, 'round': round}) }}">Average</a></th>
+                {% if round == currentRound %}
+                    <th>Promote</th>
+                {% endif %}
             </tr>
 
             {# loop over each idea, loop over each criteria #}
 
-            <form action = {{ path('idea_advance', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} id='advance'  method="post">
+            <form action = "{{ path('idea_advance', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" id="advance"  method="post">
                 {% for idea in ideas %}
                     <tr>
                         <!-- TODO: Change link here to point to drill down table for selected idea -->
@@ -58,8 +79,9 @@
                         {% endfor %}
                         <td>{{ attribute( ideaAvgScore, 'avgScore') }}</td>
 
-                        <td><input type='checkbox' name ='{{idea.id}}' {% if loop.index0 < firstN %}checked="yes"{% endif %}/></td>
-
+                        {% if round == currentRound %}
+                            <td><input type='checkbox' name ='{{idea.id}}' {% if loop.index0 < firstN %}checked="yes"{% endif %}/></td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </form>
@@ -68,14 +90,17 @@
 
     <br>
 
-    <table class="right">
-        <form action = {{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} id='firstNForm' method="get">
-            <td><input type='text' name='firstN' placeholder="Select first N ideas" /></td>
-            <td><input type='submit' value='Select' class='btnMdm' /></td>
-            <input type='hidden' name='tag' value='{{tag}}'/>
-            <input type='hidden' name='crit' value='{{crit}}'/>
-        </form>
-    </table>
+    {% if round == currentRound %}
+        <table class="right">
+            <form action = {{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} id='firstNForm' method="get">
+                <td><input type='text' name='firstN' placeholder="Select first N ideas" /></td>
+                <td><input type='submit' value='Select' class='btnMdm' /></td>
+                <input type='hidden' name='tag' value='{{tag}}'/>
+                <input type='hidden' name='crit' value='{{crit}}'/>
+                <input type='hidden' name='round' value='{{round}}'/>
+            </form>
+        </table>
+    {% endif %}
 
     <br><br><br>
 
@@ -85,9 +110,11 @@
                 <input type="submit" value="Back">
             </form>
         </td>
-    <td>
-        <input type="submit" value="Advance To Next Round" onclick="document.forms['advance'].submit();">
-    </td>
+        {% if round == currentRound %}
+            <td>
+                <input type="submit" value="Advance To Next Round" onclick="document.forms['advance'].submit();">
+            </td>
+        {% endif %}
 
     </table>
 

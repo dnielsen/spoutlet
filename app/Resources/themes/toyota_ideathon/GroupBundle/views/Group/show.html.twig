@@ -1,48 +1,44 @@
-{% extends 'IdeaBundle::group_layout.html.twig' %}
+{% extends 'SpoutletBundle::layout.html.twig' %}
 
 {% block title %}{{ group.name }}{% endblock %}
 
 {% block content %}
 
     <div id="contentLft">
-        <h2 class="left spcr-t">{{ group.name }}</h2>
-        <br/><br/>
-        {% include 'GroupBundle:Group:_subNav.html.twig' %}
-        <hr/>
 
-        <!-- royalslider code start
+        <!-- royalslider code start -->
         <div class="content-slider-bg">
             <div id="content-slider-1" class="royalSlider contentSlider rsDefault">
 
                 <div>
-                    <a href={{ path('fos_user_registration_register') }}><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-register.jpg') }}" alt="Register" width="740" height="341"></a>
+                    <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': '4'}) }}"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-register.jpg') }}" alt="Register" width="740" height="341"></a>
 						<span class="rsTmb">
-							Register
+							<a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': '4'}) }}" class="wht">Hackathon</a>
 						</span>
                 </div>
                 <div>
-                    <a href="learn.html" target="_blank"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-learn.jpg') }} alt="Learn" width="740" height="341"></a>
+                    <a href="{{ path('group_about', {'slug': group.slug}) }}"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-learn.jpg') }} alt="Learn" width="740" height="341"></a>
 				        <span class="rsTmb">
-							Learn
+							<a href="{{ path('group_about', {'slug': group.slug}) }}" class="wht">Learn</a>
 				        </span>
                 </div>
                 <div>
-                    <a href="code.html" target="_blank"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-forum.jpg') }} alt="Code" width="740" height="341"></a>
+                    <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': 'api'}) }}"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-forum.jpg') }} alt="Code" width="740" height="341"></a>
 				        <span class="rsTmb">
-							API Forum
+							<a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': 'api'}) }}" class="wht">API Forum</a>
 				        </span>
                 </div>
                 <div>
-                    <a href="share.html" target="_blank"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-share.jpg') }} alt="Share" width="740" height="341"></a>
+                    <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': '4'}) }}"><img src="{{ asset('themes/ideacontest/spoutlet/img/ss-share.jpg') }} alt="Share" width="740" height="341"></a>
 						<span class="rsTmb">
-							App Idea Forum
+							<a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': '4'}) }}" class="wht">View Ideas</a>
 						</span>
                 </div>
 
             </div>
-        </div> <!-- end royalslider
+        </div> <!-- end royalslider -->
 
-        <script id="addJS">
+        <script type="text/javascript" id="addJS">
             jQuery(document).ready(function($) {
                 // Please note that autoHeight option has some conflicts with options like imageScaleMode, imageAlignCenter and autoScaleSlider
                 // it's recommended to disable them when using autoHeight module
@@ -67,10 +63,10 @@
                 });
             });
         </script>
-        -->
 
-
-        {{ group.description | raw }}<br/>
+        <div class="rowBx">
+            {{ group.description | raw }}
+        </div>
     </div>
 
 
@@ -78,7 +74,7 @@
         <h2 class="stepBar">Step 1: Register for Hackathon</h2>
         <p>Join this competition to create apps that utilize the API for vehicle data on either iOS or Android platforms. Toyota-ITC will provide qualified developers with access to Toyota&#8217;s vehicle data streaming API for the first time in the US.</p>
 
-        <p class="right"><a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': 4}) }}"  class="btnTny">register</a></p>
+        <p class="right"><a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': 12}) }}"  class="btnTny">register</a></p>
 
         <p class="bdr spcr-b"><a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': 4}) }}" class="midtxt">Quantified Car Hackathon</a><br>
             Nov 9th - 10th | Mountain View</p>
@@ -88,21 +84,21 @@
         <h2 class="stepBar">Step 2: Learn about the API</h2>
 
         <p>Come to one of our API idea brainstorming sessions (aka &ldquo;Ideathons&rdquo;) where you can learn about the API, generate app ideas and form teams. Get some ideas for a startup or new product design.</p>
-        <p class="right"><a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': 1}) }}"  class="btnTny">register</a></p>
+        <p class="right"><a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': 2}) }}"  class="btnTny">register</a></p>
 
         <p class="bdr"><a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': 1}) }}" class="midtxt">Ideathon / Kickoff</a><br>
             Oct 17th | Mountain View</p>
 
         <div class="clr"></div>
 
-        <p class="right"><a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': 2}) }}"  class="btnTny">register</a></p>
+        <p class="right"><a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': 10}) }}"  class="btnTny">register</a></p>
 
         <p class="bdr"><a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': 2}) }}" class="midtxt">Ideathon / Kickoff</a><br>
             Oct 21st | Mountain View</p>
 
         <div class="clr"></div>
 
-        <p class="right"><a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': 3}) }}"  class="btnTny">register</a></p>
+        <p class="right"><a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': 11}) }}"  class="btnTny">register</a></p>
 
         <p class="bdr spcr-b"><a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': 3}) }}" class="midtxt">Ideathon / Design Emphasis</a><br>
             Oct 29th | Mountain View</p>
@@ -111,7 +107,7 @@
 
         <p class="bdr"></p>
 
-        <p class="right mgnNeg"><a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': 1}) }}" class="btnTny">register</a></p>
+        <p class="right mgnNeg"><a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': 2}) }}" class="btnTny">register</a></p>
         <h2>Our First Ideathon</h2>
 
         <table summary="Event Info" class="tblStyle spcr-b2">

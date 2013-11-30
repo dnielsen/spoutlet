@@ -2,36 +2,118 @@
 
 {% block event_content %}
 
-    <div class="left"><h1>Proposed Ideas{% if round > 1 %} - Round {{ round }}{% endif %}</h1></div>
+    <h1>{{ event.name }} - {{ ideaType }}s {% if showAllRounds == 'true' %}- All Rounds{% else %}{% if round > 1 %}- Round {{ round }}{% endif %}{% endif %}</h1>
 
-    {% if submitActive %}
-        <form action = {{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get" class="right">
-            <input type="submit" value="Add Idea" class="right">
+    <div>
+        <form action = "{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" id='filterForm' method="get" class="left">
+
+            <table>
+                <tr>
+                    <td><input type="text" name="tag" tabindex="1" placeholder="Filter by tag" value="{{tag}}" /></td>
+                    <td><input type="submit" value="Filter" class="btnMdm" /></td>
+                    {% if tag %}<td style="padding-left: 5px"><a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}"><input type="button" value="View All" class="btnMdm" /></a></td>{% endif %}
+                </tr>
+            </table>
+
         </form>
-    {%  endif %}
 
-    <br><br><br>
+        {% if submitActive and app.user is not null %}
+            {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
+                <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">
+                    <input type="submit" value="Add {{ ideaType }}" class="right">
+                </a>
+            {% else %}
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}">
+                    <input type="submit" value="Register" class="right">
+                </a>
+            {% endif %}
+        {%  endif %}
+        
+    </div>
+    <div class="clr"></div>
 
-    <form action = {{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} id='filterForm' method="get">
-        <table>
-        <tr>
-            <td><input type="text" name="tag" tabindex="1" placeholder="Filter by tag" value="{{tag}}" /></td>
-            <td><input type="submit" value="Filter" class="btnMdm" /></td>
-            {% if tag %}<td style="padding-left: 5px"><a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}"><input type="button" value="View All" class="btnMdm" /></a></td>{% endif %}
-        </tr>
-        </table><br>
-    </form>
+    {% if app.user %}
+        {% if viewPrivate %}
+            <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'viewPrivate': false, 'sortBy': sortBy, 'showAllRounds': showAllRounds}) }}">Public {{ ideaType }}s</a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <strong>
+                {% if isAdmin %}
+                    Private {{ ideaType }}s
+                {% elseif isJudge %}
+                    Assigned {{ ideaType }}s
+                {% else %}
+                    My {{ ideaType }}s
+                {% endif %}
+            </strong>
+
+        {% else %}
+            <strong>Public {{ ideaType }}s</strong>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'viewPrivate': true, 'sortBy': sortBy, 'showAllRounds': showAllRounds}) }}">
+                {% if isAdmin %}
+                    Private Ideas</a>
+                {% elseif isJudge %}
+                    Assigned Ideas</a>
+                {% else %}
+                    My Ideas</a>
+                {% endif %}
+
+        {% endif %}
+
+        &nbsp;&nbsp;&nbsp;&nbsp;
+    {% endif %}
+
+
+    {% if sortBy == 'vote' %}
+        <strong>Sort By Votes</strong>
+
+    {% else %}
+        <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'sortBy': 'vote', 'viewPrivate': viewPrivate, 'showAllRounds': showAllRounds}) }}">Sort By Votes</a>
+
+    {% endif %}
+
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+
+    {% if sortBy == 'createdAt' %}
+        <strong>Sort By Newest</strong>
+
+    {% else %}
+        <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'sortBy': 'createdAt', 'viewPrivate': viewPrivate, 'showAllRounds': showAllRounds}) }}">Sort By Newest</a>
+
+    {% endif %}
+
+    &nbsp;&nbsp;&nbsp;&nbsp;
+
+    {% if round > 1 %}
+        {% if showAllRounds == 'true' %}
+            <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'sortBy': sortBy, 'viewPrivate': viewPrivate, 'showAllRounds': 'false'}) }}">
+                Current Round
+            </a>
+        {% else %}
+            <strong>Current Round</strong>
+        {% endif %}
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        {% if showAllRounds == 'true' %}
+            <strong>All Rounds</strong>
+        {% else %}
+            <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'sortBy': sortBy, 'viewPrivate': viewPrivate, 'showAllRounds': 'true'}) }}">
+                All Rounds
+            </a>
+        {% endif %}
+    {% endif %}
+
+    <hr/>
 
 	{% for idea in ideas %}
         <div id="idea">
             <div class="voteBx">
-                <p><strong class="lrgtxt">{{  idea.numFollowers }}</strong><br>
-                    <span class="tnytxt gry">followers</span></p>
+                <p><strong class="lrgtxt">{{ idea.numFollowers }}</strong><br>
+                    <span class="tnytxt gry">vote{% if idea.numFollowers != 1 %}s{% endif %}</span></p>
                 <form action = "{{ path('idea_follow', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="POST">
                     <input type="hidden" name="id" value="{{idea.id}}">
                     <input type="hidden" name="source" value="list">
                     <input type="hidden" name="tag" value="{{ tag }}">
-                    <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnTny" value="Follow"{% else %}class="btnTnyInv" value="Unfollow"{% endif %}{% else %}class="btnTny" value="Follow"{% endif %}>
+                    <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnTny" value="Vote"{% else %}class="btnTny redButton" value="Remove Vote"{% endif %}{% else %}class="btnTny" value="Vote"{% endif %}>
                 </form>
             </div>
 
@@ -55,6 +137,10 @@
             <hr>
         </div>
 
+    {% else %}
+        <div class="left">There are no {% if viewPrivate %}private {% endif %}{{ ideaType }}s yet.</div>
+        <br/><br/><hr/>
+    
 	{% endfor %}
 
     <form action = {{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get">

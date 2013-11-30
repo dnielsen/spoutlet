@@ -118,6 +118,53 @@ class VoteRepository extends EntityRepository
 
 		return $ideaCriteriaAvgs;
 	}
+
+    public function toCSV($event) {
+        $ideas = $event->getIdeas();
+
+        $votes = array();
+        foreach($ideas as $idea){
+            $votes = array_merge($votes, $this->findAllByIdea($idea));
+        }
+
+        $votesArray = array();
+
+        //Add header
+        $headerArray = array(
+            "Round", "Idea", "Judge", "Criteria", "Score",
+        );
+
+        $votesArray[] = $headerArray;
+
+        foreach($votes as $vote) {
+
+            $voteArray = array(
+                $vote->getRound(),
+                $vote->getIdea()->getName(),
+                $vote->getVoter(),
+                $vote->getCriteria()->getDisplayName(),
+                $vote->getValue(),
+            );
+            $votesArray[] = $voteArray;
+        }
+        return $this->createCsvString($votesArray);
+    }
+
+
+    private function createCsvString($data) {
+        // Open temp file pointer
+        if (!$fp = fopen('php://temp', 'w+')) return FALSE;
+
+        // Loop data and write to file pointer
+        foreach ($data as $line) fputcsv($fp, $line);
+
+        // Place stream pointer at beginning
+        rewind($fp);
+
+        // Return the data
+        return stream_get_contents($fp);
+    }
+
 }
 
 ?>

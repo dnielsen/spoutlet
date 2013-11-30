@@ -286,7 +286,14 @@ class EventService
 
         $rsvpAction->setUser($user);
         $rsvpAction->setEvent($event);
-        $rsvpAction->setAttendance(EventRsvpAction::ATTENDING_YES);
+
+        if ($event->getPrivate()) {
+            $rsvpAction->setAttendance(EventRsvpAction::ATTENDING_PENDING);
+        }
+        else {
+            $rsvpAction->setAttendance(EventRsvpAction::ATTENDING_YES);
+        }
+
         $rsvpAction->setRsvpAt(new DateTime('now'));
 
         $event->getRsvpActions()->add($rsvpAction);
@@ -398,6 +405,11 @@ class EventService
     public function isUserAttending(Event $event, $user)
     {
         return $user instanceof User ? $this->repository->isUserAttending($event, $user) : false;
+    }
+
+    public function getUserRsvpStatus(Event $event, User $user)
+    {
+        return $this->repository->getUserRsvpStatus($event, $user);
     }
 
     public function saveEmail(MassEmail $email)

@@ -42,6 +42,9 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     const REGISTRATION_ENABLED      = 'REGISTRATION_ENABLED';
     const REGISTRATION_DISABLED     = 'REGISTRATION_DISABLED';
     const REGISTRATION_3RD_PARTY    = 'REGISTRATION_3RDPARTY';
+    const TYPE_UNCONFERENCE         = 'unconference';
+    const TYPE_IDEATHON             = 'ideathon';
+    const TYPE_FORUM                = 'forum';
 
     // overridden in group and global event entities
     const SEARCH_PREFIX             = 'event_';
@@ -132,7 +135,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      *
      * @var boolean $online
      * @ORM\Column(name="online", type="boolean")
-     * //Assert\NotNull(message="Required")
+     * //@Assert\NotNull(message="Required")
      */
     protected $online;
 
@@ -140,7 +143,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      * Event starts at
      *
      * @var \DateTime $startsAt
-     * @Assert\NotNull(message="Required")
+     * //@Assert\NotNull(message="Required")
      * @ORM\Column(name="starts_at", type="datetime", nullable=true)
      */
     protected $startsAt;
@@ -149,7 +152,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      * Events ends at
      *
      * @var \DateTime $endsAt
-     * @Assert\NotNull(message="Required")
+     * //@Assert\NotNull(message="Required")
      * @ORM\Column(name="ends_at", type="datetime", nullable=true)
      */
     protected $endsAt;
@@ -158,7 +161,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      * The timezone this event is taking place in
      *
      * @var string
-     * //Assert\NotBlank(message="Required")
+     * //@Assert\NotBlank(message="Required")
      * @ORM\Column(type="string", length=255, nullable=false)
      */
     protected $timezone = 'UTC';
@@ -283,7 +286,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     protected $isSubmissionActive;
 
     /**
-     * @ORM\Column(type="string", nullable="true")
+     * @ORM\Column(type="string", nullable="true", length=5000)
      */
     protected $allowedVoters;
 
@@ -291,6 +294,11 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      * @ORM\Column(type="integer")
      */
     protected $currentRound;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable="true")
+     */
+    protected $type;
 
 
     /**
@@ -681,15 +689,20 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
     public function getDateRangeString()
     {
-        $startsAtDate = $this->getStartsAt()->format('M d');
-        $startsAtYear = $this->getStartsAt()->format('Y');
-        $endsAtDate = $this->getEndsAt()->format('M d');
-        $endsAtYear = $this->getEndsAt()->format('Y');
+        if ($this->getStartsAt() && $this->getEndsAt()) {
+            $startsAtDate = $this->getStartsAt()->format('M d');
+            $startsAtYear = $this->getStartsAt()->format('Y');
+            $endsAtDate = $this->getEndsAt()->format('M d');
+            $endsAtYear = $this->getEndsAt()->format('Y');
 
-        if ($startsAtYear == $endsAtYear) {
-            return ($startsAtDate == $endsAtDate) ? $startsAtDate.', '.$endsAtYear : $startsAtDate.' - '.$endsAtDate.', '.$startsAtYear;
-        } else {
-            return $startsAtDate.', '.$startsAtYear.' - '.$endsAtDate.', '.$endsAtYear;
+            if ($startsAtYear == $endsAtYear) {
+                return ($startsAtDate == $endsAtDate) ? $startsAtDate.', '.$endsAtYear : $startsAtDate.' - '.$endsAtDate.', '.$startsAtYear;
+            } else {
+                return $startsAtDate.', '.$startsAtYear.' - '.$endsAtDate.', '.$endsAtYear;
+            }
+        }
+        else {
+            return null;
         }
     }
 
@@ -1048,6 +1061,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     {
         $this->currentRound = $currentRound;
     }
+
     public function getIdeas()
     {
         return $this->ideas;
@@ -1055,5 +1069,14 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     public function setIdeas($ideas)
     {
         $this->ideas = $ideas;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+    public function getType()
+    {
+        return $this->type;
     }
 }

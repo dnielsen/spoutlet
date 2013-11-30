@@ -1,41 +1,86 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{%  block header %}
+{% block title %}{{ event.name }}{% endblock %}
+
+{% block header %}
 
     {% embed 'SpoutletBundle::header.html.twig' %}
 
         {% block extra_user_controls %}
-            <li><a href="{{ path('group_show', { 'slug': group.slug }) }}">Group</a></li>
-
-            {% if is_granted('ROLE_ADMIN') %}
+            {% if is_granted('ROLE_ADMIN') or event.user == (app.user) %}
                 <li><a href="{{ path('idea_admin', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">Event Admin</a></li>
             {% endif %}
+
+            <li><a href="{{ path('group_show', { 'slug': group.slug }) }}">Group</a></li>
+
         {% endblock %}
 
     {% endembed %}
+
+    {% embed 'SpoutletBundle::navigation.html.twig' %}{% endembed %}
 
 {%  endblock %}
 
 
 {% block content %}
 
-    {% if sidebar is defined and sidebar == true %}
-        <div class="col1">
+    {% if event.type == constant('\\Platformd\\EventBundle\\Entity\\Event::TYPE_UNCONFERENCE') %}
+        {% set ideaType = 'Session' %}
+        {% set personType = 'Speaker' %}
+    {% elseif event.type == constant('Platformd\\EventBundle\\Entity\\Event::TYPE_IDEATHON') %}
+        {% set ideaType = 'Idea' %}
+        {% set personType = 'Contributor' %}
+    {% elseif event.type == constant('Platformd\\EventBundle\\Entity\\Event::TYPE_FORUM') %}
+        {% set ideaType = 'Discussion' %}
     {% endif %}
 
-    {% block event_content %}
-    {% endblock %}
+    {% if event.private and not isAdmin %}
+        {% if app.user is null %}
+            This forum is private. Please log in to view this page.<br/><br/>
+            <a href="{{ path('fos_user_security_login') }}"><input type="button" value="{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}" class="btnMdm left"></a>
+            <a href="{{ path('fos_user_registration_register') }}"><input type="button" value="Register" class="btnMdm left marginlft"></a>
+            {% set show = 'false' %}
+        {% elseif not event.isUserAttending(app.user) %}
+            This event is private. Please apply for access and an administrator will review your application. <br/><br/>
+            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}"><input type="button" value="Apply Now"></a>
+            {% set show = 'false' %}
+        {% elseif attendance == 'pending' %}
+            This event is private. You have applied for access and are waiting for administrative approval.
+            {% set show = 'false' %}
+        {% elseif attendance == 'rejected' %}
+            This event is private. You have applied for access and have been denied.
+            {% set show = 'false' %}
+        {% else %}
+            {% set show = 'true' %}
+        {% endif %}
+    {% else %}
+        {% set show = 'true' %}
+    {% endif %}
 
-    {% if sidebar is defined and sidebar == true %}
-        </div>
-        <div class="col2">
-            {% block sidebar %}
-                {% include 'IdeaBundle::sidebar.html.twig' %}
-            {% endblock %}
-        </div>
+    {% if show == 'true' %}
+
+        {% if sidebar is defined and sidebar == true %}
+            <div class="col1">
+        {% endif %}
+
+        {% block event_content %}
+        {% endblock %}
+
+        {% if sidebar is defined and sidebar == true %}
+            </div>
+            <div class="col2">
+                {% block sidebar %}
+                    {% include 'IdeaBundle::sidebar.html.twig' %}
+                {% endblock %}
+            </div>
+        {% endif %}
+
     {% endif %}
 
 {% endblock %}
+
+
+
 
 
 

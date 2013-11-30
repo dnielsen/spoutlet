@@ -78,6 +78,11 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
 
             if ($targetPath = $request->getSession()->get('_security.target_path')) {
                 $url = $targetPath;
+
+                $checkEmailPath = $this->router->generate('fos_user_registration_check_email');
+                $registerPath   = $this->router->generate('fos_user_registration_register');
+
+                $targetPath = ($url == $checkEmailPath || $url == $registerPath) ? $this->router->generate('default_index') : $url;
             } else {
                 $url = $this->router->generate('default_index');
             }

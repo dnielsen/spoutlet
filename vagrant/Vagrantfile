@@ -1,0 +1,49 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.provider :virtualbox do |vb|
+    vb.customize ["modifyvm", :id, "--memory", "1024"]
+    # vb.gui = true
+  end
+
+  config.vm.synced_folder "synced_folders/app_resources", "/home/vagrant/app_resources", owner: "vagrant", group: "vagrant" 
+  config.vm.synced_folder "synced_folders/app_resources_backup", "/home/vagrant/app_resources_backup", owner: "vagrant", group: "vagrant" 
+
+  config.vm.box = "opscode-ubuntu-12.04"
+  config.vm.box_url = "https://opscode-vm-bento.s3.amazonaws.com/vagrant/opscode_ubuntu-12.04_provisionerless.box"
+
+  #config.vm.network :forwarded_port, guest: 80, host: 8080
+  config.vm.network :private_network, ip: "192.168.56.3"
+
+  config.omnibus.chef_version = :latest
+  config.vm.provision :chef_solo do |chef|
+    chef.add_recipe "apt"
+    # chef.add_recipe "apache2"
+    # chef.add_recipe "apache2::mod_php5"
+    chef.add_recipe "mysql"
+    chef.add_recipe "mysql::server"
+    # chef.add_recipe "mysql::client"
+    # chef.add_recipe "mysql::ruby"
+
+    # apache_site "default" do
+    #   enable false
+    # end
+
+    chef.json = { 
+    	# :apache => { :default_site_enabled => true }, 
+      :mysql => { :server_root_password => "platformd",
+                  :server_debian_password => "platformd",
+                  :server_repl_password => "platformd",
+                  :bind_address => "127.0.0.1" },
+      # :campsite => { :db_password => "platformd" }
+    }
+    # chef.add_recipe "campsite"
+  end
+
+  config.vm.provision :shell, :path => "custom.sh"
+
+end

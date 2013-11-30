@@ -1,27 +1,39 @@
-{% extends 'FOSUserBundle::layout.html.twig' %}
+{% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block fos_user_content %}
-    {% if error %}
-        <div>Invalid credentials, please try again.</div><br>
-    {% else %}
-        <h1>Please sign in:</h1>
-    {% endif %}
+{% block content %}
+    <div>
+        {% if error %}
+            <div>Invalid credentials, please try again.</div><br>
+        {% else %}
+            <h1>Please sign in:</h1>
+        {% endif %}
 
-    <form action="{{ path("_fos_user_security_check") }}" method="post">
+        <form action="{{ path("_fos_user_security_check") }}" method="post">
 
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="_username" value="{{ last_username }}" class="auth" tabindex="1"/>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="_username" value="{{ last_username }}" class="auth" tabindex="1"/>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="_password" class="auth" tabindex="2"/>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="_password" class="auth" tabindex="2"/>
 
-        <label for="remember_me">{{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}</label>
-        <input type="checkbox" id="remember_me" name="_remember_me" value="on" tabindex="3"/>
+            <label for="remember_me">{{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}</label>
+            <input type="checkbox" id="remember_me" name="_remember_me" value="on" tabindex="3"/>
 
-        <br><br>
-        <input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" class='btnMdm left'/>
-        <a href="{{ path('fos_user_registration_register') }}"><input type="button" class="btnMdm left marginlft" value="Join Now"</a>
+            <br><br>
+            <input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" class='btnMdm left'/>
+            <a href="{{ path('fos_user_registration_register') }}"><input type="button" class="btnMdm left marginlft" value="Join Now"</a>
 
-    </form>
+        </form>
+    </div><br/><br/>
+
+    <div>
+        <div style="width: 60%">
+            <a href="{{ path('fos_user_resetting_request') }}">{{ 'platformd.user.login.forgot_password' | pd_trans }}</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{{ path('contact') }}">{{ 'platformd.user.login.need_help' | pd_trans }}</a>
+            <p>
+                {{ 'platformd.user.login.password_message' | pd_trans | format(path('contact')) | raw }}
+            </p>
+        </div>
+    </div>
 
 {% endblock %}

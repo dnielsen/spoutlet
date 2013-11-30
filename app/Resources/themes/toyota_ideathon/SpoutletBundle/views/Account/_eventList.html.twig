@@ -1,0 +1,103 @@
+<div class="event-list">
+    <table style="width:99%; border-collapse:separate; border-spacing: 5px;">
+        <thead>
+            <tr>
+                <th style="width:10%;">{{ 'platformd.events.event_listings.date' | pd_trans }}</th>
+                <th>{{ 'platformd.events.event_listings.event' | pd_trans }}</th>
+                <th style="width:10%;">{{ 'platformd.events.event_listings.organizer' | pd_trans }}</th>
+                <th style="width:10%; text-align:center;">{{ 'platformd.events.event_listings.attendees' | pd_trans }}</th>
+                <th style="width:25%;">{{ 'platformd.events.event_listings.status' | pd_trans }}</th>
+                <th style="width:150px;">{{ 'platformd.events.event_listings.actions' | pd_trans }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+
+                {% if event.contentType == "GroupEvent" %}
+                    {% set contactUrl = path("group_event_contact", event.getLinkableRouteParameters) %}
+                    {% set editUrl = path("idea_admin", {"groupSlug": event.group.slug, "eventSlug": event.slug }) %}
+                    {% set rsvpUrl = path("group_event_rsvp") %}
+                    {% set manageUrl = path("group_event_attendees", event.getLinkableRouteParameters) %}
+                    {% if event.approved == 0 %}{% set status = 'platformd.account_page.events.pending_approval' | pd_trans %}{% endif %}
+                {% elseif event.contentType == "GlobalEvent" %}
+                    {% set contactUrl = path("global_event_contact", event.getLinkableRouteParameters) %}
+                    {% set editUrl = path("admin_events_edit", { 'id': event.id }) %}
+                    {% set rsvpUrl = path("global_event_rsvp") %}
+                    {% set manageUrl = path("global_event_attendees", event.getLinkableRouteParameters) %}
+                {% endif %}
+
+                <tr id="event-{{ event.contentType }}-{{ event.id }}" style="height: 40px;">
+                    <td>{{ event.startsAt | date_translate }}</td>
+                    <td><a class="event-title-link" href="{{ event | pd_link }}">{{  event.name }}</a></td>
+                    <td><a href="{{ path('profile', {'username': event.user.username}) }}">{{ event.user.username }}</a></td>
+                    <td style=" text-align:center;">{{ event.attendeeCount }}</td>
+                    <td>
+                        {% if status is defined %}
+                            {{ status }}
+                        {% else %}
+                            {% if extendedStatus %}
+                                {% if event.active == false %}{{ 'platformd.account_page.events.cancelled' | pd_trans }}{% elseif event.registrationOption == "REGISTRATION_ENABLED" %}{{ 'platformd.account_page.events.registration_open' | pd_trans }}{% else %}{{ 'platformd.account_page.events.event_listing' | pd_trans }}{% endif %}
+                            {% else %}
+                                {% if event.active %}{{ 'platformd.account_page.events.active' | pd_trans }}{% else %}{{ 'platformd.account_page.events.cancelled' | pd_trans }}{% endif %}
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if event.user == app.user %}
+                            {% if event.registrationOption == "REGISTRATION_ENABLED" %}
+                                {% if event.contentType == "GlobalEvent" or (event.contentType == "GroupEvent" and event.approved) %}
+                                    <div class="styled-select">
+                                        <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="{{ event.contentType }}" style="width:145px;">
+                                            <option>{{ 'platformd.account_page.events.choose_one' | pd_trans }}</option>
+                                            <option value="edit" data-route="{{ editUrl }}">{{ 'platformd.account_page.events.edit_event' | pd_trans }}</option>
+                                            <option value="contact" data-route="{{ contactUrl }}">{{ 'platformd.events.event_show.contact_attendees' | pd_trans }}</option>
+                                            <option value="manage" data-route="{{ manageUrl }}">{{ 'platformd.events.event_show.manage_attendees' | pd_trans }}</option>
+                                        </select>
+                                    </div>
+                                {% else %}
+                                    <a href="{{ editUrl }}">{{ 'platformd.account_page.events.edit_event' | pd_trans }}</a>
+                                {% endif %}
+                            {% else %}
+                                <a href="{{ editUrl }}">{{ 'platformd.account_page.events.edit_event' | pd_trans }}</a>
+                            {% endif %}
+
+                        {% else %}
+                            <a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ rsvpUrl }}" data-contenttype="{{ event.contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | pd_trans }}</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td style="text-align:center; padding:20px 0;" colspan="6">
+                        {% if no_events_message is defined %}<strong>{{ no_events_message | raw }}</strong>{% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+
+            {% if pastEvents|length > 0 %}
+                {% for event in pastEvents %}
+                    {% if loop.index == 1 %}
+                        <tr class="past-{{ event.contentType }}" style="display:none;">
+                            <td colspan="6"style="text-align:center;"><hr class="faded" /></td>
+                        </tr>
+                    {% endif %}
+                    <tr id="event-{{ event.contentType }}-{{ event.id }}" class="past-{{ event.contentType }}" style="display:none;">
+                        <td>{{ event.startsAt | date('M j, Y') }}</td>
+                        <td><a class="event-title-link" href="{{ event | pd_link }}">{{  event.name }}</a></td>
+                        <td><a href="{{ account_link(event.user.username) }}">{{ event.user.username }}</a></td>
+                        <td style=" text-align:center;">{{ event.attendeeCount }}</td>
+                        <td>{{ 'platformd.account_page.events.registration_closed' | pd_trans }}</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('.event-title-link').truncate({ width: 230 });
+    });
+</script>

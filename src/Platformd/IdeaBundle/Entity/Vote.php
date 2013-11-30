@@ -34,7 +34,9 @@ class Vote
 	/** @ORM\Column(type="integer") */
 	private $value;
 
-	/** @ORM\Column(type="integer") */
+	/** @ORM\Id
+     * @ORM\Column(type="integer")
+     */
 	private $round;
 
 

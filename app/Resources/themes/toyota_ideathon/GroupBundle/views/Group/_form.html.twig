@@ -1,0 +1,83 @@
+{% form_theme form 'SpoutletBundle:Admin:normalLabel.html.twig' %}
+{% form_theme form 'SpoutletBundle:Admin:_bootstrapForms.html.twig' %}
+
+{% set showAdminOpts = form.sites is defined or form.deleted is defined or form.featured is defined or form.discussionsEnabled is defined %}
+
+<div class="game-page-form">
+    {{ form_errors(form) }}
+
+        <div class="span11">
+
+            {{ form_row(form.name) }}
+
+            <div class="styled-select">
+                {{ form_row(form.category) }}
+            </div>
+            <div id="group-location-controls">
+                {{ form_widget(form.location) }}
+            </div>
+            {{ form_row(form.isPublic) }}
+            {{ form_row(form.description) }}
+            {{ form_row(form.tags) }}
+
+
+            <h4><a href="javascript:void(0);" id="toggle-advanced">Advanced Options (click to view)</a></h4>
+            <div id="advanced-options" style="display:none;">
+                {{ form_row(form.slug) }}
+                {{ form_widget(form.groupAvatar) }}
+                {{ form_widget(form.backgroundImage) }}
+                {{ form_widget(form.thumbNail )}}
+            </div>
+
+            <div id="admin-options" style="margin-top:15px;">
+                {% if showAdminOpts %}
+                    <h4>Admin Options</h4>
+                {% endif %}
+                {% if form.sites is defined %}
+                    {{ form_row(form.sites) }}
+                    {{ form_row(form.allLocales) }}
+                {% endif %}
+
+                {% if form.deleted is defined %}
+                    {{ form_row(form.deleted) }}
+                {% endif %}
+
+                {% if form.featured is defined %}
+                    {{ form_row(form.featured) }}
+                {% endif %}
+
+                {% if form.discussionsEnabled is defined %}
+                    {{ form_row(form.discussionsEnabled) }}
+                {% endif %}
+            </div>
+
+        </div>
+    {{ form_rest(form) }}
+</div>
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.watermark.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.tagsinput.min.js') }}"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#toggle-advanced').click(function () {
+            $('#advanced-options').slideToggle();
+        });
+
+        $('input#platformd_groupbundle_grouptype_name').css('width', '300px');
+
+        if ($('#advanced-options .error').length > 0) {
+            $('#advanced-options').show();
+        }
+
+        if ($('.control-group.error').length > 0) {
+            $('html, body').animate({
+                scrollTop: ($('.control-group.error').first().offset().top) - 100
+            }, 400);
+        }
+
+        $('#platformd_groupbundle_grouptype_tags').watermark('Separate tags with commas');
+        $('#platformd_groupbundle_grouptype_tags').tagsInput({
+            placeholderColor: '#aaaaaa',
+            defaultText: "{{ 'tags.forms.add_tag' | pd_trans }}"
+        });
+    });
+</script>

@@ -35,12 +35,14 @@ dynamically set the output filename for packed css/js files
     %}
 
     <link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
+
     {% endstylesheets %}
 {% endblock %}
 
 {% block javascripts %}
 
     {% javascripts
+        'themes/ideacontest/spoutlet/js/jquery-1.8.3.min.js'
         'bundles/spoutlet/js/ie8.js'
         'bundles/spoutlet/js/jquery-ui-1.8.16.custom.min.js'
         'bundles/spoutlet/js/jquery.ajaxfileupload.js'
@@ -65,32 +67,37 @@ dynamically set the output filename for packed css/js files
         'ckeditor/config.js'
         'ckeditor/lang/en.js'
         'themes/ideacontest/spoutlet/js/datescript.js'
-        'themes/ideacontest/spoutlet/js/gmaps_custom.js'
-        'themes/ideacontest/spoutlet/js/hoverIntent.js'
         'themes/ideacontest/spoutlet/js/jkmegamenu.js'
         'themes/ideacontest/spoutlet/js/jquery.cycle.all.min.js'
         'themes/ideacontest/spoutlet/js/jquery.royalslider.min.js'
-        'themes/ideacontest/spoutlet/js/jquery-1.8.3.min.js'
         'themes/ideacontest/spoutlet/js/superfish.js'
         'themes/ideacontest/spoutlet/js/supersubs.js'
+        'themes/ideacontest/spoutlet/js/hoverIntent.js'
         'plugins/jquery.ad-gallery/jquery.ad-gallery.js'
         output='js/packed/layout_ideacontest.js'
     %}
 
     <script type="text/javascript" src="{{ asset_url }}"></script>
+
     {% endjavascripts %}
 
-    <script type="text/javascript">
-        //jkmegamenu.definemenu("anchorid", "menuid", "mouseover|click")
-        jkmegamenu.definemenu("megaanchor1", "megamenu1", "mouseover")
-        jkmegamenu.definemenu("megaanchor2", "megamenu2", "mouseover")
-        jkmegamenu.definemenu("megaanchor3", "megamenu3", "mouseover")
-        jkmegamenu.definemenu("megaanchor4", "megamenu4", "mouseover")
-    </script>
-
-    {% if app.user is not null and app.user.adminLevel == "ROLE_SUPER_ADMIN" %}
+    {% if app.user  %}
+        {% if app.user.adminLevel == "ROLE_SUPER_ADMIN" %}
+            <script type="text/javascript">
+                CKEDITOR.config.customConfig = '/ckeditor/config.admin.js';
+                var user_is_logged_in = true;
+                var is_admin = true;
+            </script>
+        {% else %}
+            <script type="text/javascript">
+                var user_is_logged_in = true;
+                var is_admin = false;
+            </script>
+        {% endif %}
+    {% else %}
         <script type="text/javascript">
-            CKEDITOR.config.customConfig = '/ckeditor/config.admin.js';
+            var user_is_logged_in = false;
+            var is_admin = false;
         </script>
     {% endif %}
 

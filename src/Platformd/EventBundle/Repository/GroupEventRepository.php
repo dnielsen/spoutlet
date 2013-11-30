@@ -32,6 +32,21 @@ class GroupEventRepository extends EventRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function findOngoingEventsForGroup(Group $group, $limit=null)
+    {
+        $qb = $this->getBaseGroupQueryBuilder($group)
+            ->andWhere('e.startsAt is NULL')
+            ->andWhere('e.active = 1');
+
+        $this->addActiveClauses($qb);
+
+        if ($limit) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function findPastEventsForGroupMostRecentFirst(Group $group, $limit=null)
     {
         $qb = $this->getBaseGroupQueryBuilder($group)

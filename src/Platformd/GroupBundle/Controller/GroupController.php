@@ -39,9 +39,15 @@ class GroupController extends Controller
 
         $this->ensureGroupExists($group);
 
-        $isMember    = $this->getGroupManager()->isMember($user, $group);
-        $isOwner     = $group->getOwner() == $user;
-        $isApplicant = $this->getGroupManager()->isApplicant($user, $group);
+        $isMember    = false;
+        $isOwner     = false;
+        $isApplicant = false;
+
+        if ($user){
+            $isMember    = $this->getGroupManager()->isMember($user, $group);
+            $isOwner     = $group->getOwner() == $user;
+            $isApplicant = $this->getGroupManager()->isApplicant($user, $group);
+        }
 
         $response = $this->render('GroupBundle:Group:_groupMemberCheck.html.twig', array(
             'isMember'    => $isMember,
@@ -391,6 +397,7 @@ Alienware Arena Team
 
         $ownedEvents = $this->getGroupEventService()->findBy(array(
                 'user' => $user->getId(),
+                'group' => $group->getId(),
                 'active' => 1,
             ));
 
@@ -690,8 +697,11 @@ Alienware Arena Team
         $group  = $this->getGroupBySlug($slug);
         $this->ensureAllowed($group, 'ViewGroupContent', false);
 
-        $groupEvents    = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group);
+        $ongoingEvents  = $this->getGroupEventService()->findOngoingEventsForGroup($group);
+        $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group);
         $pastEvents     = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group);
+
+        $groupEvents    = array_merge($ongoingEvents, $upcomingEvents);
 
         $canAdd         = $this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'AddEvent');
 
@@ -1653,14 +1663,21 @@ Alienware Arena Team
     public function showAction($slug)
     {
         $group = $this->getGroupBySlug($slug);
+
+        $pastEvents     = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group, 6);
+        $ongoingEvents  = $this->getGroupEventService()->findOngoingEventsForGroup($group, 6);
         $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group, 6);
+
         $nextEvent = reset($upcomingEvents);
-        $remainingEvents = array_slice($upcomingEvents, 1);
+        $moreEvents = array_slice($upcomingEvents, 1);
+
+        $groupEvents = array_merge($ongoingEvents, $moreEvents);
 
         return $this->render('GroupBundle:Group:show.html.twig', array(
             'group'          => $group,
             'nextEvent'      => $nextEvent,
-            'upcomingEvents' => $remainingEvents,
+            'groupEvents'    => $groupEvents,
+            'pastEvents'     => $pastEvents,
         ));
     }
 
@@ -1767,6 +1784,14 @@ Alienware Arena Team
                     $this->setFlash('success', 'Your group was created. Fill in the details below to list your upcoming event.');
 
                     $url = $this->generateUrl('group_event_new', array('groupSlug' => $group->getSlug()));
+                    $request->getSession()->remove('PostCreateAction');
+                    return $this->redirect($url);
+                }
+                elseif ($then == "campsite_event") {
+
+                    $this->setFlash('success', 'Your group was created. Fill in the details below to list your upcoming event.');
+
+                    $url = $this->generateUrl('idea_admin_event', array('groupSlug' => $group->getSlug(), 'eventSlug' => 'newEvent'));
                     $request->getSession()->remove('PostCreateAction');
                     return $this->redirect($url);
                 }
@@ -2085,11 +2110,6 @@ Alienware Arena Team
             ));
 
         return $this->getBreadcrumbs();
-    }
-
-    private function getGroupManager()
-    {
-        return $this->get('platformd.model.group_manager');
     }
 
     private function getEntityManager() {

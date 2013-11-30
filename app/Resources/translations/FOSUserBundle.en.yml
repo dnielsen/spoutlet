@@ -17,7 +17,6 @@ fos_user_registration_form_recaptcha: "Verification:"
 fos_user_registration_form_subscribedAlienwareEvent: Subscribe me to the Campsite email newsletter.
 
 fos_user_registration_form_name: "Full Name:"
-fos_user_registration_form_plainPassword_second: "Confirm Password:"
 fos_user_registration_form_eventRole: "Event Role:"
 fos_user_registration_form_affiliation: "Affiliation:"
 fos_user_registration_form_organization: Company/Organization

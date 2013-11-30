@@ -6,7 +6,7 @@
     <form action="{{ path('idea_admin_criteria_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
 
-        <input type="submit" value="New" name="new" formnovalidate />
+        <button type="submit" value="New" name="new" formnovalidate>New</button>
         <input type="submit" value="Edit" name="edit" />
         <input type="submit" value="Delete" name="delete" />
 

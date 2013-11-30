@@ -56,7 +56,7 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
      *
      * @var boolean $private
      * @ORM\Column(name="private", type="boolean")
-     * //@Assert\NotNull(message="Required")
+     * @Assert\NotNull(message="Required")
      */
     protected $private;
 
@@ -128,7 +128,7 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
     protected $contentReports;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Platformd\MediaBundle\Entity\Media")
+     * @ORM\ManyToMany(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove", "persist"})
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $rotatorImages;

@@ -1,26 +1,29 @@
 <div class="sub-nav-wrapper groups-sub-nav-wrapper">
     <div class="sub-nav groups-sub-nav">
         <ul>
-            <li><a href="{{ path('group_show', {'slug' : group.slug }) }}">Group Home</a></li>
 
-            {% if is_granted('ROLE_ADMIN') or group.isOwner(app.user) %}
+            <li><a href="{{ path('group_show', {'slug': group.slug }) }}">Group Home</a></li>
+
+            <span data-group-admin="true">
                 <li><a href="{{ path('group_edit', { 'slug': group.slug }) }}">Group Settings</a></li>
                 <li><a href="{{ path('idea_admin_event', {'groupSlug': group.slug}) }}">Create Event</a></li>
                 {% if not group.isPublic %}
                     <li><a href="{{ path('group_applications', { 'slug': group.slug }) }}">Member Approvals</a></li>
                 {% endif %}
-            {% endif %}
+            </span>
 
-            {% if not group.isOwner(app.user) %}
+            <span data-group-admin="false">
                 <span data-group-member="true">
                     <li><a href="{{ path('group_leave', { 'slug': group.slug }) }}" onclick="return confirm('Are you sure you want to leave this group?');">Leave Group</a></li>
                 </span>
                 <span data-group-member="false">
                     <li><a href="{{ path('group_join', { 'slug': group.slug }) }}">Join Group</a></li>
                 </span>
-            {% endif %}
+            </span>
 
+            <li><a href="{{ path('group_events', {'slug': group.slug }) }}">Group Events</a></li>
             <li><a href="{{ path('groups') }}">See All Groups</a></li>
+
         </ul>
     </div>
 </div>
@@ -28,11 +31,20 @@
 {% render url('_group_member_check', { 'groupId': group.id }) with {}, {'standalone': true } %}
 
 <script type="text/javascript">
-    if (user_is_group_member) {
-        $('[data-group-member="true"]').show();
-        $('[data-group-member="false"]').hide();
-    } else {
-        $('[data-group-member="true"]').hide();
-        $('[data-group-member="false"]').show();
-    }
+    jQuery(document).ready(function($) {
+        if (user_is_group_member) {
+            $('[data-group-member="true"]').show();
+            $('[data-group-member="false"]').hide();
+        } else {
+            $('[data-group-member="true"]').hide();
+            $('[data-group-member="false"]').show();
+        }
+        if (is_admin || user_is_group_owner) {
+            $('[data-group-admin="true"]').show();
+            $('[data-group-admin="false"]').hide();
+        } else {
+            $('[data-group-admin="true"]').hide();
+            $('[data-group-admin="false"]').show();
+        }
+    });
 </script>

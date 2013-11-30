@@ -3,26 +3,62 @@
 {% block event_content %}
     <div class="row1">
         <div class="cBx1">
-            <p>{{event.content | raw }}</p>
+            <h1 class="ctr">{{ event.name }}</h1>
+
+            {% if event.rotatorImages | length > 0 %}
+                <div class="intro">
+                    <div id="slideshow" class="pics">
+
+                        {% for image in event.rotatorImages %}
+
+                        <div class="unicusSlides">
+                            <a href="/" target="_blank">
+                                <img src="{{  media_path(image) }}" width="644" height="340"/>
+                            </a>
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                    <ul id="bullets"></ul> <!-- nav bullets -->
+                 </div>
+
+                <script type="text/javascript">
+                    $(function() {
+                        $('#slideshow').cycle({
+                            fx:     'scrollHorz',
+                            speed:  400,
+                            timeout: 6000,
+                            cleartypeNoBg: true,
+                            pager:  '#bullets',
+                            pagerAnchorBuilder: function paginate(idx, el) {
+                                return '<a class="service' + idx + '" href="#" >&bull;</a>';
+                            }
+                        });
+                    });
+                </script>
+            {% endif %}
+
+            <p>{{ event.content | raw }}</p>
         </div>
+
         <div class="cBx2">
-            <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="submit left" id="event_button">View Ideas</a>
+            <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="submit left" id="event_button">View {{ ideaType }}s</a>
             {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
-                <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="submit right" id="event_button">Add Idea</a>
+                <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="submit right" id="event_button">Propose {{ ideaType }}</a>
             {% else %}
                 <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="submit right" id="event_button">Register</a>
             {% endif %}
             <table id="eventDetails" class="tblStyle">
                 <tbody>
-                <tr>
-                    <td width="25%"><strong>Event:</strong></td>
-                    <td width="75%">{{event.name}}</td>
-                </tr>
+                {% if event.startsAt %}
                 <tr>
                     <td width="25%"><strong>Date:</strong></td>
                     <td width="75%">{{event.DateRangeString}}</td>
                 </tr>
-                {% if not event.getOnline %}
+                {% endif %}
+                {% if event.location %}
                 <tr>
                     <td width="25%"><strong>Map:</strong></td>
                     <td width="75%">

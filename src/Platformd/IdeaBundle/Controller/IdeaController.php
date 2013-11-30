@@ -16,101 +16,169 @@ use Platformd\IdeaBundle\Entity\Vote;
 use Platformd\IdeaBundle\Entity\FollowMapping;
 use Platformd\IdeaBundle\Entity\Document;
 use Platformd\IdeaBundle\Entity\Link;
-use Platformd\UserBundle\Entity\User;
 use Platformd\EventBundle\Entity\Event;
 
 class IdeaController extends Controller
 {
 
-    public function indexAction($groupSlug, $eventSlug) {
+	const SIDEBAR_NONE = 0;
+    const SIDEBAR_JUDGE = 1;
+    const SIDEBAR_ADMIN = 2;
 
-        $group = $this->getGroup($groupSlug);
-		$event = $this->getEvent($groupSlug, $eventSlug);
-
-    	$params = array(
-            'group' => $group,
-            'event' => $event,
-        );
-        return $this->render('IdeaBundle:Idea:index.html.twig', $params);
-    }
-
-
-	public function showAllAction($groupSlug, $eventSlug) {
-
+    public function showAllAction(Request $request, $groupSlug, $eventSlug)
+    {
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
-		$tag = $this->getRequest()->query->get('tag');
-        $submitActive = $event->getIsSubmissionActive();
+        $tag         	= $request->query->get('tag');
+        $viewPrivate 	= $request->query->get('viewPrivate', false);
+        $sortBy      	= $request->query->get('sortBy', 'vote');
+        $showAllRounds  = $request->query->get('showAllRounds', 'false');
 
-		$ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
-        $ideaList = $ideaRepo->filter($event->getId(), $event->getCurrentRound(), $tag);
-        $ideaRepo->sortByFollows($ideaList);
+        //filter the idea list using the query parameters
+        $userParam  = $viewPrivate ? $this->getCurrentUser() : null;
+        $roundParam = $showAllRounds == 'true' ? null : $event->getCurrentRound();
+        $ideaRepo 	= $this->getDoctrine()->getRepository('IdeaBundle:Idea');
+        $ideaList 	= $ideaRepo->filter($event, $roundParam, $tag, $userParam);
+
+        $isAdmin    = $this->isGranted('ROLE_ADMIN');
+
+        //For admin remove the public ideas from the full list to just show private ideas
+        if ($viewPrivate && $isAdmin) {
+            $publicList 	= $ideaRepo->filter($event, $roundParam, $tag, null);
+            foreach($publicList as $publicIdea) {
+                $index = array_search($publicIdea,$ideaList);
+                unset($ideaList[$index]);
+            }
+        }
+
+        if ($sortBy == 'vote') {
+            $ideaRepo->sortByFollows($ideaList);
+        }
+        else if ($sortBy == 'createdAt') {
+            $ideaRepo->sortByCreatedAt($ideaList);
+        }
+
+        $attendance = $this->getCurrentUserApproved($event);
 
         $params = array(
-            'group' => $group,
-            'event' => $event,
-            'ideas' => $ideaList,
-            'submitActive' => $submitActive,
-            'tag' => $tag,
-            'round' => $event->getCurrentRound(),
-            'sidebar' => true,
+            'group'         => $group,
+            'event'         => $event,
+            'ideas'         => $ideaList,
+            'submitActive'  => $event->getIsSubmissionActive(),
+            'tag'           => $tag,
+            'round'         => $event->getCurrentRound(),
+            'sidebar'       => true,
+            'attendance'    => $attendance,
+            'viewPrivate'   => $viewPrivate,
+            'sortBy'        => $sortBy,
+            'isAdmin'       => $isAdmin,
+            'isJudge'       => $this->isJudge($event),
+            'showAllRounds' => $showAllRounds,
         );
 
         return $this->render('IdeaBundle:Idea:showAll.html.twig', $params);
-	}
+    }
 
 
-	public function showAction($groupSlug, $eventSlug, $id) {
+    public function showAction($groupSlug, $eventSlug, $id) {
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
-		$currentRound = $event->getCurrentRound();
+        $currentRound = $event->getCurrentRound();
 
         $doctrine = $this->getDoctrine();
-		$ideaRepo = $doctrine->getRepository('IdeaBundle:Idea');
+        $ideaRepo = $doctrine->getRepository('IdeaBundle:Idea');
 
-		$idea = $ideaRepo->find($id);
+        $idea = $ideaRepo->find($id);
 
-		if (!$idea) {
-			throw $this->createNotFoundException('No idea found for id '.$id);
-		}
+        if (!$idea) {
+            throw $this->createNotFoundException('No idea found for id '.$id);
+        }
+
+        $attendance = $this->getCurrentUserApproved($event);
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         $params = array(
-            'group' => $group,
-            'event' => $event,
-            'idea' => $idea,
-            'canEdit' => $this->canEdit($idea, $event),
-            'sidebar' => true,
+            'group' 			=> $group,
+            'event' 			=> $event,
+            'idea' 				=> $idea,
+            'canEdit' 			=> $this->canEditIdea($idea, $event),
+			'canRemoveComments' => $this->canRemoveComment($idea),
+            'sidebar' 			=> true,
+            'attendance' 		=> $attendance,
+            'isAdmin'       	=> $isAdmin,
         );
 
 
         // Do vote sidebar stuff
+        $sidebarState = $this->getSidebarState($idea, $event);
+
+        //Disable Judge mode if no criteria defined yet
         $criteriaList = $doctrine->getRepository('IdeaBundle:VoteCriteria')->findByEventId($event->getId());
-        $params['isVoting'] = $this->canJudge($event) && count($criteriaList) > 0;
-		if( $params['isVoting'] ) {
+        if($sidebarState == IdeaController::SIDEBAR_JUDGE && count($criteriaList) <= 0)
+            $sidebarState = IdeaController::SIDEBAR_NONE;
+
+        //pass state into twig
+        $params['sidebarState'] = $sidebarState;
+
+        $user = $this->getCurrentUser();
+
+        //For Admin sidebar
+        if( $sidebarState == IdeaController::SIDEBAR_ADMIN) {
+
+            $ideas = $ideaRepo->filter($event, $currentRound, null, $user);
 
             // determine previous idea, next idea
-            $ideas = $ideaRepo->filter($event->getId(), $currentRound);
             $ideaRepo->sortByFollows($ideas);
 
-            $currentIdeaFound = false;
-            $previousIdea = null;
-            $nextIdea = null;
+            list($previousIdea, $nextIdea) = $this->findNextAndPrevious($ideas, $idea);
 
-            foreach($ideas as $currentIdea) {
-                if($currentIdeaFound) {
-                    $nextIdea = $currentIdea;
-                    break;
-                }
+            if($nextIdea){
+                $params['next'] = $nextIdea->getId();
+            }
+            if($previousIdea){
+                $params['previous'] = $previousIdea->getId();
+            }
 
-                if($idea->getId() == $currentIdea->getId()) {
-                    $currentIdeaFound = true;
-                } else {
-                    $previousIdea = $currentIdea;
+            $userRepo = $doctrine->getRepository('UserBundle:User');
+
+            //Get list of event judges and populate form widget
+            $choices = array();
+            $allowedVoterString = $event->getAllowedVoters();
+            if($allowedVoterString != "") {
+                $allowedVoters = array_map('trim',explode(",",$allowedVoterString));
+                foreach($allowedVoters as $voter) {
+                    $choices[$voter] = $userRepo->findOneBy(array('username' => $voter))->getName();
                 }
             }
+
+            $selected = array();
+            foreach($idea->getJudges() as $judge) {
+                $selected[] = array_search($judge->getName(),$choices);
+            }
+
+            $numRows = count($choices) <= 20 ? count($choices) : 20;
+            $formAttributes = array('multiple' => 'true', 'style' => 'width: 100%', 'size' => $numRows);
+            $choiceOptions = array(
+                'choices' => $choices,
+                'attr' => $formAttributes,
+                'multiple' => 'true',
+                'data' => $selected
+            );
+            $form = $this->container->get('form.factory')->createNamedBuilder('form', 'judgeAssignment')
+                ->add('judges', 'choice', $choiceOptions)
+                ->getForm();
+
+            $params['form'] = $form->createView();
+
+        } elseif( $sidebarState == IdeaController::SIDEBAR_JUDGE ) {
+            // determine previous idea, next idea
+            $ideas = $ideaRepo->filter($event, $currentRound, null, $user);
+            $ideaRepo->sortByFollows($ideas);
+
+            list($previousIdea, $nextIdea) = $this->findNextAndPrevious($ideas, $idea);
 
             if($nextIdea){
                 $params['next'] = $nextIdea->getId();
@@ -124,42 +192,46 @@ class IdeaController extends Controller
 
             //Pass previous vote values to the template keyed by category
 
-            $userName = $this->get('security.context')->getToken()->getUser()->getUsername();
+            $userName = $user->getUsername();
 
             $voteRepo = $doctrine->getRepository('IdeaBundle:Vote');
 
             $votes = $voteRepo->findBy(array('idea' => $idea->getId(), 'voter' => $userName, 'round' => $currentRound));
 
-	        if(count($votes) > 0) {
-	        	$valuesByCriteria = array();
-	        	foreach($votes as $criteriaVote) {
-	        		$valuesByCriteria[strval($criteriaVote->getCriteria()->getId())] = $criteriaVote->getValue();
-	        	}
-	        	$params['values'] = $valuesByCriteria;
-	        }
-
+            if(count($votes) > 0) {
+                $valuesByCriteria = array();
+                foreach($votes as $criteriaVote) {
+                    $valuesByCriteria[strval($criteriaVote->getCriteria()->getId())] = $criteriaVote->getValue();
+                }
+                $params['values'] = $valuesByCriteria;
+            }
         }
-		return $this->render('IdeaBundle:Idea:show.html.twig', $params);
-	}
+        return $this->render('IdeaBundle:Idea:show.html.twig', $params);
+    }
 
 
-	public function createFormAction($groupSlug, $eventSlug) {
+    public function createFormAction($groupSlug, $eventSlug) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
+
+        $attendance = $this->getCurrentUserApproved($event);
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:createForm.html.twig', array(
                 'group' => $group,
                 'event' => $event,
                 'sidebar' => true,
+                'attendance' => $attendance,
+                'isAdmin'       => $isAdmin,
             ));
-	}
+    }
 
-	public function createAction(Request $request, $groupSlug, $eventSlug) {
+    public function createAction(Request $request, $groupSlug, $eventSlug) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $event = $this->getEvent($groupSlug, $eventSlug);
 
@@ -169,21 +241,24 @@ class IdeaController extends Controller
                     'eventSlug' => $eventSlug)));
         }
 
-		$params = $request->request->all();
+        $params = $request->request->all();
 
-		$idea = new Idea();
+        $idea = new Idea();
 
         $idea->setEvent($event);
         $idea->setCreator($this->getCurrentUser());
         $idea->setName($params['title']);
         $idea->setDescription($params['desc']);
-        $idea->setMembers($params['members']);
 
-        if (array_key_exists('stage', $params)){
+        if (array_key_exists('members', $params)) {
+            $idea->setMembers($params['members']);
+        }
+
+        if (array_key_exists('stage', $params)) {
             $idea->setStage($params['stage']);
         }
 
-        if (array_key_exists('forCourse', $params)){
+        if (array_key_exists('forCourse', $params)) {
             $idea->setForCourse(true);
             $idea->setProfessors($params['professors']);
         }
@@ -205,22 +280,22 @@ class IdeaController extends Controller
 
         $idea->setHighestRound($event->getCurrentRound());
 
-		$em = $this->getDoctrine()->getEntityManager();
-		$em->persist($idea);
-		$em->flush();
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->persist($idea);
+        $em->flush();
 
-		$ideaUrl = $this->generateUrl('idea_show', array(
+        $ideaUrl = $this->generateUrl('idea_show', array(
              'id' => $idea->getId(),
              'groupSlug' => $groupSlug,
              'eventSlug' => $eventSlug,
             ));
         return new RedirectResponse($ideaUrl);
-	}
+    }
 
 
     public function editFormAction($groupSlug, $eventSlug, $id) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
@@ -231,28 +306,33 @@ class IdeaController extends Controller
             throw $this->createNotFoundException('No idea found for id '.$id);
         }
 
-        if(!$this->canEdit($idea, $event)) {
+        if(!$this->canEditIdea($idea, $event)) {
             throw new AccessDeniedException();
         }
+
+        $attendance = $this->getCurrentUserApproved($event);
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:createForm.html.twig', array(
                 'idea' => $idea,
                 'group' => $group,
                 'event' => $event,
                 'sidebar' => true,
+                'attendance' => $attendance,
+                'isAdmin'       => $isAdmin,
             ));
     }
 
 
     public function editAction($groupSlug, $eventSlug, $id) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $event = $this->getEvent($groupSlug, $eventSlug);
 
         $idea = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($id);
 
-        if(!$this->canEdit($idea, $event)) {
+        if(!$this->canEditIdea($idea, $event)) {
             throw new AccessDeniedException();
         }
 
@@ -260,13 +340,16 @@ class IdeaController extends Controller
 
         $idea->setName($params['title']);
         $idea->setDescription($params['desc']);
-        $idea->setMembers($params['members']);
 
-        if (array_key_exists('stage', $params)){
+        if (array_key_exists('members', $params)) {
+            $idea->setMembers($params['members']);
+        }
+
+        if (array_key_exists('stage', $params)) {
             $idea->setStage($params['stage']);
         }
 
-        if (array_key_exists('forCourse', $params)){
+        if (array_key_exists('forCourse', $params)) {
             $idea->setForCourse(true);
             $idea->setProfessors($params['professors']);
         }
@@ -304,19 +387,21 @@ class IdeaController extends Controller
 
     public function uploadAction($groupSlug, $eventSlug, $id = null){
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
         $document = new Document();
-        $form = $this->createFormBuilder($document)
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'image', $document)
             ->add('file')
             ->getForm()
         ;
 
         if ($this->getRequest()->getMethod() === 'POST') {
+
             $form->bindRequest($this->getRequest());
+
             if ($form->isValid()) {
 
                 $em = $this->getDoctrine()->getEntityManager();
@@ -328,6 +413,9 @@ class IdeaController extends Controller
                     $document->upload($id);
                 }
                 else{
+
+                    $this->setFlash('error', 'You must select an image file');
+
                     return new RedirectResponse($this->generateUrl('idea_upload_form', array(
                             'id' => $id,
                             'groupSlug' => $groupSlug,
@@ -350,18 +438,23 @@ class IdeaController extends Controller
             }
         }
 
+        $attendance = $this->getCurrentUserApproved($event);
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
         return $this->render('IdeaBundle:Idea:upload.html.twig', array(
                 'form'=>$form->createView(),
                 'id'=>$id,
                 'group' => $group,
                 'event' => $event,
                 'sidebar' => true,
+                'attendance' => $attendance,
+                'isAdmin'       => $isAdmin,
             ));
     }
 
     public function deleteImageAction($groupSlug, $eventSlug)
     {
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $params = $this->getRequest()->request->all();
 
@@ -387,16 +480,16 @@ class IdeaController extends Controller
     public function addLinkAction($groupSlug, $eventSlug, $id = null)
     {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
         $link = new Link();
-        $form = $this->createFormBuilder($link)
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'link', $link)
             ->add('title')
-            ->add('linkDescription', 'textarea')
-            ->add('url')
+            ->add('linkDescription', 'textarea', array('attr' => array('cols' => '60%')))
+            ->add('url','text', array('attr' => array('size' => '60%', 'value' => 'http://')))
             ->add('type', 'choice', array(
                     'choices' => array (
                         'youtube'   =>  'YouTube',
@@ -433,18 +526,23 @@ class IdeaController extends Controller
             }
         }
 
+        $attendance = $this->getCurrentUserApproved($event);
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
         return $this->render('IdeaBundle:Idea:addLink.html.twig', array(
-                'form'=>$form->createView(),
-                'id'=>$id,
-                'group' => $group,
-                'event' => $event,
-                'sidebar' => true,
+                'form'      => $form->createView(),
+                'id'        => $id,
+                'group'     => $group,
+                'event'     => $event,
+                'sidebar'   => true,
+                'attendance'=> $attendance,
+                'isAdmin'   => $isAdmin,
             ));
     }
 
     public function deleteLinkAction($groupSlug, $eventSlug) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $params = $this->getRequest()->request->all();
 
@@ -469,12 +567,12 @@ class IdeaController extends Controller
 
     public function voteAction($groupSlug, $eventSlug) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $event = $this->getEvent($groupSlug, $eventSlug);
 
         //check for judge role here
-        if (!$this->canJudge($event)) {
+        if (!$this->isJudge($event)) {
             throw new AccessDeniedException();
         }
 
@@ -486,7 +584,12 @@ class IdeaController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         //see if this voter has already voted on this idea
-        $votes = $this->getDoctrine()->getRepository('IdeaBundle:Vote')->findBy(array('idea' => $idea->getId(), 'voter' => $userName));
+        $votes = $this->getDoctrine()->getRepository('IdeaBundle:Vote')->findBy(
+            array('idea'  => $idea->getId(),
+                  'voter' => $userName,
+                  'round' => $currentRound,
+            )
+        );
 
         $criteriaList = $this->getDoctrine()->getRepository('IdeaBundle:VoteCriteria')->findByEventId($event->getId());
         foreach($criteriaList as $criteria) {
@@ -515,7 +618,7 @@ class IdeaController extends Controller
         $em->flush();
 
         $ideaUrl = $this->generateUrl('idea_show', array(
-                'id' => $idea->getId(),
+                'id'        => $idea->getId(),
                 'groupSlug' => $groupSlug,
                 'eventSlug' => $eventSlug,
             ));
@@ -526,7 +629,7 @@ class IdeaController extends Controller
 
     public function commentAction($groupSlug, $eventSlug) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $params = $this->getRequest()->request->all();
 
@@ -542,7 +645,7 @@ class IdeaController extends Controller
         $em->flush();
 
         $ideaUrl = $this->generateUrl('idea_show', array(
-                'id' => $ideaId,
+                'id'        => $ideaId,
                 'groupSlug' => $groupSlug,
                 'eventSlug' => $eventSlug,
             ));
@@ -552,7 +655,7 @@ class IdeaController extends Controller
 
     public function commentDeleteAction($groupSlug, $eventSlug) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $params = $this->getRequest()->request->all();
 
@@ -562,12 +665,16 @@ class IdeaController extends Controller
         $idea = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($ideaId);
         $comment = $this->getDoctrine()->getRepository('IdeaBundle:Comment')->find($commentId);
 
+        if(!$this->canRemoveComment($idea)) {
+            throw new AccessDeniedException();
+        }
+
         $em = $this->getDoctrine()->getEntityManager();
         $em->remove($comment);
         $em->flush();
 
         $ideaUrl = $this->generateUrl('idea_show', array(
-                'id' => $ideaId,
+                'id'        => $ideaId,
                 'groupSlug' => $groupSlug,
                 'eventSlug' => $eventSlug,
             ));
@@ -576,7 +683,7 @@ class IdeaController extends Controller
 
     public function followAction($groupSlug, $eventSlug, Request $request) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $params = $request->request->all();
         $ideaId = $params['id'];
@@ -605,13 +712,13 @@ class IdeaController extends Controller
 
         if ($source == 'detail')
             $url = $this->generateUrl('idea_show', array(
-                    'id' => $ideaId,
+                    'id'        => $ideaId,
                     'groupSlug' => $groupSlug,
                     'eventSlug' => $eventSlug,
                 ));
         elseif ($source == 'list')
             $url = $this->generateUrl('idea_show_all', array(
-                    'tag' => $params['tag'],
+                    'tag'       => $params['tag'],
                     'groupSlug' => $groupSlug,
                     'eventSlug' => $eventSlug,
                 ));
@@ -622,14 +729,14 @@ class IdeaController extends Controller
 
     public function deleteAction($groupSlug, $eventSlug) {
 
-        $this->basicSecurityCheck('ROLE_USER');
+        $this->enforceUserSecurity();
 
         $event = $this->getEvent($groupSlug, $eventSlug);
 
         $id = $this->getRequest()->request->get('id');
         $idea = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($id);
 
-        if (!$this->canEdit($idea, $event)) {
+        if (!$this->canEditIdea($idea, $event)) {
             throw new AccessDeniedException();
         }
 
@@ -662,23 +769,85 @@ class IdeaController extends Controller
         }
 
         $ownProfile = ($currentUser == $user);
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:profile.html.twig', array(
-                'user'=>$user,
-                'ownProfile'=>$ownProfile,
-                'sidebar' => true,
+                'user'       => $user,
+                'ownProfile' => $ownProfile,
+                'isAdmin'    => $isAdmin,
+                'sidebar'    => true,
             ));
     }
+
+    public function profileEditAction(Request $request, $username) {
+
+        if ($request->get('cancel') == 'Cancel') {
+            return $this->redirect($this->generateUrl('profile', array(
+                'username' => $username,
+            )));
+        }
+
+        $currentUser = $this->getCurrentUser();
+
+        $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
+        $user = $userRepo->findOneBy(array('username'=>$username));
+
+        if ($currentUser != $user){
+            throw new AccessDeniedException();
+        }
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'profile', $user, array('validation_groups' => array('ideaProfile')))
+            ->add('name')
+            ->add('title')
+            ->add('organization')
+            ->add('industry')
+            ->add('aboutMe', null, array('attr' => array('rows' => '4', 'cols' => '60', 'maxlength' => '2000')))
+            ->add('twitterUsername')
+            ->add('professionalEmail')
+            ->add('linkedIn', null, array('attr' => array('size' => '60%')))
+            ->add('website', null, array('attr' => array('size' => '60%')))
+            ->add('mailingAddress', null, array('attr' => array('size' => '60%')))
+            ->getForm();
+
+        if($request->getMethod() == 'POST') {
+
+            $form->bindRequest($request);
+
+            if($form->isValid()) {
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('profile', array(
+                    'username' => $username,
+                )));
+            }
+        }
+
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
+        return $this->render('IdeaBundle:Idea:profileForm.html.twig', array(
+            'form'      => $form->createView(),
+            'username'  => $username,
+            'isAdmin'   => $isAdmin,
+        ));
+
+    }
+
 
     public function infoAction($groupSlug, $eventSlug, $page) {
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
 
+        $attendance = $this->getCurrentUserApproved($event);
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
         return $this->render('IdeaBundle:Idea:info'.$page.'.html.twig', array(
-                'group' => $group,
-                'event' => $event,
-                'sidebar' => true,
+                'group'      => $group,
+                'event'      => $event,
+                'sidebar'    => true,
+                'attendance' => $attendance,
+                'isAdmin'    => $isAdmin,
             ));
     }
 
@@ -690,10 +859,33 @@ class IdeaController extends Controller
 
 
     public function isLoggedIn() {
-        return $this->get('security.context')->isGranted('IS_AUTHENTICATED_FULLY');
+        return $this->isGranted('IS_AUTHENTICATED_REMEMBERED');
     }
 
-    public function canJudge($event) {
+    public function getSidebarState($idea, $event) {
+
+        if ($event->getType() == Event::TYPE_IDEATHON)
+        {
+            if($this->isGranted('ROLE_ADMIN')) {
+                return IdeaController::SIDEBAR_ADMIN;
+            }
+
+            if($this->canJudge($event, $idea)) {
+                return IdeaController::SIDEBAR_JUDGE;
+            }
+        }
+
+        return IdeaController::SIDEBAR_NONE;
+    }
+
+    public function canJudge($event, $idea) {
+
+        $user = $this->getCurrentUser();
+
+        return $this->isJudge($event) && $idea->isJudgeAssigned($user);
+    }
+
+    public function isJudge($event) {
 
         if(!$this->isLoggedIn())
             return false;
@@ -701,9 +893,9 @@ class IdeaController extends Controller
         if (!$event->getIsVotingActive())
             return false;
 
-        $username = $this->getCurrentUser()->getUsername();
+        $user = $this->getCurrentUser();
 
-        return $event->containsVoter($username);
+        return $event->containsVoter($user->getUsername());
     }
 
     public function canCreate($event) {
@@ -712,23 +904,25 @@ class IdeaController extends Controller
             return false;
         }
 
-        //TODO: Check to see if user is member of group/has joined event
-        return true;
+        return $this->isLoggedIn();
     }
 
-    public function canEdit($idea, $event)
-    {
-        if(!$this->isLoggedIn() or !$this->canCreate($event))
+    public function isCreator($idea) {
+        if(!$this->isLoggedIn()) {
             return false;
+		}
+        $username = $this->getCurrentUser()->getUsername();
+        return $username === $idea->getCreator()->getUsername();
+    }
 
-        $security = $this->getSecurity();
-        $username = $security->getToken()->getUser()->getUsername();
+    public function canEditIdea($idea, $event) {
 
-        if($username === $idea->getCreator()->getUsername() || $security->isGranted('ROLE_ADMIN')) {
-            return true;
-        }
+        return $this->isGranted('ROLE_ADMIN') || ($this->isCreator($idea) && $event->getIsSubmissionActive());
+    }
 
-        return false;
+    public function canRemoveComment($idea) {
+
+        return $this->isGranted('ROLE_ADMIN') || $this->isCreator($idea);
     }
 
     /**
@@ -777,8 +971,7 @@ class IdeaController extends Controller
 
     public function getGroup($groupSlug)
     {
-        $groupEm = $this->getDoctrine()->getRepository('GroupBundle:Group');
-        $group = $groupEm->findOneBySlug($groupSlug);
+        $group = $this->getGroupManager()->getGroupBySlug($groupSlug);
 
         if (!$group) {
             throw new NotFoundHttpException('Group not found.');
@@ -791,6 +984,7 @@ class IdeaController extends Controller
     public function getEvent($groupSlug, $eventSlug)
     {
         $group = $this->getGroup($groupSlug);
+
         $eventEm = $this->getDoctrine()->getRepository('EventBundle:GroupEvent');
         $event = $eventEm->findOneBy(
             array(
@@ -819,6 +1013,41 @@ class IdeaController extends Controller
             $tagNames[] = $tag->getTagName();
         }
         return $tagNames;
+    }
+
+    /**
+     * @param $ideas
+     * @param $currentIdea
+     * @return array
+     */
+    public function findNextAndPrevious($ideas, $idea)
+    {
+        $ideaFound = false;
+        $previousIdea = null;
+        $nextIdea = null;
+        foreach ($ideas as $currentIdea) {
+            if ($ideaFound) {
+                $nextIdea = $currentIdea;
+                break;
+            }
+
+            if ($currentIdea->getId() == $idea->getId()) {
+                $ideaFound = true;
+            } else {
+                $previousIdea = $currentIdea;
+            }
+        }
+        return array($previousIdea, $nextIdea);
+    }
+
+
+    public function getCurrentUserApproved($event)
+    {
+        $rsvpRepo = $this->getDoctrine()->getRepository('EventBundle:GroupEventRsvpAction');
+        $user = $this->getCurrentUser();
+        $attendance = $rsvpRepo->getUserApprovedStatus($event, $user);
+
+        return $attendance;
     }
 
 }

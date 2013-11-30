@@ -1,0 +1,48 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block title %}Create Group{% endblock %}
+
+{% block content %}
+
+<h1>Create Group</h1>
+<h4>Required Fields</h4>
+<form action="{{ path('group_create') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+    {% include 'GroupBundle:Group:_form.html.twig' %}
+
+    <div class="form-actions" style="float: left;">
+        <button type="submit" formnovalidate>Create</button>
+        <button type="submit" id="cancel" rel="{{ path('groups') }}" style="margin-left: 10px;">Cancel</button>
+    </div>
+</form>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'GroupBundle:Group:_css_assets.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function () {
+            $('#cancel').delegate('','click change',function(){
+                window.location = $(this).attr('rel');
+                return false;
+            });
+
+            $('#platformd_groupbundle_grouptype_category').change(function () {
+                var groupType = $(this).val();
+                if(groupType == 'topic') {
+                    $('#group-location-controls').fadeOut();
+                } else {
+                    $('#group-location-controls').fadeIn();
+                }
+            });
+
+            var groupType = $('#platformd_groupbundle_grouptype_category').val();
+            if(groupType == 'topic') {
+                $('#group-location-controls').fadeOut();
+            }
+        });
+    </script>
+{% endblock %}

@@ -242,14 +242,6 @@ class FrontendController extends Controller
     }
 
     /**
-     * @return \Platformd\GroupBundle\Model\GroupManager
-     */
-    private function getGroupManager()
-    {
-        return $this->get('platformd.model.group_manager');
-    }
-
-    /**
      * @return \Platformd\CEVOBundle\Api\ApiManager
      */
     private function getCEVOApiManager()
