@@ -26,6 +26,10 @@
     git=http://github.com/swiftmailer/swiftmailer.git
     version=v4.2.2
 
+[sendgrid-php]
+    git=git@github.com:sendgrid/sendgrid-php.git
+    version=v1.1.5
+
 [assetic]
     git=http://github.com/kriswallsmith/assetic.git
     version=v1.0.4
