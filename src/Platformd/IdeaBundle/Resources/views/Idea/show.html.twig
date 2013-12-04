@@ -168,7 +168,7 @@
 		{% elseif sidebarState == constant('\\Platformd\\IdeaBundle\\Controller\\IdeaController::SIDEBAR_ADMIN') %}
 		    <h2>Admins' Sidebar</h2>
 
-            {% if event.allowedVoters | length > 0 %}
+            {% if event.firstEntrySet.allowedVoters | length > 0 %}
                 <form action="{{ path('idea_admin_assign', {'groupSlug': group.slug, 'eventSlug': event.slug, 'ideaId': idea.id}) }}" method="post" {{ form_enctype(form) }}>
                     {{ form_widget(form) }}
 

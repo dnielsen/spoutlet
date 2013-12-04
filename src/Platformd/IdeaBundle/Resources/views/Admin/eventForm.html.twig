@@ -105,7 +105,8 @@
     <form action="{{ formpath }}" method="post" {{ form_enctype(form) }} id="event" novalidate>
         {{ form_row(form.name) }}
         {{ form_row(form.content) }}
-        {{ form_row(form.type) }}
+{#        {{ form_row(form.type) }}
+#}
         <div id="time-controls">
         {{ form_row(form.startsAt) }}
         {{ form_row(form.endsAt) }}
@@ -118,13 +119,14 @@
         {{ form_row(form.address1) }}
         {{ form_row(form.address2) }}
         </div>
-        <div id="idea-controls">
+ {#       <div id="idea-controls">
         {{ form_row(form.isSubmissionActive) }}
         </div>
         <div id="voting-controls">
         {{ form_row(form.isVotingActive) }}
         {{ form_row(form.allowedVoters) }}
         </div>
+ #}
         {{ form_row(form.private) }}
 
         {{ form_rest(form) }}

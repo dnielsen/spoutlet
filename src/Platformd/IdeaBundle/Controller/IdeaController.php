@@ -25,7 +25,7 @@ class IdeaController extends Controller
     const SIDEBAR_JUDGE = 1;
     const SIDEBAR_ADMIN = 2;
 
-    public function showAllAction(Request $request, $groupSlug, $eventSlug)
+    public function showAllAction(Request $request, $groupSlug, $eventSlug, $entrySetId)
     {
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
@@ -38,14 +38,18 @@ class IdeaController extends Controller
         //filter the idea list using the query parameters
         $userParam  = $viewPrivate ? $this->getCurrentUser() : null;
         $roundParam = $showAllRounds == 'true' ? null : $event->getCurrentRound();
+
         $ideaRepo 	= $this->getDoctrine()->getRepository('IdeaBundle:Idea');
-        $ideaList 	= $ideaRepo->filter($event, $roundParam, $tag, $userParam);
+        $entrySetRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet');
+
+        $entrySet   = $entrySetRepo->find($entrySetId);
+        $ideaList 	= $ideaRepo->filter($entrySet, $roundParam, $tag, $userParam);
 
         $isAdmin    = $this->isGranted('ROLE_ADMIN');
 
         //For admin remove the public ideas from the full list to just show private ideas
         if ($viewPrivate && $isAdmin) {
-            $publicList 	= $ideaRepo->filter($event, $roundParam, $tag, null);
+            $publicList 	= $ideaRepo->filter($entrySet, $roundParam, $tag, null);
             foreach($publicList as $publicIdea) {
                 $index = array_search($publicIdea,$ideaList);
                 unset($ideaList[$index]);
@@ -65,7 +69,7 @@ class IdeaController extends Controller
             'group'         => $group,
             'event'         => $event,
             'ideas'         => $ideaList,
-            'submitActive'  => $event->getIsSubmissionActive(),
+            'submitActive'  => $entrySet->getIsSubmissionActive(),
             'tag'           => $tag,
             'round'         => $event->getCurrentRound(),
             'sidebar'       => true,
@@ -75,6 +79,7 @@ class IdeaController extends Controller
             'isAdmin'       => $isAdmin,
             'isJudge'       => $this->isJudge($event),
             'showAllRounds' => $showAllRounds,
+            'entrySet'    => $entrySet,
         );
 
         return $this->render('IdeaBundle:Idea:showAll.html.twig', $params);
@@ -146,7 +151,7 @@ class IdeaController extends Controller
 
             //Get list of event judges and populate form widget
             $choices = array();
-            $allowedVoterString = $event->getAllowedVoters();
+            $allowedVoterString = $event->getFirstEntrySet()->getAllowedVoters();
             if($allowedVoterString != "") {
                 $allowedVoters = array_map('trim',explode(",",$allowedVoterString));
                 foreach($allowedVoters as $voter) {
@@ -245,7 +250,7 @@ class IdeaController extends Controller
 
         $idea = new Idea();
 
-        $idea->setEvent($event);
+        $idea->setEntrySet($event->getFirstEntrySet());
         $idea->setCreator($this->getCurrentUser());
         $idea->setName($params['title']);
         $idea->setDescription($params['desc']);
@@ -864,7 +869,7 @@ class IdeaController extends Controller
 
     public function getSidebarState($idea, $event) {
 
-        if ($event->getType() == Event::TYPE_IDEATHON)
+        if ($event->getFirstEntrySet()->getType() == Event::TYPE_IDEATHON)
         {
             if($this->isGranted('ROLE_ADMIN')) {
                 return IdeaController::SIDEBAR_ADMIN;
@@ -890,17 +895,17 @@ class IdeaController extends Controller
         if(!$this->isLoggedIn())
             return false;
 
-        if (!$event->getIsVotingActive())
+        if (!$event->getFirstEntrySet()->getIsVotingActive())
             return false;
 
         $user = $this->getCurrentUser();
 
-        return $event->containsVoter($user->getUsername());
+        return $event->getFirstEntrySet()->containsVoter($user->getUsername());
     }
 
     public function canCreate($event) {
 
-        if (!$event->getIsSubmissionActive()){
+        if (!$event->getFirstEntrySet()->getIsSubmissionActive()){
             return false;
         }
 
@@ -917,7 +922,7 @@ class IdeaController extends Controller
 
     public function canEditIdea($idea, $event) {
 
-        return $this->isGranted('ROLE_ADMIN') || ($this->isCreator($idea) && $event->getIsSubmissionActive());
+        return $this->isGranted('ROLE_ADMIN') || ($this->isCreator($idea) && $event->getFirstEntrySet()->getIsSubmissionActive());
     }
 
     public function canRemoveComment($idea) {

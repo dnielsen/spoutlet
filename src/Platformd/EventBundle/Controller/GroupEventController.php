@@ -316,7 +316,7 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Event does not exist.');
         }
 
-        if ($groupEvent->getType() == GroupEvent::TYPE_FORUM){
+        if ($groupEvent->getFirstEntrySet()->getType() == GroupEvent::TYPE_FORUM){
             return $this->redirect($this->generateUrl('idea_show_all', array('groupSlug' => $groupSlug, 'eventSlug' => $eventSlug)));
         }
 

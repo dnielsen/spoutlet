@@ -92,38 +92,38 @@ idea_admin_remove_image:
 # NON-ADMIN
 
 idea_create:
-    pattern:  /{groupSlug}/event/{eventSlug}/ideas/create
+    pattern:  /{groupSlug}/event/{eventSlug}/{entrySetId}/create
     defaults: { _controller: IdeaBundle:Idea:create }
     requirements:
       _method: POST
 
 idea_create_form:
-    pattern:  /{groupSlug}/event/{eventSlug}/ideas/create
+    pattern:  /{groupSlug}/event/{eventSlug}/{entrySetId}/create
     defaults: { _controller: IdeaBundle:Idea:createForm}
     requirements:
       _method: GET
 
 idea_show_all:
-    pattern:  /{groupSlug}/event/{eventSlug}/ideas
+    pattern:  /{groupSlug}/event/{eventSlug}/{entrySetId}
     defaults: { _controller: IdeaBundle:Idea:showAll }
     requirements:
       _method: GET
 
 idea_show:
-    pattern:  /{groupSlug}/event/{eventSlug}/ideas/{id}
+    pattern:  /{groupSlug}/event/{eventSlug}/{entrySetId}/{id}
     defaults: { _controller: IdeaBundle:Idea:show }
     requirements:
       _method: GET
 
 
 idea_edit:
-    pattern:  /{groupSlug}/event/{eventSlug}/ideas/{id}/edit
+    pattern:  /{groupSlug}/event/{eventSlug}/{entrySetId}/{id}/edit
     defaults: { _controller: IdeaBundle:Idea:edit }
     requirements:
       _method: POST
 
 idea_edit_form:
-    pattern:  /{groupSlug}/event/{eventSlug}/ideas/{id}/edit
+    pattern:  /{groupSlug}/event/{eventSlug}/{entrySetId}/{id}/edit
     defaults: { _controller: IdeaBundle:Idea:editForm }
     requirements:
       _method: GET

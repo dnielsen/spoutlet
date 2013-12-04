@@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\IdeaBundle\Entity\VoteCriteria;
 use Platformd\EventBundle\Entity\Event;
+use Platformd\IdeaBundle\Entity\EntrySet;
 use Platformd\EventBundle\Entity\GroupEvent;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
@@ -48,10 +49,10 @@ class AdminController extends Controller
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
             ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
             ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
-            ->add('type',               'choice',           array('choices' => array(Event::TYPE_IDEATHON       => 'Ideathon',
-                                                                                     Event::TYPE_UNCONFERENCE   => 'Unconference',
-                                                                                     Event::TYPE_FORUM          => 'Forum',
-                                                                                    )))
+//            ->add('type',               'choice',           array('choices' => array(Event::TYPE_IDEATHON       => 'Ideathon',
+//                                                                                     Event::TYPE_UNCONFERENCE   => 'Unconference',
+//                                                                                     Event::TYPE_FORUM          => 'Forum',
+//                                                                                    )))
             ->add('online',             'choice',           array('choices' => array('1' => 'Yes', '0' => 'No')))
             ->add('private',            'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
             ->add('startsAt',           'datetime',         array('attr'    => array('size' => '60%'), 'required' => '0'))
@@ -59,9 +60,9 @@ class AdminController extends Controller
             ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address2',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
-            ->add('allowedVoters',      'text',             array('max_length' => '5000', 'attr'    => array('size' => '60%', 'placeholder' => 'username1, username2, ...'), 'required' => '0',))
-            ->add('isSubmissionActive', 'choice',           array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
-            ->add('isVotingActive',     'choice',           array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
+//            ->add('allowedVoters',      'text',             array('max_length' => '5000', 'attr'    => array('size' => '60%', 'placeholder' => 'username1, username2, ...'), 'required' => '0',))
+//            ->add('isSubmissionActive', 'choice',           array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
+//            ->add('isVotingActive',     'choice',           array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
 
             ->getForm();
 
@@ -76,16 +77,27 @@ class AdminController extends Controller
                 $event->setApproved(true);
                 $event->setRegistrationOption(Event::REGISTRATION_ENABLED);
 
+
                 //validate and clean up allowedVoters
-                $validatedJudges = array();
-                $candidateJudges = array_map('trim',explode(",",$event->getAllowedVoters()));
-                $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
-                foreach($candidateJudges as $candidate) {
-                    if($userRepo->findOneBy(array('username'=> $candidate)) != null)
-                        $validatedJudges[] = $candidate;
-                }
-                $event->setAllowedVoters(implode(",",$validatedJudges));
-                
+//                $validatedJudges = array();
+//                $candidateJudges = array_map('trim',explode(",",$event->getAllowedVoters()));
+//                $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
+//                foreach($candidateJudges as $candidate) {
+//                    if($userRepo->findOneBy(array('username'=> $candidate)) != null)
+//                        $validatedJudges[] = $candidate;
+//                }
+
+
+                $newEntrySet = new EntrySet();
+                $newEntrySet->setName($event->getName().' EntrySet');
+                $newEntrySet->setEvent($event);
+                $newEntrySet->setType(EntrySet::TYPE_IDEATHON);
+                $newEntrySet->setAllowedVoters(''); //->setAllowedVoters(implode(",",$validatedJudges));
+                $newEntrySet->setIsSubmissionActive(1);
+                $newEntrySet->setIsVotingActive(1);
+
+                $event->getEntrySets()->add($newEntrySet);
+
                 $em = $this->getDoctrine()->getEntityManager();
                 $em->persist($event);
                 $em->flush();

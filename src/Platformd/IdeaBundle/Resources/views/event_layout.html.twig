@@ -24,6 +24,7 @@
 
 {% block content %}
 
+    {#
     {% if event.type == constant('\\Platformd\\EventBundle\\Entity\\Event::TYPE_UNCONFERENCE') %}
         {% set ideaType = 'Session' %}
         {% set personType = 'Speaker' %}
@@ -33,6 +34,9 @@
     {% elseif event.type == constant('Platformd\\EventBundle\\Entity\\Event::TYPE_FORUM') %}
         {% set ideaType = 'Discussion' %}
     {% endif %}
+    #}
+    {% set ideaType = "Entry" %}
+    {% set personType = "Fat Bastard" %}
 
     {% if event.private and not isAdmin %}
         {% if app.user is null %}

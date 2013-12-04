@@ -19,9 +19,9 @@ class Idea
 	protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GroupEvent", inversedBy="ideas")
+     * @ORM\ManyToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySet", inversedBy="entries")
      */
-    protected $event;
+    protected $entrySet;
 
 	/**
      * @ORM\Column(type="string", length=255)
@@ -168,13 +168,13 @@ class Idea
         return $this->name;
     }
 
-    public function getEvent()
+    public function getEntrySet()
     {
-        return $this->event;
+        return $this->entrySet;
     }
-    public function setEvent($event)
+    public function setEntrySet($entrySet)
     {
-        $this->event = $event;
+        $this->entrySet = $entrySet;
     }
 
     /**
