@@ -89,7 +89,7 @@ class AdminController extends Controller
 
 
                 $newEntrySet = new EntrySet();
-                $newEntrySet->setName($event->getName().' EntrySet');
+                $newEntrySet->setName($event->getName().' Entries');
                 $newEntrySet->setEvent($event);
                 $newEntrySet->setType(EntrySet::TYPE_IDEATHON);
                 $newEntrySet->setAllowedVoters(''); //->setAllowedVoters(implode(",",$validatedJudges));
