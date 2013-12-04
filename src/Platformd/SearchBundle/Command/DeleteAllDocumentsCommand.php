@@ -1,5 +1,4 @@
 <?php
-
 namespace Platformd\SearchBundle\Command;
 
 use
@@ -9,8 +8,8 @@ use
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface
 ;
-
 use Platformd\SearchBundle\QueueMessage\SearchIndexQueueMessage;
+
 use HPCloud\HPCloudPHP;
 
 class DeleteAllDocumentsCommand extends ContainerAwareCommand
@@ -78,13 +77,13 @@ EOT
 
     protected function clearQueue()
     {
-        $s3        = $this->getContainer()->get('aws_s3');
         $queueUtil = $this->getContainer()->get('platformd.util.queue_util');
 
         while ($message = $queueUtil->retrieveFromQueue(new SearchIndexQueueMessage())) {
             if ($this->hpObject == 1){
                 $response = $this->hpcloud->delete_object($message->bucket, $message->filename);
             } else {
+                $s3        = $this->getContainer()->get('aws_s3');
                 $response = $s3->delete_object($message->bucket, $message->filename);
             }    
             $deleted = $queueUtil->deleteFromQueue($message);

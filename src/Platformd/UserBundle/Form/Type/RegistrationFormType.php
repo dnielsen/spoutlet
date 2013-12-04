@@ -61,6 +61,7 @@ class RegistrationFormType extends BaseType
 
     public function buildForm(FormBuilder $builder, array $options)
     {
+        
         parent::buildForm($builder, $options);
 
         $builder
@@ -117,6 +118,7 @@ class RegistrationFormType extends BaseType
         );
 
         $builder->add('country', 'country', $countryOptions);
+        $builder->add('name');
 
         if ($this->includeRecaptcha) {
             $builder->add('recaptcha', 'ewz_recaptcha', array(
@@ -151,6 +153,7 @@ class RegistrationFormType extends BaseType
     {
         return array(
             'data_class' => 'Platformd\UserBundle\Entity\User',
+	    'csrf_protection' => false,
         );
     }
 

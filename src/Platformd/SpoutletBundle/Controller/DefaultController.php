@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Controller\Controller as Controller;
 use Symfony\Component\HttpFoundation\Cookie;
-use Platformd\UserBundle\Entity\RegistrationSource;
+//use Platformd\UserBundle\Entity\RegistrationSource;
 
 use Platformd\UserBundle\Entity\RegistrationSource;
 

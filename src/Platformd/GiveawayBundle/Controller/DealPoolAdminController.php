@@ -152,9 +152,7 @@ class DealPoolAdminController extends Controller
       
         $keysFile = $pool->getKeysfile();
         
-        if ($keysFile) {
-          
-            
+        if ($keysFile) {           
             //if ($keysFile->getSize() > DealPool::POOL_SIZE_QUEUE_THRESHOLD) {
               if ($keysFile->getSize() > 21) {
 
@@ -166,16 +164,19 @@ class DealPoolAdminController extends Controller
                 $filename   = trim(DealPool::POOL_FILE_S3_PREFIX, '/').'/'.md5_file($keysFile).'.'.pathinfo($keysFile->getClientOriginalName(), PATHINFO_EXTENSION);
                 if($this->container->getParameter('object_storage') == 'HpObjectStorage'){
                 
-                  $hpcloud_accesskey = $this->getContainer()->getParameter('hpcloud_accesskey');
-                  $hpcloud_secreatekey = $this->getContainer()->getParameter('hpcloud_secreatkey');
-                  $hpcloud_tenantid = $this->getContainer()->getParameter('hpcloud_tenantid');
+                  $hpcloud_accesskey =   $this->container->getParameter('hpcloud_accesskey');
+                  $hpcloud_secreatekey = $this->container->getParameter('hpcloud_secreatkey');
+                  $hpcloud_tenantid =    $this->container->getParameter('hpcloud_tenantid');
                   $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatekey, $hpcloud_tenantid);
+                  $filename = md5_file($keysFile).'.'.pathinfo($keysFile->getClientOriginalName(), PATHINFO_EXTENSION);
+                  $subDir = trim(DealPool::POOL_FILE_S3_PREFIX);
                   $response = $this->hpCloudObj->create_object($bucket, $filename, array(
                         'fileUpload'    => $handle,
                         'encryption'    => 'AES256',
                         'contentType'   => 'text/plain',
+                        'subDir'        => $subDir
                     ));
-                    $resonse_data = $response->isOk();
+                    $response_data = ($response) ? true : false   ;
                 }
                 else {
                   $response = $s3->create_object($bucket, $filename, array(

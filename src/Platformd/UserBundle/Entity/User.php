@@ -392,11 +392,11 @@ class User extends BaseUser
      * @ORM\JoinTable(name="pd_groups_members")
      */
     private $pdGroups;
-
+  
     /**
-      * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupMembershipAction", mappedBy="user", cascade={"persist"})
-      * @ORM\JoinColumn(onDelete="SET NULL")
-      */
+     * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupMembershipAction", mappedBy="user", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
     private $groupMembershipActions;
 
     /**
@@ -458,7 +458,6 @@ class User extends BaseUser
 
     /**
      * @ORM\Column(type="string", length="255", nullable=true)
-     * @Assert\NotBlank(message="Please enter your name.", groups={"Registration", "Profile"})
      */
     protected $name = null;
 

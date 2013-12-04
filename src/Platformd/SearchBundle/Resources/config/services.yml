@@ -14,3 +14,9 @@ services:
             - %s3_private_bucket_name%
             - "@platformd.util.queue_util"
             - "%search_item_prefix%"
+            - '%hpcloud_accesskey%'
+            - '%hpcloud_secreatkey%'
+            - '%hpcloud_tenantid%'
+            - '%hpcloud_url%'
+            - '%hpcloud_container%'
+            - '%object_storage%'
