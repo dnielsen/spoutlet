@@ -20,7 +20,7 @@
         {% if submitActive and app.user is not null %}
             {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
                 <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id}) }}">
-                    <input type="submit" value="Add {{ ideaType }}" class="right">
+                    <input type="submit" value="Add {{ entrySet.type | capitalize }}" class="right">
                 </a>
             {% else %}
                 <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}">
@@ -34,28 +34,28 @@
 
     {% if app.user %}
         {% if viewPrivate %}
-            <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id, 'viewPrivate': false, 'sortBy': sortBy, 'showAllRounds': showAllRounds}) }}">Public {{ ideaType }}s</a>
+            <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id, 'viewPrivate': false, 'sortBy': sortBy, 'showAllRounds': showAllRounds}) }}">Public {{ entrySet.type | capitalize }}s</a>
             &nbsp;&nbsp;|&nbsp;&nbsp;
             <strong>
                 {% if isAdmin %}
-                    Private {{ ideaType }}s
+                    Private {{ entrySet.type | capitalize }}s
                 {% elseif isJudge %}
-                    Assigned {{ ideaType }}s
+                    Assigned {{ entrySet.type | capitalize }}s
                 {% else %}
-                    My {{ ideaType }}s
+                    My {{ entrySet.type | capitalize }}s
                 {% endif %}
             </strong>
 
         {% else %}
-            <strong>Public {{ ideaType }}s</strong>
+            <strong>Public {{ entrySet.type | capitalize }}s</strong>
             &nbsp;&nbsp;|&nbsp;&nbsp;
             <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id, 'viewPrivate': true, 'sortBy': sortBy, 'showAllRounds': showAllRounds}) }}">
                 {% if isAdmin %}
-                    Private {{ ideaType }}s</a>
+                    Private {{ entrySet.type | capitalize }}s</a>
                 {% elseif isJudge %}
-                    Assigned {{ ideaType }}s</a>
+                    Assigned {{ entrySet.type | capitalize }}s</a>
                 {% else %}
-                    My {{ ideaType }}s</a>
+                    My {{ entrySet.type | capitalize }}s</a>
                 {% endif %}
 
         {% endif %}
@@ -138,7 +138,7 @@
         </div>
 
     {% else %}
-        <div class="left">There are no {{ ideaType }}s yet.</div>
+        <div class="left">There are no {{ entrySet.type }}s yet.</div>
         <br/><br/><hr/>
     
 	{% endfor %}

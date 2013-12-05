@@ -24,20 +24,6 @@
 
 {% block content %}
 
-    {#
-    {% if event.type == constant('\\Platformd\\IdeaBundle\\Entity\\EntrySet::TYPE_SESSION') %}
-        {% set ideaType = 'Session' %}
-        {% set personType = 'Speaker' %}
-    {% elseif event.type == constant('\\Platformd\\IdeaBundle\\Entity\\EntrySet::TYPE_IDEA') %}
-        {% set ideaType = 'Idea' %}
-        {% set personType = 'Contributor' %}
-    {% elseif event.type == constant('\\Platformd\\IdeaBundle\\Entity\\EntrySet::TYPE_THREAD') %}
-        {% set ideaType = 'Discussion' %}
-    {% endif %}
-    #}
-    {% set ideaType = "Entry" %}
-    {% set personType = "Member" %}
-
     {% if event.private and not isAdmin %}
         {% if app.user is null %}
             This event is private. Please log in to view this page.<br/><br/>

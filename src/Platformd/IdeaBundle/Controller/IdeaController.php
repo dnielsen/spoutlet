@@ -120,7 +120,7 @@ class IdeaController extends Controller
 
 
         // Do vote sidebar stuff
-        $sidebarState = $this->getSidebarState($idea, $event, $entrySet);
+        $sidebarState = $this->getSidebarState($entrySet, $idea);
 
         //Disable Judge mode if no criteria defined yet
         $criteriaList = $doctrine->getRepository('IdeaBundle:VoteCriteria')->findByEventId($event->getId());
@@ -879,7 +879,7 @@ class IdeaController extends Controller
         return $this->isGranted('IS_AUTHENTICATED_REMEMBERED');
     }
 
-    public function getSidebarState($idea, $entrySet) {
+    public function getSidebarState($entrySet, $idea) {
 
         if ($entrySet->getType() == EntrySet::TYPE_IDEA)
         {
