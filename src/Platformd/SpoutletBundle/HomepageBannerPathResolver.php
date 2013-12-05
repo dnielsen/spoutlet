@@ -5,7 +5,7 @@ namespace Platformd\SpoutletBundle;
 use Platformd\SpoutletBundle\PathResolver;
 use Platformd\SpoutletBundle\Entity\HomepageBanner;
 use Gaufrette\Adapter\AmazonS3;
-use HPCloud\HPCloudPHP;
+use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 /**
 *
 */

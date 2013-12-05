@@ -9,8 +9,7 @@ use
     Symfony\Component\Console\Output\OutputInterface
 ;
 use Platformd\SearchBundle\QueueMessage\SearchIndexQueueMessage;
-
-use HPCloud\HPCloudPHP;
+use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 
 class DeleteAllDocumentsCommand extends ContainerAwareCommand
 {

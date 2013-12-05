@@ -15,8 +15,7 @@ use Platformd\UserBundle\Entity\User,
     Platformd\UserBundle\QueueMessage\AvatarResizeQueueMessage,
     Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage
 ;
-
-use HPCloud\HPCloudPHP;
+use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 class GallaryManager
 {
     const IMAGE_CROP_MAX_WIDTH  = 512;

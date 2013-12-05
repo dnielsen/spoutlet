@@ -6,9 +6,7 @@ use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Platformd\SpoutletBundle\Exception\QueueFailureException;
 use Platformd\SpoutletBundle\QueueMessage\SqsMessageBase;
 use Platformd\SpoutletBundle\Util\Interfaces\QueueUtilInterface;
-
-use HPCloud\HPCloudPHP;
-
+use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 class QueueUtil implements QueueUtilInterface
 {
     const LOG_MESSAGE_PREFIX = "[QueueUtil] ";

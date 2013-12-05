@@ -11,7 +11,7 @@ use Platformd\GiveawayBundle\Entity\Deal;
 use Symfony\Component\Locale\Locale;
 use Platformd\GiveawayBundle\QueueMessage\KeyPoolQueueMessage;
 
-use HPCloud\HPCloudPHP;
+use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 /**
 *
 */

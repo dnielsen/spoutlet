@@ -15,8 +15,7 @@ use Platformd\GiveawayBundle\Entity\GiveawayPool;
 use Platformd\GiveawayBundle\Entity\DealPool;
 use Platformd\GiveawayBundle\QueueMessage\KeyPoolQueueMessage;
 
-use HPCloud\HPCloudPHP;
-
+use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 /**
  * Command that places themes assets into a given directory.
  */

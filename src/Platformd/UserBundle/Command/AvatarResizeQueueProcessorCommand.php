@@ -14,7 +14,7 @@ use Platformd\UserBundle\Entity\Avatar,
     Platformd\UserBundle\QueueMessage\AvatarResizeQueueMessage,
     Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage
 ;
-use HPCloud\HPCloudPHP;
+use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 class AvatarResizeQueueProcessorCommand extends ContainerAwareCommand
 {
     private $stdOutput;

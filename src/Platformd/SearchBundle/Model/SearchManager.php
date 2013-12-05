@@ -9,7 +9,7 @@ use Platformd\TagBundle\Model\TaggableInterface;
 use Platformd\SearchBundle\QueueMessage\SearchIndexQueueMessage;
 
 use Symfony\Component\HttpFoundation\Response;
-use HPCloud\HPCloudPHP;
+use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 
 class SearchManager
 {

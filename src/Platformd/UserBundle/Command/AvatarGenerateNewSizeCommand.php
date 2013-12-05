@@ -9,9 +9,8 @@ use
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface
 ;
-
 use Platformd\UserBundle\Entity\Avatar;
-use HPCloud\HPCloudPHP;
+use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 
 class AvatarGenerateNewSizeCommand extends ContainerAwareCommand
 {

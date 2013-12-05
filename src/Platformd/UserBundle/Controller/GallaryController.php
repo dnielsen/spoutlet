@@ -6,23 +6,17 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response
 ;
-
 use Platformd\SpoutletBundle\Controller\Controller,
     Platformd\GroupBundle\Entity\Group,
     Platformd\GroupBundle\Model\GroupManager,
     Platformd\UserBundle\Entity\User,
     Platformd\UserBundle\Entity\Gallary,
-    Platformd\UserBundle\Form\Type\GallaryType,
-    
-    Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage
-;
+    Platformd\UserBundle\Form\Type\GallaryType,   
+    Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage;
 use 
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
-//    Symfony\Component\Security\Core\Exception\AccessDeniedException,
-    Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-;
-use HPCloud\HPCloudPHP;
-
+    Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 class GallaryController extends Controller
 {
 

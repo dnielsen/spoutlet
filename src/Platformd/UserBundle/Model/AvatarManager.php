@@ -16,7 +16,7 @@ use Platformd\UserBundle\Entity\User,
     Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage
 ;
 
-use HPCloud\HPCloudPHP;
+use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 class AvatarManager
 {
     const IMAGE_CROP_MAX_WIDTH  = 512;

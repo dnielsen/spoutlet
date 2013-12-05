@@ -9,8 +9,7 @@ use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\GiveawayBundle\QueueMessage\KeyPoolQueueMessage;
-
-use HPCloud\HPCloudPHP;
+use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 
 /**
  *

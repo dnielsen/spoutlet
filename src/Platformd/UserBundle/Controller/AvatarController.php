@@ -13,7 +13,7 @@ use Platformd\SpoutletBundle\Controller\Controller,
     Platformd\UserBundle\Form\Type\AvatarType,
     Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage
 ;
-use HPCloud\HPCloudPHP;
+use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 
 class AvatarController extends Controller
 {
@@ -29,23 +29,21 @@ class AvatarController extends Controller
 
         $form = $this->createForm(new AvatarType(), $newAvatar);
         if(isset($_GET['url_pic'])) {
-
-        $hpcloud_accesskey = $this->container->getParameter('hpcloud_accesskey');
-        $hpcloud_secreatekey = $this->container->getParameter('hpcloud_secreatkey');
-        $hpcloud_tenantid = $this->container->getParameter('hpcloud_tenantid');
-
-        $hpcloud = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatekey, $hpcloud_tenantid);
-   
-        $url_pic = $_GET['url_pic'];
-        $url = $this->container->getParameter("hpcloud_url").$this->container->getParameter("hpcloud_container")."/"."images/avatar";
-        //$url = 'https://region-a.geo-1.objects.hpcloudsvc.com/v1/10873218563681/cloudcamp/images/avatar';
-        $hpcloud->faceDetection($url_pic,$url);
-     
-     unset($hpcloud);
-     $response = new Response();
-    // $response->setContent(json_encode($data));
-     return $response;
-     }
+          $hpcloud_accesskey = $this->container->getParameter('hpcloud_accesskey');
+          $hpcloud_secreatekey = $this->container->getParameter('hpcloud_secreatkey');
+          $hpcloud_tenantid = $this->container->getParameter('hpcloud_tenantid');       
+          $hpcloud = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatekey, $hpcloud_tenantid);
+          
+          $url_pic = $_GET['url_pic'];
+          $url = $this->container->getParameter("hpcloud_url").$this->container->getParameter("hpcloud_container")."/"."images/avatar";
+          //$url = 'https://region-a.geo-1.objects.hpcloudsvc.com/v1/10873218563681/cloudcamp/images/avatar';
+          $hpcloud->faceDetection($url_pic,$url);
+       
+          unset($hpcloud);
+          $response = new Response();
+          // $response->setContent(json_encode($data));
+          return $response;
+        }
 
 
         if ($request->getMethod() == 'POST') {
@@ -57,12 +55,7 @@ class AvatarController extends Controller
                 $avatarManager->save($newAvatar);
 
                 if ($newAvatar->getUuid()) {
-                  //  return $this->redirect($this->generateUrl('avatar_crop', array(
-                    //    'uuid' => $newAvatar->getUuid(),
-                    //)));
-                   return $this->redirect($this->generateUrl('avatar_facedetect',array(
-			'uuid' => $newAvatar->getUuid(),
-			)));
+                   return $this->redirect($this->generateUrl('avatar_facedetect',array('uuid' => $newAvatar->getUuid(),)));
                 } else {
                     $this->setFlash('error', 'platformd.user.avatars.invalid_avatar');
                 }
