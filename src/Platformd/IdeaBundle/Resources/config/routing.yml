@@ -92,38 +92,38 @@ idea_admin_remove_image:
 # NON-ADMIN
 
 idea_create:
-    pattern:  /{groupSlug}/event/{eventSlug}/{entrySetId}/create
+    pattern:  /{groupSlug}/event/{eventSlug}/list/{entrySetId}/create
     defaults: { _controller: IdeaBundle:Idea:create }
     requirements:
       _method: POST
 
 idea_create_form:
-    pattern:  /{groupSlug}/event/{eventSlug}/{entrySetId}/create
+    pattern:  /{groupSlug}/event/{eventSlug}/list/{entrySetId}/create
     defaults: { _controller: IdeaBundle:Idea:createForm}
     requirements:
       _method: GET
 
 idea_show_all:
-    pattern:  /{groupSlug}/event/{eventSlug}/{entrySetId}
+    pattern:  /{groupSlug}/event/{eventSlug}/list/{entrySetId}
     defaults: { _controller: IdeaBundle:Idea:showAll }
     requirements:
       _method: GET
 
 idea_show:
-    pattern:  /{groupSlug}/event/{eventSlug}/{entrySetId}/{id}
+    pattern:  /{groupSlug}/event/{eventSlug}/list/{entrySetId}/entry/{id}
     defaults: { _controller: IdeaBundle:Idea:show }
     requirements:
       _method: GET
 
 
 idea_edit:
-    pattern:  /{groupSlug}/event/{eventSlug}/{entrySetId}/{id}/edit
+    pattern:  /{groupSlug}/event/{eventSlug}/list/{entrySetId}/entry/{id}/edit
     defaults: { _controller: IdeaBundle:Idea:edit }
     requirements:
       _method: POST
 
 idea_edit_form:
-    pattern:  /{groupSlug}/event/{eventSlug}/{entrySetId}/{id}/edit
+    pattern:  /{groupSlug}/event/{eventSlug}/list/{entrySetId}/entry/{id}/edit
     defaults: { _controller: IdeaBundle:Idea:editForm }
     requirements:
       _method: GET
@@ -171,7 +171,7 @@ idea_follow:
      _method:   POST
 
 idea_vote:
-    pattern:    /{groupSlug}/event/{eventSlug}/vote
+    pattern:    /{groupSlug}/event/{eventSlug}/list/{entrySetId}/vote
     defaults:   { _controller: IdeaBundle:Idea:vote }
     requirements:
      _method:   POST
@@ -189,7 +189,7 @@ idea_comment_delete:
      _method:    POST
 
 idea_delete:
-    pattern:    /{groupSlug}/event/{eventSlug}/delete
+    pattern:    /{groupSlug}/event/{eventSlug}/list/{entrySetId}/delete
     defaults:   { _controller: IdeaBundle:Idea:delete }
     requirements:
      _method:   POST

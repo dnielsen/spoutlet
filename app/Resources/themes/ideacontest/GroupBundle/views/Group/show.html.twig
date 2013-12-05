@@ -44,7 +44,7 @@
                 <td width="25%">{{ nextEvent.attendeeCount }} attendee{% if nextEvent.attendeeCount != 1 %}s{% endif %}</td>
                 <td width="75%%">
                     {% if nextEvent.isUserAttending(app.user) or nextEvent.getUser() == app.user %}
-                        <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': nextEvent.slug}) }}" class="btnTny right">View Ideas</a>
+                        <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': nextEvent.slug}) }}" class="btnTny right">View Event</a>
                     {% else %}
                         <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right">Register</a>
                     {% endif %}

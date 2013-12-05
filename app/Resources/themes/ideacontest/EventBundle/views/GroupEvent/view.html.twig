@@ -44,16 +44,20 @@
         </div>
 
         <div class="cBx2">
-            {% for entrySet in event.entrySets %}
-                <h2>{{ entrySet.name }}</h2>
-                <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id}) }}" class="submit left" id="event_button">View {{ ideaType }}s</a>
-                {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
-                    <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id}) }}" class="submit right" id="event_button">Propose {{ ideaType }}</a>
-                {% else %}
-                    <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="submit right" id="event_button">Register</a>
-                {% endif %}
-                <hr/>
-            {% endfor %}
+            <div class="scrollableSidebarWidget">
+                {% for entrySet in event.entrySets %}
+                    <div class="scrollableSidebarWidgetItem">
+                        <h2>{{ entrySet.name }}</h2>
+                        <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id}) }}" class="submit left">View {{ ideaType }}s</a>
+                        {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
+                            <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id}) }}" class="submit left marginlft">Propose {{ ideaType }}</a>
+                        {% else %}
+                            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="submit left marginlft">Register</a>
+                        {% endif %}
+                        <div class="clear"></div>
+                    </div>
+                {% endfor %}
+            </div>
 
             <table id="eventDetails" class="tblStyle">
                 <tbody>
@@ -83,7 +87,6 @@
                 </tbody>
             </table>
 
-            <br>
         </div>
     </div>
 

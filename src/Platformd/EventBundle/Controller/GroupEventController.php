@@ -316,10 +316,6 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Event does not exist.');
         }
 
-        if ($groupEvent->getFirstEntrySet()->getType() == GroupEvent::TYPE_FORUM){
-            return $this->redirect($this->generateUrl('idea_show_all', array('groupSlug' => $groupSlug, 'eventSlug' => $eventSlug)));
-        }
-
         if (!$groupEvent->isApproved()) {
             $this->basicSecurityCheck(array('ROLE_USER'));
             if ($this->getUser() != $groupEvent->getUser() && !$this->getGroupManager()->isAllowedTo($this->getUser(), $group, $this->getCurrentSite(), 'ApproveEvent') && !$this->isGranted('ROLE_SUPER_ADMIN')) {

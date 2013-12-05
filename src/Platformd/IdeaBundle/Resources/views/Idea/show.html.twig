@@ -19,7 +19,7 @@
             <ul>
                 <li>Tags</li>
                 {% for tag in idea.tags %}
-                    <li><a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'tag': tag.tagName}) }}">{{ tag.tagName }}</a></li>
+                    <li><a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id, 'tag': tag.tagName}) }}">{{ tag.tagName }}</a></li>
                 {% endfor %}
             </ul>
         </div>
@@ -35,7 +35,7 @@
         </div>
 
         {% if canEdit %}
-            <a href = "{{ path('idea_edit_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': idea.id}) }}" class="right">Edit</a>
+            <a href = "{{ path('idea_edit_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id, 'id': idea.id}) }}" class="right">Edit</a>
         {% endif %}
         <br class="clr"><br>
 
@@ -127,7 +127,7 @@
         </form>
     </td>
     <td>
-        <form action="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="get">
+        <form action="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id }) }}" method="get">
             <input type="submit" value="View {{ ideaType }}s">
         </form>
     </td>
@@ -146,7 +146,7 @@
         {% if sidebarState == constant('\\Platformd\\IdeaBundle\\Controller\\IdeaController::SIDEBAR_JUDGE') %}
             <h2>Judges' Sidebar</h2>
 
-		<form action="{{ path('idea_vote', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post">
+		<form action="{{ path('idea_vote', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id}) }}" method="post">
 		    <input type="hidden" name="id" value='{{idea.id}}'>
 
 		    <table class = "paddedTable">
@@ -168,7 +168,7 @@
 		{% elseif sidebarState == constant('\\Platformd\\IdeaBundle\\Controller\\IdeaController::SIDEBAR_ADMIN') %}
 		    <h2>Admins' Sidebar</h2>
 
-            {% if event.firstEntrySet.allowedVoters | length > 0 %}
+            {% if entrySet.allowedVoters | length > 0 %}
                 <form action="{{ path('idea_admin_assign', {'groupSlug': group.slug, 'eventSlug': event.slug, 'ideaId': idea.id}) }}" method="post" {{ form_enctype(form) }}>
                     {{ form_widget(form) }}
 
@@ -183,14 +183,14 @@
 		<table class="prevNext">
 		<td>
 		    {% if previous is defined %}
-		    <form action="{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': previous}) }}">
+		    <form action="{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id, 'id': previous}) }}">
 		        <input type="submit" value="Previous">
 		    </form>
 		    {% endif %}
 		</td>
 		<td>
 		    {% if next is defined %}
-		    <form action="{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': next}) }}">
+		    <form action="{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id, 'id': next}) }}">
 		        <input type="submit" value="Next">
 		    </form>
 		    {% endif %}

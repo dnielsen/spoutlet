@@ -21,9 +21,10 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class EntrySet {
 
-    const TYPE_UNCONFERENCE         = 'unconference';
-    const TYPE_IDEATHON             = 'ideathon';
-    const TYPE_FORUM                = 'forum';
+    const TYPE_SESSION  = 'session';
+    const TYPE_IDEA     = 'idea';
+    const TYPE_THREAD   = 'thread';
+    const TYPE_COMMENT  = 'comment';
 
     /**
      * @var integer $id

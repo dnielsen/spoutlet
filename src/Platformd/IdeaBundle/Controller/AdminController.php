@@ -49,9 +49,9 @@ class AdminController extends Controller
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
             ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
             ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
-//            ->add('type',               'choice',           array('choices' => array(Event::TYPE_IDEATHON       => 'Ideathon',
-//                                                                                     Event::TYPE_UNCONFERENCE   => 'Unconference',
-//                                                                                     Event::TYPE_FORUM          => 'Forum',
+//            ->add('type',               'choice',           array('choices' => array(EntrySet::TYPE_IDEA      => 'Ideathon',
+//                                                                                     EntrySet::TYPE_SESSION   => 'Unconference',
+//                                                                                     EntrySet::TYPE_THREAD    => 'Forum',
 //                                                                                    )))
             ->add('online',             'choice',           array('choices' => array('1' => 'Yes', '0' => 'No')))
             ->add('private',            'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
@@ -89,9 +89,9 @@ class AdminController extends Controller
 
 
                 $newEntrySet = new EntrySet();
-                $newEntrySet->setName($event->getName().' Entries');
+                $newEntrySet->setName('Entries');
                 $newEntrySet->setEvent($event);
-                $newEntrySet->setType(EntrySet::TYPE_IDEATHON);
+                $newEntrySet->setType(EntrySet::TYPE_IDEA);
                 $newEntrySet->setAllowedVoters(''); //->setAllowedVoters(implode(",",$validatedJudges));
                 $newEntrySet->setIsSubmissionActive(1);
                 $newEntrySet->setIsVotingActive(1);

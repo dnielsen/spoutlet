@@ -2,7 +2,7 @@
 
 {% block event_content %}
 
-    {% if not event.firstEntrySet.isSubmissionActive %}
+    {% if not entrySet.isSubmissionActive %}
 
         <p>{{ ideaType }} Submissions are currently disabled.</p>
 
@@ -13,7 +13,7 @@
                 </form>
             </td>
             <td>
-                <form action="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="get">
+                <form action="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id}) }}" method="get">
                     <input type="submit" value="View Ideas">
                 </form>
             </td>
@@ -23,14 +23,14 @@
 
         <h1>{% if idea is defined %}Edit{% else %}Submit{% endif %} Your {{ ideaType }}</h1>
 
-        <form action="{% if idea is defined %}{{ path('idea_edit', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': idea.id}) }}{% else %}{{ path('idea_create', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}{% endif %}" method="post" id="submit" enctype="multipart/form-data">
+        <form action="{% if idea is defined %}{{ path('idea_edit', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id, 'id': idea.id}) }}{% else %}{{ path('idea_create', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id}) }}{% endif %}" method="post" id="submit" enctype="multipart/form-data">
             <label>Title</label>
             <input type="text" name="title" {% if idea is defined %}value="{{ idea.name }}"{% endif %} tabindex="1" class="inPt">
 
             <label>Description</label>
             <textarea name="desc" rows="6" tabindex="2" class="inPt">{% if idea is defined %}{{ idea.description }}{% endif %}</textarea>
 
-            {% if event.firstEntrySet.type == constant('\\Platformd\\IdeaBundle\\Entity\\EntrySet::TYPE_UNCONFERENCE') or event.firstEntrySet.type == constant('\\Platformd\\IdeaBundle\\Entity\\EntrySet::TYPE_IDEATHON') %}
+            {% if entrySet.type == constant('\\Platformd\\IdeaBundle\\Entity\\EntrySet::TYPE_SESSION') or entrySet.type == constant('\\Platformd\\IdeaBundle\\Entity\\EntrySet::TYPE_IDEA') %}
                 <label>Names of Additional {{ personType }}s</label>
                 <textarea name="members" rows="6" tabindex="3"
                     placeholder="First Last, First Last, etc&#8230;" class="inPt">{% if idea is defined %}{{ idea.members }}{% endif %}</textarea>
@@ -78,10 +78,10 @@
 
         <br class="clr">
 
-        <form action="{% if idea is defined %}{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': idea.id}) }}{% else %}{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}{% endif %}" id="cancel"></form>
+        <form action="{% if idea is defined %}{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id, 'id': idea.id}) }}{% else %}{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}{% endif %}" id="cancel"></form>
 
         {% if idea is defined %}
-        <form action="{{ path('idea_delete', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" id="delete">
+        <form action="{{ path('idea_delete', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id}) }}" method="post" id="delete">
             <input type="hidden" name="id" value='{{idea.id}}'>
         </form>
         {% endif %}
