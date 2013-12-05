@@ -208,7 +208,7 @@
     target=twitteroauth
 
 [HpCloudPhp]
-    git=https://github.com/sandip2451984/HpCloudPHP.git
+    git=https://github.com/hpcloud/HPCloud-PHP.git
     target=/HPCloudPHP
 [SendGrid]
     git=https://github.com/sandip2451984/SendGrid.git
