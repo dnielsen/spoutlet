@@ -123,12 +123,12 @@
     <table class="paddedTable">
     <td>
         <form action = {{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get">
-            <input type="submit" value="Home">
+            <input type="submit" value="< {{ event.name | truncate(20) }}">
         </form>
     </td>
     <td>
         <form action="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id }) }}" method="get">
-            <input type="submit" value="View {{ entrySet.type | capitalize }}s">
+            <input type="submit" value="< {{ entrySet.name | truncate(20) }}">
         </form>
     </td>
     </table>

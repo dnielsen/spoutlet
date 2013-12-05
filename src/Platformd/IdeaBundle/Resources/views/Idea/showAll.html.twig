@@ -144,7 +144,7 @@
 	{% endfor %}
 
     <form action = {{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get">
-        <input type="submit" value="Home">
+        <input type="submit" value="< {{ event.name | truncate(20) }}">
     </form>
 
 {% endblock %}

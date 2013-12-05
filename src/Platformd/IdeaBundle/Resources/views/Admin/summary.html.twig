@@ -104,18 +104,27 @@
 
     <br><br><br>
 
-    <table class="right">
-        <td style="padding-right: 10px">
+
+
+    <table class="paddedTable left">
+        <td>
+            <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="get" id='home'>
+                <input type="submit" value="< {{ event.name | truncate(20) }}" form='home' />
+            </a>
+        </td>
+        <td>
             <form action = {{ path('idea_admin', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get">
-                <input type="submit" value="Back">
+                <input type="submit" value="< Admin Console">
             </form>
         </td>
+    </table>
+
+    <table class="paddedTable right">
         {% if round == currentRound %}
             <td>
                 <input type="submit" value="Advance To Next Round" onclick="document.forms['advance'].submit();">
             </td>
         {% endif %}
-
     </table>
 
 
