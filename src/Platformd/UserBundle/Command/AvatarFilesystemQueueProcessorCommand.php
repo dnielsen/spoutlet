@@ -13,7 +13,8 @@ use
 use Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage,
     Platformd\UserBundle\Entity\Avatar
 ;
-use HPCloud\HPCloudPHP;
+use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
+
 class AvatarFilesystemQueueProcessorCommand extends ContainerAwareCommand
 {
     private $stdOutput;
