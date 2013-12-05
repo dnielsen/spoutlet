@@ -69,6 +69,9 @@ class AdminController extends Controller
         if($request->getMethod() == 'POST') {
             $form->bindRequest($request);
             if($form->isValid()) {
+
+                $em = $this->getDoctrine()->getEntityManager();
+
                 $group->addEvent($event);
 
                 $event->setUser($this->getCurrentUser());
@@ -77,6 +80,8 @@ class AdminController extends Controller
                 $event->setApproved(true);
                 $event->setRegistrationOption(Event::REGISTRATION_ENABLED);
 
+                $em->persist($event);
+                $em->flush();
 
                 //validate and clean up allowedVoters
 //                $validatedJudges = array();
@@ -88,18 +93,16 @@ class AdminController extends Controller
 //                }
 
 
+                $event->createEntrySetRegistration();
                 $newEntrySet = new EntrySet();
                 $newEntrySet->setName('Entries');
-                $newEntrySet->setEvent($event);
                 $newEntrySet->setType(EntrySet::TYPE_IDEA);
+                $newEntrySet->setContainer($event->getEntrySetRegistration());
                 $newEntrySet->setAllowedVoters(''); //->setAllowedVoters(implode(",",$validatedJudges));
                 $newEntrySet->setIsSubmissionActive(1);
                 $newEntrySet->setIsVotingActive(1);
 
-                $event->getEntrySets()->add($newEntrySet);
-
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($event);
+                $em->persist($newEntrySet);
                 $em->flush();
 
                 return $this->redirect($this->generateUrl('idea_admin', array(

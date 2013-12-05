@@ -37,14 +37,14 @@ class EntrySet {
 
     /**
      * @var string $name
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255)
      */
     protected $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GroupEvent", inversedBy="entrySets")
+     * @ORM\ManyToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySetRegistry", cascade={"persist"})
      */
-    protected $event;
+    protected $container;
 
     /**
      * @ORM\Column(type="string", length=255, nullable="true")
@@ -52,7 +52,7 @@ class EntrySet {
     protected $type;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\Idea", mappedBy="entrySet", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\Idea", mappedBy="entrySet", cascade={"persist", "remove"})
      */
     protected $entries;
 
@@ -76,15 +76,15 @@ class EntrySet {
      */
     public function __construct()
     {
-        $this->entries        = new ArrayCollection();
+        $this->entries = new ArrayCollection();
     }
 
-    public function getEvent() {
-        return $this->event;
+    public function getContainer() {
+        return $this->container;
     }
 
-    public function setEvent($event) {
-        $this->event = $event;
+    public function setContainer(EntrySetRegistry $container) {
+        $this->container = $container;
     }
 
     public function getId()

@@ -45,9 +45,10 @@
                 <td width="75%%">
                     {% if nextEvent.isUserAttending(app.user) or nextEvent.getUser() == app.user %}
                         <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': nextEvent.slug}) }}" class="btnTny right">View Event</a>
+
                     {% else %}
                         <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right">Register</a>
-                    {% endif %}
+                    {% endif %} #}
                 </td>
             </tr>
             </tbody>
@@ -64,11 +65,11 @@
                         {{ event.DateRangeString | default("Ongoing Event") }} | {% if event.getOnline %}Online Event{% else %}{{ event.location }}{% endif %}
                     </div>
                     <div class="right">
-                        {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
+                        {# {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
                             <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="btnTny">View Ideas</a>
                         {% else %}
                             <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny">Register</a>
-                        {% endif %}
+                        {% endif %} #}
                     </div>
                     <div class="clr"></div>
                 </div>
@@ -86,9 +87,9 @@
                             <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventSlug': event.slug }) }}" class="midtxt">{{ event.name }}</a><br>
                             {{ event.DateRangeString }} | {% if event.getOnline %}Online Event{% else %}{{ event.location }}{% endif %}
                         </div>
-                        <div class="right">
+                        {# <div class="right">
                             <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="btnTny">View Ideas</a>
-                        </div>
+                        </div> #}
                         <div class="clr"></div>
                     </div>
                 {% endfor %}

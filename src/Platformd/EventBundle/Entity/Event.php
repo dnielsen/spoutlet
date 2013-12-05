@@ -21,6 +21,7 @@ use Platformd\GameBundle\Entity\Game,
     Platformd\EventBundle\Entity\GlobalEvent,
     Platformd\EventBundle\Entity\GroupEvent,
     Platformd\IdeaBundle\Entity\EntrySet,
+    Platformd\IdeaBundle\Entity\EntrySetRegistry,
     Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil,
     Platformd\SearchBundle\Model\IndexableInterface,
     Platformd\TagBundle\Model\TaggableInterface
@@ -276,9 +277,9 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     protected $currentRound;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\EntrySet", mappedBy="event", cascade={"remove", "persist"})
+     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySetRegistry", cascade={"persist"})
      */
-    protected $entrySets;
+    protected $entrySetRegistration;
 
     /**
      * Constructor
@@ -290,8 +291,6 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         $this->startsAt     = new \DateTime('now');
         $this->endsAt       = new \DateTime('now');
         $this->currentRound = 1;
-
-        $this->entrySets    = new ArrayCollection();
     }
 
     /**
@@ -1001,15 +1000,24 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         $this->currentRound = $currentRound;
     }
 
-    public function getEntrySets() {
-        return $this->entrySets;
+    public function getEntrySetRegistration() {
+        return $this->entrySetRegistration;
     }
 
-    public function setEntrySets(EntrySet $entrySets) {
-        $this->entrySets = $entrySets;
+    public function createEntrySetRegistration() {
+        $this->entrySetRegistration = new EntrySetRegistry($this);
     }
+
+    public function getEntrySets() {
+        return $this->entrySetRegistration->getEntrySets();
+    }
+
+//    public function setEntrySets(EntrySet $entrySets) {
+//        //change needs to be flushed
+//        $this->entrySetRegistration->setEntrySets($entrySets);
+//    }
 
     public function getFirstEntrySet() {
-        return $this->getEntrySets()->get(0);
+        return $this->entrySetRegistration->getEntrySets()->get(0);
     }
 }
