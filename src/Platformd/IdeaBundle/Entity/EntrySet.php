@@ -37,7 +37,7 @@ class EntrySet {
 
     /**
      * @var string $name
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=255)
      */
     protected $name;
 
