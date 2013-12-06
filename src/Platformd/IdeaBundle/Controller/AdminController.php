@@ -291,6 +291,7 @@ class AdminController extends Controller
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
+        $entrySets = $event->getEntrySets();
 
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
@@ -322,7 +323,12 @@ class AdminController extends Controller
 
         //perform filter and sort
         $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
-        $ideaList = $ideaRepo->filter($event, $round, $tag, $this->getCurrentUser());
+
+        $ideaList = array();
+        foreach($entrySets as $entrySet){
+            $ideaList = array_merge($ideaList, $ideaRepo->filter($entrySet, $round, $tag, $this->getCurrentUser()));
+        }
+
         $ideaRepo->sortByVotes($ideaList, true, $sortCriteria);
 
         //save the resulting ordered list of ideas
