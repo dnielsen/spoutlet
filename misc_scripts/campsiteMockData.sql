@@ -545,15 +545,15 @@ DROP TABLE IF EXISTS `entry_set`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `entry_set` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `container_id` int(11) DEFAULT NULL,
+  `entrySetRegistration_id` int(11) DEFAULT NULL,
   `name` varchar(255) NOT NULL,
   `type` varchar(255) DEFAULT NULL,
   `isVotingActive` tinyint(1) NOT NULL,
   `isSubmissionActive` tinyint(1) NOT NULL,
   `allowedVoters` varchar(5000) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `IDX_15A85BBABC21F742` (`container_id`),
-  CONSTRAINT `FK_15A85BBABC21F742` FOREIGN KEY (`container_id`) REFERENCES `EntrySetRegistry` (`id`)
+  KEY `IDX_15A85BBAD0E9DF32` (`entrySetRegistration_id`),
+  CONSTRAINT `FK_15A85BBAD0E9DF32` FOREIGN KEY (`entrySetRegistration_id`) REFERENCES `EntrySetRegistry` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -933,4 +933,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-12-05 20:40:41
+-- Dump completed on 2013-12-06 13:19:09
