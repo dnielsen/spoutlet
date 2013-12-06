@@ -1006,6 +1006,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
     public function createEntrySetRegistration() {
         $this->entrySetRegistration = new EntrySetRegistry($this);
+        return $this->entrySetRegistration;
     }
 
     public function getEntrySets() {

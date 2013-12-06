@@ -15,7 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Table(name="EntrySetRegistry")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Platformd\IdeaBundle\Entity\EntrySetRegistryRepository")
  */
 class EntrySetRegistry {
 

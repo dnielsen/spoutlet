@@ -123,14 +123,14 @@
 
         {% for idea in user.ideas %}
             {% if idea.canUserView(app.user) %}
-                {% set event = idea.getEvent %}
+                {% set event = parents[idea.name] %}
                 {% set group = event.getGroup %}
                 <tr>
                     <td>
                         <a href="{{ path('group_event_view', {'groupSlug': group.getSlug, 'eventSlug': event.getSlug}) }}">{{ event.getName }}</a>
                     </td>
                     <td>
-                        <a href="{{ path('idea_show', {'groupSlug': group.getSlug, 'eventSlug': event.getSlug, 'id': idea.id}) }}">{{ idea.name }}</a>
+                        <a href="{{ path('idea_show', {'groupSlug': group.getSlug, 'eventSlug': event.getSlug, 'entrySetId': idea.entrySet.getId, 'id': idea.id}) }}">{{ idea.name }}</a>
                     </td>
                 </tr>
             {% endif %}
@@ -138,6 +138,5 @@
 
     </table>
     {% endif %}
-
 
 {% endblock %}

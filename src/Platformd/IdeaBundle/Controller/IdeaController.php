@@ -18,6 +18,7 @@ use Platformd\IdeaBundle\Entity\FollowMapping;
 use Platformd\IdeaBundle\Entity\Document;
 use Platformd\IdeaBundle\Entity\Link;
 use Platformd\IdeaBundle\Entity\EntrySet;
+use Platformd\IdeaBundle\Entity\EntrySetRegistryRepository;
 use Platformd\EventBundle\Entity\Event;
 
 class IdeaController extends Controller
@@ -788,11 +789,23 @@ class IdeaController extends Controller
         $ownProfile = ($currentUser == $user);
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
+
+        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
+        $parents = array();
+        foreach($user->getIdeas() as $idea) {
+            $registration = $idea->getParentRegistration();
+            $parent = $esRegRepo->getContainerByRegistryId($registration);
+            $parents[$idea->getName()] = $parent;
+        }
+
+
+
         return $this->render('IdeaBundle:Idea:profile.html.twig', array(
                 'user'       => $user,
                 'ownProfile' => $ownProfile,
                 'isAdmin'    => $isAdmin,
                 'sidebar'    => true,
+                'parents'    => $parents,
             ));
     }
 

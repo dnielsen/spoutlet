@@ -44,7 +44,7 @@ class EntrySet {
     /**
      * @ORM\ManyToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySetRegistry", cascade={"persist"})
      */
-    protected $container;
+    protected $entrySetRegistration;
 
     /**
      * @ORM\Column(type="string", length=255, nullable="true")
@@ -79,12 +79,12 @@ class EntrySet {
         $this->entries = new ArrayCollection();
     }
 
-    public function getContainer() {
-        return $this->container;
+    public function getEntrySetRegistration() {
+        return $this->entrySetRegistration;
     }
 
-    public function setContainer(EntrySetRegistry $container) {
-        $this->container = $container;
+    public function setEntrySetRegistration(EntrySetRegistry $container) {
+        $this->entrySetRegistration = $container;
     }
 
     public function getId()

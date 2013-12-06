@@ -172,6 +172,11 @@ class Idea
     {
         return $this->entrySet;
     }
+
+    public function getParentRegistration() {
+        return $this->getEntrySet()->getEntrySetRegistration();
+    }
+
     public function setEntrySet($entrySet)
     {
         $this->entrySet = $entrySet;
