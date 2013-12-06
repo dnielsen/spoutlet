@@ -332,7 +332,7 @@ class IdeaController extends Controller
                 'idea'       => $idea,
                 'group'      => $group,
                 'event'      => $event,
-                'entrySetId' => $entrySetId,
+                'entrySet'   => $entrySet,
                 'sidebar'    => true,
                 'attendance' => $attendance,
                 'isAdmin'    => $isAdmin,
@@ -450,6 +450,7 @@ class IdeaController extends Controller
                         'id' => $id,
                         'groupSlug' => $groupSlug,
                         'eventSlug' => $eventSlug,
+                        'entrySetId'=> $idea->getEntrySet()->getId(),
                     ));
                 return new RedirectResponse($ideaUrl);
             }
@@ -490,6 +491,7 @@ class IdeaController extends Controller
                 'id' => $ideaId,
                 'groupSlug' => $groupSlug,
                 'eventSlug' => $eventSlug,
+                'entrySetId'=> $idea->getEntrySet()->getId(),
             ));
         return new RedirectResponse($ideaUrl);
     }
@@ -538,6 +540,7 @@ class IdeaController extends Controller
                         'id' => $id,
                         'groupSlug' => $groupSlug,
                         'eventSlug' => $eventSlug,
+                        'entrySetId'=> $idea->getEntrySet()->getId(),
                     ));
                 return new RedirectResponse($ideaUrl);
             }
@@ -577,6 +580,7 @@ class IdeaController extends Controller
                 'id' => $ideaId,
                 'groupSlug' => $groupSlug,
                 'eventSlug' => $eventSlug,
+                'entrySetId'=> $idea->getEntrySet()->getId(),
             ));
         return new RedirectResponse($ideaUrl);
     }
@@ -639,6 +643,7 @@ class IdeaController extends Controller
                 'id'        => $idea->getId(),
                 'groupSlug' => $groupSlug,
                 'eventSlug' => $eventSlug,
+                'entrySetId'=> $entrySetId,
             ));
         return new RedirectResponse($ideaUrl);
 
@@ -666,6 +671,7 @@ class IdeaController extends Controller
                 'id'        => $ideaId,
                 'groupSlug' => $groupSlug,
                 'eventSlug' => $eventSlug,
+                'entrySetId'=> $idea->getEntrySet()->getId(),
             ));
         return new RedirectResponse($ideaUrl);
 
@@ -695,6 +701,7 @@ class IdeaController extends Controller
                 'id'        => $ideaId,
                 'groupSlug' => $groupSlug,
                 'eventSlug' => $eventSlug,
+                'entrySetId'=> $idea->getEntrySet()->getId(),
             ));
         return new RedirectResponse($ideaUrl);
     }
@@ -733,12 +740,14 @@ class IdeaController extends Controller
                     'id'        => $ideaId,
                     'groupSlug' => $groupSlug,
                     'eventSlug' => $eventSlug,
+                    'entrySetId'=> $idea->getEntrySet()->getId(),
                 ));
         elseif ($source == 'list')
             $url = $this->generateUrl('idea_show_all', array(
                     'tag'       => $params['tag'],
                     'groupSlug' => $groupSlug,
                     'eventSlug' => $eventSlug,
+                    'entrySetId'=> $idea->getEntrySet()->getId(),
                 ));
 
         return new RedirectResponse($url);
@@ -768,6 +777,7 @@ class IdeaController extends Controller
         $ideaListUrl = $this->generateUrl('idea_show_all', array(
                 'groupSlug' => $groupSlug,
                 'eventSlug' => $eventSlug,
+                'entrySetId'=> $entrySetId,
             ));
         return new RedirectResponse($ideaListUrl);
 
