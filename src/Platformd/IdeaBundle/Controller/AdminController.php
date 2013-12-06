@@ -97,7 +97,7 @@ class AdminController extends Controller
                 $newEntrySet = new EntrySet();
                 $newEntrySet->setName('Entries');
                 $newEntrySet->setType(EntrySet::TYPE_IDEA);
-                $newEntrySet->setContainer($esReg);
+                $newEntrySet->setEntrySetRegistration($esReg);
                 $newEntrySet->setAllowedVoters(''); //->setAllowedVoters(implode(",",$validatedJudges));
                 $newEntrySet->setIsSubmissionActive(1);
                 $newEntrySet->setIsVotingActive(1);

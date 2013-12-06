@@ -37,7 +37,7 @@ class EntrySetRegistry {
     protected $containerId;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\EntrySet", mappedBy="container", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\EntrySet", mappedBy="entrySetRegistration", cascade={"persist"})
      */
     protected $entrySets;
 
