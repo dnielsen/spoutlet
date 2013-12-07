@@ -2,8 +2,8 @@
 
 {% block event_content %}
 
-    <h1>{{ event.name }} - {{ entrySet.name }} {% if showAllRounds == 'true' %}- All Rounds{% else %}{% if round > 1 %}- Round {{ round }}{% endif %}{% endif %}</h1>
-
+    <h1 class = "left">{{ event.name }} - {{ entrySet.name }} {% if showAllRounds == 'true' %}- All Rounds{% else %}{% if round > 1 %}- Round {{ round }}{% endif %}{% endif %}</h1>{% if isAdmin %}<a class="left marginlft" href="{{ path('entry_set_edit', {'registrationId': entrySet.entrySetRegistration.id, 'entrySetId': entrySet.id}) }}">Edit</a> {% endif %}
+    <div class="clear"></div>
     <div>
         <form action = "{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id}) }}" id='filterForm' method="get" class="left">
 

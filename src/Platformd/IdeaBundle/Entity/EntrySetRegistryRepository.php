@@ -32,6 +32,9 @@ class EntrySetRegistryRepository extends EntityRepository
         if(strpos($className,'GroupEvent') != false) {
             $containerClass = "EventBundle:GroupEvent";
         }
+        elseif(strpos($className, 'Group') != false) {
+            $containerClass = "GroupBundle:Group";
+        }
 
         $queryString = 'SELECT s FROM '.$containerClass.' s WHERE s.id = :containerId';
         $query = $this->getEntityManager()

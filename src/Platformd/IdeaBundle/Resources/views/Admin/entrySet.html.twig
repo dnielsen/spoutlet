@@ -1,0 +1,14 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+
+    <h1>{% if entrySetId == 'new' %}Add a new{% else %}Edit{% endif %} List</h1>
+
+    <form action="{{ path('entry_set_new', {'entrySetId': entrySetId, 'registrationId': registrationId}) }}" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+
+        <input type="submit" value="Submit"/>
+        <button type="submit" name="cancel" value="Cancel" formnovalidate>Cancel</button>
+    </form>
+
+{% endblock %}

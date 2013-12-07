@@ -49,10 +49,6 @@ class AdminController extends Controller
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
             ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
             ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
-//            ->add('type',               'choice',           array('choices' => array(EntrySet::TYPE_IDEA      => 'Ideathon',
-//                                                                                     EntrySet::TYPE_SESSION   => 'Unconference',
-//                                                                                     EntrySet::TYPE_THREAD    => 'Forum',
-//                                                                                    )))
             ->add('online',             'choice',           array('choices' => array('1' => 'Yes', '0' => 'No')))
             ->add('private',            'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
             ->add('startsAt',           'datetime',         array('attr'    => array('size' => '60%'), 'required' => '0'))
@@ -60,9 +56,6 @@ class AdminController extends Controller
             ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address2',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
-//            ->add('allowedVoters',      'text',             array('max_length' => '5000', 'attr'    => array('size' => '60%', 'placeholder' => 'username1, username2, ...'), 'required' => '0',))
-//            ->add('isSubmissionActive', 'choice',           array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
-//            ->add('isVotingActive',     'choice',           array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
 
             ->getForm();
 
@@ -79,30 +72,12 @@ class AdminController extends Controller
                 $event->setActive(true);
                 $event->setApproved(true);
                 $event->setRegistrationOption(Event::REGISTRATION_ENABLED);
-
                 $em->persist($event);
                 $em->flush();
 
-                //validate and clean up allowedVoters
-//                $validatedJudges = array();
-//                $candidateJudges = array_map('trim',explode(",",$event->getAllowedVoters()));
-//                $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
-//                foreach($candidateJudges as $candidate) {
-//                    if($userRepo->findOneBy(array('username'=> $candidate)) != null)
-//                        $validatedJudges[] = $candidate;
-//                }
-
-
+                // Registration needs to be created after event is persisted, relies on generated event ID
                 $esReg = $event->createEntrySetRegistration();
-                $newEntrySet = new EntrySet();
-                $newEntrySet->setName('Entries');
-                $newEntrySet->setType(EntrySet::TYPE_IDEA);
-                $newEntrySet->setEntrySetRegistration($esReg);
-                $newEntrySet->setAllowedVoters(''); //->setAllowedVoters(implode(",",$validatedJudges));
-                $newEntrySet->setIsSubmissionActive(1);
-                $newEntrySet->setIsVotingActive(1);
-
-                $em->persist($newEntrySet);
+                $em->persist($esReg);
                 $em->flush();
 
                 return $this->redirect($this->generateUrl('idea_admin', array(
@@ -139,6 +114,108 @@ class AdminController extends Controller
                 'event'     => $event,
                 'isAdmin'   => $isAdmin,
             ));
+    }
+
+    public function entrySetAction(Request $request, $entrySetId) {
+
+        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
+        $registrationId = $request->get('registrationId');
+        $entrySetRegistration = $esRegRepo->find($registrationId);
+
+        $parentScope = $entrySetRegistration->getScope();
+
+        if(strpos($parentScope, 'GroupEvent') != false) {
+            $parent = "event";
+            $event = $this->getGroupEventService()->find($entrySetRegistration->getContainerId());
+            $group = $event->getGroup();
+        }
+        elseif(strpos($parentScope, 'Group') != false) {
+            $parent = "group";
+            $group = $this->getGroupManager()->find($entrySetRegistration->getContainerId());
+        }
+
+        if ($request->get('cancel') == 'Cancel') {
+            if ($parent == "event")
+            {
+                return $this->redirect($this->generateUrl('group_event_view', array(
+                    'groupSlug' => $group->getSlug(),
+                    'eventSlug' => $event->getSlug(),
+                )));
+            }
+            elseif ($parent == "group")
+            {
+                return $this->redirect($this->generateUrl('group_show', array(
+                    'slug'  => $group->getSlug(),
+                )));
+            }
+        }
+
+        if( $entrySetId == 'new' )
+        {
+            $entrySet   = new EntrySet();
+        }
+        else
+        {
+            $esRepo     = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet');
+            $entrySet   = $esRepo->find($entrySetId);
+        }
+
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'entrySet', $entrySet)
+            ->add('name',               'text',     array('attr'    => array('size'  => '60%')))
+            ->add('type',               'choice',   array('choices' => array(EntrySet::TYPE_IDEA      => 'Ideas',
+                                                                             EntrySet::TYPE_SESSION   => 'Sessions',
+                                                                             EntrySet::TYPE_THREAD    => 'Threads',)))
+            ->add('isSubmissionActive', 'choice',   array('choices' => array('1' => 'Yes', '0' => 'No')))
+            ->add('isVotingActive',     'choice',   array('choices' => array('0' => 'No', '1' => 'Yes')))
+            ->add('allowedVoters',      'text',     array('max_length' => '5000', 'attr'    => array('size' => '60%', 'placeholder' => 'username1, username2, ...'), 'required' => '0',))
+            ->getForm();
+
+        if($request->getMethod() == 'POST') {
+
+            $form->bindRequest($request);
+
+            if($form->isValid()) {
+
+
+                //validate and clean up allowedVoters
+                $validatedJudges = array();
+                $candidateJudges = array_map('trim', explode(",", $entrySet->getAllowedVoters()));
+
+                $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
+
+                foreach($candidateJudges as $candidate) {
+                    if($userRepo->findOneBy(array('username' => $candidate)) != null) {
+                        $validatedJudges[] = $candidate;
+                    }
+                }
+
+                $entrySet->setEntrySetRegistration($entrySetRegistration);
+                $entrySet->setAllowedVoters(implode(",", $validatedJudges));
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($entrySet);
+                $em->flush();
+
+
+                if($parent == "event") {
+                    $redirectUrl = $this->generateUrl('idea_show_all', array('groupSlug' => $group->getSlug(),
+                                                                             'eventSlug' => $event->getSlug(),
+                                                                             'entrySetId'=> $entrySet->getId(),
+                    ));
+                }
+                elseif($parent == "group") {
+                    $redirectUrl = $this->generateUrl('group_show', array('slug' => $group->getSlug()));
+                }
+
+                return $this->redirect($redirectUrl);
+            }
+        }
+
+        return $this->render('IdeaBundle:Admin:entrySet.html.twig', array(
+            'form'           => $form->createView(),
+            'entrySetId'     => $entrySetId,
+            'registrationId' => $registrationId,
+        ));
     }
 
     // Edit requets will provide id using GET
@@ -541,6 +618,13 @@ class AdminController extends Controller
             return false;
         }
         return $event;
+    }
+
+    public function getParentByIdea($idea){
+        $esRegistration = $idea->getParentRegistration();
+        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
+
+        return $esRegRepo->getContainer($esRegistration);
     }
 
     public function assignJudgesAction(Request $request, $groupSlug, $eventSlug, $ideaId)

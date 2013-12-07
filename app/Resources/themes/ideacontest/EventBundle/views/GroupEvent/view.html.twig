@@ -45,6 +45,9 @@
 
         <div class="cBx2">
             <div class="scrollableSidebarWidget">
+                {% if isAdmin or (event.getUser() == app.user) %}
+                    <a href = "{{ path('entry_set_new', {'registrationId': event.entrySetRegistration.id, 'entrySetId': 'new'}) }}">Add List</a>
+                {% endif %}
                 {% for entrySet in event.entrySets %}
                     <div class="scrollableSidebarWidgetItem">
                         <h2>{{ entrySet.name }}</h2>

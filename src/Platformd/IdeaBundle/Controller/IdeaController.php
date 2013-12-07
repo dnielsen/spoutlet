@@ -799,16 +799,11 @@ class IdeaController extends Controller
         $ownProfile = ($currentUser == $user);
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
-
-        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
         $parents = array();
         foreach($user->getIdeas() as $idea) {
-            $registration = $idea->getParentRegistration();
-            $parent = $esRegRepo->getContainer($registration);
+            $parent = $this->getParentByIdea($idea);
             $parents[$idea->getName()] = $parent;
         }
-
-
 
         return $this->render('IdeaBundle:Idea:profile.html.twig', array(
                 'user'       => $user,
@@ -1100,6 +1095,13 @@ class IdeaController extends Controller
         $attendance = $rsvpRepo->getUserApprovedStatus($event, $user);
 
         return $attendance;
+    }
+
+    public function getParentByIdea($idea){
+        $esRegistration = $idea->getParentRegistration();
+        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
+
+        return $esRegRepo->getContainer($esRegistration);
     }
 
 }

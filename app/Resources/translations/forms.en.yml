@@ -111,3 +111,9 @@ knp_media_fileObject: Image to Upload
 image_file: Image to Upload
 
 judgeAssignment_judges: Assign Judges
+
+entrySet_name: What do you want to call this list?
+entrySet_type: What goes in the list?
+entrySet_isSubmissionActive: Do you want people to be able to add content right now?
+entrySet_isVotingActive: Do you want judges to be able to submit their scores right now?
+entrySet_allowedVoters: Which users should be able to judge?
