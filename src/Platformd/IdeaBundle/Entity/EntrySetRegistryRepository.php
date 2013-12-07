@@ -15,7 +15,7 @@ use Platformd\SpoutletBundle\Entity\Site;
  */
 class EntrySetRegistryRepository extends EntityRepository
 {
-    public function getContainerByRegistryId(EntrySetRegistry $registration) {
+    public function getContainer(EntrySetRegistry $registration) {
         if($registration == null) {
             return null;
         }
@@ -39,7 +39,6 @@ class EntrySetRegistryRepository extends EntityRepository
             ->setParameter('containerId', $containerId);
 
         $result = $query->getSingleResult();
-//        var_dump($result);
         return $result;
     }
 

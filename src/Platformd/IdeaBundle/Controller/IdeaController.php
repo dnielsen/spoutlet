@@ -804,7 +804,7 @@ class IdeaController extends Controller
         $parents = array();
         foreach($user->getIdeas() as $idea) {
             $registration = $idea->getParentRegistration();
-            $parent = $esRegRepo->getContainerByRegistryId($registration);
+            $parent = $esRegRepo->getContainer($registration);
             $parents[$idea->getName()] = $parent;
         }
 
