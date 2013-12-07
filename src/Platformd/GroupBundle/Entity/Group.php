@@ -22,6 +22,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Platformd\GroupBundle\Entity\GroupMembershipAction;
 use Platformd\SearchBundle\Model\IndexableInterface;
 
+use Platformd\IdeaBundle\Entity\EntrySetRegistry;
+
 /**
  * Platformd\GroupBundle\Entity\Group
  *
@@ -291,6 +293,12 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
      *
      */
     private $tags;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySetRegistry", cascade={"persist"})
+     */
+    protected $entrySetRegistration;
+
 
     public function __construct()
     {
@@ -1035,5 +1043,22 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     public function getTaggableId()
     {
         return $this->getId();
+    }
+
+    public function getEntrySetRegistration() {
+        return $this->entrySetRegistration;
+    }
+
+    public function createEntrySetRegistration() {
+        $this->entrySetRegistration = new EntrySetRegistry($this);
+        return $this->entrySetRegistration;
+    }
+
+    public function getEntrySets() {
+        return $this->entrySetRegistration->getEntrySets();
+    }
+
+    public function getFirstEntrySet() {
+        return $this->entrySetRegistration->getEntrySets()->get(0);
     }
 }

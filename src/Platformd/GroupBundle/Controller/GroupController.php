@@ -2085,6 +2085,11 @@ Alienware Arena Team
 
                 $this->getGroupManager()->saveGroup($group);
 
+                $esReg = $group->createEntrySetRegistration();
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($esReg);
+                $em->flush();
+
                 $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
                 $group->getId() ? $tagManager->replaceTags($tags, $group) : $tagManager->addTags($tags, $group);
 
