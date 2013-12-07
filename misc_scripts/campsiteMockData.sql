@@ -256,13 +256,16 @@ CREATE TABLE `pd_groups` (
   `discussionsEnabled` tinyint(1) NOT NULL,
   `facebookLikesUpdatedAt` datetime DEFAULT NULL,
   `facebookLikes` bigint(20) NOT NULL,
+  `entrySetRegistration_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_D63978B75E237E06` (`name`),
   UNIQUE KEY `UNIQ_D63978B764D218E` (`location_id`),
+  UNIQUE KEY `UNIQ_D63978B7D0E9DF32` (`entrySetRegistration_id`),
   KEY `IDX_D63978B7745FB76C` (`backgroundImage_id`),
   KEY `IDX_D63978B72339B0AC` (`groupAvatar_id`),
   KEY `IDX_D63978B77E3C61F9` (`owner_id`),
   KEY `IDX_D63978B73242170E` (`thumbNail_id`),
+  CONSTRAINT `FK_D63978B7D0E9DF32` FOREIGN KEY (`entrySetRegistration_id`) REFERENCES `EntrySetRegistry` (`id`),
   CONSTRAINT `FK_D63978B72339B0AC` FOREIGN KEY (`groupAvatar_id`) REFERENCES `pd_media` (`id`) ON DELETE SET NULL,
   CONSTRAINT `FK_D63978B73242170E` FOREIGN KEY (`thumbNail_id`) REFERENCES `pd_media` (`id`) ON DELETE SET NULL,
   CONSTRAINT `FK_D63978B764D218E` FOREIGN KEY (`location_id`) REFERENCES `pd_locations` (`id`) ON DELETE SET NULL,
@@ -277,7 +280,7 @@ CREATE TABLE `pd_groups` (
 
 LOCK TABLES `pd_groups` WRITE;
 /*!40000 ALTER TABLE `pd_groups` DISABLE KEYS */;
-INSERT INTO `pd_groups` VALUES (1,'Ye Olde London Theatre Company','topic','<p>\n	Welcome to our fine company! This is where we will collaborate on ideas for new plays, put together wondrous shows and events, and have a great time!</p>',NULL,1,NULL,NULL,1,'2013-12-05 19:39:39','2013-12-05 20:08:26',0,2,0,NULL,'ye-olde-london-theatre-company',NULL,0,NULL,1,'2013-12-05 20:08:26',0);
+INSERT INTO `pd_groups` VALUES (1,'Ye Olde London Theatre Company','topic','<p>\n	Welcome to our fine company! This is where we will collaborate on ideas for new plays, put together wondrous shows and events, and have a great time!</p>',NULL,1,NULL,NULL,1,'2013-12-05 19:39:39','2013-12-05 20:08:26',0,2,0,NULL,'ye-olde-london-theatre-company',NULL,0,NULL,1,'2013-12-05 20:08:26',0,2);
 /*!40000 ALTER TABLE `pd_groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -356,7 +359,7 @@ CREATE TABLE `EntrySetRegistry` (
   `scope` varchar(255) NOT NULL,
   `containerId` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -365,7 +368,7 @@ CREATE TABLE `EntrySetRegistry` (
 
 LOCK TABLES `EntrySetRegistry` WRITE;
 /*!40000 ALTER TABLE `EntrySetRegistry` DISABLE KEYS */;
-INSERT INTO `EntrySetRegistry` VALUES (1,'Platformd\\EventBundle\\Entity\\GroupEvent',1);
+INSERT INTO `EntrySetRegistry` VALUES (1,'Platformd\\EventBundle\\Entity\\GroupEvent',1),(2,'Platformd\\GroupBundle\\Entity\\Group',1);
 /*!40000 ALTER TABLE `EntrySetRegistry` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -933,4 +936,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-12-06 13:19:09
+-- Dump completed on 2013-12-06 17:15:56
