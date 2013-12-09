@@ -2,6 +2,8 @@
 
 namespace Platformd\IdeaBundle\Controller;
 
+use Platformd\GroupBundle\Entity\Group;
+use Platformd\EventBundle\Entity\GroupEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,6 +29,92 @@ class IdeaController extends Controller
 	const SIDEBAR_NONE = 0;
     const SIDEBAR_JUDGE = 1;
     const SIDEBAR_ADMIN = 2;
+
+
+    public function entrySetViewAction(Request $request, $entrySetId)
+    {
+
+        $entrySet   = $this->getEntrySet($entrySetId);
+
+        $parentRegistration = $entrySet->getEntrySetRegistration();
+
+        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
+        $parent = $esRegRepo->getContainer($parentRegistration);
+
+        $group = null;
+        $event = null;
+        $round = null;
+
+        if ($parent instanceof GroupEvent){
+            $group = $parent->getGroup();
+            $event = $parent;
+            $round = $event->getCurrentRound();
+        }
+        elseif ($parent instanceof Group){
+            $group = $parent;
+        }
+
+
+        $tag         	= $request->query->get('tag');
+        $viewPrivate 	= $request->query->get('viewPrivate', false);
+        $sortBy      	= $request->query->get('sortBy', 'vote');
+        $showAllRounds  = $request->query->get('showAllRounds', 'false');
+
+        //filter the idea list using the query parameters
+        $userParam  = $viewPrivate ? $this->getCurrentUser() : null;
+        if ($event) {
+            $roundParam = $showAllRounds == 'true' ? null : $event->getCurrentRound();
+            $canSubmit = $entrySet->getIsSubmissionActive() && ($event->isUserAttending($this->getCurrentUser()) || $event->getUser() == $this->getCurrentUser());
+        } else {
+            $roundParam = null;
+            $canSubmit = $entrySet->getIsSubmissionActive() && ($group->isOwner($this->getCurrentUser()) || $group->isMember($this->getCurrentUser()));
+        }
+
+        $ideaRepo 	= $this->getDoctrine()->getRepository('IdeaBundle:Idea');
+        $ideaList 	= $ideaRepo->filter($entrySet, $roundParam, $tag, $userParam);
+
+        $isAdmin    = $this->isGranted('ROLE_ADMIN');
+
+        //For admin remove the public ideas from the full list to just show private ideas
+        if ($viewPrivate && $isAdmin) {
+            $publicList 	= $ideaRepo->filter($entrySet, $roundParam, $tag, null);
+            foreach($publicList as $publicIdea) {
+                $index = array_search($publicIdea,$ideaList);
+                unset($ideaList[$index]);
+            }
+        }
+
+        if ($sortBy == 'vote') {
+            $ideaRepo->sortByFollows($ideaList);
+        }
+        else if ($sortBy == 'createdAt') {
+            $ideaRepo->sortByCreatedAt($ideaList);
+        }
+
+        $attendance = $this->getCurrentUserApproved($event);
+
+
+        $params = array(
+            'group'         => $group,
+            'event'         => $event,
+            'ideas'         => $ideaList,
+            'canSubmit'     => $canSubmit,
+            'tag'           => $tag,
+            'round'         => $round,
+            'sidebar'       => true,
+            'attendance'    => $attendance,
+            'viewPrivate'   => $viewPrivate,
+            'sortBy'        => $sortBy,
+            'isAdmin'       => $isAdmin,
+            'isJudge'       => $this->isJudge($entrySet),
+            'showAllRounds' => $showAllRounds,
+            'entrySet'      => $entrySet,
+        );
+
+        return $this->render('IdeaBundle:Idea:entrySetView.html.twig', $params);
+    }
+
+
 
     public function showAllAction(Request $request, $groupSlug, $eventSlug, $entrySetId)
     {
@@ -85,6 +173,8 @@ class IdeaController extends Controller
 
         return $this->render('IdeaBundle:Idea:showAll.html.twig', $params);
     }
+
+
 
 
     public function showAction($groupSlug, $eventSlug, $entrySetId, $id) {

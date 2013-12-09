@@ -9,8 +9,12 @@ profile_edit:
 
 # EntrySet Routes
 
-entry_set_new:
+entry_set_view:
     pattern:    /lists/{entrySetId}
+    defaults:   { _controller: IdeaBundle:Idea:entrySetView }
+
+entry_set_new:
+    pattern:    /lists/{entrySetId}/form
     defaults:   { _controller: IdeaBundle:Admin:entrySet }
 
 entry_set_edit:
