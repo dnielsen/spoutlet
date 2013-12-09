@@ -76,9 +76,12 @@ class AdminController extends Controller
                 $em->flush();
 
                 // Registration needs to be created after event is persisted, relies on generated event ID
-                $esReg = $event->createEntrySetRegistration();
-                $em->persist($esReg);
-                $em->flush();
+                $esReg = $event->getEntrySetRegistration();
+                if ($esReg == null){
+                    $esReg = $event->createEntrySetRegistration();
+                    $em->persist($esReg);
+                    $em->flush();
+                }
 
                 return $this->redirect($this->generateUrl('idea_admin', array(
                             'groupSlug' => $groupSlug,
