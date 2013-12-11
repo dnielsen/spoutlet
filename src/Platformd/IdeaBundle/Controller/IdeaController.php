@@ -108,68 +108,6 @@ class IdeaController extends Controller
     }
 
 
-
-    public function showAllAction(Request $request, $groupSlug, $eventSlug, $entrySetId)
-    {
-        $group      = $this->getGroup($groupSlug);
-        $event      = $this->getEvent($groupSlug, $eventSlug);
-        $entrySet   = $this->getEntrySet($entrySetId);
-
-        $tag         	= $request->query->get('tag');
-        $viewPrivate 	= $request->query->get('viewPrivate', false);
-        $sortBy      	= $request->query->get('sortBy', 'vote');
-        $showAllRounds  = $request->query->get('showAllRounds', 'false');
-
-        //filter the idea list using the query parameters
-        $userParam  = $viewPrivate ? $this->getCurrentUser() : null;
-        $roundParam = $showAllRounds == 'true' ? null : $event->getCurrentRound();
-
-        $ideaRepo 	= $this->getDoctrine()->getRepository('IdeaBundle:Idea');
-        $ideaList 	= $ideaRepo->filter($entrySet, $roundParam, $tag, $userParam);
-
-        $isAdmin    = $this->isGranted('ROLE_ADMIN');
-
-        //For admin remove the public ideas from the full list to just show private ideas
-        if ($viewPrivate && $isAdmin) {
-            $publicList 	= $ideaRepo->filter($entrySet, $roundParam, $tag, null);
-            foreach($publicList as $publicIdea) {
-                $index = array_search($publicIdea,$ideaList);
-                unset($ideaList[$index]);
-            }
-        }
-
-        if ($sortBy == 'vote') {
-            $ideaRepo->sortByFollows($ideaList);
-        }
-        else if ($sortBy == 'createdAt') {
-            $ideaRepo->sortByCreatedAt($ideaList);
-        }
-
-        $attendance = $this->getCurrentUserApproved($event);
-
-        $params = array(
-            'group'         => $group,
-            'event'         => $event,
-            'ideas'         => $ideaList,
-            'submitActive'  => $entrySet->getIsSubmissionActive(),
-            'tag'           => $tag,
-            'round'         => $event->getCurrentRound(),
-            'sidebar'       => true,
-            'attendance'    => $attendance,
-            'viewPrivate'   => $viewPrivate,
-            'sortBy'        => $sortBy,
-            'isAdmin'       => $isAdmin,
-            'isJudge'       => $this->isJudge($entrySet),
-            'showAllRounds' => $showAllRounds,
-            'entrySet'      => $entrySet,
-        );
-
-        return $this->render('IdeaBundle:Idea:showAll.html.twig', $params);
-    }
-
-
-
-
     public function showAction($entrySetId, $id)
     {
         $entrySet   = $this->getEntrySet($entrySetId);
@@ -852,10 +790,8 @@ class IdeaController extends Controller
                     'entrySetId'=> $idea->getEntrySet()->getId(),
                 ));
         elseif ($source == 'list')
-            $url = $this->generateUrl('idea_show_all', array(
+            $url = $this->generateUrl('entry_set_view', array(
                     'tag'       => $params['tag'],
-                    'groupSlug' => $groupSlug,
-                    'eventSlug' => $eventSlug,
                     'entrySetId'=> $idea->getEntrySet()->getId(),
                 ));
 
@@ -883,9 +819,7 @@ class IdeaController extends Controller
         $em->remove($idea);
         $em->flush();
 
-        $ideaListUrl = $this->generateUrl('idea_show_all', array(
-                'groupSlug' => $groupSlug,
-                'eventSlug' => $eventSlug,
+        $ideaListUrl = $this->generateUrl('entry_set_view', array(
                 'entrySetId'=> $entrySetId,
             ));
         return new RedirectResponse($ideaListUrl);
