@@ -239,6 +239,10 @@
 		float: right;
 		width: 605px;
 	}
+    .sessionWide {
+        float: right;
+        width: 960px;
+    }
 	.session-mp {
 		float: right;
 		width: 665px;

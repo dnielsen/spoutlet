@@ -51,7 +51,7 @@
                 {% for entrySet in event.entrySets %}
                     <div class="scrollableSidebarWidgetItem">
                         <h2>{{ entrySet.name }}</h2>
-                        <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id}) }}" class="submit left">View {{ entrySet.type | capitalize }}s</a>
+                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" class="submit left">View {{ entrySet.type | capitalize }}s</a>
                         {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
                             <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id}) }}" class="submit left marginlft">Propose {{ entrySet.type | capitalize }}</a>
                         {% else %}

@@ -17,18 +17,22 @@
 
         </form>
 
-        {#
-           {% if canSubmit and app.user is not null %}
-               <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id}) }}">
-                   <input type="submit" value="Add {{ entrySet.type | capitalize }}" class="right">
-               </a>
-           {% else %}
-               <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}">
+
+        {% if canSubmit %}
+           <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}">
+               <input type="submit" value="Add {{ entrySet.type | capitalize }}" class="right">
+           </a>
+        {% else %}
+            {% if event is defined and event is not null %}
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}">
                    <input type="submit" value="Register" class="right">
-               </a>
+                </a>
+            {% elseif group is not null %}
+                <a href="{{ path('group_join', {'slug': group.slug}) }}">
+                    <input type="submit" value="Join Group" class="right">
+                </a>
+            {% endif %}
         {%  endif %}
-        #}
-        <a href="/" class="submit right">Add Idea</a>
 
     </div>
     <div class="clr"></div>
@@ -110,8 +114,7 @@
             <div class="voteBx">
                 <p><strong class="lrgtxt">{{ idea.numFollowers }}</strong><br>
                     <span class="tnytxt gry">vote{% if idea.numFollowers != 1 %}s{% endif %}</span></p>
-            {#    <form action = "{{ path('idea_follow', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="POST"> #}
-                <form action = "/">
+                <form action = "{{ path('idea_follow') }}" method="POST">
                     <input type="hidden" name="id" value="{{idea.id}}">
                     <input type="hidden" name="source" value="list">
                     <input type="hidden" name="tag" value="{{ tag }}">
@@ -119,9 +122,8 @@
                 </form>
             </div>
 
-            <div class="session" style="overflow:hidden">
-               {# <a href="{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id, 'id': idea.id}) }}"> #}
-                <a href="/">
+            {% if sidebar %}<div class="session">{% else %}<div class="sessionWide">{% endif %}
+                <a href="{{ path('idea_show', {'entrySetId': entrySet.id, 'id': idea.id}) }}">
                     <h3>{{ idea.name }}</h3>
                 </a>
                 <p>{{ idea.description|truncate(300) }}</p>
@@ -145,15 +147,5 @@
         <br/><br/><hr/>
 
     {% endfor %}
-
-    {% if event is not null %}
-        <form action = {{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get">
-            <input type="submit" value="< {{ event.name | truncate(30) }}">
-        </form>
-    {% else %}
-        <form action = {{ path('group_show', {'slug': group.slug}) }}>
-            <input type="submit" value="< {{ group.name | truncate(30) }}">
-        </form>
-    {% endif %}
 
 {% endblock %}

@@ -47,7 +47,6 @@ idea_admin_assign:
     requirements:
      _method: POST
 
-#Criteria POST requests (new, delete & edit) and GET all
 idea_admin_criteria:
     pattern:  /{groupSlug}/event/{eventSlug}/admin/criteria
     defaults: { _controller: IdeaBundle:Admin:criteria }
@@ -105,114 +104,101 @@ idea_admin_remove_image:
 # NON-ADMIN
 
 idea_create:
-    pattern:  /{groupSlug}/event/{eventSlug}/lists/{entrySetId}/create
+    pattern:  /lists/{entrySetId}/create
     defaults: { _controller: IdeaBundle:Idea:create }
     requirements:
       _method: POST
 
 idea_create_form:
-    pattern:  /{groupSlug}/event/{eventSlug}/lists/{entrySetId}/create
+    pattern:  /lists/{entrySetId}/create
     defaults: { _controller: IdeaBundle:Idea:createForm}
     requirements:
       _method: GET
 
-idea_show_all:
-    pattern:  /{groupSlug}/event/{eventSlug}/lists/{entrySetId}
-    defaults: { _controller: IdeaBundle:Idea:showAll }
-    requirements:
-      _method: GET
-
 idea_show:
-    pattern:  /{groupSlug}/event/{eventSlug}/lists/{entrySetId}/entry/{id}
+    pattern:  /lists/{entrySetId}/entry/{id}
     defaults: { _controller: IdeaBundle:Idea:show }
     requirements:
       _method: GET
 
 
 idea_edit:
-    pattern:  /{groupSlug}/event/{eventSlug}/lists/{entrySetId}/entry/{id}/edit
+    pattern:  /lists/{entrySetId}/entry/{id}/edit
     defaults: { _controller: IdeaBundle:Idea:edit }
     requirements:
       _method: POST
 
 idea_edit_form:
-    pattern:  /{groupSlug}/event/{eventSlug}/lists/{entrySetId}/entry/{id}/edit
+    pattern:  /lists/{entrySetId}/entry/{id}/edit
     defaults: { _controller: IdeaBundle:Idea:editForm }
     requirements:
       _method: GET
 
 idea_upload:
-    pattern:  /{groupSlug}/event/{eventSlug}/upload/
+    pattern:  /upload/
     defaults: { _controller: IdeaBundle:Idea:upload }
     requirements:
      _method:   POST
 
 idea_upload_form:
-    pattern:  /{groupSlug}/event/{eventSlug}/upload/{id}
+    pattern:  /upload/{id}
     defaults: { _controller: IdeaBundle:Idea:upload }
     requirements:
       _method: GET
 
 idea_image_delete:
-    pattern:  /{groupSlug}/event/{eventSlug}/deleteImage
+    pattern:  /deleteImage
     defaults: { _controller: IdeaBundle:Idea:deleteImage }
     requirements:
      _method: POST
 
 idea_add_link:
-    pattern:  /{groupSlug}/event/{eventSlug}/addLink
+    pattern:  /addLink
     defaults: { _controller: IdeaBundle:Idea:addLink }
     requirements:
      _method: POST
 
 idea_add_link_form:
-    pattern:  /{groupSlug}/event/{eventSlug}/addLink/{id}
+    pattern:  /addLink/{id}
     defaults: { _controller: IdeaBundle:Idea:addLink }
     requirements:
      _method: GET
 
 idea_link_delete:
-    pattern:  /{groupSlug}/event/{eventSlug}/deleteLink
+    pattern:  /deleteLink
     defaults: { _controller: IdeaBundle:Idea:deleteLink }
     requirements:
      _method: POST
 
 idea_follow:
-    pattern:    /{groupSlug}/event/{eventSlug}/follow
+    pattern:    /follow
     defaults:   { _controller: IdeaBundle:Idea:follow }
     requirements:
      _method:   POST
 
 idea_vote:
-    pattern:    /{groupSlug}/event/{eventSlug}/lists/{entrySetId}/vote
+    pattern:    /lists/{entrySetId}/vote
     defaults:   { _controller: IdeaBundle:Idea:vote }
     requirements:
      _method:   POST
 
 idea_comment:
-    pattern:    /{groupSlug}/event/{eventSlug}/comment
+    pattern:    /comment
     defaults:   { _controller: IdeaBundle:Idea:comment }
     requirements:
      _method:   POST
 
 idea_comment_delete:
-    pattern:    /{groupSlug}/event/{eventSlug}/commentDelete
+    pattern:    /commentDelete
     defaults:   { _controller: IdeaBundle:Idea:commentDelete }
     requirements:
      _method:    POST
 
 idea_delete:
-    pattern:    /{groupSlug}/event/{eventSlug}/lists/{entrySetId}/delete
+    pattern:    /lists/{entrySetId}/delete
     defaults:   { _controller: IdeaBundle:Idea:delete }
     requirements:
      _method:   POST
-
-idea_info:
-    pattern:    /{groupSlug}/event/{eventSlug}/info/{page}
-    defaults:   { _controller: IdeaBundle:Idea:info }
-    requirements:
-     _method:   GET
-
 
 login:
     pattern:   /login
