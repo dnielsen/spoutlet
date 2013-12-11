@@ -47,8 +47,10 @@ class EntrySetRegistry {
     public function __construct($container)
     {
         $this->entrySets = new ArrayCollection();
-        $this->scope = get_class($container);
         $this->containerId = $container->getId();
+
+        $className = get_class($container);
+        $this->scope = preg_replace('/\w+\\\\(\w+Bundle)\\\\Entity\\\\(\w+)/', "$1:$2", $className);
     }
 
     /**

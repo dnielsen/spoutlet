@@ -125,32 +125,11 @@ class AdminController extends Controller
         $registrationId = $request->get('registrationId');
         $entrySetRegistration = $esRegRepo->find($registrationId);
 
-        $parentScope = $entrySetRegistration->getScope();
-
-        if(strpos($parentScope, 'GroupEvent') != false) {
-            $parent = "event";
-            $event = $this->getGroupEventService()->find($entrySetRegistration->getContainerId());
-            $group = $event->getGroup();
-        }
-        elseif(strpos($parentScope, 'Group') != false) {
-            $parent = "group";
-            $group = $this->getGroupManager()->find($entrySetRegistration->getContainerId());
-        }
+        $parent = $esRegRepo->getContainer($entrySetRegistration);
+        $cancelUrl = $this->generateUrl($parent->getLinkableRouteName(), $parent->getLinkableRouteParameters());
 
         if ($request->get('cancel') == 'Cancel') {
-            if ($parent == "event")
-            {
-                return $this->redirect($this->generateUrl('group_event_view', array(
-                    'groupSlug' => $group->getSlug(),
-                    'eventSlug' => $event->getSlug(),
-                )));
-            }
-            elseif ($parent == "group")
-            {
-                return $this->redirect($this->generateUrl('group_show', array(
-                    'slug'  => $group->getSlug(),
-                )));
-            }
+            return $this->redirect($cancelUrl);
         }
 
         if( $entrySetId == 'new' )
@@ -199,17 +178,7 @@ class AdminController extends Controller
                 $em->persist($entrySet);
                 $em->flush();
 
-
-                if($parent == "event") {
-                    $redirectUrl = $this->generateUrl('idea_show_all', array('groupSlug' => $group->getSlug(),
-                                                                             'eventSlug' => $event->getSlug(),
-                                                                             'entrySetId'=> $entrySet->getId(),
-                    ));
-                }
-                elseif($parent == "group") {
-                    $redirectUrl = $this->generateUrl('group_show', array('slug' => $group->getSlug()));
-                }
-
+                $redirectUrl = $this->generateUrl('entry_set_view', array('entrySetId' => $entrySet->getId()));
                 return $this->redirect($redirectUrl);
             }
         }

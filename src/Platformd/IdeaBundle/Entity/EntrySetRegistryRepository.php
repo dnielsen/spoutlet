@@ -4,7 +4,7 @@ namespace Platformd\IdeaBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
 
-use FOS\UserBundle\Propel\Group;
+use FOS\UserBundle\Propel\Group as G;
 use Platformd\GroupBundle\Event\GroupEvent;
 use Platformd\IdeaBundle\Entity\VoteCriteria;
 use Platformd\SpoutletBundle\Entity\Site;
@@ -16,6 +16,7 @@ use Platformd\SpoutletBundle\Entity\Site;
 class EntrySetRegistryRepository extends EntityRepository
 {
     public function getContainer(EntrySetRegistry $registration) {
+
         if($registration == null) {
             return null;
         }
@@ -23,20 +24,13 @@ class EntrySetRegistryRepository extends EntityRepository
         $containerId = $registration->getContainerId();
         $className = $registration->getScope();
 
-//        EventBundle:GroupEvent
-//        GroupBundle:Group
+
+//        Platformd\EventBundle\Entity\GroupEvent --> EventBundle:GroupEvent
+//        Platformd\GroupBundle\Entity\Group --> GroupBundle:Group
 //        SpoutletBundle:Site
 //        IdeaBundle:Session
 
-        $containerClass = "";
-        if(strpos($className,'GroupEvent') != false) {
-            $containerClass = "EventBundle:GroupEvent";
-        }
-        elseif(strpos($className, 'Group') != false) {
-            $containerClass = "GroupBundle:Group";
-        }
-
-        $queryString = 'SELECT s FROM '.$containerClass.' s WHERE s.id = :containerId';
+        $queryString = 'SELECT s FROM '.$className.' s WHERE s.id = :containerId';
         $query = $this->getEntityManager()
             ->createQuery($queryString)
             ->setParameter('containerId', $containerId);
