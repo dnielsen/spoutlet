@@ -22,6 +22,7 @@ use Platformd\GameBundle\Entity\Game,
     Platformd\EventBundle\Entity\GroupEvent,
     Platformd\IdeaBundle\Entity\EntrySet,
     Platformd\IdeaBundle\Entity\EntrySetRegistry,
+    Platformd\IdeaBundle\Entity\EntrySetScopeable,
     Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil,
     Platformd\SearchBundle\Model\IndexableInterface,
     Platformd\TagBundle\Model\TaggableInterface
@@ -39,7 +40,7 @@ use DateTime,
  * @Assert\Callback(methods={"externalContentCheck", "validateDateRanges", "validateAddressField", "validateSlug"})
  * @ORM\HasLifecycleCallbacks()
  */
-abstract class Event implements LinkableInterface, IndexableInterface, TaggableInterface
+abstract class Event implements LinkableInterface, IndexableInterface, TaggableInterface, EntrySetScopeable
 {
     const REGISTRATION_ENABLED      = 'REGISTRATION_ENABLED';
     const REGISTRATION_DISABLED     = 'REGISTRATION_DISABLED';
@@ -312,7 +313,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     }
 
     /**
-     * @param string $address
+     * @param string $address1
      */
     public function setAddress1($address1)
     {

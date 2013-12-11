@@ -1,6 +1,7 @@
 <?php
 
 namespace Platformd\GroupBundle\Entity;
+
 use Symfony\Component\Validator\Constraints as Assert;
 use Platformd\SpoutletBundle\Entity\Location;
 use Platformd\MediaBundle\Entity\Media;
@@ -22,7 +23,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Platformd\GroupBundle\Entity\GroupMembershipAction;
 use Platformd\SearchBundle\Model\IndexableInterface;
 
-use Platformd\IdeaBundle\Entity\EntrySetRegistry;
+use Platformd\IdeaBundle\Entity\EntrySetRegistry,
+    Platformd\IdeaBundle\Entity\EntrySetScopeable;
 
 /**
  * Platformd\GroupBundle\Entity\Group
@@ -35,7 +37,7 @@ use Platformd\IdeaBundle\Entity\EntrySetRegistry;
  * @GroupSlugCollision()
  * @ORM\HasLifecycleCallbacks()
  */
-class Group implements LinkableInterface, ReportableContentInterface, IndexableInterface, TaggableInterface
+class Group implements LinkableInterface, ReportableContentInterface, IndexableInterface, TaggableInterface, EntrySetScopeable
 {
     const GROUP_CATEGORY_LABEL_PREFIX  = 'platformd.groups.category.';
     const DELETED_BY_OWNER  = 'by_owner';
