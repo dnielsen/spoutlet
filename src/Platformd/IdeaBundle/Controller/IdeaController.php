@@ -911,25 +911,6 @@ class IdeaController extends Controller
 
     }
 
-
-    public function infoAction($groupSlug, $eventSlug, $page) {
-
-        $group = $this->getGroup($groupSlug);
-        $event = $this->getEvent($groupSlug, $eventSlug);
-
-        $attendance = $this->getCurrentUserApproved($event);
-        $isAdmin = $this->isGranted('ROLE_ADMIN');
-
-        return $this->render('IdeaBundle:Idea:info'.$page.'.html.twig', array(
-                'group'      => $group,
-                'event'      => $event,
-                'sidebar'    => true,
-                'attendance' => $attendance,
-                'isAdmin'    => $isAdmin,
-            ));
-    }
-
-
     //TODO: Move this to a model file?
     /******************************************************
      ****************    MODEL STUFF HERE    ***************
