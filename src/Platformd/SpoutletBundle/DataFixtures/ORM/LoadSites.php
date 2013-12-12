@@ -12,7 +12,7 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
     private $container;
     private $manager;
 
-    private function createSite($id, $name, $locale, $domain, $supportEmailAddress, $emailFromName, $forwardBaseUrl) {
+    private function createSite($id, $name, $locale, $domain, $supportEmailAddress, $noReplyEmailAddress, $emailFromName, $forwardBaseUrl, $theme = null) {
 
         $site = new Site();
 
@@ -26,15 +26,24 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
         $site->setName($name);
         $site->setDefaultLocale($locale);
         $site->setFullDomain($domain);
+
+        if($theme != null)
+            $site->setTheme($theme);
+
         $site->getSiteConfig()
           ->setSupportEmailAddress($supportEmailAddress)
-          ->setAutomatedEmailAddress('noreply@alienwarearena.com')
+          ->setAutomatedEmailAddress($noReplyEmailAddress)
           ->setEmailFromName($emailFromName)
           ->setForwardBaseUrl($forwardBaseUrl)
           ->setForwardedPaths($forwardedPaths)
         ;
 
         $this->manager->persist($site);
+        $this->manager->flush();
+
+        $esReg = $site->createEntrySetRegistration();
+        $this->manager->persist($esReg);
+        $this->manager->flush();
 
         return $site;
     }
@@ -53,15 +62,16 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
 
         $this->resetAutoIncrementId();
 
-        $demo  = $this->createSite(1, 'Demo', 'en', 'demo.alienwarearena.local', 'demo@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
-        $japan = $this->createSite(2, 'Japan', 'ja', 'japan.alienwarearena.local', 'japan@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
-        $china = $this->createSite(3, 'China', 'zh', 'china.alienwarearena.local', 'china@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
-        $na    = $this->createSite(4, 'North America', 'en_US', 'na.alienwarearena.local', 'na@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
-        $eu    = $this->createSite(5, 'Europe', 'en_GB', 'eu.alienwarearena.local', 'eu@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
-        $latam = $this->createSite(6, 'Latin America', 'es', 'latam.alienwarearena.local', 'latam@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
-        $in    = $this->createSite(7, 'India', 'en_IN', 'in.alienwarearena.local', 'in@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
-        $mysg  = $this->createSite(8, 'Singapore', 'en_SG', 'mysg.alienwarearena.local', 'mysg@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
-        $anz   = $this->createSite(9, 'Australia / New Zealand', 'en_AU', 'anz.alienwarearena.local', 'anz@alienwarearena.local', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $demo  = $this->createSite(1, 'Demo',           'en',       'demo.alienwarearena.local',    'demo@alienwarearena.local',    'noreply@alienwarearena.com', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $japan = $this->createSite(2, 'Japan',          'ja',       'japan.alienwarearena.local',   'japan@alienwarearena.local',   'noreply@alienwarearena.com', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $china = $this->createSite(3, 'China',          'zh',       'china.alienwarearena.local',   'china@alienwarearena.local',   'noreply@alienwarearena.com', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $na    = $this->createSite(4, 'North America',  'en_US',    'na.alienwarearena.local',      'na@alienwarearena.local',      'noreply@alienwarearena.com', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $eu    = $this->createSite(5, 'Europe',         'en_GB',    'eu.alienwarearena.local',      'eu@alienwarearena.local',      'noreply@alienwarearena.com', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $latam = $this->createSite(6, 'Latin America',  'es',       'latam.alienwarearena.local',   'latam@alienwarearena.local',   'noreply@alienwarearena.com', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $in    = $this->createSite(7, 'India',          'en_IN',    'in.alienwarearena.local',      'in@alienwarearena.local',      'noreply@alienwarearena.com', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $mysg  = $this->createSite(8, 'Singapore',      'en_SG',    'mysg.alienwarearena.local',    'mysg@alienwarearena.local',    'noreply@alienwarearena.com', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $anz   = $this->createSite(9, 'Australia / New Zealand','en_AU','anz.alienwarearena.local', 'anz@alienwarearena.local',     'noreply@alienwarearena.com', 'Alienware Arena', 'http://www.alienwarearena.com');
+        $campsite  = $this->createSite(10, 'Campsite',  'en_dev',   'campsite.local',               'support@campsite.org',         'noreply@campsite.org',       'Campsite',        'http://www.campsite.local', 'ideacontest');
 
         $demo->getSiteFeatures()
           ->setHasArp()
@@ -349,6 +359,38 @@ class LoadSites extends AbstractFixture implements OrderedFixtureInterface
           ->setHasContact(false)
           ->setHasSearch()
           ->setHasGiveaways()
+        ;
+
+        $campsite->getSiteFeatures()
+            ->setHasArp(false)
+            ->setHasComments(false)
+            ->setHasContests(false)
+            ->setHasDeals(false)
+            ->setHasForums(false)
+            ->setHasGames(false)
+            ->setHasGamesNavDropDown(false)
+            ->setHasGroups()
+            ->setHasMessages(false)
+            ->setHasMicrosoft(false)
+            ->setHasNews(false)
+            ->setHasPhotos(false)
+            ->setHasSteamXfireCommunities(false)
+            ->setHasSweepstakes(false)
+            ->setHasVideo(false)
+            ->setHasWallpapers(false)
+            ->setHasEvents()
+            ->setHasHtmlWidgets()
+            ->setHasFacebook(false)
+            ->setHasGoogleAnalytics(false)
+            ->setHasTournaments(false)
+            ->setHasMatchClient(false)
+            ->setHasProfile(false)
+            ->setHasForwardOn404(false)
+            ->setHasIndex()
+            ->setHasAbout()
+            ->setHasContact()
+            ->setHasSearch(false)
+            ->setHasGiveaways(false)
         ;
 
         $this->manager->flush();
