@@ -9,6 +9,7 @@
         > <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}">{{ entrySet.name | truncate(30) }}</a>
     {% endif %}
     {% if idea is defined and idea is not null %}
-        > <a href="{{ path('idea_show', {'entrySetId': entrySet.id, 'id': idea.id}) }}">{{ idea.name | truncate(30) }}</a>
+        > <a href="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}">{{ idea.name | truncate(30) }}</a>
     {% endif %}
+    <hr/>
 </div>

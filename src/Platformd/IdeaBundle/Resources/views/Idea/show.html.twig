@@ -6,7 +6,7 @@
     <div class="voteBx">
         <p><strong class="lrgtxt">{{ idea.numFollowers }}</strong><br>
             <span class="tnytxt gry">vote{% if idea.numFollowers != 1 %}s{% endif %}</span></p>
-        <form action = "{{ path('idea_follow') }}" method="POST">
+        <form action = "{{ path('idea_follow', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="POST">
               <input type="hidden" name="id" value="{{idea.id}}">
               <input type="hidden" name="source" value="detail">
               <input type="hidden" name="tag">
@@ -36,7 +36,7 @@
         </div>
 
         {% if canEdit %}
-            <a href = "{{ path('idea_edit_form', {'entrySetId': entrySet.id, 'id': idea.id}) }}" class="right">Edit</a>
+            <a href = "{{ path('idea_edit_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="right">Edit</a>
         {% endif %}
         <br class="clr"><br>
 
@@ -49,14 +49,14 @@
                 <img src="{{ asset(idea.image.getWebPath()) }}" style="max-width:100%">
 
                 {% if canEdit %}
-                    <form action="{{ path('idea_image_delete') }}" method="post">
+                    <form action="{{ path('idea_image_delete', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post">
                         <input type="hidden" name="idea" value="{{ idea.id }}">
                         <input type="submit" value="Delete Image" class="redButton" onclick="return confirm('Are you sure you want to delete this image?');">
                     </form>
                 {% endif %}
 
             {% elseif canEdit %}
-                <a href="{{ path('idea_upload_form', {'id': idea.id}) }}">Add Image</a>
+                <a href="{{ path('idea_upload_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}">Add Image</a>
             {% endif %}
         </div>
         <div id="links" style="padding-bottom: 15px;">
@@ -65,7 +65,7 @@
                 {% for link in idea.links %}
                     <hr>
                     {% if canEdit %}
-                        <form action="{{ path('idea_link_delete') }}" method="post" class="left padrt">
+                        <form action="{{ path('idea_link_delete', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post" class="left padrt">
                             <input type="hidden" name="idea" value="{{ idea.id }}">
                             <input type="hidden" name="link" value="{{ link.id }}">
                             <input type="submit" value="Remove" class="redButton" onclick="return confirm('Are you sure you want to delete this link?');">
@@ -77,7 +77,7 @@
             {% endif %}
 
             {% if canEdit %}
-                <a href = "{{ path('idea_add_link_form', {'id': idea.id}) }}" style="clear: both">Add Link</a>
+                <a href = "{{ path('idea_add_link_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" style="clear: both">Add Link</a>
             {% endif %}
         </div>
     </div>
@@ -91,7 +91,7 @@
                 <hr>
                 <a href="{{ path('profile', {'username': comment.user.username}) }}">{{ comment.user.name }}</a> commented on <em>{{ comment.timestamp }}</em>
                 {% if canRemoveComments %}
-                    <form action="{{ path('idea_comment_delete') }}" method="post" class="left padrt">
+                    <form action="{{ path('idea_comment_delete', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post" class="left padrt">
                         <input type="hidden" name="idea" value="{{ idea.id }}">
                         <input type="hidden" name="comment" value="{{ comment.id }}">
                         <input type="submit" value="Remove" class="redButton" onclick="return confirm('Are you sure you want to delete this comment?');">
@@ -105,7 +105,7 @@
 
         {% if app.user %}
 
-        <form action="{{ path('idea_comment') }}" method="post" class="spcr-b2 right">
+        <form action="{{ path('idea_comment', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post" class="spcr-b2 right">
             <input type="hidden" name="idea" value="{{idea.id}}">
             <textarea name="comment" rows="6" tabindex="3" placeholder="Add a comment" class="comments"></textarea>
             <input type="submit" class="right" value="Post Comment">
@@ -133,7 +133,7 @@
         {% if sidebarState == constant('\\Platformd\\IdeaBundle\\Controller\\IdeaController::SIDEBAR_JUDGE') %}
             <h2>Judges' Sidebar</h2>
 
-		<form action="{{ path('idea_vote', {'entrySetId': entrySet.id}) }}" method="post">
+		<form action="{{ path('idea_vote', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post">
 		    <input type="hidden" name="id" value='{{idea.id}}'>
 
 		    <table class = "paddedTable">
@@ -156,7 +156,7 @@
 		    <h2>Admins' Sidebar</h2>
 
             {% if entrySet.allowedVoters | length > 0 %}
-                <form action="{{ path('idea_admin_assign', {'ideaId': idea.id}) }}" method="post" {{ form_enctype(form) }}>
+                <form action="{{ path('idea_admin_assign', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post" {{ form_enctype(form) }}>
                     {{ form_widget(form) }}
 
                    <button type="submit" name="submit" formnovalidate>Submit</button>
@@ -170,14 +170,14 @@
 		<table class="prevNext">
 		<td>
 		    {% if previous is defined %}
-		    <form action="{{ path('idea_show', {'entrySetId': entrySet.id, 'id': previous}) }}">
+		    <form action="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': previous}) }}">
 		        <input type="submit" value="Previous">
 		    </form>
 		    {% endif %}
 		</td>
 		<td>
 		    {% if next is defined %}
-		    <form action="{{ path('idea_show', {'entrySetId': entrySet.id, 'id': next}) }}">
+		    <form action="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': next}) }}">
 		        <input type="submit" value="Next">
 		    </form>
 		    {% endif %}
