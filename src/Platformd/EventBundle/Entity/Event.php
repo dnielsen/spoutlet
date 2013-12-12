@@ -1013,13 +1013,4 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     public function getEntrySets() {
         return $this->entrySetRegistration->getEntrySets();
     }
-
-//    public function setEntrySets(EntrySet $entrySets) {
-//        //change needs to be flushed
-//        $this->entrySetRegistration->setEntrySets($entrySets);
-//    }
-
-    public function getFirstEntrySet() {
-        return $this->entrySetRegistration->getEntrySets()->get(0);
-    }
 }
