@@ -28,7 +28,10 @@ CREATE TABLE `pd_site` (
   `defaultLocale` varchar(255) NOT NULL,
   `fullDomain` varchar(255) NOT NULL,
   `theme` varchar(255) NOT NULL,
-  PRIMARY KEY (`id`)
+  `entrySetRegistration_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `UNIQ_1025CCFBD0E9DF32` (`entrySetRegistration_id`),
+  CONSTRAINT `FK_1025CCFBD0E9DF32` FOREIGN KEY (`entrySetRegistration_id`) REFERENCES `EntrySetRegistry` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -38,7 +41,7 @@ CREATE TABLE `pd_site` (
 
 LOCK TABLES `pd_site` WRITE;
 /*!40000 ALTER TABLE `pd_site` DISABLE KEYS */;
-INSERT INTO `pd_site` VALUES (1,'Campsite','en_dev','campsite.local','ideacontest');
+INSERT INTO `pd_site` VALUES (1,'Campsite','en_dev','campsite.local','ideacontest',3);
 /*!40000 ALTER TABLE `pd_site` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -213,7 +216,7 @@ CREATE TABLE `fos_user` (
   KEY `uuid_idx` (`uuid`),
   KEY `cevo_user_id_idx` (`cevoUserId`),
   CONSTRAINT `FK_957A647986383B10` FOREIGN KEY (`avatar_id`) REFERENCES `pd_avatar` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -222,7 +225,7 @@ CREATE TABLE `fos_user` (
 
 LOCK TABLES `fos_user` WRITE;
 /*!40000 ALTER TABLE `fos_user` DISABLE KEYS */;
-INSERT INTO `fos_user` VALUES (1,'admin','admin','admin@local.com','admin@local.com',1,'ab0q21z52kg0c4s4ckw8gskwsgwk8kw','eee89c4d94edca13461a014183226655ea62e7c0f99f356c0e846ea4db6cb1ae2e2e78dd822b12352c2833985a36036e82bcd8c48eb8d6280c9bb9a837a81b17','2013-12-05 19:58:13',0,0,NULL,'359m4t',NULL,'a:1:{i:0;s:16:\"ROLE_SUPER_ADMIN\";}',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'en','2013-12-05 19:12:10','2013-12-05 19:58:13',NULL,NULL,'',NULL,'e3cdef42-1010-402d-8a17-98798418d068','','',NULL,NULL,'Admin User',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,'bill','bill','bill@local.com','bill@local.com',1,'o35ssiltmj4css48gcg40kws8w0sgkw','dbaa5e1923750b6b80dae0c6e71fd09110ccd51ea18e93e7e98ff0126aaf611acfe5e3c308129c94912f09e1058d7590993f35d3ab923739eb3c9821437b6ad3','2013-12-05 19:33:17',0,0,NULL,'3bx3us',NULL,'a:0:{}',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'en','2013-12-05 19:31:42','2013-12-05 19:39:40',NULL,NULL,'',NULL,'047f299b-b929-4a0e-a329-cdf7bfdc444c','','',NULL,'I am an English poet and playwright, widely regarded as the greatest writer in the English language and the world\'s pre-eminent dramatist. I am often called England\'s national poet and the \"Bard of Avon\". My extant works, including some collaborations, consist of about 38 plays, 154 sonnets, two long narrative poems, and a few other verses, the authorship of some of which is uncertain. My plays have been translated into every major living language and are performed more often than those of any other playwright.','William Shakespeare',NULL,NULL,'Playwright','Entertainment',NULL,NULL,NULL,'shakenbake',NULL,NULL),(4,'john','john','john@local.com','john@local.com',1,'4cnrm9fekjcwk0kw40skwgc0gcsgkog','631b7aa5874ad500dcb6c722e897374e8c6049c155d7d65f61814059bda743d5c3d7f5f7b4530ca41523f3be838068e8509b311215c72a0aee2e3bcf240a3a3b',NULL,0,0,NULL,'22oz9b',NULL,'a:0:{}',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'en','2013-12-05 19:50:28','2013-12-05 20:08:26',NULL,NULL,'',NULL,'151100e5-3cf8-44de-99a9-38c2b82f9971','','',NULL,NULL,'John Johnson',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `fos_user` VALUES (1,'admin','admin','admin@local.com','admin@local.com',1,'ab0q21z52kg0c4s4ckw8gskwsgwk8kw','eee89c4d94edca13461a014183226655ea62e7c0f99f356c0e846ea4db6cb1ae2e2e78dd822b12352c2833985a36036e82bcd8c48eb8d6280c9bb9a837a81b17','2013-12-12 12:53:56',0,0,NULL,'359m4t',NULL,'a:1:{i:0;s:16:\"ROLE_SUPER_ADMIN\";}',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'en','2013-12-05 19:12:10','2013-12-12 12:54:42',NULL,NULL,'',NULL,'e3cdef42-1010-402d-8a17-98798418d068','','',NULL,NULL,'Admin User',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,'bill','bill','bill@local.com','bill@local.com',1,'o35ssiltmj4css48gcg40kws8w0sgkw','dbaa5e1923750b6b80dae0c6e71fd09110ccd51ea18e93e7e98ff0126aaf611acfe5e3c308129c94912f09e1058d7590993f35d3ab923739eb3c9821437b6ad3','2013-12-05 19:33:17',0,0,NULL,'3bx3us',NULL,'a:0:{}',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'en','2013-12-05 19:31:42','2013-12-05 19:39:40',NULL,NULL,'',NULL,'047f299b-b929-4a0e-a329-cdf7bfdc444c','','',NULL,'I am an English poet and playwright, widely regarded as the greatest writer in the English language and the world\'s pre-eminent dramatist. I am often called England\'s national poet and the \"Bard of Avon\". My extant works, including some collaborations, consist of about 38 plays, 154 sonnets, two long narrative poems, and a few other verses, the authorship of some of which is uncertain. My plays have been translated into every major living language and are performed more often than those of any other playwright.','William Shakespeare',NULL,NULL,'Playwright','Entertainment',NULL,NULL,NULL,'shakenbake',NULL,NULL),(4,'john','john','john@local.com','john@local.com',1,'4cnrm9fekjcwk0kw40skwgc0gcsgkog','631b7aa5874ad500dcb6c722e897374e8c6049c155d7d65f61814059bda743d5c3d7f5f7b4530ca41523f3be838068e8509b311215c72a0aee2e3bcf240a3a3b',NULL,0,0,NULL,'22oz9b',NULL,'a:0:{}',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,'en','2013-12-05 19:50:28','2013-12-05 20:08:26',NULL,NULL,'',NULL,'151100e5-3cf8-44de-99a9-38c2b82f9971','','',NULL,NULL,'John Johnson',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(5,'eric','eric','eric@platformd.com','eric@platformd.com',1,'65jb5occ5yg4cwgogkg00wk88oc0wwc','38d0c38a7cd39c0dc317605555c156e9fe7c4af56a005045821739e1cd0003c519f17357504d374e8ff9d5c4595d2cc628c6d381865e2c25cc17a6d0abd2a41d','2013-12-12 12:47:10',0,0,NULL,NULL,NULL,'a:0:{}',0,NULL,NULL,NULL,NULL,NULL,'US',NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,'en','2013-12-12 12:44:41','2013-12-12 12:52:23',NULL,NULL,'127.0.0.1',NULL,'627745e9-d0a7-4e80-93a2-aa6616ea27bb','','',NULL,NULL,'Eric',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `fos_user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -280,7 +283,7 @@ CREATE TABLE `pd_groups` (
 
 LOCK TABLES `pd_groups` WRITE;
 /*!40000 ALTER TABLE `pd_groups` DISABLE KEYS */;
-INSERT INTO `pd_groups` VALUES (1,'Ye Olde London Theatre Company','topic','<p>\n	Welcome to our fine company! This is where we will collaborate on ideas for new plays, put together wondrous shows and events, and have a great time!</p>',NULL,1,NULL,NULL,1,'2013-12-05 19:39:39','2013-12-05 20:08:26',0,2,0,NULL,'ye-olde-london-theatre-company',NULL,0,NULL,1,'2013-12-05 20:08:26',0,2);
+INSERT INTO `pd_groups` VALUES (1,'Ye Olde London Theatre Company','topic','<p>\n	Welcome to our fine company! This is where we will collaborate on ideas for new plays, put together wondrous shows and events, and have a great time!</p>',NULL,1,NULL,NULL,1,'2013-12-05 19:39:39','2013-12-12 12:54:42',0,2,0,NULL,'ye-olde-london-theatre-company',NULL,0,NULL,1,'2013-12-12 12:54:42',0,2);
 /*!40000 ALTER TABLE `pd_groups` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -343,7 +346,7 @@ CREATE TABLE `group_event` (
 
 LOCK TABLES `group_event` WRITE;
 /*!40000 ALTER TABLE `group_event` DISABLE KEYS */;
-INSERT INTO `group_event` VALUES (1,1,2,NULL,1,0,NULL,0,'New Play','new-play','<p>\n	Hey guys,</p>\n<p>\n	 </p>\n<p>\n	Let\'s collaborate on ideas for a new play! Just propose your ideas and we\'ll put them to a vote!</p>\n<p>\n	 </p>\n<p>\n	The winning entries will be integrated into the next play I write and full credit will be given to the submitters. </p>','REGISTRATION_ENABLED',1,1,1,1,'2013-01-01 00:00:00','2014-01-01 23:59:00','UTC',1,NULL,NULL,NULL,0.0000000,0.0000000,'2013-12-05 19:42:45','2013-12-05 20:08:25',NULL,NULL,1,1);
+INSERT INTO `group_event` VALUES (1,1,2,NULL,3,0,NULL,0,'New Play','new-play','<p>\n	Hey guys,</p>\n<p>\n	 </p>\n<p>\n	Let\'s collaborate on ideas for a new play! Just propose your ideas and we\'ll put them to a vote!</p>\n<p>\n	 </p>\n<p>\n	The winning entries will be integrated into the next play I write and full credit will be given to the submitters. </p>','REGISTRATION_ENABLED',1,1,1,1,'2013-01-01 00:00:00','2014-01-01 23:59:00','UTC',1,NULL,NULL,NULL,0.0000000,0.0000000,'2013-12-05 19:42:45','2013-12-12 12:54:42',NULL,NULL,1,1);
 /*!40000 ALTER TABLE `group_event` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -359,7 +362,7 @@ CREATE TABLE `EntrySetRegistry` (
   `scope` varchar(255) NOT NULL,
   `containerId` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -368,7 +371,7 @@ CREATE TABLE `EntrySetRegistry` (
 
 LOCK TABLES `EntrySetRegistry` WRITE;
 /*!40000 ALTER TABLE `EntrySetRegistry` DISABLE KEYS */;
-INSERT INTO `EntrySetRegistry` VALUES (1,'Platformd\\EventBundle\\Entity\\GroupEvent',1),(2,'Platformd\\GroupBundle\\Entity\\Group',1);
+INSERT INTO `EntrySetRegistry` VALUES (1,'EventBundle:GroupEvent',1),(2,'GroupBundle:Group',1),(3,'SpoutletBundle:Site',1);
 /*!40000 ALTER TABLE `EntrySetRegistry` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -557,7 +560,7 @@ CREATE TABLE `entry_set` (
   PRIMARY KEY (`id`),
   KEY `IDX_15A85BBAD0E9DF32` (`entrySetRegistration_id`),
   CONSTRAINT `FK_15A85BBAD0E9DF32` FOREIGN KEY (`entrySetRegistration_id`) REFERENCES `EntrySetRegistry` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -566,7 +569,7 @@ CREATE TABLE `entry_set` (
 
 LOCK TABLES `entry_set` WRITE;
 /*!40000 ALTER TABLE `entry_set` DISABLE KEYS */;
-INSERT INTO `entry_set` VALUES (1,1,'Plot Ideas','idea',1,1,'');
+INSERT INTO `entry_set` VALUES (1,1,'Plot Ideas','idea',1,1,''),(2,1,'Title Ideas','idea',0,1,''),(3,2,'Group Forum','thread',0,1,'');
 /*!40000 ALTER TABLE `entry_set` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -616,7 +619,7 @@ CREATE TABLE `group_event_rsvp_actions` (
   KEY `IDX_910265CA76ED395` (`user_id`),
   CONSTRAINT `FK_910265CA76ED395` FOREIGN KEY (`user_id`) REFERENCES `fos_user` (`id`) ON DELETE SET NULL,
   CONSTRAINT `FK_910265C71F7E88B` FOREIGN KEY (`event_id`) REFERENCES `group_event` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -625,7 +628,7 @@ CREATE TABLE `group_event_rsvp_actions` (
 
 LOCK TABLES `group_event_rsvp_actions` WRITE;
 /*!40000 ALTER TABLE `group_event_rsvp_actions` DISABLE KEYS */;
-INSERT INTO `group_event_rsvp_actions` VALUES (1,1,4,'2013-12-05 20:08:25','2013-12-05 20:08:25','2013-12-05 20:08:25','ATTENDING_YES');
+INSERT INTO `group_event_rsvp_actions` VALUES (1,1,4,'2013-12-05 20:08:25','2013-12-05 20:08:25','2013-12-05 20:08:25','ATTENDING_YES'),(2,1,5,'2013-12-12 12:52:22','2013-12-12 12:52:22','2013-12-12 12:52:22','ATTENDING_YES'),(3,1,1,'2013-12-12 12:54:41','2013-12-12 12:54:41','2013-12-12 12:54:41','ATTENDING_YES');
 /*!40000 ALTER TABLE `group_event_rsvp_actions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -653,7 +656,7 @@ CREATE TABLE `group_events_attendees` (
 
 LOCK TABLES `group_events_attendees` WRITE;
 /*!40000 ALTER TABLE `group_events_attendees` DISABLE KEYS */;
-INSERT INTO `group_events_attendees` VALUES (1,4);
+INSERT INTO `group_events_attendees` VALUES (1,1),(1,4),(1,5);
 /*!40000 ALTER TABLE `group_events_attendees` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -774,7 +777,7 @@ CREATE TABLE `pd_group_membership_actions` (
   KEY `IDX_3A2B03ABA76ED395` (`user_id`),
   CONSTRAINT `FK_3A2B03ABA76ED395` FOREIGN KEY (`user_id`) REFERENCES `fos_user` (`id`) ON DELETE SET NULL,
   CONSTRAINT `FK_3A2B03ABFE54D947` FOREIGN KEY (`group_id`) REFERENCES `pd_groups` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -783,7 +786,7 @@ CREATE TABLE `pd_group_membership_actions` (
 
 LOCK TABLES `pd_group_membership_actions` WRITE;
 /*!40000 ALTER TABLE `pd_group_membership_actions` DISABLE KEYS */;
-INSERT INTO `pd_group_membership_actions` VALUES (1,1,4,'JOINED','2013-12-05 20:08:25');
+INSERT INTO `pd_group_membership_actions` VALUES (1,1,4,'JOINED','2013-12-05 20:08:25'),(2,1,5,'JOINED','2013-12-12 12:52:23'),(3,1,1,'JOINED','2013-12-12 12:54:42');
 /*!40000 ALTER TABLE `pd_group_membership_actions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -839,7 +842,7 @@ CREATE TABLE `pd_groups_members` (
 
 LOCK TABLES `pd_groups_members` WRITE;
 /*!40000 ALTER TABLE `pd_groups_members` DISABLE KEYS */;
-INSERT INTO `pd_groups_members` VALUES (1,2),(1,4);
+INSERT INTO `pd_groups_members` VALUES (1,1),(1,2),(1,4),(1,5);
 /*!40000 ALTER TABLE `pd_groups_members` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -936,4 +939,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-12-06 17:15:56
+-- Dump completed on 2013-12-12 12:57:56
