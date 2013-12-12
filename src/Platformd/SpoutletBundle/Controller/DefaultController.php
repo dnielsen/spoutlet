@@ -284,16 +284,7 @@ class DefaultController extends Controller
             throw $this->createNotFoundException();
         }
 
-        $groupRepo = $this->getDoctrine()->getRepository('GroupBundle:Group');
-        $siteGroups = $groupRepo->findAllGroupsRelevantForSite($site);
-
-        if (count($siteGroups) == 1) {
-            $group = reset($siteGroups);
-            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
-        }
-        else {
-            return $this->render('SpoutletBundle:Default:index.html.twig');
-        }
+        return $this->render('SpoutletBundle:Default:index.html.twig');
     }
 
     public function healthCheckAction() {
