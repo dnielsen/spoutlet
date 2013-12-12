@@ -130,7 +130,7 @@
                         <a href="{{ path('group_event_view', {'groupSlug': group.getSlug, 'eventSlug': event.getSlug}) }}">{{ event.getName }}</a>
                     </td>
                     <td>
-                        <a href="{{ path('idea_show', {'groupSlug': group.getSlug, 'eventSlug': event.getSlug, 'entrySetId': idea.entrySet.getId, 'id': idea.id}) }}">{{ idea.name }}</a>
+                        <a href="{{ path('idea_show', {'entrySetId': idea.entrySet.getId, 'entryId': idea.id}) }}">{{ idea.name }}</a>
                     </td>
                 </tr>
             {% endif %}

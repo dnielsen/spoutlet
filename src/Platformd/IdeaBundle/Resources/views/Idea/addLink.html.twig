@@ -1,14 +1,13 @@
-{% extends 'IdeaBundle::event_layout.html.twig' %}
+{% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block event_content %}
+{% block content %}
 
     <h1>Add Link</h1>
 
-    <form action="{{ path('idea_add_link', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ path('idea_add_link', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
 
-        <br><br>
-        <input type="hidden" name="id" value={{ id }}>
+        <br>
         <input type="submit" value="Add Link" />
     </form>
 

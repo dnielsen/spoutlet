@@ -1,14 +1,13 @@
-{% extends 'IdeaBundle::event_layout.html.twig' %}
+{% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block event_content %}
+{% block content %}
 
     <h1>Upload File</h1>
 
-    <form action="{{ path('idea_upload', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ path('idea_upload', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
 
         <br><br>
-        <input type="hidden" name="id" value={{ id }}>
         <input type="submit" value="Upload Image" />
     </form>
 
