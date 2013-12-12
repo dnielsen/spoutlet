@@ -119,27 +119,27 @@ class AdminController extends Controller
             ));
     }
 
-    public function entrySetAction(Request $request, $entrySetId) {
-
+    public function entrySetAction(Request $request, $entrySetId)
+    {
         $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
-        $registrationId = $request->get('registrationId');
-        $entrySetRegistration = $esRegRepo->find($registrationId);
-
-        $parent = $esRegRepo->getContainer($entrySetRegistration);
-        $cancelUrl = $this->generateUrl($parent->getLinkableRouteName(), $parent->getLinkableRouteParameters());
-
-        if ($request->get('cancel') == 'Cancel') {
-            return $this->redirect($cancelUrl);
-        }
 
         if( $entrySetId == 'new' )
         {
-            $entrySet   = new EntrySet();
+            $entrySet             = new EntrySet();
+            $registrationId       = $request->get('registrationId');
+            $entrySetRegistration = $esRegRepo->find($registrationId);
+            $cancelTarget         = $esRegRepo->getContainer($entrySetRegistration);
         }
         else
         {
-            $esRepo     = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet');
-            $entrySet   = $esRepo->find($entrySetId);
+            $entrySet             = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet')->find($entrySetId);
+            $entrySetRegistration = $entrySet->getEntrySetRegistration();
+            $registrationId       = $entrySetRegistration->getId();
+            $cancelTarget         = $entrySet;
+        }
+
+        if ($request->get('cancel') == 'Cancel') {
+            return $this->redirect($this->generateUrl($cancelTarget->getLinkableRouteName(), $cancelTarget->getLinkableRouteParameters()));
         }
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'entrySet', $entrySet)
@@ -178,7 +178,7 @@ class AdminController extends Controller
                 $em->persist($entrySet);
                 $em->flush();
 
-                $redirectUrl = $this->generateUrl('entry_set_view', array('entrySetId' => $entrySet->getId()));
+                $redirectUrl = $this->generateUrl($entrySet->getLinkableRouteName(), $entrySet->getLinkableRouteParameters());
                 return $this->redirect($redirectUrl);
             }
         }

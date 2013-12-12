@@ -9,6 +9,7 @@
 namespace Platformd\IdeaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Platformd\SpoutletBundle\Link\LinkableInterface;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -19,7 +20,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity
  *
  */
-class EntrySet {
+class EntrySet implements LinkableInterface {
 
     const TYPE_SESSION  = 'session';
     const TYPE_IDEA     = 'idea';
@@ -170,20 +171,38 @@ class EntrySet {
     {
         return $this->name;
     }
-//
-//    /**
-//     * @param mixed $parent
-//     */
-//    public function setParent($parent)
-//    {
-//        $this->parent = $parent;
-//    }
-//
-//    /**
-//     * @return mixed
-//     */
-//    public function getParent()
-//    {
-//        return $this->parent;
-//    }
+
+    /**
+     * If there is a set URL that should be used without doing anything else, return it here
+     *
+     * @return string
+     */
+    public function getLinkableOverrideUrl()
+    {
+        return false;
+    }
+
+    /**
+     * Returns the name of the route used to link to this object
+     *
+     * @return string
+     */
+    public function getLinkableRouteName()
+    {
+        return 'entry_set_view';
+    }
+
+    /**
+     * Returns an array route parameters to link to this object
+     *
+     * @return array
+     */
+    public function getLinkableRouteParameters()
+    {
+        return array(
+            'entrySetId' => $this->getId(),
+        );
+    }
+
+
 } 

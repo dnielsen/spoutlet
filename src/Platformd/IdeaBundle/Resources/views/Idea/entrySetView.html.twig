@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <h1 class = "left">{{ entrySet.name }} {% if showAllRounds == 'true' %}- All Rounds{% else %}{% if round > 1 %}- Round {{ round }}{% endif %}{% endif %}</h1>{% if isAdmin %}<a class="left marginlft" href="{{ path('entry_set_edit', {'registrationId': entrySet.entrySetRegistration.id, 'entrySetId': entrySet.id}) }}">Edit</a> {% endif %}
+    <h1 class = "left">{{ entrySet.name }} {% if showAllRounds == 'true' %}- All Rounds{% else %}{% if round > 1 %}- Round {{ round }}{% endif %}{% endif %}</h1>{% if isAdmin %}<a class="left marginlft" href="{{ path('entry_set_edit', {'entrySetId': entrySet.id}) }}">Edit</a> {% endif %}
     <div class="clear"></div>
     <div>
         <form action = "{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" id='filterForm' method="get" class="left">
