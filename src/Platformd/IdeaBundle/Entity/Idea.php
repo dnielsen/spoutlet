@@ -75,7 +75,7 @@ class Idea
 
     /**
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="ideas")
-     * @ORM\JoinTable(name="TagIdeaMap",
+     * @ORM\JoinTable(name="tag_idea_map",
      *      joinColumns={@ORM\JoinColumn(name="idea", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="tag", referencedColumnName="tag")}
      *      )
@@ -84,7 +84,7 @@ class Idea
 
     /**
      * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
-     * @ORM\JoinTable(name="JudgeIdeaMap",
+     * @ORM\JoinTable(name="judge_idea_map",
      *      joinColumns={@ORM\JoinColumn(name="idea", referencedColumnName="id", onDelete="cascade")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="judge", referencedColumnName="id", onDelete="cascade")}
      *      )

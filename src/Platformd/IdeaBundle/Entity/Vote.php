@@ -9,7 +9,7 @@ use \DateTime;
 
 /**
  * @ORM\Entity(repositoryClass="Platformd\IdeaBundle\Entity\VoteRepository")
- * @ORM\Table(name="Vote")
+ * @ORM\Table(name="vote")
  */
 class Vote
 {
