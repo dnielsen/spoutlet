@@ -35,20 +35,8 @@ class IdeaController extends Controller
     public function entrySetViewAction(Request $request, $entrySetId)
     {
         $entrySet   = $this->getEntrySet($entrySetId);
-        $parent     = $this->getParentByEntrySet($entrySet);
 
-        $group = null;
-        $event = null;
-        $round = null;
-
-        if ($parent instanceof GroupEvent){
-            $group = $parent->getGroup();
-            $event = $parent;
-            $round = $event->getCurrentRound();
-        }
-        elseif ($parent instanceof Group){
-            $group = $parent;
-        }
+        list($group, $event, $entrySet, $idea) = $this->getHierarchy($entrySet);
 
         $tag         	= $request->query->get('tag');
         $viewPrivate 	= $request->query->get('viewPrivate', false);
@@ -57,12 +45,18 @@ class IdeaController extends Controller
 
         //filter the idea list using the query parameters
         $userParam  = $viewPrivate ? $this->getCurrentUser() : null;
+        $round = null;
+
+        $canSubmit = $entrySet->getIsSubmissionActive();
         if ($event) {
-            $roundParam = $showAllRounds == 'true' ? null : $event->getCurrentRound();
-            $canSubmit = $entrySet->getIsSubmissionActive() && ($event->isUserAttending($this->getCurrentUser()) || $event->getUser() == $this->getCurrentUser());
+            $round = $event->getCurrentRound();
+            $roundParam = $showAllRounds == 'true' ? null : $round;
+            $canSubmit = $canSubmit && ($event->isUserAttending($this->getCurrentUser()) || $event->getUser() == $this->getCurrentUser());
         } else {
             $roundParam = null;
-            $canSubmit = $entrySet->getIsSubmissionActive() && ($group->isMember($this->getCurrentUser()) || $group->isOwner($this->getCurrentUser()) );
+            if ($group){
+                $canSubmit = $canSubmit && ($group->isMember($this->getCurrentUser()) || $group->isOwner($this->getCurrentUser()) );
+            }
         }
 
         $ideaRepo 	= $this->getDoctrine()->getRepository('IdeaBundle:Idea');
@@ -93,9 +87,9 @@ class IdeaController extends Controller
             'event'         => $event,
             'entrySet'      => $entrySet,
             'ideas'         => $ideaList,
+            'round'         => $round,
             'canSubmit'     => $canSubmit,
             'tag'           => $tag,
-            'round'         => $round,
             'sidebar'       => true,
             'attendance'    => $attendance,
             'viewPrivate'   => $viewPrivate,
@@ -1086,10 +1080,10 @@ class IdeaController extends Controller
 
     public function getHierarchy($scope)
     {
-        $entry    = null;
-        $entrySet = null;
-        $event    = null;
         $group    = null;
+        $event    = null;
+        $entrySet = null;
+        $entry    = null;
 
         $entrySetParent   = null;
 
