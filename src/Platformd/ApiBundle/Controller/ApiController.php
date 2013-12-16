@@ -4,12 +4,8 @@ namespace Platformd\ApiBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 
-use Platformd\IdeaBundle\Entity\EntrySet;
-use Platformd\IdeaBundle\Entity\EntrySetRegistryRepository;
 use Platformd\SpoutletBundle\Controller\Controller;
 
 
@@ -24,18 +20,32 @@ class ApiController extends Controller
 
         if (!$entrySet){
             $response->setStatusCode(404);
+            // Error message - not found
         }
         else {
             $response->setStatusCode(200);
 
-            //$jsonContent = $this->getJsonSerializer()->serialize($entrySet, 'json');
-            //$response->setContent($jsonContent);
+            $entries = array();
+            foreach ($entrySet->getEntries() as $entry) {
+                $entries[] = array(
+                    'id'    => $entry->getId(),
+                    'name'  => $entry->getName(),
+                );
+            }
 
             $entrySetData = array(
-                'id'            => $entrySet->getId(),
-                'name'          => $entrySet->getName(),
-                'type'          => $entrySet->getType(),
-                'registration'  => $entrySet->getEntrySetRegistration(),
+                'meta'                 => array(
+                        'self'  => $this->generateUrl('api_entrySet', array('entrySetId'=>$entrySet->getId()), true),
+                        'mimetype' => "application/json"
+                    ),
+                'id'                    => $entrySet->getId(),
+                'name'                  => $entrySet->getName(),
+                'type'                  => $entrySet->getType(),
+                'registrationId'        => $entrySet->getEntrySetRegistration()->getId(),
+                'isSubmissionsActive'   => $entrySet->getIsSubmissionActive(),
+                'isVotingActive'        => $entrySet->getIsVotingActive(),
+                'allowedVoters'         => $entrySet->getAllowedVoters(),
+                'entries'               => $entries,
             );
 
             $jsonEncoder = new JsonEncoder();
@@ -47,22 +57,35 @@ class ApiController extends Controller
 
     public function entryAction($entryId)
     {
-        $entry = $this->getDoctrine()->getRepository('IdeaBundle:Idea')>find($entryId);
+        $entry = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($entryId);
+
+        $response = new Response();
 
         if (!$entry){
-            throw new NotFoundHttpException('Entry '.$entryId.' not found');
+            $response->setStatusCode(404);
+            // Error message - not found
+        }
+        else {
+            $response->setStatusCode(200);
+
+            $entryData = array(
+                'meta'                 => array(
+                    'self'  => $this->generateUrl('api_entry', array('entryId'=>$entry->getId()), true),
+                    'mimetype' => "application/json"
+                ),
+                'id'                    => $entry->getId(),
+                'entrySetId'            => $entry->getEntrySet()->getId(),
+                'creator'               => $entry->getCreator()->getUserName(),
+                'createdAt'             => $entry->getCreatedAt(),
+                'name'                  => $entry->getName(),
+                'description'           => $entry->getDescription(),
+            );
+
+            $jsonEncoder = new JsonEncoder();
+            $response->setContent($jsonEncoder->encode($entryData, $format = 'json'));
         }
 
-        return $entry;
-    }
-
-
-    // This didn't work, went into a recursive loop when encoding EntrySet
-    public function getJsonSerializer()
-    {
-        $normalizers = array(new GetSetMethodNormalizer());
-        $encoders = array('json' => new JsonEncoder());
-        return new Serializer($normalizers, $encoders);
+        return $response;
     }
 
 }

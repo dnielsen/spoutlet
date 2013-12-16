@@ -1,8 +1,8 @@
 
-entrySet:
+api_entrySet:
     pattern:    /list/{entrySetId}
     defaults:   { _controller: ApiBundle:Api:entrySet }
 
-entry:
-    pattern:    /list/{entryId}
+api_entry:
+    pattern:    /entry/{entryId}
     defaults:   { _controller: ApiBundle:Api:entry }
