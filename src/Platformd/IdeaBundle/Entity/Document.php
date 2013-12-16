@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile as UploadedFile;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="document")
  */
 class Document
 {
