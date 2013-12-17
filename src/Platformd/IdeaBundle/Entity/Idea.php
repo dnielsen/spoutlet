@@ -782,4 +782,9 @@ class Idea
     {
         return $this->getJudges()->contains($judge);
     }
+
+    public function getNumVotes()
+    {
+        return count($this->getFollowMappings());
+    }
 }

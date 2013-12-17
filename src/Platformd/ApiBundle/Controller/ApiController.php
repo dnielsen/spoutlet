@@ -5,6 +5,7 @@ namespace Platformd\ApiBundle\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\HttpFoundation\Request;
 
 use Platformd\SpoutletBundle\Controller\Controller;
 
@@ -12,7 +13,7 @@ use Platformd\SpoutletBundle\Controller\Controller;
 
 class ApiController extends Controller
 {
-    public function entrySetAction($entrySetId)
+    public function entrySetAction(Request $request, $entrySetId)
     {
         $entrySet = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet')->find($entrySetId);
 
@@ -20,7 +21,6 @@ class ApiController extends Controller
 
         if (!$entrySet){
             $response->setStatusCode(404);
-            // Error message - not found
         }
         else {
             $response->setStatusCode(200);
@@ -48,14 +48,15 @@ class ApiController extends Controller
                 'entries'               => $entries,
             );
 
-            $jsonEncoder = new JsonEncoder();
-            $response->setContent($jsonEncoder->encode($entrySetData, $format = 'json'));
+            $jsonData = (new JsonEncoder())->encode($entrySetData, $format = 'json');
+            $response->setContent($this->jsonpWrapper($request,$jsonData));
+            $response->headers->set('Content-Type', 'application/json');
         }
 
         return $response;
     }
 
-    public function entryAction($entryId)
+    public function entryAction(Request $request, $entryId)
     {
         $entry = $this->getDoctrine()->getRepository('IdeaBundle:Idea')->find($entryId);
 
@@ -63,7 +64,6 @@ class ApiController extends Controller
 
         if (!$entry){
             $response->setStatusCode(404);
-            // Error message - not found
         }
         else {
             $response->setStatusCode(200);
@@ -79,13 +79,113 @@ class ApiController extends Controller
                 'createdAt'             => $entry->getCreatedAt(),
                 'name'                  => $entry->getName(),
                 'description'           => $entry->getDescription(),
+                'numVotes'              => $entry->getNumVotes(),
             );
 
-            $jsonEncoder = new JsonEncoder();
-            $response->setContent($jsonEncoder->encode($entryData, $format = 'json'));
+            $jsonData = (new JsonEncoder())->encode($entryData, $format = 'json');
+            $response->setContent($this->jsonpWrapper($request,$jsonData));
+            $response->headers->set('Content-Type', 'application/json');
         }
 
         return $response;
+    }
+
+    public function groupAction(Request $request, $groupId)
+    {
+        $group = $this->getGroupManager()->find($groupId);
+
+        $response= new Response();
+
+        if (!$group){
+            return $response->setStatusCode(404);
+        }
+
+        $response->setStatusCode(200);
+
+        $events = array();
+        foreach ($group->getEvents() as $event) {
+            $events[] = array(
+                'id'        => $event->getId(),
+                'name'      => $event->getName(),
+                'startsAt'  => $event->getStartsAt(),
+                'endsAt'    => $event->getEndsAt(),
+                'location'  => $event->getLocation(),
+                'address1'  => $event->getAddress1(),
+                'address2'  => $event->getAddress2(),
+            );
+        }
+
+        $entrySets = array();
+        foreach ($group->getEntrySets() as $entrySet) {
+
+            $sortedEntries = $entrySet->getEntries()->toArray();
+            $this->getDoctrine()->getRepository('IdeaBundle:Idea')->sortByFollows($sortedEntries);
+
+            $entries = array();
+            foreach ($sortedEntries as $entry) {
+                $entries[] = array(
+                    'id'        => $entry->getId(),
+                    'name'      => $entry->getName(),
+                    'numVotes'  => $entry->getNumVotes(),
+                );
+            }
+            $entrySets[] = array(
+                'id'        => $entrySet->getId(),
+                'name'      => $entrySet->getName(),
+                'entries'   => $entries,
+            );
+        }
+        $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group, 1);
+        $nextEvent = reset($upcomingEvents);
+        $pastEvents = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group, 6);
+
+        $pastEventData = array();
+        foreach ($pastEvents as $event) {
+            $pastEventData[] = array(
+                'id'        => $event->getId(),
+                'name'      => $event->getName(),
+                'daterange' => $event->getDateRangeString(),
+            );
+        }
+        $nextEvent = array(
+            'id'            => $nextEvent->getId(),
+            'name'          => $nextEvent->getName(),
+            'daterange'     => $nextEvent->getDateRangeString(),
+            'location'      => $nextEvent->getLocation(),
+            'address1'      => $nextEvent->getAddress1(),
+            'address2'      => $nextEvent->getAddress2(),
+        );
+
+
+        $groupData = array(
+            'meta'                 => array(
+                'self'  => $this->generateUrl('api_group', array('groupId'=>$group->getId()), true),
+                'mimetype' => "application/json"
+            ),
+            'id'                    => $group->getId(),
+            'creator'               => $group->getOwner()->getUserName(),
+            'name'                  => $group->getName(),
+            'description'           => $group->getDescription(),
+            'pastEvents'            => $pastEventData,
+            'nextEvent'             => $nextEvent,
+            'entrySets'             => $entrySets,
+        );
+
+        $jsonData = (new JsonEncoder())->encode($groupData, $format = 'json');
+        $response->setContent($this->jsonpWrapper($request,$jsonData));
+        $response->headers->set('Content-Type', 'application/json');
+
+
+        return $response;
+    }
+
+    public function jsonpWrapper(Request $request, $jsonData)
+    {
+        $callback = $request->query->get('callback');
+        if(!$callback)
+            return $jsonData;
+
+        return $callback . "(" . $jsonData . ")";
     }
 
 }
