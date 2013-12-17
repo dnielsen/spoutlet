@@ -133,13 +133,16 @@ class IdeaRepository extends EntityRepository
 		return $ideas;
 	}
 
-    public function sortByFollows(&$ideas) {
-        usort($ideas, function($a, $b) {
+    public function sortByFollows(&$ideas, $desc = true) {
+        usort($ideas, function($a, $b) use ($desc) {
                 $valueA = $a->getNumFollowers();
                 $valueB = $b->getNumFollowers();
-                if($valueA == $valueB )
-                    return 0;
-                return ($valueA < $valueB) ? 1 : -1;
+                if($valueA == $valueB ) { return 0; }
+
+                if($desc)
+                    return ($valueA < $valueB) ? 1 : -1;
+                else
+                    return ($valueA < $valueB) ? -1 : 1;
             });
         return $ideas;
     }
