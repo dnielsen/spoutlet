@@ -48,7 +48,8 @@ class ApiController extends Controller
                 'entries'               => $entries,
             );
 
-            $jsonData = (new JsonEncoder())->encode($entrySetData, $format = 'json');
+            $encoder = new JsonEncoder();
+            $jsonData = $encoder->encode($entrySetData, $format = 'json');
             $response->setContent($this->jsonpWrapper($request,$jsonData));
             $response->headers->set('Content-Type', 'application/json');
         }
@@ -82,7 +83,8 @@ class ApiController extends Controller
                 'numVotes'              => $entry->getNumVotes(),
             );
 
-            $jsonData = (new JsonEncoder())->encode($entryData, $format = 'json');
+            $encoder = new JsonEncoder();
+            $jsonData = $encoder->encode($entryData, $format = 'json');
             $response->setContent($this->jsonpWrapper($request,$jsonData));
             $response->headers->set('Content-Type', 'application/json');
         }
@@ -162,7 +164,8 @@ class ApiController extends Controller
             'entrySets'             => $entrySets,
         );
 
-        $jsonData = (new JsonEncoder())->encode($groupData, $format = 'json');
+        $encoder = new JsonEncoder();
+        $jsonData = $encoder->encode($groupData, $format = 'json');
         $response->setContent($this->jsonpWrapper($request,$jsonData));
         $response->headers->set('Content-Type', 'application/json');
 
