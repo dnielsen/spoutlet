@@ -12,15 +12,15 @@ INSTALLATION
     $ cd spoutlet  
     $ ./install_packages.sh 
 
+* Copy the template parameters file to parameters.ini
+
+    $ cp app/config/parameters.ini.dist  app/config/parameters.ini
+    
 * Update the vendors (this will take several minutes the first time you do it)
 
     $ php bin/vendors install
 
     - If this command fails, see the last section
-
-* Copy the template parameters file to parameters.ini
-
-    $ cp app/config/parameters.ini.dist  app/config/parameters.ini
     
 * Open the `app/config/parameters.ini` file and customize the database
     information. All the other settings are fine.
@@ -81,16 +81,19 @@ INSTALLATION
 
 * Run the following commands to set up permissions for apache:
 
-        $ APACHEUSER=\`ps aux | grep -E '[a]pache|[h]ttpd' | grep -v root | head -1 | cut -d\  -f1\`  
-        $ sudo setfacl -R -m u:$APACHEUSER:rwX -m u:\`whoami\`:rwX app/cache app/logs  
-        $ sudo setfacl -dR -m u:$APACHEUSER:rwX -m u:\`whoami\`:rwX app/cache app/logs  
+        $ APACHEUSER=`ps aux | grep -E '[a]pache|[h]ttpd' | grep -v root | head -1 | cut -d\  -f1`
+        $ sudo setfacl -R -m u:$APACHEUSER:rwX -m u:`whoami`:rwX app/cache app/logs
+        $ sudo setfacl -dR -m u:$APACHEUSER:rwX -m u:`whoami`:rwX app/cache app/logs
 
 * Make sure you set the timezone in your php.ini file
 
     $ sudo vim /etc/php5/apache2/php.ini
 
-    Update date.timezone with your server's timezone:  
+* Update date.timezone with your server's timezone:  
     `date.timezone = "America/Los_Angeles"`
+    
+* Disable <? ?> tags, this can confuse some webservers:   
+    `short_open_tag = Off` 
 
 * Check to see if your system is setup by running the following command.
     If you see any issues, you may need to install more things. You can

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Default behavior runs assetic dump for dev environment
 # First parameter 'dev' or 'prod' overrides it
 
@@ -23,11 +25,12 @@ php app/console themes:install web --symlink
 echo '============================='
 echo 'Assetic Dump'
 echo
-if [ $ENV == 'dev' ]; then
+if [ $ENV = 'dev' ]; then
     php app/console assetic:dump
-elif [ $ENV == 'prod' ]; then 
+elif [ $ENV = 'prod' ]; then 
     php app/console assetic:dump -e prod --no-debug
     echo '============================='
+    echo 'Clearing Symfony cache'
     echo
     php app/console cache:clear -e prod --no-debug
 fi
