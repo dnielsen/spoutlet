@@ -102,19 +102,6 @@ class ApiController extends Controller
 
         $response->setStatusCode(200);
 
-        $events = array();
-        foreach ($group->getEvents() as $event) {
-            $events[] = array(
-                'id'        => $event->getId(),
-                'name'      => $event->getName(),
-                'startsAt'  => $event->getStartsAt(),
-                'endsAt'    => $event->getEndsAt(),
-                'location'  => $event->getLocation(),
-                'address1'  => $event->getAddress1(),
-                'address2'  => $event->getAddress2(),
-            );
-        }
-
         $entrySets = array();
         foreach ($group->getEntrySets() as $entrySet) {
 
@@ -127,11 +114,13 @@ class ApiController extends Controller
                     'id'        => $entry->getId(),
                     'name'      => $entry->getName(),
                     'numVotes'  => $entry->getNumVotes(),
+                    'url'       => $this->generateUrl($entry->getLinkableRouteName(), $entry->getLinkableRouteParameters(), true),
                 );
             }
             $entrySets[] = array(
                 'id'        => $entrySet->getId(),
                 'name'      => $entrySet->getName(),
+                'url'       => $this->generateUrl($entrySet->getLinkableRouteName(), $entrySet->getLinkableRouteParameters(), true),
                 'entries'   => $entries,
             );
         }
@@ -145,6 +134,7 @@ class ApiController extends Controller
                 'id'        => $event->getId(),
                 'name'      => $event->getName(),
                 'daterange' => $event->getDateRangeString(),
+                'url'       => $this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
             );
         }
         $nextEvent = array(
@@ -154,6 +144,7 @@ class ApiController extends Controller
             'location'      => $nextEvent->getLocation(),
             'address1'      => $nextEvent->getAddress1(),
             'address2'      => $nextEvent->getAddress2(),
+            'url'           => $this->generateUrl($nextEvent->getLinkableRouteName(), $nextEvent->getLinkableRouteParameters(), true),
         );
 
 

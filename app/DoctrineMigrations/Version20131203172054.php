@@ -22,7 +22,9 @@ class Version20131203172054 extends AbstractMigration
         $this->addSql("ALTER TABLE idea DROP FOREIGN KEY FK_A8BCA4571F7E88B");
         $this->addSql("DROP INDEX IDX_A8BCA4571F7E88B ON idea");
         $this->addSql("ALTER TABLE idea CHANGE event_id entrySet_id INT DEFAULT NULL");
+        $this->addSql("SET foreign_key_checks = 0");
         $this->addSql("ALTER TABLE idea ADD CONSTRAINT FK_A8BCA4519758714 FOREIGN KEY (entrySet_id) REFERENCES entry_set(id)");
+        $this->addSql("SET foreign_key_checks = 1");
         $this->addSql("CREATE INDEX IDX_A8BCA4519758714 ON idea (entrySet_id)");
     }
 
@@ -38,7 +40,9 @@ class Version20131203172054 extends AbstractMigration
         $this->addSql("ALTER TABLE idea DROP FOREIGN KEY FK_A8BCA4519758714");
         $this->addSql("DROP INDEX IDX_A8BCA4519758714 ON idea");
         $this->addSql("ALTER TABLE idea CHANGE entryset_id event_id INT DEFAULT NULL");
+        $this->addSql("SET foreign_key_checks = 0");
         $this->addSql("ALTER TABLE idea ADD CONSTRAINT FK_A8BCA4571F7E88B FOREIGN KEY (event_id) REFERENCES group_event(id)");
+        $this->addSql("SET foreign_key_checks = 1");
         $this->addSql("CREATE INDEX IDX_A8BCA4571F7E88B ON idea (event_id)");
     }
 }
