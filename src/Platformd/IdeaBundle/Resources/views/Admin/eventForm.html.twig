@@ -1,92 +1,29 @@
-{% extends 'IdeaBundle::group_layout.html.twig' %}
+{% extends 'SpoutletBundle::layout.html.twig' %}
 
 {% block javascripts %}
     {{ parent() }}
 
     <script type="text/javascript">
         $(function() {
+            // Initialize location controls state based on default online value
+            toggleLocationControls();
 
-            setTypeControls();
-
-            $('#event_type').change(function() {
-                setTypeControls();
-            });
-
+            // Toggle location controls on online update
             $('#event_online').change(function() {
-                setLocationControls();
+                toggleLocationControls();
             });
 
-            function setTypeControls(){
-
-                var type = $('#event_type').val();
-
-                if (type == 'unconference'){
-                    $('#time-controls').slideDown();
-                    $('#idea-controls').slideDown();
-                    $('#voting-controls').slideDown();
-                    $('#online-controls').slideUp();
-                    $('#location-controls').slideDown();
-                }
-                else if (type == 'ideathon'){
-                    $('#time-controls').slideDown();
-                    $('#idea-controls').slideDown();
-                    $('#voting-controls').slideDown();
-                    $('#online-controls').slideDown();
-                    setLocationControls();
-                }
-                else if (type == 'forum'){
-                    $('#time-controls').slideUp();
-                    $('#idea-controls').slideUp();
-                    $('#voting-controls').slideUp();
-                    $('#online-controls').slideUp();
+            function toggleLocationControls() {
+                if($('#event_online').val() == '1') {
                     $('#location-controls').slideUp();
-                }
-            }
-
-            function setLocationControls() {
-                var isOnline = $('#event_online').val();
-                if(isOnline == '1') {
-                    $('#location-controls').slideUp();
+                    $('#event_location').val(null);
+                    $('#event_address1').val(null);
+                    $('#event_address2').val(null);
                 } else {
                     $('#location-controls').slideDown();
                 }
             }
-
-            $('#event').submit(function() {
-
-                var type = $('#event_type').val();
-
-                if (type == 'unconference'){
-                    $('#event_online').val('0');
-                }
-                else if (type == 'ideathon'){
-                    if($('#event_online').val() == '1') {
-                        $('#event_location').val(null);
-                        $('#event_address1').val(null);
-                        $('#event_address2').val(null);
-                    }
-                }
-                else if (type == 'forum'){
-                    $('#event_startsAt_date_year').val(null);
-                    $('#event_startsAt_date_month').val(null);
-                    $('#event_startsAt_date_day').val(null);
-                    $('#event_startsAt_time_hour').val(null);
-                    $('#event_startsAt_time_minute').val(null);
-                    $('#event_endsAt_date_year').val(null);
-                    $('#event_endsAt_date_month').val(null);
-                    $('#event_endsAt_date_day').val(null);
-                    $('#event_endsAt_time_hour').val(null);
-                    $('#event_endsAt_time_minute').val(null);
-                    $('#event_online').val(1);
-                    $('#event_location').val(null);
-                    $('#event_address1').val(null);
-                    $('#event_address2').val(null);
-                    $('#event_isSubmissionActive').val(1);
-                    $('#event_isVotingActive').val(0);
-                    $('#event_allowedVoters').val(null);
-                }
-            });
-        })
+        });
     </script>
 {% endblock %}
 
@@ -105,13 +42,9 @@
     <form action="{{ formpath }}" method="post" {{ form_enctype(form) }} id="event" novalidate>
         {{ form_row(form.name) }}
         {{ form_row(form.content) }}
-        <div id="time-controls">
         {{ form_row(form.startsAt) }}
         {{ form_row(form.endsAt) }}
-        </div>
-        <div id="online-controls">
         {{ form_row(form.online) }}
-        </div>
         <div id="location-controls">
         {{ form_row(form.location) }}
         {{ form_row(form.address1) }}
