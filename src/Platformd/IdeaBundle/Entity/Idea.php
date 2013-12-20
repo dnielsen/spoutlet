@@ -4,12 +4,12 @@ namespace Platformd\IdeaBundle\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-
+use Platformd\SpoutletBundle\Link\LinkableInterface;
 /**
  * @ORM\Entity(repositoryClass="Platformd\IdeaBundle\Entity\IdeaRepository")
  * @ORM\Table(name="idea")
  */
-class Idea
+class Idea implements LinkableInterface
 {
 	/**
      * @ORM\Id
@@ -19,9 +19,9 @@ class Idea
 	protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GroupEvent", inversedBy="ideas")
+     * @ORM\ManyToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySet", inversedBy="entries")
      */
-    protected $event;
+    protected $entrySet;
 
 	/**
      * @ORM\Column(type="string", length=255)
@@ -75,7 +75,7 @@ class Idea
 
     /**
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="ideas")
-     * @ORM\JoinTable(name="TagIdeaMap",
+     * @ORM\JoinTable(name="tag_idea_map",
      *      joinColumns={@ORM\JoinColumn(name="idea", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="tag", referencedColumnName="tag")}
      *      )
@@ -84,7 +84,7 @@ class Idea
 
     /**
      * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
-     * @ORM\JoinTable(name="JudgeIdeaMap",
+     * @ORM\JoinTable(name="judge_idea_map",
      *      joinColumns={@ORM\JoinColumn(name="idea", referencedColumnName="id", onDelete="cascade")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="judge", referencedColumnName="id", onDelete="cascade")}
      *      )
@@ -168,13 +168,18 @@ class Idea
         return $this->name;
     }
 
-    public function getEvent()
+    public function getEntrySet()
     {
-        return $this->event;
+        return $this->entrySet;
     }
-    public function setEvent($event)
+
+    public function getParentRegistration() {
+        return $this->getEntrySet()->getEntrySetRegistration();
+    }
+
+    public function setEntrySet($entrySet)
     {
-        $this->event = $event;
+        $this->entrySet = $entrySet;
     }
 
     /**
@@ -776,5 +781,43 @@ class Idea
     public function isJudgeAssigned(\Platformd\UserBundle\Entity\User $judge)
     {
         return $this->getJudges()->contains($judge);
+    }
+
+    public function getNumVotes()
+    {
+        return count($this->getFollowMappings());
+    }
+
+    /**
+     * If there is a set URL that should be used without doing anything else, return it here
+     *
+     * @return string
+     */
+    function getLinkableOverrideUrl()
+    {
+        return false;
+    }
+
+    /**
+     * Returns the name of the route used to link to this object
+     *
+     * @return string
+     */
+    function getLinkableRouteName()
+    {
+        return "idea_show";
+    }
+
+    /**
+     * Returns an array route parameters to link to this object
+     *
+     * @return array
+     */
+    function getLinkableRouteParameters()
+    {
+        return array(
+            'entryId' => $this->id,
+            'entrySetId' => $this->getEntrySet()->getId(),
+        );
     }
 }

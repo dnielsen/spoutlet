@@ -1,0 +1,54 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $(function() {
+
+            // Initialize voting controls state based on default type value
+            toggleVotingControls();
+
+            // Toggle voting controls on type update
+            $('#entrySet_type').change(function() {
+                toggleVotingControls();
+            });
+
+            function toggleVotingControls() {
+
+                var type = $('#entrySet_type').val();
+
+                if (type == 'idea'){
+                    $('#voting-controls').slideDown();
+                }
+                else {
+                    $('#voting-controls').slideUp();
+                    $('#entrySet_isVotingActive').val(0);
+                    $('#entrySet_allowedVoters').val(null);
+                }
+            }
+        });
+    </script>
+{% endblock %}
+
+
+{% block content %}
+
+    <h1>{% if entrySetId == 'new' %}Add a new{% else %}Edit{% endif %} List</h1>
+
+    <form action="{{ path('entry_set_new', {'entrySetId': entrySetId, 'registrationId': registrationId}) }}" method="post" id="entrySet" {{ form_enctype(form) }}>
+
+        {{ form_row(form.name) }}
+        {{ form_row(form.type) }}
+        {{ form_row(form.isSubmissionActive) }}
+        <div id="voting-controls">
+        {{ form_row(form.isVotingActive) }}
+        {{ form_row(form.allowedVoters) }}
+        </div>
+        {{ form_rest(form) }}
+
+        <input type="submit" value="Submit"/>
+        <button type="submit" name="cancel" value="Cancel" formnovalidate>Cancel</button>
+    </form>
+
+{% endblock %}

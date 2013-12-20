@@ -120,8 +120,16 @@ class VoteRepository extends EntityRepository
 	}
 
     public function toCSV($event) {
-        $ideas = $event->getIdeas();
 
+        $entrySets = $event->getEntrySets();
+
+        // Get all ideas for all entrySets in this event
+        $ideas = array();
+        foreach($entrySets as $entrySet){
+            $ideas = array_merge($ideas, $entrySet->getEntries());
+        }
+
+        // Get all votes for each idea in the event
         $votes = array();
         foreach($ideas as $idea){
             $votes = array_merge($votes, $this->findAllByIdea($idea));

@@ -64,3 +64,7 @@ PlatformDGroupBundle:
 IdeaBundle:
     resource: "@IdeaBundle/Resources/config/routing.yml"
     prefix:   /
+
+ApiBundle:
+    resource: "@ApiBundle/Resources/config/routing.yml"
+    prefix:   /api

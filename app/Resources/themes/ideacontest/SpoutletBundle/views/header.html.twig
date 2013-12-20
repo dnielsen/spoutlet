@@ -10,8 +10,11 @@
                 <li><a href="{{ path('profile', {'username': app.user.username}) }}">Profile</a></li>
                 <li><a href="{{ path('accounts_index') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
             {% endif %}
-            {% block extra_user_controls %}
-            {% endblock %}
+            {% if event is defined and event is not null %}
+                {% if is_granted('ROLE_ADMIN') or event.user == (app.user) %}
+                    <li><a href="{{ path('idea_admin', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">Event Admin</a></li>
+                {% endif %}
+            {% endif %}
             <li><a href="{{ path('default_index') }}">Home</a></li>
             {% if is_granted("ROLE_SUPER_ADMIN") %}
                 <li><a href="{{ path('admin_index') }}">Site Admin</a></li>

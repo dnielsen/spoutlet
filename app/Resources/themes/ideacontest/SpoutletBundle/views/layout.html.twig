@@ -2,7 +2,21 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Campsite{% endblock %}</title>
+        <title>
+            {% block title %}
+                {% if idea is defined and idea is not null %}
+                    {{ idea.name }}
+                {% elseif entrySet is defined and entrySet is not null %}
+                    {{ entrySet.name }}
+                {% elseif event is defined and event is not null %}
+                    {{ event.name }}
+                {% elseif group is defined and group is not null %}
+                    {{ group.name }}
+                {% else %}
+                    Campsite
+                {% endif %}
+            {% endblock %}
+        </title>
 
         <script type="text/javascript">
             var CKEDITOR_BASEPATH = '/ckeditor/';
@@ -39,8 +53,54 @@
 
                 <div class="clear"></div>
 
-                {% block content %}
-                {% endblock %}
+                {% if event is defined and event is not null%}
+                    {% if event.private and not isAdmin %}
+                        {% if app.user is null %}
+                            This event is private. Please log in to view this page.<br/><br/>
+                            <a href="{{ path('fos_user_security_login') }}"><input type="button" value="{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}" class="btnMdm left"></a>
+                            <a href="{{ path('fos_user_registration_register') }}"><input type="button" value="Register" class="btnMdm left marginlft"></a>
+                            {% set show = 'false' %}
+                        {% elseif not event.isUserAttending(app.user) %}
+                            This event is private. Please apply for access and an administrator will review your application. <br/><br/>
+                            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}"><input type="button" value="Apply Now"></a>
+                            {% set show = 'false' %}
+                        {% elseif attendance == 'pending' %}
+                            This event is private. You have applied for access and are waiting for administrative approval.
+                            {% set show = 'false' %}
+                        {% elseif attendance == 'rejected' %}
+                            This event is private. You have applied for access and have been denied.
+                            {% set show = 'false' %}
+                        {% else %}
+                            {% set show = 'true' %}
+                        {% endif %}
+                    {% else %}
+                        {% set show = 'true' %}
+                    {% endif %}
+                {% else %}
+                    {% set show = 'true' %}
+                {% endif %}
+
+                {% if show == 'true' %}
+
+                    {% if sidebar is defined and sidebar == true %}
+                        <div class="col1">
+                    {% endif %}
+
+                    {% include 'IdeaBundle:Idea:breadcrumbs.html.twig' %}
+
+                    {% block content %}
+                    {% endblock %}
+
+                    {% if sidebar is defined and sidebar == true %}
+                        </div>
+                        <div class="col2">
+                        {% block sidebar %}
+                            {% include 'IdeaBundle::sidebar.html.twig' %}
+                        {% endblock %}
+                        </div>
+                    {% endif %}
+                {% endif %}
+
 
                 <div class="clear"></div>
 

@@ -23,7 +23,7 @@
         {% endif %}
     </div>
 
-    {% if event.type == 'ideathon' %}
+{#    {% if event.type == 'ideathon' %}#}
         <div class="adminRow">
             <h1>Judging</h1>
             <a href="{{ path('idea_admin_criteria_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">
@@ -36,11 +36,11 @@
                 <input type="submit" value="Download Results (CSV)" class="marginlft" />
             </a>
         </div>
-    {% endif %}
+{#    {% endif %} #}
 
     <div class="adminRow">
         <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="get" id='home'>
-            <input type="submit" value="Home" form='home' />
+            <input type="submit" value="< {{ event.name | truncate(20) }}" form='home' />
         </a>
     </div>
 

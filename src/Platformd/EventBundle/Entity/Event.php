@@ -20,6 +20,9 @@ use Platformd\GameBundle\Entity\Game,
     Platformd\UserBundle\Entity\User,
     Platformd\EventBundle\Entity\GlobalEvent,
     Platformd\EventBundle\Entity\GroupEvent,
+    Platformd\IdeaBundle\Entity\EntrySet,
+    Platformd\IdeaBundle\Entity\EntrySetRegistry,
+    Platformd\IdeaBundle\Entity\EntrySetScopeable,
     Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil,
     Platformd\SearchBundle\Model\IndexableInterface,
     Platformd\TagBundle\Model\TaggableInterface
@@ -37,7 +40,7 @@ use DateTime,
  * @Assert\Callback(methods={"externalContentCheck", "validateDateRanges", "validateAddressField", "validateSlug"})
  * @ORM\HasLifecycleCallbacks()
  */
-abstract class Event implements LinkableInterface, IndexableInterface, TaggableInterface
+abstract class Event implements LinkableInterface, IndexableInterface, TaggableInterface, EntrySetScopeable
 {
     const REGISTRATION_ENABLED      = 'REGISTRATION_ENABLED';
     const REGISTRATION_DISABLED     = 'REGISTRATION_DISABLED';
@@ -265,30 +268,9 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     private $attendeeCount = 0;
 
     /**
-     * @var Platformd\TagBundle\Entity\Tag[]
-     *
+     * @var \Tag[]
      */
     private $tags;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\Idea", mappedBy="event", cascade={"remove"})
-     */
-    protected $ideas;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    protected $isVotingActive;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    protected $isSubmissionActive;
-
-    /**
-     * @ORM\Column(type="string", nullable="true", length=5000)
-     */
-    protected $allowedVoters;
 
     /**
      * @ORM\Column(type="integer")
@@ -296,10 +278,9 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     protected $currentRound;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable="true")
+     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySetRegistry", cascade={"persist"})
      */
-    protected $type;
-
+    protected $entrySetRegistration;
 
     /**
      * Constructor
@@ -308,10 +289,8 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     {
         $this->attendees    = new ArrayCollection();
         $this->createdAt    = new DateTime();
-
         $this->startsAt     = new \DateTime('now');
         $this->endsAt       = new \DateTime('now');
-        $this->ideas        = new ArrayCollection();
         $this->currentRound = 1;
     }
 
@@ -334,7 +313,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     }
 
     /**
-     * @param string $address
+     * @param string $address1
      */
     public function setAddress1($address1)
     {
@@ -1012,71 +991,26 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     }
 
 
-    public function setIsVotingActive($isVotingActive)
-    {
-        $this->isVotingActive = $isVotingActive;
-        return $this;
-    }
-    public function getIsVotingActive()
-    {
-        return $this->isVotingActive;
-    }
-
-    public function setIsSubmissionActive($isSubmissionActive)
-    {
-        $this->isSubmissionActive = $isSubmissionActive;
-        return $this;
-    }
-    public function getIsSubmissionActive()
-    {
-        return $this->isSubmissionActive;
-    }
-
-    public function setAllowedVoters($allowedVoters)
-    {
-        $this->allowedVoters = $allowedVoters;
-    }
-    public function getAllowedVoters()
-    {
-        return $this->allowedVoters;
-    }
-    public function containsVoter($voter)
-    {
-        if( strlen($this->allowedVoters) == 0)
-            return false;
-
-        $voters = preg_split("/[\s,]+/", trim($this->allowedVoters));
-        if (in_array($voter, $voters)) {
-            return true;
-        }
-
-        return false;
-    }
-
     public function getCurrentRound()
     {
         return $this->currentRound;
     }
+
     public function setCurrentRound($currentRound)
     {
         $this->currentRound = $currentRound;
     }
 
-    public function getIdeas()
-    {
-        return $this->ideas;
-    }
-    public function setIdeas($ideas)
-    {
-        $this->ideas = $ideas;
+    public function getEntrySetRegistration() {
+        return $this->entrySetRegistration;
     }
 
-    public function setType($type)
-    {
-        $this->type = $type;
+    public function createEntrySetRegistration() {
+        $this->entrySetRegistration = new EntrySetRegistry($this);
+        return $this->entrySetRegistration;
     }
-    public function getType()
-    {
-        return $this->type;
+
+    public function getEntrySets() {
+        return $this->entrySetRegistration->getEntrySets();
     }
 }

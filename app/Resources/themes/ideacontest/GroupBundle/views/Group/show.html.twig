@@ -16,6 +16,24 @@
     </div>
 
     <div id="contentRt">
+
+        {% if group.entrySets | length > 0 %}
+            <h2 class="stepBar">Group Lists</h2>
+            <div class="scrollableSidebarWidget">
+                {% for entrySet in group.entrySets %}
+                <div class="scrollableSidebarWidgetItem">
+                    <h2>{{ entrySet.name }}</h2>
+                    <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" class="btnTny left marginlft">View Ideas</a>
+                    {% if group.isMember(app.user) or group.isOwner(app.user) %}
+                        {# <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id}) }}" class="btnTny left marginlft">Propose {{ entrySet.type | capitalize }}</a> #}
+                        <a href="/" class="btnTny left marginlft">Add Idea</a>
+                    {% endif %}
+                    <div class="clear"></div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         {% if nextEvent %}
         <h2 class="stepBar"><a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': nextEvent.slug}) }}">{{ nextEvent.name }}</a></h2>
         <table summary="Next Event" class="tblStyle">
@@ -44,7 +62,8 @@
                 <td width="25%">{{ nextEvent.attendeeCount }} attendee{% if nextEvent.attendeeCount != 1 %}s{% endif %}</td>
                 <td width="75%%">
                     {% if nextEvent.isUserAttending(app.user) or nextEvent.getUser() == app.user %}
-                        <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': nextEvent.slug}) }}" class="btnTny right">View Ideas</a>
+                        <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': nextEvent.slug}) }}" class="btnTny right">View Event</a>
+
                     {% else %}
                         <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right">Register</a>
                     {% endif %}
@@ -65,7 +84,7 @@
                     </div>
                     <div class="right">
                         {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
-                            <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="btnTny">View Ideas</a>
+                            <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="btnTny">View Event</a>
                         {% else %}
                             <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny">Register</a>
                         {% endif %}
@@ -87,7 +106,7 @@
                             {{ event.DateRangeString }} | {% if event.getOnline %}Online Event{% else %}{{ event.location }}{% endif %}
                         </div>
                         <div class="right">
-                            <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="btnTny">View Ideas</a>
+                            <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="btnTny">View Event</a>
                         </div>
                         <div class="clr"></div>
                     </div>

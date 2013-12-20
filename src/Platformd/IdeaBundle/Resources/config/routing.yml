@@ -7,45 +7,57 @@ profile_edit:
     pattern:    /profile/{username}/edit
     defaults:   { _controller: IdeaBundle:Idea:profileEdit }
 
+# EntrySet Routes
+
+entry_set_view:
+    pattern:    /list/{entrySetId}
+    defaults:   { _controller: IdeaBundle:Idea:entrySetView }
+
+entry_set_new:
+    pattern:    /list/{entrySetId}/form
+    defaults:   { _controller: IdeaBundle:Admin:entrySet }
+
+entry_set_edit:
+    pattern:    /list/{entrySetId}/edit
+    defaults:   { _controller: IdeaBundle:Admin:entrySet }
 
 # ADMIN ROUTES
 
 idea_admin_event:
-    pattern:  /{groupSlug}/event/{eventSlug}/admin/configure
-    defaults: { _controller: IdeaBundle:Admin:event, eventSlug:newEvent}
+    pattern:    /{groupSlug}/event/{eventSlug}/admin/configure
+    defaults:   { _controller: IdeaBundle:Admin:event, eventSlug:newEvent}
 
 idea_admin:
-    pattern:  /{groupSlug}/event/{eventSlug}/admin
-    defaults: { _controller: IdeaBundle:Admin:admin }
+    pattern:    /{groupSlug}/event/{eventSlug}/admin
+    defaults:   { _controller: IdeaBundle:Admin:admin }
 
 idea_admin_criteria_all:
-  pattern:    /{groupSlug}/event/{eventSlug}/admin/criteriaList
-  defaults:   { _controller: IdeaBundle:Admin:criteriaList }
+    pattern:    /{groupSlug}/event/{eventSlug}/admin/criteriaList
+    defaults:   { _controller: IdeaBundle:Admin:criteriaList }
 
 idea_admin_criteria_get:
-    pattern:  /{groupSlug}/event/{eventSlug}/admin/criteria/{id}
-    defaults: { _controller: IdeaBundle:Admin:criteria }
+    pattern:    /{groupSlug}/event/{eventSlug}/admin/criteria/{id}
+    defaults:   { _controller: IdeaBundle:Admin:criteria }
     requirements:
       _method: GET
 
 idea_admin_assign:
-    pattern:  /{groupSlug}/event/{eventSlug}/admin/assign/{ideaId}
-    defaults: { _controller: IdeaBundle:Admin:assignJudges }
+    pattern:    /list/{entrySetId}/entry/{entryId}/assign
+    defaults:   { _controller: IdeaBundle:Admin:assignJudges }
     requirements:
      _method: POST
 
-#Criteria POST requests (new, delete & edit) and GET all
 idea_admin_criteria:
-    pattern:  /{groupSlug}/event/{eventSlug}/admin/criteria
-    defaults: { _controller: IdeaBundle:Admin:criteria }
+    pattern:    /{groupSlug}/event/{eventSlug}/admin/criteria
+    defaults:   { _controller: IdeaBundle:Admin:criteria }
 
 idea_admin_member_approvals:
-    pattern:  /{groupSlug}/event/{eventSlug}/admin/approvals
-    defaults: { _controller: IdeaBundle:Admin:approvals }
+    pattern:    /{groupSlug}/event/{eventSlug}/admin/approvals
+    defaults:   { _controller: IdeaBundle:Admin:approvals }
 
 idea_admin_process_approval:
-    pattern:  /{groupSlug}/event/{eventSlug}/admin/approvals/{userId}/{approval}
-    defaults: { _controller: IdeaBundle:Admin:processApproval }
+    pattern:    /{groupSlug}/event/{eventSlug}/admin/approvals/{userId}/{approval}
+    defaults:   { _controller: IdeaBundle:Admin:processApproval }
 
 idea_summary:
     pattern:    /{groupSlug}/event/{eventSlug}/admin/summary
@@ -65,6 +77,12 @@ idea_admin_images:
     requirements:
       _method: GET|POST
 
+idea_admin_remove_image:
+    pattern:    /{groupSlug}/event/{eventSlug}/admin/images/remove/{imageId}
+    defaults:   { _controller: IdeaBundle:Admin:removeImage }
+    requirements:
+      _method: GET
+
 idea_admin_export_ideas:
     pattern:    /{groupSlug}/event/{eventSlug}/admin/exportIdeas
     defaults:   { _controller: IdeaBundle:Admin:exportIdeas }
@@ -83,123 +101,104 @@ idea_admin_export_votes:
     requirements:
       _method: GET
 
-idea_admin_remove_image:
-    pattern:    /{groupSlug}/event/{eventSlug}/admin/images/remove/{imageId}
-    defaults:   { _controller: IdeaBundle:Admin:removeImage }
-    requirements:
-      _method: GET
-
 # NON-ADMIN
 
 idea_create:
-    pattern:  /{groupSlug}/event/{eventSlug}/ideas/create
-    defaults: { _controller: IdeaBundle:Idea:create }
+    pattern:    /list/{entrySetId}/create
+    defaults:   { _controller: IdeaBundle:Idea:create }
     requirements:
       _method: POST
 
 idea_create_form:
-    pattern:  /{groupSlug}/event/{eventSlug}/ideas/create
-    defaults: { _controller: IdeaBundle:Idea:createForm}
-    requirements:
-      _method: GET
-
-idea_show_all:
-    pattern:  /{groupSlug}/event/{eventSlug}/ideas
-    defaults: { _controller: IdeaBundle:Idea:showAll }
+    pattern:    /list/{entrySetId}/create
+    defaults:   { _controller: IdeaBundle:Idea:createForm}
     requirements:
       _method: GET
 
 idea_show:
-    pattern:  /{groupSlug}/event/{eventSlug}/ideas/{id}
-    defaults: { _controller: IdeaBundle:Idea:show }
+    pattern:    /list/{entrySetId}/entry/{entryId}
+    defaults:   { _controller: IdeaBundle:Idea:show }
     requirements:
       _method: GET
 
 
 idea_edit:
-    pattern:  /{groupSlug}/event/{eventSlug}/ideas/{id}/edit
-    defaults: { _controller: IdeaBundle:Idea:edit }
+    pattern:    /list/{entrySetId}/entry/{entryId}/edit
+    defaults:   { _controller: IdeaBundle:Idea:edit }
     requirements:
       _method: POST
 
 idea_edit_form:
-    pattern:  /{groupSlug}/event/{eventSlug}/ideas/{id}/edit
-    defaults: { _controller: IdeaBundle:Idea:editForm }
+    pattern:    /list/{entrySetId}/entry/{entryId}/edit
+    defaults:   { _controller: IdeaBundle:Idea:editForm }
     requirements:
       _method: GET
 
 idea_upload:
-    pattern:  /{groupSlug}/event/{eventSlug}/upload/
-    defaults: { _controller: IdeaBundle:Idea:upload }
+    pattern:    /list/{entrySetId}/entry/{entryId}/upload
+    defaults:   { _controller: IdeaBundle:Idea:upload }
     requirements:
      _method:   POST
 
 idea_upload_form:
-    pattern:  /{groupSlug}/event/{eventSlug}/upload/{id}
-    defaults: { _controller: IdeaBundle:Idea:upload }
+    pattern:    /list/{entrySetId}/entry/{entryId}/upload
+    defaults:   { _controller: IdeaBundle:Idea:upload }
     requirements:
       _method: GET
 
 idea_image_delete:
-    pattern:  /{groupSlug}/event/{eventSlug}/deleteImage
-    defaults: { _controller: IdeaBundle:Idea:deleteImage }
+    pattern:    /list/{entrySetId}/entry/{entryId}/deleteImage
+    defaults:   { _controller: IdeaBundle:Idea:deleteImage }
     requirements:
      _method: POST
 
 idea_add_link:
-    pattern:  /{groupSlug}/event/{eventSlug}/addLink
-    defaults: { _controller: IdeaBundle:Idea:addLink }
+    pattern:    /list/{entrySetId}/entry/{entryId}/addLink
+    defaults:   { _controller: IdeaBundle:Idea:addLink }
     requirements:
      _method: POST
 
 idea_add_link_form:
-    pattern:  /{groupSlug}/event/{eventSlug}/addLink/{id}
-    defaults: { _controller: IdeaBundle:Idea:addLink }
+    pattern:    /list/{entrySetId}/entry/{entryId}/addLink
+    defaults:   { _controller: IdeaBundle:Idea:addLink }
     requirements:
      _method: GET
 
 idea_link_delete:
-    pattern:  /{groupSlug}/event/{eventSlug}/deleteLink
-    defaults: { _controller: IdeaBundle:Idea:deleteLink }
+    pattern:    /list/{entrySetId}/entry/{entryId}/deleteLink
+    defaults:   { _controller: IdeaBundle:Idea:deleteLink }
     requirements:
      _method: POST
 
 idea_follow:
-    pattern:    /{groupSlug}/event/{eventSlug}/follow
+    pattern:    /list/{entrySetId}/entry/{entryId}/follow
     defaults:   { _controller: IdeaBundle:Idea:follow }
     requirements:
      _method:   POST
 
 idea_vote:
-    pattern:    /{groupSlug}/event/{eventSlug}/vote
+    pattern:    /list/{entrySetId}/entry/{entryId}/vote
     defaults:   { _controller: IdeaBundle:Idea:vote }
     requirements:
      _method:   POST
 
 idea_comment:
-    pattern:    /{groupSlug}/event/{eventSlug}/comment
+    pattern:    /list/{entrySetId}/entry/{entryId}/comment
     defaults:   { _controller: IdeaBundle:Idea:comment }
     requirements:
      _method:   POST
 
 idea_comment_delete:
-    pattern:    /{groupSlug}/event/{eventSlug}/commentDelete
+    pattern:    /list/{entrySetId}/entry/{entryId}/commentDelete
     defaults:   { _controller: IdeaBundle:Idea:commentDelete }
     requirements:
      _method:    POST
 
 idea_delete:
-    pattern:    /{groupSlug}/event/{eventSlug}/delete
+    pattern:    /list/{entrySetId}/entry/{entryId}/delete
     defaults:   { _controller: IdeaBundle:Idea:delete }
     requirements:
      _method:   POST
-
-idea_info:
-    pattern:    /{groupSlug}/event/{eventSlug}/info/{page}
-    defaults:   { _controller: IdeaBundle:Idea:info }
-    requirements:
-     _method:   GET
-
 
 login:
     pattern:   /login

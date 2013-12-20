@@ -44,12 +44,24 @@
         </div>
 
         <div class="cBx2">
-            <a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="submit left" id="event_button">View {{ ideaType }}s</a>
-            {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
-                <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="submit right" id="event_button">Propose {{ ideaType }}</a>
-            {% else %}
-                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="submit right" id="event_button">Register</a>
-            {% endif %}
+            <div class="scrollableSidebarWidget">
+                {% if isAdmin or (event.getUser() == app.user) %}
+                    <a href = "{{ path('entry_set_new', {'registrationId': event.entrySetRegistration.id, 'entrySetId': 'new'}) }}">Add List</a>
+                {% endif %}
+                {% for entrySet in event.entrySets %}
+                    <div class="scrollableSidebarWidgetItem">
+                        <h2>{{ entrySet.name }}</h2>
+                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" class="submit left">View {{ entrySet.type | capitalize }}s</a>
+                        {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
+                            <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id}) }}" class="submit left marginlft">Propose {{ entrySet.type | capitalize }}</a>
+                        {% else %}
+                            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="submit left marginlft">Register</a>
+                        {% endif %}
+                        <div class="clear"></div>
+                    </div>
+                {% endfor %}
+            </div>
+
             <table id="eventDetails" class="tblStyle">
                 <tbody>
                 {% if event.startsAt %}
@@ -78,7 +90,6 @@
                 </tbody>
             </table>
 
-            <br>
         </div>
     </div>
 

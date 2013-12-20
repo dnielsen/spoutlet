@@ -5,11 +5,13 @@
             <li><a href="{{ path('group_show', {'slug': group.slug }) }}">Group Home</a></li>
 
             <span data-group-admin="true">
-                <li><a href="{{ path('group_edit', { 'slug': group.slug }) }}">Group Settings</a></li>
+                <li><a href="{{ path('group_edit', { 'slug': group.slug }) }}">Edit Group</a></li>
                 <li><a href="{{ path('idea_admin_event', {'groupSlug': group.slug}) }}">Create Event</a></li>
+                <li><a href = "{{ path('entry_set_new', {'registrationId': group.entrySetRegistration.id, 'entrySetId': 'new'}) }}">Add List</a></li>
                 {% if not group.isPublic %}
                     <li><a href="{{ path('group_applications', { 'slug': group.slug }) }}">Member Approvals</a></li>
                 {% endif %}
+
             </span>
 
             <span data-group-admin="false">
@@ -21,8 +23,7 @@
                 </span>
             </span>
 
-            <li><a href="{{ path('group_events', {'slug': group.slug }) }}">Group Events</a></li>
-            <li><a href="{{ path('groups') }}">See All Groups</a></li>
+            <li><a href="{{ path('group_events', {'slug': group.slug }) }}">All Events</a></li>
 
         </ul>
     </div>

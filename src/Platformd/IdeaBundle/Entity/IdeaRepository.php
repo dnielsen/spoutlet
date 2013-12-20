@@ -19,22 +19,22 @@ class IdeaRepository extends EntityRepository
      *   Admin show only private ideas for all users.
      *   Normal user only ideas you authored (private and public)
      *   Judge user only ideas assigned to you for judging (private and public)
-     * @param $event Used to determine if user is a judge
+     * @param $entrySet Used to determine if user is a judge
      * @param null $round If null ideas from all rounds are
      * returned, otherwise ideas from this round and above are returned.
      * @param null $tag Returns all ideas containing this tag
      * @param null $user If null show public ideas otherwise show user specific filtered idea.
      * @return array
      */
-    public function filter($event, $round = null, $tag = null, $user = null)
+    public function filter($entrySet, $round = null, $tag = null, $user = null)
     {
         $qb = $this->createQueryBuilder('i')
             ->select      ('i')
-            ->where       ('i.event = :eventId')
+            ->where       ('i.entrySet = :entrySetId')
             ->andWhere       ('i.highestRound >= :round')
             ->setParameters( array(
                'round'    => ($round == null ? 1 : $round),
-               'eventId'  => $event->getId(),
+               'entrySetId'  => $entrySet->getId(),
  			));
 
         if(!is_null($tag) && $tag <> '') {
@@ -48,7 +48,7 @@ class IdeaRepository extends EntityRepository
         }
 
         $isAdmin = $user->hasRole('ROLE_SUPER_ADMIN');
-        $isJudge = !$isAdmin && $event->getIsVotingActive() && $event->containsVoter($user->getUsername());
+        $isJudge = !$isAdmin && $entrySet->getIsVotingActive() && $entrySet->containsVoter($user->getUsername());
 
         //for normal users filter out other peoples ideas
         if(!$isAdmin && !$isJudge) {
@@ -91,7 +91,7 @@ class IdeaRepository extends EntityRepository
 
         //Add header
         $headerArray = array(
-            "id","Event", "Creator", "Email", "Title", "Creation Time",
+            "id","EntrySet", "Creator", "Email", "Title", "Creation Time",
             "Description", "Stage", "For Course", "Professors",
             "Amount", "Members", "HighestRound", "IsPrivate"
         );
@@ -100,7 +100,7 @@ class IdeaRepository extends EntityRepository
         foreach($this->findAll() as $idea) {
             $ideaArray = array(
                 $idea->getId(),
-                $idea->getEvent()->getName(),
+                $idea->getEntrySet()->getName(),
                 $idea->getCreator()->getUsername(),
                 $idea->getCreator()->getEmail(),
                 $idea->getName(),
@@ -133,13 +133,16 @@ class IdeaRepository extends EntityRepository
 		return $ideas;
 	}
 
-    public function sortByFollows(&$ideas) {
-        usort($ideas, function($a, $b) {
+    public function sortByFollows(&$ideas, $desc = true) {
+        usort($ideas, function($a, $b) use ($desc) {
                 $valueA = $a->getNumFollowers();
                 $valueB = $b->getNumFollowers();
-                if($valueA == $valueB )
-                    return 0;
-                return ($valueA < $valueB) ? 1 : -1;
+                if($valueA == $valueB ) { return 0; }
+
+                if($desc)
+                    return ($valueA < $valueB) ? 1 : -1;
+                else
+                    return ($valueA < $valueB) ? -1 : 1;
             });
         return $ideas;
     }

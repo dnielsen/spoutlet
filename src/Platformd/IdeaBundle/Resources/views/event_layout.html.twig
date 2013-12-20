@@ -24,19 +24,9 @@
 
 {% block content %}
 
-    {% if event.type == constant('\\Platformd\\EventBundle\\Entity\\Event::TYPE_UNCONFERENCE') %}
-        {% set ideaType = 'Session' %}
-        {% set personType = 'Speaker' %}
-    {% elseif event.type == constant('Platformd\\EventBundle\\Entity\\Event::TYPE_IDEATHON') %}
-        {% set ideaType = 'Idea' %}
-        {% set personType = 'Contributor' %}
-    {% elseif event.type == constant('Platformd\\EventBundle\\Entity\\Event::TYPE_FORUM') %}
-        {% set ideaType = 'Discussion' %}
-    {% endif %}
-
     {% if event.private and not isAdmin %}
         {% if app.user is null %}
-            This forum is private. Please log in to view this page.<br/><br/>
+            This event is private. Please log in to view this page.<br/><br/>
             <a href="{{ path('fos_user_security_login') }}"><input type="button" value="{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}" class="btnMdm left"></a>
             <a href="{{ path('fos_user_registration_register') }}"><input type="button" value="Register" class="btnMdm left marginlft"></a>
             {% set show = 'false' %}

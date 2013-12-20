@@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\IdeaBundle\Entity\VoteCriteria;
 use Platformd\EventBundle\Entity\Event;
+use Platformd\IdeaBundle\Entity\EntrySet;
 use Platformd\EventBundle\Entity\GroupEvent;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
@@ -48,10 +49,6 @@ class AdminController extends Controller
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
             ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
             ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
-            ->add('type',               'choice',           array('choices' => array(Event::TYPE_IDEATHON       => 'Ideathon',
-                                                                                     Event::TYPE_UNCONFERENCE   => 'Unconference',
-                                                                                     Event::TYPE_FORUM          => 'Forum',
-                                                                                    )))
             ->add('online',             'choice',           array('choices' => array('1' => 'Yes', '0' => 'No')))
             ->add('private',            'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
             ->add('startsAt',           'datetime',         array('attr'    => array('size' => '60%'), 'required' => '0'))
@@ -59,15 +56,15 @@ class AdminController extends Controller
             ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address2',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
-            ->add('allowedVoters',      'text',             array('max_length' => '5000', 'attr'    => array('size' => '60%', 'placeholder' => 'username1, username2, ...'), 'required' => '0',))
-            ->add('isSubmissionActive', 'choice',           array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
-            ->add('isVotingActive',     'choice',           array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
 
             ->getForm();
 
         if($request->getMethod() == 'POST') {
             $form->bindRequest($request);
             if($form->isValid()) {
+
+                $em = $this->getDoctrine()->getEntityManager();
+
                 $group->addEvent($event);
 
                 $event->setUser($this->getCurrentUser());
@@ -75,20 +72,16 @@ class AdminController extends Controller
                 $event->setActive(true);
                 $event->setApproved(true);
                 $event->setRegistrationOption(Event::REGISTRATION_ENABLED);
-
-                //validate and clean up allowedVoters
-                $validatedJudges = array();
-                $candidateJudges = array_map('trim',explode(",",$event->getAllowedVoters()));
-                $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
-                foreach($candidateJudges as $candidate) {
-                    if($userRepo->findOneBy(array('username'=> $candidate)) != null)
-                        $validatedJudges[] = $candidate;
-                }
-                $event->setAllowedVoters(implode(",",$validatedJudges));
-                
-                $em = $this->getDoctrine()->getEntityManager();
                 $em->persist($event);
                 $em->flush();
+
+                // Registration needs to be created after event is persisted, relies on generated event ID
+                $esReg = $event->getEntrySetRegistration();
+                if ($esReg == null){
+                    $esReg = $event->createEntrySetRegistration();
+                    $em->persist($esReg);
+                    $em->flush();
+                }
 
                 return $this->redirect($this->generateUrl('idea_admin', array(
                             'groupSlug' => $groupSlug,
@@ -124,6 +117,77 @@ class AdminController extends Controller
                 'event'     => $event,
                 'isAdmin'   => $isAdmin,
             ));
+    }
+
+    public function entrySetAction(Request $request, $entrySetId)
+    {
+        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
+
+        if( $entrySetId == 'new' )
+        {
+            $entrySet             = new EntrySet();
+            $registrationId       = $request->get('registrationId');
+            $entrySetRegistration = $esRegRepo->find($registrationId);
+            $cancelTarget         = $esRegRepo->getContainer($entrySetRegistration);
+        }
+        else
+        {
+            $entrySet             = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet')->find($entrySetId);
+            $entrySetRegistration = $entrySet->getEntrySetRegistration();
+            $registrationId       = $entrySetRegistration->getId();
+            $cancelTarget         = $entrySet;
+        }
+
+        if ($request->get('cancel') == 'Cancel') {
+            return $this->redirect($this->generateUrl($cancelTarget->getLinkableRouteName(), $cancelTarget->getLinkableRouteParameters()));
+        }
+
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'entrySet', $entrySet)
+            ->add('name',               'text',     array('attr'    => array('size'  => '60%')))
+            ->add('type',               'choice',   array('choices' => array(EntrySet::TYPE_IDEA      => 'Ideas',
+                                                                             EntrySet::TYPE_SESSION   => 'Sessions',
+                                                                             EntrySet::TYPE_THREAD    => 'Threads',)))
+            ->add('isSubmissionActive', 'choice',   array('choices' => array('1' => 'Yes', '0' => 'No')))
+            ->add('isVotingActive',     'choice',   array('choices' => array('0' => 'No', '1' => 'Yes')))
+            ->add('allowedVoters',      'text',     array('max_length' => '5000', 'attr'    => array('size' => '60%', 'placeholder' => 'username1, username2, ...'), 'required' => '0',))
+            ->getForm();
+
+        if($request->getMethod() == 'POST') {
+
+            $form->bindRequest($request);
+
+            if($form->isValid()) {
+
+
+                //validate and clean up allowedVoters
+                $validatedJudges = array();
+                $candidateJudges = array_map('trim', explode(",", $entrySet->getAllowedVoters()));
+
+                $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
+
+                foreach($candidateJudges as $candidate) {
+                    if($userRepo->findOneBy(array('username' => $candidate)) != null) {
+                        $validatedJudges[] = $candidate;
+                    }
+                }
+
+                $entrySet->setEntrySetRegistration($entrySetRegistration);
+                $entrySet->setAllowedVoters(implode(",", $validatedJudges));
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($entrySet);
+                $em->flush();
+
+                $redirectUrl = $this->generateUrl($entrySet->getLinkableRouteName(), $entrySet->getLinkableRouteParameters());
+                return $this->redirect($redirectUrl);
+            }
+        }
+
+        return $this->render('IdeaBundle:Admin:entrySet.html.twig', array(
+            'form'           => $form->createView(),
+            'entrySetId'     => $entrySetId,
+            'registrationId' => $registrationId,
+        ));
     }
 
     // Edit requets will provide id using GET
@@ -276,6 +340,7 @@ class AdminController extends Controller
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventSlug);
+        $entrySets = $event->getEntrySets();
 
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
@@ -307,7 +372,12 @@ class AdminController extends Controller
 
         //perform filter and sort
         $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
-        $ideaList = $ideaRepo->filter($event, $round, $tag, $this->getCurrentUser());
+
+        $ideaList = array();
+        foreach($entrySets as $entrySet){
+            $ideaList = array_merge($ideaList, $ideaRepo->filter($entrySet, $round, $tag, $this->getCurrentUser()));
+        }
+
         $ideaRepo->sortByVotes($ideaList, true, $sortCriteria);
 
         //save the resulting ordered list of ideas
@@ -520,6 +590,13 @@ class AdminController extends Controller
             return false;
         }
         return $event;
+    }
+
+    public function getParentByIdea($idea){
+        $esRegistration = $idea->getParentRegistration();
+        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
+
+        return $esRegRepo->getContainer($esRegistration);
     }
 
     public function assignJudgesAction(Request $request, $groupSlug, $eventSlug, $ideaId)
