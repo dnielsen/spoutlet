@@ -26,7 +26,7 @@
                     <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" class="btnTny left marginlft">View Ideas</a>
                     {% if group.isMember(app.user) or group.isOwner(app.user) %}
                         {# <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id}) }}" class="btnTny left marginlft">Propose {{ entrySet.type | capitalize }}</a> #}
-                        <a href="/" class="btnTny left marginlft">Add Idea</a>
+                        <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}" class="btnTny left marginlft">Add Idea</a>
                     {% endif %}
                     <div class="clear"></div>
                 </div>
