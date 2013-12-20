@@ -44,6 +44,42 @@
         </div>
 
         <div class="cBx2">
+            <h2 class="left">{{ event.attendeeCount }} attendee{% if event.attendeeCount != 1 %}s{% endif %}</h2>
+            {% if not (event.isUserAttending(app.user) or event.getUser() == app.user) %}
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="submit right marginlft">Register</a>
+            {% endif %}
+            <br/><br><hr/><div class="clear"></div>
+
+
+            <table id="eventDetails" class="tblStyle">
+                <tbody>
+                {% if event.startsAt %}
+                    <tr>
+                        <td width="25%"><strong>Date:</strong></td>
+                        <td width="75%">{{event.DateRangeString}}</td>
+                    </tr>
+                {% endif %}
+                {% if event.location %}
+                    <tr>
+                        <td width="25%"><strong>Map:</strong></td>
+                        <td width="75%">
+                            <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+                            <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="25%"><strong>Location:</strong></td>
+                        <td width="75%">{{ event.location }}</td>
+                    </tr>
+                    <tr>
+                        <td width="25%"><strong>Address:</strong></td>
+                        <td width="75%">{{ event.address1 }}<br/>{{ event.address2 }}</td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+
+
             <div class="scrollableSidebarWidget">
                 {% if isAdmin or (event.getUser() == app.user) %}
                     <a href = "{{ path('entry_set_new', {'registrationId': event.entrySetRegistration.id, 'entrySetId': 'new'}) }}">Add List</a>
@@ -53,42 +89,13 @@
                         <h2>{{ entrySet.name }}</h2>
                         <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" class="submit left">View {{ entrySet.type | capitalize }}s</a>
                         {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
-                            <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': entrySet.id}) }}" class="submit left marginlft">Propose {{ entrySet.type | capitalize }}</a>
-                        {% else %}
-                            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="submit left marginlft">Register</a>
+                            <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}" class="submit left marginlft">Propose {{ entrySet.type | capitalize }}</a>
                         {% endif %}
                         <div class="clear"></div>
                     </div>
                 {% endfor %}
             </div>
 
-            <table id="eventDetails" class="tblStyle">
-                <tbody>
-                {% if event.startsAt %}
-                <tr>
-                    <td width="25%"><strong>Date:</strong></td>
-                    <td width="75%">{{event.DateRangeString}}</td>
-                </tr>
-                {% endif %}
-                {% if event.location %}
-                <tr>
-                    <td width="25%"><strong>Map:</strong></td>
-                    <td width="75%">
-                        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
-                        <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
-                    </td>
-                </tr>
-                <tr>
-                    <td width="25%"><strong>Location:</strong></td>
-                    <td width="75%">{{ event.location }}</td>
-                </tr>
-                <tr>
-                    <td width="25%"><strong>Address:</strong></td>
-                    <td width="75%">{{ event.address1 }}<br/>{{ event.address2 }}</td>
-                </tr>
-                {% endif %}
-                </tbody>
-            </table>
 
         </div>
     </div>
