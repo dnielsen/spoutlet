@@ -190,6 +190,27 @@ class AdminController extends Controller
         ));
     }
 
+    public function entrySetDeleteAction($entrySetId)
+    {
+        $this->enforceUserSecurity();
+
+        $entrySet = $this->getEntrySet($entrySetId);
+        $parent   = $this->getParentByEntrySet($entrySet);
+
+        if ($this->canEditEntrySet($entrySet)) {
+
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->remove($entrySet);
+            $em->flush();
+
+            $url = $this->generateUrl($parent->getLinkableRouteName(), $parent->getLinkableRouteParameters());
+            return $this->redirect($url);
+        }
+        else {
+            throw new AccessDeniedException;
+        }
+    }
+
     // Edit requets will provide id using GET
     // New request will not provide id using GET
     // Save request will have displayName and description parameters using POST
@@ -637,6 +658,42 @@ class AdminController extends Controller
             'id' => $ideaId,
         )));
     }
+
+
+    public function getEntrySet($entrySetId)
+    {
+        $entrySetRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet');
+        $entrySet = $entrySetRepo->find($entrySetId);
+
+        if (!$entrySet){
+            throw new NotFoundHttpException('Entry Set not found');
+        }
+
+        return $entrySet;
+    }
+
+    public function getParentByEntrySet($entrySet)
+    {
+        $parentRegistration = $entrySet->getEntrySetRegistration();
+        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
+
+        return $esRegRepo->getContainer($parentRegistration);
+    }
+
+    public function canEditEntrySet($entrySet)
+    {
+        $parent = $this->getParentByEntrySet($entrySet);
+
+        if ($parent instanceof GroupEvent){
+            return $this->canEditEvent($parent);
+        }
+        elseif ($parent instanceof Group){
+            return ($this->isAdmin() || $parent->isOwner($this->getCurrentUser()) );
+        }
+
+        return false;
+    }
+
 
 	public function exportIdeasAction($groupSlug, $eventSlug) {
         $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
