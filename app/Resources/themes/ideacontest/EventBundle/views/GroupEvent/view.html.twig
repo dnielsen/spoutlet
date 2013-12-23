@@ -44,15 +44,8 @@
         </div>
 
         <div class="cBx2">
-            <h2 class="left">{{ event.attendeeCount }} attendee{% if event.attendeeCount != 1 %}s{% endif %}</h2>
-            {% if not (event.isUserAttending(app.user) or event.getUser() == app.user) %}
-                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="submit right marginlft">Register</a>
-            {% endif %}
-            <br/><br><hr/><div class="clear"></div>
-
-
+            <h2 class="left">Event Details</h2>
             <table id="eventDetails" class="tblStyle">
-                <tbody>
                 {% if event.startsAt %}
                     <tr>
                         <td width="25%"><strong>Date:</strong></td>
@@ -61,13 +54,6 @@
                 {% endif %}
                 {% if event.location %}
                     <tr>
-                        <td width="25%"><strong>Map:</strong></td>
-                        <td width="75%">
-                            <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
-                            <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
-                        </td>
-                    </tr>
-                    <tr>
                         <td width="25%"><strong>Location:</strong></td>
                         <td width="75%">{{ event.location }}</td>
                     </tr>
@@ -75,10 +61,35 @@
                         <td width="25%"><strong>Address:</strong></td>
                         <td width="75%">{{ event.address1 }}<br/>{{ event.address2 }}</td>
                     </tr>
+                    <tr>
+                        <td colspan="2">
+                            <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+                            <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
+                        </td>
+                    </tr>
                 {% endif %}
-                </tbody>
             </table>
 
+            <br>
+
+            <h2 class="left">{{ event.attendees|length }} attendee{% if event.attendees|length != 1 %}s{% endif %}</h2>
+            {% if not (event.isUserAttending(app.user)) %}
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny submit right marginlft">Register</a>
+            {% else %}
+                <a class="btnTny right marginlft">Registered</a>
+            {% endif %}
+            <br class="clr">
+            <div class="scrollableSidebarWidget">
+                {% for member in event.attendees %}
+                    <div class="scrollableSidebarWidgetItem">
+                        <a href="{{ path('profile', {'username': member.username}) }}">{{ member.name }}</a>
+                    </div>
+                {% else %}
+                    There are no members of this group yet.
+                {% endfor %}
+            </div>
+
+            <br>
 
             <div class="scrollableSidebarWidget">
                 {% if isAdmin or (event.getUser() == app.user) %}
@@ -87,9 +98,9 @@
                 {% for entrySet in event.entrySets %}
                     <div class="scrollableSidebarWidgetItem">
                         <h2>{{ entrySet.name }}</h2>
-                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" class="submit left">View {{ entrySet.type | capitalize }}s</a>
+                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" class="tnyBtn submit left">View {{ entrySet.type | capitalize }}s</a>
                         {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
-                            <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}" class="submit left marginlft">Propose {{ entrySet.type | capitalize }}</a>
+                            <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}" class="tnyBtn submit left marginlft">Propose {{ entrySet.type | capitalize }}</a>
                         {% endif %}
                         <div class="clear"></div>
                     </div>
