@@ -17,7 +17,12 @@
 
         </form>
 
+        {# TODO: push down authentication and membership check to the submit idea page #}
+        <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}">
+            <input type="submit" value="Add {{ entrySet.type | capitalize }}" class="right">
+        </a>
 
+        {#
         {% if canSubmit %}
            <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}">
                <input type="submit" value="Add {{ entrySet.type | capitalize }}" class="right">
@@ -29,10 +34,11 @@
                 </a>
             {% elseif group is defined and group is not null %}
                 <a href="{{ path('group_join', {'slug': group.slug}) }}">
-                    <input type="submit" value="Join Group" class="right">
+                    <input type="submit" value="Register" class="right">
                 </a>
             {% endif %}
         {%  endif %}
+        #}
 
     </div>
     <div class="clr"></div>
