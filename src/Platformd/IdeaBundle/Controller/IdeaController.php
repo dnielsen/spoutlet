@@ -1007,6 +1007,20 @@ class IdeaController extends Controller
         return $entry;
     }
 
+    public function canEditEntrySet($entrySet)
+    {
+        $parent = $this->getParentByEntrySet($entrySet);
+
+        if ($parent instanceof GroupEvent){
+            return $this->canEditEvent($parent);
+        }
+        elseif ($parent instanceof Group){
+            return ($this->isAdmin() || $parent->isOwner($this->getCurrentUser()) );
+        }
+
+        return false;
+    }
+
 
     /*
      * Gets array of tag name strings
