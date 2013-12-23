@@ -21,6 +21,10 @@ entry_set_edit:
     pattern:    /list/{entrySetId}/edit
     defaults:   { _controller: IdeaBundle:Admin:entrySet }
 
+entry_set_delete:
+    pattern:    /list/{entrySetId}/delete
+    defaults:   { _controller: IdeaBundle:Admin:entrySetDelete }
+
 # ADMIN ROUTES
 
 idea_admin_event:

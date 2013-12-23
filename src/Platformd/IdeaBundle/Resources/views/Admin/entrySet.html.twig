@@ -49,6 +49,8 @@
 
         <input type="submit" value="Submit"/>
         <button type="submit" name="cancel" value="Cancel" formnovalidate>Cancel</button>
+        <a href="{{ path('entry_set_delete', {'entrySetId': entrySetId}) }}"><input type="button" class="spcr-l redButton" value="Delete" class="redButton" onclick="return confirm('Are you sure you want to delete this list?');"></a>
+
     </form>
 
 {% endblock %}
