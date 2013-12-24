@@ -5,8 +5,8 @@
     <h1 class = "left">{{ entrySet.name }} {% if showAllRounds == 'true' %}- All Rounds{% else %}{% if round > 1 %}- Round {{ round }}{% endif %}{% endif %}</h1>{% if isAdmin %}<a class="left marginlft" href="{{ path('entry_set_edit', {'entrySetId': entrySet.id}) }}">Edit</a> {% endif %}
     <div class="clear"></div>
     <div>
+        {% if (entrySet.entries|length > 0) %}
         <form action = "{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" id='filterForm' method="get" class="left">
-
             <table>
                 <tr>
                     <td><input type="text" name="tag" tabindex="1" placeholder="Filter by tag" value="{{tag}}" /></td>
@@ -14,8 +14,8 @@
                     {% if tag %}<td style="padding-left: 5px"><a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><input type="button" value="View All" class="btnMdm" /></a></td>{% endif %}
                 </tr>
             </table>
-
         </form>
+        {% endif %}
 
         {# TODO: push down authentication and membership check to the submit idea page #}
         <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}">
@@ -41,78 +41,81 @@
         #}
 
     </div>
+    
     <div class="clr"></div>
 
-    {% if app.user %}
-        {% if viewPrivate %}
-            <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'viewPrivate': false, 'sortBy': sortBy, 'showAllRounds': showAllRounds}) }}">Public {{ entrySet.type | capitalize }}s</a>
-            &nbsp;&nbsp;|&nbsp;&nbsp;
-            <strong>
+    {% if (entrySet.entries|length > 0) %} {# No entries in entrySet #}
+        {% if app.user %}
+            {% if viewPrivate %}
+                <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'viewPrivate': false, 'sortBy': sortBy, 'showAllRounds': showAllRounds}) }}">Public {{ entrySet.type | capitalize }}s</a>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <strong>
+                    {% if isAdmin %}
+                        Private {{ entrySet.type | capitalize }}s
+                    {% elseif isJudge %}
+                        Assigned {{ entrySet.type | capitalize }}s
+                    {% else %}
+                        My {{ entrySet.type | capitalize }}s
+                    {% endif %}
+                </strong>
+
+            {% else %}
+                <strong>Public {{ entrySet.type | capitalize }}s</strong>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'viewPrivate': true, 'sortBy': sortBy, 'showAllRounds': showAllRounds}) }}">
                 {% if isAdmin %}
-                    Private {{ entrySet.type | capitalize }}s
+                    Private {{ entrySet.type | capitalize }}s</a>
                 {% elseif isJudge %}
-                    Assigned {{ entrySet.type | capitalize }}s
+                    Assigned {{ entrySet.type | capitalize }}s</a>
                 {% else %}
-                    My {{ entrySet.type | capitalize }}s
+                    My {{ entrySet.type | capitalize }}s</a>
                 {% endif %}
-            </strong>
+
+            {% endif %}
+
+            &nbsp;&nbsp;&nbsp;&nbsp;
+        {% endif %}
+
+
+        {% if sortBy == 'vote' %}
+            <strong>Sort By Votes</strong>
 
         {% else %}
-            <strong>Public {{ entrySet.type | capitalize }}s</strong>
-            &nbsp;&nbsp;|&nbsp;&nbsp;
-        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'viewPrivate': true, 'sortBy': sortBy, 'showAllRounds': showAllRounds}) }}">
-            {% if isAdmin %}
-                Private {{ entrySet.type | capitalize }}s</a>
-            {% elseif isJudge %}
-                Assigned {{ entrySet.type | capitalize }}s</a>
-            {% else %}
-                My {{ entrySet.type | capitalize }}s</a>
-            {% endif %}
+            <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': 'vote', 'viewPrivate': viewPrivate, 'showAllRounds': showAllRounds}) }}">Sort By Votes</a>
+
+        {% endif %}
+
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+
+        {% if sortBy == 'createdAt' %}
+            <strong>Sort By Newest</strong>
+
+        {% else %}
+            <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': 'createdAt', 'viewPrivate': viewPrivate, 'showAllRounds': showAllRounds}) }}">Sort By Newest</a>
 
         {% endif %}
 
         &nbsp;&nbsp;&nbsp;&nbsp;
-    {% endif %}
 
-
-    {% if sortBy == 'vote' %}
-        <strong>Sort By Votes</strong>
-
-    {% else %}
-        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': 'vote', 'viewPrivate': viewPrivate, 'showAllRounds': showAllRounds}) }}">Sort By Votes</a>
-
-    {% endif %}
-
-    &nbsp;&nbsp;|&nbsp;&nbsp;
-
-    {% if sortBy == 'createdAt' %}
-        <strong>Sort By Newest</strong>
-
-    {% else %}
-        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': 'createdAt', 'viewPrivate': viewPrivate, 'showAllRounds': showAllRounds}) }}">Sort By Newest</a>
-
-    {% endif %}
-
-    &nbsp;&nbsp;&nbsp;&nbsp;
-
-    {% if round > 1 %}
-        {% if showAllRounds == 'true' %}
-            <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': sortBy, 'viewPrivate': viewPrivate, 'showAllRounds': 'false'}) }}">
-                Current Round
-            </a>
-        {% else %}
-            <strong>Current Round</strong>
+        {% if round > 1 %}
+            {% if showAllRounds == 'true' %}
+                <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': sortBy, 'viewPrivate': viewPrivate, 'showAllRounds': 'false'}) }}">
+                    Current Round
+                </a>
+            {% else %}
+                <strong>Current Round</strong>
+            {% endif %}
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            {% if showAllRounds == 'true' %}
+                <strong>All Rounds</strong>
+            {% else %}
+                <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': sortBy, 'viewPrivate': viewPrivate, 'showAllRounds': 'true'}) }}">
+                    All Rounds
+                </a>
+            {% endif %}
         {% endif %}
-        &nbsp;&nbsp;|&nbsp;&nbsp;
-        {% if showAllRounds == 'true' %}
-            <strong>All Rounds</strong>
-        {% else %}
-            <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': sortBy, 'viewPrivate': viewPrivate, 'showAllRounds': 'true'}) }}">
-                All Rounds
-            </a>
-        {% endif %}
-    {% endif %}
 
+    {% endif %} {# No entries in entrySet #}
     <hr/>
 
     {% for idea in ideas %}
@@ -130,7 +133,7 @@
                 </form>
             </div>
 
-            {% if sidebar %}<div class="session">{% else %}<div class="sessionWide">{% endif %}
+            <div class="{% if sidebar %}session{% else %}sessionWide{% endif %}">
                 <a href="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}">
                     <h3>{{ idea.name }}</h3>
                 </a>
@@ -153,7 +156,6 @@
     {% else %}
         <div class="left">There are no {{ entrySet.type }}s yet.</div>
         <br/><br/><hr/>
-
     {% endfor %}
 
 {% endblock %}
