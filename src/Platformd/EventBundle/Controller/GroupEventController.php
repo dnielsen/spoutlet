@@ -329,6 +329,7 @@ class GroupEventController extends Controller
         return $this->render('EventBundle:GroupEvent:view.html.twig', array(
             'group'         => $group,
             'event'         => $groupEvent,
+            'breadCrumbs'   => "> <a href=\"".$this->generateUrl($group->getLinkableRouteName(), $group->getLinkableRouteParameters())."\">".$group->getName()."</a>",
             'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_GROUP, 'id'=>$group->getId()),
             'attendance'    => $attendance,
             'isAdmin'       => $isAdmin,
