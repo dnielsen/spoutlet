@@ -144,7 +144,7 @@ class ApiController extends Controller
             'id'            => $nextEvent->getId(),
             'name'          => $nextEvent->getName(),
             'daterange'     => $nextEvent->getDateRangeString(),
-            'timerange'     => $event->getStartsAt()->format('g:i a').' - '.$event->getEndsAt()->format('g:i a'),
+            'timerange'     => $nextEvent->getStartsAt()->format('g:i a').' - '.$nextEvent->getEndsAt()->format('g:i a'),
             'location'      => $nextEvent->getLocation(),
             'address1'      => $nextEvent->getAddress1(),
             'address2'      => $nextEvent->getAddress2(),
