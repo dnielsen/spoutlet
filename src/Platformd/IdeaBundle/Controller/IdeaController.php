@@ -23,6 +23,7 @@ use Platformd\IdeaBundle\Entity\Link;
 use Platformd\IdeaBundle\Entity\EntrySet;
 use Platformd\IdeaBundle\Entity\EntrySetRegistryRepository;
 use Platformd\EventBundle\Entity\Event;
+use Platformd\IdeaBundle\Entity\EntrySetScopeable;
 
 class IdeaController extends Controller
 {
@@ -315,13 +316,14 @@ class IdeaController extends Controller
         $em->persist($idea);
         $em->flush();
 
+        $this->joinIdeaScope($idea);
+
         $ideaUrl = $this->generateUrl('idea_show', array(
             'entrySetId'=> $entrySetId,
             'entryId'   => $idea->getId(),
             ));
         return new RedirectResponse($ideaUrl);
     }
-
 
     public function editFormAction($entrySetId, $entryId) {
 
@@ -400,6 +402,8 @@ class IdeaController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $em->flush();
 
+        $this->joinIdeaScope($idea);
+
         $ideaUrl = $this->generateUrl('idea_show', array(
                 'entrySetId'  => $entrySetId,
                 'entryId'     => $entryId,
@@ -407,6 +411,30 @@ class IdeaController extends Controller
         return new RedirectResponse($ideaUrl);
     }
 
+    public function joinIdeaScope(Idea $idea) {
+        $user = $this->get('security.context')->getToken()->getUser();
+
+        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
+        $containerScope = $esRegRepo->getContainer($idea->getEntrySet()->getEntrySetRegistration());
+
+        $event = null;
+        $group = null;
+        if($containerScope instanceof GroupEvent) {
+            $event = $containerScope;
+            $group = $event->getGroup();
+        } elseif($containerScope instanceof Group) {
+            $group = $containerScope;
+        }
+
+        if($event != null) {
+            $eventService = $this->getGroupEventService();
+            $eventService->register($event, $user);
+        }
+
+        if($group != null) {
+            $this->getGroupManager()->autoJoinGroup($group, $user);
+        }
+    }
 
     public function uploadAction($entrySetId, $entryId)
     {
