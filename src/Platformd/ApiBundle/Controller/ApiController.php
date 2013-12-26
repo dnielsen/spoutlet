@@ -92,6 +92,65 @@ class ApiController extends Controller
         return $response;
     }
 
+    public function eventAction(Request $request, $eventId)
+    {
+        $event = $this->getGroupEventService()->find($eventId);
+
+        $response= new Response();
+        if (!$event){
+            return $response->setStatusCode(404);
+        }
+
+        $response->setStatusCode(200);
+
+        $entrySets = array();
+        foreach ($event->getEntrySets() as $entrySet) {
+
+            $sortedEntries = $entrySet->getEntries()->toArray();
+            $this->getDoctrine()->getRepository('IdeaBundle:Idea')->sortByFollows($sortedEntries);
+
+            $entries = array();
+            foreach ($sortedEntries as $entry) {
+                $entries[] = array(
+                    'id'        => $entry->getId(),
+                    'name'      => $entry->getName(),
+                    'numVotes'  => $entry->getNumVotes(),
+                    'url'       => $this->generateUrl($entry->getLinkableRouteName(), $entry->getLinkableRouteParameters(), true),
+                );
+            }
+            $entrySets[] = array(
+                'id'        => $entrySet->getId(),
+                'name'      => $entrySet->getName(),
+                'url'       => $this->generateUrl($entrySet->getLinkableRouteName(), $entrySet->getLinkableRouteParameters(), true),
+                'entries'   => $entries,
+            );
+        }
+
+        $eventData = array(
+            'meta'                 => array(
+                'self'  => $this->generateUrl('api_event', array('eventId' => $event->getId()), true),
+                'mimetype' => "application/json"
+            ),
+            'id'                    => $event->getId(),
+            'creator'               => $event->getUser()->getUserName(),
+            'name'                  => $event->getName(),
+            'description'           => $event->getContent(),
+            'daterange'             => $event->getDateRangeString(),
+            'timerange'             => $event->getStartsAt()->format('g:i a').' - '.$event->getEndsAt()->format('g:i a'),
+            'location'              => $event->getLocation(),
+            'address1'              => $event->getAddress1(),
+            'address2'              => $event->getAddress2(),
+            'entrySets'             => $entrySets,
+        );
+
+        $encoder = new JsonEncoder();
+        $jsonData = $encoder->encode($eventData, $format = 'json');
+        $response->setContent($this->jsonpWrapper($request,$jsonData));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
     public function groupAction(Request $request, $groupId)
     {
         $group = $this->getGroupManager()->find($groupId);
@@ -137,6 +196,9 @@ class ApiController extends Controller
                 'name'      => $event->getName(),
                 'daterange' => $event->getDateRangeString(),
                 'timerange' => $event->getStartsAt()->format('g:i a').' - '.$event->getEndsAt()->format('g:i a'),
+                'location'  => $event->getLocation(),
+                'address1'  => $event->getAddress1(),
+                'address2'  => $event->getAddress2(),
                 'url'       => $this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
             );
         }
