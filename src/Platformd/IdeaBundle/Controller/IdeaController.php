@@ -88,6 +88,7 @@ class IdeaController extends Controller
             'event'         => $event,
             'entrySet'      => $entrySet,
             'ideas'         => $ideaList,
+            'breadCrumbs'   => $this->getBreadCrumbsString($entrySet),
             'round'         => $round,
             'canSubmit'     => $canSubmit,
             'tag'           => $tag,
@@ -117,6 +118,7 @@ class IdeaController extends Controller
             'event' 			=> $event,
             'entrySet'          => $entrySet,
             'idea' 				=> $idea,
+            'breadCrumbs'       => $this->getBreadCrumbsString($idea),
             'canEdit' 			=> $this->canEditIdea($entrySet, $idea),
 			'canRemoveComments' => $this->canRemoveComment($idea),
             'sidebar' 			=> true,
@@ -249,6 +251,7 @@ class IdeaController extends Controller
                 'group'      => $group,
                 'event'      => $event,
                 'entrySet'   => $entrySet,
+                'breadCrumbs'=> $this->getBreadCrumbsString($entrySet),
                 'sidebar'    => true,
                 'attendance' => $attendance,
                 'isAdmin'    => $isAdmin,
@@ -344,6 +347,7 @@ class IdeaController extends Controller
                 'event'      => $event,
                 'entrySet'   => $entrySet,
                 'idea'       => $idea,
+                'breadCrumbs'=> $this->getBreadCrumbsString($idea),
                 'sidebar'    => true,
                 'attendance' => $attendance,
                 'isAdmin'    => $isAdmin,
@@ -492,6 +496,7 @@ class IdeaController extends Controller
                 'event'     => $event,
                 'entrySet'  => $entrySet,
                 'idea'      => $idea,
+                'breadCrumbs'=> $this->getBreadCrumbsString($idea),
                 'form'      => $form->createView(),
                 'sidebar'   => true,
                 'attendance'=> $attendance,
@@ -571,6 +576,7 @@ class IdeaController extends Controller
                 'event'     => $event,
                 'entrySet'  => $entrySet,
                 'idea'      => $idea,
+                'breadCrumbs'=> $this->getBreadCrumbsString($idea),
                 'form'      => $form->createView(),
                 'sidebar'   => true,
                 'attendance'=> $attendance,
@@ -1118,6 +1124,21 @@ class IdeaController extends Controller
         $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
 
         return $esRegRepo->getContainer($parentRegistration);
+    }
+
+    public function getBreadCrumbsString($scope)
+    {
+        $breadCrumbs = $this->getHierarchy($scope);
+
+        $breadCrumbsHtml = "";
+
+        foreach ($breadCrumbs as $crumb) {
+            if ($crumb && $crumb != $scope){
+                $breadCrumbsHtml = $breadCrumbsHtml."> <a href=\"".$this->generateUrl($crumb->getLinkableRouteName(), $crumb->getLinkableRouteParameters())."\">".$crumb->getName()."</a> ";
+            }
+        }
+
+        return $breadCrumbsHtml;
     }
 
     public function getHierarchy($scope)
