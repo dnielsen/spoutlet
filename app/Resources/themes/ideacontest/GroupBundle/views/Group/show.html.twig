@@ -65,7 +65,10 @@
                         <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': nextEvent.slug}) }}" class="btnTny right">View Event</a>
 
                     {% else %}
-                        <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right">Attend Event</a>
+                        <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right" onclick=
+                        "{% if not group.isOwner(app.user) and not group.isMember(app.user) %}
+                                    return confirm('In order to register for this event, you must be a member of its group. Press OK to join group.');
+                                {% endif %}">Attend Event</a>
                     {% endif %}
                 </td>
             </tr>
@@ -86,7 +89,10 @@
                         {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
                             <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" class="btnTny">View Event</a>
                         {% else %}
-                            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny">Attend Event</a>
+                            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny" onclick=
+                                "{% if not group.isOwner(app.user) and not group.isMember(app.user) %}
+                                    return confirm('In order to register for this event, you must be a member of its group. Press OK to join group.');
+                                {% endif %}" >Attend Event</a>
                         {% endif %}
                     </div>
                     <div class="clr"></div>
