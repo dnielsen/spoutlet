@@ -136,6 +136,7 @@ class ApiController extends Controller
                 'id'        => $event->getId(),
                 'name'      => $event->getName(),
                 'daterange' => $event->getDateRangeString(),
+                'timerange' => $event->getStartsAt()->format('g:i a').' - '.$event->getEndsAt()->format('g:i a'),
                 'url'       => $this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
             );
         }
@@ -143,6 +144,7 @@ class ApiController extends Controller
             'id'            => $nextEvent->getId(),
             'name'          => $nextEvent->getName(),
             'daterange'     => $nextEvent->getDateRangeString(),
+            'timerange'     => $event->getStartsAt()->format('g:i a').' - '.$event->getEndsAt()->format('g:i a'),
             'location'      => $nextEvent->getLocation(),
             'address1'      => $nextEvent->getAddress1(),
             'address2'      => $nextEvent->getAddress2(),
