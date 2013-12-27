@@ -42,6 +42,10 @@
                 <td width="25%"><strong>DATE:</strong></td>
                 <td width="75%">{{ nextEvent.DateRangeString }}</td>
             </tr>
+            <tr>
+                <td width="25%"><strong>TIME:</strong></td>
+                <td width="75%">{{ nextEvent.startsAt|date('g:i a') }} - {{ nextEvent.endsAt|date('g:i a') }}</td>
+            </tr>
             {% if not nextEvent.getOnline %}
                 <tr>
                     <td width="25%"><strong>LOCATION:</strong></td>
