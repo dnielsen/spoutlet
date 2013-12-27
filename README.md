@@ -104,7 +104,10 @@ INSTALLATION
 * Create the database, migrate up to the current schema
 
     $ php app/console doctrine:database:create  
-    $ php app/console doctrine:mig:mig  
+    $ php app/console doctrine:mig:mig 
+    
+    $ php app/console doctrine:database:create --connection="acl" --env=prod
+    $ php app/console init:acl --env=prod
     
     Connect to database and update:  
 
