@@ -12,7 +12,6 @@
         </thead>
         <tbody>
             {% for event in events %}
-
                 {% if event.contentType == "GroupEvent" %}
                     {% set contactUrl = path("group_event_contact", event.getLinkableRouteParameters) %}
                     {% set editUrl = path("idea_admin", {"groupSlug": event.group.slug, "eventId": event.id }) %}
