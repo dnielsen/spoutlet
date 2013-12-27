@@ -123,11 +123,10 @@
 
         {% for idea in user.ideas %}
             {% if idea.canUserView(app.user) %}
-                {% set event = parents[idea.name] %}
-                {% set group = event.getGroup %}
+                {% set parent = parents[idea.name] %}
                 <tr>
                     <td>
-                        <a href="{{ path('group_event_view', {'groupSlug': group.getSlug, 'eventId': event.getId}) }}">{{ event.getName }}</a>
+                        <a href="{{ path(parent.getLinkableRouteName(), parent.getLinkableRouteParameters()) }}">{{ parent.getName }}</a>
                     </td>
                     <td>
                         <a href="{{ path('idea_show', {'entrySetId': idea.entrySet.getId, 'entryId': idea.id}) }}">{{ idea.name }}</a>
