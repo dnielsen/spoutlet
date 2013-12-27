@@ -30,13 +30,13 @@ platformd:
             requirements: Participation in Campsite requires an account.
             already: "Already have a Campsite Account? Skip this step and <login now>."
             last_step: |
-                You’re almost there! A confirmation email has been sent. Follow the instructions in the email to activate your Campsite account. If you do not receive an email within 15 minutes, please email <a href="mailto:osman@platformd.com">osman@platformd.com</a> for support.
+                You’re almost there! A confirmation email has been sent. Follow the instructions in the email to activate your Campsite account. If you do not receive an email within 15 minutes, please email <a href="mailto:support@campsite.org">support@campsite.org</a> for support.
                 <br /><br />
                 <strong>Important: Check Your Spam Folder!</strong>
 
         request_reset:
             help_message: To reset your password, please enter the email address used to create your Campsite account.
-            spam_message: If you can’t find the password reset email, be sure to check your email’s spam folder. It can take up to 30 minutes before a password reset email is received. If you haven’t received your password reset email after 30 minutes or you require additional support, please email <a href="mailto:osman@platformd.com">osman@platformd.com</a>.
+            spam_message: If you can’t find the password reset email, be sure to check your email’s spam folder. It can take up to 30 minutes before a password reset email is received. If you haven’t received your password reset email after 30 minutes or you require additional support, please email <a href="mailto:support@campsite.org">support@campsite.org</a>.
 
     giveaway:
         max_ip_limit: No more keys can be claimed by your IP address. If you believe this is an error, please contact info@Campsite.org
