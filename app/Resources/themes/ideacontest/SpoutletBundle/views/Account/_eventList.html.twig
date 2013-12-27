@@ -12,10 +12,9 @@
         </thead>
         <tbody>
             {% for event in events %}
-
                 {% if event.contentType == "GroupEvent" %}
                     {% set contactUrl = path("group_event_contact", event.getLinkableRouteParameters) %}
-                    {% set editUrl = path("idea_admin", {"groupSlug": event.group.slug, "eventSlug": event.slug }) %}
+                    {% set editUrl = path("idea_admin", {"groupSlug": event.group.slug, "eventId": event.id }) %}
                     {% set rsvpUrl = path("group_event_rsvp") %}
                     {% set manageUrl = path("group_event_attendees", event.getLinkableRouteParameters) %}
                     {% if event.approved == 0 %}{% set status = 'platformd.account_page.events.pending_approval' | pd_trans %}{% endif %}

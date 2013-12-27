@@ -28,19 +28,19 @@ entry_set_delete:
 # ADMIN ROUTES
 
 idea_admin_event:
-    pattern:    /{groupSlug}/event/{eventSlug}/admin/configure
-    defaults:   { _controller: IdeaBundle:Admin:event, eventSlug:newEvent}
+    pattern:    /{groupSlug}/event/{eventId}/admin/configure
+    defaults:   { _controller: IdeaBundle:Admin:event, eventId:newEvent}
 
 idea_admin:
-    pattern:    /{groupSlug}/event/{eventSlug}/admin
+    pattern:    /{groupSlug}/event/{eventId}/admin
     defaults:   { _controller: IdeaBundle:Admin:admin }
 
 idea_admin_criteria_all:
-    pattern:    /{groupSlug}/event/{eventSlug}/admin/criteriaList
+    pattern:    /{groupSlug}/event/{eventId}/admin/criteriaList
     defaults:   { _controller: IdeaBundle:Admin:criteriaList }
 
 idea_admin_criteria_get:
-    pattern:    /{groupSlug}/event/{eventSlug}/admin/criteria/{id}
+    pattern:    /{groupSlug}/event/{eventId}/admin/criteria/{id}
     defaults:   { _controller: IdeaBundle:Admin:criteria }
     requirements:
       _method: GET
@@ -52,55 +52,55 @@ idea_admin_assign:
      _method: POST
 
 idea_admin_criteria:
-    pattern:    /{groupSlug}/event/{eventSlug}/admin/criteria
+    pattern:    /{groupSlug}/event/{eventId}/admin/criteria
     defaults:   { _controller: IdeaBundle:Admin:criteria }
 
 idea_admin_member_approvals:
-    pattern:    /{groupSlug}/event/{eventSlug}/admin/approvals
+    pattern:    /{groupSlug}/event/{eventId}/admin/approvals
     defaults:   { _controller: IdeaBundle:Admin:approvals }
 
 idea_admin_process_approval:
-    pattern:    /{groupSlug}/event/{eventSlug}/admin/approvals/{userId}/{approval}
+    pattern:    /{groupSlug}/event/{eventId}/admin/approvals/{userId}/{approval}
     defaults:   { _controller: IdeaBundle:Admin:processApproval }
 
 idea_summary:
-    pattern:    /{groupSlug}/event/{eventSlug}/admin/summary
+    pattern:    /{groupSlug}/event/{eventId}/admin/summary
     defaults:   { _controller: IdeaBundle:Admin:summary }
     requirements:
       _method:  GET
 
 idea_advance:
-    pattern:    /{groupSlug}/event/{eventSlug}/admin/advance
+    pattern:    /{groupSlug}/event/{eventId}/admin/advance
     defaults:   { _controller: IdeaBundle:Admin:advance }
     requirements:
       _method:  POST
 
 idea_admin_images:
-    pattern:    /{groupSlug}/event/{eventSlug}/admin/images
+    pattern:    /{groupSlug}/event/{eventId}/admin/images
     defaults:   { _controller: IdeaBundle:Admin:images }
     requirements:
       _method: GET|POST
 
 idea_admin_remove_image:
-    pattern:    /{groupSlug}/event/{eventSlug}/admin/images/remove/{imageId}
+    pattern:    /{groupSlug}/event/{eventId}/admin/images/remove/{imageId}
     defaults:   { _controller: IdeaBundle:Admin:removeImage }
     requirements:
       _method: GET
 
 idea_admin_export_ideas:
-    pattern:    /{groupSlug}/event/{eventSlug}/admin/exportIdeas
+    pattern:    /{groupSlug}/event/{eventId}/admin/exportIdeas
     defaults:   { _controller: IdeaBundle:Admin:exportIdeas }
     requirements:
       _method: GET
 
 idea_admin_export_users:
-    pattern:    /{groupSlug}/event/{eventSlug}/admin/exportUsers
+    pattern:    /{groupSlug}/event/{eventId}/admin/exportUsers
     defaults:   { _controller: IdeaBundle:Admin:exportUsers }
     requirements:
       _method: GET
 
 idea_admin_export_votes:
-    pattern:    /{groupSlug}/event/{eventSlug}/admin/exportVotes
+    pattern:    /{groupSlug}/event/{eventId}/admin/exportVotes
     defaults:   { _controller: IdeaBundle:Admin:exportVotes }
     requirements:
       _method: GET

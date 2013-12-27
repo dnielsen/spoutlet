@@ -1791,7 +1791,7 @@ Alienware Arena Team
 
                     $this->setFlash('success', 'Your group was created. Fill in the details below to list your upcoming event.');
 
-                    $url = $this->generateUrl('idea_admin_event', array('groupSlug' => $group->getSlug(), 'eventSlug' => 'newEvent'));
+                    $url = $this->generateUrl('idea_admin_event', array('groupSlug' => $group->getSlug(), 'eventId' => 'newEvent'));
                     $request->getSession()->remove('PostCreateAction');
                     return $this->redirect($url);
                 }

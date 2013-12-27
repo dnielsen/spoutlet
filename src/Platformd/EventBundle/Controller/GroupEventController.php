@@ -36,7 +36,7 @@ class GroupEventController extends Controller
         $event = $this->getGroupEventService()->find($id);
 
         if (!$event) {
-            throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
+            throw $this->createNotFoundException(sprintf('No event find for "%s"', $id));
         }
 
         $user  = $this->getUser();
@@ -135,7 +135,7 @@ class GroupEventController extends Controller
 
                     return $this->redirect($this->generateUrl('group_event_view', array(
                         'groupSlug' => $group->getSlug(),
-                        'eventSlug' => $groupEvent->getSlug()
+                        'eventId' => $groupEvent->getId()
                     )));
                 } else {
                     $this->setFlash('success', 'Success! Your event has been created. The group organizer has been notified via email to review your event. If approved, your event will be listed on the group page allowing other members to RSVP for your event.');
@@ -212,7 +212,7 @@ class GroupEventController extends Controller
 
                     return $this->redirect($this->generateUrl('group_event_view', array(
                         'groupSlug' => $group->getSlug(),
-                        'eventSlug' => $groupEvent->getSlug()
+                        'eventId' => $groupEvent->getId()
                     )));
                 } else {
                     $this->setFlash('success', 'Success! Your event has been created. The group organizer has been notified via email to review your event. If approved, your event will be listed on the group page allowing other members to RSVP for your event.');
@@ -283,7 +283,7 @@ class GroupEventController extends Controller
 
                 return $this->redirect($this->generateUrl('group_event_view', array(
                     'groupSlug' => $group->getSlug(),
-                    'eventSlug' => $groupEvent->getSlug()
+                    'eventId' => $groupEvent->getId()
                 )));
             }
         }
@@ -295,7 +295,7 @@ class GroupEventController extends Controller
         ));
     }
 
-    public function viewAction($groupSlug, $eventSlug)
+    public function viewAction($groupSlug, $eventId)
     {
         /** @var $group Group */
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
@@ -307,7 +307,7 @@ class GroupEventController extends Controller
         /** @var $groupEvent GroupEvent */
         $groupEvent = $this->getGroupEventService()->findOneBy(array(
             'group' => $group->getId(),
-            'slug' => $eventSlug,
+            'id' => $eventId,
             'published' => true,
             'deleted' => false,
         ));
@@ -336,7 +336,7 @@ class GroupEventController extends Controller
         ));
     }
 
-    public function contactAction($groupSlug, $eventSlug, Request $request)
+    public function contactAction($groupSlug, $eventId, Request $request)
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
 
@@ -348,7 +348,7 @@ class GroupEventController extends Controller
 
         $groupEvent = $this->getGroupEventService()->findOneBy(array(
             'group' => $group->getId(),
-            'slug' => $eventSlug,
+            'id' => $eventId,
             'published' => true,
             'deleted' => false,
             'approved' => true,
@@ -377,7 +377,7 @@ class GroupEventController extends Controller
 
             return $this->redirect($this->generateUrl('group_event_view', array(
                 'groupSlug' => $groupSlug,
-                'eventSlug' => $groupEvent->getSlug()
+                'eventId' => $groupEvent->getId()
             )));
         }
 
@@ -455,7 +455,7 @@ class GroupEventController extends Controller
                     array(
                         '%content%' => $content,
                         '%eventName%' => $groupEvent->getName(),
-                        '%eventUrl%' => $this->generateUrl('group_event_view', array('groupSlug' => $groupSlug, 'eventSlug' => $eventSlug), true),
+                        '%eventUrl%' => $this->generateUrl('group_event_view', array('groupSlug' => $groupSlug, 'eventId' => $eventId), true),
                         '%organizerName%' => $this->getUser()->getUsername(),
                     ),
                     'messages',
@@ -481,7 +481,7 @@ class GroupEventController extends Controller
 
                 return $this->redirect($this->generateUrl('group_event_view', array(
                     'groupSlug' => $groupSlug,
-                    'eventSlug' => $groupEvent->getSlug()
+                    'eventId' => $groupEvent->getId()
                 )));
             }
 
@@ -495,7 +495,7 @@ class GroupEventController extends Controller
         ));
     }
 
-    public function emailPreviewAction($groupSlug, $eventSlug, Request $request)
+    public function emailPreviewAction($groupSlug, $eventId, Request $request)
     {
         $email = new GroupEventEmail();
 
@@ -503,7 +503,7 @@ class GroupEventController extends Controller
 
         $event = $this->getGroupEventService()->findOneBy(array(
             'group' => $group->getId(),
-            'slug' => $eventSlug,
+            'id' => $eventId,
         ));
 
         $emailLocale = $group->getOwner()->getLocale() ?: 'en';
@@ -539,7 +539,7 @@ class GroupEventController extends Controller
                     array(
                         '%content%' => $content,
                         '%eventName%' => $event->getName(),
-                        '%eventUrl%' => $this->generateUrl('group_event_view', array('groupSlug' => $groupSlug, 'eventSlug' => $eventSlug), true),
+                        '%eventUrl%' => $this->generateUrl('group_event_view', array('groupSlug' => $groupSlug, 'eventId' => $eventId), true),
                         '%organizerName%' => $this->getUser()->getUsername(),
                     ),
                     'messages',
@@ -556,7 +556,7 @@ class GroupEventController extends Controller
         $this->setFlash('error', 'platformd.events.event_contact.error');
         return $this->redirect($this->generateUrl('group_event_contact', array(
             'groupSlug' => $groupSlug,
-            'eventSlug' => $eventSlug,
+            'eventId' => $eventId,
         )));
     }
 
@@ -565,7 +565,7 @@ class GroupEventController extends Controller
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function attendeesAction($groupSlug, $eventSlug)
+    public function attendeesAction($groupSlug, $eventId)
     {
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
 
@@ -575,7 +575,7 @@ class GroupEventController extends Controller
 
         $groupEvent = $this->getGroupEventService()->findOneBy(array(
             'group' => $group->getId(),
-            'slug' => $eventSlug,
+            'id' => $eventId,
         ));
 
         if (!$groupEvent) {
@@ -590,7 +590,7 @@ class GroupEventController extends Controller
         ));
     }
 
-    public function removeAttendeeAction($groupSlug, $eventSlug, $userId)
+    public function removeAttendeeAction($groupSlug, $eventId, $userId)
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
 
@@ -602,7 +602,7 @@ class GroupEventController extends Controller
 
         $groupEvent = $this->getGroupEventService()->findOneBy(array(
             'group' => $group->getId(),
-            'slug' => $eventSlug,
+            'id' => $eventId,
         ));
 
         if (!$groupEvent) {
@@ -628,7 +628,7 @@ class GroupEventController extends Controller
             '%eventName%' => $groupEvent->getName(),
         ), 'messages', $locale);
 
-        $url        = $this->generateUrl('group_event_view', array('groupSlug' => $groupSlug, 'eventSlug' => $groupEvent->getSlug()), true);
+        $url        = $this->generateUrl('group_event_view', array('groupSlug' => $groupSlug, 'eventId' => $groupEvent->getId()), true);
 
         $message = nl2br($this->trans('platformd.event.email.attendee_removed.message', array(
             '%username%'       => $user->getUsername(),
@@ -645,7 +645,7 @@ class GroupEventController extends Controller
         $attendees = $this->getGroupEventService()->getAttendeeList($groupEvent);
         return $this->redirect($this->generateUrl('group_event_attendees', array(
             'groupSlug' => $groupSlug,
-            'eventSlug' => $groupEvent->getSlug(),
+            'eventId' => $groupEvent->getId(),
         )));
     }
 
@@ -756,7 +756,7 @@ class GroupEventController extends Controller
 
         return $this->redirect($this->generateUrl('group_event_contact', array(
             'groupSlug' => $groupEvent->getGroup()->getSlug(),
-            'eventSlug' => $groupEvent->getSlug()
+            'eventId' => $groupEvent->getId()
         )));
     }
 
@@ -790,7 +790,7 @@ class GroupEventController extends Controller
 
         return $this->redirect($this->generateUrl('group_event_contact', array(
             'groupSlug' => $groupEvent->getGroup()->getSlug(),
-            'eventSlug' => $groupEvent->getSlug()
+            'eventId' => $groupEvent->getId()
         )));
     }
 
@@ -873,7 +873,7 @@ class GroupEventController extends Controller
             $this->setFlash('error', $this->trans('platformd.events.event_show.not_allowed_register'));
             return $this->redirect($this->generateUrl('group_event_view', array(
                 'groupSlug' => $groupSlug,
-                'eventSlug' => $groupEvent->getSlug(),
+                'eventId' => $groupEvent->getId(),
             )));
         }
 
@@ -898,7 +898,7 @@ class GroupEventController extends Controller
 
         return $this->redirect($this->generateUrl('group_event_view', array(
             'groupSlug' => $groupSlug,
-            'eventSlug' => $groupEvent->getSlug(),
+            'eventId' => $groupEvent->getId(),
         )));
     }
 

@@ -20,24 +20,26 @@ use Platformd\MediaBundle\Form\Type\MediaType;
 class AdminController extends Controller
 {
 
-    public function eventAction(Request $request, $groupSlug, $eventSlug) {
+    public function eventAction(Request $request, $groupSlug, $eventId) {
 
         // test if submission is from a 'cancel' button press
+        $event = $this->getEvent($groupSlug, $eventId);
+         
         if ($request->get('cancel') == 'Cancel') {
-            if ($eventSlug == 'newEvent'){
+            if ($eventId == 'newEvent'){
                 return $this->redirect($this->generateUrl('group_show', array(
                     'slug'  => $groupSlug,
                 )));
             } else {
                 return $this->redirect($this->generateUrl('idea_admin', array(
                     'groupSlug' => $groupSlug,
-                    'eventSlug' => $eventSlug,
+                    'eventId' =>   $eventId,
                 )));
             }
         }
 
         $group = $this->getGroup($groupSlug);
-        $event = $this->getEvent($groupSlug, $eventSlug);
+      //  $event = $this->getEvent($groupSlug, $eventId);
 
         $isNew = false;
 
@@ -85,7 +87,7 @@ class AdminController extends Controller
 
                 return $this->redirect($this->generateUrl('idea_admin', array(
                             'groupSlug' => $groupSlug,
-                            'eventSlug' => $event->getSlug(),
+                            'eventId' => $event->getId(),
                         )));
             }
         }
@@ -101,10 +103,10 @@ class AdminController extends Controller
             ));
     }
 
-    public function adminAction(Request $request, $groupSlug, $eventSlug) {
+    public function adminAction(Request $request, $groupSlug, $eventId) {
 
         $group = $this->getGroup($groupSlug);
-        $event = $this->getEvent($groupSlug, $eventSlug);
+        $event = $this->getEvent($groupSlug, $eventId);
 
         if (!$this->canEditEvent($event)) {
             throw new AccessDeniedException();
@@ -214,18 +216,18 @@ class AdminController extends Controller
     // Edit requets will provide id using GET
     // New request will not provide id using GET
     // Save request will have displayName and description parameters using POST
-    public function criteriaAction(Request $request, $groupSlug, $eventSlug, $id = null) {
+    public function criteriaAction(Request $request, $groupSlug, $eventId, $id = null) {
 
         // test if submission is from a 'cancel' button press
         if($request->get('cancel') == 'Cancel') {
             return $this->redirect($this->generateUrl('idea_admin_criteria_all', array(
                     'groupSlug' => $groupSlug,
-                    'eventSlug' => $eventSlug,
+                    'eventId' => $eventId,
                 )));
         }
 
         $group = $this->getGroup($groupSlug);
-        $event = $this->getEvent($groupSlug, $eventSlug);
+        $event = $this->getEvent($groupSlug, $eventId);
 
         $vcRepo = $this->getDoctrine()->getRepository('IdeaBundle:VoteCriteria');
 
@@ -264,7 +266,7 @@ class AdminController extends Controller
 
                 return $this->redirect($this->generateUrl('idea_admin_criteria_all', array(
                             'groupSlug' => $groupSlug,
-                            'eventSlug' => $eventSlug,
+                            'eventId' => $eventId,
                         )));
             }
         }
@@ -281,18 +283,18 @@ class AdminController extends Controller
     }
 
 
-    public function criteriaListAction(Request $request, $groupSlug, $eventSlug) {
+    public function criteriaListAction(Request $request, $groupSlug, $eventId) {
 
         // test if submission is from a 'new' button press
         if($request->get('new') == 'New') {
             return $this->redirect($this->generateUrl('idea_admin_criteria', array(
                     'groupSlug' => $groupSlug,
-                    'eventSlug' => $eventSlug,
+                    'eventId' => $eventId,
                 )));
         }
 
         $group = $this->getGroup($groupSlug);
-        $event = $this->getEvent($groupSlug, $eventSlug);
+        $event = $this->getEvent($groupSlug, $eventId);
 
         $doc = $this->getDoctrine();
         $vcRepo = $doc->getRepository('IdeaBundle:VoteCriteria');
@@ -325,7 +327,7 @@ class AdminController extends Controller
                 return $this->redirect($this->generateUrl('idea_admin_criteria_get', array(
                             'id' => $selectedId,
                             'groupSlug' => $groupSlug,
-                            'eventSlug' => $eventSlug,
+                            'eventId' => $eventId,
                         )));
             }
 
@@ -343,7 +345,7 @@ class AdminController extends Controller
 
             return $this->redirect($this->generateUrl('idea_admin_criteria_all', array(
                     'groupSlug' => $groupSlug,
-                    'eventSlug' => $eventSlug,
+                    'eventId' => $eventId,
                 )));
         }
 
@@ -357,10 +359,10 @@ class AdminController extends Controller
             ));
     }
 
-    public function summaryAction(Request $request, $groupSlug, $eventSlug) {
+    public function summaryAction(Request $request, $groupSlug, $eventId) {
 
         $group = $this->getGroup($groupSlug);
-        $event = $this->getEvent($groupSlug, $eventSlug);
+        $event = $this->getEvent($groupSlug, $eventId);
         $entrySets = $event->getEntrySets();
 
         $isAdmin = $this->isGranted('ROLE_ADMIN');
@@ -378,8 +380,8 @@ class AdminController extends Controller
 
         $vcRepo = $this->getDoctrine()->getRepository('IdeaBundle:VoteCriteria');
         $sortCriteria = $vcRepo->find($critId);
-
-        $params['criteriaList'] = $vcRepo->findByEventId($this->getEvent($groupSlug, $eventSlug));
+        
+        $params['criteriaList'] = $vcRepo->findByEventId($this->getEvent($groupSlug, $event->getSlug()));
 
         //retrieve tag filter parameter
         $tag = $request->query->get('tag');
@@ -416,9 +418,9 @@ class AdminController extends Controller
         return $this->render('IdeaBundle:Admin:summary.html.twig', $params);
     }
 
-    public function advanceAction($groupSlug, $eventSlug) {
+    public function advanceAction($groupSlug, $eventId) {
 
-        $event = $this->getEvent($groupSlug, $eventSlug);
+        $event = $this->getEvent($groupSlug, $eventId);
 
         //update current round
         $currentRound = $event->getCurrentRound() + 1;
@@ -442,16 +444,16 @@ class AdminController extends Controller
 
         return  $this->redirect($this->generateUrl('idea_summary', array(
                 'groupSlug' => $groupSlug,
-                'eventSlug' => $eventSlug,
+                'eventId' => $eventId,
             )));
     }
 
-    public function imagesAction($groupSlug, $eventSlug, Request $request) {
+    public function imagesAction($groupSlug, $eventId, Request $request) {
 
         $newImage = new Media();
         $form = $this->createForm(new MediaType(), $newImage, array('image_label' => 'Image File:'));
 
-        $event = $this->getEvent($groupSlug, $eventSlug);
+        $event = $this->getEvent($groupSlug, $eventId);
 
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
@@ -486,9 +488,9 @@ class AdminController extends Controller
         return $this->render('IdeaBundle:Admin:images.html.twig', $params);
     }
 
-    public function approvalsAction($groupSlug, $eventSlug) {
+    public function approvalsAction($groupSlug, $eventId) {
 
-        $event = $this->getEvent($groupSlug, $eventSlug);
+        $event = $this->getEvent($groupSlug, $eventId);
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         $attendees = $event->getAttendees();
@@ -515,9 +517,9 @@ class AdminController extends Controller
         return $this->render('IdeaBundle:Admin:approvals.html.twig', $params);
     }
 
-    public function processApprovalAction($groupSlug, $eventSlug, $userId, $approval) {
+    public function processApprovalAction($groupSlug, $eventId, $userId, $approval) {
 
-        $eventId = $this->getEvent($groupSlug, $eventSlug)->getId();
+        $eventId = $this->getEvent($groupSlug, $eventId)->getId();
         $user = $this->getDoctrine()->getRepository('UserBundle:User')->findOneBy(array('id'=>$userId));
 
         $rsvpRepo = $this->getDoctrine()->getRepository('EventBundle:GroupEventRsvpAction');
@@ -542,12 +544,12 @@ class AdminController extends Controller
 
         return $this->redirect($this->generateUrl('idea_admin_member_approvals', array(
             'groupSlug' => $groupSlug,
-            'eventSlug' => $eventSlug,
+            'eventId' => $eventId,
         )));
 
     }
 
-    public function removeImageAction($groupSlug, $eventSlug, $imageId) {
+    public function removeImageAction($groupSlug, $eventId, $imageId) {
 
         $image = $this->getDoctrine()->getRepository('MediaBundle:Media')->find($imageId);
 
@@ -561,7 +563,7 @@ class AdminController extends Controller
 
         return $this->redirect($this->generateUrl('idea_admin_images', array(
             'groupSlug' => $groupSlug,
-            'eventSlug' => $eventSlug,
+            'eventId' => $eventId,
         )));
     }
 
@@ -593,9 +595,10 @@ class AdminController extends Controller
         return $group;
     }
 
-    public function getEvent($groupSlug, $eventSlug)
+    public function getEvent($groupSlug, $eventId)
     {
         $group = $this->getGroup($groupSlug);
+        
         if (!$group){
             return false;
         }
@@ -604,7 +607,7 @@ class AdminController extends Controller
         $event = $eventEm->findOneBy(
             array(
                 'group' => $group->getId(),
-                'slug' => $eventSlug,
+                'id' => $eventId,
             )
         );
         if ($event == null){
@@ -620,11 +623,11 @@ class AdminController extends Controller
         return $esRegRepo->getContainer($esRegistration);
     }
 
-    public function assignJudgesAction(Request $request, $groupSlug, $eventSlug, $ideaId)
+    public function assignJudgesAction(Request $request, $groupSlug, $eventId, $ideaId)
     {
         $doc = $this->getDoctrine();
 
-        if (!$this->canEditEvent($this->getEvent($groupSlug, $eventSlug))) {
+        if (!$this->canEditEvent($this->getEvent($groupSlug, $eventId))) {
             throw new AccessDeniedException();
         }
 
@@ -654,7 +657,7 @@ class AdminController extends Controller
 
         return  $this->redirect($this->generateUrl('idea_show', array(
             'groupSlug' => $groupSlug,
-            'eventSlug' => $eventSlug,
+            'eventId' => $eventId,
             'id' => $ideaId,
         )));
     }
@@ -695,13 +698,13 @@ class AdminController extends Controller
     }
 
 
-	public function exportIdeasAction($groupSlug, $eventSlug) {
+	public function exportIdeasAction($groupSlug, $eventId) {
         $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
         $csvString = $ideaRepo->toCSV();
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$eventSlug.'-ideas.csv"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$eventId.'-ideas.csv"');
         $response->setContent($csvString);
         return $response;
     }
@@ -717,15 +720,15 @@ class AdminController extends Controller
         return $response;
     }
 
-    public function exportVotesAction($groupSlug, $eventSlug) {
-        $event = $this->getEvent($groupSlug, $eventSlug);
+    public function exportVotesAction($groupSlug, $eventId) {
+        $event = $this->getEvent($groupSlug, $eventId);
 
         $voteRepo = $this->getDoctrine()->getRepository('IdeaBundle:Vote');
         $csvString = $voteRepo->toCSV($event);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$eventSlug.'-scores.csv"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$eventId.'-scores.csv"');
         $response->setContent($csvString);
         return $response;
     }
