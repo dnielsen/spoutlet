@@ -35,7 +35,8 @@
             <td style="vertical-align:top" class="event-link">
 
                 {% if isGroupEvent %}
-                    {{ event | pd_link_full(event.name) }}
+                    {{ event | pd_link_full(event.name ) }} 
+      
                 {% else %}
                     {{ event | pd_link_full(event.name, ['global-event-link']) }}
                 {% endif %}

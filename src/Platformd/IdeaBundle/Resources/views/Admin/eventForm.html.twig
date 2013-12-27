@@ -34,7 +34,7 @@
         {% set formpath = path('idea_admin_event', {'groupSlug': group.slug}) %}
     {% else %}
         {% set verb = 'Modify' %}
-        {% set formpath = path('idea_admin_event', {'groupSlug': group.slug, 'eventSlug': event.slug}) %}
+        {% set formpath = path('idea_admin_event', {'groupSlug': group.slug, 'eventId': event.id}) %}
     {% endif %}
 
     <h1>{{ verb }} Your Event</h1>

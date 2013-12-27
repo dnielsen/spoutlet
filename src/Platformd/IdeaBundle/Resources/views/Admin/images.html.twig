@@ -6,7 +6,7 @@
 
     <h2>Add Image</h2> (Approximately 644 x 340)
 
-    <form action="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" {{  form_enctype(form) }}>
+    <form action="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventId': event.id}) }}" method="post" {{  form_enctype(form) }}>
         {{  form_errors(form) }}
         {{  form_row(form.fileObject) }}
         {{  form_rest(form) }}
@@ -19,18 +19,18 @@
 
     {%  for image in event.rotatorImages %}
         <img src="{{  media_path(image) }}" style="max-width: 150px;max-height: 150px;vertical-align: middle"/>
-        <a href="{{ path('idea_admin_remove_image', {'groupSlug': group.slug, 'eventSlug': event.slug, 'imageId': image.id}) }}">Delete</a>
+        <a href="{{ path('idea_admin_remove_image', {'groupSlug': group.slug, 'eventId': event.id, 'imageId': image.id}) }}">Delete</a>
         <br/><hr/>
     {% endfor %}
 
     <table class="paddedTable">
         <td>
-            <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="get" id='home'>
+            <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}" method="get" id='home'>
                 <input type="submit" value="< {{ event.name | truncate(20) }}" form='home' />
             </a>
         </td>
         <td>
-            <form action = {{ path('idea_admin', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get">
+            <form action = {{ path('idea_admin', {'groupSlug': group.slug, 'eventId': event.id}) }} method="get">
                 <input type="submit" value="< Admin Console">
             </form>
         </td>

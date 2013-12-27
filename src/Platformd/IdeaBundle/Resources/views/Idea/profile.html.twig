@@ -127,7 +127,7 @@
                 {% set group = event.getGroup %}
                 <tr>
                     <td>
-                        <a href="{{ path('group_event_view', {'groupSlug': group.getSlug, 'eventSlug': event.getSlug}) }}">{{ event.getName }}</a>
+                        <a href="{{ path('group_event_view', {'groupSlug': group.getSlug, 'eventId': event.getId}) }}">{{ event.getName }}</a>
                     </td>
                     <td>
                         <a href="{{ path('idea_show', {'entrySetId': idea.entrySet.getId, 'entryId': idea.id}) }}">{{ idea.name }}</a>

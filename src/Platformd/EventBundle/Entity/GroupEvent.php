@@ -328,7 +328,7 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
     public function getLinkableRouteParameters()
     {
         return array(
-            'eventSlug' => $this->slug,
+            'eventId' => $this->id,
             'groupSlug' => $this->group->getSlug(),
         );
     }

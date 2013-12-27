@@ -28,7 +28,7 @@ use Platformd\IdeaBundle\Entity\EntrySetScopeable;
 class IdeaController extends Controller
 {
 
-	const SIDEBAR_NONE  = 0;
+  	const SIDEBAR_NONE  = 0;
     const SIDEBAR_JUDGE = 1;
     const SIDEBAR_ADMIN = 2;
 
@@ -998,7 +998,7 @@ class IdeaController extends Controller
     }
 
 
-    public function getEvent($groupSlug, $eventSlug)
+    public function getEvent($groupSlug, $eventId)
     {
         $group = $this->getGroup($groupSlug);
 
@@ -1006,7 +1006,7 @@ class IdeaController extends Controller
         $event = $eventEm->findOneBy(
             array(
                 'group' => $group->getId(),
-                'slug' => $eventSlug,
+                'id' => $eventId,
             )
         );
 

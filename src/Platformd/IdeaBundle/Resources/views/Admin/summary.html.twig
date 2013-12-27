@@ -6,24 +6,24 @@
     {# Filter by tag text field / Link to create new criteria #}
     {% if criteriaList|length == 0 %}
         <h2>Please define the judging criteria</h2>
-        <form action = {{ path('idea_admin_criteria_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get">
+        <form action = {{ path('idea_admin_criteria_all', {'groupSlug': group.slug, 'eventId': event.id}) }} method="get">
             <input type="submit" value="Judging Criteria">
         </form>
 
     {% else %}
         <table class="left">
-            <form action = "{{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" id="filterForm" method="get">
+            <form action = "{{ path('idea_summary', {'groupSlug': group.slug, 'eventId': event.id}) }}" id="filterForm" method="get">
                 <td><input type="text" name="tag" tabindex="1" placeholder="Filter by tag" value="{{tag}}" /></td>
                 <td><input type="submit" value="Filter" class="btnMdm" /></td>
                 {% if tag %}
                     <td style="padding-left: 5px">
-                        <a href="{{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug, 'crit': crit, 'round': round}) }}"><input type="button" value="View All" class="btnMdm" /></a>
+                        <a href="{{ path('idea_summary', {'groupSlug': group.slug, 'eventId': event.id, 'crit': crit, 'round': round}) }}"><input type="button" value="View All" class="btnMdm" /></a>
                     </td>
                 {% endif %}
                 <input type="hidden" name="crit" tabindex="1" value="{{crit}}" />
                 <input type="hidden" name="round" tabindex="1" value="{{round}}" />
             </form>
-            <form action = "{{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug, 'crit': crit, 'tag': tag}) }}" method="get">
+            <form action = "{{ path('idea_summary', {'groupSlug': group.slug, 'eventId': event.id, 'crit': crit, 'tag': tag}) }}" method="get">
                 <input type="hidden" name="crit" tabindex="1" value="{{crit}}" />
                 <input type="hidden" name="tag" tabindex="1" value="{{tag}}" />
                 <td style="padding:0px 20px">
@@ -45,12 +45,12 @@
                 <th>Idea Name</th>
                 {% for criteria in criteriaList %}
                     <th>
-                        <a href="{{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug, 'crit': criteria.id, 'tag': tag, 'round': round}) }}">
+                        <a href="{{ path('idea_summary', {'groupSlug': group.slug, 'eventId': event.id, 'crit': criteria.id, 'tag': tag, 'round': round}) }}">
                             {{criteria.displayName}}
                         </a>
                     </th>
                 {% endfor %}
-                <th><a href="{{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug, 'tag': tag, 'round': round}) }}">Average</a></th>
+                <th><a href="{{ path('idea_summary', {'groupSlug': group.slug, 'eventId': event.id, 'tag': tag, 'round': round}) }}">Average</a></th>
                 {% if round == currentRound %}
                     <th>Promote</th>
                 {% endif %}
@@ -58,12 +58,12 @@
 
             {# loop over each idea, loop over each criteria #}
 
-            <form action = "{{ path('idea_advance', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" id="advance"  method="post">
+            <form action = "{{ path('idea_advance', {'groupSlug': group.slug, 'eventId': event.id}) }}" id="advance"  method="post">
                 {% for idea in ideas %}
                     <tr>
                         <!-- TODO: Change link here to point to drill down table for selected idea -->
                         <td>
-                            <a href="{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'entrySetId': idea.entrySet.id, 'id': idea.id}) }}"><h3>{{ idea.name }}</h3></a>
+                            <a href="{{ path('idea_show', {'groupSlug': group.slug, 'eventId': event.id, 'entrySetId': idea.entrySet.id, 'id': idea.id}) }}"><h3>{{ idea.name }}</h3></a>
                         </td>
 
                         {% set ideaAvgScore = attribute(avgScore,idea.id) %}
@@ -92,7 +92,7 @@
 
     {% if round == currentRound %}
         <table class="right">
-            <form action = {{ path('idea_summary', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} id='firstNForm' method="get">
+            <form action = {{ path('idea_summary', {'groupSlug': group.slug, 'eventId': event.id}) }} id='firstNForm' method="get">
                 <td><input type='text' name='firstN' placeholder="Select first N ideas" /></td>
                 <td><input type='submit' value='Select' class='btnMdm' /></td>
                 <input type='hidden' name='tag' value='{{tag}}'/>
@@ -108,12 +108,12 @@
 
     <table class="paddedTable left">
         <td>
-            <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="get" id='home'>
+            <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}" method="get" id='home'>
                 <input type="submit" value="< {{ event.name | truncate(20) }}" form='home' />
             </a>
         </td>
         <td>
-            <form action = {{ path('idea_admin', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get">
+            <form action = {{ path('idea_admin', {'groupSlug': group.slug, 'eventId': event.id}) }} method="get">
                 <input type="submit" value="< Admin Console">
             </form>
         </td>

@@ -50,7 +50,7 @@
                                 <tr>
                                     {% if canRemove %}
                                         <td style="padding:5px 0;">
-                                            <a href="{{ path('group_event_remove_attendee', { 'groupSlug': event.group.slug, 'eventSlug': event.slug, 'userId' : attendee.id }) }}" onclick="return confirm('Are you sure you want to remove \'{{ attendee.username }}\' from this event?');">Remove</a>
+                                            <a href="{{ path('group_event_remove_attendee', { 'groupSlug': event.group.slug, 'eventId': event.id, 'userId' : attendee.id }) }}" onclick="return confirm('Are you sure you want to remove \'{{ attendee.username }}\' from this event?');">Remove</a>
                                         </td>
                                     {% endif %}
                                     <td style="padding:5px 0;">

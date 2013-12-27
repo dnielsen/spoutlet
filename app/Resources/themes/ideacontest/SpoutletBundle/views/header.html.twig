@@ -12,7 +12,7 @@
             {% endif %}
             {% if event is defined and event is not null %}
                 {% if is_granted('ROLE_ADMIN') or event.user == (app.user) %}
-                    <li><a href="{{ path('idea_admin', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">Event Admin</a></li>
+                    <li><a href="{{ path('idea_admin', {'groupSlug': group.slug, 'eventId': event.id}) }}">Event Admin</a></li>
                 {% endif %}
             {% endif %}
             <li><a href="{{ path('default_index') }}">Home</a></li>

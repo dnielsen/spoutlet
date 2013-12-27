@@ -4,7 +4,7 @@
 
     <h1>{% if id is not null %}Edit{% else %}Submit{% endif %} Your Vote Criteria</h1>
 
-    <form action="{{ path('idea_admin_criteria', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ path('idea_admin_criteria', {'groupSlug': group.slug, 'eventId': event.id}) }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
 
 	    <input type="submit" value="Submit"/>
