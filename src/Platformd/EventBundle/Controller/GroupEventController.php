@@ -418,7 +418,7 @@ class GroupEventController extends Controller
                     $email->setSentToAll(true);
 
                 } else {
-
+                    $email->setSentToAll(false);
                     $recipientArr = explode(',', $recipientsString);
                     $userManager = $this->getUserManager();
 
