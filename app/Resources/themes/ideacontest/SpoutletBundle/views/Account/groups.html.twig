@@ -15,10 +15,11 @@
             <div class="text">
                 <table style="width: 100%;border-spacing: 2px;border-collapse:inherit;" class="tablesorter">
                 <tbody><tr>
-                    <th style="width:25%;">Group</th>
-                    <th style="width:25%;">Organizer</th>
-                    <th style="width:25%;">Type</th>
-                    <th style="width:25%">Members</th>
+                    <th style="width:20%;">Group</th>
+                    <th style="width:20%;">Organizer</th>
+                    <th style="width:20%;">Type</th>
+                    <th style="width:20%">Members</th>
+                    <th style="width:20%">Actions</th>
                 </tr>
                 {% for group in groups %}
                     <tr class="eventListGroup_lan">
@@ -47,6 +48,9 @@
                         </td>
                         <td>
                             {{ group['memberCount'] }}
+                        </td>
+                        <td>
+                            <a href="{{ path('group_leave', { 'slug': group[0].slug }) }}" onclick="return confirm('Are you sure you want to leave this group?');">Leave</a>
                         </td>
                     </tr>
                 {% else %}
