@@ -21,6 +21,17 @@
             <input type="submit" value="Membership Approvals" class="marginlft"/>
         </a>
         {% endif %}
+        <a href="{{ path('idea_admin_member_approvals', {'groupSlug': group.slug, 'eventId': event.id}) }}">
+            <input type="submit" value="Membership Approvals" class="marginlft"/>
+        </a>
+        {% if event.EntrySets|length == 0 %}
+            <a onclick="return confirm('Are you sure you want to delete this event?');"
+               href="{{ path("group_event_delete", {"groupSlug": event.group.slug, "eventId": event.id}) }}" >
+                <input type="submit" value="Delete" class="marginlft"/>
+            </a>
+        {% else %}
+            <input type="submit" value="Delete" class="marginlft" title="Remove the {{ event.EntrySets|length }} list(s) attached to this Event to enable the delete option." disabled/>
+        {% endif %}
     </div>
 
 {#    {% if event.type == 'ideathon' %}#}
