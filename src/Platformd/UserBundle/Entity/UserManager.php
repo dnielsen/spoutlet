@@ -328,7 +328,7 @@ class UserManager extends BaseUserManager
         ;
     }
 
-    protected function canonicalizeUsername($username)
+    public function canonicalizeUsername($username)
     {
         if ($username) {
             return parent::canonicalizeUsername($username);
