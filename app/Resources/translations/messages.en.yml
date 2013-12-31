@@ -281,9 +281,10 @@ platformd:
             contact_attendees: Contact Attendees
             manage_attendees: Manage Attendees
             edit_event: Edit Event
+            delete_event: Delete Event
             not_allowed_register: You are not allowed to rsvp to this event!
             now_attending: You are now attending this event.
-            group_joined: To attend this event, you must join %groupName%. You are now a member of this group.
+            group_joined: Welcome to %groupName%. You are now attending this event.
             group_home: Group Home
         event_contact:
             title: Contact Attendees By Email

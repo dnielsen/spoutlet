@@ -32,6 +32,10 @@
 
                 {% render url('_flash_message') with {}, {'standalone': true } %}
 
+                {%  for key, message in app.session.getFlashes() %}
+                    {% include 'SpoutletBundle::_flashMessage.html.twig' with { 'type': key, 'message': message } %}
+                {% endfor %}
+
                 <div class="clear"></div>
 
                 {% block content %}
@@ -40,8 +44,10 @@
                 <div class="clear"></div>
 
             </div>
+            <div class="push"></div> <!-- needed for sticky footer -->
+        </div><!-- end wrapper-ht -->
 
-            {% include 'SpoutletBundle::footer.html.twig' %}
-	    </div>
+
+        {% include 'SpoutletBundle::footer.html.twig' %}
 	</body>
 </html>

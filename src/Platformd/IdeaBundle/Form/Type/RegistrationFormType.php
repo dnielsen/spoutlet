@@ -12,6 +12,11 @@ class RegistrationFormType extends BaseType
     {
         parent::buildForm($builder, $options);
         $builder->add('name');
+        $builder->add('plainPassword', 'repeated', array(
+            'type' => 'password',
+            'invalid_message' => 'passwords_do_not_match',
+            'error_bubbling' => true,
+        ));
         $builder->add('organization');
         $builder->add('title');
         $builder->add('industry');

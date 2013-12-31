@@ -1,0 +1,80 @@
+{% extends 'UserBundle::accountLayout.html.twig' %}
+
+{% block title %}My Groups{% endblock %}
+
+{% block content %}
+
+<div class="control_panel">
+    <div class="widget-100">
+        <div class="widget-header">
+            <div class="widget-title">
+                <h2>My Groups</h2>
+            </div>
+        </div>
+        <div class="widget-content">
+            <div class="text">
+                <table style="width: 100%;border-spacing: 2px;border-collapse:inherit;" class="tablesorter">
+                <tbody><tr>
+                    <th style="width:20%;">Group</th>
+                    <th style="width:20%;">Organizer</th>
+                    <th style="width:20%;">Type</th>
+                    <th style="width:20%">Members</th>
+                    <th style="width:20%">Actions</th>
+                </tr>
+                {% for group in groups %}
+                    <tr class="eventListGroup_lan">
+                        <td>
+                            {% if action != null %}
+                                {% if action == "group_event" %}
+                                    <a href="{{ path('group_event_new', { 'groupSlug': group[0].slug }) }}">{{ group[0].name }}</a>
+                                {% elseif action == "campsite_event" %}
+                                    <a href="{{ path('idea_admin_event', { 'groupSlug': group[0].slug, 'eventId': 'newEvent' }) }}">{{ group[0].name }}</a>
+                                {% else %}
+                                    <a href="{{ path('group_show', { 'slug': group[0].slug }) }}">{{ group[0].name }}</a>
+                                {% endif %}
+                            {% else %}
+                                <a href="{{ path('group_show', { 'slug': group[0].slug }) }}">{{ group[0].name }}</a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group[0].owner.username }}
+                        </td>
+                        <td>
+                            {% if group[0].isPublic %}
+                                <span class="label label-success">Public</span>
+                            {% else %}
+                                <span class="label label-warning">Private</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{ group[0].members|length }}
+                        </td>
+                        <td>
+                            <a href="{{ path('group_leave', { 'slug': group[0].slug }) }}" onclick="return confirm('Are you sure you want to leave this group?');">Leave</a>
+                            <br/>
+                            {% set numEntrySets =  group[0].entrySets|length %}
+                            {% set numEvents =  group[0].numEvents %}
+                            {% if numEntrySets > 0 or numEvents > 0 %}
+                                <span title="A Group must not contain any lists or events in order to be deleted. This Group contains {{ numEntrySets }} lists and {{ numEvents }} events.">Delete Disabled</span>
+                            {% else %}
+                                <a href="{{ path('group_delete', { 'slug': group[0].slug }) }}" onclick="return confirm('Are you sure you want to delete this group?');">Delete</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4">
+                            <em>You are not in any groups. <a href="{{ path('groups') }}">Click here</a> to join a group or <a href="{{ path('group_new') }}">create your first group</a>.</em>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+        <div class="widget-footer">
+            &nbsp;
+        </div>
+    </div>
+</div>
+{% endblock %}

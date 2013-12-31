@@ -1,0 +1,61 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+<div id="content">
+    <div class="qList">
+        <h2 class="spcr-b">TOYOTA ITC / ACM Quantified-Car</h2>
+        <div class="row">
+            <p><strong>The Most Comprehensive Vehicle API to Date. Access will be Provided to Qualified Developers.<br/>
+                    <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': '4'}) }}">Please register for the Hackathon here</a>.</strong></p>
+        </div>
+
+    </div>
+    <p></p>
+    <div class="qList">
+        <h2 class="spcr-b">Hackathon for a new Streaming Vehicle Data API</h2>
+        <div class="row">
+            <p><strong>Mountain View, Calif. - October 10, 2013</strong> - Today Toyota InfoTechnology Center, U.S.A., Inc. (Toyota-ITC) together with ACM, announces
+                sponsorship of Toyota ACM Quantified-Car Hackathon. Come join this competition to create apps that utilize the API for vehicle data on
+                either iOS or Android platforms. At these events, Toyota-ITC will provide qualified developers with access to Toyota's vehicle data
+                streaming API for the first time in the industry, in the US.</p>
+            <p>Those interested in participating can sign up for Toyota ACM Quantified-Car API Hackathon event
+                <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': '4'}) }}">here</a>. In the course of registration, you can request a license
+                key to access the API and documentation ahead of the event.</p>
+            <p>Toyota ACM Quantified-Car Hackathon has space for 100 mobile developers to compete for fun and prizes as they meet other developers
+                and learn, test and refine the API. This free event on the November 9-10, 2013 weekend is open to pre-registered developers, both novice
+                and advanced, and takes place at Hacker Dojo in Mountain View, CA.</p>
+            <p>The event will be preceded by API roll-out and idea brainstorming sessions (Ideathons) that will take place in the evenings of
+                October 17th and 21st at Toyota-ITC in Mountain View, CA. Here you can learn about and discuss the API, generate app ideas and 									form teams.</p>
+            <p>This Hackathon provides a great venue for programmers and other vehicle enthusiasts to meet others that share their interests and get
+                familiar with what you can do with real time data taken from the vehicles. It is the first attempt of Toyota to explore ways to partner with
+                3rd party developers of vehicle applications for drivers here in the US. Your feedback about the API is highly welcome. As stated at the
+                Evernote Hackathon in Tokyo, in Japan on 28th January, 2013. "We are seeking the best way to collaborate with you developers by involving
+                you from the earliest stage in order to establish the most beneficial ecosystem for both of us. And this is our first step." says Masato
+                Hashimoto, President & CEO of Toyota-ICT.</p>
+        </div>
+
+    </div>
+    <p></p>
+
+
+    <div id="contentLft">
+        <div class="rowBx">
+
+        </div> <!-- end row -->
+    </div> <!-- end contentLft -->
+
+    <div id="contentRt">
+
+
+    </div> <!-- end contentRt -->
+
+    <br class="clr">
+
+</div> <!-- end content -->
+{% endblock %}
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'GroupBundle:Group:_css_assets.html.twig' %}
+{% endblock %}

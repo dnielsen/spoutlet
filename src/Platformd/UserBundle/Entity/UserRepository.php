@@ -377,4 +377,44 @@ class UserRepository extends EntityRepository
 
         return $qb->getQuery();
     }
+
+    private function createCsvString($data) {
+        // Open temp file pointer
+        if (!$fp = fopen('php://temp', 'w+')) return FALSE;
+
+        // Loop data and write to file pointer
+        foreach ($data as $line) fputcsv($fp, $line);
+
+        // Place stream pointer at beginning
+        rewind($fp);
+
+        // Return the data
+        return stream_get_contents($fp);
+    }
+
+    public function toCSV() {
+        $usersArray = array();
+
+        //Add header
+        $headerArray = array(
+            "id", "Username", "Full Name", "Email", "Creation Time",
+            "Organization", "Title", "Industry"
+        );
+        $usersArray[] = $headerArray;
+
+        foreach($this->findAll() as $user) {
+            $userArray = array(
+                $user->getId(),
+                $user->getUsername(),
+                $user->getName(),
+                $user->getEmail(),
+                $user->getCreated()->format('Y-m-d H:i:s'),
+                $user->getOrganization(),
+                $user->getTitle(),
+                $user->getIndustry()
+            );
+            $usersArray[] = $userArray;
+        }
+        return $this->createCsvString($usersArray);
+    }
 }

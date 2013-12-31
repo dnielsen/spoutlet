@@ -21,7 +21,7 @@
 	height: 655px;
 }
 #header {
-	height: 225px;
+	height: 200px;
 }
 
 #topNav { /* For styling, see list-links.css */
@@ -31,7 +31,7 @@
     font-size: 12px;
 }
 #brand {
-    margin-top: 55px;
+    margin-top: 40px;
     padding-bottom: 10px;
     max-width: 1050px;
 }
@@ -39,12 +39,12 @@
     margin-top: 35px;
     padding-bottom: 10px;
     max-width: 800px;
-    max-height: 175px;
+    max-height: 160px;
 }
 #tagline {
     position: absolute;
-    top: 194px;
-    right: 0;
+    bottom: 0px;
+    right: 0px;
 }
 
 /*::::::::::::::: NAV :::::::::::::::*/
@@ -60,7 +60,7 @@
 
 #nav ul, #nav-list {
     width: 1050px;
-    height: 32px;
+    /* height: 32px; */
 }
 
 #intro {
@@ -177,9 +177,19 @@
         display: block;
         margin: 0 auto;
     }
-#events, #members {
-    max-height: 250px;
-    overflow-y: auto
+    .scrollableSidebarWidget {
+        padding-left:5px;
+        max-height: 250px;
+        overflow-y: auto
+    }
+    .scrollableSidebarWidgetItem {
+        padding: 5px 0px 5px 0px;
+        border-bottom: 1px dashed #ccc;
+    }
+
+.adminRow {
+    border-top: 1px dashed #ccc;
+    padding: 10px 0px;
 }
 	
 
@@ -229,6 +239,10 @@
 		float: right;
 		width: 605px;
 	}
+    .sessionWide {
+        float: right;
+        width: 960px;
+    }
 	.session-mp {
 		float: right;
 		width: 665px;
@@ -251,7 +265,6 @@ table.tblStyle {
 }
 .tblStyle td {
     padding: 5px 2px;
-    font-size: 13px;
     border-bottom: 1px solid #e5e5e5;
     text-align: right;
 }
@@ -262,13 +275,14 @@ table.tblStyle {
 .tblStyle th {
     padding: 5px;
     border-bottom: 1px solid #e5e5e5;
+    text-align: right;
+}
+.tblStyle th:first-child {
     text-align: left;
 }
+
 #eventDetails {
     margin-top: 20px;
-}
-#profile {
-    width: 60%;
 }
 
 table.tblStyle2 {
@@ -300,9 +314,28 @@ table.tblStyle2 {
 .fill {
 	background: #f5f5f5;
 }
+
+.profileTable {
+    margin-top: 10px;
+    width: 70%;
+    text-align: left;
+}
+    .profileTable td {
+        border-bottom: 1px solid #e5e5e5;
+    }
+    .profileTable td:first-child {
+        padding-right: 50px;
+        width: 150px;
+    }
+
+    .ideasTable td:first-child {
+        width: 50% !important;
+    }
+
+
 .paddedTable td {
-	padding: 5px 10px;
-	font-size: 16px;
+    padding: 5px 10px;
+    font-size: 16px;
 }
 
 .prevNext td {
@@ -310,6 +343,7 @@ table.tblStyle2 {
     font-size: 16px;
     width: 115px;
 }
+
 	
 /*::::::::::::::: FOOTER :::::::::::::::*/ 
 

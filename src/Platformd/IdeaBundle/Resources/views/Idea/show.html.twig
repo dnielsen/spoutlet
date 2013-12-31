@@ -1,25 +1,26 @@
-{% extends 'IdeaBundle::event_layout.html.twig' %}
+{% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block event_content %}
+{% block content %}
     <h1>{{ idea.name }}</h1>
 
     <div class="voteBx">
         <p><strong class="lrgtxt">{{ idea.numFollowers }}</strong><br>
-            <span class="tnytxt gry">followers</span></p>
-        <form action = "{{ path('idea_follow', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="POST">
+            <span class="tnytxt gry">vote{% if idea.numFollowers != 1 %}s{% endif %}</span></p>
+        <form action = "{{ path('idea_follow', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="POST">
               <input type="hidden" name="id" value="{{idea.id}}">
               <input type="hidden" name="source" value="detail">
               <input type="hidden" name="tag">
-              <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnTny" value="Follow"{% else %}class="btnTnyInv" value="Unfollow"{% endif %}{% else %}class="btnTny" value="Follow"{% endif %}>
+              <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnTny" value="Vote"{% else %}class="btnTny redButton" value="Remove Vote"{% endif %}{% else %}class="btnTny" value="Vote"{% endif %}>
         </form>
     </div>
-    <div class="session">
+
+    {% if sidebar %}<div class="session">{% else %}<div class="sessionWide">{% endif %}
 
         <div class="left kWords">
             <ul>
                 <li>Tags</li>
                 {% for tag in idea.tags %}
-                    <li><a href="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug, 'tag': tag.tagName}) }}">{{ tag.tagName }}</a></li>
+                    <li><a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'tag': tag.tagName}) }}">{{ tag.tagName }}</a></li>
                 {% endfor %}
             </ul>
         </div>
@@ -30,12 +31,12 @@
 
         <div class="left">
             {% if idea.canUserView(app.user) %}{{ idea.description | nl2br }}
-            {% else %}[This idea is private]
+            {% else %}[This {{ entrySet.type }} is private]
             {% endif %}
         </div>
 
         {% if canEdit %}
-            <a href = "{{ path('idea_edit_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': idea.id}) }}" class="right">Edit</a>
+            <a href = "{{ path('idea_edit_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="right">Edit</a>
         {% endif %}
         <br class="clr"><br>
 
@@ -48,26 +49,26 @@
                 <img src="{{ asset(idea.image.getWebPath()) }}" style="max-width:100%">
 
                 {% if canEdit %}
-                    <form action="{{ path('idea_image_delete', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post">
+                    <form action="{{ path('idea_image_delete', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post">
                         <input type="hidden" name="idea" value="{{ idea.id }}">
-                        <input type="submit" value="Delete" class="btnTnyInv">
+                        <input type="submit" value="Delete Image" class="redButton" onclick="return confirm('Are you sure you want to delete this image?');">
                     </form>
                 {% endif %}
 
             {% elseif canEdit %}
-                <a href="{{ path('idea_upload_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': idea.id}) }}">Add Image</a>
+                <a href="{{ path('idea_upload_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}">Add Image</a>
             {% endif %}
         </div>
-        <div id="links" style="padding-bottom: 15px;float: left">
+        <div id="links" style="padding-bottom: 15px;">
             {% if ((idea.links|length > 0) and (idea.canUserView(app.user)))%}
                 <label class="midtxt" style="margin-top:20px">Additional Resources</label>
                 {% for link in idea.links %}
                     <hr>
                     {% if canEdit %}
-                        <form action="{{ path('idea_link_delete', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" class="left padrt">
+                        <form action="{{ path('idea_link_delete', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post" class="left padrt">
                             <input type="hidden" name="idea" value="{{ idea.id }}">
                             <input type="hidden" name="link" value="{{ link.id }}">
-                            <input type="submit" value="Remove" class="btnTnyInv">
+                            <input type="submit" value="Remove" class="redButton" onclick="return confirm('Are you sure you want to delete this link?');">
                         </form>
                     {% endif %}
                     <a href="{{ link.url }}">{{ link.title }}</a> - {{ link.linkDescription }}<br>
@@ -76,7 +77,7 @@
             {% endif %}
 
             {% if canEdit %}
-                <a href = "{{ path('idea_add_link_form', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': idea.id}) }}" style="clear: both">Add Link</a>
+                <a href = "{{ path('idea_add_link_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" style="clear: both">Add Link</a>
             {% endif %}
         </div>
     </div>
@@ -89,11 +90,11 @@
             {% for comment in idea.comments %}
                 <hr>
                 <a href="{{ path('profile', {'username': comment.user.username}) }}">{{ comment.user.name }}</a> commented on <em>{{ comment.timestamp }}</em>
-                {% if canEdit %}
-                    <form action="{{ path('idea_comment_delete', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" class="left padrt">
+                {% if canRemoveComments %}
+                    <form action="{{ path('idea_comment_delete', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post" class="left padrt">
                         <input type="hidden" name="idea" value="{{ idea.id }}">
                         <input type="hidden" name="comment" value="{{ comment.id }}">
-                        <input type="submit" value="Remove" class="btnTnyInv">
+                        <input type="submit" value="Remove" class="redButton" onclick="return confirm('Are you sure you want to delete this comment?');">
                     </form>
                 {% endif %}
                 <br>
@@ -104,7 +105,7 @@
 
         {% if app.user %}
 
-        <form action="{{ path('idea_comment', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" class="spcr-b2 right">
+        <form action="{{ path('idea_comment', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post" class="spcr-b2 right">
             <input type="hidden" name="idea" value="{{idea.id}}">
             <textarea name="comment" rows="6" tabindex="3" placeholder="Add a comment" class="comments"></textarea>
             <input type="submit" class="right" value="Post Comment">
@@ -120,65 +121,69 @@
         <br class="clr">
     {% endif %}
 
-    <table class="paddedTable">
-    <td>
-        <form action = {{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get">
-            <input type="submit" value="Home">
-        </form>
-    </td>
-    <td>
-        <form action="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="get">
-            <input type="submit" value="View Ideas">
-        </form>
-    </td>
-    </table>
-
-
 {% endblock %}
 
 {% block sidebar %}
-    {% if isVoting %}
-    <h2>Judges' Sidebar</h2>
-    <br>
-
-    <table class="prevNext">
-    <td>
-        {% if previous is defined %}
-        <form action="{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': previous}) }}">
-            <input type="submit" value="Previous">
-        </form>
-        {% endif %}
-    </td>
-    <td>
-        {% if next is defined %}
-        <form action="{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': next}) }}">
-            <input type="submit" value="Next">
-        </form>
-        {% endif %}
-    </td>
-    </table>
-    <br>
-
-    <form action="{{ path('idea_vote', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post">
-        <input type="hidden" name="id" value='{{idea.id}}'>
-
-        <table class = "paddedTable">
-        {% for criteria in criteriaList %}
-            <td><select name="{{criteria.id}}">
-                {% for j in 0..5 %}
-                    <option value={{ j }} {% if (values is defined) and (values[criteria.id] == j) %}selected{%endif%}>{{ j }}</option>
-                {% endfor %}
-                </select>
-            </td>
-            <td colspan="2"> {{criteria.description}}</td>
-            </tr>
-        {% endfor %}
-        </table>
-
-        <input type="submit" value="Submit Scores">
-    </form>
-
-    {% else %}
+    {% if sidebarState == constant('\\Platformd\\IdeaBundle\\Controller\\IdeaController::SIDEBAR_NONE') %}
         {% include 'IdeaBundle::sidebar.html.twig' %}
+    {% else %}
+
+
+    <br>
+        {% if sidebarState == constant('\\Platformd\\IdeaBundle\\Controller\\IdeaController::SIDEBAR_JUDGE') %}
+            <h2>Judges' Sidebar</h2>
+
+		<form action="{{ path('idea_vote', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post">
+		    <input type="hidden" name="id" value='{{idea.id}}'>
+
+		    <table class = "paddedTable">
+		    {% for criteria in criteriaList %}
+		        <td><select name="{{criteria.id}}">
+		            {% for j in 0..5 %}
+		                <option value={{ j }} {% if (values is defined) and (values[criteria.id] == j) %}selected{%endif%}>{{ j }}</option>
+		            {% endfor %}
+		            </select>
+		        </td>
+		        <td colspan="2"> {{criteria.description}}</td>
+		        </tr>
+		    {% endfor %}
+		    </table>
+
+		    <input type="submit" value="Submit Scores">
+		</form>
+
+		{% elseif sidebarState == constant('\\Platformd\\IdeaBundle\\Controller\\IdeaController::SIDEBAR_ADMIN') %}
+		    <h2>Admins' Sidebar</h2>
+
+            {% if entrySet.allowedVoters | length > 0 %}
+                <form action="{{ path('idea_admin_assign', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post" {{ form_enctype(form) }}>
+                    {{ form_widget(form) }}
+
+                   <button type="submit" name="submit" formnovalidate>Submit</button>
+                </form>
+            {% else %}
+                You must <a href="{{ path('entry_set_edit', {'entrySetId': entrySet.id}) }}">add some judges</a> in order to assign any.
+            {% endif %}
+		{% endif %}
+
+        <hr/>
+		<table class="prevNext">
+		<td>
+		    {% if previous is defined %}
+		    <form action="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': previous}) }}">
+		        <input type="submit" value="Previous">
+		    </form>
+		    {% endif %}
+		</td>
+		<td>
+		    {% if next is defined %}
+		    <form action="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': next}) }}">
+		        <input type="submit" value="Next">
+		    </form>
+		    {% endif %}
+		</td>
+		</table>
+
     {% endif %}
+
 {% endblock %}

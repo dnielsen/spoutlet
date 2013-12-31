@@ -73,6 +73,7 @@
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     height: 310px;
+    min-width: 550px;
 }
 
 #group-widget-content {
@@ -94,7 +95,7 @@
 }
 
 .group-event-item {
-    background-color: #e1e1e8;
+    background-color: #e0f0ff;
     padding: 10px;
     border-radius: 5px;
     margin: 7px 0;

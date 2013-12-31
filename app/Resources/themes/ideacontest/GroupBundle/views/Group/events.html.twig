@@ -1,0 +1,135 @@
+{% extends 'IdeaBundle::group_layout.html.twig' %}
+
+{% block title %}{{ group.name }}{% endblock %}
+
+{% block content %}
+
+{% include 'GroupBundle:Group:_subNav.html.twig' %}
+
+<div id="event-content-scroll">
+
+    {% for event in groupEvents %}
+
+        <div class="group-event-item" id="event-item-{{ event.id }}">
+                <div class="group-event-date">
+                    {% if event.startsAt %}
+                        {{ event.getDateRangeString }}
+                    {% else %}
+                        Ongoing
+                    {% endif %}
+                </div>
+
+            <div class="group-event-details">
+                <div class="group-event-title"><a href="{{ event | pd_link }}">{{ event.name }}</a></div>
+                {% if event.startsAt %}
+                    <div class="group-event-time"><strong>{{ 'platformd.groups.events.time' | pd_trans }}: </strong>{{ event.startsAt | date('g:i A') }} - {{ event.endsAt | date('g:i A') }}{% if event.displayTimezone %}, {{ event.timezoneString }}{% endif %}</div>
+                {% endif %}
+                <div class="group-event-location"><strong>{{ 'platformd.groups.events.where' | pd_trans }}:</strong>
+                    {% if event.online %}
+                        {{ 'platformd.groups.events.online' | pd_trans }}
+                    {% else %}
+                        <br/>{{ event.location }},<br />{{ event.address1 }},<br />{{ event.address2 }}
+                    {% endif %}
+                </div>
+                <div class="group-event-actions">
+                    <span data-group-admin="true">
+                        <a href="{{ path('idea_admin_event', { 'groupSlug' : group.slug, 'eventId' : event.id })}}">{{ 'platformd.groups.events.edit' | pd_trans }}</a> |
+                        <a href="{{ path('group_event_delete', { 'groupSlug' : group.slug, 'eventId' : event.id })}}" onclick="return confirm('{{ 'platformd.groups.events.delete_confirmation' | pd_trans }}');">{{ 'platformd.groups.events.delete' | pd_trans }}</a> |
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+
+    {% if pastEvents|length > 0 %}
+
+        <div><a id="show-past-events-link" href="javascript:void(0);">{{ 'platformd.groups.events.view_past_events' | pd_trans }}</a></div>
+
+        <div id="group-past-events" style="display: none;">
+
+            {% for event in pastEvents %}
+
+                <div class="group-event-item" id="event-item-{{ event.id }}"{% if loop.index > 3 %} style="display:none;"{% endif %}>
+                    <div class="group-event-date">
+                        {{ event.getDateRangeString }}
+                    </div>
+
+                    <div class="group-event-details">
+                        <div class="group-event-title"><a href="{{ event | pd_link }}">{{ event.name }}</a></div>
+                        <div class="group-event-time"><strong>{{ 'platformd.groups.events.time' | pd_trans }}: </strong>{{ event.startsAt | date('g:i A') }} - {{ event.endsAt | date('g:i A') }}{% if event.displayTimezone %}, {{ event.timezoneString }}{% endif %}</div>
+                        <div class="group-event-location"><strong>{{ 'platformd.groups.events.where' | pd_trans }}:</strong>
+                            {% if event.online %}
+                                {{ 'platformd.groups.events.online' | pd_trans }}
+                            {% else %}
+                                <br/>{{ event.location }},<br />{{ event.address1 }},<br />{{ event.address2 }}
+                            {% endif %}
+                        </div>
+                        <div class="group-event-actions">
+                            <div data-group-admin="true">
+                                <a href="{{ path('idea_admin_event', { 'groupSlug' : group.slug, 'eventId' : event.id }) }}">{{ 'platformd.groups.events.edit' | pd_trans }}</a> |
+                                <a href="{{ path('group_event_delete', { 'groupSlug' : group.slug, 'eventId' : event.id }) }}">{{ 'platformd.groups.events.delete' | pd_trans }}</a> |
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p>{{ 'platformd.groups.events.no_past_events' | pd_trans }}</p>
+            {% endfor %}
+
+            {% if pastEvents|length > 3 %}
+                <a href="javascript:void(0);" id="show-more-past-events">{{ 'platformd.groups.events.show_more_past' | pd_trans }}</a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'GroupBundle:Group:_css_assets.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% render url('_group_member_check', { 'groupId': group.id }) with {}, {'standalone': true } %}
+
+    <script type="text/javascript">
+        $(function() {
+
+            var canAdd     = (user_is_logged_in && (is_admin || user_is_group_member));
+            var groupAdmin = (user_is_logged_in && (is_admin || user_is_group_owner));
+
+            if (groupAdmin) {
+                $('[data-group-admin="true"]').show();
+                $('[data-group-admin="false"]').hide();
+            } else {
+                $('[data-group-admin="true"]').hide();
+                $('[data-group-admin="false"]').show();
+            }
+
+            if (canAdd) {
+                $('[data-group-member="true"]').show();
+                $('[data-group-member="false"]').hide();
+            } else {
+                $('[data-group-member="true"]').hide();
+                $('[data-group-member="false"]').show();
+            }
+
+            $('#show-past-events-link').click(function () {
+                $('#group-past-events').toggle();
+                $('#event-content-scroll').mCustomScrollbar('update');
+            });
+
+            $('#show-more-past-events').click(function () {
+                $('.group-event-item').show();
+                $(this).hide();
+                $('#event-content-scroll').mCustomScrollbar('update');
+            });
+        });
+
+    </script>
+{% endblock %}

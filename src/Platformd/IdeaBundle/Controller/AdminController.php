@@ -2,9 +2,9 @@
 
 namespace Platformd\IdeaBundle\Controller;
 
+use Platformd\EventBundle\Entity\EventRsvpAction;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -12,26 +12,34 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\IdeaBundle\Entity\VoteCriteria;
 use Platformd\EventBundle\Entity\Event;
+use Platformd\IdeaBundle\Entity\EntrySet;
 use Platformd\EventBundle\Entity\GroupEvent;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
-use Knp\MediaBundle\Entity\MediaRepository;
 
 class AdminController extends Controller
 {
 
-    public function eventAction(Request $request, $groupSlug, $eventSlug) {
+    public function eventAction(Request $request, $groupSlug, $eventId) {
 
-		// test if submission is from a 'cancel' button press
-		if ($request->get('cancel') == 'Cancel') {
-            return $this->redirect($this->generateUrl('idea_admin', array(
-                        'groupSlug' => $groupSlug,
-                        'eventSlug' => $eventSlug,
-                    )));
-		}
+        // test if submission is from a 'cancel' button press
+        $event = $this->getEvent($groupSlug, $eventId);
+         
+        if ($request->get('cancel') == 'Cancel') {
+            if ($eventId == 'newEvent'){
+                return $this->redirect($this->generateUrl('group_show', array(
+                    'slug'  => $groupSlug,
+                )));
+            } else {
+                return $this->redirect($this->generateUrl('idea_admin', array(
+                    'groupSlug' => $groupSlug,
+                    'eventId' =>   $eventId,
+                )));
+            }
+        }
 
         $group = $this->getGroup($groupSlug);
-        $event = $this->getEvent($groupSlug, $eventSlug);
+      //  $event = $this->getEvent($groupSlug, $eventId);
 
         $isNew = false;
 
@@ -40,299 +48,420 @@ class AdminController extends Controller
             $isNew = true;
         }
 
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
+            ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
+            ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
+            ->add('online',             'choice',           array('choices' => array('1' => 'Yes', '0' => 'No')))
+            ->add('private',            'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
+            ->add('startsAt',           'datetime',         array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('endsAt',             'datetime',         array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('address2',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
 
-		$form = $this->createFormBuilder($event)
-			->add('name', 'text', array('attr' => array('size' => '60%')))
-			->add('content', 'purifiedTextarea', array('attr' => array('class' => 'ckeditor')))
-			->add('startsAt', 'date', array('attr' => array('size' => '60%')))
-			->add('endsAt', 'date', array('attr' => array('size' => '60%')))
-            ->add('online', 'choice', array('choices' => array('1' => 'Yes', '0' => 'No')))
-            ->add('location', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
-			->add('address1', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
-			->add('address2', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
-			->add('allowedVoters', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
-            ->add('isSubmissionActive', 'choice', array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
-            ->add('isVotingActive', 'choice', array('choices' => array('1' => 'Enabled', '0' => 'Disabled')))
+            ->getForm();
 
-			->getForm();
+        if($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+            if($form->isValid()) {
 
-		if($request->getMethod() == 'POST') {
-			$form->bindRequest($request);
-			if($form->isValid()) {
+                $em = $this->getDoctrine()->getEntityManager();
+
                 $group->addEvent($event);
 
                 $event->setUser($this->getCurrentUser());
                 $event->setTimezone('UTC');
                 $event->setActive(true);
                 $event->setApproved(true);
-                $event->setPrivate(false);
                 $event->setRegistrationOption(Event::REGISTRATION_ENABLED);
+                $em->persist($event);
+                $em->flush();
 
-				$em = $this->getDoctrine()->getEntityManager();
-				$em->persist($event);
-				$em->flush();
+                // Registration needs to be created after event is persisted, relies on generated event ID
+                $esReg = $event->getEntrySetRegistration();
+                if ($esReg == null){
+                    $esReg = $event->createEntrySetRegistration();
+                    $em->persist($esReg);
+                    $em->flush();
+                }
 
-				return $this->redirect($this->generateUrl('idea_admin', array(
+                return $this->redirect($this->generateUrl('idea_admin', array(
                             'groupSlug' => $groupSlug,
-                            'eventSlug' => $event->getSlug(),
+                            'eventId' => $event->getId(),
                         )));
-			}
-		}
+            }
+        }
 
-		return $this->render('IdeaBundle:Admin:eventForm.html.twig', array(
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
+        return $this->render('IdeaBundle:Admin:eventForm.html.twig', array(
                 'form' => $form->createView(),
                 'isNew' => $isNew,
                 'group' => $group,
                 'event' => $event,
+                'isAdmin'    => $isAdmin,
             ));
-	}
+    }
 
-	public function adminAction(Request $request, $groupSlug, $eventSlug) {
-
-		$this->basicSecurityCheck('ROLE_USER');
+    public function adminAction(Request $request, $groupSlug, $eventId) {
 
         $group = $this->getGroup($groupSlug);
-        $event = $this->getEvent($groupSlug, $eventSlug);
+        $event = $this->getEvent($groupSlug, $eventId);
 
-        if (!$this->isGranted('ROLE_SUPER_ADMIN') && $this->getCurrentUser() !== $group->getOwner()) {
+        if (!$this->canEditEvent($event)) {
             throw new AccessDeniedException();
         }
 
-		return $this->render('IdeaBundle:Admin:admin.html.twig', array(
-                'group' => $group,
-                'event' => $event,
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
+        return $this->render('IdeaBundle:Admin:admin.html.twig', array(
+                'group'     => $group,
+                'event'     => $event,
+                'isAdmin'   => $isAdmin,
             ));
-	}
+    }
 
-	// Edit requets will provide id using GET
-	// New request will not provide id using GET
-	// Save request will have displayName and description parameters using POST
-	public function criteriaAction(Request $request, $groupSlug, $eventSlug, $id = null) {
+    public function entrySetAction(Request $request, $entrySetId)
+    {
+        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
 
-		// test if submission is from a 'cancel' button press
-		if($request->get('cancel') == 'Cancel') {
-			return $this->redirect($this->generateUrl('idea_admin_criteria_all', array(
+        if( $entrySetId == 'new' )
+        {
+            $entrySet             = new EntrySet();
+            $registrationId       = $request->get('registrationId');
+            $entrySetRegistration = $esRegRepo->find($registrationId);
+            $cancelTarget         = $esRegRepo->getContainer($entrySetRegistration);
+        }
+        else
+        {
+            $entrySet             = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet')->find($entrySetId);
+            $entrySetRegistration = $entrySet->getEntrySetRegistration();
+            $registrationId       = $entrySetRegistration->getId();
+            $cancelTarget         = $entrySet;
+        }
+
+        if ($request->get('cancel') == 'Cancel') {
+            return $this->redirect($this->generateUrl($cancelTarget->getLinkableRouteName(), $cancelTarget->getLinkableRouteParameters()));
+        }
+
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'entrySet', $entrySet)
+            ->add('name',               'text',     array('attr'    => array('size'  => '60%')))
+            ->add('type',               'choice',   array('choices' => array(EntrySet::TYPE_IDEA      => 'Ideas',
+                                                                             EntrySet::TYPE_SESSION   => 'Sessions',
+                                                                             EntrySet::TYPE_THREAD    => 'Threads',)))
+            ->add('isSubmissionActive', 'choice',   array('choices' => array('1' => 'Yes', '0' => 'No')))
+            ->add('isVotingActive',     'choice',   array('choices' => array('0' => 'No', '1' => 'Yes')))
+            ->add('allowedVoters',      'text',     array('max_length' => '5000', 'attr'    => array('size' => '60%', 'placeholder' => 'username1, username2, ...'), 'required' => '0',))
+            ->getForm();
+
+        if($request->getMethod() == 'POST') {
+
+            $form->bindRequest($request);
+
+            if($form->isValid()) {
+
+
+                //validate and clean up allowedVoters
+                $validatedJudges = array();
+                $candidateJudges = array_map('trim', explode(",", $entrySet->getAllowedVoters()));
+
+                $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
+
+                foreach($candidateJudges as $candidate) {
+                    if($userRepo->findOneBy(array('username' => $candidate)) != null) {
+                        $validatedJudges[] = $candidate;
+                    }
+                }
+
+                $entrySet->setEntrySetRegistration($entrySetRegistration);
+                $entrySet->setAllowedVoters(implode(",", $validatedJudges));
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($entrySet);
+                $em->flush();
+
+                $redirectUrl = $this->generateUrl($entrySet->getLinkableRouteName(), $entrySet->getLinkableRouteParameters());
+                return $this->redirect($redirectUrl);
+            }
+        }
+
+        return $this->render('IdeaBundle:Admin:entrySet.html.twig', array(
+            'form'           => $form->createView(),
+            'entrySetId'     => $entrySetId,
+            'registrationId' => $registrationId,
+        ));
+    }
+
+    public function entrySetDeleteAction($entrySetId)
+    {
+        $this->enforceUserSecurity();
+
+        $entrySet = $this->getEntrySet($entrySetId);
+        $parent   = $this->getParentByEntrySet($entrySet);
+
+        if ($this->canEditEntrySet($entrySet)) {
+
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->remove($entrySet);
+            $em->flush();
+
+            $url = $this->generateUrl($parent->getLinkableRouteName(), $parent->getLinkableRouteParameters());
+            return $this->redirect($url);
+        }
+        else {
+            throw new AccessDeniedException;
+        }
+    }
+
+    // Edit requets will provide id using GET
+    // New request will not provide id using GET
+    // Save request will have displayName and description parameters using POST
+    public function criteriaAction(Request $request, $groupSlug, $eventId, $id = null) {
+
+        // test if submission is from a 'cancel' button press
+        if($request->get('cancel') == 'Cancel') {
+            return $this->redirect($this->generateUrl('idea_admin_criteria_all', array(
                     'groupSlug' => $groupSlug,
-                    'eventSlug' => $eventSlug,
+                    'eventId' => $eventId,
                 )));
-		}
+        }
 
         $group = $this->getGroup($groupSlug);
-        $event = $this->getEvent($groupSlug, $eventSlug);
+        $event = $this->getEvent($groupSlug, $eventId);
 
-		$vcRepo = $this->getDoctrine()->getRepository('IdeaBundle:VoteCriteria');
+        $vcRepo = $this->getDoctrine()->getRepository('IdeaBundle:VoteCriteria');
 
-		//retrieve criteria id if available
-		$vc = null;
-		if(!is_null($id)) {
-			$vc = $vcRepo->find($id);
-		} else {
-			$vc = new VoteCriteria();
-		}
+        //retrieve criteria id if available
+        $vc = null;
+        if(!is_null($id)) {
+            $vc = $vcRepo->find($id);
+        } else {
+            $vc = new VoteCriteria();
+        }
 
-		$form = $this->createFormBuilder($vc)
-			->add('displayName', 'text', array('label' => 'Display Name'))
-			->add('description', 'textarea', array('attr' => array('cols' => '60%', 'rows' => '3')))
-			->add('id', 'hidden')
-			->getForm();
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'criteria', $vc)
+            ->add('displayName', 'text', array('label' => 'criteria_displayName'))
+            ->add('description', 'textarea', array('label' => 'criteria_description', 'attr' => array('cols' => '60%', 'rows' => '3')))
+            ->add('id', 'hidden')
+            ->getForm();
 
-		if($request->getMethod() == 'POST') {
-			$form->bindRequest($request);
-			if($form->isValid()) {
+        if($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+            if($form->isValid()) {
 
-				$em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getEntityManager();
 
-				if($vc->getId() == null) {
+                if($vc->getId() == null) {
                     $vc->setEvent($event);
-					$em->persist($vc);
-				}
+                    $em->persist($vc);
+                }
                 else {
-					$existingVc = $vcRepo->find($vc->getId());
-					$existingVc->setDisplayName($vc->getDisplayName());
-					$existingVc->setDescription($vc->getDescription());
-				}
+                    $existingVc = $vcRepo->find($vc->getId());
+                    $existingVc->setDisplayName($vc->getDisplayName());
+                    $existingVc->setDescription($vc->getDescription());
+                }
 
-				//save to db
-				$em->flush();
+                //save to db
+                $em->flush();
 
-				return $this->redirect($this->generateUrl('idea_admin_criteria_all', array(
+                return $this->redirect($this->generateUrl('idea_admin_criteria_all', array(
                             'groupSlug' => $groupSlug,
-                            'eventSlug' => $eventSlug,
+                            'eventId' => $eventId,
                         )));
-			}
-		}
-		return $this->render('IdeaBundle:Admin:criteriaForm.html.twig', array(
-                'group' => $group,
-                'event' => $event,
-                'form' => $form->createView(),
-                'id' => $id));
-	}
+            }
+        }
+
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
+        return $this->render('IdeaBundle:Admin:criteriaForm.html.twig', array(
+                'group'     => $group,
+                'event'     => $event,
+                'form'      => $form->createView(),
+                'id'        => $id,
+                'isAdmin'   => $isAdmin,
+        ));
+    }
 
 
-	public function criteriaListAction(Request $request, $groupSlug, $eventSlug) {
+    public function criteriaListAction(Request $request, $groupSlug, $eventId) {
 
-		// test if submission is from a 'new' button press
-		if($request->get('new') == 'New') {
-			return $this->redirect($this->generateUrl('idea_admin_criteria', array(
+        // test if submission is from a 'new' button press
+        if($request->get('new') == 'New') {
+            return $this->redirect($this->generateUrl('idea_admin_criteria', array(
                     'groupSlug' => $groupSlug,
-                    'eventSlug' => $eventSlug,
+                    'eventId' => $eventId,
                 )));
-		}
+        }
 
         $group = $this->getGroup($groupSlug);
-        $event = $this->getEvent($groupSlug, $eventSlug);
+        $event = $this->getEvent($groupSlug, $eventId);
 
-		$doc = $this->getDoctrine();
-		$vcRepo = $doc->getRepository('IdeaBundle:VoteCriteria');
+        $doc = $this->getDoctrine();
+        $vcRepo = $doc->getRepository('IdeaBundle:VoteCriteria');
 
-		$criteriaList = $vcRepo->findByEventId($event->getId());
+        $criteriaList = $vcRepo->findByEventId($event->getId());
 
-		$choices = array();
-		foreach($criteriaList as $criteria) {
-			$choices[$criteria->getId()] = $criteria->getDisplayName();
-		}
-		$formAttributes = array('size' => count($choices) <= 10 ? count($choices) : 10, 'style' => 'width: 50%');
+        $choices = array();
+        foreach($criteriaList as $criteria) {
+            $choices[$criteria->getId()] = $criteria->getDisplayName();
+        }
+        $formAttributes = array('size' => count($choices) <= 10 ? count($choices) : 10, 'style' => 'width: 50%');
 
-		$form = $this->createFormBuilder()->add('displayName', 'choice',
-				array('choices' => $choices,
-						'label' => 'Criteria Specification',
-						'attr' => $formAttributes))
-						->getForm();
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'criteria')
+            ->add('displayName', 'choice', array('choices' => $choices,
+                                                 'label' => 'criteria_displayName',
+                                                 'attr' => $formAttributes))
+            ->getForm();
 
-		if($request->getMethod() == 'POST') {
-			$form->bindRequest($request);
-			$data = $form->getData();
+        if($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+            $data = $form->getData();
 
-			//This should never happen b/c of validation
-			if(!array_key_exists('displayName',$data))
-				return;
+            //This should never happen b/c of validation
+            if(!array_key_exists('displayName',$data))
+                return;
 
-			$selectedId = $data['displayName'];
+            $selectedId = $data['displayName'];
 
-			if ($request->get('edit') == 'Edit') {
-				return $this->redirect($this->generateUrl('idea_admin_criteria_get', array(
+            if ($request->get('edit') == 'Edit') {
+                return $this->redirect($this->generateUrl('idea_admin_criteria_get', array(
                             'id' => $selectedId,
                             'groupSlug' => $groupSlug,
-                            'eventSlug' => $eventSlug,
+                            'eventId' => $eventId,
                         )));
-			}
+            }
 
-			//by process of elimination this must be a delete operation
-			$selectedCriteria = null;
-			foreach($criteriaList as $criteria) {
-				if($criteria->getId() == $selectedId)
-					$selectedCriteria = $criteria;
-			}
+            //by process of elimination this must be a delete operation
+            $selectedCriteria = null;
+            foreach($criteriaList as $criteria) {
+                if($criteria->getId() == $selectedId)
+                    $selectedCriteria = $criteria;
+            }
 
-			//TODO: Handle id not found exception
-  			$doc->getRepository('IdeaBundle:Vote')->removeAllByCriteria($selectedCriteria);
-			$doc->getEntityManager()->remove($selectedCriteria);
-			$doc->getEntityManager()->flush();
+            //TODO: Handle id not found exception
+            $doc->getRepository('IdeaBundle:Vote')->removeAllByCriteria($selectedCriteria);
+            $doc->getEntityManager()->remove($selectedCriteria);
+            $doc->getEntityManager()->flush();
 
-			return $this->redirect($this->generateUrl('idea_admin_criteria_all', array(
+            return $this->redirect($this->generateUrl('idea_admin_criteria_all', array(
                     'groupSlug' => $groupSlug,
-                    'eventSlug' => $eventSlug,
+                    'eventId' => $eventId,
                 )));
-		}
+        }
 
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
-		return $this->render('IdeaBundle:Admin:criteriaAll.html.twig', array(
-                'form' => $form->createView(),
-                'group' => $group,
-                'event' => $event,
+        return $this->render('IdeaBundle:Admin:criteriaAll.html.twig', array(
+                'form'      => $form->createView(),
+                'group'     => $group,
+                'event'     => $event,
+                'isAdmin'   => $isAdmin,
             ));
-	}
+    }
 
-
-	public function summaryAction(Request $request, $groupSlug, $eventSlug) {
+    public function summaryAction(Request $request, $groupSlug, $eventId) {
 
         $group = $this->getGroup($groupSlug);
-        $event = $this->getEvent($groupSlug, $eventSlug);
+        $event = $this->getEvent($groupSlug, $eventId);
+        $entrySets = $event->getEntrySets();
 
-		$params = array(
-            'group' => $group,
-            'event' => $event,
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
+        $params = array(
+            'group'     => $group,
+            'event'     => $event,
+            'isAdmin'   => $isAdmin,
         );
 
 
-		//retrieve criteria sort parameter
-		$critId = $request->query->get('crit', 0);
-		$params['crit'] = $critId;
+        //retrieve criteria sort parameter
+        $critId = $request->query->get('crit', 0);
+        $params['crit'] = $critId;
 
         $vcRepo = $this->getDoctrine()->getRepository('IdeaBundle:VoteCriteria');
-		$sortCriteria = $vcRepo->find($critId);
-        $params['criteriaList'] = $vcRepo->findByEventId($this->getEvent($groupSlug, $eventSlug));
+        $sortCriteria = $vcRepo->find($critId);
+        
+        $params['criteriaList'] = $vcRepo->findByEventId($this->getEvent($groupSlug, $event->getSlug()));
 
-		//retrieve tag filter parameter
-		$tag = $request->query->get('tag');
-		$params['tag'] = $tag;
+        //retrieve tag filter parameter
+        $tag = $request->query->get('tag');
+        $params['tag'] = $tag;
 
-		//perform filter and sort
-		$currentRound = $event->getCurrentRound();
+        $currentRound = $event->getCurrentRound();
 
+        $round = $request->query->get('round', $currentRound);
+        $params['round'] = $round;
+        $params['currentRound'] = $currentRound;
+
+        //perform filter and sort
         $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
-		$ideaList = $ideaRepo->filter($event->getId(), $currentRound, $tag);
-		$ideaRepo->sortByVotes($ideaList, true, $sortCriteria);
 
-
-		//save the resulting ordered list of ideas
-		$params['ideas'] = $ideaList;
-
-        $params['round'] = $currentRound;
-        $params['firstN'] = $request->query->get('firstN');
-
-		//caluclate table values if criteria exist
-		$voteRepo = $this->getDoctrine()->getRepository('IdeaBundle:Vote');
-		$criteriaCount =  count($params['criteriaList']);
-
-		if($criteriaCount > 0) {
-			$params['avgScore'] = $voteRepo->getIdeaCriteriaTable($ideaList, $criteriaCount, $currentRound);
+        $ideaList = array();
+        foreach($entrySets as $entrySet){
+            $ideaList = array_merge($ideaList, $ideaRepo->filter($entrySet, $round, $tag, $this->getCurrentUser()));
         }
 
-		return $this->render('IdeaBundle:Admin:summary.html.twig', $params);
-	}
+        $ideaRepo->sortByVotes($ideaList, true, $sortCriteria);
 
-	public function advanceAction($groupSlug, $eventSlug) {
+        //save the resulting ordered list of ideas
+        $params['ideas'] = $ideaList;
+        $params['firstN'] = $request->query->get('firstN');
 
-        $event = $this->getEvent($groupSlug, $eventSlug);
+        //caluclate table values if criteria exist
+        $voteRepo = $this->getDoctrine()->getRepository('IdeaBundle:Vote');
+        $criteriaCount =  count($params['criteriaList']);
 
-		//update current round
-		$currentRound = $event->getCurrentRound() + 1;
-		$event->setCurrentRound($currentRound);
+        if($criteriaCount > 0) {
+            $params['avgScore'] = $voteRepo->getIdeaCriteriaTable($ideaList, $criteriaCount, $round);
+        }
 
-		//update last round for each selected idea
-		$params = $this->getRequest()->request->all();
+        return $this->render('IdeaBundle:Admin:summary.html.twig', $params);
+    }
 
-		if(count($params) > 0 ) {
-			$ideaEm = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
+    public function advanceAction($groupSlug, $eventId) {
 
-			foreach($params as $key => $value) {
-				$idea = $ideaEm->find($key);
-				$idea->setHighestRound($currentRound);
-			}
-		}
+        $event = $this->getEvent($groupSlug, $eventId);
 
-		$em = $this->getDoctrine()->getEntityManager();
-		$em->flush();
+        //update current round
+        $currentRound = $event->getCurrentRound() + 1;
+        $event->setCurrentRound($currentRound);
+
+        //update last round for each selected idea
+        $params = $this->getRequest()->request->all();
+
+        if(count($params) > 0 ) {
+            $ideaEm = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
+
+            foreach($params as $key => $value) {
+                $idea = $ideaEm->find($key);
+                $idea->setHighestRound($currentRound);
+            }
+        }
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->flush();
 
 
-		return  $this->redirect($this->generateUrl('idea_summary', array(
+        return  $this->redirect($this->generateUrl('idea_summary', array(
                 'groupSlug' => $groupSlug,
-                'eventSlug' => $eventSlug,
+                'eventId' => $eventId,
             )));
-	}
+    }
 
-    public function imagesAction($groupSlug, $eventSlug, Request $request) {
+    public function imagesAction($groupSlug, $eventId, Request $request) {
 
         $newImage = new Media();
         $form = $this->createForm(new MediaType(), $newImage, array('image_label' => 'Image File:'));
 
-        $event = $this->getEvent($groupSlug, $eventSlug);
+        $event = $this->getEvent($groupSlug, $eventId);
+
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         $params = array(
-            'group' => $this->getGroup($groupSlug),
-            'event' => $event,
-            'form'  => $form->createView(),
+            'group'     => $this->getGroup($groupSlug),
+            'event'     => $event,
+            'form'      => $form->createView(),
+            'isAdmin'   => $isAdmin,
         );
 
         if ('POST' === $request->getMethod()) {
@@ -341,20 +470,86 @@ class AdminController extends Controller
             if ($form->isValid()) {
                 $image = $form->getData();
 
-                $mUtil = $this->getMediaUtil();
-                $mUtil->persistRelatedMedia($image);
+                if ($image->getFileObject() == null) {
+                    $this->setFlash('error', 'You must select an image file');
+                }
+                else {
+                    $mUtil = $this->getMediaUtil();
+                    $mUtil->persistRelatedMedia($image);
 
-                $event->getRotatorImages()->add($image);
+                    $event->getRotatorImages()->add($image);
 
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->flush();
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $em->flush();
+                }
             }
         }
 
         return $this->render('IdeaBundle:Admin:images.html.twig', $params);
     }
 
-    public function removeImageAction($groupSlug, $eventSlug, $imageId) {
+    public function approvalsAction($groupSlug, $eventId) {
+
+        $event = $this->getEvent($groupSlug, $eventId);
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
+        $attendees = $event->getAttendees();
+        $awaitingApproval = array();
+
+        $rsvpRepo = $this->getDoctrine()->getRepository('EventBundle:GroupEventRsvpAction');
+
+        foreach ($attendees as $attendee) {
+            $userRsvpStatus = $rsvpRepo->getUserApprovedStatus($event, $attendee);
+
+            if ($userRsvpStatus == 'pending'){
+                $awaitingApproval[] = $attendee;
+            }
+
+        }
+
+        $params = array(
+            'group'             => $this->getGroup($groupSlug),
+            'event'             => $event,
+            'awaitingApproval'  => $awaitingApproval,
+            'isAdmin'           => $isAdmin,
+        );
+
+        return $this->render('IdeaBundle:Admin:approvals.html.twig', $params);
+    }
+
+    public function processApprovalAction($groupSlug, $eventId, $userId, $approval) {
+
+        $eventId = $this->getEvent($groupSlug, $eventId)->getId();
+        $user = $this->getDoctrine()->getRepository('UserBundle:User')->findOneBy(array('id'=>$userId));
+
+        $rsvpRepo = $this->getDoctrine()->getRepository('EventBundle:GroupEventRsvpAction');
+        $userRsvpStatus = $rsvpRepo->findOneBy( array('user' => $userId,'event' => $eventId) );
+
+        $em = $this->getDoctrine()->getEntityManager();
+
+        if ($userRsvpStatus){
+            if ($approval == 'approve'){
+                $userRsvpStatus->setAttendance(EventRsvpAction::ATTENDING_YES);
+                $em->flush();
+                $this->setFlash('success', $user->getName().' has been approved for the event.');
+            }
+            else {
+                $userRsvpStatus->setAttendance(EventRsvpAction::ATTENDING_REJECTED);
+                $em->flush();
+                $this->setFlash('success', $user->getName().' has been rejected for the event.');
+            }
+        } else {
+            $this->setFlash('error', $user->getName().' is not attending this event.');
+        }
+
+        return $this->redirect($this->generateUrl('idea_admin_member_approvals', array(
+            'groupSlug' => $groupSlug,
+            'eventId' => $eventId,
+        )));
+
+    }
+
+    public function removeImageAction($groupSlug, $eventId, $imageId) {
 
         $image = $this->getDoctrine()->getRepository('MediaBundle:Media')->find($imageId);
 
@@ -368,16 +563,17 @@ class AdminController extends Controller
 
         return $this->redirect($this->generateUrl('idea_admin_images', array(
             'groupSlug' => $groupSlug,
-            'eventSlug' => $eventSlug,
+            'eventId' => $eventId,
         )));
     }
 
 
-	//------------------------ Helper Functions -----------------------------------
-	public function isAdmin()
+    //------------------------ Helper Functions -----------------------------------
+    public function isAdmin()
     {
-		return $this->get('security.context')->isGranted('ROLE_ADMIN');
-	}
+        return $this->isGranted('ROLE_ADMIN');
+
+    }
 
     public function canEditEvent(Event $event)
     {
@@ -399,9 +595,10 @@ class AdminController extends Controller
         return $group;
     }
 
-    public function getEvent($groupSlug, $eventSlug)
+    public function getEvent($groupSlug, $eventId)
     {
         $group = $this->getGroup($groupSlug);
+        
         if (!$group){
             return false;
         }
@@ -410,13 +607,130 @@ class AdminController extends Controller
         $event = $eventEm->findOneBy(
             array(
                 'group' => $group->getId(),
-                'slug' => $eventSlug,
+                'id' => $eventId,
             )
         );
         if ($event == null){
             return false;
         }
         return $event;
+    }
+
+    public function getParentByIdea($idea){
+        $esRegistration = $idea->getParentRegistration();
+        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
+
+        return $esRegRepo->getContainer($esRegistration);
+    }
+
+    public function assignJudgesAction(Request $request, $groupSlug, $eventId, $ideaId)
+    {
+        $doc = $this->getDoctrine();
+
+        if (!$this->canEditEvent($this->getEvent($groupSlug, $eventId))) {
+            throw new AccessDeniedException();
+        }
+
+        $judgeAssignment = $request->request->get('judgeAssignment');
+        $idea = $doc->getRepository('IdeaBundle:Idea')->findOneBy(array('id' => $ideaId));
+
+        $judges = array();
+
+        //Check if any judges are being assigned at all
+        if ( array_key_exists('judges',$judgeAssignment)) {
+
+            $judgeUserNames = $judgeAssignment['judges'];
+
+            $userRepo = $doc->getRepository('UserBundle:User');
+            foreach($judgeUserNames as $judgeUsername) {
+                $judge = $userRepo->findOneBy(array('username' => $judgeUsername));
+                if($judge != null)
+                    $judges[] = $judge;
+            }
+
+        }
+
+        $idea->setJudges($judges);
+
+        $em = $doc->getEntityManager();
+        $em->flush();
+
+        return  $this->redirect($this->generateUrl('idea_show', array(
+            'groupSlug' => $groupSlug,
+            'eventId' => $eventId,
+            'id' => $ideaId,
+        )));
+    }
+
+
+    public function getEntrySet($entrySetId)
+    {
+        $entrySetRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet');
+        $entrySet = $entrySetRepo->find($entrySetId);
+
+        if (!$entrySet){
+            throw new NotFoundHttpException('Entry Set not found');
+        }
+
+        return $entrySet;
+    }
+
+    public function getParentByEntrySet($entrySet)
+    {
+        $parentRegistration = $entrySet->getEntrySetRegistration();
+        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
+
+        return $esRegRepo->getContainer($parentRegistration);
+    }
+
+    public function canEditEntrySet($entrySet)
+    {
+        $parent = $this->getParentByEntrySet($entrySet);
+
+        if ($parent instanceof GroupEvent){
+            return $this->canEditEvent($parent);
+        }
+        elseif ($parent instanceof Group){
+            return ($this->isAdmin() || $parent->isOwner($this->getCurrentUser()) );
+        }
+
+        return false;
+    }
+
+
+	public function exportIdeasAction($groupSlug, $eventId) {
+        $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
+        $csvString = $ideaRepo->toCSV();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$eventId.'-ideas.csv"');
+        $response->setContent($csvString);
+        return $response;
+    }
+
+    public function exportUsersAction() {
+        $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
+        $csvString = $userRepo->toCSV();
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="users.csv"');
+        $response->setContent($csvString);
+        return $response;
+    }
+
+    public function exportVotesAction($groupSlug, $eventId) {
+        $event = $this->getEvent($groupSlug, $eventId);
+
+        $voteRepo = $this->getDoctrine()->getRepository('IdeaBundle:Vote');
+        $csvString = $voteRepo->toCSV($event);
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'.$eventId.'-scores.csv"');
+        $response->setContent($csvString);
+        return $response;
     }
 }
 

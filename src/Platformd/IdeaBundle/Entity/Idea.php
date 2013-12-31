@@ -4,12 +4,12 @@ namespace Platformd\IdeaBundle\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-
+use Platformd\SpoutletBundle\Link\LinkableInterface;
 /**
  * @ORM\Entity(repositoryClass="Platformd\IdeaBundle\Entity\IdeaRepository")
  * @ORM\Table(name="idea")
  */
-class Idea
+class Idea implements LinkableInterface
 {
 	/**
      * @ORM\Id
@@ -19,9 +19,9 @@ class Idea
 	protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GroupEvent", inversedBy="ideas")
+     * @ORM\ManyToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySet", inversedBy="entries")
      */
-    protected $event;
+    protected $entrySet;
 
 	/**
      * @ORM\Column(type="string", length=255)
@@ -64,7 +64,7 @@ class Idea
     protected $amount;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable="true")
      */
     protected $members;
 
@@ -75,12 +75,21 @@ class Idea
 
     /**
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="ideas")
-     * @ORM\JoinTable(name="TagIdeaMap",
+     * @ORM\JoinTable(name="tag_idea_map",
      *      joinColumns={@ORM\JoinColumn(name="idea", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="tag", referencedColumnName="tag")}
      *      )
      */
     protected $tags;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\JoinTable(name="judge_idea_map",
+     *      joinColumns={@ORM\JoinColumn(name="idea", referencedColumnName="id", onDelete="cascade")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="judge", referencedColumnName="id", onDelete="cascade")}
+     *      )
+     */
+    protected $judges;
 
     /**
      * @ORM\OneToMany(targetEntity="Vote", mappedBy="idea", cascade={"remove"})
@@ -121,6 +130,7 @@ class Idea
         $this->votes = new ArrayCollection();
         $this->followMappings = new ArrayCollection();
         $this->links = new ArrayCollection();
+        $this->judges = new ArrayCollection();
         $this->isPrivate = false;
         $this->createdAt = new \DateTime();
     }
@@ -158,13 +168,18 @@ class Idea
         return $this->name;
     }
 
-    public function getEvent()
+    public function getEntrySet()
     {
-        return $this->event;
+        return $this->entrySet;
     }
-    public function setEvent($event)
+
+    public function getParentRegistration() {
+        return $this->getEntrySet()->getEntrySetRegistration();
+    }
+
+    public function setEntrySet($entrySet)
     {
-        $this->event = $event;
+        $this->entrySet = $entrySet;
     }
 
     /**
@@ -541,8 +556,10 @@ class Idea
         if ($user == null){
             return false;
         }
-        // logged in as creator or admin
-        if ($this->getCreator() == $user || in_array('ROLE_SUPER_ADMIN', $user->getRoles())){
+        // logged in as creator or admin or assigned judge
+        if ($this->getCreator() == $user ||
+            in_array('ROLE_SUPER_ADMIN', $user->getRoles()) ||
+            $this->isJudgeAssigned($user)){
             return true;
         }
 
@@ -736,5 +753,71 @@ class Idea
     public function setCreatedAt($time)
     {
         $this->createdAt = $time;
+    }
+
+    /**
+     * Get judges
+     *
+     * @return Doctrine\Common\Collections\Collection 
+     */
+    public function getJudges()
+    {
+        return $this->judges;
+}
+
+    public function setJudges($judges) {
+        $currentJudges = $this->getJudges();
+        $currentJudges->clear();
+        foreach($judges as $judge) {
+            $currentJudges->add($judge);
+        }
+    }
+
+    /**
+     * Answers is the provided judge assigned to vote for this idea
+     *
+     * @param Platformd\UserBundle\Entity\User $judge
+     */
+    public function isJudgeAssigned(\Platformd\UserBundle\Entity\User $judge)
+    {
+        return $this->getJudges()->contains($judge);
+    }
+
+    public function getNumVotes()
+    {
+        return count($this->getFollowMappings());
+    }
+
+    /**
+     * If there is a set URL that should be used without doing anything else, return it here
+     *
+     * @return string
+     */
+    function getLinkableOverrideUrl()
+    {
+        return false;
+    }
+
+    /**
+     * Returns the name of the route used to link to this object
+     *
+     * @return string
+     */
+    function getLinkableRouteName()
+    {
+        return "idea_show";
+    }
+
+    /**
+     * Returns an array route parameters to link to this object
+     *
+     * @return array
+     */
+    function getLinkableRouteParameters()
+    {
+        return array(
+            'entryId' => $this->id,
+            'entrySetId' => $this->getEntrySet()->getId(),
+        );
     }
 }

@@ -53,7 +53,7 @@ class DealController extends Controller
         if ($keyValue) { # the user has a key, so let's display it for them
 
             $group        = $deal->getGroup();
-            $groupManager = $this->get('platformd.model.group_manager');
+            $groupManager = $this->getGroupManager();
 
             $data                               = new deal_show_key_data();
 
@@ -127,7 +127,7 @@ class DealController extends Controller
         $dealCodeRepo      = $this->getDealCodeRepo();
         $dealManager       = $this->getDealManager();
         $mediaPathResolver = $this->getMediaPathResolver();
-        $groupManager      = $this->get('platformd.model.group_manager');
+        $groupManager      = $this->getGroupManager();
 
         $totalAvailableKeys = $dealCodeRepo->getTotalAvailableForDeal($deal);
         $currentlyAssigned  = $currentUser ? $dealCodeRepo->getUserAssignedCodeForDeal($currentUser, $deal) : null;
@@ -346,14 +346,6 @@ class DealController extends Controller
     private function getDealManager()
     {
         return $this->get('platformd.model.deal_manager');
-    }
-
-    /**
-     * @return \Platformd\GroupBundle\Model\GroupManager
-     */
-    private function getGroupManager()
-    {
-        return $this->get('platformd.model.group_manager');
     }
 
     /**

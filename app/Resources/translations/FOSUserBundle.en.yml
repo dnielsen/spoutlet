@@ -17,7 +17,6 @@ fos_user_registration_form_recaptcha: "Verification:"
 fos_user_registration_form_subscribedAlienwareEvent: Subscribe me to the Campsite email newsletter.
 
 fos_user_registration_form_name: "Full Name:"
-fos_user_registration_form_plainPassword_second: "Confirm Password:"
 fos_user_registration_form_eventRole: "Event Role:"
 fos_user_registration_form_affiliation: "Affiliation:"
 fos_user_registration_form_organization: Company/Organization
@@ -109,12 +108,12 @@ registration.email: |
 # Password resetting
 resetting.password_already_requested: The password for this user has already been requested within the last 24 hours.
 resetting.check_email: A password reset email has been sent. Please click the link provided in the email to complete your password reset.
-resetting.request.invalid_username: The email you entered, "%username%", does not appear to be in our system. If you believe this is an error, please email <a href="mailto:osman@platformd.org">osman@platformd.org</a> for support.
+resetting.request.invalid_username: The email you entered, "%username%", does not appear to be in our system. If you believe this is an error, please email <a href="mailto:support@campsite.org">support@campsite.org</a> for support.
 resetting.request.username: "Email:"
 resetting.request.submit: Reset Password
 resetting.reset.submit: Change Password
 resetting.flash.success: Your password has been successfully changed.
-resetting.flash.api_error: There was a problem processing your password change. Please email "osman@platformd.com" for support.
+resetting.flash.api_error: There was a problem processing your password change. Please email "support@campsite.org" for support.
 resetting.flash.error: There was a problem submitting your request. Please try again shortly.
 
 # the first line is the subject of the email

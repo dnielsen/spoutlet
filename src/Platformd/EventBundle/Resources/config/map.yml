@@ -3,3 +3,8 @@ services:
         class: Platformd\EventBundle\Map\LocationMap
         tags:
             - { name: vichgeo.map, alias: location }
+
+    platformd_event.service.map.large_location:
+        class: Platformd\EventBundle\Map\LargeLocationMap
+        tags:
+            - { name: vichgeo.map, alias: large_location }

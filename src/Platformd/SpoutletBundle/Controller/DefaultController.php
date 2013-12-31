@@ -358,7 +358,9 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        if (!$this->getCurrentSite()->getSiteFeatures()->getHasIndex()) {
+        $site = $this->getCurrentSite();
+
+        if (!$site->getSiteFeatures()->getHasIndex()) {
             throw $this->createNotFoundException();
         }
  
@@ -660,7 +662,7 @@ class DefaultController extends Controller
     {
         $site = $this->getCurrentSite();
 
-        $groups = $this->get('platformd.model.group_manager')->getAllLocationGroupsForSite($site);
+        $groups = $this->getGroupManager()->getAllLocationGroupsForSite($site);
 
         $groupsArray = array();
 

@@ -1,92 +1,88 @@
-{% extends 'IdeaBundle::event_layout.html.twig' %}
+{% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block event_content %}
+{% block content %}
 
-    {% if not event.isSubmissionActive %}
+    {% if not entrySet.isSubmissionActive %}
 
-    <p>Idea Submissions are currently disabled.</p>
-
-    <table class="paddedTable">
-        <td>
-            <form action = {{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }} method="get">
-            <input type="submit" value="Home">
-            </form>
-        </td>
-        <td>
-            <form action="{{ path('idea_show_all', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="get">
-                <input type="submit" value="View Ideas">
-            </form>
-        </td>
-    </table>
+        <p>{{ entrySet.type | capitalize }} submissions are currently disabled.</p>
 
     {% else %}
 
-    <h1>{% if idea is defined %}Edit Your Idea{% else %}Submit Your Idea{% endif %}</h1>
-    <form action="{% if idea is defined %}{{ path('idea_edit', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': idea.id}) }}{% else %}{{ path('idea_create', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}{% endif %}" method="post" id="submit" enctype="multipart/form-data">
-        <label>Idea Title</label>
-        <input type="text" name="title" {% if idea is defined %}value="{{ idea.name }}"{% endif %} tabindex="1" class="inPt">
+        <h1>{% if idea is defined %}Edit{% else %}Submit{% endif %} Your {{ entrySet.type | capitalize }}</h1>
 
-        <label>Idea Description</label>
-        <textarea name="desc" rows="6" tabindex="2" class="inPt">{% if idea is defined %}{{ idea.description }}{% endif %}</textarea>
+        <form action="{% if idea is defined %}{{ path('idea_edit', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}{% else %}{{ path('idea_create', {'entrySetId': entrySet.id}) }}{% endif %}" method="post" id="submit" enctype="multipart/form-data">
+            <label>Title</label>
+            <input type="text" name="title" {% if idea is defined %}value="{{ idea.name }}"{% endif %} tabindex="1" class="inPt">
 
-        <label>Names of Additional Contributors</label>
-        <textarea name="members" rows="6" tabindex="3"
-            placeholder="Please use this format for names: First Last, First Last, etc&#8230;" class="inPt">{% if idea is defined %}{{ idea.members }}{% endif %}</textarea>
+            <label>Description</label>
+            <textarea name="desc" rows="6" tabindex="2" class="inPt">{% if idea is defined %}{{ idea.description }}{% endif %}</textarea>
 
-        <label>Suggested Categories</label>
-        <textarea name="tags" rows="1" tabindex="4" placeholder="Tag list (tag1 tag2 tag3)" class="inPt">{% if idea is defined %}{{ idea.implodedTagString }}{% endif %}</textarea>
+            {% if entrySet.type == constant('\\Platformd\\IdeaBundle\\Entity\\EntrySet::TYPE_SESSION') or entrySet.type == constant('\\Platformd\\IdeaBundle\\Entity\\EntrySet::TYPE_IDEA') %}
+                <label>Names of Additional Members</label>
+                <textarea name="members" rows="6" tabindex="3"
+                    placeholder="First Last, First Last, etc&#8230;" class="inPt">{% if idea is defined %}{{ idea.members }}{% endif %}</textarea>
+            {% endif %}
 
-        <label class="right spcr-r2">Private Idea</label><br>
-        <input type="checkbox" name="isPrivate" tabindex="5" class="right spcr-r2"{% if idea is defined %}{% if idea.isPrivate %}checked="yes"{% endif %}{% endif %}>
+            <label>Suggested Tags</label>
+            <textarea name="tags" rows="1" tabindex="4" placeholder="tag1, tag2, tag3, etc&#8230;" class="inPt">{% if idea is defined %}{{ idea.implodedTagString }}{% endif %}</textarea>
 
-        {# School Idea Contest specific fields -- make these optional through event type or something later
+            You may add images and external links once you have submitted the {{ entrySet.type }}.<br/>
+
+            <label class="right spcr-r2">Private</label><br>
+            <input type="checkbox" name="isPrivate" tabindex="5" class="right spcr-r2"{% if idea is defined %}{% if idea.isPrivate %}checked="yes"{% endif %}{% endif %}>
+
+            {# School Idea Contest specific fields -- make these optional through event type or something later
+            {% if idea is defined %}
+                {% set stage = idea.stage %}
+            {% else %}
+                {% set stage = "" %}
+            {% endif %}
+
+            <label>Idea Stage</label>
+            <select name="stage" tabindex="4">
+                <option value="Concept" {% if stage == "Concept" %}selected{% endif %}>Concept</option>
+                <option value="Prototype" {% if stage == "Prototype" %}selected{% endif %}>Prototype</option>
+                <option value="Beta" {% if stage == "Beta" %}selected{% endif %}>Beta</option>
+                <option value="Startup" {% if stage == "Startup" %}selected{% endif %}>Startup</option>
+                <option value="Growth" {% if stage == "Growth" %}selected{% endif %}>Growth</option>
+                <option value="Profitable" {% if stage == "Profitable" %}selected{% endif %}>Profitable</option>
+                <option value="Expansion" {% if stage == "Expansion" %}selected{% endif %}>Expansion</option>
+            </select>
+
+
+            <label>Is this idea for a course?</label>
+            <input type="checkbox" name="forCourse" value="yes" tabindex="5" {% if idea is defined %}{% if idea.getForCourse %}checked="yes"{% endif %}{% endif %}>
+
+            <label>If yes, please enter the name of your professors:</label>
+            <input type="text" name="professors" class="inPt" tabindex="6" {% if idea is defined %} value="{{ idea.professors }}"{% endif %}>
+
+            <label>Amount needed to start-up venture (optional):</label>
+            <input type="text" name="amount" tabindex="7" {% if idea is defined %}value="{{ idea.amount }}"{% endif %}>
+
+            #}
+
+        </form>
+
+        <br class="clr">
+
         {% if idea is defined %}
-            {% set stage = idea.stage %}
+            <form action="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" id="cancel"></form>
+            <form action="{{ path('idea_delete', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post" id="delete">
+            </form>
         {% else %}
-            {% set stage = "" %}
+            <form action="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" id="cancel"></form>
         {% endif %}
 
-        <label>Idea Stage</label>
-        <select name="stage" tabindex="4">
-            <option value="Concept" {% if stage == "Concept" %}selected{% endif %}>Concept</option>
-            <option value="Prototype" {% if stage == "Prototype" %}selected{% endif %}>Prototype</option>
-            <option value="Beta" {% if stage == "Beta" %}selected{% endif %}>Beta</option>
-            <option value="Startup" {% if stage == "Startup" %}selected{% endif %}>Startup</option>
-            <option value="Growth" {% if stage == "Growth" %}selected{% endif %}>Growth</option>
-            <option value="Profitable" {% if stage == "Profitable" %}selected{% endif %}>Profitable</option>
-            <option value="Expansion" {% if stage == "Expansion" %}selected{% endif %}>Expansion</option>
-        </select>
+        <table>
+            <input type="submit" class="right spcr-r2" value="{% if idea is defined %}Save Changes{% else %}Submit {{ entrySet.type | capitalize }}{% endif %}" tabindex="6"
+                onclick="if ( confirm('This action will enroll you into the parent group or event if you have not already done so.')) {
+                   document.forms['submit'].submit();
+                }">
+            {% if idea is defined %}
+                <input type="submit" class="right spcr-r redButton" value="Delete" onclick="if (confirm('Are you sure you want to delete this {{ entrySet.type }}?')) { document.forms['delete'].submit(); } ">
+            {% endif %}
+        </table>
 
-
-        <label>Is this idea for a course?</label>
-        <input type="checkbox" name="forCourse" value="yes" tabindex="5" {% if idea is defined %}{% if idea.getForCourse %}checked="yes"{% endif %}{% endif %}>
-
-        <label>If yes, please enter the name of your professors:</label>
-        <input type="text" name="professors" class="inPt" tabindex="6" {% if idea is defined %} value="{{ idea.professors }}"{% endif %}>
-
-        <label>Amount needed to start-up venture (optional):</label>
-        <input type="text" name="amount" tabindex="7" {% if idea is defined %}value="{{ idea.amount }}"{% endif %}>
-
-        #}
-
-    </form>
-
-    <br class="clr">
-
-    <form action="{% if idea is defined %}{{ path('idea_show', {'groupSlug': group.slug, 'eventSlug': event.slug, 'id': idea.id}) }}{% else %}{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}{% endif %}" id="cancel"></form>
-
-    {% if idea is defined %}
-    <form action="{{ path('idea_delete', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}" method="post" id="delete">
-        <input type="hidden" name="id" value='{{idea.id}}'>
-    </form>
-    {% endif %}
-
-    <table>
-        <input type="submit" class="right spcr-r2" value="{% if idea is defined %}Save Changes{% else %}Submit Idea{% endif %}" tabindex="6" onclick="document.forms['submit'].submit();">
-        <input type="submit" class="right spcr-r" value="Cancel" onclick="document.forms['cancel'].submit();">
-        {% if idea is defined %}<input type="submit" class="right spcr-r" value="Delete" onclick="document.forms['delete'].submit();">{% endif %}
-    </table>
-
-    {% endif %} {# End if not event.isSubmissionsActive #}
+    {% endif %} {# End if not entrySet.isSubmissionsActive #}
 
 {% endblock %}

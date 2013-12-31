@@ -7,15 +7,15 @@
                 <li><a href="{{ path('fos_user_registration_register') }}">Register</a></li>
             {% else %}
                 <li><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a></li>
-                {% if is_granted("ROLE_SUPER_ADMIN") %}
-                    <li><a href="{{ path('admin_index') }}">Site Admin</a></li>
-                {% endif %}
-                <li><a href="{{ path('accounts_index') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
                 <li><a href="{{ path('profile', {'username': app.user.username}) }}">Profile</a></li>
+                <li><a href="{{ path('accounts_index') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
             {% endif %}
-            <li><a href="{{ path('default_index') }}">Home</a></li>
             {% block extra_user_controls %}
             {% endblock %}
+            <li><a href="{{ path('default_index') }}">Home</a></li>
+            {% if is_granted("ROLE_SUPER_ADMIN") %}
+                <li><a href="{{ path('admin_index') }}">Site Admin</a></li>
+            {% endif %}
         </ul>
     </div>
 

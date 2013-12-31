@@ -1,5 +1,7 @@
+<ul class="dflt">
 {% for group in groups %}
-    <a href="{{ path('group_show', {'slug': group.slug}) }}">{{ group.group_name }}</a> 
-           - {{ group.member_count }} members <br/><hr/> 
-           {# - {{ group.description |striptags|truncate(150) }}<br/><hr/> #}
+    <li>
+    <a href="{{ path('group_show', {'slug': group.slug}) }}">{{ group.group_name }}</a> - {{ group.member_count }} members
+    </li>
 {% endfor %}
+</ul>

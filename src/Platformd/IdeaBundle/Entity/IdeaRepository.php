@@ -14,33 +14,110 @@ use Platformd\IdeaBundle\Entity\VoteCriteria;
 class IdeaRepository extends EntityRepository
 {
 
-    /**
-     * @param $event
-     * @param null $tag
-     * Filters idea list by event, current round, optional tag, and isPrivate
+/**
+     * User specific idea filter mode:
+     *   Admin show only private ideas for all users.
+     *   Normal user only ideas you authored (private and public)
+     *   Judge user only ideas assigned to you for judging (private and public)
+     * @param $entrySet Used to determine if user is a judge
+     * @param null $round If null ideas from all rounds are
+     * returned, otherwise ideas from this round and above are returned.
+     * @param null $tag Returns all ideas containing this tag
+     * @param null $user If null show public ideas otherwise show user specific filtered idea.
      * @return array
      */
-    public function filter($eventId, $round, $tag = null) {
-
-         $qb = $this->createQueryBuilder('i')
+    public function filter($entrySet, $round = null, $tag = null, $user = null)
+    {
+        $qb = $this->createQueryBuilder('i')
             ->select      ('i')
-            ->where       ('i.event = :eventId')
-            ->andWhere    ('i.highestRound >= :round')
-            ->andWhere    ('i.isPrivate = false')
-            ->setParameters(
-                 array(
-                     'eventId' => $eventId,
-                     'round' => $round,
-                 ));
+            ->where       ('i.entrySet = :entrySetId')
+            ->andWhere       ('i.highestRound >= :round')
+            ->setParameters( array(
+               'round'    => ($round == null ? 1 : $round),
+               'entrySetId'  => $entrySet->getId(),
+ 			));
 
+        if(!is_null($tag) && $tag <> '') {
+            $qb->innerJoin('i.tags', 't', 'WITH', 't.tagName = :tag')->setParameter('tag', $tag);
+        }
 
+        //Handle anon or "public" ideas
+        if($user == null) {
+            $qb->andWhere('i.isPrivate = false');
+            return $qb->getQuery()->getResult();
+        }
 
-		if(!is_null($tag) && $tag <> '') {
-			$qb->innerJoin('i.tags', 't', 'WITH', 't.tagName = :tag')->setParameter('tag', $tag);
-		}
+        $isAdmin = $user->hasRole('ROLE_SUPER_ADMIN');
+        $isJudge = !$isAdmin && $entrySet->getIsVotingActive() && $entrySet->containsVoter($user->getUsername());
 
-		return $qb->getQuery()->getResult();
-	}
+        //for normal users filter out other peoples ideas
+        if(!$isAdmin && !$isJudge) {
+            $qb->andWhere('i.creator = :creator')->setParameter('creator', $user->getId());
+        }
+
+        //process he query
+        $result = $qb->getQuery()->getResult();
+
+        // judge case, all ideas assigned to this judge
+        if($isJudge) {
+            $ideasAssignedToJudge = array();
+            foreach($result as $idea) {
+                if( $idea->isJudgeAssigned($user) ){
+                    $ideasAssignedToJudge[] = $idea;
+                }
+            }
+            $result = $ideasAssignedToJudge;
+        }
+
+        return $result;
+    }
+
+    private function createCsvString($data) {
+        // Open temp file pointer
+        if (!$fp = fopen('php://temp', 'w+')) return FALSE;
+
+        // Loop data and write to file pointer
+        foreach ($data as $line) fputcsv($fp, $line);
+
+        // Place stream pointer at beginning
+        rewind($fp);
+
+        // Return the data
+        return stream_get_contents($fp);
+    }
+
+    public function toCSV() {
+        $ideasArray = array();
+
+        //Add header
+        $headerArray = array(
+            "id","EntrySet", "Creator", "Email", "Title", "Creation Time",
+            "Description", "Stage", "For Course", "Professors",
+            "Amount", "Members", "HighestRound", "IsPrivate"
+        );
+        $ideasArray[] = $headerArray;
+
+        foreach($this->findAll() as $idea) {
+            $ideaArray = array(
+                $idea->getId(),
+                $idea->getEntrySet()->getName(),
+                $idea->getCreator()->getUsername(),
+                $idea->getCreator()->getEmail(),
+                $idea->getName(),
+                $idea->getCreatedAt()->format('Y-m-d H:i:s'),
+                $idea->getDescription(),
+                $idea->getStage(),
+                $idea->getForCourse(),
+                $idea->getProfessors(),
+                $idea->getAmount(),
+                $idea->getMembers(),
+                $idea->getHighestRound(),
+                $idea->getIsPrivate()
+            );
+            $ideasArray[] = $ideaArray;
+        }
+        return $this->createCsvString($ideasArray);
+    }
 
 	public function sortByVotes(&$ideas, $desc = true, VoteCriteria $criteria = null) {
 		usort($ideas, function($a, $b) use ($desc, $criteria) {
@@ -56,13 +133,16 @@ class IdeaRepository extends EntityRepository
 		return $ideas;
 	}
 
-    public function sortByFollows(&$ideas) {
-        usort($ideas, function($a, $b) {
+    public function sortByFollows(&$ideas, $desc = true) {
+        usort($ideas, function($a, $b) use ($desc) {
                 $valueA = $a->getNumFollowers();
                 $valueB = $b->getNumFollowers();
-                if($valueA == $valueB )
-                    return 0;
-                return ($valueA < $valueB) ? 1 : -1;
+                if($valueA == $valueB ) { return 0; }
+
+                if($desc)
+                    return ($valueA < $valueB) ? 1 : -1;
+                else
+                    return ($valueA < $valueB) ? -1 : 1;
             });
         return $ideas;
     }

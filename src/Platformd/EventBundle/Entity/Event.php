@@ -20,6 +20,9 @@ use Platformd\GameBundle\Entity\Game,
     Platformd\UserBundle\Entity\User,
     Platformd\EventBundle\Entity\GlobalEvent,
     Platformd\EventBundle\Entity\GroupEvent,
+    Platformd\IdeaBundle\Entity\EntrySet,
+    Platformd\IdeaBundle\Entity\EntrySetRegistry,
+    Platformd\IdeaBundle\Entity\EntrySetScopeable,
     Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil,
     Platformd\SearchBundle\Model\IndexableInterface,
     Platformd\TagBundle\Model\TaggableInterface
@@ -37,11 +40,14 @@ use DateTime,
  * @Assert\Callback(methods={"externalContentCheck", "validateDateRanges", "validateAddressField", "validateSlug"})
  * @ORM\HasLifecycleCallbacks()
  */
-abstract class Event implements LinkableInterface, IndexableInterface, TaggableInterface
+abstract class Event implements LinkableInterface, IndexableInterface, TaggableInterface, EntrySetScopeable
 {
     const REGISTRATION_ENABLED      = 'REGISTRATION_ENABLED';
     const REGISTRATION_DISABLED     = 'REGISTRATION_DISABLED';
     const REGISTRATION_3RD_PARTY    = 'REGISTRATION_3RDPARTY';
+    const TYPE_UNCONFERENCE         = 'unconference';
+    const TYPE_IDEATHON             = 'ideathon';
+    const TYPE_FORUM                = 'forum';
 
     // overridden in group and global event entities
     const SEARCH_PREFIX             = 'event_';
@@ -132,7 +138,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      *
      * @var boolean $online
      * @ORM\Column(name="online", type="boolean")
-     * //Assert\NotNull(message="Required")
+     * //@Assert\NotNull(message="Required")
      */
     protected $online;
 
@@ -140,7 +146,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      * Event starts at
      *
      * @var \DateTime $startsAt
-     * @Assert\NotNull(message="Required")
+     * //@Assert\NotNull(message="Required")
      * @ORM\Column(name="starts_at", type="datetime", nullable=true)
      */
     protected $startsAt;
@@ -149,7 +155,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      * Events ends at
      *
      * @var \DateTime $endsAt
-     * @Assert\NotNull(message="Required")
+     * //@Assert\NotNull(message="Required")
      * @ORM\Column(name="ends_at", type="datetime", nullable=true)
      */
     protected $endsAt;
@@ -158,7 +164,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      * The timezone this event is taking place in
      *
      * @var string
-     * //Assert\NotBlank(message="Required")
+     * //@Assert\NotBlank(message="Required")
      * @ORM\Column(type="string", length=255, nullable=false)
      */
     protected $timezone = 'UTC';
@@ -262,8 +268,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     private $attendeeCount = 0;
 
     /**
-     * @var Platformd\TagBundle\Entity\Tag[]
-     *
+     * @var \Tag[]
      */
     private $tags;
 
@@ -292,6 +297,10 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      */
     protected $currentRound;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySetRegistry", cascade={"persist"})
+     */
+    protected $entrySetRegistration;
 
     /**
      * Constructor
@@ -300,10 +309,8 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     {
         $this->attendees    = new ArrayCollection();
         $this->createdAt    = new DateTime();
-
         $this->startsAt     = new \DateTime('now');
         $this->endsAt       = new \DateTime('now');
-        $this->ideas        = new ArrayCollection();
         $this->currentRound = 1;
     }
 
@@ -326,7 +333,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     }
 
     /**
-     * @param string $address
+     * @param string $address1
      */
     public function setAddress1($address1)
     {
@@ -681,15 +688,20 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
     public function getDateRangeString()
     {
-        $startsAtDate = $this->getStartsAt()->format('M d');
-        $startsAtYear = $this->getStartsAt()->format('Y');
-        $endsAtDate = $this->getEndsAt()->format('M d');
-        $endsAtYear = $this->getEndsAt()->format('Y');
+        if ($this->getStartsAt() && $this->getEndsAt()) {
+            $startsAtDate = $this->getStartsAt()->format('M d');
+            $startsAtYear = $this->getStartsAt()->format('Y');
+            $endsAtDate = $this->getEndsAt()->format('M d');
+            $endsAtYear = $this->getEndsAt()->format('Y');
 
-        if ($startsAtYear == $endsAtYear) {
-            return ($startsAtDate == $endsAtDate) ? $startsAtDate.', '.$endsAtYear : $startsAtDate.' - '.$endsAtDate.', '.$startsAtYear;
-        } else {
-            return $startsAtDate.', '.$startsAtYear.' - '.$endsAtDate.', '.$endsAtYear;
+            if ($startsAtYear == $endsAtYear) {
+                return ($startsAtDate == $endsAtDate) ? $startsAtDate.', '.$endsAtYear : $startsAtDate.' - '.$endsAtDate.', '.$startsAtYear;
+            } else {
+                return $startsAtDate.', '.$startsAtYear.' - '.$endsAtDate.', '.$endsAtYear;
+            }
+        }
+        else {
+            return null;
         }
     }
 
@@ -999,61 +1011,26 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     }
 
 
-    public function setIsVotingActive($isVotingActive)
-    {
-        $this->isVotingActive = $isVotingActive;
-        return $this;
-    }
-    public function getIsVotingActive()
-    {
-        return $this->isVotingActive;
-    }
-
-    public function setIsSubmissionActive($isSubmissionActive)
-    {
-        $this->isSubmissionActive = $isSubmissionActive;
-        return $this;
-    }
-    public function getIsSubmissionActive()
-    {
-        return $this->isSubmissionActive;
-    }
-
-    public function setAllowedVoters($allowedVoters)
-    {
-        $this->allowedVoters = $allowedVoters;
-    }
-    public function getAllowedVoters()
-    {
-        return $this->allowedVoters;
-    }
-    public function containsVoter($voter)
-    {
-        if( strlen($this->allowedVoters) == 0)
-            return false;
-
-        $voters = preg_split("/[\s,]+/", trim($this->allowedVoters));
-        if (in_array($voter, $voters)) {
-            return true;
-        }
-
-        return false;
-    }
-
     public function getCurrentRound()
     {
         return $this->currentRound;
     }
+
     public function setCurrentRound($currentRound)
     {
         $this->currentRound = $currentRound;
     }
-    public function getIdeas()
-    {
-        return $this->ideas;
+
+    public function getEntrySetRegistration() {
+        return $this->entrySetRegistration;
     }
-    public function setIdeas($ideas)
-    {
-        $this->ideas = $ideas;
+
+    public function createEntrySetRegistration() {
+        $this->entrySetRegistration = new EntrySetRegistry($this);
+        return $this->entrySetRegistration;
+    }
+
+    public function getEntrySets() {
+        return $this->entrySetRegistration->getEntrySets();
     }
 }

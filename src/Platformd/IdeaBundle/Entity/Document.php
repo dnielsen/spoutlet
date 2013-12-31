@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile as UploadedFile;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="document")
  */
 class Document
 {
@@ -58,6 +59,10 @@ class Document
     // TODO: Check for type, size, etc.
     public function isValid()
     {
+        if ( $this->getFile() == null ) {
+            return false;
+        }
+
         $allowedMimeTypes = array("image/jpeg", "image/jpg", "image/png", "image/gif");
         $mimeType = $this->getFile()->getMimeType();
 

@@ -103,7 +103,7 @@
                     <div id="event-organizer"><strong>{{ 'platformd.events.event_show.organizer' | pd_trans }}: </strong><a href="{{ account_link(event.user.username) }}">{{ event.user.username }}</a></div>
 
                     {% if event.registrationOption == "REGISTRATION_ENABLED" %}
-                        <div id="event-attendee-attendees"><strong>{{ 'platformd.events.event_show.attending' | pd_trans }}: </strong><a href="{{ path('group_event_attendees', { 'groupSlug': event.group.slug, 'eventSlug': event.slug }) }}"><span id="event-attendee-count-{{ event.id }}">{{ event.attendeeCount }}</span></a></div>
+                        <div id="event-attendee-attendees"><strong>{{ 'platformd.events.event_show.attending' | pd_trans }}: </strong><a href="{{ path('group_event_attendees', { 'groupSlug': event.group.slug, 'eventId': event.id }) }}"><span id="event-attendee-count-{{ event.id }}">{{ event.attendeeCount }}</span></a></div>
                         <div id="event-registration">
                             {% if (event.endsAtUtc | date('Y-m-d H:i:s')) < ('now' | date('Y-m-d H:i:s'))  %}
                                 <div id="event-registration-closed">{{ 'platformd.events.event_show.registration_closed' | pd_trans }}</div>

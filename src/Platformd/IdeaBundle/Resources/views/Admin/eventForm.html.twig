@@ -1,22 +1,27 @@
-{% extends 'IdeaBundle::group_layout.html.twig' %}
+{% extends 'SpoutletBundle::layout.html.twig' %}
 
 {% block javascripts %}
     {{ parent() }}
 
     <script type="text/javascript">
-        $(function () {
-            $('#form_online').change(function (){
-                var isOnline = $(this).val();
-                if(isOnline == '1') {
+        $(function() {
+            // Initialize location controls state based on default online value
+            toggleLocationControls();
+
+            // Toggle location controls on online update
+            $('#event_online').change(function() {
+                toggleLocationControls();
+            });
+
+            function toggleLocationControls() {
+                if($('#event_online').val() == '1') {
                     $('#location-controls').slideUp();
+                    $('#event_location').val(null);
+                    $('#event_address1').val(null);
+                    $('#event_address2').val(null);
                 } else {
                     $('#location-controls').slideDown();
                 }
-            });
-
-            var isOnline = $('#form_online').val();
-            if(isOnline == '1') {
-                $('#location-controls').slideUp();
             }
         });
     </script>
@@ -29,12 +34,12 @@
         {% set formpath = path('idea_admin_event', {'groupSlug': group.slug}) %}
     {% else %}
         {% set verb = 'Modify' %}
-        {% set formpath = path('idea_admin_event', {'groupSlug': group.slug, 'eventSlug': event.slug}) %}
+        {% set formpath = path('idea_admin_event', {'groupSlug': group.slug, 'eventId': event.id}) %}
     {% endif %}
 
     <h1>{{ verb }} Your Event</h1>
 
-    <form action="{{ formpath }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ formpath }}" method="post" {{ form_enctype(form) }} id="event" novalidate>
         {{ form_row(form.name) }}
         {{ form_row(form.content) }}
         {{ form_row(form.startsAt) }}
@@ -45,13 +50,12 @@
         {{ form_row(form.address1) }}
         {{ form_row(form.address2) }}
         </div>
-        {{ form_row(form.allowedVoters) }}
-        {{ form_row(form.isSubmissionActive) }}
-        {{ form_row(form.isVotingActive) }}
+        {{ form_row(form.private) }}
 
         {{ form_rest(form) }}
 
-	    <input type="submit" value="Submit" formnovalidate/>
-        <input type="submit" value="Cancel" name="cancel" formnovalidate/>
+	    <input type="submit" value="Submit"/>
+		<button type="submit" value="Cancel" name="cancel" formnovalidate/>Cancel</button>
+	
 	</form>
 {% endblock %}

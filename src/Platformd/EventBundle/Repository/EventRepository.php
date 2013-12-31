@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManager,
 ;
 
 use Platformd\EventBundle\Entity\Event;
-use Platformd\EventBundle\Entity\GroupEventRepository;
+use Platformd\EventBundle\Repository\GroupEventRepository;
 use Platformd\SpoutletBundle\Entity\MassEmail;
 use Platformd\EventBundle\Entity\EventRsvpAction;
 use Platformd\UserBundle\Entity\User;
@@ -263,7 +263,7 @@ class EventRepository extends EntityRepository
         $qb = $this->createQueryBuilder('e')
             ->select('e', 's')
             ->leftJoin('e.sites', 's')
-            ->where('e.endsAt >= :now')
+            ->where('e.startsAt >= :now')
             ->andWhere('e.published = :published')
             ->andWhere('e.active = :published')
             ->andWhere('s = :site')
@@ -273,6 +273,10 @@ class EventRepository extends EntityRepository
             ->setParameter('site', $site)
             ->setMaxResults($limit)
         ;
+
+        if ($this instanceof GroupEventRepository) {
+            $qb->andWhere('e.deleted = 0');
+        }
 
         return $qb->getQuery()->getResult();
     }

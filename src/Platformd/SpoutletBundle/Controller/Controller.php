@@ -339,6 +339,11 @@ class Controller extends BaseController
         return $this->get('platformd_event.service.group_event');
     }
 
+    protected function getGroupManager()
+    {
+        return $this->get('platformd.model.group_manager');
+    }
+
     protected function getSiteManager()
     {
         return $this->get('platformd.model.site_manager');

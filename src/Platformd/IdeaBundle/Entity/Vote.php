@@ -9,7 +9,7 @@ use \DateTime;
 
 /**
  * @ORM\Entity(repositoryClass="Platformd\IdeaBundle\Entity\VoteRepository")
- * @ORM\Table(name="Vote")
+ * @ORM\Table(name="vote")
  */
 class Vote
 {
@@ -34,7 +34,9 @@ class Vote
 	/** @ORM\Column(type="integer") */
 	private $value;
 
-	/** @ORM\Column(type="integer") */
+	/** @ORM\Id
+     * @ORM\Column(type="integer")
+     */
 	private $round;
 
 

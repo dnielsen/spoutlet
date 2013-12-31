@@ -51,7 +51,7 @@ class GiveawayController extends Controller
         if ($keyValue) { # the user has a key, so let's display it for them
 
             $group        = $giveaway->getGroup();
-            $groupManager = $this->get('platformd.model.group_manager');
+            $groupManager = $this->getGroupManager();
 
             $data                               = new giveaway_show_key_data();
 
@@ -145,7 +145,7 @@ class GiveawayController extends Controller
         }
 
         $group        = $giveaway->getGroup();
-        $groupManager = $this->get('platformd.model.group_manager');
+        $groupManager = $this->getGroupManager();
 
         $data->promotion_group_slug         = $group ? $group->getSlug() : null;
         $data->is_member_of_promotion_group = $group ? $groupManager->isMember($currentUser, $group) : false;
@@ -444,14 +444,6 @@ class GiveawayController extends Controller
                 return sprintf('aw-arenakeygiveaways-950x120.en.jpg', $defaultLocale);
                 break;
         }
-    }
-
-    /**
-     * @return \Platformd\GroupBundle\Model\GroupManager
-     */
-    private function getGroupManager()
-    {
-        return $this->get('platformd.model.group_manager');
     }
 
     /**

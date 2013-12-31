@@ -10,6 +10,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\SpoutletBundle\Entity\SiteFeatures;
 use Platformd\SpoutletBundle\Entity\SiteConfig;
 use Doctrine\Common\Collections\ArrayCollection;
+use Platformd\IdeaBundle\Entity\EntrySetScopeable;
+use Platformd\IdeaBundle\Entity\EntrySetRegistry;
 
 /**
  * Platformd\SpoutletBundle\Entity\Site
@@ -17,7 +19,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Table(name="pd_site")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\SiteRepository")
  */
-class Site
+class Site implements EntrySetScopeable
 {
     const DEFAULT_THEME = 'default';
 
@@ -78,6 +80,12 @@ class Site
      * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\Region", mappedBy="site")
      */
     private $region;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySetRegistry", cascade={"persist"})
+     */
+    protected $entrySetRegistration;
+
 
     public function __construct() {
         $this->siteFeatures = new SiteFeatures();
@@ -200,4 +208,49 @@ class Site
     {
         return $this->region;
     }
+
+    public function getEntrySetRegistration() {
+        return $this->entrySetRegistration;
+    }
+
+    public function createEntrySetRegistration() {
+        $this->entrySetRegistration = new EntrySetRegistry($this);
+        return $this->entrySetRegistration;
+    }
+
+    public function getEntrySets() {
+        return $this->entrySetRegistration->getEntrySets();
+    }
+
+    /**
+     * If there is a set URL that should be used without doing anything else, return it here
+     *
+     * @return string
+     */
+    function getLinkableOverrideUrl()
+    {
+        return false;
+    }
+
+    /**
+     * Returns the name of the route used to link to this object
+     *
+     * @return string
+     */
+    function getLinkableRouteName()
+    {
+        return 'default_index';
+    }
+
+    /**
+     * Returns an array route parameters to link to this object
+     *
+     * @return array
+     */
+    function getLinkableRouteParameters()
+    {
+        return array();
+    }
+
+
 }

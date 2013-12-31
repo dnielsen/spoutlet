@@ -1,96 +1,131 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{%  block header %}
+{% block title %}{{ event.name }}{% endblock %}
+
+{% block header %}
 
     {% embed 'SpoutletBundle::header.html.twig' %}
 
         {% block extra_user_controls %}
+            {% if is_granted('ROLE_ADMIN') or event.user == (app.user) %}
+                <li><a href="{{ path('idea_admin', {'groupSlug': group.slug, 'eventId': event.id}) }}">Event Admin</a></li>
+            {% endif %}
+
             <li><a href="{{ path('group_show', { 'slug': group.slug }) }}">Group</a></li>
 
-            {% if is_granted('ROLE_ADMIN') %}
-                <li><a href="{{ path('idea_admin', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">Event Admin</a></li>
-            {% endif %}
         {% endblock %}
 
     {% endembed %}
+
+    {% embed 'SpoutletBundle::navigation.html.twig' %}{% endembed %}
 
 {%  endblock %}
 
 
 {% block content %}
 
-    {% if sidebar is defined and sidebar == true %}
-        <div class="col1">
+    {% if event.private and not isAdmin %}
+        {% if app.user is null %}
+            This event is private. Please log in to view this page.<br/><br/>
+            <a href="{{ path('fos_user_security_login') }}"><input type="button" value="{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}" class="btnMdm left"></a>
+            <a href="{{ path('fos_user_registration_register') }}"><input type="button" value="Register" class="btnMdm left marginlft"></a>
+            {% set show = 'false' %}
+        {% elseif not event.isUserAttending(app.user) %}
+            This event is private. Please apply for access and an administrator will review your application. <br/><br/>
+            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}"><input type="button" value="Apply Now"></a>
+            {% set show = 'false' %}
+        {% elseif attendance == 'pending' %}
+            This event is private. You have applied for access and are waiting for administrative approval.
+            {% set show = 'false' %}
+        {% elseif attendance == 'rejected' %}
+            This event is private. You have applied for access and have been denied.
+            {% set show = 'false' %}
+        {% else %}
+            {% set show = 'true' %}
+        {% endif %}
+    {% else %}
+        {% set show = 'true' %}
     {% endif %}
 
-    {% block event_content %}
-    {% endblock %}
+    {% if show == 'true' %}
 
-    {% if sidebar is defined and sidebar == true %}
-        </div>
-        <div class="col2">
-            {% block sidebar %}
-                {% include 'IdeaBundle::sidebar.html.twig' %}
-            {% endblock %}
-        </div>
+        {% if sidebar is defined and sidebar == true %}
+            <div class="col1">
+        {% endif %}
+
+        {% block event_content %}
+        {% endblock %}
+
+        {% if sidebar is defined and sidebar == true %}
+            </div>
+            <div class="col2">
+                {% block sidebar %}
+                    {% include 'IdeaBundle::sidebar.html.twig' %}
+                {% endblock %}
+            </div>
+        {% endif %}
+
     {% endif %}
 
 {% endblock %}
 
 
 
+
+
+
 {#
 block menu_items %}
-    <li><a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventSlug': event.slug}) }}">Home</a></li>
-    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'About'}) }}" id="megaanchor1">About</a>
+    <li><a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}">Home</a></li>
+    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'About'}) }}" id="megaanchor1">About</a>
         <div id="megamenu1" class="megamenu">
             <div class="column">
                 <ul>
-                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'About'}) }}#about">About SVIC</a></li>
-                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'About'}) }}#organizers">Organizers</a></li>
+                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'About'}) }}#about">About SVIC</a></li>
+                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'About'}) }}#organizers">Organizers</a></li>
                 </ul>
             </div>
         </div>
     </li>
-    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'Event'}) }}" id="megaanchor2">Event</a>
+    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'Event'}) }}" id="megaanchor2">Event</a>
         <div id="megamenu2" class="megamenu">
             <div class="column">
                 <ul>
-                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'Event'}) }}#details">Event Details</a></li>
-                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'Event'}) }}#presentation">Presentation Guidelines</a></li>
-                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'Event'}) }}#criteria">Judging Criteria</a></li>
-                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'Event'}) }}#poster">Poster Preparation</a></li>
-                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'Event'}) }}#faculty">Faculty Resources</a></li>
-                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'Event'}) }}#ip">Intellectual Property</a></li>
-                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'Event'}) }}#guidelines">Community Guidelines</a></li>
+                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'Event'}) }}#details">Event Details</a></li>
+                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'Event'}) }}#presentation">Presentation Guidelines</a></li>
+                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'Event'}) }}#criteria">Judging Criteria</a></li>
+                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'Event'}) }}#poster">Poster Preparation</a></li>
+                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'Event'}) }}#faculty">Faculty Resources</a></li>
+                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'Event'}) }}#ip">Intellectual Property</a></li>
+                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'Event'}) }}#guidelines">Community Guidelines</a></li>
                 </ul>
             </div>
         </div>
     </li>
-    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'GetInvolved'}) }}" id="megaanchor3">Get Involved</a>
+    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'GetInvolved'}) }}" id="megaanchor3">Get Involved</a>
         <div id="megamenu3" class="megamenu">
             <div class="column">
                 <ul>
-                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'GetInvolved'}) }}#observer">Observers</a></li>
-                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'GetInvolved'}) }}#participant">Participants</a></li>
-                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'GetInvolved'}) }}#judge">Judges</a></li>
-                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'GetInvolved'}) }}#sponsor">Sponsors</a></li>
+                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'GetInvolved'}) }}#observer">Observers</a></li>
+                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'GetInvolved'}) }}#participant">Participants</a></li>
+                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'GetInvolved'}) }}#judge">Judges</a></li>
+                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'GetInvolved'}) }}#sponsor">Sponsors</a></li>
                 </ul>
             </div>
         </div>
     </li>
-    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'Sponsor'}) }}" id="megaanchor4">Sponsors</a>
+    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'Sponsor'}) }}" id="megaanchor4">Sponsors</a>
         <div id="megamenu4" class="megamenu">
             <div class="column">
                 <ul>
-                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'Sponsor'}) }}#sponsor">Sponsors</a></li>
-                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'Sponsor'}) }}#howto">How to Sponsor</a></li>
+                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'Sponsor'}) }}#sponsor">Sponsors</a></li>
+                    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'Sponsor'}) }}#howto">How to Sponsor</a></li>
                 </ul>
             </div>
         </div>
     </li>
-    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'Schedule'}) }}">Schedule</a></li>
-    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventSlug': event.slug, 'page': 'FAQ'}) }}">Event FAQ</a></li>
+    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'Schedule'}) }}">Schedule</a></li>
+    <li><a href="{{ path('idea_info', {'groupSlug': group.slug, 'eventId': event.id, 'page': 'FAQ'}) }}">Event FAQ</a></li>
 {% endblock
 #}
 
