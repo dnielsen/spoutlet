@@ -402,7 +402,7 @@ class GallaryController extends Controller
     /**
      * @return GroupManager
      */
-    private function getGroupManager()
+    protected function getGroupManager()
     {
         return $this->get('platformd.model.group_manager');
     }
