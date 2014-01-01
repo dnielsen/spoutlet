@@ -165,6 +165,15 @@ UPDATING
 
    http://campsite.local
 
+EMAIL FEATURE
+-------------
+From AWS SQS console create two queues called 
+PD_TESTING_CHUNKED_MASS_EMAIL
+PD_TESTING_MASS_EMAIL
+
+Setup cron task to occasionally execute these two commands:
+app/console pd:massEmails:process --env=prod
+app/console pd:massEmails:sendChunks -e prod
 
 
 INSTALLATION CHALLENGES
