@@ -2,28 +2,42 @@
 
 {% block content %}
 
-<h1>Edit Profile</h1>
+  <div id="user-username" class="spcr-b2">Hello, {{ user.username }}</div>
 
-<form action="{{ path('profile_edit', {'username': username}) }}" {{ form_enctype(form) }} method="POST">
-
-    {{ form_errors(form) }}
-
-    {{ form_row(form.name) }}
-    {{ form_row(form.title) }}
-    {{ form_row(form.organization) }}
-    {{ form_row(form.industry) }}
-    {{ form_row(form.aboutMe) }}
-    {{ form_row(form.twitterUsername) }}
-    {{ form_row(form.professionalEmail) }}
-    {{ form_row(form.linkedIn) }}
-    {{ form_row(form.website) }}
-    {{ form_row(form.mailingAddress) }}
-
-    {{ form_rest(form) }}
-
-    <input type="submit" value="Submit" class="button btn btn-primary"/>
-    <button type="submit" value="Cancel" name="cancel" formnovalidate>Cancel</button>
-
-</form>
-
+  <div class="col3">
+	  <ul>		  
+		  <li><a href="{{ path('profile', {'username': app.user.username}) }}">Settings</a></li>
+		  <li><a href="{{ path('groups') }}">Groups</a></li>
+		  <li><a href="{{ path('global_events_index') }}">Events</a></li>
+	  </ul>
+  </div>
+  
+  
+  <div class="col1 bdrLft"> 
+    <h1>Edit Profile</h1>
+    <div class="left">
+      <form action="{{ path('profile_edit', {'username': username}) }}" {{ form_enctype(form) }} method="POST">
+        {{ form_errors(form) }}
+    
+        {{ form_row(form.name) }}
+        {{ form_row(form.title) }}
+        {{ form_row(form.organization) }}
+        {{ form_row(form.industry) }}
+        {{ form_row(form.aboutMe) }}
+        {{ form_row(form.twitterUsername) }}
+        {{ form_row(form.professionalEmail) }}
+        {{ form_row(form.linkedIn) }}
+        {{ form_row(form.website) }}
+        {{ form_row(form.mailingAddress) }}
+        
+        {{ form_rest(form) }}
+        
+        <input type="submit" value="Submit" class="button btn btn-primary left"/>    
+        <a class="btnBdr left spcr-l3" href="#">Cancel</a>
+        
+      </form>
+    </div>
+ 	</div> <!-- end col1 -->
+	
+	<br class="clr">
 {% endblock %}

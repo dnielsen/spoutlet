@@ -1,46 +1,39 @@
 <div id="footer">
-    <a name="sitemap"></a>
-    <div id="ftr-content">
-        <div class="ftrcol">
-            <h5>About</h5>
-            <ul>
-                <li><a href="{{ path('about') }}">About Campsite</a></li>
-                <li class="spcr-t"><a href="{{ path('contact') }}">Contact Us</a></li>
-                <li><a href="{{ path('default_index') }}">Home</a></li>
-            </ul>
-        </div>
-        <div class="ftrcol">
-            <h5>Events</h5>
-            <ul>
-                <li><a href="{{ path('global_events_index') }}">All Events</a></li>
-                <li><a href="{{ path('accounts_events') }}">My Events</a></li>
-            </ul>
-        </div>
-        <div class="ftrcol">
-            <h5>Groups</h5>
-            <ul>
-                <li><a href="{{ path('groups') }}">All Groups</a></li>
-                <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
-                <li><a href="{{ path('group_new') }}">Create Group</a></li>
-            </ul>
-        </div>
-        <div id="contactNfo" class="divrt">
-            <h5>Contact Us</h5>
+	<div id="ftr-content">						
+		<div class="ftrcol">
+			<h5>About Us</h5>
+			 <ul>
+          <li><a href="{{ path('about') }}">About Campsite</a></li>
+          <li class="spcr-t"><a href="{{ path('contact') }}">Contact Us</a></li>
+          <li><a href="{{ path('default_index') }}">Home</a></li>
+       </ul>
+		</div>
 
-            <p><a href="mailto:&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#064;&#099;&#097;&#109;&#112;&#115;&#105;&#116;&#101;&#046;&#111;&#114;&#103;">&#115;&#117;&#112;&#112;&#111;&#114;&#116;&#064;&#099;&#097;&#109;&#112;&#115;&#105;&#116;&#101;&#046;&#111;&#114;&#103;</a></p>
-
-            <p>Twitter Handle<br>
-            @Campsite<br>
-            
-        </div>
-
-        <br class="clr" />
-
-        <div id="credit">
-            Site created by <a href="http://www.takeflightgraphics.com" target="_blank">Take Flight Graphics</a> <img src="{{ asset('/themes/' ~ site.theme ~ '/spoutlet/img/icon-tfg.png') }}" width="14" height="8" alt="Take Flight Graphics"></a>
-        </div>
-        <div id="copyright">
-            <script language="JavaScript">document.write(include_copyright(2012));</script>
-        </div>
-    </div><!-- end footer content -->
-</div><!-- end footer -->
+    <div class="ftrcol">
+      <h5>Events</h5>
+        <ul>
+          <li><a href="{{ path('global_events_index') }}">All Events</a></li>
+          <li><a href="{{ path('accounts_events') }}">My Events</a></li>
+        </ul>
+    </div>
+    <div class="ftrcol">
+      <h5>Groups</h5>
+      <ul>
+          <li><a href="{{ path('groups') }}">All Groups</a></li>
+          <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
+          <li><a href="{{ path('group_new') }}">Create Group</a></li>
+      </ul>
+    </div>
+    <div id="contactNfo" class="divrt">
+	    <h5>Contact Us</h5>
+			<p><a href="mailto:yoko@quantified-car.com">yoko@quantified-car.com</a></p>
+			<p>Twitter Handle: @campsite<br>
+			Hashtag: #campsite</p>			
+			<p>Follow us on <a href="#" target="_blank"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/twitter_16.png') }}" alt="" width="16"></a></p>
+		</div>		
+		<br class="clr">
+		<div id="copyright">
+			<script language="JavaScript">document.write(include_copyright(2012));</script>© 2013 Platform D. All rights reserved.
+		</div>
+	</div> <!-- end footer content -->
+</div> <!-- end footer -->

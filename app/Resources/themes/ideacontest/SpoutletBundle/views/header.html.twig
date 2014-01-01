@@ -1,45 +1,22 @@
-<div id="header">
-
-    <div id="topNav">
-        <ul>
-            {% if app.user is null %}
-                <li><a href="{{ path('fos_user_security_login') }}">{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}</a></li>
-                <li><a href="{{ path('fos_user_registration_register') }}">Join Now</a></li>
-            {% else %}
-                <li><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a></li>
-                <li><a href="{{ path('profile', {'username': app.user.username}) }}">Profile</a></li>
-                <li><a href="{{ path('accounts_index') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
-            {% endif %}
-            {% if event is defined and event is not null %}
-                {% if is_granted('ROLE_ADMIN') or event.user == (app.user) %}
-                    <li><a href="{{ path('idea_admin', {'groupSlug': group.slug, 'eventId': event.id}) }}">Event Admin</a></li>
-                {% endif %}
-            {% endif %}
-            <li><a href="{{ path('default_index') }}">Home</a></li>
-            {% if is_granted("ROLE_SUPER_ADMIN") %}
-                <li><a href="{{ path('admin_index') }}">Site Admin</a></li>
-            {% endif %}
-        </ul>
-
-        {% if app.user %}
-            <ul>
-                <li>Welcome, <a href="{{ path('profile', {'username': app.user.username}) }}">{% if app.user.name %}{{app.user.name}}{% else %}{{app.user.username}}{% endif %}</a></li>
-            </ul>
-        {% endif %}
-
-    </div>
-
-    {% block banner %}
-        {% if asset_exists('themes/' ~ site.theme ~ '/spoutlet/img/logo_'~site.defaultLocale~'_large.jpg') %}
-            <a href="{{ path('default_index') }}"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/logo_'~site.defaultLocale~'_large.jpg') }}" alt="Campsite" id="brand"></a>
+<div id="header"> <!-- begin header -->
+		<div id="topNav">
+			<ul>
+				   <li>Follow us on <a href="#" target="_blank">
+             <img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/twitter_16.png') }}" alt="" width="16" ></a></li>
+				
+  	    {% if app.user is null %}
+            <li><a href="{{ path('fos_user_security_login') }}">{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}</a></li>
+            <li><a href="{{ path('fos_user_registration_register') }}">Join Now</a></li>
         {% else %}
-            <a href="{{ path('default_index') }}"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/logo_'~site.defaultLocale~'.jpg') }}" alt="Campsite" id="brand_small"></a>
-            <img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/tagline.gif') }}" alt="" width="235" height="31" id="tagline">
-        {% endif %}
-    {% endblock %}
+            <li><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a></li>
+            <li><a href="{{ path('profile', {'username': app.user.username}) }}">Profile</a></li>
+            <li><a href="{{ path('accounts_index') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
+        {% endif %}        
+				<li><a href="{{ path('default_index') }}">Home</a></li>            
+			</ul>
+		</div>
 
-
+		<a href="#" target="_blank"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/toyota_itc_banner.jpg') }}" alt="" id="brand" height="130" width="1050"></a>
     <br class="clr">
-
 </div> <!-- end header -->
-
+	

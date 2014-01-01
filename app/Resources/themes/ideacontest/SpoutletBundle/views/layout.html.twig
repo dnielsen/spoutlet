@@ -2,6 +2,9 @@
 <html>
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="initial-scale=1">
+      	<meta name="distribution" content="global">
+      	<meta name="robots" content="index, follow">
         <title>
             {% block title %}
                 {% if idea is defined and idea is not null %}
@@ -38,7 +41,7 @@
 
             {%  block header %}
                 {% embed 'SpoutletBundle::header.html.twig' %}{% endembed %}
-                {% embed 'SpoutletBundle::navigation.html.twig' %}{% endembed %}
+                
             {%  endblock %}
 
             <div id="content">
@@ -82,23 +85,10 @@
 
                 {% if show == 'true' %}
 
-                    {% if sidebar is defined and sidebar == true %}
-                        <div class="col1">
-                    {% endif %}
-
-                    {% include 'IdeaBundle:Idea:breadcrumbs.html.twig' %}
-
+           
                     {% block content %}
                     {% endblock %}
 
-                    {% if sidebar is defined and sidebar == true %}
-                        </div>
-                        <div class="col2">
-                        {% block sidebar %}
-                            {% include 'IdeaBundle::sidebar.html.twig' %}
-                        {% endblock %}
-                        </div>
-                    {% endif %}
                 {% endif %}
 
 
@@ -108,7 +98,7 @@
             <div class="push"></div> <!-- needed for sticky footer -->
         </div><!-- end wrapper-ht -->
 
-
+        <a name="sitemap"></a>
         {% include 'SpoutletBundle::footer.html.twig' %}
 	</body>
 </html>

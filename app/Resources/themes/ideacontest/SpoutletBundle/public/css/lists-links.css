@@ -16,7 +16,7 @@ a img {
 	vertical-align: middle;
 }
 
-a.btn, a.btnLg, a.btnLg2, button.btn {
+a.btn, a.btnLg, a.btnLg2, a.btnBdr {
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
 	border-radius: 6px;
@@ -25,13 +25,18 @@ a.btn, a.btnLg, a.btnLg2, button.btn {
 	font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
 	color: #fff;
 }
-a.btn, a.btnLg, button.btn {
+a.btn {
 	padding: 5px 10px;
 }
-a.btnLg {
+a.btnLg, a.btnBdr {
 	padding: 10px;
-	font-size: 17px;
+	font-size: 18px;
 	font-weight: bold;
+}
+a.btnBdr {
+	background: none;
+	border: 1px solid #2faad9;
+	color: #2faad9;
 }
 a.btnLg2 {
 	display: block;
@@ -41,12 +46,16 @@ a.btnLg2 {
 	line-height: 30px;
 	text-align: center;
 }
-	a.btn:hover, a.btnLg:hover, a.btnLg2:hover, button.btn:hover {
+	a.btn:hover, a.btnLg:hover, a.btnLg2:hover, a.btnBdr:hover {
 		background: #c93dbf;
 		text-decoration: none;
 	}
+	a.btnBdr:hover {
+		border-color: transparent;
+		color: #fff;
+	}
 	
-a.btnTny, input.btnTny {
+a.btnTny, .btnTnyInv {
 	display: block;
 	width: 75px;
 	padding: 2px 0;
@@ -62,57 +71,18 @@ a.btnTny, input.btnTny {
 	text-align: center;
 	text-shadow: 0 1px 0 rgba(146, 146, 146, 1.0);
 }
-
-a.btnTny:hover, input.btnTny:hover {
+	input.btnTny {
+	    margin-top: 5px;
+	}
+	input.btnTnyInv {
+	    margin-top: 5px;
+	    background: #ee0000;
+	}
+a.btnTny:hover, input.btnTny:hover, input.btnTnyInv:hover {
     background: #d757c8;
     text-decoration: none;
     color: #fff;
 }
-
-a.btnMdm, input.btnMdm {
-    display: block;
-    width: 75px;
-    height: 36px;
-    padding: 2px 0;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    background: #2faad9;
-    behavior: url("PIE.php");
-    font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff;
-    text-align: center;
-    text-shadow: 0 1px 0 rgba(146, 146, 146, 1.0);
-}
-
-a.btnMdm:hover, input.btnMdm:hover {
-    background: #d757c8;
-    text-decoration: none;
-    color: #fff;
-}
-
-input.auth, password.auth {
-    display: block;
-    margin-bottom: 10px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    behavior: url("PIE.htc");
-    font: normal 15px/22px 'ProximaNova-Regular', Arial, sans-serif;
-    color: #414141;
-}
-
-input.username:focus, password.auth:focus {
-	-webkit-box-shadow: #51cbee 0px 0px 4px;
-	-moz-box-shadow: #51cbee 0px 0px 4px;
-	box-shadow: #51cbee 0px 0px 4px;
-	behavior: url("PIE.htc");
-}
-
 
 .tblStyle2 td a {
 	color: #1799c1;
@@ -181,13 +151,32 @@ ol {
 
 /*::::::::::::::: PAGE CONTENT LIST STYLES :::::::::::::::*/
 	
-ul.dflt {
+ul.dflt, .row ul {
 	margin-top: 5px;
 	margin-bottom: 5px;
 }	
-	ul.dflt li {
+	ul.dflt li, .row li {
 		padding: 0 0 2px 19px;
 		background: url("../img/bullet.png") 0 5px no-repeat;
+	}
+	
+.col3 ul li {
+	display: list-item;
+	padding: 0 0 0 10px;
+	background: url("../img/arrw-lnk.png") 0 9px no-repeat;
+	font-size: 14px;
+}
+
+.featGrp ul {
+	float: left;
+	width: 148px;
+	margin: 0 15px 30px 0;
+	padding: 10px;
+	border: 1px solid #ccc;
+}
+	.featGrp ul li {
+		font-size: 12px;
+		line-height: 16px;
 	}
 		
 /* .col2 ul {
@@ -265,10 +254,6 @@ ul.cLnks li {
 }
 #credit a:hover {
 	color: #777;
-}
-
-#accountHeader li {
-    padding: 0 10px;
 }
 
 .sub-nav ul li {

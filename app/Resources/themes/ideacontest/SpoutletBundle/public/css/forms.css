@@ -1,6 +1,8 @@
 /*::::::::::::::: GLOBAL FORM STYLES :::::::::::::::*/
 
+
 fieldset {
+	margin-bottom: 25px;
 	padding: 25px;
 	border: 1px solid #ddd;
 	-webkit-border-radius: 6px;
@@ -37,6 +39,9 @@ input[type="text"], input[type="email"], input[type="password"], input[type="int
 	.comments {
 		width: 605px;
 	}
+	form.profl input[type="text"], form.profl input[type="password"] {
+		padding: 2px;
+	}
 
 select {
     margin: 0px 5px 10px 5px;
@@ -57,8 +62,7 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focu
 	behavior: url("PIE.htc");
 }
 
-
-input[type="submit"], input[type="button"], button[type="submit"], button[type="button"], a.submit {
+input[type="submit"], input[type="button"] {
     padding: 10px;
 	border: 0 none;
 	-webkit-border-radius: 6px;
@@ -72,7 +76,7 @@ input[type="submit"], input[type="button"], button[type="submit"], button[type="
 	color: #fff;
     text-align: center;
 }
-	input[type="submit"]:hover, input[type="button"]:hover, button[type="submit"]:hover , button[type="button"]:hover, a.submit:hover {
+	input[type="submit"]:hover, input[type="button"]:hover {
         color: #fff;
 		background: #ca43bb;
 		text-decoration: none;
@@ -80,18 +84,5 @@ input[type="submit"], input[type="button"], button[type="submit"], button[type="
     #event_button {
         width: 155px;
         padding: 20px 10px;
-        font-size: 16px;
     }
-
-.redButton {
-    background: red !important;
-    border: 1px solid red !important;
-    color: white !important;
-}
-.redButton:hover {
-    background: white !important;
-    border: 1px solid red !important;
-    color: red !important;
-}
-
 
