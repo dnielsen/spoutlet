@@ -30,7 +30,7 @@
                 <tr id="event-{{ event.contentType }}-{{ event.id }}" style="height: 40px;">
                     <td>{{ event.startsAt | date_translate }}</td>
                     <td><a class="event-title-link" href="{{ event | pd_link }}">{{  event.name }}</a></td>
-                    <td><a href="{{ path('profile', {'username': event.user.username}) }}">{{ event.user.username }}</a></td>
+                    <td><a href="{{ path('profile', {'username': event.user.username}) }}">{{ event.user.name }}</a></td>
                     <td style=" text-align:center;">{{ event.attendeeCount }}</td>
                     <td>
                         {% if status is defined %}
