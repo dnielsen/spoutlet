@@ -42,7 +42,7 @@ class User extends BaseUser
     protected $id;
 
     /**
-     * @Assert\NotBlank(message="fos_user.username.blank", groups={"Registration", "Default", "AdminEdit"});
+     * //Assert\NotBlank(message="fos_user.username.blank", groups={"Registration", "Default", "AdminEdit"});
      * @ORM\Column(type="string", length="255", nullable=true)
      */
     protected $username;

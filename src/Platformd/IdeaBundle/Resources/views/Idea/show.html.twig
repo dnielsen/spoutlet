@@ -25,7 +25,7 @@
             </ul>
         </div>
 
-        <p class="right tnytxt">Proposed by: <a href="{{ path('profile', {'username': idea.creator.username}) }}">{{idea.creator.name}}</a>{% if idea.members %}, {{idea.members}}{% endif %}</p>
+        <p class="right tnytxt">Proposed by: <a href="{{ path('profile', {'userId': idea.creator.id}) }}">{{idea.creator.name}}</a>{% if idea.members %}, {{idea.members}}{% endif %}</p>
 
         <br class="clr">
 
@@ -89,7 +89,7 @@
             <label class="midtxt">{{idea.comments.count}} Comments</label>
             {% for comment in idea.comments %}
                 <hr>
-                <a href="{{ path('profile', {'username': comment.user.username}) }}">{{ comment.user.name }}</a> commented on <em>{{ comment.timestamp }}</em>
+                <a href="{{ path('profile', {'userId': comment.user.id}) }}">{{ comment.user.name }}</a> commented on <em>{{ comment.timestamp }}</em>
                 {% if canRemoveComments %}
                     <form action="{{ path('idea_comment_delete', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post" class="left padrt">
                         <input type="hidden" name="idea" value="{{ idea.id }}">

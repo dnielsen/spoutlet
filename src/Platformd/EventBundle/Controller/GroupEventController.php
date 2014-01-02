@@ -418,7 +418,7 @@ class GroupEventController extends Controller
                     $email->setSentToAll(true);
 
                 } else {
-
+                    $email->setSentToAll(false);
                     $recipientArr = explode(',', $recipientsString);
                     $userManager = $this->getUserManager();
 
@@ -465,12 +465,9 @@ class GroupEventController extends Controller
                 $emailManager = $this->container->get('platformd.model.email_manager');
                 $queueResult  = $emailManager->queueMassEmail($email);
 
-                $this->setFlash('success', $this->transChoice(
+                $this->setFlash('success', $this->trans(
                     'platformd.events.event_contact.confirmation',
-                    $recipientCount,
-                    array('%attendeeCount%' => ($recipientCount > 0 ? $recipientCount : 'all')),
-                    'messages',
-                    $emailLocale
+                    array('%attendeeCount%' => ($recipientCount > 0 ? $recipientCount : 'all'))
                 ));
 
                 if ($groupEvent->getExternalUrl()) {

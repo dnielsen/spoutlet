@@ -276,6 +276,7 @@ platformd:
             contact_attendees: Contact Attendees
             manage_attendees: Manage Attendees
             edit_event: Edit Event
+            delete_event: Delete Event
             not_allowed_register: You are not allowed to rsvp to this event!
             now_attending: You are now attending this event.
             group_joined: Welcome to %groupName%. You are now attending this event.
@@ -288,7 +289,7 @@ platformd:
             attending: Attending
             error: There was an error previewing your email!
             limit_hit: You have reached the maximum number of emails you can send to event attendees within a 24-hour period.
-            confirmation: Email sent to %attendeeCount% attendee.|Email sent to %attendeeCount% attendees.
+            confirmation: Email sent to %attendeeCount% attendees.
             form:
                 recipients: Recipients
                 message: Message

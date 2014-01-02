@@ -64,15 +64,7 @@
             <tr>
                 <td width="25%">{{ nextEvent.attendeeCount }} attendee{% if nextEvent.attendeeCount != 1 %}s{% endif %}</td>
                 <td width="75%%">
-                    {% if nextEvent.isUserAttending(app.user) or nextEvent.getUser() == app.user %}
-                        <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right">View Event</a>
-
-                    {% else %}
-                        <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right" onclick=
-                        "{% if not group.isOwner(app.user) and not group.isMember(app.user) %}
-                                    return confirm('In order to register for this event, you must be a member of its group. Press OK to join group.');
-                                {% endif %}">Attend Event</a>
-                    {% endif %}
+                    <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right">View Event</a>
                 </td>
             </tr>
             </tbody>
@@ -89,14 +81,7 @@
                         {{ event.DateRangeString | default("Ongoing Event") }} | {% if event.getOnline %}Online Event{% else %}{{ event.location }}{% endif %}
                     </div>
                     <div class="right">
-                        {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
-                            <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny">View Event</a>
-                        {% else %}
-                            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny" onclick=
-                                "{% if not group.isOwner(app.user) and not group.isMember(app.user) %}
-                                    return confirm('In order to register for this event, you must be a member of its group. Press OK to join group.');
-                                {% endif %}" >Attend Event</a>
-                        {% endif %}
+                        <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny">View Event</a>
                     </div>
                     <div class="clr"></div>
                 </div>
@@ -127,7 +112,7 @@
         <div class="scrollableSidebarWidget">
             {% for member in group.members %}
                 <div class="scrollableSidebarWidgetItem">
-                    <a href="{{ path('profile', {'username': member.username}) }}">{{ member.name }}</a>
+                    <a href="{{ path('profile', {'userId': member.id}) }}">{{ member.name }}</a>
                 </div>
             {% else %}
                 There are no members of this group yet.

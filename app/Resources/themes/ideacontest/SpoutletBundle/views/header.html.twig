@@ -1,21 +1,20 @@
 <div id="header"> <!-- begin header -->
-		<div id="topNav">
-			<ul>
-				   <li>Follow us on <a href="#" target="_blank">
-             <img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/twitter_16.png') }}" alt="" width="16" ></a></li>
+  <div id="topNav">
+	  <ul>
+		  <li>Follow us on <a href="#" target="_blank">
+        <img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/twitter_16.png') }}" alt="" width="16" ></a></li>
 				
-  	    {% if app.user is null %}
-            <li><a href="{{ path('fos_user_security_login') }}">{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}</a></li>
-            <li><a href="{{ path('fos_user_registration_register') }}">Join Now</a></li>
-        {% else %}
-            <li><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a></li>
-            <li><a href="{{ path('profile', {'username': app.user.username}) }}">Profile</a></li>
-            <li><a href="{{ path('accounts_index') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
-        {% endif %}        
-				<li><a href="{{ path('default_index') }}">Home</a></li>            
-			</ul>
-		</div>
-
+     	{% if app.user is null %}
+        <li><a href="{{ path('fos_user_security_login') }}">{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}</a></li>
+        <li><a href="{{ path('fos_user_registration_register') }}">Join Now</a></li>
+      {% else %}
+        <li><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a></li>
+        <li><a href="{{ path('profile', {'username': app.user.username}) }}">Profile</a></li>
+        <li><a href="{{ path('accounts_index') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
+      {% endif %}        
+			<li><a href="{{ path('default_index') }}">Home</a></li>            
+		</ul>
+  </div>
 		<a href="#" target="_blank"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/toyota_itc_banner.jpg') }}" alt="" id="brand" height="130" width="1050"></a>
     <br class="clr">
 </div> <!-- end header -->

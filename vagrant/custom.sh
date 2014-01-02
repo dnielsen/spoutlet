@@ -108,6 +108,10 @@ EOF
     cd $PROJ
     php app/console doc:data:create
     php app/console doc:mig:mig --no-interaction
+
+    php app/console doctrine:database:create --connection="acl" --env=prod
+    php app/console init:acl --env=prod
+
     mysql -u$DB_USER -p$DB_PASS $DB_NAME < /vagrant/user_data/campsite_sites.sql
     # mysql -u$DB_USER -p$DB_PASS $DB_NAME < $PROJ/misc_scripts/campsiteMockData.sql
     cd $INITIAL_DIR

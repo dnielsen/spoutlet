@@ -17,18 +17,20 @@
                     {% set editUrl = path("idea_admin", {"groupSlug": event.group.slug, "eventId": event.id }) %}
                     {% set rsvpUrl = path("group_event_rsvp") %}
                     {% set manageUrl = path("group_event_attendees", event.getLinkableRouteParameters) %}
+                    {% set deleteUrl = path("group_event_delete", {"groupSlug": event.group.slug, "eventId": event.id}) %}
                     {% if event.approved == 0 %}{% set status = 'platformd.account_page.events.pending_approval' | pd_trans %}{% endif %}
                 {% elseif event.contentType == "GlobalEvent" %}
                     {% set contactUrl = path("global_event_contact", event.getLinkableRouteParameters) %}
                     {% set editUrl = path("admin_events_edit", { 'id': event.id }) %}
                     {% set rsvpUrl = path("global_event_rsvp") %}
                     {% set manageUrl = path("global_event_attendees", event.getLinkableRouteParameters) %}
+                    {% set deleteUrl = path("#") %}
                 {% endif %}
 
                 <tr id="event-{{ event.contentType }}-{{ event.id }}" style="height: 40px;">
                     <td>{{ event.startsAt | date_translate }}</td>
                     <td><a class="event-title-link" href="{{ event | pd_link }}">{{  event.name }}</a></td>
-                    <td><a href="{{ path('profile', {'username': event.user.username}) }}">{{ event.user.username }}</a></td>
+                    <td><a href="{{ path('profile', {'userId': event.user.id}) }}">{{ event.user.name }}</a></td>
                     <td style=" text-align:center;">{{ event.attendeeCount }}</td>
                     <td>
                         {% if status is defined %}
@@ -41,17 +43,21 @@
                             {% endif %}
                         {% endif %}
                     </td>
+
                     <td>
                         {% if event.user == app.user %}
                             {% if event.registrationOption == "REGISTRATION_ENABLED" %}
                                 {% if event.contentType == "GlobalEvent" or (event.contentType == "GroupEvent" and event.approved) %}
                                     <div class="styled-select">
-                                        <select class="event-owner-actions" data-id="{{ event.id }}" data-contenttype="{{ event.contentType }}" style="width:145px;">
-                                            <option>{{ 'platformd.account_page.events.choose_one' | pd_trans }}</option>
-                                            <option value="edit" data-route="{{ editUrl }}">{{ 'platformd.account_page.events.edit_event' | pd_trans }}</option>
-                                            <option value="contact" data-route="{{ contactUrl }}">{{ 'platformd.events.event_show.contact_attendees' | pd_trans }}</option>
-                                            <option value="manage" data-route="{{ manageUrl }}">{{ 'platformd.events.event_show.manage_attendees' | pd_trans }}</option>
-                                        </select>
+                                        <a href="{{ contactUrl }}">{{ 'platformd.events.event_show.contact_attendees' | pd_trans }}</a>
+                                        <br>
+                                        <a href="{{ manageUrl }}">{{ 'platformd.events.event_show.manage_attendees' | pd_trans }}</a>
+                                        <br>
+                                        {% if event.EntrySets|length == 0 %}
+                                            <a onclick="return confirm('Are you sure you want to delete this event?');" href="{{ deleteUrl }}" >{{ 'platformd.events.event_show.delete_event' | pd_trans }}</a>
+                                        {% else %}
+                                            <span title="Remove the {{ event.EntrySets|length }} list(s) attached to this Event to enable the delete option.">Delete Disabled</span>
+                                        {% endif %}
                                     </div>
                                 {% else %}
                                     <a href="{{ editUrl }}">{{ 'platformd.account_page.events.edit_event' | pd_trans }}</a>
@@ -80,13 +86,19 @@
                             <td colspan="6"style="text-align:center;"><hr class="faded" /></td>
                         </tr>
                     {% endif %}
+                    {% set deleteUrl = path("group_event_delete", {"groupSlug": event.group.slug, "eventId": event.id}) %}
                     <tr id="event-{{ event.contentType }}-{{ event.id }}" class="past-{{ event.contentType }}" style="display:none;">
                         <td>{{ event.startsAt | date('M j, Y') }}</td>
                         <td><a class="event-title-link" href="{{ event | pd_link }}">{{  event.name }}</a></td>
                         <td><a href="{{ account_link(event.user.username) }}">{{ event.user.username }}</a></td>
                         <td style=" text-align:center;">{{ event.attendeeCount }}</td>
                         <td>{{ 'platformd.account_page.events.registration_closed' | pd_trans }}</td>
-                        <td>&nbsp;</td>
+                        <td>{% if event.EntrySets|length == 0 %}
+                                <a onclick="return confirm('Are you sure you want to delete this event?');" href="{{ deleteUrl }}" >{{ 'platformd.events.event_show.delete_event' | pd_trans }}</a>
+                            {% else %}
+                                <span title="Remove the {{ event.EntrySets|length }} list(s) attached to this Event to enable the delete option.">Delete Disabled</span>
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
             {% endif %}

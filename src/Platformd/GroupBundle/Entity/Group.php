@@ -965,6 +965,13 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     {
         return $this->events;
     }
+    public function getNumEvents() {
+        $count = 0;
+        foreach($this->events as $event)
+            if($event->getDeleted() == 0)
+                $count++;
+        return $count;
+    }
     public function addEvent($event)
     {
         $this->events[] = $event;

@@ -785,16 +785,16 @@ class IdeaController extends Controller
     }
 
 
-    public function profileAction($username = null)
+    public function profileAction($userId = null)
     {
         $currentUser = $this->getCurrentUser();
 
-        if ($username == null){
+        if ($userId == null){
             $user = $currentUser;
         }
         else{
             $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
-            $user = $userRepo->findOneBy(array('username'=>$username));
+            $user     = $userRepo->findOneBy(array('id' => $userId));
         }
 
         $ownProfile = ($currentUser == $user);
@@ -815,18 +815,18 @@ class IdeaController extends Controller
             ));
     }
 
-    public function profileEditAction(Request $request, $username) {
+    public function profileEditAction(Request $request, $userId) {
 
         if ($request->get('cancel') == 'Cancel') {
             return $this->redirect($this->generateUrl('profile', array(
-                'username' => $username,
+                'userId' => $userId,
             )));
         }
 
         $currentUser = $this->getCurrentUser();
 
         $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
-        $user = $userRepo->findOneBy(array('username'=>$username));
+        $user     = $userRepo->findOneBy(array('id' => $userId));
 
         if ($currentUser != $user){
             throw new AccessDeniedException();
@@ -854,7 +854,7 @@ class IdeaController extends Controller
                 $em->flush();
 
                 return $this->redirect($this->generateUrl('profile', array(
-                    'username' => $username,
+                    'userId' => $userId,
                 )));
             }
         }
@@ -863,7 +863,7 @@ class IdeaController extends Controller
 
         return $this->render('IdeaBundle:Idea:profileForm.html.twig', array(
             'form'      => $form->createView(),
-            'username'  => $username,
+            'userId'    => $userId,
             'isAdmin'   => $isAdmin,
         ));
 

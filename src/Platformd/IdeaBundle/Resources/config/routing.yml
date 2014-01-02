@@ -1,10 +1,10 @@
 
 profile:
-    pattern:    /profile/{username}
-    defaults:   { _controller: IdeaBundle:Idea:profile, username:null }
+    pattern:    /profile/{userId}
+    defaults:   { _controller: IdeaBundle:Idea:profile, userId:null }
 
 profile_edit:
-    pattern:    /profile/{username}/edit
+    pattern:    /profile/{userId}/edit
     defaults:   { _controller: IdeaBundle:Idea:profileEdit }
 
 # EntrySet Routes
