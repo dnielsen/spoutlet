@@ -4,16 +4,15 @@
   <div id="user-username" class="spcr-b2">Hello, {{ user.username }}</div>	
 		<div class="col3">
 			<ul>
-				<li><a href="{{ path('profile', {'username': user.username}) }}">Settings</a></li> 
+				<li><a href="{{ path('profile', {'userId': user.id}) }}">Settings</a></li> 
 				<li><a href="{{ path('groups') }}">Groups</a></li>
 				<li><a href="{{ path('global_events_index') }}">Events</a></li>
 			</ul>
 		</div>
 
     <div class="col1 bdrLft"> 
-			{% if ownProfile %}
-                    <a href="{{ path('profile_edit', {'username': user.username}) }}" class="btnLg right">Edit Profile</a>
-      {% endif %}			
+	        <a href="{{ path('profile_edit', {'userId': user.id}) }}" class="btnLg right">Edit Profile</a>
+     			
 			<h1>Settings: Profile</h1>			
 			<hr>			
 			<div class="left">

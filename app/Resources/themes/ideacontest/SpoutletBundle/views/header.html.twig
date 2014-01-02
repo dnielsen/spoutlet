@@ -9,7 +9,7 @@
         <li><a href="{{ path('fos_user_registration_register') }}">Join Now</a></li>
       {% else %}
         <li><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a></li>
-        <li><a href="{{ path('profile', {'username': app.user.username}) }}">Profile</a></li>
+        <li><a href="{{ path('profile', {'userId': app.user.id}) }}">Profile</a></li>
         <li><a href="{{ path('accounts_index') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
       {% endif %}        
 			<li><a href="{{ path('default_index') }}">Home</a></li>            

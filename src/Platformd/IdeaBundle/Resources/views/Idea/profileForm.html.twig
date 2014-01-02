@@ -2,12 +2,11 @@
 
 {% block content %}
 
-<<<<<<< HEAD
   <div id="user-username" class="spcr-b2">Hello, {{ user.username }}</div>
 
   <div class="col3">
 	  <ul>		  
-		  <li><a href="{{ path('profile', {'username': app.user.username}) }}">Settings</a></li>
+		  <li><a href="{{ path('profile', {'userId': user.id}) }}">Settings</a></li>
 		  <li><a href="{{ path('groups') }}">Groups</a></li>
 		  <li><a href="{{ path('global_events_index') }}">Events</a></li>
 	  </ul>
@@ -17,7 +16,7 @@
   <div class="col1 bdrLft"> 
     <h1>Edit Profile</h1>
     <div class="left">
-      <form action="{{ path('profile_edit', {'username': username}) }}" {{ form_enctype(form) }} method="POST">
+      <form action="{{ path('profile_edit', {'userId': user.id}) }}" {{ form_enctype(form) }} method="POST">
         {{ form_errors(form) }}
     
         {{ form_row(form.name) }}
