@@ -37,7 +37,7 @@
                             {% endif %}
                         </td>
                         <td>
-                            {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group[0].owner.username }}
+                            {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group[0].owner.name }}
                         </td>
                         <td>
                             {% if group[0].isPublic %}

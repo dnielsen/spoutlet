@@ -51,6 +51,14 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
         }
 
         if ('POST' == $this->request->getMethod()) {
+
+            $form_data = $this->request->request->get('fos_user_registration_form');
+
+            if (!in_array('username', $form_data)) {
+                $user->setUsername($form_data['email']);
+                $user->setUsernameCanonical($this->userManager->canonicalizeUsername($form_data['email']));
+            }
+
             $this->form->bindRequest($this->request);
 
             $ageManager = $this->container->get('platformd.age.age_manager');

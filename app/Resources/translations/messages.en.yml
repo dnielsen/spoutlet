@@ -294,7 +294,7 @@ platformd:
             attending: Attending
             error: There was an error previewing your email!
             limit_hit: You have reached the maximum number of emails you can send to event attendees within a 24-hour period.
-            confirmation: Email sent to %attendeeCount% attendee.|Email sent to %attendeeCount% attendees.
+            confirmation: Email sent to %attendeeCount% attendees.
             form:
                 recipients: Recipients
                 message: Message

@@ -12,7 +12,7 @@
             </td>
             <td style="text-align: right">
                 {% if ownProfile %}
-                    <a href="{{ path('profile_edit', {'username': user.username}) }}">Edit Profile</a>
+                    <a href="{{ path('profile_edit', {'userId': user.id}) }}">Edit Profile</a>
                 {% endif %}
             </td>
         </tr>
@@ -83,10 +83,6 @@
             <td colspan=2>
                 <strong>Private Information</strong>
             </td>
-        </tr>
-        <tr>
-            <td>Username</td>
-            <td> {{ user.username }} </td>
         </tr>
         <tr>
             <td>Email</td>

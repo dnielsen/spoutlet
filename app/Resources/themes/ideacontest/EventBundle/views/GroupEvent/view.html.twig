@@ -86,7 +86,7 @@
             <div class="scrollableSidebarWidget">
                 {% for member in event.attendees %}
                     <div class="scrollableSidebarWidgetItem">
-                        <a href="{{ path('profile', {'username': member.username}) }}">{{ member.name }}</a>
+                        <a href="{{ path('profile', {'userId': member.id}) }}">{{ member.name }}</a>
                     </div>
                 {% endfor %}
             </div>
