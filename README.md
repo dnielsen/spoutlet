@@ -167,15 +167,38 @@ UPDATING
 
 EMAIL FEATURE
 -------------
-* From AWS SQS console create two queues called:  
-    PD_TESTING_CHUNKED_MASS_EMAIL  
-    PD_TESTING_MASS_EMAIL  
+1. From [AWS SQS console](https://console.aws.amazon.com/sqs/home) create two queues: `PD_TESTING_CHUNKED_MASS_EMAIL`, `PD_TESTING_MASS_EMAIL`  
 
-* In app/config/parameters.ini set queue_prefix to the url of the queues you just created minus everything after 'PD_TESTING'
+2. In `app/config/parameters.ini` set `queue_prefix` to the url of the queues you just created minus everything after `PD_TESTING`
 
-* Setup cron task to occasionally execute these two commands:  
-    app/console pd:massEmails:process --env=prod  
-    app/console pd:massEmails:sendChunks --env=prod  
+3. Setup cron task to execute these two commands on a 1 minute interval:  
+    > app/console pd:massEmails:process --env=prod  
+    > app/console pd:massEmails:sendChunks --env=prod
+  1. Modify both `misc_scripts/mass_email_queue_process_script.sh` and `misc_scripts/chunked_mass_email_queue_process_script.sh` such that all paths are relative to user home directory.  For example:  
+  
+    ```sh
+    #!/bin/bash
+    # Create a file handle if it doesn't already exist, 200 is arbitrary file handle id
+    exec 200>./misc_scripts/flock_files/mass_email_queue_process_script
+    # Lock the newly created file handle (whose id is 200) or exit with error code '1'
+    flock -n 200 || exit 1
+    # If we are still executing this script then we have exclusive access to the file handle
+    # Run the process mass email command
+    ./app/console pd:massEmails:process -e prod
+    ```
+  2. Fix permissions on the scripts so the cron user can run them:
+  
+     ```
+     sudo chmod 755 misc_scripts/mass_email_queue_process_script.sh
+     sudo chmod 755 misc_scripts/chunked_mass_email_queue_process_script.sh
+     ```
+  4. Edit crontab (`crontab -e`) to add the following two lines (adjusting file paths as needed):
+  
+    ```
+    * * * * * ./sites/campsite/misc_scripts/mass_email_queue_process_script.sh >> /dev/null 2>&1
+    * * * * * ./sites/campsite/misc_scripts/chunked_mass_email_queue_process_script.sh >> /dev/null 2>&1
+    ```
+    
 
 
 INSTALLATION CHALLENGES
