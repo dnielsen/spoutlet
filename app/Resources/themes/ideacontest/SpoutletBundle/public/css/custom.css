@@ -134,3 +134,59 @@ nav.spoutlet-pager .current {
 .qtip-content a {
     color: #ca43bb;
 }
+
+.profile-leftcol {
+    float: left;
+    width: 165px;
+    margin-right: 20px;
+}
+
+.profile-rightcol {
+    float: left;
+    width: 698px;
+    padding-right: 20px;
+    padding-bottom: 30px;
+    border-right: 1px dashed #ccc;
+}
+
+.profile-rightcol.bdrLft {
+    width: 824px;
+    padding-left: 20px;
+    border-right: 0 none;
+    border-left: 1px dashed #ccc;
+}
+
+a.profile-cancelBtn {
+    padding: 8px;
+    font-size: 18px;
+    font-weight: bold;
+    background: none;
+    border: 1px solid #2faad9;
+    color: #2faad9;
+    font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    margin-left: 10px;
+    text-decoration: none;
+}
+
+#allgroups-contentLft {
+    float: left;
+    width: 680px;
+    margin-right: 20px;
+}
+
+#allgroups-contentRt {
+    position: relative;
+    float: left;
+    width: 330px;
+}
+
+.allgroups-step, .allgroups-step2 {
+    float: left;
+    display: block;
+    width: 290px;
+    margin-bottom: 15px;
+    margin-right: 20px;
+}

@@ -3,106 +3,105 @@
 {% block title %}All Groups{% endblock %}
 
 {% block content %}
-
-    <div class="std_2col">
-        {% if features.hasSearch %}<div class="left">{% render url('search_form', {'category': 'group', 'watermark': 'platformd.search.form.default.all' }) %}</div>{% endif %}
-        <div class="right" style="margin:20px 5px;"><a href="{{ path('group_new') }}" class="btn reg-source">{{ 'platformd.groups.index.create_group' | pd_trans }}</a></div>
-    </div>
-
-    <div class="std_2col">
-        <div class="left">
-
-            <h3 id="groups-index-title">{{ 'platformd.groups.index.recommended_groups' | pd_trans }}</h3>
-            {% if featuredGroups|length > 0 %}
-                <div class="group-collection">
-                    <h4 class="groups-category-header">{{ 'platformd.groups.index.featured_groups' | pd_trans }}</h4>
-                    <div id="featured-groups">
-                        {% for group in featuredGroups %}
-                            <div class="group-list-item">
-                                <a href="{{ path('group_show', { slug: group[0].slug}) }}">
-                                    {% if group[0].thumbNail %}
-                                        <img src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
-                                    {% else %}
-                                        <div class="default-group-thumbnail"></div>
-                                    {% endif %}
-                                </a>
-                                <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
-                                    {{ group[0].name }}
-                                </a>
-                                <div class="details">
-                                    <div class="item-detail">{{ 'platformd.groups.index.members' | pd_trans }}: {{ group['memberCount'] }}</div>
-                                    <div class="item-detail">{{ 'platformd.groups.index.organizer' | pd_trans }}: {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'platformd.groups.index.staff' | pd_trans : group[0].owner.username }}</div>
-                                    <div class="report-group-caption">
-                                        <a href="javascript:void(0);" class="report-group" report-data="{{ group[0].id }}">{{ 'platformd.groups.index.report_group' | pd_trans }}</a>
-                                    </div>
+    <a href="{{ path('fos_user_registration_register') }}" class="allgroups-step btnLg2 bdr3">Step 1: Sign Up</a>
+    <a href="{{ path('fos_user_security_login') }}" class="allgroups-step btnLg2 bdr3">Step 2: Login</a>
+    <a href="#" class="allgroups-step btnLg2 bdr3">Step 3: Register</a>
+    <hr class="spcr-t4 clr">
+    <div id="allgroups-contentLft">
+        {% if featuredGroups|length > 0 %}
+            <div class="group-collection">
+                <h2>{{ 'platformd.groups.index.featured_groups' | pd_trans }}</h2>
+                <div id="featured-groups">
+                    {% for group in featuredGroups %}
+                        <div class="group-list-item">
+                            <a href="{{ path('group_show', { slug: group[0].slug}) }}">
+                                {% if group[0].thumbNail %}
+                                    <img src="{{ media_path(group[0].thumbNail) }}" alt="{{ group[0].name }}" title="{{ group[0].name }}" />
+                                {% else %}
+                                    <div class="default-group-thumbnail"></div>
+                                {% endif %}
+                            </a>
+                            <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
+                                {{ group[0].name }}
+                            </a>
+                            <div class="details">
+                                <div class="item-detail">{{ 'platformd.groups.index.members' | pd_trans }}: {{ group['memberCount'] }}</div>
+                                <div class="item-detail">{{ 'platformd.groups.index.organizer' | pd_trans }}: {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'platformd.groups.index.staff' | pd_trans : group[0].owner.username }}</div>
+                                <div class="report-group-caption">
+                                    <a href="javascript:void(0);" class="report-group" report-data="{{ group[0].id }}">{{ 'platformd.groups.index.report_group' | pd_trans }}</a>
                                 </div>
                             </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            {% endif %}
-            <div class="group-collection">
-                <h4 class="groups-category-header">{{ 'platformd.groups.index.topic_groups' | pd_trans }}</h4>
-                <div class="scrollable" id="scrollable-topic-groups">
-                    <div class="items">
-                    </div>
-                </div>
-                <div id="scroll-actions" style="margin-top: 0px;">
-                    <a id="topic-prev" class="prev browse" style="float: left;">{{ 'platformd.groups.index.previous' | pd_trans }}</a>
-                    <a id="topic-next" class="next browse" style="float: right;">{{ 'platformd.groups.index.see_more' | pd_trans }}</a>
-                </div>
-            </div>
-            <div class="group-collection" style="margin-top: 20px;">
-                <h4 class="groups-category-header">{{ 'platformd.groups.index.location_groups' | pd_trans }}</h4>
-                <div class="scrollable" id="scrollable-location-groups">
-                    <div class="items">
-                    </div>
-                </div>
-                <div id="scroll-actions" style="margin-top: 10px;">
-                    <a id="location-prev" class="prev browse" style="float: left;">{{ 'platformd.groups.index.previous' | pd_trans }}</a>
-                    <a id="location-next" class="next browse" style="float: right;">{{ 'platformd.groups.index.see_more' | pd_trans }}</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="right">
-
-            {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
-            <div class="widget-33" id="new-groups-widget">
-                <div class="widget-header">
-                    <div class="widget-title">
-                        {{ 'platformd.groups.index.welcome_new' | pd_trans }}
-                    </div>
-                </div>
-                <div class="widget-content">
-                    {% for recentGroup in recentGroups %}
-                        <div class="widget-item">
-                            <a class="widget-link news-ellipse" href="{{ path('group_show', { 'slug': recentGroup.slug }) }}">{{ recentGroup.name }}</a>
                         </div>
-                    {% else %}
-                        <p>{{ 'platformd.groups.index.no_groups_found' | pd_trans }}</p>
                     {% endfor %}
                 </div>
             </div>
-            <div class="widget-33" id="popular-groups-widget">
-                <div class="widget-header">
-                    <div class="widget-title">
-                        {{ 'platformd.groups.index.most_popular' | pd_trans }}
-                    </div>
-                </div>
-                <div class="widget-content">
-                    {% for popularGroup in popularGroups %}
-                        <div class="widget-item">
-                            <a class="widget-link news-ellipse" href="{{ path('group_show', { 'slug': popularGroup['slug'] }) }}">{{ popularGroup['group_name'] }}</a>
-                        </div>
-                    {% else %}
-                        <p>{{ 'platformd.groups.index.no_groups_found' | pd_trans }}</p>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
-    {% include 'GroupBundle:Group:_reportGroupPopup.html.twig' %}
+		{% endif %}
+			
+		<hr class="clr">
+	    <div id="mapGrp">
+			<h2>Find a Group Near You</h2>
+		    <input id="map-location-search" type="text" size="50" placeholder="Enter your location" autocomplete="off">
+			<iframe width="680" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps?oe=utf-8&amp;client=firefox-a&amp;channel=fflb&amp;q=1355+Sansome+St,+San+Francisco,+CA&amp;ie=UTF8&amp;hq=&amp;hnear=1355+Sansome+St,+San+Francisco,+California+94111&amp;gl=us&amp;t=m&amp;z=14&amp;ll=37.802716,-122.403427&amp;output=embed"></iframe>
+	    </div> <!-- end mapGrp -->
+					
+        <div class="row">
+            <h2>Find Groups by Topic</h2>
+
+            <input id="#" size="50" placeholder="Enter topic" autocomplete="off" type="text">
+
+             <table summary="Upcoming Event Dates" class="tblStyle">
+                <thead>
+                    <tr>
+                        <th>Group</th>
+                        <th>Topic</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div> <!-- end row -->
+	</div> <!-- end contentLft -->
+		
+				
+    <div id="allgroups-contentRt">
+        <div>
+            <h2>{{ 'platformd.groups.index.welcome_new' | pd_trans }}</h2>
+
+            <table summary="New Groups" class="tblStyle">
+                <tbody>
+                {% for recentGroup in recentGroups %}
+                <tr class="fill">
+                   <td><a href="{{ path('group_show', { 'slug': recentGroup.slug }) }}">{{ recentGroup.name }}</a></td>
+                </tr>
+                {% else %}
+                  <p>{{ 'platformd.groups.index.no_groups_found' | pd_trans }}</p>
+                {% endfor %}
+
+                </tbody>
+            </table>
+
+            <p><a href="{{ path('group_new') }}" target="_blank" class="btn right smtxt spcr-b">{{ 'platformd.groups.index.create_group' | pd_trans }} </a></p>
+
+            <hr class="clr">
+
+            <h2>{{ 'platformd.groups.index.most_popular' | pd_trans }}</h2>
+
+            <table summary="Most Popular Groups" class="tblStyle">
+                <tbody>
+                {% for popularGroup in popularGroups %}
+                    <tr class="fill">
+                        <td><a href="{{ path('group_show', { 'slug': popularGroup['slug'] }) }}">{{ popularGroup['group_name'] }}</a></td>
+                    </tr>
+                {% else %}
+                    <p>{{ 'platformd.groups.index.no_groups_found' | pd_trans }}</p>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div> <!-- end cBx1 -->
+    </div> <!-- end contentRt -->
+    <br class="clr">
 {% endblock %}
 
 {% block stylesheets %}
@@ -157,7 +156,7 @@
         }
 
         function loadNextGroupsAjax(type, num) {
-
+          
             if(typeof(num)==='undefined') num = 8;
 
             scrollContainer = null;
@@ -173,7 +172,7 @@
             } else {
                 return;
             }
-
+            
             var currDiv = null;
             var baseDiv = $('<div class="items-wrapper"></div>');
 
