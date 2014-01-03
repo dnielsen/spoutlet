@@ -1,21 +1,10 @@
-{% block sidebar %}{% endblock %}
-{% set sidebar = false %}
-{% extends 'SpoutletBundle::layout.html.twig' %}
-{% block title %}{% if ownProfile %}My{% else %}{{ user.username }}'s{% endif %} Profile{% endblock %}
-{% block content %}
-    <div id="user-username" class="spcr-b2">Hello, {{ user.name }}</div>
-    <div class="profile-leftcol">
-        <ul>
-            <li><a href="{{ path('profile', {'userId': user.id}) }}">Settings</a></li>
-            <li><a href="{{ path('groups') }}">Groups</a></li>
-            <li><a href="{{ path('global_events_index') }}">Events</a></li>
-        </ul>
-    </div>
+{% extends 'UserBundle::accountLayout.html.twig' %}
 
-    <div class="profile-rightcol bdrLft">
+{% block profile_content %}
+
         <a href="{{ path('profile_edit', {'userId': user.id}) }}" class="btnLg right">Edit Profile</a>
 
-        <h1>Settings: Profile</h1>
+        <h1>Profile</h1>
         <hr>
         <div class="left">
             <form action="" method="" class="profl">
@@ -84,21 +73,6 @@
         </div>
 
         <div class="clr spcr-b"></div>
-
-        <form action="#" method="POST" class="fos_user_change_password form form-horizontal">
-            <fieldset class="label-full account-settings-section" id="account-settings-newsletter">
-                <h1>Notifications</h1>
-
-                <input id="subscription_settings_subscribedAlienwareEvents" name="subscription_settings[subscribedAlienwareEvents]" value="1" checked="checked" class="left" style="margin-top: 5px;" type="checkbox"><label for="subscription_settings_subscribedAlienwareEvents" class="left nrml">&nbsp;Subscribe to the Campsite eNewsletter.</label>
-
-                <div class="clr spcr-b"></div>
-
-                <input value="Submit" class="left" type="button">
-                <a href="#" class="profile-cancelBtn left spcr-l3">Cancel</a>
-            </fieldset>
-        </form>
-
-    </div> <!-- end col1 -->
 	
   <br class="clr">
 {% endblock %}
