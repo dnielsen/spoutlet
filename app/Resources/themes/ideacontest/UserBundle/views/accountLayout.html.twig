@@ -2,18 +2,19 @@
 {% set sidebar = false %}
 {% block title %}{% if user == app.user %}My Profile{% else %}{{ user.name }}{% endif %}{% endblock %}
 
-
 {% block content %}
 
-    <div id="user-username" class="spcr-b2">Hello, {{ user.name }}</div>
+    {% if user == app.user %}
     <div class="profile-leftcol">
         <ul>
             <li><a href="{{ path('profile', {'userId': user.id}) }}">Profile</a></li>
             <li><a href="{{ path('accounts_settings') }}">Settings</a></li>
-            <li><a href="{{ path('accounts_groups') }}">Groups</a></li>
-            <li><a href="{{ path('accounts_events') }}">Events</a></li>
+            <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
+            <li><a href="{{ path('accounts_events') }}">My Events</a></li>
+            <li><a href="#">Manage Photos</a></li>
         </ul>
     </div>
+    {% endif %}
 
     <div class="profile-rightcol bdrLft">
 

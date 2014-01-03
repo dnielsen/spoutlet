@@ -2,77 +2,89 @@
 
 {% block profile_content %}
 
+    {% if ownProfile or isAdmin %}
         <a href="{{ path('profile_edit', {'userId': user.id}) }}" class="btnLg right">Edit Profile</a>
+    {% endif %}
 
-        <h1>Profile</h1>
-        <hr>
-        <div class="left">
-            <form action="" method="" class="profl">
-               <table summary="Personal Information" class="tblStyle">
-                <tbody>
-                    <tr>
-                        <td width="185">Name:</td>
-                        <td width="483">{{ user.name }}</td>
-                    </tr>
-                    <tr>
-                      <td>Title</td>
-                      <td> {% if user.title %}{{ user.title }}{% endif %} </td>
-                    </tr>
-                    <tr>
-                      <td>Organization</td>
-                      <td> {% if user.organization %}{{ user.organization }}{% endif %} </td>
-                    </tr>
-                    <tr>
-                      <td>Industry</td>
-                      <td> {% if user.industry %}{{ user.industry }}{% endif %} </td>
-                    </tr>
-                    <tr>
-                      <td>About</td>
-                      <td> {% if user.aboutMe %}{{ user.aboutMe }}{% endif %} </td>
-                    </tr>
-                    <tr>
-                      <td>Affiliation</td>
-                      <td> {% if user.affiliation %}{{ user.affiliation }}{% endif %} </td>
-                    </tr>
-                    <tr>
-                      <td>Event Role</td>
-                      <td>{% if user.eventRole %}{{ user.eventRole }}{% endif %} </td>
-                    </tr>
-                    <tr>
-                      <td>LinkedIn</td>
-                      <td> {% if user.linkedIn %}{{ user.linkedIn }}{% endif %} </td>
-                    </tr>
-                    <tr>
-                      <td>Twitter</td>
-                      <td> {% if user.twitterUsername %}{{ user.twitterUsername }}{% endif %} </td>
-                    </tr>
-                    <tr>
-                      <td>Website</td>
-                      <td> {% if user.website %}{{ user.website }}{% endif %} </td>
-                    </tr>
+    <h1>{{ user.name }}</h1>
+    <hr>
+    <div class="left">
+       <table summary="Personal Information" class="tblStyle">
+        <tbody>
+            {% if user.title %}
+                <tr>
+                  <td width="185">Title</td>
+                  <td width="483"> {{ user.title }} </td>
+                </tr>
+            {% endif %}
+            {% if user.organization %}
+                <tr>
+                  <td>Organization</td>
+                  <td> {{ user.organization }}</td>
+                </tr>
+            {% endif %}
+            {% if user.industry %}
+                <tr>
+                  <td>Industry</td>
+                  <td> {{ user.industry }}</td>
+                </tr>
+            {% endif %}
+            {% if user.aboutMe %}
+                <tr>
+                  <td>About</td>
+                  <td> {{ user.aboutMe }}</td>
+                </tr>
+            {% endif %}
+            {% if user.affiliation %}
+                <tr>
+                  <td>Affiliation</td>
+                  <td> {{ user.affiliation }}</td>
+                </tr>
+            {% endif %}
+            {% if user.eventRole %}
+                <tr>
+                  <td>Event Role</td>
+                  <td>{{ user.eventRole }}</td>
+                </tr>
+            {% endif %}
+            {% if user.linkedIn %}
+                <tr>
+                  <td>LinkedIn</td>
+                  <td>{{ user.linkedIn }}</td>
+                </tr>
+            {% endif %}
+            {% if user.twitterUsername %}
+                <tr>
+                  <td>Twitter</td>
+                  <td> {{ user.twitterUsername }}</td>
+                </tr>
+            {% endif %}
+            {% if user.website %}
+                <tr>
+                  <td>Website</td>
+                  <td> {{ user.website }} </td>
+                </tr>
+            {% endif %}
+            {% if ownProfile or isAdmin %}
+                <tr>
+                    <td>Email address:</td>
+                    <td>{{ user.email }}</td>
+                </tr>
+                {% if user.professionalEmail %}
                     <tr>
                       <td>Professional Email</td>
-                      <td> {% if user.professionalEmail %}{{ user.professionalEmail }}{% endif %} </td>
+                      <td> {{ user.professionalEmail }} </td>
                     </tr>
+                {% endif %}
+                {% if user.mailingAddress %}
                     <tr>
                       <td>Mailing Address</td>
-                      <td> {% if user.mailingAddress %}{{ user.mailingAddress }}{% endif %} </td>
+                      <td> {{ user.mailingAddress }} </td>
                     </tr>
-                    <tr class="last">
-                     <td>Email address:</td>
-                     <td>{{ user.email }}</td>
-                    </tr>
-                </tbody>
-               </table>
-           </form>
-        </div>
-
-        <div class="right ctr">
-           <img src="" alt=""><br>
-           <a href="#" class="btn smtxt">Manage photos ›</a>
-        </div>
-
-        <div class="clr spcr-b"></div>
-	
-  <br class="clr">
+                {% endif %}
+            {% endif %}
+        </tbody>
+       </table>
+    </div>
+    <div class="clr spcr-b"></div>
 {% endblock %}
