@@ -1,137 +1,104 @@
+{% block sidebar %}{% endblock %}
+{% set sidebar = false %}
 {% extends 'SpoutletBundle::layout.html.twig' %}
-
-{% block title %}{% if ownProfile %}My{% else %}{{ user.name }}'s{% endif %} Profile{% endblock %}
-
+{% block title %}{% if ownProfile %}My{% else %}{{ user.username }}'s{% endif %} Profile{% endblock %}
 {% block content %}
+    <div id="user-username" class="spcr-b2">Hello, {{ user.name }}</div>
+    <div class="profile-leftcol">
+        <ul>
+            <li><a href="{{ path('profile', {'userId': user.id}) }}">Settings</a></li>
+            <li><a href="{{ path('groups') }}">Groups</a></li>
+            <li><a href="{{ path('global_events_index') }}">Events</a></li>
+        </ul>
+    </div>
 
-    <table class="profileTable">
+    <div class="profile-rightcol bdrLft">
+        <a href="{{ path('profile_edit', {'userId': user.id}) }}" class="btnLg right">Edit Profile</a>
 
-        <tr>
-            <td>
-                <strong>Public Profile</strong>
-            </td>
-            <td style="text-align: right">
-                {% if ownProfile %}
-                    <a href="{{ path('profile_edit', {'userId': user.id}) }}">Edit Profile</a>
-                {% endif %}
-            </td>
-        </tr>
-        <tr>
-            <td>Name</td>
-            <td> {{ user.name }} </td>
-        </tr>
-        {% if user.title %}
-            <tr>
-                <td>Title</td>
-                <td> {{ user.title }} </td>
-            </tr>
-        {% endif %}
-        {% if user.organization %}
-        <tr>
-            <td>Organization</td>
-            <td> {{ user.organization }} </td>
-        </tr>
-        {% endif %}
-        {% if user.industry %}
-            <tr>
-                <td>Industry</td>
-                <td> {{ user.industry }} </td>
-            </tr>
-        {% endif %}
-        {% if user.aboutMe %}
-            <tr>
-                <td>About</td>
-                <td> {{ user.aboutMe }} </td>
-            </tr>
-        {% endif %}
-        {% if user.affiliation %}
-        <tr>
-            <td>Affiliation</td>
-            <td> {{ user.affiliation }} </td>
-        </tr>
-        {% endif %}
-        {% if user.eventRole %}
-            <tr>
-                <td>Event Role</td>
-                <td> {{ user.eventRole }} </td>
-            </tr>
-        {% endif %}
-        {% if user.linkedIn %}
-            <tr>
-                <td>LinkedIn</td>
-                <td> {{ user.linkedIn }} </td>
-            </tr>
-        {% endif %}
-        {% if user.twitterUsername %}
-            <tr>
-                <td>Twitter</td>
-                <td> {{ user.twitterUsername }} </td>
-            </tr>
-        {% endif %}
-        {% if user.website %}
-            <tr>
-                <td>Website</td>
-                <td> {{ user.website }} </td>
-            </tr>
-        {% endif %}
-    </table>
+        <h1>Settings: Profile</h1>
+        <hr>
+        <div class="left">
+            <form action="" method="" class="profl">
+               <table summary="Personal Information" class="tblStyle">
+                <tbody>
+                    <tr>
+                        <td width="185">Name:</td>
+                        <td width="483">{{ user.name }}</td>
+                    </tr>
+                    <tr>
+                      <td>Title</td>
+                      <td> {% if user.title %}{{ user.title }}{% endif %} </td>
+                    </tr>
+                    <tr>
+                      <td>Organization</td>
+                      <td> {% if user.organization %}{{ user.organization }}{% endif %} </td>
+                    </tr>
+                    <tr>
+                      <td>Industry</td>
+                      <td> {% if user.industry %}{{ user.industry }}{% endif %} </td>
+                    </tr>
+                    <tr>
+                      <td>About</td>
+                      <td> {% if user.aboutMe %}{{ user.aboutMe }}{% endif %} </td>
+                    </tr>
+                    <tr>
+                      <td>Affiliation</td>
+                      <td> {% if user.affiliation %}{{ user.affiliation }}{% endif %} </td>
+                    </tr>
+                    <tr>
+                      <td>Event Role</td>
+                      <td>{% if user.eventRole %}{{ user.eventRole }}{% endif %} </td>
+                    </tr>
+                    <tr>
+                      <td>LinkedIn</td>
+                      <td> {% if user.linkedIn %}{{ user.linkedIn }}{% endif %} </td>
+                    </tr>
+                    <tr>
+                      <td>Twitter</td>
+                      <td> {% if user.twitterUsername %}{{ user.twitterUsername }}{% endif %} </td>
+                    </tr>
+                    <tr>
+                      <td>Website</td>
+                      <td> {% if user.website %}{{ user.website }}{% endif %} </td>
+                    </tr>
+                    <tr>
+                      <td>Professional Email</td>
+                      <td> {% if user.professionalEmail %}{{ user.professionalEmail }}{% endif %} </td>
+                    </tr>
+                    <tr>
+                      <td>Mailing Address</td>
+                      <td> {% if user.mailingAddress %}{{ user.mailingAddress }}{% endif %} </td>
+                    </tr>
+                    <tr class="last">
+                     <td>Email address:</td>
+                     <td>{{ user.email }}</td>
+                    </tr>
+                </tbody>
+               </table>
+           </form>
+        </div>
 
+        <div class="right ctr">
+           <img src="" alt=""><br>
+           <a href="#" class="btn smtxt">Manage photos ›</a>
+        </div>
 
-    {% if ownProfile or isAdmin %}
-    <table class="profileTable">
-        <tr>
-            <td colspan=2>
-                <strong>Private Information</strong>
-            </td>
-        </tr>
-        <tr>
-            <td>Email</td>
-            <td> {{ user.email }} </td>
-        </tr>
-        {% if user.professionalEmail %}
-            <tr>
-                <td>Professional Email</td>
-                <td> {{ user.professionalEmail }} </td>
-            </tr>
-        {% endif %}
-        {% if user.mailingAddress %}
-            <tr>
-                <td>Mailing Address</td>
-                <td> {{ user.mailingAddress }} </td>
-            </tr>
-        {% endif %}
+        <div class="clr spcr-b"></div>
 
-    </table>
-    {% endif %}
+        <form action="#" method="POST" class="fos_user_change_password form form-horizontal">
+            <fieldset class="label-full account-settings-section" id="account-settings-newsletter">
+                <h1>Notifications</h1>
 
-    {% if user.ideas | length > 0 %}
-    <table class="profileTable ideasTable">
-        <tr>
-            <td colspan=2 style="text-align: center">
-                <strong>Proposed Ideas:</strong>
-            </td>
-        </tr>
-        <tr>
-            <td style="text-align: center"><strong>Event</strong></td>
-            <td style="text-align: center"><strong>Idea</strong></td>
-            </strong>
-        </tr>
+                <input id="subscription_settings_subscribedAlienwareEvents" name="subscription_settings[subscribedAlienwareEvents]" value="1" checked="checked" class="left" style="margin-top: 5px;" type="checkbox"><label for="subscription_settings_subscribedAlienwareEvents" class="left nrml">&nbsp;Subscribe to the Campsite eNewsletter.</label>
 
-        {% for idea in user.ideas %}
-            {% if idea.canUserView(app.user) %}
-                {% set parent = parents[idea.name] %}
-                <tr>
-                    <td>
-                        <a href="{{ path(parent.getLinkableRouteName(), parent.getLinkableRouteParameters()) }}">{{ parent.getName }}</a>
-                    </td>
-                    <td>
-                        <a href="{{ path('idea_show', {'entrySetId': idea.entrySet.getId, 'entryId': idea.id}) }}">{{ idea.name }}</a>
-                    </td>
-                </tr>
-            {% endif %}
-        {% endfor %}
+                <div class="clr spcr-b"></div>
 
-    </table>
-    {% endif %}
+                <input value="Submit" class="left" type="button">
+                <a href="#" class="profile-cancelBtn left spcr-l3">Cancel</a>
+            </fieldset>
+        </form>
 
+    </div> <!-- end col1 -->
+	
+  <br class="clr">
 {% endblock %}
