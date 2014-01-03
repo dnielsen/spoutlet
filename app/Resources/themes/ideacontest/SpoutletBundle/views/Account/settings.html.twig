@@ -151,68 +151,73 @@
 {% block file_label %}
 {% endblock %}
 
-{% block javascripts %}
-
+{% block stylesheets %}
     {{ parent() }}
-    <script type="text/javascript">
-
-        var modalVisible = false;
-
-        $(function() {
-
-            $('#submit-avatar').click(function (e) {
-
-                e.preventDefault();
-
-                $('#avatar-modal').block({
-                    message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />',
-                    css: {
-                        border: 'none',
-                        background: 'transparent'
-                    }
-                });
-
-                $(this).closest('form').submit();
-            });
-
-            $('.user-avatar').hover(
-                    function() {
-                        $('#avatar-update-overlay-wrapper').show();
-                    },
-                    function() {
-                        $('#avatar-update-overlay-wrapper').hide();
-                    }
-            );
-
-            $('.user-avatar').click(function() {
-                $.blockUI({ message: $('#avatar-modal'), css: { width: '500px', cursor: 'default', border: 'none', top: '10%' }, onBlock: showModal });
-            });
-
-            $(document).click(function(e) {
-                if (modalVisible && !$(e.target).parents().andSelf().is('#avatar-modal')) {
-                    $.unblockUI();
-                    modalVisible = false;
-                }
-            });
-
-            $(document).on('keyup', function(e) {
-                if (modalVisible && e.which === 27) { // Escape key
-                    $.unblockUI();
-                    modalVisible = false;
-                }
-            });
-
-            function showModal() {
-                modalVisible = true;
-            }
-
-            $('#avatar-listings').mCustomScrollbar();
-
-            if ($('.xnotices p').html() == '{{ 'platformd.user.avatars.invalid_avatar' | pd_trans }}') {
-                $('#avatar-modal .avatar-restrictions').show();
-                $('.user-avatar').click();
-            }
-        });
-    </script>
-
+    {% include 'SpoutletBundle:Account:_css_assets.html.twig' %}
 {% endblock %}
+
+{#{% block javascripts %}#}
+
+    {#{{ parent() }}#}
+    {#<script type="text/javascript">#}
+
+        {#var modalVisible = false;#}
+
+        {#$(function() {#}
+
+            {#$('#submit-avatar').click(function (e) {#}
+
+                {#e.preventDefault();#}
+
+                {#$('#avatar-modal').block({#}
+                    {#message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />',#}
+                    {#css: {#}
+                        {#border: 'none',#}
+                        {#background: 'transparent'#}
+                    {#}#}
+                {#});#}
+
+                {#$(this).closest('form').submit();#}
+            {#});#}
+
+            {#$('.user-avatar').hover(#}
+                    {#function() {#}
+                        {#$('#avatar-update-overlay-wrapper').show();#}
+                    {#},#}
+                    {#function() {#}
+                        {#$('#avatar-update-overlay-wrapper').hide();#}
+                    {#}#}
+            {#);#}
+
+            {#$('.user-avatar').click(function() {#}
+                {#$.blockUI({ message: $('#avatar-modal'), css: { width: '500px', cursor: 'default', border: 'none', top: '10%' }, onBlock: showModal });#}
+            {#});#}
+
+            {#$(document).click(function(e) {#}
+                {#if (modalVisible && !$(e.target).parents().andSelf().is('#avatar-modal')) {#}
+                    {#$.unblockUI();#}
+                    {#modalVisible = false;#}
+                {#}#}
+            {#});#}
+
+            {#$(document).on('keyup', function(e) {#}
+                {#if (modalVisible && e.which === 27) { // Escape key#}
+                    {#$.unblockUI();#}
+                    {#modalVisible = false;#}
+                {#}#}
+            {#});#}
+
+            {#function showModal() {#}
+                {#modalVisible = true;#}
+            {#}#}
+
+            {#$('#avatar-listings').mCustomScrollbar();#}
+
+            {#if ($('.xnotices p').html() == '{{ 'platformd.user.avatars.invalid_avatar' | pd_trans }}') {#}
+                {#$('#avatar-modal .avatar-restrictions').show();#}
+                {#$('.user-avatar').click();#}
+            {#}#}
+        {#});#}
+    {#</script>#}
+
+{#{% endblock %}#}
