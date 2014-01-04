@@ -48,30 +48,61 @@ values=(\
 'idea_edit_form' 'Edit Entry Feedback' \
 'idea_upload_form' 'Entry Image Upload Feedback' \
 'idea_add_link_form' 'Entry Add Link Feedback' \
+'fos_user_security_login' 'Login Page Feedback' \
 );
 
+size=${#values[@]};
+
+# Get the site's registry id  -  or die trying
 esr=`mysql -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names << END_TEXT
 SELECT entrySetRegistration_id FROM pd_site WHERE name = "$SITE_NAME";
 END_TEXT`
-
 if [[ -z "$esr" ]]; then
     echo "Error: The site '$SITE_NAME' does not have a valid EntrySet Registration id."
     exit;
 fi
 
-echo "Add the following lines to your parameters.ini (replace if neccessary) in the app/config directory."
-
-size=${#values[@]};
+# Print out the config.yml stanza
+echo "Add/Update config.yml under section parameters:feedback_ids with the following:"
 for ((i=0; i<size; i+=2))
 do
+
+    # Get the id of the new entry set
+    es_id=`mysql -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names <<END_TEXT
+SELECT id FROM entry_set WHERE name = "${values[$i+1]}";
+END_TEXT`
+    if [[ -n "$es_id" ]]; then
+        continue
+    fi
+
+    echo "    ${values[$i]}: %${values[$i]}%"
+done
+
+echo
+
+echo "Add/Update the following entries in parameters.ini:"
+for ((i=0; i<size; i+=2))
+do
+
+    # Get the id of the new entry set
+    es_id=`mysql -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names <<END_TEXT
+SELECT id FROM entry_set WHERE name = "${values[$i+1]}";
+END_TEXT`
+    if [[ -n "$es_id" ]]; then
+        continue
+    fi
+    
+    # Create Feedback list 
     mysql -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names <<END_TEXT
 INSERT INTO entry_set (entrySetRegistration_id,name,type,isVotingActive,isSubmissionActive,allowedVoters) 
 VALUES ($esr,"${values[$i+1]}",'idea',0,1,'');
 END_TEXT
     
+    # Get the id of the new entry set
     es_id=`mysql -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names <<END_TEXT
 SELECT id FROM entry_set WHERE name = "${values[$i+1]}";
 END_TEXT`
 
-    echo "${values[$i]} = ${es_id}";
+    # Print parameter statement needed to access this entry set
+    echo "    ${values[$i]} = ${es_id}";
 done

@@ -171,6 +171,7 @@ parameters:
         idea_edit_form: %idea_edit_form% # add/edit idea
         idea_upload_form: %idea_upload_form% # idea image upload
         idea_add_link_form: %idea_add_link_form%
+        fos_user_security_login: %fos_user_security_login% # login
 
 
     services_queue_util_class: Platformd\SpoutletBundle\Util\QueueUtil
