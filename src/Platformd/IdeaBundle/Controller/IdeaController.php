@@ -242,14 +242,13 @@ class IdeaController extends Controller
         $this->enforceUserSecurity();
 
         $entrySet = $this->getEntrySet($entrySetId);
-        list($group, $event, $entrySet, $idea) = $this->getHierarchy($entrySet);
+        list($group, $event, $entrySet, $idea, $parent) = $this->getHierarchy($entrySet);
 
         $attendance = $this->getCurrentUserApproved($entrySet);
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:createForm.html.twig', array(
-                'group'      => $group,
-                'event'      => $event,
+                'parent'     => $parent,
                 'entrySet'   => $entrySet,
                 'breadCrumbs'=> $this->getBreadCrumbsString($entrySet),
                 'sidebar'    => true,
@@ -333,7 +332,7 @@ class IdeaController extends Controller
         $this->enforceUserSecurity();
 
         $idea = $this->getEntry($entryId);
-        list($group, $event, $entrySet, $idea) = $this->getHierarchy($idea);
+        list($group, $event, $entrySet, $idea, $parent) = $this->getHierarchy($idea);
 
         if(!$this->canEditIdea($entrySet, $idea)) {
             throw new AccessDeniedException();
@@ -343,8 +342,7 @@ class IdeaController extends Controller
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:createForm.html.twig', array(
-                'group'      => $group,
-                'event'      => $event,
+                'parent'     => $parent,
                 'entrySet'   => $entrySet,
                 'idea'       => $idea,
                 'breadCrumbs'=> $this->getBreadCrumbsString($idea),
@@ -1180,6 +1178,7 @@ class IdeaController extends Controller
             $event,
             $entrySet,
             $entry,
+            $entrySetParent,
         );
     }
 
