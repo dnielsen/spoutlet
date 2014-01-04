@@ -172,7 +172,7 @@ parameters:
         idea_upload_form: %idea_upload_form% # idea image upload
         idea_add_link_form: %idea_add_link_form%
         fos_user_security_login: %fos_user_security_login% # login
-
+        fos_user_resetting_request: %fos_user_resetting_request% # forgot password
 
     services_queue_util_class: Platformd\SpoutletBundle\Util\QueueUtil
 

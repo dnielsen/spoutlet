@@ -49,6 +49,7 @@ values=(\
 'idea_upload_form' 'Entry Image Upload Feedback' \
 'idea_add_link_form' 'Entry Add Link Feedback' \
 'fos_user_security_login' 'Login Page Feedback' \
+'fos_user_resetting_request' 'Forgot Password Feedback' \
 );
 
 size=${#values[@]};
