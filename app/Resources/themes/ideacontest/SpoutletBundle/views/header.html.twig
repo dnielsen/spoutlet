@@ -22,7 +22,10 @@
             {% endif %}
 
             {% set feedbackKey = app.request.get('_route') %}
-            <li>{% if feedbackKey in feedback_ids|keys %}<a href="{{ path('entry_set_view', {'entrySetId': feedback_ids[feedbackKey] }) }}">Feedback</a>{% else %}<span>No Feedback</span>{% endif %}</li>
+            {% if feedbackKey in feedback_ids|keys %}<li>
+                <a class="feedback" href="{{ path('entry_set_view', {'entrySetId': feedback_ids[feedbackKey] }) }}">Feedback</a>
+            </li>{% endif %}
+
         </ul>
 
         {% if app.user %}
