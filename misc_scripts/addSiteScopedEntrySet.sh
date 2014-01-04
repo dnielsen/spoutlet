@@ -12,6 +12,7 @@
 DB_NAME="campsite"
 DB_USER="root"
 DB_PASS="sqladmin"
+DB_HOST="localhost"
 SITE_NAME="Campsite"
 
 values=(\
@@ -49,7 +50,7 @@ values=(\
 'idea_add_link_form' 'Entry Add Link Feedback' \
 );
 
-esr=`mysql -u$DB_USER -p$DB_PASS $DB_NAME --skip-column-names << END_TEXT
+esr=`mysql -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names << END_TEXT
 SELECT entrySetRegistration_id FROM pd_site WHERE name = "$SITE_NAME";
 END_TEXT`
 
@@ -63,12 +64,12 @@ echo "Add the following lines to your parameters.ini (replace if neccessary) in 
 size=${#values[@]};
 for ((i=0; i<size; i+=2))
 do
-    mysql -u$DB_USER -p$DB_PASS $DB_NAME --skip-column-names <<END_TEXT
+    mysql -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names <<END_TEXT
 INSERT INTO entry_set (entrySetRegistration_id,name,type,isVotingActive,isSubmissionActive,allowedVoters) 
 VALUES ($esr,"${values[$i+1]}",'idea',0,1,'');
 END_TEXT
     
-    es_id=`mysql -u$DB_USER -p$DB_PASS $DB_NAME --skip-column-names <<END_TEXT
+    es_id=`mysql -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names <<END_TEXT
 SELECT id FROM entry_set WHERE name = "${values[$i+1]}";
 END_TEXT`
 
