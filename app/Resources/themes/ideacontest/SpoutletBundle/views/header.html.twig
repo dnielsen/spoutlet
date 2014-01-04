@@ -7,17 +7,22 @@
                 <li><a href="{{ path('fos_user_registration_register') }}">Join Now</a></li>
             {% else %}
                 <li><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a></li>
-                <li><a href="{{ path('accounts_index') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
+                <li><a href="{{ path('accounts_settings') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
             {% endif %}
-            {% if event is defined and event is not null %}
-                {% if is_granted('ROLE_ADMIN') or event.user == (app.user) %}
-                    <li><a href="{{ path('idea_admin', {'groupSlug': group.slug, 'eventId': event.id}) }}">Event Admin</a></li>
+            {% if group is defined and group is not null %}
+                {% if event is defined and event is not null %}
+                    {% if is_granted('ROLE_ADMIN') or event.user == (app.user) %}
+                        <li><a href="{{ path('idea_admin', {'groupSlug': group.slug, 'eventId': event.id}) }}">Event Admin</a></li>
+                    {% endif %}
                 {% endif %}
             {% endif %}
             <li><a href="{{ path('default_index') }}">Home</a></li>
             {% if is_granted("ROLE_SUPER_ADMIN") %}
                 <li><a href="{{ path('admin_index') }}">Site Admin</a></li>
             {% endif %}
+
+            {% set feedbackKey = app.request.get('_route') %}
+            <li>{% if feedbackKey in feedback_ids|keys %}<a href="{{ path('entry_set_view', {'entrySetId': feedback_ids[feedbackKey] }) }}">Feedback</a>{% else %}<span>No Feedback</span>{% endif %}</li>
         </ul>
 
         {% if app.user %}

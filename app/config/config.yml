@@ -53,6 +53,7 @@ twig:
         showVideo:    false
         facebook_app_id: %facebook_app_id%
         google_api_key: %google_api_key%
+        feedback_ids: %feedback_ids%
 
 # Assetic Configuration
 assetic:
@@ -136,6 +137,41 @@ vich_geographical:
     db_driver: orm
 
 parameters:
+
+    feedback_ids:
+        accounts_groups: %accounts_groups% # my groups
+        accounts_events: %accounts_events% # my events
+        default_index: %default_index% # front page
+        about: %about%
+        contact: %contact%
+        groups: %groups% # all groups
+        global_events_index: %global_events_index% # all events
+        profile: %profile%
+        accounts_settings: %accounts_settings%
+        entry_set_view: %entry_set_view%
+        profile_edit: %profile_edit%
+        group_event_contact: %group_event_contact%
+        group_event_attendees: %group_event_attendees%
+        group_show: %group_show% # show group
+        group_event_view: %group_event_view% # show event
+        group_new: %group_new%
+        group_edit: %group_edit%
+        entry_set_new: %entry_set_new%
+        idea_admin_event: %idea_admin_event% # new event
+        idea_admin: %idea_admin% # event admin
+        idea_admin_event: %idea_admin_event% # edit event
+        idea_admin_images: %idea_admin_images%
+        idea_admin_member_approvals: %idea_admin_member_approvals
+        idea_admin_criteria_all: %idea_admin_criteria_all%
+        idea_admin_criteria: %idea_admin_criteria% # new criteria
+        idea_admin_criteria_get: %idea_admin_criteria_get% # edit criteria
+        idea_summary: %idea_summary% # round summery
+        idea_create_form: %idea_create_form%
+        idea_show: %idea_show%
+        idea_edit_form: %idea_edit_form% # add/edit idea
+        idea_upload_form: %idea_upload_form% # idea image upload
+        idea_add_link_form: %idea_add_link_form%
+
 
     services_queue_util_class: Platformd\SpoutletBundle\Util\QueueUtil
 
