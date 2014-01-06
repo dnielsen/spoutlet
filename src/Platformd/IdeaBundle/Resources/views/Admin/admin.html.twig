@@ -4,12 +4,12 @@
 
     <div class="adminRow">
         <h1>General</h1>
-        <a href="{{ path('idea_admin_event', {'groupSlug': group.slug, 'eventId': event.id}) }}">
-            <input type="submit" value="Configure Details" class="marginlft" />
-        </a>
-        <a href="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventId': event.id}) }}">
-            <input type="submit" value="Add Images" class="marginlft" />
-        </a>
+        {#<a href="{{ path('idea_admin_event', {'groupSlug': group.slug, 'eventId': event.id}) }}">#}
+            {#<input type="submit" value="Configure Details" class="marginlft" />#}
+        {#</a>#}
+        {#<a href="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventId': event.id}) }}">#}
+            {#<input type="submit" value="Add Images" class="marginlft" />#}
+        {#</a>#}
         <a href="{{ path('idea_admin_export_ideas', {'groupSlug': group.slug, 'eventId': event.id}) }}">
             <input type="submit" value="Download Ideas (CSV)" class="marginlft" />
         </a>
