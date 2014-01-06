@@ -54,8 +54,15 @@
 
         {{ form_rest(form) }}
 
+        <a href="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventId': event.id}) }}">
+            Add Images
+        </a>
+        <br class="clr"/>
+        <br/>
+
 	    <input type="submit" value="Submit"/>
 		<button type="submit" value="Cancel" name="cancel" formnovalidate/>Cancel</button>
 	
 	</form>
+
 {% endblock %}

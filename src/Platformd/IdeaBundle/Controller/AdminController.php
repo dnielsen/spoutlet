@@ -31,7 +31,7 @@ class AdminController extends Controller
                     'slug'  => $groupSlug,
                 )));
             } else {
-                return $this->redirect($this->generateUrl('idea_admin', array(
+                return $this->redirect($this->generateUrl('group_event_view', array(
                     'groupSlug' => $groupSlug,
                     'eventId' =>   $eventId,
                 )));
@@ -39,7 +39,6 @@ class AdminController extends Controller
         }
 
         $group = $this->getGroup($groupSlug);
-      //  $event = $this->getEvent($groupSlug, $eventId);
 
         $isNew = false;
 
@@ -85,10 +84,10 @@ class AdminController extends Controller
                     $em->flush();
                 }
 
-                return $this->redirect($this->generateUrl('idea_admin', array(
-                            'groupSlug' => $groupSlug,
-                            'eventId' => $event->getId(),
-                        )));
+                return $this->redirect($this->generateUrl('group_event_view', array(
+                        'groupSlug' => $groupSlug,
+                        'eventId' => $event->getId(),
+                    )));
             }
         }
 
