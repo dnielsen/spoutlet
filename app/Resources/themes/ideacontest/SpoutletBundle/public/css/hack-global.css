@@ -166,3 +166,6 @@ h5 {
     padding: 10px;
     border: 1px dashed #ccc;
 }
+.fillWidth {
+    width:100% !important;
+}
