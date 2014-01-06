@@ -1070,4 +1070,16 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     public function getFirstEntrySet() {
         return $this->entrySetRegistration->getEntrySets()->get(0);
     }
+
+    public function isMemberOf(User $user) {
+        if($user->getId() == $this->getOwner()->getId())
+            return true;
+
+        foreach ($this->getMembers() as $member) {
+            if($user->getId() == $member->getId())
+                return true;
+        }
+
+        return false;
+    }
 }

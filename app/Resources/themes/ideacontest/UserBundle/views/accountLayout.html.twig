@@ -7,8 +7,8 @@
     {% if user == app.user %}
     <div class="profile-leftcol">
         <ul>
-            <li><a href="{{ path('profile', {'userId': user.id}) }}">Profile</a></li>
             <li><a href="{{ path('accounts_settings') }}">Settings</a></li>
+            <li><a href="{{ path('profile', {'userId': user.id}) }}">Profile</a></li>
             <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
             <li><a href="{{ path('accounts_events') }}">My Events</a></li>
             <li><a href="#">Manage Photos</a></li>
