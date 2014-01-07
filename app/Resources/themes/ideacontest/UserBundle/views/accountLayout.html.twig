@@ -1,67 +1,27 @@
-{# base layout for the account section #}
 {% extends 'SpoutletBundle::layout.html.twig' %}
+{% set sidebar = false %}
+{% block title %}{% if user == app.user %}My Profile{% else %}{{ user.name }}{% endif %}{% endblock %}
 
-{% set event_link    = site_link('USER_EVENT') %}
-{% set game_id_link  = site_link('USER_GAME_ID') %}
-{% set profile_link  = site_link('USER_PROFILE') %}
-{% set giveaway_link = site_link('USER_GIVEAWAY') %}
+{% block content %}
 
-{% block pre_content_nav %}
-    <div class="std_1col">
-        <div id="accountHeader">
-            <ul class="links sf-menu-account sf-list">
-                <li><a href="{{ account_home_link() }}">{{ "platformd.user.account.account_home" | pd_trans }}</a></li>
-
-                {% if auth_type == 'local' %}
-                    <li><a href="{{ path('accounts_settings') }}">{{ "platformd.user.account.account_settings" | pd_trans }}</a></li>
-                    {% if features.hasProfile %}
-                        <li><a href="{{ path('fos_user_profile_show') }}">{{ "platformd.user.account.profile" | pd_trans }}</a></li>
-                    {% endif %}
-                {% else %}
-                    <li><a href="{{ path('change_password') }}">{{ "platformd.user.account.change_password" | trans }}</a></li>
-                    <li>{{ profile_link | raw }}</li>
-                {% endif %}
-
-                {% if features.hasGroups %}
-                    <li><a href="{{ path('accounts_groups') }}">{{ 'platformd.user.account.my_groups' | pd_trans }}</a></li>
-                {% endif %}
-
-                {% if features.hasEvents %}
-                    <li><a href="{{ path('accounts_events') }}">{{ 'platformd.user.account.my_events' | pd_trans }}</a></li>
-                {% endif %}
-
-                {{ giveaway_link | raw }}
-
-                {% if features.hasPhotos and features.hasVideo %}
-                    <li class="more">
-                        <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.user.account.media' | pd_trans }}</a>
-                        <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
-                            <li><a href="{{ path('accounts_photos') }}">{{ 'platformd.user.account.images' | pd_trans }}</a></li>
-                            <li><a href="{{ path('accounts_videos') }}">{{ 'platformd.user.account.videos' | pd_trans }}</a></li>
-                        </ul>
-                    </li>
-                {% elseif features.hasPhotos and not features.hasVideo %}
-                    <li class="more">
-                        <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.user.account.media' | pd_trans }}</a>
-                        <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
-                            <li><a href="{{ path('accounts_photos') }}">{{ 'platformd.user.account.images' | pd_trans }}</a></li>
-                        </ul>
-                    </li>
-                {% elseif features.hasVideo and not features.hasPhotos %}
-                    <li class="more">
-                        <a class="blue" style="background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat; padding-right: 15px; margin-right: 5px; cursor: pointer;">{{ 'platformd.user.account.media' | pd_trans }}</a>
-                        <ul style="padding: 3px; position: absolute; background: #393939; width: 50px;">
-                            <li><a href="{{ path('accounts_videos') }}">{{ 'platformd.user.account.videos' | pd_trans }}</a></li>
-                        </ul>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
+    {% if user == app.user %}
+    <div class="profile-leftcol">
+        <ul>
+            <li><a href="{{ path('accounts_settings') }}">Settings</a></li>
+            <li><a href="{{ path('profile', {'userId': user.id}) }}">Profile</a></li>
+            <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
+            <li><a href="{{ path('accounts_events') }}">My Events</a></li>
+            <li><a href="{{ path('accounts_entries') }}">My Entries</a></li>
+            <li><a href="#">Manage Photos</a></li>
+        </ul>
     </div>
-    <div class="clear"></div>
-{% endblock %}
+    {% endif %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {% include 'SpoutletBundle:Account:_css_assets.html.twig' %}
+    <div class="profile-rightcol bdrLft">
+
+    {% block profile_content %}
+    {% endblock %}
+
+    </div>
+
 {% endblock %}

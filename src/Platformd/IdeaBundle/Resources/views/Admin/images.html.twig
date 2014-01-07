@@ -30,8 +30,8 @@
             </a>
         </td>
         <td>
-            <form action = {{ path('idea_admin', {'groupSlug': group.slug, 'eventId': event.id}) }} method="get">
-                <input type="submit" value="< Admin Console">
+            <form action = {{ path('idea_admin_event', {'groupSlug': group.slug, 'eventId': event.id}) }} method="get">
+                <input type="submit" value="< Edit Event">
             </form>
         </td>
     </table>

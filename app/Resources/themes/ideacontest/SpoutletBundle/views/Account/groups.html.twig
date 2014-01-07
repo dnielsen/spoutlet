@@ -2,13 +2,13 @@
 
 {% block title %}My Groups{% endblock %}
 
-{% block content %}
+{% block profile_content %}
 
 <div class="control_panel">
-    <div class="widget-100">
+    <div class="widget-100 fillWidth">
         <div class="widget-header">
             <div class="widget-title">
-                <h2>My Groups</h2>
+                My Groups
             </div>
         </div>
         <div class="widget-content">
@@ -37,7 +37,7 @@
                             {% endif %}
                         </td>
                         <td>
-                            {{ group[0].owner.adminLevel == 'ROLE_SUPER_ADMIN' ? 'Staff' : group[0].owner.name }}
+                            <a href="{{ path('profile', {'userId': group[0].owner.id}) }}">{{ group[0].owner.name }}</a>
                         </td>
                         <td>
                             {% if group[0].isPublic %}

@@ -186,6 +186,7 @@ platformd:
             photos: Image Gallery
             contests: Contests
             giveaways: Giveaways
+            settings: Settings
 
         page_content:
             featured: Featured

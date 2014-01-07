@@ -92,3 +92,39 @@
     
     ; only set to true if you have implemented the API authentication system and have configured it properly
     api_authentication    = false
+
+    accounts_groups             = 
+    accounts_events             = 
+    default_index               = 
+    about                       = 
+    contact                     = 
+    groups                      = 
+    global_events_index         = 
+    profile                     = 
+    accounts_settings           = 
+    entry_set_view              = 
+    profile_edit                = 
+    group_event_contact         = 
+    group_event_attendees       = 
+    group_show                  = 
+    group_event_view            = 
+    group_new                   = 
+    group_edit                  = 
+    entry_set_new               = 
+    idea_admin_event            = 
+    idea_admin                  = 
+    idea_admin_event            = 
+    idea_admin_images           = 
+    idea_admin_member_approvals = 
+    idea_admin_criteria_all     = 
+    idea_admin_criteria         = 
+    idea_admin_criteria_get     = 
+    idea_summary                = 
+    idea_create_form            = 
+    idea_show                   = 
+    idea_edit_form              = 
+    idea_upload_form            = 
+    idea_add_link_form          = 
+    fos_user_security_login     = 
+    fos_user_resetting_request  = 
+

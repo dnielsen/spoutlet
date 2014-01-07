@@ -4,12 +4,12 @@
 
     <div class="adminRow">
         <h1>General</h1>
-        <a href="{{ path('idea_admin_event', {'groupSlug': group.slug, 'eventId': event.id}) }}">
-            <input type="submit" value="Configure Details" class="marginlft" />
-        </a>
-        <a href="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventId': event.id}) }}">
-            <input type="submit" value="Add Images" class="marginlft" />
-        </a>
+        {#<a href="{{ path('idea_admin_event', {'groupSlug': group.slug, 'eventId': event.id}) }}">#}
+            {#<input type="submit" value="Configure Details" class="marginlft" />#}
+        {#</a>#}
+        {#<a href="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventId': event.id}) }}">#}
+            {#<input type="submit" value="Add Images" class="marginlft" />#}
+        {#</a>#}
         <a href="{{ path('idea_admin_export_ideas', {'groupSlug': group.slug, 'eventId': event.id}) }}">
             <input type="submit" value="Download Ideas (CSV)" class="marginlft" />
         </a>
@@ -30,7 +30,7 @@
                 <input type="submit" value="Delete" class="marginlft"/>
             </a>
         {% else %}
-            <input type="submit" value="Delete" class="marginlft" title="Remove the {{ event.EntrySets|length }} list(s) attached to this Event to enable the delete option." disabled/>
+            <input type="submit" value="Delete" class="marginlft redButton" title="Remove the {{ event.EntrySets|length }} list(s) attached to this Event to enable the delete option." disabled/>
         {% endif %}
     </div>
 

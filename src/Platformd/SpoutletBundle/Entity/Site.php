@@ -8,6 +8,7 @@ use Gedmo\Sluggable\Util\Urlizer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\SpoutletBundle\Entity\SiteFeatures;
+use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\SiteConfig;
 use Doctrine\Common\Collections\ArrayCollection;
 use Platformd\IdeaBundle\Entity\EntrySetScopeable;
@@ -252,5 +253,7 @@ class Site implements EntrySetScopeable
         return array();
     }
 
-
+    public function isMemberOf(User $user) {
+        return true;
+    }
 }

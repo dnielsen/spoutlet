@@ -1,0 +1,31 @@
+{% extends 'UserBundle::accountLayout.html.twig' %}
+
+{% block title %}My Entries{% endblock %}
+
+{% block profile_content %}
+
+    <h2>My Entries</h2>
+    {% if entries | length > 0 %}
+        <table class="profileTable ideasTable">
+            <tr>
+                <td><strong>List</strong></td>
+                <td><strong>Entry</strong></td>
+            </tr>
+
+            {% for entry in entries %}
+                {% set parent = parents[entry.name] %}
+                {% set entrySet = entry.entrySet %}
+                <tr>
+                    <td>
+                        <a href="{{ path(entrySet.getLinkableRouteName(), entrySet.getLinkableRouteParameters()) }}">{{ parent.getName }} - {{ entrySet.name }}</a>
+                    </td>
+                    <td>
+                        <a href="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': entry.id}) }}">{{ entry.name }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </table>
+    {% endif %}
+
+{% endblock %}
