@@ -798,18 +798,12 @@ class IdeaController extends Controller
         $ownProfile = ($currentUser == $user);
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
-        $parents = array();
-        foreach($user->getIdeas() as $idea) {
-            $parent = $this->getParentByIdea($idea);
-            $parents[$idea->getName()] = $parent;
-        }
 
         return $this->render('IdeaBundle:Idea:profile.html.twig', array(
                 'user'       => $user,
                 'ownProfile' => $ownProfile,
                 'isAdmin'    => $isAdmin,
                 'sidebar'    => true,
-                'parents'    => $parents,
             ));
     }
 
@@ -865,6 +859,22 @@ class IdeaController extends Controller
             'isAdmin'   => $isAdmin,
         ));
 
+    }
+
+    public function userEntriesAction()
+    {
+        $userEntries = $this->getCurrentUser()->getIdeas();
+
+        $parents = array();
+        foreach($userEntries as $entry) {
+            $parent = $this->getParentByIdea($entry);
+            $parents[$entry->getName()] = $parent;
+        }
+
+        return $this->render('IdeaBundle:Idea:userEntries.html.twig', array(
+            'entries'   => $userEntries,
+            'parents'   => $parents,
+        ));
     }
 
     //TODO: Move this to a model file?
