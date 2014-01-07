@@ -20,11 +20,13 @@
                 {% if entrySet|default is not empty %}
                     {% if entrySet.entrySetRegistration.scope == "EventBundle:GroupEvent" %}
                         {% if event|default %}
+                            {% set parentOwner = event.user %}
                             {% set event_id = event.id %}
                             {% set group_id = event.group.slug %}
                         {% endif %}
                     {% elseif entrySet.entrySetRegistration.scope == "GroupBundle:Group" %}
                         {% if group|default %}
+                            {% set parentOwner = group.owner %}
                             {% set group_id = group.slug %}
                         {% endif %}
                     {% endif %}
@@ -51,6 +53,7 @@
                 </ul>
             </li>
 
+            {% if app.user %}
             <li class="more">
                 <a>{{ 'platformd.layout.main_menu.settings' | pd_trans }}</a>
                 <ul>
@@ -58,7 +61,7 @@
 
                     {% if group_id is defined %}
                         {% if group is defined %}
-                            {% if group.owner == app.user %}
+                            {% if (group.owner == app.user) or (is_granted('ROLE_ADMIN')) %}
                                 <li><a href="{{ path('group_edit', {'slug': group_id}) }}">Group</a></li>
                             {% endif %}
                         {% endif %}
@@ -66,17 +69,22 @@
 
                     {% if event_id is defined %}
                         {% if event is defined %}
-                            {% if event.user == app.user %}
+                            {% if (event.user == app.user) or (is_granted('ROLE_ADMIN')) %}
                                 <li><a href="{{ path('idea_admin_event', {'groupSlug': group_id, 'eventId': event_id}) }}">Event</a></li>
                             {% endif %}
                         {% endif %}
                     {% endif %}
 
-                    {% if entrySet is defined %}
-                        <li><a href="{{ path('entry_set_edit', {'entrySetId': entrySet.id}) }}">List</a></li>
+                    {% if (entrySet is defined)  %}
+                        {% if parentOwner is defined %}
+                            {% if (parentOwner == app.user) or (is_granted('ROLE_ADMIN')) %}
+                                <li><a href="{{ path('entry_set_edit', {'entrySetId': entrySet.id}) }}">List</a></li>
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
                 </ul>
             </li>
+            {% endif %}
 
             <li><a href="{{ path('contact') }}">Contact Us</a></li>
 

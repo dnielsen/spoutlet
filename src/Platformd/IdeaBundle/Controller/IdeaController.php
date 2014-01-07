@@ -242,13 +242,13 @@ class IdeaController extends Controller
         $this->enforceUserSecurity();
 
         $entrySet = $this->getEntrySet($entrySetId);
-        list($group, $event, $entrySet, $idea, $parent) = $this->getHierarchy($entrySet);
+        list($group, $event, $entrySet, $idea) = $this->getHierarchy($entrySet);
 
         $attendance = $this->getCurrentUserApproved($entrySet);
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Idea:createForm.html.twig', array(
-                'parent'     => $parent,
+                'parent'     => $this->getParentByEntrySet($entrySet),
                 'entrySet'   => $entrySet,
                 'breadCrumbs'=> $this->getBreadCrumbsString($entrySet),
                 'sidebar'    => true,
