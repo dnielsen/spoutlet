@@ -64,9 +64,14 @@
 		<button type="submit" value="Cancel" name="cancel" formnovalidate/>Cancel</button>
 
         {% if not isNew %}
-            <a href="{{ path("group_event_delete", {"groupSlug": group.slug, "eventId": event.id}) }}">
-                <input type="button" class="spcr-l redButton" value="Delete" class="redButton" onclick="return confirm('Are you sure you want to delete this list?');">
-            </a>
+            {% if event.entrySets|length == 0 %}
+                <a href="{{ path("group_event_delete", {"groupSlug": group.slug, "eventId": event.id}) }}">
+                    <input type="button" class="spcr-l redButton" value="Delete" class="redButton" onclick="return confirm('Are you sure you want to delete this list?');">
+                </a>
+            {% else %}
+                <span class="spcr-l redButton" title="Remove the {{ event.EntrySets|length }} list(s) attached to this Event to enable the delete option.">Delete Disabled</span>
+            {% endif %}
+
         {% endif %}
 
     </form>
