@@ -94,4 +94,8 @@ input[type="submit"], input[type="button"], button[type="submit"], button[type="
     color: red !important;
 }
 
+.greyButton {
+    background: #929292 !important;
+    color: white !important;
+}
 

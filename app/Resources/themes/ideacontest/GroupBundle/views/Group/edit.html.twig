@@ -20,7 +20,7 @@
             {% set numEntrySets =  group.entrySets|length %}
             {% set numEvents =  group.numEvents %}
             {% if numEntrySets > 0 or numEvents > 0 %}
-                <input type="button" class="spcr-l" style="background: #929292" value="Delete Disabled" title="A Group must not contain any lists or events in order to be deleted. This Group contains {{ numEntrySets }} lists and {{ numEvents }} events."></input>
+                <input type="button" class="spcr-l greyButton" value="Delete Disabled" title="A Group must not contain any lists or events in order to be deleted. This Group contains {{ numEntrySets }} lists and {{ numEvents }} events."></input>
             {% else %}
                 <a href="{{ path('group_delete', { 'slug': group.slug }) }}">
                     <input type="button" value="Delete" class="spcr-l redButton" onclick="return confirm('Are you sure you want to delete this group?');">
