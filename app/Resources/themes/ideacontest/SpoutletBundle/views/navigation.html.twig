@@ -57,12 +57,12 @@
             <li class="more">
                 <a>{{ 'platformd.layout.main_menu.settings' | pd_trans }}</a>
                 <ul>
-                    <li><a href="{{ path('accounts_settings') }}">Account</a></li>
+                    <li><a href="{{ path('accounts_settings') }}">Account Control Panel</a></li>
 
                     {% if group_id is defined %}
                         {% if group is defined %}
                             {% if (group.owner == app.user) or (is_granted('ROLE_ADMIN')) %}
-                                <li><a href="{{ path('group_edit', {'slug': group_id}) }}">Group</a></li>
+                                <li><a href="{{ path('group_edit', {'slug': group_id}) }}">Edit This Group</a></li>
                             {% endif %}
                         {% endif %}
                     {% endif %}
@@ -70,7 +70,7 @@
                     {% if event_id is defined %}
                         {% if event is defined %}
                             {% if (event.user == app.user) or (is_granted('ROLE_ADMIN')) %}
-                                <li><a href="{{ path('idea_admin_event', {'groupSlug': group_id, 'eventId': event_id}) }}">Event</a></li>
+                                <li><a href="{{ path('idea_admin_event', {'groupSlug': group_id, 'eventId': event_id}) }}">Edit This Event</a></li>
                             {% endif %}
                         {% endif %}
                     {% endif %}
@@ -78,7 +78,7 @@
                     {% if (entrySet is defined)  %}
                         {% if parentOwner is defined %}
                             {% if (parentOwner == app.user) or (is_granted('ROLE_ADMIN')) %}
-                                <li><a href="{{ path('entry_set_edit', {'entrySetId': entrySet.id}) }}">List</a></li>
+                                <li><a href="{{ path('entry_set_edit', {'entrySetId': entrySet.id}) }}">Edit This List</a></li>
                             {% endif %}
                         {% endif %}
                     {% endif %}
