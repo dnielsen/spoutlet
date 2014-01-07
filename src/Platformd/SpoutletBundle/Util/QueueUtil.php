@@ -20,10 +20,12 @@ class QueueUtil implements QueueUtilInterface
         $this->sqsClient      = $sqsClient;
         $this->logger         = $logger;
         $this->queueUrlPrefix = $queueUrlPrefix;
+        $this->object_storage = $object_storage;
+        $this->hpcloud_messaging_url = $hpcloud_messaging_url; 
         if($object_storage == 'HpObjectStorage') {
-          $this->object_storage = $object_storage;
+       
           $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey,$hpcloud_secreatkey,$hpcloud_tenantid);
-          $this->hpcloud_messaging_url = $hpcloud_messaging_url; 
+          
         }
         $this->logger->debug(self::LOG_MESSAGE_PREFIX.'queue prefix is "'.$queueUrlPrefix.'"');
     }
@@ -58,7 +60,7 @@ class QueueUtil implements QueueUtilInterface
     public function addToQueue(SqsMessageBase $message) {
 
         $fullQueueUrl = $this->getFullQueueUrl($message);
-
+        
         $this->logger->debug(self::LOG_MESSAGE_PREFIX.'addToQueue - sending message to queue "'.$fullQueueUrl.'".');
 
         $messageBody = serialize($message);
@@ -66,12 +68,14 @@ class QueueUtil implements QueueUtilInterface
             $queueName = $message->getQueueName();
             $this->ensureValidQueueName($queueName);
 
-            $result = $this->hpCloudObj->sendMessageToQueue($queueName,base64_encode($messageBody),$this->hpcoud_messaging_url);
+            $result = $this->hpCloudObj->sendMessageToQueue($queueName,base64_encode($messageBody),$this->hpcloud_messaging_url);     
         }
         else {
+       
           $result  = $this->sqsClient->send_message($fullQueueUrl, base64_encode($messageBody));
+        
         }
-
+    
         if($this->object_storage == 'HpObjectStorage') {
            if($result == '') {
           $this->logger->err(self::LOG_MESSAGE_PREFIX.'addToQueue - could not send message to "'.$queueName);
@@ -86,7 +90,7 @@ class QueueUtil implements QueueUtilInterface
         }
 
         $this->logger->debug(self::LOG_MESSAGE_PREFIX.'addToQueue - message successfully sent to queue "'.$fullQueueUrl.'".');
-
+          
         return true;
     }
 
@@ -118,9 +122,12 @@ class QueueUtil implements QueueUtilInterface
     public function retrieveFromQueue(SqsMessageBase $message) {
         
       if($this->object_storage == 'HpObjectStorage') {
+      
          $queueName = $message->getQueueName();
          $this->logger->debug(self::LOG_MESSAGE_PREFIX.'retrieveFromHPQueue - retrieving message from queue "'.$queueName.'".');
+         
          $result = $this->hpCloudObj->getMessageFromQueue($queueName,$this->hpcloud_messaging_url);
+         
          // if there is error 
          if($result == ''){
           $this->logger->err(self::LOG_MESSAGE_PREFIX.'retrieveFromHPQueue - could not retrieve message from queue "'.$queueName);

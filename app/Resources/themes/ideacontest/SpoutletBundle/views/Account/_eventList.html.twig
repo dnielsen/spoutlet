@@ -24,7 +24,7 @@
                     {% set editUrl = path("admin_events_edit", { 'id': event.id }) %}
                     {% set rsvpUrl = path("global_event_rsvp") %}
                     {% set manageUrl = path("global_event_attendees", event.getLinkableRouteParameters) %}
-                    {% set deleteUrl = path("#") %}
+                    {% set deleteUrl = '#' %}
                 {% endif %}
 
                 <tr id="event-{{ event.contentType }}-{{ event.id }}" style="height: 40px;">

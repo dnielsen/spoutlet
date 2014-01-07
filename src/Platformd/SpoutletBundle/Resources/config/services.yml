@@ -142,14 +142,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: awa.site_util.current_site_set, method: setCurrentSiteId }
 
-    platformd.util.queue_util:
-        class: %services_queue_util_class%
-        arguments:
-            - "@platformd.sqs"
-            - "@logger"
-            - "%queue_prefix%"
-            - "%mock_queue_util_full_filename%"
-
     platformd.util.varnish_util:
         class: Platformd\SpoutletBundle\Util\VarnishUtil
         arguments:
