@@ -15,8 +15,17 @@
         } %}
 
         <div class="form-actions" style="float: left;">
-            <button type="submit" class="btn btn-primary" formnovalidate>{{ 'save' | trans({}, 'admin') }}</button>
-            <button id="cancel" class="btn btn-primary" rel="{{ group | pd_link }}" style="margin-left: 10px;">Cancel</button>
+            <input type="submit" value="{{ 'save' | trans({}, 'admin') }}" formnovalidate>
+            <input type="button" id="cancel" value="Cancel" rel="{{ group | pd_link }}">
+            {% set numEntrySets =  group.entrySets|length %}
+            {% set numEvents =  group.numEvents %}
+            {% if numEntrySets > 0 or numEvents > 0 %}
+                <input type="button" class="spcr-l" style="background: #929292" value="Delete Disabled" title="A Group must not contain any lists or events in order to be deleted. This Group contains {{ numEntrySets }} lists and {{ numEvents }} events."></input>
+            {% else %}
+                <a href="{{ path('group_delete', { 'slug': group.slug }) }}">
+                    <input type="button" value="Delete" class="spcr-l redButton" onclick="return confirm('Are you sure you want to delete this group?');">
+                </a>
+            {% endif %}
         </div>
     </form>
 {% endblock %}
