@@ -3,33 +3,40 @@
         <ul class="sf-menu sf-js-enabled sf-list" id="nav-list">
             <li><a href="{{ path('about') }}">About</a></li>
 
-            {% set currentRoute = app.request.get('_route') %}
-
-            {% if app.request.get('groupSlug')|default %}
-                {% set group_id = app.request.get('groupSlug') %}
-            {% elseif app.request.get('slug')|default %}
-                {% set group_id = app.request.get('slug') %}
-            {% endif %}
-
-            {% if app.request.get('eventId')|default %}
-                {% set event_id = app.request.get('eventId') %}
-            {% endif %}
-
-            {% if app.request.get('entrySetId')|default %}
-                {% set entrySet_id = app.request.get('entrySetId') %}
-                {% if entrySet|default is not empty %}
+            {% set _isOwner = false %}
+            {% if app.request.get('entryId')|default %}
+                {% set menu_scope = 'entry' %}
+                {% set _key = app.request.get('entryId') %}
+                {% set _key2 = app.request.get('entrySetId') %}
+                {% if idea|default %}
+                    {% set _isOwner = (idea.creator == app.user) or (is_granted('ROLE_ADMIN')) %}
+                {% endif %}
+            {% elseif app.request.get('entrySetId')|default %}
+                {% set menu_scope = 'entry_set' %}
+                {% set _key = app.request.get('entrySetId') %}
+                {% if entrySet|default %}
                     {% if entrySet.entrySetRegistration.scope == "EventBundle:GroupEvent" %}
                         {% if event|default %}
-                            {% set parentOwner = event.user %}
-                            {% set event_id = event.id %}
-                            {% set group_id = event.group.slug %}
+                            {% set _isOwner = (event.user == app.user) or (is_granted('ROLE_ADMIN')) %}
                         {% endif %}
                     {% elseif entrySet.entrySetRegistration.scope == "GroupBundle:Group" %}
                         {% if group|default %}
-                            {% set parentOwner = group.owner %}
-                            {% set group_id = group.slug %}
+                            {% set _isOwner = (group.owner == app.user) or (is_granted('ROLE_ADMIN')) %}
                         {% endif %}
                     {% endif %}
+                {% endif %}
+            {% elseif app.request.get('eventId')|default %}
+                {% set menu_scope = 'event' %}
+                {% set _key = app.request.get('eventId') %}
+                {% set _key2 = app.request.get('groupSlug') %}
+                {% if event|default %}
+                    {% set _isOwner = (event.user == app.user) or (is_granted('ROLE_ADMIN')) %}
+                {% endif %}
+            {% elseif (app.request.get('groupSlug')|default) or (app.request.get('slug')|default) %}
+                {% set menu_scope = 'group' %}
+                {% set _key = app.request.get('groupSlug')|default ? app.request.get('groupSlug') : app.request.get('slug')%}
+                {% if group|default %}
+                    {% set _isOwner = (group.owner == app.user) or (is_granted('ROLE_ADMIN')) %}
                 {% endif %}
             {% endif %}
 
@@ -53,37 +60,30 @@
                 </ul>
             </li>
 
+            {% set _here = app.request.get('_route') %}
             {% if app.user %}
-            <li class="more">
-                <a>{{ 'platformd.layout.main_menu.settings' | pd_trans }}</a>
-                <ul>
-                    <li><a href="{{ path('accounts_settings') }}">Account</a></li>
-
-                    {% if group_id is defined %}
-                        {% if group is defined %}
-                            {% if (group.owner == app.user) or (is_granted('ROLE_ADMIN')) %}
-                                <li><a href="{{ path('group_edit', {'slug': group_id}) }}">Group</a></li>
+                <li class="more">
+                    <a>{{ 'platformd.layout.main_menu.settings' | pd_trans }}</a>
+                    <ul>
+                        {% if menu_scope == 'group' %}
+                            {% if _isOwner and (_here != 'group_edit') %}
+                                <li><a href="{{ path('group_edit', {'slug': _key}) }}">Edit Group Details</a></li>
+                            {% endif %}
+                        {% elseif menu_scope == 'event' %}
+                            {% if _isOwner and (_here != 'idea_admin_event') %}
+                                <li><a href="{{ path('idea_admin_event', {'eventId': _key, 'groupSlug': _key2}) }}">Edit Event Details</a></li>
+                            {% endif %}
+                        {% elseif menu_scope == 'entry_set' %}
+                            {% if _isOwner and (_here != 'entry_set_edit') %}
+                                <li><a href="{{ path('entry_set_edit', {'entrySetId': _key}) }}">Edit List Details</a></li>
+                            {% endif %}
+                        {% elseif menu_scope == 'entry' %}
+                            {% if _isOwner  and (_here != 'idea_edit_form') %}
+                                <li><a href="{{ path('idea_edit_form', {'entryId': _key, 'entrySetId': _key2}) }}">Edit Entry Details</a></li>
                             {% endif %}
                         {% endif %}
-                    {% endif %}
-
-                    {% if event_id is defined %}
-                        {% if event is defined %}
-                            {% if (event.user == app.user) or (is_granted('ROLE_ADMIN')) %}
-                                <li><a href="{{ path('idea_admin_event', {'groupSlug': group_id, 'eventId': event_id}) }}">Event</a></li>
-                            {% endif %}
-                        {% endif %}
-                    {% endif %}
-
-                    {% if (entrySet is defined)  %}
-                        {% if parentOwner is defined %}
-                            {% if (parentOwner == app.user) or (is_granted('ROLE_ADMIN')) %}
-                                <li><a href="{{ path('entry_set_edit', {'entrySetId': entrySet.id}) }}">List</a></li>
-                            {% endif %}
-                        {% endif %}
-                    {% endif %}
-                </ul>
-            </li>
+                    </ul>
+                </li>
             {% endif %}
 
             <li><a href="{{ path('contact') }}">Contact Us</a></li>
