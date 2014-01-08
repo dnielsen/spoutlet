@@ -3,11 +3,8 @@
 {% block title 'Edit Group Page' %}
 
 {% block content %}
-    <h1>
-        <i class="icon-pencil"></i>
-        Edit Group Page
 
-    </h1>
+    <h1>Edit Group</h1>
 
     <form action="{{ path('group_update', { 'slug': group.slug }) }}" method="post" {{ form_enctype(edit_form) }} class="form-horizontal">
         {% include 'GroupBundle:Group:_form.html.twig' with {
