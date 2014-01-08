@@ -105,6 +105,11 @@ idea_admin_export_votes:
     requirements:
       _method: GET
 
+all_event_acl_fix:
+    pattern:    /admin/fixEventACLs
+    defaults:   { _controller: IdeaBundle:Admin:fixEventACLs }
+
+
 # NON-ADMIN
 
 idea_create:
