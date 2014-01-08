@@ -4,12 +4,15 @@
             <li><a href="{{ path('about') }}">About</a></li>
 
             {% set _isOwner = false %}
+            {% set _canDelete = false %}
+            {% set menu_scope = 'other' %}
             {% if app.request.get('entryId')|default %}
                 {% set menu_scope = 'entry' %}
                 {% set _key = app.request.get('entryId') %}
                 {% set _key2 = app.request.get('entrySetId') %}
                 {% if idea|default %}
                     {% set _isOwner = (idea.creator == app.user) or (is_granted('ROLE_ADMIN')) %}
+                    {% set _canDelete = _isOwner %}
                 {% endif %}
             {% elseif app.request.get('entrySetId')|default %}
                 {% set menu_scope = 'entry_set' %}
@@ -24,6 +27,7 @@
                             {% set _isOwner = (group.owner == app.user) or (is_granted('ROLE_ADMIN')) %}
                         {% endif %}
                     {% endif %}
+                    {% set _canDelete = _isOwner %}
                 {% endif %}
             {% elseif app.request.get('eventId')|default %}
                 {% set menu_scope = 'event' %}
@@ -31,12 +35,21 @@
                 {% set _key2 = app.request.get('groupSlug') %}
                 {% if event|default %}
                     {% set _isOwner = (event.user == app.user) or (is_granted('ROLE_ADMIN')) %}
+                    {% set _canDelete = _isOwner and (event.entrySets|length == 0) %}
+                    {% set _canContact = _isOwner and (event.registrationOption == "REGISTRATION_ENABLED") and (event.approved == true) %}
+                    {% if  event.entrySetRegistration|default %}
+                        {% set _regId = event.entrySetRegistration.id %}
+                    {% endif %}
                 {% endif %}
             {% elseif (app.request.get('groupSlug')|default) or (app.request.get('slug')|default) %}
                 {% set menu_scope = 'group' %}
                 {% set _key = app.request.get('groupSlug')|default ? app.request.get('groupSlug') : app.request.get('slug')%}
                 {% if group|default %}
                     {% set _isOwner = (group.owner == app.user) or (is_granted('ROLE_ADMIN')) %}
+                    {% set _canDelete = _isOwner and (group.entrySets|length == 0) and (group.numEvents == 0) %}
+                    {% if  group.entrySetRegistration|default %}
+                        {% set _regId = group.entrySetRegistration.id %}
+                    {% endif %}
                 {% endif %}
             {% endif %}
 
@@ -66,20 +79,46 @@
                     <a>{{ 'platformd.layout.main_menu.settings' | pd_trans }}</a>
                     <ul>
                         {% if menu_scope == 'group' %}
-                            {% if _isOwner and (_here != 'group_edit') %}
+                            {% if _isOwner %}
                                 <li><a href="{{ path('group_edit', {'slug': _key}) }}">Edit Group Details</a></li>
+                                <li><a href="{{ path('idea_admin_event', {'groupSlug': _key}) }}">Create Event</a></li>
+                                {% if _regId|default %}
+                                    <li><a href = "{{ path('entry_set_new', {'registrationId': _regId, 'entrySetId': 'new'}) }}">Create List</a></li>
+                                {% endif %}
+                                {% if not group.isPublic %}
+                                    <li><a href="{{ path('group_applications', { 'slug': _key }) }}">Member Approvals</a></li>
+                                {% endif %}
+                            {% endif %}
+                            {% if _canDelete %}
+                                <li><a href="{{  path('group_delete', {'slug': _key }) }}">Delete Group</a></li>
                             {% endif %}
                         {% elseif menu_scope == 'event' %}
-                            {% if _isOwner and (_here != 'idea_admin_event') %}
+                            {% if _isOwner %}
                                 <li><a href="{{ path('idea_admin_event', {'eventId': _key, 'groupSlug': _key2}) }}">Edit Event Details</a></li>
+                                {% if _regId|default %}
+                                    <li><a href="{{ path('group_event_attendees', {'eventId': _key, 'groupSlug': _key2}) }}">Manage Attendees</a></li>
+                                {% endif %}
+                                {% if _canContact %}
+                                    <li><a href="{{ path('group_event_contact', {'eventId': _key, 'groupSlug': _key2}) }}">Email Attendees</a></li>
+                                {% endif %}
+                                <li><a href = "{{ path('entry_set_new', {'registrationId': _regId, 'entrySetId': 'new'}) }}">Create List</a></li>
+                            {% endif %}
+                            {% if _canDelete %}
+                                <li><a href="{{ path("group_event_delete", {"eventId": _key, "groupSlug": _key2}) }}">Delete Event</a></li>
                             {% endif %}
                         {% elseif menu_scope == 'entry_set' %}
-                            {% if _isOwner and (_here != 'entry_set_edit') %}
+                            {% if _isOwner %}
                                 <li><a href="{{ path('entry_set_edit', {'entrySetId': _key}) }}">Edit List Details</a></li>
                             {% endif %}
+                            {% if _canDelete %}
+                                <li><a href="{{ path('entry_set_delete', {'entrySetId': _key}) }}">Delete List</a></li>
+                            {% endif %}
                         {% elseif menu_scope == 'entry' %}
-                            {% if _isOwner  and (_here != 'idea_edit_form') %}
+                            {% if _isOwner %}
                                 <li><a href="{{ path('idea_edit_form', {'entryId': _key, 'entrySetId': _key2}) }}">Edit Entry Details</a></li>
+                            {% endif %}
+                            {% if _canDelete %}
+                                <li><a href="{{ path('idea_delete', {'entryId': _key, 'entrySetId': _key2}) }}">Delete Entry</a></li>
                             {% endif %}
                         {% endif %}
                     </ul>

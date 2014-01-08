@@ -201,8 +201,8 @@ idea_comment_delete:
 idea_delete:
     pattern:    /list/{entrySetId}/entry/{entryId}/delete
     defaults:   { _controller: IdeaBundle:Idea:delete }
-    requirements:
-     _method:   POST
+#    requirements:
+#     _method:   POST
 
 login:
     pattern:   /login

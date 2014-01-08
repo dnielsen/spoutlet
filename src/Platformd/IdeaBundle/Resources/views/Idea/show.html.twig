@@ -34,10 +34,6 @@
             {% else %}[This {{ entrySet.type }} is private]
             {% endif %}
         </div>
-
-        {% if canEdit %}
-            <a href = "{{ path('idea_edit_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="right">Edit</a>
-        {% endif %}
         <br class="clr"><br>
 
         {% if idea.stage %}<hr/><strong>Idea Stage:</strong> {{ idea.stage }}<hr/>{% endif %}

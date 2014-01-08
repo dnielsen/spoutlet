@@ -14,8 +14,18 @@ use Platformd\IdeaBundle\Entity\VoteCriteria;
 use Platformd\EventBundle\Entity\Event;
 use Platformd\IdeaBundle\Entity\EntrySet;
 use Platformd\EventBundle\Entity\GroupEvent;
+use Platformd\GroupBundle\Entity\Group;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
+
+use Symfony\Component\EventDispatcher\EventDispatcher,
+    Symfony\Component\Security\Core\SecurityContextInterface,
+    Symfony\Component\Security\Acl\Model\MutableAclProviderInterface as aclProvider,
+    Symfony\Component\Security\Acl\Domain\ObjectIdentity,
+    Symfony\Component\Security\Acl\Domain\UserSecurityIdentity,
+    Symfony\Component\Security\Acl\Permission\MaskBuilder,
+    Symfony\Component\Routing\RouterInterface
+;
 
 class AdminController extends Controller
 {
@@ -83,6 +93,14 @@ class AdminController extends Controller
                     $em->persist($esReg);
                     $em->flush();
                 }
+
+                // ACLs
+                $objectIdentity = ObjectIdentity::fromDomainObject($event);
+                $aclProvider = $this->container->get('security.acl.provider');
+                $acl = $aclProvider->createAcl($objectIdentity);
+                $securityIdentity = UserSecurityIdentity::fromAccount($event->getUser());
+                $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+                $aclProvider->updateAcl($acl);
 
                 return $this->redirect($this->generateUrl('group_event_view', array(
                         'groupSlug' => $groupSlug,
@@ -203,6 +221,8 @@ class AdminController extends Controller
             $em = $this->getDoctrine()->getEntityManager();
             $em->remove($entrySet);
             $em->flush();
+
+            $this->setFlash('success', 'List \''.$entrySet->getName().'\' has been deleted.');
 
             $url = $this->generateUrl($parent->getLinkableRouteName(), $parent->getLinkableRouteParameters());
             return $this->redirect($url);

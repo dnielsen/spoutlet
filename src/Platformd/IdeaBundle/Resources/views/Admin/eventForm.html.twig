@@ -54,14 +54,15 @@
 
         {{ form_rest(form) }}
 
-        <a href="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventId': event.id}) }}">
-            Add Images
-        </a>
+        {% if not isNew %}
+            <a href="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventId': event.id}) }}">Add Images</a>
+        {% endif %}
+
         <br class="clr"/>
         <br/>
 
 	    <input type="submit" value="Submit"/>
-		<button type="submit" value="Cancel" name="cancel" formnovalidate/>Cancel</button>
+		<button type="submit" value="Cancel" name="cancel" formnovalidate>Cancel</button>
 
         {% if not isNew %}
             {% if event.entrySets|length == 0 %}
@@ -71,7 +72,6 @@
             {% else %}
                 <input type="button" class="spcr-l greyButton" value="Delete Disabled" title="Remove the {{ event.EntrySets|length }} list(s) attached to this Event to enable the delete option.">
             {% endif %}
-
         {% endif %}
 
     </form>
