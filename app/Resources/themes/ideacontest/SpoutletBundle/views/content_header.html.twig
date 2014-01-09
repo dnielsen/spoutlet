@@ -4,9 +4,9 @@
     jQuery(document).ready(function($) {
         var GROUPS = [];
 
-        var url = window.location + 'app_dev.php/api/allGroups/';
+        var url = 'app.php'+'{{ path('api_all_groups') }}';
 
-        $.getJSON(url + '?callback=?', null,
+        $.getJSON(url, null,
                 function(data) {
                     console.log(data);
                     //Initially populate with all groups
@@ -44,7 +44,6 @@
                         hits.push(group);
                     }
                 }
-                console.log(hits);
 
                 var col1 = $("#groups-col1");
                 var col2 = $("#groups-col2");
