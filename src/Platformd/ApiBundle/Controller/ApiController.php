@@ -202,16 +202,20 @@ class ApiController extends Controller
                 'url'       => $this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
             );
         }
-        $nextEvent = array(
-            'id'            => $nextEvent->getId(),
-            'name'          => $nextEvent->getName(),
-            'daterange'     => $nextEvent->getDateRangeString(),
-            'timerange'     => $nextEvent->getStartsAt()->format('g:i a').' - '.$nextEvent->getEndsAt()->format('g:i a'),
-            'location'      => $nextEvent->getLocation(),
-            'address1'      => $nextEvent->getAddress1(),
-            'address2'      => $nextEvent->getAddress2(),
-            'url'           => $this->generateUrl($nextEvent->getLinkableRouteName(), $nextEvent->getLinkableRouteParameters(), true),
-        );
+
+        $nextEvent = array();
+        if($nextEvent != null) {
+            $nextEvent = array(
+                'id'            => $nextEvent->getId(),
+                'name'          => $nextEvent->getName(),
+                'daterange'     => $nextEvent->getDateRangeString(),
+                'timerange'     => $nextEvent->getStartsAt()->format('g:i a').' - '.$nextEvent->getEndsAt()->format('g:i a'),
+                'location'      => $nextEvent->getLocation(),
+                'address1'      => $nextEvent->getAddress1(),
+                'address2'      => $nextEvent->getAddress2(),
+                'url'           => $this->generateUrl($nextEvent->getLinkableRouteName(), $nextEvent->getLinkableRouteParameters(), true),
+            );
+        }
 
 
         $groupData = array(
@@ -230,6 +234,49 @@ class ApiController extends Controller
 
         $encoder = new JsonEncoder();
         $jsonData = $encoder->encode($groupData, $format = 'json');
+        $response->setContent($this->jsonpWrapper($request,$jsonData));
+        $response->headers->set('Content-Type', 'application/json');
+
+
+        return $response;
+    }
+
+    public function allGroupsAction(Request $request) {
+        $site = $this->getCurrentSite();
+        $groups = $this->getGroupManager()->getAllGroupsForSite($site);
+
+        $response= new Response();
+        if (!$groups){
+            return $response->setStatusCode(404);
+        }
+
+        $response->setStatusCode(200);
+
+        $groupsData = array();
+        foreach($groups as $group) {
+
+            //only public groups
+            if(!$group->getIsPublic()) {
+                continue;
+            }
+
+            $data = array(
+                'name' => $group->getName(),
+                'url'  => $this->generateUrl($group->getLinkableRouteName(), $group->getLinkableRouteParameters(), true),
+            );
+            $groupsData[] = $data;
+        }
+
+        $responseData = array(
+            'meta'                 => array(
+                'self'  => $this->generateUrl('api_all_groups', array(), true),
+                'mimetype' => "application/json"
+            ),
+            'groups'                => $groupsData
+        );
+
+        $encoder = new JsonEncoder();
+        $jsonData = $encoder->encode($responseData, $format = 'json');
         $response->setContent($this->jsonpWrapper($request,$jsonData));
         $response->headers->set('Content-Type', 'application/json');
 

@@ -1,12 +1,94 @@
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
 <script type="text/javascript" src="/themes/ideacontest/spoutlet/js/gmaps_custom.js"></script>
+<script>
+    jQuery(document).ready(function($) {
+        var GROUPS = [];
+
+        var url = window.location + 'app_dev.php/api/allGroups/';
+
+        $.getJSON(url + '?callback=?', null,
+                function(data) {
+                    console.log(data);
+                    //Initially populate with all groups
+                    GROUPS = data.groups;
+                    if(GROUPS) {
+                        for (var i=0; i<GROUPS.length; i+=2){
+                            var group = GROUPS[i];
+
+                            $("#groups-col1").append("<li><a href=\""+group.url+"\">"+group.name+"</a></li>");
+                            if(i+1<GROUPS.length) {
+                                var group2 = GROUPS[i+1];
+                                $("#groups-col2").append("<li><a href=\""+group2.url+"\">"+group2.name+"</a></li>");
+                            }
+                        }
+                    }
+                });
+
+        //Register search callback
+        var globalTimeout = null;
+        var searchBox = $('#groups-by-topic-search');
+        searchBox.keyup(function() {
+            if (globalTimeout != null) {
+                clearTimeout(globalTimeout);
+            }
+            globalTimeout = setTimeout(function() {
+                globalTimeout = null;
+
+                //ajax code
+                var topic = searchBox.val();
+
+                var hits = [];
+                for(var i=0; i<GROUPS.length; i++) {
+                    var group = GROUPS[i];
+                    if(group.name.toLowerCase().indexOf(topic) != -1) {
+                        hits.push(group);
+                    }
+                }
+                console.log(hits);
+
+                var col1 = $("#groups-col1");
+                var col2 = $("#groups-col2");
+
+                col1.empty();
+                col2.empty();
+
+                for (var i=0; i<hits.length; i+=2) {
+                    var group = hits[i];
+
+                    col1.append("<li><a href=\""+group.url+"\">"+group.name+"</a></li>");
+
+                    if(i+1<hits.length) {
+                        var group2 = hits[i+1];
+                        col2.append("<li><a href=\""+group2.url+"\">"+group2.name+"</a></li>");
+                    }
+                }
+
+            }, 200);
+        });
+    });
+</script>
 
 <div id="content-header">
     <div id="row-1" class="std_2col">
-        <div id="rotator-wrapper">
-            <div id="rotator">
-                {% render "SpoutletBundle:Default:banner" %}
+
+        <div id="group-by-topic">
+            <h2 class="spcr-b2">Find a Group by Topic</h2>
+
+            <input id="groups-by-topic-search" type="text" size="80" placeholder="Enter Topic" autocomplete="off">
+
+            <div class="group-list">
+                <ul id="groups-col1">
+                </ul>
             </div>
+
+            <div class="group-list">
+                <ul id="groups-col2">
+                </ul>
+            </div>
+
+            <hr class="clr">
+
+            <p><em>Room for other content?</em></p>
         </div>
 
         {% render "SpoutletBundle:Default:groupsMap" %}
