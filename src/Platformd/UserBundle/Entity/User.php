@@ -476,6 +476,11 @@ class User extends BaseUser
     protected $eventRole = null;
 
     /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\EntrySet", mappedBy="creator")
+     */
+    protected $entrySets;
+
+    /**
      * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\Idea", mappedBy="creator")
      */
     protected $ideas;
@@ -1446,7 +1451,14 @@ class User extends BaseUser
     {
         return $this->comments;
     }
-
+    public function setEntrySets($entrySets)
+    {
+        $this->entrySets = $entrySets;
+    }
+    public function getEntrySets()
+    {
+        return $this->entrySets;
+    }
     public function addIdea($idea)
     {
         $this->ideas[] = $idea;

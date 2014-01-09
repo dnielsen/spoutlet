@@ -877,6 +877,22 @@ class IdeaController extends Controller
         ));
     }
 
+    public function userEntrySetsAction()
+    {
+        $userEntrySets = $this->getCurrentUser()->getEntrySets();
+
+        $parents = array();
+        foreach($userEntrySets as $entrySet) {
+            $parent = $this->getParentByEntrySet($entrySet);
+            $parents[$entrySet->getName()] = $parent;
+        }
+
+        return $this->render('IdeaBundle:Idea:userEntrySets.html.twig', array(
+            'entrySets' => $userEntrySets,
+            'parents'   => $parents,
+        ));
+    }
+
     //TODO: Move this to a model file?
     /******************************************************
      ****************    MODEL STUFF HERE    ***************

@@ -43,6 +43,11 @@ class EntrySet implements LinkableInterface {
     protected $name;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", inversedBy="entrySets")
+     */
+    protected $creator;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySetRegistry", cascade={"persist"})
      */
     protected $entrySetRegistration;
@@ -78,6 +83,16 @@ class EntrySet implements LinkableInterface {
     public function __construct()
     {
         $this->entries = new ArrayCollection();
+    }
+
+    public function setCreator($creator)
+    {
+        $this->creator = $creator;
+    }
+
+    public function getCreator()
+    {
+        return $this->creator;
     }
 
     public function getEntrySetRegistration() {
