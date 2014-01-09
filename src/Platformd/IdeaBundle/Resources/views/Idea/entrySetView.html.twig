@@ -3,8 +3,13 @@
 {% block content %}
 
     <h1 class = "left">{{ entrySet.name }} {% if showAllRounds == 'true' %}- All Rounds{% else %}{% if round > 1 %}- Round {{ round }}{% endif %}{% endif %}</h1>
-    <div class="clear"></div>
+    <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}">
+        <input type="submit" value="Add {{ entrySet.type | capitalize }}" class="right">
+    </a>
+
+    <div class="clr"></div>
     <div>
+
         {% if (entrySet.entries|length > 0) %}
         <form action = "{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" id='filterForm' method="get" class="left">
             <table>
@@ -16,29 +21,6 @@
             </table>
         </form>
         {% endif %}
-
-        {# TODO: push down authentication and membership check to the submit idea page #}
-        <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}">
-            <input type="submit" value="Add {{ entrySet.type | capitalize }}" class="right">
-        </a>
-
-        {#
-        {% if canSubmit %}
-           <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}">
-               <input type="submit" value="Add {{ entrySet.type | capitalize }}" class="right">
-           </a>
-        {% else %}
-            {% if event is defined and event is not null %}
-                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}">
-                   <input type="submit" value="Register" class="right">
-                </a>
-            {% elseif group is defined and group is not null %}
-                <a href="{{ path('group_join', {'slug': group.slug}) }}">
-                    <input type="submit" value="Register" class="right">
-                </a>
-            {% endif %}
-        {%  endif %}
-        #}
 
     </div>
     
