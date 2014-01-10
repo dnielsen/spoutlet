@@ -1,19 +1,110 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        jQuery(document).ready(function($) {
+            var GROUPS = [];
+
+            var url = '{{ path('api_all_groups') }}';
+
+            $.getJSON(url, null,
+                    function(data) {
+                        //Initially populate with all groups
+                        GROUPS = data.groups;
+                        if(GROUPS) {
+                            for (var i=0; i<GROUPS.length; i+=2){
+                                var group = GROUPS[i];
+
+                                $("#groups-col1").append("<li><a href=\""+group.url+"\">"+group.name+"</a></li>");
+                                if(i+1<GROUPS.length) {
+                                    var group2 = GROUPS[i+1];
+                                    $("#groups-col2").append("<li><a href=\""+group2.url+"\">"+group2.name+"</a></li>");
+                                }
+                            }
+                        }
+                    });
+
+            //Register search callback
+            var globalTimeout = null;
+            var searchBox = $('#groups-by-topic-search');
+            searchBox.keyup(function() {
+                if (globalTimeout != null) {
+                    clearTimeout(globalTimeout);
+                }
+                globalTimeout = setTimeout(function() {
+                    globalTimeout = null;
+
+                    //ajax code
+                    var topic = searchBox.val();
+
+                    var hits = [];
+                    for(var i=0; i<GROUPS.length; i++) {
+                        var group = GROUPS[i];
+                        if(group.name.toLowerCase().indexOf(topic) != -1) {
+                            hits.push(group);
+                        }
+                    }
+
+                    var col1 = $("#groups-col1");
+                    var col2 = $("#groups-col2");
+
+                    col1.empty();
+                    col2.empty();
+
+                    for (var i=0; i<hits.length; i+=2) {
+                        var group = hits[i];
+
+                        col1.append("<li><a href=\""+group.url+"\">"+group.name+"</a></li>");
+
+                        if(i+1<hits.length) {
+                            var group2 = hits[i+1];
+                            col2.append("<li><a href=\""+group2.url+"\">"+group2.name+"</a></li>");
+                        }
+                    }
+
+                }, 200);
+            });
+        });
+    </script>
+{% endblock %}
+
+{% set sidebar = true %}
+
 {% block content %}
+    {#{% include 'SpoutletBundle::content_header.html.twig' %}#}
 
-    {% include 'SpoutletBundle::content_header.html.twig' %}
+    <div id="group-by-topic">
+        <h2 class="spcr-b2">Find a Group by Topic</h2>
 
-    <div id="row1">
-        <div class="cBx1">
-            <h2 class="left spcr-b">Popular Groups</h2>
-            <a href="{{ path('group_new') }}" class="left spcr-l2 btn">Create Group</a>
-            <hr style="clear:both"/>
-            {% render url('_popular_groups') %}
+        <input id="groups-by-topic-search" type="text" size="80" placeholder="Enter Topic" autocomplete="off">
+
+        <div class="group-list">
+            <ul id="groups-col1">
+            </ul>
         </div>
 
-        {% render 'SpoutletBundle:Default:groupEvents' %}
+        <div class="group-list">
+            <ul id="groups-col2">
+            </ul>
+        </div>
 
+        <hr class="clr">
+
+        <p><em>Room for other content?</em></p>
     </div>
 
+    <hr>
+
+    <h2 class="left spcr-b">Popular Groups</h2>
+
+    <a href="{{ path('group_new') }}" class="right spcr-l2 btn bld bgBtn">Create Group &rsaquo;</a>
+    {% render url('_popular_groups') %}
+    <br class="clr"/>
+{% endblock %}
+
+{% block sidebar %}
+    {% render "SpoutletBundle:Default:groupsMap" %}
+    <hr class="clr">
+    {% render 'SpoutletBundle:Default:groupEvents' %}
 {% endblock %}

@@ -53,13 +53,38 @@ h1 {
 	font-size: 26px;
 	line-height: 30px;
 }
-
+	#brand-group-txt {
+		position: absolute;
+		top: 155px;
+		left: 0;
+		font-size: 42px;
+	}
 h2 {
 	font-size: 22px;
 	line-height: 26px;
 }
-	#intro h2, .cBx2 h3, .col2 h2 {
+	h2.spnsrBar {
+		padding: 10px;
+		background: #e9e9e9;
+		-webkit-border-radius: 6px;
+		-moz-border-radius: 6px;
+		border-radius: 6px;
+		behavior: url("PIE.htc");
+	}
+	h2 img {
+		vertical-align: middle;
+	}	
+	.cBx2 h3, .col2 h2 {
 		margin-bottom: 10px;
+	}
+	/* h2.greyBar {
+		padding: 8px 12px;
+		margin-bottom: 5px;
+		background: #e9e9e9;
+		-webkit-border-radius: 6px;
+		-moz-border-radius: 6px;
+		border-radius: 6px;
+		behavior: url("PIE.htc");
 	}
 	h2.stepBar {
 		width: 360px;
@@ -74,7 +99,7 @@ h2 {
 	}
    .stepBar a, .stepBar a:visited {
         color:#ffffff;
-    }
+    } */
 h3 { 
 	font-size: 16px;
 	line-height: 20px;
@@ -115,17 +140,10 @@ h5 {
 .grn { color: #abe224; }
 .gry { color: #929292; }
 
-.form_error {
-    color: white;
-    background-color: red;
-    width: 300px;
-}
-
 .bld { font-weight: bold; }
+.nrml { font-weight: normal; }
 
-#colRt .twtr-tweet .twtr-tweet-text p {
-   font-size: 13px !important;
-}
+.caps { text-transform: uppercase; }
 
 /*::::::::::::::: MISC POSITION PROPERTIES :::::::::::::::*/
 
@@ -133,11 +151,13 @@ h5 {
 .spcr-t { margin-top: 10px; }
 .spcr-t2 { margin-top: 45px; }
 .spcr-t3 { margin-top: 25px; }
+.spcr-t4 { margin-top: 30px !important; }
 .spcr-b { margin-bottom: 25px; }
 .spcr-b2 { margin-bottom: 10px; }
 .spcr-b3 { margin-bottom: 15px; }
 .spcr-l { margin-left: 25px; }
 .spcr-l2 { margin-left: 75px; }
+.spcr-l3 { margin-left: 10px; }
 .spcr-r { margin-right: 15px; }
 .spcr-r2 { margin-right: 90px; }
 
@@ -153,10 +173,13 @@ h5 {
 
 .padlft { padding-left: 20px; }
 .padrt { padding-right: 20px; }
+.padbtm { padding-bottom: 10px; }
 .marginlft { margin-left: 10px; }
 .marginrt { margin-right: 10px; }
 
 .mgnNeg { margin-top: -10px; }
+
+/* misc. borders */
 
 .bdr {
     padding-bottom: 5px;
@@ -166,6 +189,7 @@ h5 {
     padding: 10px;
     border: 1px dashed #ccc;
 }
+
 .fillWidth {
     width:100% !important;
 }

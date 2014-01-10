@@ -1,0 +1,45 @@
+
+/* Example Styles for Demo */
+
+.etabs {
+	margin: 0;
+	padding: 0;
+}
+.tabLnk {
+	display: inline-block;
+	zoom: 1;
+	*display: inline;
+	/* border: 1px dashed #ccc;
+	border-bottom: none; */
+}
+.tabLnk a {
+	display: block;
+	padding: 0 10px;
+	outline: none;
+	font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
+	font-size: 21px;
+}
+.tabLnk a:hover {
+	text-decoration: none;
+}
+.tabLnk.active {
+   	position: relative;
+	top: 6px;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	background: #fff;
+	border: 1px dashed #ccc;
+	border-bottom: none;
+}
+.tabLnk a.active {
+	font-weight: bold;
+}
+.tab-container .panel-container {
+	background: #fff;
+	border-top: 1px dashed #ccc;
+	border-bottom: 1px dashed #ccc;
+	padding: 10px 0;
+}
+.panel-container {
+	margin-bottom: 10px;
+}

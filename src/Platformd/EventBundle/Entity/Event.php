@@ -1011,7 +1011,12 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     }
 
     public function getEntrySets() {
-        return $this->entrySetRegistration->getEntrySets();
+        if($this->entrySetRegistration){
+            return $this->entrySetRegistration->getEntrySets();
+        }
+        else {
+            return array();
+        }
     }
 
     public function isMemberOf(User $user) {

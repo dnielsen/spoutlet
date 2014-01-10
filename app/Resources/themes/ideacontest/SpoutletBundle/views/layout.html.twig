@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+    {% set _isFrontPage = app.request.get('_route') == 'default_index' %}
     <head>
         <meta charset="UTF-8" />
         <title>
@@ -53,7 +54,7 @@
 
                 <div class="clear"></div>
 
-                {% if event is defined and event is not null%}
+                {% if event|default %}
                     {% if event.private and not isAdmin %}
                         {% if app.user is null %}
                             This event is private. Please log in to view this page.<br/><br/>
@@ -80,20 +81,21 @@
                     {% set show = 'true' %}
                 {% endif %}
 
-                {% if show == 'true' %}
-
-                    {% if sidebar is defined and sidebar == true %}
-                        <div class="col1">
+                {% if (show == 'true') or (_isFrontPage) %}
+                    {% if sidebar|default %}
+                        <div id="contentLft{% if _isFrontPage %}MP{% endif %}">
                     {% endif %}
 
-                    {% include 'IdeaBundle:Idea:breadcrumbs.html.twig' %}
+                    {% if _isFrontPage %}
+                        {% include 'IdeaBundle:Idea:breadcrumbs.html.twig' %}
+                    {% endif %}
 
                     {% block content %}
                     {% endblock %}
 
-                    {% if sidebar is defined and sidebar == true %}
+                    {% if sidebar|default %}
                         </div>
-                        <div class="col2">
+                        <div id="contentRt{% if _isFrontPage %}MP{% endif %}">
                         {% block sidebar %}
                             {% include 'IdeaBundle::sidebar.html.twig' %}
                         {% endblock %}
@@ -101,13 +103,10 @@
                     {% endif %}
                 {% endif %}
 
-
-                <div class="clear"></div>
-
+                <br class="clr">
             </div>
             <div class="push"></div> <!-- needed for sticky footer -->
         </div><!-- end wrapper-ht -->
-
 
         {% include 'SpoutletBundle::footer.html.twig' %}
 	</body>

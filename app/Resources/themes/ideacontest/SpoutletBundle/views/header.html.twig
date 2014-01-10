@@ -1,7 +1,11 @@
-<div id="header">
+<div id="{% if _isFrontPage %}header-campsite{% else %}header-group{% endif %}">
+
+    {% block pre_topNav %}
+    {% endblock %}
 
     <div id="topNav">
         <ul>
+            <li><a href="{{ path('default_index') }}">Home</a></li>
             {% if app.user is null %}
                 <li><a href="{{ path('fos_user_security_login') }}">{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}</a></li>
                 <li><a href="{{ path('fos_user_registration_register') }}">Join Now</a></li>
@@ -9,14 +13,16 @@
                 <li><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a></li>
                 <li><a href="{{ path('accounts_settings') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
             {% endif %}
+            <li><a href="{{ path('global_events_index') }}">{{ 'platformd.layout.main_menu.events' | pd_trans }}</a></li>
+            <li><a href="{{ path('groups') }}">{{ 'platformd.layout.main_menu.groups' | pd_trans }}</a></li>
+
             {% if group is defined and group is not null %}
                 {% if event is defined and event is not null %}
                     {% if is_granted('ROLE_ADMIN') or event.user == (app.user) %}
-                        <li><a href="{{ path('idea_admin', {'groupSlug': group.slug, 'eventId': event.id}) }}">Event Admin</a></li>
+                        <li><a href="{{ path('idea_admin', {'groupSlug': group.slug, 'eventId': event.id}) }}">Delete me --> Event Admin</a></li>
                     {% endif %}
                 {% endif %}
             {% endif %}
-            <li><a href="{{ path('default_index') }}">Home</a></li>
             {% if is_granted("ROLE_SUPER_ADMIN") %}
                 <li><a href="{{ path('admin_index') }}">Site Admin</a></li>
             {% endif %}
@@ -40,8 +46,12 @@
         {% if asset_exists('themes/' ~ site.theme ~ '/spoutlet/img/logo_'~site.defaultLocale~'_large.jpg') %}
             <a href="{{ path('default_index') }}"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/logo_'~site.defaultLocale~'_large.jpg') }}" alt="Campsite" id="brand"></a>
         {% else %}
-            <a href="{{ path('default_index') }}"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/logo_'~site.defaultLocale~'.jpg') }}" alt="Campsite" id="brand_small"></a>
-            <img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/tagline.gif') }}" alt="" width="235" height="31" id="tagline">
+            <a href="{{ path('default_index') }}"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/logo_'~site.defaultLocale~'.jpg') }}" width="305" height="72" alt="Campsite" id="brand-campsite"></a>
+            <div id="tagline-campsite">
+                <span class="gry">share.</span>
+                <span class="gry">learn.</span>
+                <span class="gry">grow.</span>
+            </div>
         {% endif %}
     {% endblock %}
 

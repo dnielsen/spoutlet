@@ -205,3 +205,10 @@ a.profile-cancelBtn {
 .feedback:hover {
     background-color: rgba(135, 135, 135, 0.50);
 }
+
+#groupHeader {
+    position: absolute;
+    top: 110px;
+    font-size: 72px;
+    color: gray;
+}

@@ -37,7 +37,7 @@
                     {% set _isOwner = (event.user == app.user) or (is_granted('ROLE_ADMIN')) %}
                     {% set _canDelete = _isOwner and (event.entrySets|length == 0) %}
                     {% set _canContact = _isOwner and (event.registrationOption == "REGISTRATION_ENABLED") and (event.approved == true) %}
-                    {% if  event.entrySetRegistration|default %}
+                    {% if event.entrySetRegistration|default %}
                         {% set _regId = event.entrySetRegistration.id %}
                     {% endif %}
                 {% endif %}
@@ -53,25 +53,25 @@
                 {% endif %}
             {% endif %}
 
-            <li class="more">
-                <a>Events</a>
-                <ul>
-                    <li><a href="{{ path('global_events_index') }}">All Events</a></li>
-                    <li><a href="{{ path('accounts_events') }}">My Events</a></li>
-                    {% if group_id is defined %}
-                        <li><a href="{{ path('idea_admin_event', {'groupSlug': group_id, 'eventId': 'newEvent'}) }}">Create Event</a></li>
-                    {% endif %}
-                </ul>
-            </li>
+            {#<li class="more">#}
+                {#<a>Events</a>#}
+                {#<ul>#}
+                    {#<li><a href="{{ path('global_events_index') }}">All Events</a></li>#}
+                    {#<li><a href="{{ path('accounts_events') }}">My Events</a></li>#}
+                    {#{% if group_id is defined %}#}
+                        {#<li><a href="{{ path('idea_admin_event', {'groupSlug': group_id, 'eventId': 'newEvent'}) }}">Create Event</a></li>#}
+                    {#{% endif %}#}
+                {#</ul>#}
+            {#</li>#}
 
-            <li class="more">
-                <a>{{ 'platformd.layout.main_menu.groups' | pd_trans }}</a>
-                <ul>
-                    <li><a href="{{ path('groups') }}">All Groups</a></li>
-                    <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
-                    <li><a href="{{ path('group_new') }}">Create Group</a></li>
-                </ul>
-            </li>
+            {#<li class="more">#}
+                {#<a>{{ 'platformd.layout.main_menu.groups' | pd_trans }}</a>#}
+                {#<ul>#}
+                    {#<li><a href="{{ path('groups') }}">All Groups</a></li>#}
+                    {#<li><a href="{{ path('accounts_groups') }}">My Groups</a></li>#}
+                    {#<li><a href="{{ path('group_new') }}">Create Group</a></li>#}
+                {#</ul>#}
+            {#</li>#}
 
             {% set _here = app.request.get('_route') %}
             {% if app.user %}
@@ -96,12 +96,12 @@
                             {% if _isOwner %}
                                 <li><a href="{{ path('idea_admin_event', {'eventId': _key, 'groupSlug': _key2}) }}">Edit Event Details</a></li>
                                 {% if _regId|default %}
+                                    <li><a href = "{{ path('entry_set_new', {'registrationId': _regId, 'entrySetId': 'new'}) }}">Create List</a></li>
                                     <li><a href="{{ path('group_event_attendees', {'eventId': _key, 'groupSlug': _key2}) }}">Manage Attendees</a></li>
                                 {% endif %}
                                 {% if _canContact %}
                                     <li><a href="{{ path('group_event_contact', {'eventId': _key, 'groupSlug': _key2}) }}">Email Attendees</a></li>
                                 {% endif %}
-                                <li><a href = "{{ path('entry_set_new', {'registrationId': _regId, 'entrySetId': 'new'}) }}">Create List</a></li>
                             {% endif %}
                             {% if _canDelete %}
                                 <li><a href="{{ path("group_event_delete", {"eventId": _key, "groupSlug": _key2}) }}">Delete Event</a></li>
