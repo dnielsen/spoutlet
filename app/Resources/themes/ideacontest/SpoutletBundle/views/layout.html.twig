@@ -86,9 +86,7 @@
                         <div id="contentLft{% if _isFrontPage %}MP{% endif %}">
                     {% endif %}
 
-                    {% if _isFrontPage %}
-                        {% include 'IdeaBundle:Idea:breadcrumbs.html.twig' %}
-                    {% endif %}
+                    {% include 'IdeaBundle:Idea:breadcrumbs.html.twig' %}
 
                     {% block content %}
                     {% endblock %}
