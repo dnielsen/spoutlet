@@ -8,7 +8,13 @@
     <div class="widget-100 fillWidth">
         <div class="widget-header">
             <div class="widget-title">
-                My Groups
+                <span class="left">My Groups</span>
+                    {% if action != null %}
+                        <span class="right"><a href="{{ path('group_new', {'then': action}) }}" class="blu">Create Group</a></span>
+                    {% else %}
+                        <span class="right"><a href="{{ path('group_new') }}" class="blu">Create Group</a></span>
+                    {% endif %}
+                <div class="clr"></div>
             </div>
         </div>
         <div class="widget-content">
