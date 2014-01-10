@@ -16,6 +16,10 @@
                             for (var i=0; i<GROUPS.length; i+=2){
                                 var group = GROUPS[i];
 
+                                if(!group.isTopic || !group.isFeatured) {
+                                    continue;
+                                }
+
                                 $("#groups-col1").append("<li><a href=\""+group.url+"\">"+group.name+"</a></li>");
                                 if(i+1<GROUPS.length) {
                                     var group2 = GROUPS[i+1];

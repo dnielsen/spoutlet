@@ -45,9 +45,12 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     const DELETED_BY_REPORT = 'REPORTED_PENDING_INVESTIGATION';
     const DELETED_BY_REPORT_ADMIN = 'REPORTED_AND_REMOVED_BY_ADMIN';
 
+    const CAT_TOPIC = 'topic';
+    const CAT_LOCATION = 'location';
+
     static private $validCategories = array(
-        'topic',
-        'location',
+        self::CAT_TOPIC,
+        self::CAT_LOCATION,
     );
 
     static private $validDeletedReasons = array(

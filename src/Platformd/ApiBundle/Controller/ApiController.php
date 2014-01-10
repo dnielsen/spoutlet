@@ -8,7 +8,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\HttpFoundation\Request;
 
 use Platformd\SpoutletBundle\Controller\Controller;
-
+use Platformd\GroupBundle\Entity\Group;
 
 
 class ApiController extends Controller
@@ -262,6 +262,8 @@ class ApiController extends Controller
 
             $data = array(
                 'name' => $group->getName(),
+                'isTopic' => $group->getCategory() == Group::CAT_TOPIC,
+                'isFeatured' => $group->getFeatured(),
                 'url'  => $this->generateUrl($group->getLinkableRouteName(), $group->getLinkableRouteParameters(), true),
             );
             $groupsData[] = $data;
