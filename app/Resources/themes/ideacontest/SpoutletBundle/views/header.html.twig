@@ -1,6 +1,7 @@
-<div id="{% if _isFrontPage %}header-campsite{% else %}header-group{% endif %}">
 
     {% block pre_topNav %}
+        {# This is overridden in group_layout to use 'header-group' and the small logo #}
+        <div id="header-campsite">
     {% endblock %}
 
     <div id="topNav">
