@@ -16,7 +16,7 @@
 
         {% block banner %}
             {% if group.groupAvatar is not null %}
-                <img src="{{ media_path(group.groupAvatar) }}" width="305" height="170" alt="Group Logo" id="brand-group">
+                <img src="{{ media_path(group.groupAvatar) }}" alt="Group Logo" id="brand-group">
             {% else %}
                 <span id="groupHeader">{{ group.name }}</span>
             {% endif %}
