@@ -39,14 +39,15 @@
                 globalTimeout = setTimeout(function() {
                     globalTimeout = null;
 
-                    //ajax code
+                    var hits = [];
                     var topic = searchBox.val();
 
-                    var hits = [];
-                    for(var i=0; i<GROUPS.length; i++) {
-                        var group = GROUPS[i];
-                        if(group.name.toLowerCase().indexOf(topic) != -1) {
-                            hits.push(group);
+                    if(topic !== "") {
+                        for(var i=0; i<GROUPS.length; i++) {
+                            var group = GROUPS[i];
+                            if(group.name.toLowerCase().indexOf(topic) != -1) {
+                                hits.push(group);
+                            }
                         }
                     }
 
