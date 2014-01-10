@@ -105,10 +105,14 @@ idea_admin_export_votes:
     requirements:
       _method: GET
 
+# Admin Scripts
 all_event_acl_fix:
     pattern:    /admin/fixEventACLs
     defaults:   { _controller: IdeaBundle:Admin:fixEventACLs }
 
+add_entry_set_creators:
+    pattern:    /admin/addEntrySetCreators
+    defaults:   { _controller: IdeaBundle:Admin:addEntrySetCreators }
 
 # NON-ADMIN
 

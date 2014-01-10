@@ -123,34 +123,6 @@ class AdminController extends Controller
             ));
     }
 
-    public function fixEventACLsAction(Request $request) {
-        $eventEm = $this->getDoctrine()->getRepository('EventBundle:GroupEvent');
-        $aclProvider = $this->container->get('security.acl.provider');
-
-        $output = "";
-        $allEvents = $eventEm->findAll();
-        $index = 0;
-        foreach($allEvents as $event) {
-            $index++;
-
-            $objectIdentity = ObjectIdentity::fromDomainObject($event);
-            $securityIdentity = new UserSecurityIdentity($event->getUser()->getUsername(),'Platformd\UserBundle\Entity\User');
-
-            try {
-                $acl = $aclProvider->createAcl($objectIdentity);
-                $output .= $index.'. creating acl for \''.$event->getName().'\': '.$event->getUser()->getUsername().'<br>';
-            } catch(AclAlreadyExistsException $e) {
-                $acl = $aclProvider->findAcl($objectIdentity,array($securityIdentity));
-                $output .= $index.': updating acl for \''.$event->getName().'\': '.$event->getUser()->getUsername().'<br>';
-            }
-            $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
-            $aclProvider->updateAcl($acl);
-        }
-        $this->setFlash('success', $output);
-
-        return $this->redirect($this->generateUrl('default_index'));
-    }
-
     public function adminAction(Request $request, $groupSlug, $eventId) {
 
         $group = $this->getGroup($groupSlug);
@@ -782,5 +754,70 @@ class AdminController extends Controller
         $response->setContent($csvString);
         return $response;
     }
+
+
+    // Admin Scripts
+
+    public function fixEventACLsAction(Request $request) {
+        $eventEm = $this->getDoctrine()->getRepository('EventBundle:GroupEvent');
+        $aclProvider = $this->container->get('security.acl.provider');
+
+        $output = "";
+        $allEvents = $eventEm->findAll();
+        $index = 0;
+        foreach($allEvents as $event) {
+            $index++;
+
+            $objectIdentity = ObjectIdentity::fromDomainObject($event);
+            $securityIdentity = new UserSecurityIdentity($event->getUser()->getUsername(),'Platformd\UserBundle\Entity\User');
+
+            try {
+                $acl = $aclProvider->createAcl($objectIdentity);
+                $output .= $index.'. creating acl for \''.$event->getName().'\': '.$event->getUser()->getUsername().'<br>';
+            } catch(AclAlreadyExistsException $e) {
+                $acl = $aclProvider->findAcl($objectIdentity,array($securityIdentity));
+                $output .= $index.': updating acl for \''.$event->getName().'\': '.$event->getUser()->getUsername().'<br>';
+            }
+            $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+            $aclProvider->updateAcl($acl);
+        }
+        $this->setFlash('success', $output);
+
+        return $this->redirect($this->generateUrl('default_index'));
+    }
+
+    public function addEntrySetCreatorsAction(Request $request){
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $entrySets = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet')->findAll();
+
+        $output = '';
+
+        foreach ($entrySets as $entrySet){
+
+            $parent = $this->getParentByEntrySet($entrySet);
+            $parentOwner = null;
+
+            if ($parent instanceof GroupEvent){
+                $parentOwner = $parent->getUser();
+            }
+            elseif ($parent instanceof Group){
+                $parentOwner = $parent->getOwner();
+            }
+
+            if ($parentOwner){
+                $entrySet->setCreator($parentOwner);
+                $output = $output.$entrySet->getName().'\'s creator is now '.$parentOwner->getName().'<br/>';
+            }
+        }
+        if ($output){
+            $em->flush();
+            $this->setFlash('success', $output);
+        }
+
+        return $this->redirect($this->generateUrl('default_index'));
+    }
+
+
 }
 
