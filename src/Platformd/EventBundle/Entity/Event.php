@@ -684,6 +684,27 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
             return null;
         }
     }
+    public function getDateAndTime()
+    {
+        $dateAndTime = '';
+
+        if ($this->getStartsAt() && $this->getEndsAt())
+        {
+            $startsAtDate   = $this->getStartsAt()->format('M d, Y');
+            $startsAtTime   = $this->getStartsAt()->format('g:i a');
+            $endsAtDate     = $this->getEndsAt()->format('M d, Y');
+            $endsAtTime     = $this->getEndsAt()->format('g:i a');
+
+            if ($startsAtDate == $endsAtDate) {
+                $dateAndTime = $startsAtDate.'<br/>'.$startsAtTime.' - '.$endsAtTime;
+            }
+            else {
+                $dateAndTime = $startsAtDate.' '.$startsAtTime.' - <br/>'.$endsAtDate.' '.$endsAtTime;
+            }
+        }
+
+        return $dateAndTime;
+    }
 
     /**
      * Returns the start datetime converted into the timezone of the user

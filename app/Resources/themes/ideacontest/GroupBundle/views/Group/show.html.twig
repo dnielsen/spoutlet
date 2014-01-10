@@ -84,36 +84,30 @@
 
     {% if nextEvent %}
         <div class="cBxLft">
-            <h2 class="blu"><a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}">{{ nextEvent.name }}</a></h2>
-
+            <h2 class="left"><a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="blu">{{ nextEvent.name }}</a></h2>
+            {% if not (nextEvent.isUserAttending(app.user)) %}
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right">Attend</a>
+            {% endif %}
+            <div class="clr"></div>
 
             <table summary="Next Event" class="tblStyle">
                 <tbody>
                 <tr>
-                    <td width="25%"><strong>DATE:</strong></td>
-                    <td width="75%">{{ nextEvent.DateRangeString }}</td>
-                </tr>
-                <tr>
-                    <td width="25%"><strong>TIME:</strong></td>
-                    <td width="75%">{{ nextEvent.startsAt|date('g:i a') }} - {{ nextEvent.endsAt|date('g:i a') }}</td>
+                    <td width="20%"><strong>When:</strong></td>
+                    <td width="80%">{{ nextEvent.DateAndTime|raw }}</td>
                 </tr>
                 {% if not nextEvent.getOnline %}
                     <tr>
-                        <td width="25%"><strong>LOCATION:</strong></td>
-                        <td width="75%">
-                            {{ nextEvent.location }}<br>
-                            {{ nextEvent.address1 }}<br>
-                            {{ nextEvent.address2 }}
-                        </td>
+                        <td><strong>Where:</strong></td>
+                        <td>{{ nextEvent.location }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Address:</strong></td>
+                        <td>{{ nextEvent.address1 }}<br/>{{ nextEvent.address2 }}</td>
                     </tr>
                 {% endif %}
                 <tr>
-                    <td width="25%">{{ nextEvent.attendeeCount }} attendee{% if nextEvent.attendeeCount != 1 %}s{% endif %}</td>
-                    <td width="75%%">
-                        {% if not (nextEvent.isUserAttending(app.user)) %}
-                            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right">Attend</a>
-                        {% endif %}
-                    </td>
+                    <td colspan="2">{{ nextEvent.attendeeCount }} attendee{% if nextEvent.attendeeCount != 1 %}s{% endif %}</td>
                 </tr>
                 </tbody>
             </table>

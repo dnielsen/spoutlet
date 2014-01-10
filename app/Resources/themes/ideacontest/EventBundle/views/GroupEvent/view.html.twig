@@ -48,17 +48,13 @@
             <table id="eventDetails" class="tblStyle">
                 {% if event.startsAt %}
                     <tr>
-                        <td width="25%"><strong>Date:</strong></td>
-                        <td width="75%">{{event.DateRangeString}}</td>
-                    </tr>
-                    <tr>
-                        <td width="25%"><strong>Time:</strong></td>
-                        <td width="75%">{{ event.startsAt|date('g:i a') }} - {{ event.endsAt|date('g:i a') }}</td>
+                        <td width="25%"><strong>When:</strong></td>
+                        <td width="75%">{{ event.DateAndTime|raw }}</td>
                     </tr>
                 {% endif %}
                 {% if event.location %}
                     <tr>
-                        <td width="25%"><strong>Location:</strong></td>
+                        <td width="25%"><strong>Where:</strong></td>
                         <td width="75%">{{ event.location }}</td>
                     </tr>
                     <tr>
