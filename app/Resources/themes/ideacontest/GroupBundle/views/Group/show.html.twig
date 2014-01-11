@@ -113,12 +113,21 @@
             </table>
             <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blu right">See Events</a>
         </div>
-        {% if not nextEvent.getOnline %}
-            <div class="cBxRt">
+        <div class="cBxRt">
+            {% if not nextEvent.getOnline %}
                 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
                 <div id="event-location-map">{{ vichgeo_map_for('location', nextEvent) }}</div>
-            </div>
-        {% endif %}
+            {% elseif groupEvents %}
+                <h2 class="spnsrBar">More Events</h2>
+                <ul class="scrollableSidebarWidget">
+                    {% for event in groupEvents %}
+                        <li>
+                            <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu" style="margin-top:5px;">{{ event.name }}</h3></a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
     {% endif %}
 
 {% endblock %}
@@ -144,7 +153,7 @@
 
 
 
-        {% if groupEvents %}
+        {% if (not nextEvent.getOnline) and groupEvents %}
             <h2 class="spnsrBar" style="margin-top:20px">More Events</h2>
             <ul class="scrollableSidebarWidget">
                 {% for event in groupEvents %}
