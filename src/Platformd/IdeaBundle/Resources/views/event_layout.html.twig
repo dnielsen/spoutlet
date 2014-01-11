@@ -5,19 +5,12 @@
 {% block header %}
 
     {% embed 'SpoutletBundle::header.html.twig' %}
-
         {% block extra_user_controls %}
-            {% if is_granted('ROLE_ADMIN') or event.user == (app.user) %}
-                <li><a href="{{ path('idea_admin', {'groupSlug': group.slug, 'eventId': event.id}) }}">Event Admin</a></li>
-            {% endif %}
-
-            <li><a href="{{ path('group_show', { 'slug': group.slug }) }}">Group</a></li>
-
         {% endblock %}
-
     {% endembed %}
 
-    {% embed 'SpoutletBundle::navigation.html.twig' %}{% endembed %}
+    {% embed 'SpoutletBundle::navigation.html.twig' %}
+    {% endembed %}
 
 {%  endblock %}
 
