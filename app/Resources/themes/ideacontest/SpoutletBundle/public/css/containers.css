@@ -376,6 +376,22 @@ table.tblStyle2 {
 .fill {
 	background: #f5f5f5;
 }
+
+
+.profileTable {
+    margin-top: 10px;
+    width: 100%;
+    text-align: left;
+}
+.profileTable td {
+    border-bottom: 1px solid #e5e5e5;
+}
+.profileTable td:first-child {
+    padding-right: 50px;
+    width: 50%;
+}
+
+
 .paddedTable td {
 	padding: 5px 10px;
 	font-size: 16px;
