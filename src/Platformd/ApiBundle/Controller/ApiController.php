@@ -185,13 +185,27 @@ class ApiController extends Controller
                 'entries'   => $entries,
             );
         }
-        $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group, 1);
+        $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group);
         $nextEvent = reset($upcomingEvents);
         $pastEvents = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group, 6);
 
         $pastEventData = array();
         foreach ($pastEvents as $event) {
             $pastEventData[] = array(
+                'id'        => $event->getId(),
+                'name'      => $event->getName(),
+                'daterange' => $event->getDateRangeString(),
+                'timerange' => $event->getStartsAt()->format('g:i a').' - '.$event->getEndsAt()->format('g:i a'),
+                'location'  => $event->getLocation(),
+                'address1'  => $event->getAddress1(),
+                'address2'  => $event->getAddress2(),
+                'url'       => $this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
+            );
+        }
+
+        $upcomingEventData = array();
+        foreach ($upcomingEvents as $event) {
+            $upcomingEventData[] = array(
                 'id'        => $event->getId(),
                 'name'      => $event->getName(),
                 'daterange' => $event->getDateRangeString(),
@@ -228,6 +242,7 @@ class ApiController extends Controller
             'name'                  => $group->getName(),
             'description'           => $group->getDescription(),
             'pastEvents'            => $pastEventData,
+            'upcomingEvents'        => $upcomingEventData,
             'nextEvent'             => $nextEvent,
             'entrySets'             => $entrySets,
         );
