@@ -55,14 +55,14 @@
         {{ form_rest(form) }}
 
         {% if not isNew %}
-            <a href="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventId': event.id}) }}">Add Images</a>
+            <a href="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="blu">Manage Image Slider</a>
         {% endif %}
 
         <br class="clr"/>
         <br/>
 
 	    <input type="submit" value="Submit"/>
-		<button type="submit" value="Cancel" name="cancel" formnovalidate>Cancel</button>
+		<input type="submit" value="Cancel" name="cancel" formnovalidate/>
 
         {% if not isNew %}
             {% if event.entrySets|length == 0 %}
