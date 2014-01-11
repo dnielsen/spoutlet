@@ -41,37 +41,37 @@
         <div id="content-slider-1" class="royalSlider contentSlider rsDefault">
 
             <div>
-                <a href="/" target="_blank"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-find.jpg') }}" alt="" width="740" height="341"></a>
+                <a href="{{ path('group_events', {'slug': group.slug}) }}" target="_blank"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-find.jpg') }}" alt="" width="740" height="341"></a>
                 <span class="rsTmb">
                     Find
                 </span>
             </div>
             <div>
-                <a href="/" target="_blank"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-organize.jpg') }}" alt="" width="740" height="341"></a>
+                <a href="{{ path('idea_admin_event', {'groupSlug': group.slug}) }}" target="_blank"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-organize.jpg') }}" alt="" width="740" height="341"></a>
                 <span class="rsTmb">
                     Organize
                 </span>
             </div>
             <div>
-                <a href="/" target="_blank"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-join.jpg') }}" alt="" width="740" height="341"></a>
+                <a href="{{ path('group_join', {'slug': group.slug}) }}" target="_blank"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-join.jpg') }}" alt="" width="740" height="341"></a>
                 <span class="rsTmb">
                     Join
                 </span>
             </div>
             <div>
-                <a href="/" target="_blank"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-speak.jpg') }}" alt="" width="740" height="341"></a>
+                <a href="#"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-speak.jpg') }}" alt="" width="740" height="341"></a>
                 <span class="rsTmb">
                     Speak
                 </span>
             </div>
             <div>
-                <a href="/" target="_blank"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-sponsor.jpg') }}" alt="" width="740" height="341"></a>
+                <a href="#"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-sponsor.jpg') }}" alt="" width="740" height="341"></a>
                 <span class="rsTmb">
                     Sponsor
                 </span>
             </div>
             <div>
-                <a href="/" target="_blank"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-volunteer.jpg') }}" alt="" width="740" height="341"></a>
+                <a href="#"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-volunteer.jpg') }}" alt="" width="740" height="341"></a>
                 <span class="rsTmb">
                     Volunteer
                 </span>
