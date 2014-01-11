@@ -235,16 +235,16 @@
 			height: 125px;
 			margin: 10px 0 10px 10px;
 		}
-   /* .scrollableSidebarWidget {
+    .scrollableSidebarWidget {
        padding-left:5px;
        max-height: 250px;
        overflow-y: auto
    }
-   .scrollableSidebarWidgetItem {
+    .scrollableSidebarWidgetItem {
        padding: 5px 0px 5px 0px;
        border-bottom: 1px dashed #ccc;
-   } */
-	
+   }
+
 
 /*********** SUBPAGE CONTAINERs ***********/
 		

@@ -135,7 +135,7 @@
             <h2 class="spnsrBar" style="margin-top:20px">Lists</h2>
             <ul class="scrollableSidebarWidget">
                 {% for entrySet in group.entrySets %}
-                <li class="scrollableSidebarWidgetItem">
+                <li>
                     <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu" style="margin-top:5px;">{{ entrySet.name }}</h3></a>
                 </li>
                 {% endfor %}
@@ -146,9 +146,9 @@
 
         {% if groupEvents %}
             <h2 class="spnsrBar" style="margin-top:20px">More Events</h2>
-            <ul >
+            <ul class="scrollableSidebarWidget">
                 {% for event in groupEvents %}
-                    <li class="scrollableSidebarWidgetItem">
+                    <li>
                         <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu" style="margin-top:5px;">{{ event.name }}</h3></a>
                     </li>
                 {% endfor %}
@@ -156,12 +156,12 @@
         {% endif %}
 
         <h2 class="spnsrBar" style="margin-top:20px">Organizer</h2>
-        <a href="{{ path('profile', {userId: group.owner.id}) }}"><h3 class="blu" style="margin-top:5px">{{ group.owner.name }}</h3></a>
+        <a href="{{ path('profile', {userId: group.owner.id}) }}"><h3 class="blu" style="margin-top:5px;padding-left:5px;">{{ group.owner.name }}</h3></a>
 
         <h2 class="spnsrBar" style="margin-top:20px">{{ group.members|length }} Member{% if group.members|length > 1 %}s{% endif %}</h2>
-        <ul class="scrollableSidebarWidget">
+        <ul style="padding-left:5px;">
             {% for member in group.members %}
-                <li class="scrollableSidebarWidgetItem">
+                <li>
                     <a href="{{ path('profile', {'userId': member.id}) }}"><h3 class="blu" style="margin-top:5px">{{ member.name }}</h3></a>
                 </li>
             {% else %}
