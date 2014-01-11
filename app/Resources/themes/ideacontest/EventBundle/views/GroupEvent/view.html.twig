@@ -1,112 +1,110 @@
 {% extends 'IdeaBundle::event_layout.html.twig' %}
 
 {% block event_content %}
-    <div class="row1">
-        <div class="cBx1">
-            <h1 class="ctr">{{ event.name }}</h1>
+    <div id="contentLft">
+        <h1 class="ctr">{{ event.name }}</h1>
 
-            {% if event.rotatorImages | length > 0 %}
-                <div class="intro">
-                    <div id="slideshow" class="pics">
+        {% if event.rotatorImages | length > 0 %}
+            <div class="intro">
+                <div id="slideshow" class="pics">
 
-                        {% for image in event.rotatorImages %}
+                    {% for image in event.rotatorImages %}
 
-                        <div class="unicusSlides">
-                            <a href="/" target="_blank">
-                                <img src="{{  media_path(image) }}" width="644" height="340"/>
-                            </a>
-                        </div>
-
-                        {% endfor %}
-
+                    <div class="unicusSlides">
+                        <a href="#">
+                            <img src="{{  media_path(image) }}" width="644" height="340"/>
+                        </a>
                     </div>
 
-                    <ul id="bullets"></ul> <!-- nav bullets -->
-                 </div>
+                    {% endfor %}
 
-                <script type="text/javascript">
-                    $(function() {
-                        $('#slideshow').cycle({
-                            fx:     'scrollHorz',
-                            speed:  400,
-                            timeout: 6000,
-                            cleartypeNoBg: true,
-                            pager:  '#bullets',
-                            pagerAnchorBuilder: function paginate(idx, el) {
-                                return '<a class="service' + idx + '" href="#" >&bull;</a>';
-                            }
-                        });
+                </div>
+
+                <ul id="bullets"></ul> <!-- nav bullets -->
+             </div>
+
+            <script type="text/javascript">
+                $(function() {
+                    $('#slideshow').cycle({
+                        fx:     'scrollHorz',
+                        speed:  400,
+                        timeout: 6000,
+                        cleartypeNoBg: true,
+                        pager:  '#bullets',
+                        pagerAnchorBuilder: function paginate(idx, el) {
+                            return '<a class="service' + idx + '" href="#" >&bull;</a>';
+                        }
                     });
-                </script>
-            {% endif %}
+                });
+            </script>
+        {% endif %}
 
-            <p>{{ event.content | raw }}</p>
+        <p>{{ event.content | raw }}</p>
+    </div>
+
+    <div id="contentRt">
+        <h2 class="spnsrBar">Event Details</h2>
+        <table id="eventDetails" class="tblStyle">
+            {% if event.startsAt %}
+                <tr>
+                    <td width="25%"><strong>When:</strong></td>
+                    <td width="75%">{{ event.DateAndTime|raw }}</td>
+                </tr>
+            {% endif %}
+            {% if event.location %}
+                <tr>
+                    <td width="25%"><strong>Where:</strong></td>
+                    <td width="75%">{{ event.location }}</td>
+                </tr>
+                <tr>
+                    <td width="25%"><strong>Address:</strong></td>
+                    <td width="75%">{{ event.address1 }}<br/>{{ event.address2 }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+                        <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
+                    </td>
+                </tr>
+            {% endif %}
+        </table>
+
+        <br>
+
+        <h2 class="spnsrBar">
+            <span class="left">Lists</span>
+            {% if isAdmin or (event.getUser() == app.user) %}
+                <a href="{{ path('entry_set_new', {'registrationId': event.entrySetRegistration.id, 'entrySetId': 'new'}) }}" class="blu right">New</a>
+            {% endif %}
+            <div class="clr"></div>
+        </h2>
+         <div class="scrollableSidebarWidget">
+             <ul class="scrollableSidebarWidget">
+            {% for entrySet in event.entrySets %}
+                <li>
+                    <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu" style="margin-top:5px;">{{ entrySet.name }}</h3></a>
+                </li>
+            {% endfor %}
+            </ul>
         </div>
 
-        <div class="cBx2">
-            <h2 class="left">Event Details</h2>
-            <table id="eventDetails" class="tblStyle">
-                {% if event.startsAt %}
-                    <tr>
-                        <td width="25%"><strong>When:</strong></td>
-                        <td width="75%">{{ event.DateAndTime|raw }}</td>
-                    </tr>
-                {% endif %}
-                {% if event.location %}
-                    <tr>
-                        <td width="25%"><strong>Where:</strong></td>
-                        <td width="75%">{{ event.location }}</td>
-                    </tr>
-                    <tr>
-                        <td width="25%"><strong>Address:</strong></td>
-                        <td width="75%">{{ event.address1 }}<br/>{{ event.address2 }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
-                            <div id="event-location-map">{{ vichgeo_map_for('large_location', event) }}</div>
-                        </td>
-                    </tr>
-                {% endif %}
-            </table>
+        <br>
 
-            <br>
-
-            {% if not (event.isUserAttending(app.user)) %}
-                <h2 class="left">{{ event.attendees|length }} attendee{% if event.attendees|length != 1 %}s{% endif %}</h2>
-                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny submit right marginlft">Register</a>
-            {% else %}
-                <h3 class="left">You and {{ event.attendees|length - 1 }} other {% if event.attendees|length == 2 %}person{% else %}people{% endif %} are attending:</h3>
-            {% endif %}
-            <br class="clr">
-            <div class="scrollableSidebarWidget">
-                {% for member in event.attendees %}
-                    <div class="scrollableSidebarWidgetItem">
-                        <a href="{{ path('profile', {'userId': member.id}) }}">{{ member.name }}</a>
-                    </div>
-                {% endfor %}
-            </div>
-
-            <br>
-
-            <div class="scrollableSidebarWidget">
-                {% if isAdmin or (event.getUser() == app.user) %}
-                    <a href = "{{ path('entry_set_new', {'registrationId': event.entrySetRegistration.id, 'entrySetId': 'new'}) }}">Add List</a>
-                {% endif %}
-                {% for entrySet in event.entrySets %}
-                    <div class="scrollableSidebarWidgetItem">
-                        <h2>{{ entrySet.name }}</h2>
-                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" class="tnyBtn submit left">View {{ entrySet.type | capitalize }}s</a>
-                        {% if event.isUserAttending(app.user) or event.getUser() == app.user %}
-                            <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}" class="tnyBtn submit left marginlft">Propose {{ entrySet.type | capitalize }}</a>
-                        {% endif %}
-                        <div class="clear"></div>
-                    </div>
-                {% endfor %}
-            </div>
-
-
+        {% if not (event.isUserAttending(app.user)) %}
+            <h2 class="left">{{ event.attendees|length }} attendee{% if event.attendees|length != 1 %}s{% endif %}</h2>
+            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny submit right marginlft">Attend</a>
+        {% else %}
+            <h3 class="left">You and {{ event.attendees|length - 1 }} other {% if event.attendees|length == 2 %}person{% else %}people{% endif %} are attending:</h3>
+        {% endif %}
+        <br class="clr">
+        <div class="scrollableSidebarWidget">
+            {% for member in event.attendees %}
+                <a href="{{ path('profile', {'userId': member.id}) }}" class="blu" style="margin-top:5px;">{{ member.name }}</a>
+            {% endfor %}
         </div>
+
+
+
     </div>
 
 {% endblock %}
