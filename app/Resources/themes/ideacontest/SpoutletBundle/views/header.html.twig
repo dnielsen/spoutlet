@@ -17,13 +17,6 @@
             <li><a href="{{ path('global_events_index') }}">{{ 'platformd.layout.main_menu.events' | pd_trans }}</a></li>
             <li><a href="{{ path('groups') }}">{{ 'platformd.layout.main_menu.groups' | pd_trans }}</a></li>
 
-            {% if group is defined and group is not null %}
-                {% if event is defined and event is not null %}
-                    {% if is_granted('ROLE_ADMIN') or event.user == (app.user) %}
-                        <li><a href="{{ path('idea_admin', {'groupSlug': group.slug, 'eventId': event.id}) }}">Delete me --> Event Admin</a></li>
-                    {% endif %}
-                {% endif %}
-            {% endif %}
             {% if is_granted("ROLE_SUPER_ADMIN") %}
                 <li><a href="{{ path('admin_index') }}">Site Admin</a></li>
             {% endif %}
