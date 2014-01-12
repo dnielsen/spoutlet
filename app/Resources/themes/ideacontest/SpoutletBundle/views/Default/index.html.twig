@@ -3,29 +3,60 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-        jQuery(document).ready(function($) {
-            var GROUPS = [];
+        var GROUPS = [];
+        var HITS = [];
 
+        function processGroup(index, comparator) {
+            var group = GROUPS[index];
+
+            if(comparator(group)) {
+                console.log("Skipping "+group.name);
+                return;
+            }
+
+            HITS.push(group);
+        }
+
+        function renderHits() {
+            var col1 = $("#groups-col1");
+            var col2 = $("#groups-col2");
+
+            col1.empty();
+            col2.empty();
+
+            for (var i=0; i<HITS.length; i+=2) {
+                var group = HITS[i];
+
+                col1.append("<li><a href=\""+group.url+"\">"+group.name+"</a></li>");
+
+                if(i+1<HITS.length) {
+                    var group2 = HITS[i+1];
+                    col2.append("<li><a href=\""+group2.url+"\">"+group2.name+"</a></li>");
+                }
+            }
+
+            HITS = [];
+        }
+
+        jQuery(document).ready(function($) {
             var url = '{{ path('api_all_groups') }}';
 
             $.getJSON(url, null,
                     function(data) {
+                        var featuredTopicComparator = function(group) {
+                            return !group.isTopic || !group.isFeatured;
+                        };
+
                         //Initially populate with all groups
                         GROUPS = data.groups;
                         if(GROUPS) {
-                            for (var i=0; i<GROUPS.length; i+=2){
-                                var group = GROUPS[i];
-
-                                if(!group.isTopic || !group.isFeatured) {
-                                    continue;
-                                }
-
-                                $("#groups-col1").append("<li><a href=\""+group.url+"\">"+group.name+"</a></li>");
+                            for (var i=0; i<GROUPS.length; i+=2) {
+                                processGroup(i, featuredTopicComparator);
                                 if(i+1<GROUPS.length) {
-                                    var group2 = GROUPS[i+1];
-                                    $("#groups-col2").append("<li><a href=\""+group2.url+"\">"+group2.name+"</a></li>");
+                                    processGroup(i+1, featuredTopicComparator);
                                 }
                             }
+                            renderHits();
                         }
                     });
 
@@ -33,6 +64,12 @@
             var globalTimeout = null;
             var searchBox = $('#groups-by-topic-search');
             searchBox.keyup(function() {
+
+                var topicComparator = function (group) {
+                    var topic = searchBox.val();
+                    return group.name.toLowerCase().indexOf(topic) == -1;
+                };
+
                 if (globalTimeout != null) {
                     clearTimeout(globalTimeout);
                 }
@@ -43,31 +80,14 @@
                     var topic = searchBox.val();
 
                     if(topic !== "") {
-                        for(var i=0; i<GROUPS.length; i++) {
-                            var group = GROUPS[i];
-                            if(group.name.toLowerCase().indexOf(topic) != -1) {
-                                hits.push(group);
+                        for(var i=0; i<GROUPS.length; i+=2) {
+                            processGroup(i, topicComparator);
+                            if(i+1<GROUPS.length) {
+                                processGroup(i+1, topicComparator);
                             }
                         }
                     }
-
-                    var col1 = $("#groups-col1");
-                    var col2 = $("#groups-col2");
-
-                    col1.empty();
-                    col2.empty();
-
-                    for (var i=0; i<hits.length; i+=2) {
-                        var group = hits[i];
-
-                        col1.append("<li><a href=\""+group.url+"\">"+group.name+"</a></li>");
-
-                        if(i+1<hits.length) {
-                            var group2 = hits[i+1];
-                            col2.append("<li><a href=\""+group2.url+"\">"+group2.name+"</a></li>");
-                        }
-                    }
-
+                    renderHits();
                 }, 200);
             });
         });
