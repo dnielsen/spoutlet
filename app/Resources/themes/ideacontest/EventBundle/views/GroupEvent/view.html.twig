@@ -99,7 +99,7 @@
         <br class="clr">
         <div class="scrollableSidebarWidget">
             {% for member in event.attendees %}
-                <a href="{{ path('profile', {'userId': member.id}) }}" class="blu" style="margin-top:5px;">{{ member.name }}</a>
+                <a href="{{ path('profile', {'userId': member.id}) }}" class="blu" style="margin-top:5px;">{{ member.name }}</a><br/>
             {% endfor %}
         </div>
 
