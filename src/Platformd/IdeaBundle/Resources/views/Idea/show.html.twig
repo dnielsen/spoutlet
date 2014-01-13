@@ -10,7 +10,7 @@
               <input type="hidden" name="id" value="{{idea.id}}">
               <input type="hidden" name="source" value="detail">
               <input type="hidden" name="tag">
-              <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnTny" value="Vote"{% else %}class="btnTny redButton" value="Remove Vote"{% endif %}{% else %}class="btnTny" value="Vote"{% endif %}>
+              <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnVote" value="Vote"{% else %}class="btnVote redButton" value="Remove Vote"{% endif %}{% else %}class="btnVote" value="Vote"{% endif %}>
         </form>
     </div>
 

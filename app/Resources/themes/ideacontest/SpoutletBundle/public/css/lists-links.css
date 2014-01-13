@@ -83,8 +83,10 @@ a.btnTny:hover, input.btnTny:hover, input.btnTnyInv:hover {
     color: #fff;
 }
 .btnVote {
-	width: 55px;
-	margin-top: 5px;
+    width: 100% !important;
+    margin-top: 5px !important;
+    font-size: 12px !important;
+    padding: 4px 0px !important;
 }
 
 .bgBtn { background: #c8742c; }
