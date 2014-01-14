@@ -13,6 +13,10 @@ use Platformd\GroupBundle\Entity\Group;
 
 class ApiController extends Controller
 {
+    protected function getMediaPathResolver() {
+        return $this->get('platformd.media_path_resolver');
+    }
+
     public function entrySetAction(Request $request, $entrySetId)
     {
         $entrySet = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet')->find($entrySetId);
@@ -231,6 +235,12 @@ class ApiController extends Controller
             );
         }
 
+        $avatarPath = null;
+        $avatar = $group->getGroupAvatar();
+        if($avatar) {
+            $mediaResolver =$this->getMediaPathResolver();
+            $avatarPath = $mediaResolver->getPath($group->getGroupAvatar(), array());
+        }
 
         $groupData = array(
             'meta'                 => array(
@@ -241,6 +251,8 @@ class ApiController extends Controller
             'creator'               => $group->getOwner()->getUserName(),
             'name'                  => $group->getName(),
             'description'           => $group->getDescription(),
+            'avatarPath'            => $avatarPath ? $avatarPath : null,
+            'url'                   => $this->generateUrl($group->getLinkableRouteName(), $group->getLinkableRouteParameters(), true),
             'pastEvents'            => $pastEventData,
             'upcomingEvents'        => $upcomingEventData,
             'nextEvent'             => $nextEvent,
