@@ -84,7 +84,9 @@
 
     {% if nextEvent %}
         <div class="cBxLft">
-            <h2 class="left"><a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="blu">{{ nextEvent.name }}</a></h2>
+            <h2 class="left">
+                <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="blu">{{ nextEvent.name }}</a>
+            </h2>
             {% if not (nextEvent.isUserAttending(app.user)) %}
                 <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right">Attend</a>
             {% endif %}
@@ -103,7 +105,7 @@
                     </tr>
                     <tr>
                         <td><strong>Address:</strong></td>
-                        <td>{{ nextEvent.address1 }}<br/>{{ nextEvent.address2 }}</td>
+                        <td><a href="http://maps.google.com/?q={{ nextEvent.address1 }}, {{ nextEvent.address2 }}">{{ nextEvent.address1 }}<br/>{{ nextEvent.address2 }}</a></td>
                     </tr>
                 {% endif %}
                 <tr>
@@ -111,7 +113,6 @@
                 </tr>
                 </tbody>
             </table>
-            <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blu right">See Events</a>
         </div>
         <div class="cBxRt">
             {% if not nextEvent.getOnline %}
@@ -138,6 +139,7 @@
 
         <div class="rowBx">
             {{ group.description | raw }}
+            <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blu right">See Events</a>
         </div>
 
         {% if group.entrySets | length > 0 %}
