@@ -324,7 +324,6 @@ table.tblStyle {
 .tblStyle td {
     padding: 10px 5px;
     border-bottom: 1px solid #e5e5e5;
-	font-size: 14px;
 	line-height: 18px;
 }
 .tblStyle.profile td:first-child {
