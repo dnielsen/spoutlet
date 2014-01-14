@@ -75,13 +75,7 @@
 
         <br>
 
-        <h2 class="spnsrBar">
-            <span class="left">Lists</span>
-            {% if isAdmin or (event.getUser() == app.user) %}
-                <a href="{{ path('entry_set_new', {'registrationId': event.entrySetRegistration.id, 'entrySetId': 'new'}) }}" class="blu right">New</a>
-            {% endif %}
-            <div class="clr"></div>
-        </h2>
+        <h2 class="spnsrBar">Lists</h2>
          <div class="scrollableSidebarWidget">
              <ul class="scrollableSidebarWidget">
             {% for entrySet in event.entrySets %}
