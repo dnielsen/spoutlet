@@ -140,6 +140,7 @@
         <div class="rowBx">
             {{ group.description | raw }}
             <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blu right">See Events</a>
+            <div class="clr"></div>
         </div>
 
         {% if group.entrySets | length > 0 %}
@@ -152,8 +153,6 @@
                 {% endfor %}
             </ul>
         {% endif %}
-
-
 
         {% if (not nextEvent.getOnline) and groupEvents %}
             <h2 class="spnsrBar" style="margin-top:20px">More Events</h2>
