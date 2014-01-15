@@ -154,15 +154,17 @@
             </ul>
         {% endif %}
 
-        {% if (not nextEvent.getOnline) and groupEvents %}
-            <h2 class="spnsrBar" style="margin-top:20px">More Events</h2>
-            <ul class="scrollableSidebarWidget">
-                {% for event in groupEvents %}
-                    <li>
-                        <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu" style="margin-top:5px;">{{ event.name }}</h3></a>
-                    </li>
-                {% endfor %}
-            </ul>
+        {% if nextEvent %}
+            {% if (not nextEvent.getOnline) and groupEvents %}
+                <h2 class="spnsrBar" style="margin-top:20px">More Events</h2>
+                <ul class="scrollableSidebarWidget">
+                    {% for event in groupEvents %}
+                        <li>
+                            <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu" style="margin-top:5px;">{{ event.name }}</h3></a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         {% endif %}
 
         <h2 class="spnsrBar" style="margin-top:20px">Organizer</h2>
