@@ -347,12 +347,12 @@ Alienware Arena Team
             }
         }
 
-        $locationGroups = json_encode($location, JSON_HEX_APOS);
-        $topicGroups    = json_encode($topic, JSON_HEX_APOS);
+//        $locationGroups = json_encode($location, JSON_HEX_APOS);
+//        $topicGroups    = json_encode($topic, JSON_HEX_APOS);
 
         return $this->render('GroupBundle:Group:index.html.twig', array(
-            'locationGroups' => $locationGroups,
-            'topicGroups'    => $topicGroups,
+            'locationGroups' => $location,
+            'topicGroups'    => $topic,
             'recentGroups'   => $recentGroups,
             'popularGroups'  => $popularGroups,
             'featuredGroups' => $featuredGroups,
