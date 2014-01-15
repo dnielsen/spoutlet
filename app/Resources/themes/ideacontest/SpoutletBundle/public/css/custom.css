@@ -207,8 +207,9 @@ a.profile-cancelBtn {
 }
 
 #groupHeader {
-    position: absolute;
-    top: 110px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 205px;
     font-size: 48px;
     color: gray;
 }
