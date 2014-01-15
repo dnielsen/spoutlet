@@ -105,7 +105,7 @@ class GroupRepository extends EntityRepository
         return $qb->getQuery()->execute();
     }
 
-    public function findGroupsByCategoryAndSite($category, $site)
+    public function findFeaturedGroupsByCategoryAndSite($category, $site)
     {
         $qb = $this->createQueryBuilder('g')
             ->select('g, COUNT(DISTINCT m.id) memberCount')
@@ -115,6 +115,23 @@ class GroupRepository extends EntityRepository
             ->andWhere('(s = :site OR g.allLocales = true)')
             ->andWhere('g.deleted = false')
             ->andWhere('g.featured <> 1')
+            ->setParameter('category', $category)
+            ->setParameter('site', $site)
+            ->orderBy('memberCount', 'DESC')
+            ->groupBy('g.id');
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function findAllGroupsByCategoryAndSite($category, $site)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->select('g, COUNT(DISTINCT m.id) memberCount')
+            ->leftJoin('g.members', 'm')
+            ->leftJoin('g.sites', 's')
+            ->where('g.category = :category')
+            ->andWhere('(s = :site OR g.allLocales = true)')
+            ->andWhere('g.deleted = false')
             ->setParameter('category', $category)
             ->setParameter('site', $site)
             ->orderBy('memberCount', 'DESC')

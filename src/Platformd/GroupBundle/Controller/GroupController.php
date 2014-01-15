@@ -315,8 +315,8 @@ Alienware Arena Team
         $groupManager = $this->getGroupManager();
 
         $featuredGroups = $repo->findAllFeaturedGroupsForSite($site);
-        $locationGroups = $repo->findGroupsByCategoryAndSite('location', $site);
-        $topicGroups    = $repo->findGroupsByCategoryAndSite('topic', $site);
+        $locationGroups = $repo->findAllGroupsByCategoryAndSite('location', $site);
+        $topicGroups    = $repo->findAllGroupsByCategoryAndSite('topic', $site);
         $recentGroups   = $repo->findMostRecentlyCreatedGroupsForSite($site);
         $popularGroups  = $repo->findMostPopularGroupsForSite($site);
 
