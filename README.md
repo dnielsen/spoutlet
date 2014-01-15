@@ -99,7 +99,7 @@ INSTALLATION
     If you see any issues, you may need to install more things. You can
     choose to ignore any issues, they may or may not affect you.
 
-    $ php app/check.php -c /etc/php5/apache2/php.ini
+    $ php -c /etc/php5/apache2/php.ini app/check.php 
 
 * Create the database, migrate up to the current schema
 ```
