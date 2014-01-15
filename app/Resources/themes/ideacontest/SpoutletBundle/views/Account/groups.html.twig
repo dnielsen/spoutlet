@@ -6,17 +6,15 @@
 
 <div class="control_panel">
     <div class="widget-100 fillWidth">
-        <div class="widget-header">
-            <div class="widget-title">
-                <span class="left">My Groups</span>
-                    {% if action != null %}
-                        <span class="right"><a href="{{ path('group_new', {'then': action}) }}" class="blu">Create Group</a></span>
-                    {% else %}
-                        <span class="right"><a href="{{ path('group_new') }}" class="blu">Create Group</a></span>
-                    {% endif %}
-                <div class="clr"></div>
-            </div>
-        </div>
+        <h2>
+            <span class="left">My Groups</span>
+                {% if action != null %}
+                    <span class="right"><a href="{{ path('group_new', {'then': action}) }}" class="blu">Create Group</a></span>
+                {% else %}
+                    <span class="right"><a href="{{ path('group_new') }}" class="blu">Create Group</a></span>
+                {% endif %}
+            <div class="clr"></div>
+        </h2>
         <div class="widget-content">
             <div class="text">
                 <table class="tblStyle" class="tablesorter">
