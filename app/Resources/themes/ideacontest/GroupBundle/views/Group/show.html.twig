@@ -120,10 +120,10 @@
                 <div id="event-location-map">{{ vichgeo_map_for('large_location', nextEvent) }}</div>
             {% elseif groupEvents %}
                 <h2 class="spnsrBar">More Events</h2>
-                <ul class="scrollableSidebarWidget">
+                <ul class="scrollableWidget">
                     {% for event in groupEvents %}
-                        <li>
-                            <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu" style="margin-top:5px;">{{ event.name }}</h3></a>
+                        <li class="spcr-t spcr-l3">
+                            <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu">{{ event.name }}</h3></a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -145,11 +145,11 @@
 
         {% if group.entrySets | length > 0 %}
             <h2 class="spnsrBar" style="margin-top:20px">Lists</h2>
-            <ul class="scrollableSidebarWidget">
+            <ul class="scrollableWidget">
                 {% for entrySet in group.entrySets %}
-                <li>
-                    <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu" style="margin-top:5px;">{{ entrySet.name }}</h3></a>
-                </li>
+                    <li class="spcr-t spcr-l3">
+                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
+                    </li>
                 {% endfor %}
             </ul>
         {% endif %}
@@ -157,10 +157,10 @@
         {% if nextEvent %}
             {% if (not nextEvent.getOnline) and groupEvents %}
                 <h2 class="spnsrBar" style="margin-top:20px">More Events</h2>
-                <ul class="scrollableSidebarWidget">
+                <ul class="scrollableWidget">
                     {% for event in groupEvents %}
-                        <li>
-                            <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu" style="margin-top:5px;">{{ event.name }}</h3></a>
+                        <li class="spcr-t spcr-l3">
+                            <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu">{{ event.name }}</h3></a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -168,13 +168,13 @@
         {% endif %}
 
         <h2 class="spnsrBar" style="margin-top:20px">Organizer</h2>
-        <a href="{{ path('profile', {userId: group.owner.id}) }}"><h3 class="blu" style="margin-top:5px;padding-left:5px;">{{ group.owner.name }}</h3></a>
+        <a href="{{ path('profile', {userId: group.owner.id}) }}"><h3 class="blu spcr-t spcr-l3">{{ group.owner.name }}</h3></a>
 
         <h2 class="spnsrBar" style="margin-top:20px">{{ group.members|length }} Member{% if group.members|length > 1 %}s{% endif %}</h2>
-        <ul style="padding-left:5px;">
+        <ul>
             {% for member in group.members %}
-                <li>
-                    <a href="{{ path('profile', {'userId': member.id}) }}"><h3 class="blu" style="margin-top:5px">{{ member.name }}</h3></a>
+                <li class="spcr-t spcr-l3">
+                    <a href="{{ path('profile', {'userId': member.id}) }}"><h3 class="blu">{{ member.name }}</h3></a>
                 </li>
             {% else %}
                 There are no members of this group yet.

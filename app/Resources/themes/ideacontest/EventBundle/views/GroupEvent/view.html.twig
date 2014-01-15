@@ -75,19 +75,19 @@
 
         <br>
 
-        <h2 class="spnsrBar">Lists</h2>
-         <div class="scrollableSidebarWidget">
-             <ul class="scrollableSidebarWidget">
-            {% for entrySet in event.entrySets %}
-                <li>
-                    <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu" style="margin-top:5px;">{{ entrySet.name }}</h3></a>
-                </li>
-            {% endfor %}
+        {% if event.entrySets | length > 0 %}
+             <h2 class="spnsrBar">Lists</h2>
+             <ul class="scrollableWidget">
+                {% for entrySet in event.entrySets %}
+                    <li class="spcr-t spcr-l3">
+                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
+                    </li>
+                {% endfor %}
             </ul>
-        </div>
+            <br>
+        {% endif %}
 
-        <br>
-
+        
         {% if not (event.isUserAttending(app.user)) %}
             <h2 class="left">{{ event.attendees|length }} attendee{% if event.attendees|length != 1 %}s{% endif %}</h2>
             <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny submit right marginlft">Attend</a>
@@ -95,13 +95,10 @@
             <h3 class="left">You and {{ event.attendees|length - 1 }} other {% if event.attendees|length == 2 %}person{% else %}people{% endif %} are attending:</h3>
         {% endif %}
         <br class="clr">
-        <div class="scrollableSidebarWidget">
-            {% for member in event.attendees %}
-                <a href="{{ path('profile', {'userId': member.id}) }}" class="blu" style="margin-top:5px;">{{ member.name }}</a><br/>
-            {% endfor %}
-        </div>
 
-
+        {% for member in event.attendees %}
+            <a href="{{ path('profile', {'userId': member.id}) }}" class="blu" style="margin-top:5px;">{{ member.name }}</a><br/>
+        {% endfor %}
 
     </div>
 
