@@ -32,7 +32,8 @@
 
     <div>
         <div style="display:none;">{{ form_rest(form) }}</div>
-        <input type="submit" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" class="button btn btn-primary" formnovalidate />
+        <input type="submit" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" formnovalidate />
+        <input type="button" value="Cancel" onclick="window.history.back()" formnovalidate/>
     </div>
 
 </form>
