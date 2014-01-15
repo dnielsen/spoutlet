@@ -712,12 +712,21 @@ class GroupManager
         return array(
             'id' => $group->getId(),
             'slug' => $group->getSlug(),
+            'urlRouteName' => $group->getLinkableRouteName(),
+            'urlRouteParams' => $group->getLinkableRouteParameters(),
             'thumbnail' => $group->getThumbnail() ? $this->mediaExposer->getPath($group->getThumbnail(), array()) : null,
             'name' => $group->getName(),
             'owner' => array(
                 'adminLevel' => $owner->getAdminLevel() == 'ROLE_SUPER_ADMIN',
                 'username' => $owner->getUsername(),
             ),
+            'city' => $group->getLocation()->getCity(),
+            'stateProvince' => $group->getLocation()->getStateProvince(),
+            'address1' => $group->getLocation()->getAddress1(),
+            'address2' => $group->getLocation()->getAddress2(),
+            'metroArea' => $group->getLocation()->getMetroArea(),
+            'latitude' => $group->getLocation()->getLatitude(),
+            'longitude' => $group->getLocation()->getLongitude(),
         );
     }
 }

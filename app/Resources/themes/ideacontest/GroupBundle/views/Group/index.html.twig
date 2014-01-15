@@ -1,99 +1,5 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block title %}All Groups{% endblock %}
-
-{% block content %}
-    <a href="{{ path('fos_user_registration_register') }}" class="allgroups-step btnLg2 bdr3">Step 1: Sign Up</a>
-    <a href="{{ path('fos_user_security_login') }}" class="allgroups-step btnLg2 bdr3">Step 2: Login</a>
-    <a href="#" class="allgroups-step btnLg2 bdr3">Step 3: Register</a>
-    <hr class="spcr-t4 clr">
-    <div id="allgroups-contentLft">
-        {% if featuredGroups|length > 0 %}
-            <div class="group-collection">
-                <h2>{{ 'platformd.groups.index.featured_groups' | pd_trans }}</h2>
-                <div id="featured-groups">
-                    {% for group in featuredGroups %}
-                        <div class="group-list-item">
-                            <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
-                                {{ group[0].name }}
-                            </a>
-                            <div class="details">
-                                <div class="item-detail">{{ 'platformd.groups.index.members' | pd_trans }}: {{ group['memberCount'] }}</div>
-                                <div class="item-detail">{{ 'platformd.groups.index.organizer' | pd_trans }}: {{ group[0].owner.name }}</div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-		{% endif %}
-			
-		<hr class="clr">
-	    <div id="mapGrp">
-			<h2>Find a Group Near You</h2>
-		    <input id="map-location-search" type="text" size="50" placeholder="Enter your location" autocomplete="off">
-			<iframe width="680" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.com/maps?oe=utf-8&amp;client=firefox-a&amp;channel=fflb&amp;q=1355+Sansome+St,+San+Francisco,+CA&amp;ie=UTF8&amp;hq=&amp;hnear=1355+Sansome+St,+San+Francisco,+California+94111&amp;gl=us&amp;t=m&amp;z=14&amp;ll=37.802716,-122.403427&amp;output=embed"></iframe>
-	    </div> <!-- end mapGrp -->
-					
-        <div class="row">
-            <h2>Find Groups by Topic</h2>
-
-            <input id="#" size="50" placeholder="Enter topic" autocomplete="off" type="text">
-
-             <table summary="Upcoming Event Dates" class="tblStyle">
-                <thead>
-                    <tr>
-                        <th>Group</th>
-                        <th>Topic</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
-        </div> <!-- end row -->
-	</div> <!-- end contentLft -->
-		
-				
-    <div id="allgroups-contentRt">
-        <div>
-            <h2>{{ 'platformd.groups.index.welcome_new' | pd_trans }}</h2>
-
-            <table summary="New Groups" class="tblStyle">
-                <tbody>
-                {% for recentGroup in recentGroups %}
-                <tr class="fill">
-                   <td><a href="{{ path('group_show', { 'slug': recentGroup.slug }) }}">{{ recentGroup.name }}</a></td>
-                </tr>
-                {% else %}
-                  <p>{{ 'platformd.groups.index.no_groups_found' | pd_trans }}</p>
-                {% endfor %}
-
-                </tbody>
-            </table>
-
-            <p><a href="{{ path('group_new') }}" target="_blank" class="btn right smtxt spcr-b">{{ 'platformd.groups.index.create_group' | pd_trans }} </a></p>
-
-            <hr class="clr">
-
-            <h2>{{ 'platformd.groups.index.most_popular' | pd_trans }}</h2>
-
-            <table summary="Most Popular Groups" class="tblStyle">
-                <tbody>
-                {% for popularGroup in popularGroups %}
-                    <tr class="fill">
-                        <td><a href="{{ path('group_show', { 'slug': popularGroup['slug'] }) }}">{{ popularGroup['group_name'] }}</a></td>
-                    </tr>
-                {% else %}
-                    <p>{{ 'platformd.groups.index.no_groups_found' | pd_trans }}</p>
-                {% endfor %}
-                </tbody>
-            </table>
-
-        </div> <!-- end cBx1 -->
-    </div> <!-- end contentRt -->
-    <br class="clr">
-{% endblock %}
-
 {% block stylesheets %}
     {{ parent() }}
     {% include 'GroupBundle:Group:_css_assets.html.twig' %}
@@ -101,125 +7,197 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
-    <script type="text/javascript">
 
-        var topicGroups    = {{ topicGroups | raw }};
-        var locationGroups = {{ locationGroups | raw }};
-        var topicGroupsLoaded   = 0;
-        var locationGroupsLoaded   = 0;
-        var basePath       = '{{  path('default_index') }}';
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+    <script type="text/javascript" src="/themes/ideacontest/spoutlet/js/gmaps_custom.js"></script>
+
+    <script type="text/javascript">
+        var groupsArray = [];
 
         $(function () {
-            $('.reg-source').click(function() {
-                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
-            });
 
-            initGroups();
+            {% for group in locationGroups %}
+                singleGroup = [];
+                singleGroup['name'] = '{{ group.name }}';
+                singleGroup['lat'] = '{{ group.latitude }}';
+                singleGroup['long'] = '{{ group.longitude }}';
+                singleGroup['city'] = '{{ group.city }}';
+                singleGroup['address1'] = '{{ group.address1 }}';
+                singleGroup['address2'] = '{{ group.address2 }}';
+                singleGroup['stateProvince'] = '{{ group.stateProvince }}';
+                singleGroup['metroArea'] = '{{ group.metroArea }}';
+                singleGroup['url'] = '{{ path(group.urlRouteName, group.urlRouteParams, true) }}';
 
-            $('#scrollable-location-groups').scrollable({
-                next: '#location-next',
-                prev: '#location-prev',
-            });
-            $('#scrollable-topic-groups').scrollable({
-                next: '#topic-next',
-                prev: '#topic-prev',
-            });
-
-            $('#location-next').click(function() {
-                loadNextGroupsAjax('location');
-            });
-
-            $('#topic-next').click(function() {
-                loadNextGroupsAjax('topic');
-            });
-
-            $('.group-index-link').truncate({width:320});
-            $('.item-detail').truncate({width:320});
-            $('.widget-item .news-ellipse').truncate();
-
+                groupsArray.push(singleGroup);
+            {% endfor %}
         });
+    </script>
 
-        function initGroups() {
-            loadNextGroupsAjax('topic', 16);
-            loadNextGroupsAjax('location', 16);
-        }
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.tools.min.js"></script>
+    <script type="text/javascript">
+        var GROUPS = [];
+        var HITS = [];
 
-        function loadNextGroupsAjax(type, num) {
-          
-            if(typeof(num)==='undefined') num = 8;
+        function processGroup(index, comparator) {
+            var group = GROUPS[index];
 
-            scrollContainer = null;
-
-            if (type == 'location') {
-                list = locationGroups;
-                scrollContainer = '#scrollable-location-groups .items';
-                groupsLoaded = locationGroupsLoaded;
-            } else if (type == 'topic') {
-                list = topicGroups;
-                scrollContainer = '#scrollable-topic-groups .items';
-                groupsLoaded = topicGroupsLoaded;
-            } else {
+            if(comparator(group)) {
                 return;
             }
-            
-            var currDiv = null;
-            var baseDiv = $('<div class="items-wrapper"></div>');
 
-            for (var i = 0; i < num; i++) {
-
-                var index = groupsLoaded + i;
-
-                if(list.length <= groupsLoaded + i)
-                {
-                    groupsLoaded+=i;
-                    updateCounts(type, groupsLoaded);
-                    return;
-                }
-                if (i % 8 == 0) {
-                    currDiv = baseDiv.clone();
-                    currDiv.appendTo(scrollContainer);
-                }
-
-                if (list[index].thumbnail) {
-                    image = '<img src="' + list[index].thumbnail + '" alt="' + list[index].name + '" title="' + list[index].name + '" />';
-                } else {
-                    image = '<div class="default-group-thumbnail"></div>';
-                }
-
-                ownerName = list[index].owner.name;
-
-                currDiv.append('<div class="group-list-item"> \
-                    <a href="' + basePath + list[index].slug + '"> \
-                        ' + image + ' \
-                    </a> \
-                    <a href="' + basePath + list[index].slug + '" class="group-index-link" title="' + list[index].name + '"> \
-                        ' + list[index].name + ' \
-                    </a> \
-                    <div class="details"> \
-                        <div class="item-detail">{{ 'platformd.groups.index.members' | pd_trans }}: ' + list[index].memberCount + '</div> \
-                        <div class="item-detail">{{ 'platformd.groups.index.organizer' | pd_trans }}: ' + ownerName + '</div> \
-                        <div class="report-group-caption"> \
-                            <a href="javascript:void(0);" class="report-group" report-data="' + list[index].id + '">{{ 'platformd.groups.index.report_group' | pd_trans }}</a> \
-                        </div> \
-                    </div> \
-                </div>');
-            }
-
-            groupsLoaded+=num;
-
-            updateCounts(type, groupsLoaded);
-            $('.group-index-link').truncate();
+            HITS.push(group);
         }
 
-        function updateCounts(type, groupsLoaded) {
-            if (type == 'location') {
-                locationGroupsLoaded = groupsLoaded;
-            } else if (type == 'topic') {
-                topicGroupsLoaded = groupsLoaded;
+        function renderHits() {
+            var col1 = $("#groups-col1");
+            var col2 = $("#groups-col2");
+
+            col1.empty();
+            col2.empty();
+
+            for (var i=0; i<HITS.length; i+=2) {
+                var group = HITS[i];
+
+                col1.append("<li><a href=\""+group.url+"\">"+group.name+"</a></li>");
+
+                if(i+1<HITS.length) {
+                    var group2 = HITS[i+1];
+                    col2.append("<li><a href=\""+group2.url+"\">"+group2.name+"</a></li>");
+                }
             }
+
+            HITS = [];
         }
+
+        function updateSearchResults(comparator) {
+            for(var i=0; i<GROUPS.length; i+=2) {
+                processGroup(i, comparator);
+                if(i+1<GROUPS.length) {
+                    processGroup(i+1, comparator);
+                }
+            }
+            renderHits();
+        }
+
+        jQuery(document).ready(function($) {
+            var url = '{{ path('api_all_groups') }}';
+
+            var featuredTopicsComparator = function(group) {
+                return !group.isTopic || !group.isFeatured;
+            };
+
+            var topicComparator = function (group) {
+                var topic = searchBox.val();
+                return group.name.toLowerCase().indexOf(topic) == -1;
+            };
+
+            $.getJSON(url, null,
+                    function(data) {
+                        //Initially populate with all groups
+                        GROUPS = data.groups;
+                        if(GROUPS) {
+                            updateSearchResults(featuredTopicsComparator);
+                        }
+                    });
+
+            //Register search callback
+            var globalTimeout = null;
+            var searchBox = $('#groups-by-topic-search');
+            searchBox.keyup(function() {
+                var topic = searchBox.val();
+                var comparator = (topic == '') ? featuredTopicsComparator : topicComparator;
+                updateSearchResults(comparator);
+            });
+        });
 
     </script>
 
+{% endblock %}
+
+{% block title %}All Groups{% endblock %}
+
+{% block content %}
+    <div id="allgroups-contentLft">
+        {% if featuredGroups|length > 0 %}
+            <h2>{{ 'platformd.groups.index.featured_groups' | pd_trans }}</h2>
+            <div id="featured-groups">
+                {% for group in featuredGroups %}
+                    <div class="group-list-item">
+                        <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
+                            {{ group[0].name }}
+                        </a>
+                        <div class="details">
+                            <div class="item-detail">{{ 'platformd.groups.index.members' | pd_trans }}: {{ group['memberCount'] }}</div>
+                            <div class="item-detail">{{ 'platformd.groups.index.organizer' | pd_trans }}: {{ group[0].owner.name }}</div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+		{% endif %}
+			
+		<hr>
+
+	    <div id="map">
+			<h2>Find a Group Near You</h2>
+		    <input id="map-location-search" type="text" size="50" placeholder="Enter your location" autocomplete="off">
+            <div id="map-canvas" style="width:660px;height:320px"></div>
+		</div>
+
+        <hr class="clr">
+
+        <div class="row">
+            <div id="group-by-topic">
+                <h2 class="spcr-b2">Find a Group by Topic</h2>
+
+                <input id="groups-by-topic-search" type="text" size="80" placeholder="Enter Topic" autocomplete="off">
+
+                <div class="group-list">
+                    <ul id="groups-col1">
+                    </ul>
+                </div>
+
+                <div class="group-list">
+                    <ul id="groups-col2">
+                    </ul>
+                </div>
+            </div>
+
+        </div> <!-- end row -->
+	</div> <!-- end contentLft -->
+
+    <div id="allgroups-contentRt">
+        <h2>{{ 'platformd.groups.index.welcome_new' | pd_trans }}</h2>
+
+        <table class="tblStyle">
+            <tbody>
+            {% for recentGroup in recentGroups %}
+                <tr class="fill">
+                    <td><a href="{{ path('group_show', { 'slug': recentGroup.slug }) }}">{{ recentGroup.name }}</a></td>
+                </tr>
+            {% else %}
+                <p>{{ 'platformd.groups.index.no_groups_found' | pd_trans }}</p>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+        <p><a href="{{ path('group_new') }}" target="_blank" class="btn right smtxt spcr-b">{{ 'platformd.groups.index.create_group' | pd_trans }} </a></p>
+
+        <hr class="clr">
+
+        <h2>{{ 'platformd.groups.index.most_popular' | pd_trans }}</h2>
+
+        <table class="tblStyle">
+            <tbody>
+            {% for popularGroup in popularGroups %}
+                <tr class="fill">
+                    <td><a href="{{ path('group_show', { 'slug': popularGroup['slug'] }) }}">{{ popularGroup['group_name'] }}</a></td>
+                </tr>
+            {% else %}
+                <p>{{ 'platformd.groups.index.no_groups_found' | pd_trans }}</p>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div> <!-- end contentRt -->
+    <br class="clr">
 {% endblock %}

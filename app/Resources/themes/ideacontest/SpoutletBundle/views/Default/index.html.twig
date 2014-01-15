@@ -83,8 +83,6 @@
 {% set sidebar = true %}
 
 {% block content %}
-    {#{% include 'SpoutletBundle::content_header.html.twig' %}#}
-
     <div id="group-by-topic">
         <h2 class="spcr-b2">Find a Group by Topic</h2>
 
@@ -107,6 +105,7 @@
 
     <a href="{{ path('group_new') }}" class="right spcr-l2 btn bld bgBtn">Create Group &rsaquo;</a>
     {% render url('_popular_groups') %}
+
     <br class="clr"/>
 {% endblock %}
 
