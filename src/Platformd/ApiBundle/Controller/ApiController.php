@@ -221,7 +221,6 @@ class ApiController extends Controller
             );
         }
 
-        $nextEvent = array();
         if($nextEvent != null) {
             $nextEvent = array(
                 'id'            => $nextEvent->getId(),
