@@ -193,6 +193,7 @@ class AdminController extends Controller
                     }
                 }
 
+                $entrySet->setCreator($this->getCurrentUser());
                 $entrySet->setEntrySetRegistration($entrySetRegistration);
                 $entrySet->setAllowedVoters(implode(",", $validatedJudges));
 
