@@ -78,7 +78,7 @@
             {#</li>#}
 
             {% set _here = app.request.get('_route') %}
-            {% if app.user %}
+            {% if app.user and (menu_scope != 'other') %}
                 <li class="more">
                     <a>{{ 'platformd.layout.main_menu.settings' | pd_trans }}</a>
                     <ul>
