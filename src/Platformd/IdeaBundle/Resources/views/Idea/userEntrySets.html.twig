@@ -13,7 +13,7 @@
             </tr>
 
             {% for entrySet in entrySets %}
-                {% set parent = parents[entrySet.name] %}
+                {% set parent = parents[entrySet.id] %}
                 <tr>
                     <td>
                         <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}">{{ entrySet.name }}</a>
