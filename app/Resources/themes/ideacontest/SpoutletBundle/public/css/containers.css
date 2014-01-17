@@ -429,7 +429,7 @@ table.tblStyle2 {
 
 /*::::::::::::::: SITE CREDIT, COPYRIGHT :::::::::::::::*/
 
-#credit, #copyright {
+#credit, #copyright, #cloud {
 	height: 10px;
 	border-top: 1px dashed #ccc;
 	padding-top: 10px;
@@ -439,12 +439,17 @@ table.tblStyle2 {
 #credit { /* see links-lists.css for link properties */
 	clear: both;
 	float: left;
-	width: 525px;
+	width: 350px;
 	color: #ccc;
+}
+
+#cloud {
+    float:left;
+    width: 350px;
 }
 	
 #copyright {
 	float: right;
-	width: 525px;
+	width: 350px;
 	text-align: right;
 }
