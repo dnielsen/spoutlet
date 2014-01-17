@@ -884,7 +884,7 @@ class IdeaController extends Controller
         $parents = array();
         foreach($userEntrySets as $entrySet) {
             $parent = $this->getParentByEntrySet($entrySet);
-            $parents[$entrySet->getName()] = $parent;
+            $parents[$entrySet->getId()] = $parent;
         }
 
         return $this->render('IdeaBundle:Idea:userEntrySets.html.twig', array(
