@@ -533,6 +533,7 @@ class AdminController extends Controller
         $params = array(
             'group'             => $this->getGroup($groupSlug),
             'event'             => $event,
+            'breadCrumbs'       => $this->getBreadCrumbsString($event, true),
             'awaitingApproval'  => $awaitingApproval,
             'isAdmin'           => $isAdmin,
         );
