@@ -41,6 +41,7 @@
                     {% set _isOwner = (event.user == app.user) or (is_granted('ROLE_ADMIN')) %}
                     {% set _canDelete = _isOwner and (event.entrySets|length == 0) %}
                     {% set _canContact = _isOwner and (event.registrationOption == "REGISTRATION_ENABLED") and (event.approved == true) %}
+                    {% set _isPrivate = event.private %}
                     {% if event.entrySetRegistration|default %}
                         {% set _regId = event.entrySetRegistration.id %}
                     {% endif %}
@@ -105,6 +106,9 @@
                                 {% endif %}
                                 {% if _canContact %}
                                     <li><a href="{{ path('group_event_contact', {'eventId': _key, 'groupSlug': _key2}) }}">Email Attendees</a></li>
+                                {% endif %}
+                                {% if _isPrivate %}
+                                    <li><a href="{{ path('idea_admin_member_approvals', {'groupSlug': _key2, 'eventId': _key}) }}">Membership Approvals</a></li>
                                 {% endif %}
                             {% endif %}
                             {% if _canDelete %}
