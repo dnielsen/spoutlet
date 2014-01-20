@@ -28,49 +28,39 @@
 	position: relative;
 	width: 1050px;
 	margin: 0 auto;
+    height: 130px;
 }
-#header-campsite {
-	height: 130px;
+#topNav { /* For styling, see list-links.css */
+    position: absolute;
+    top: 5px;
+    right: 0;
+    font-size: 11px;
 }
-#header-group {
-	height: 205px;
+#brand-campsite {
+    margin-top: 55px;
+    padding-bottom: 10px;
 }
-	#topNav { /* For styling, see list-links.css */
-	    position: absolute;
-	    top: 5px;
-	    right: 0;
-	    font-size: 11px;
-	}
-	#brand-campsite {
-		margin-top: 55px;
-		padding-bottom: 10px;
-	}
-		.brand-small {
-			position: absolute;
-			top: 8px;
-			left: 0;
-		}
-	#brand-group { /* see hack-global for #brand-group-txt styling */
-        margin-top: 40px;
-        max-height: 160px;
-        max-width: 840px;
-	}
-	#tagline-campsite {
-	    position: absolute;
-	    top: 95px;
-	    right: 0;
-	}
-	#tagline-group {
-		position: absolute;
-		top: 180px;
-		right: 0;
-	}
-		#tagline-campsite span, #tagline-group span {
-			font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
-			font-size: 28px;
-			font-weight: bold;
-			letter-spacing: -1px;
-		}
+    .brand-small {
+        position: absolute;
+        top: 8px;
+        left: 0;
+    }
+#brand-group { /* see hack-global for #brand-group-txt styling */
+    margin-top: 55px;
+    max-height: 75px;
+    max-width: 840px;
+}
+#tagline {
+    position: absolute;
+    top: 95px;
+    right: 0;
+
+    font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: -1px;
+    color: #2faad9;
+}
 
 /*::::::::::::::: NAV :::::::::::::::*/
 

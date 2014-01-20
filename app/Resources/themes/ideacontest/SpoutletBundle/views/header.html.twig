@@ -46,11 +46,9 @@
                 {% set bannerString = 'themes/' ~ site.theme ~ '/spoutlet/img/logo-campsite.png' %}
             {% endif %}
             <a href="{{ path('default_index') }}"><img src="{{ asset(bannerString) }}" width="305" height="72" alt="Campsite" id="brand-campsite"></a>
-            <div id="tagline-campsite">
-                <span class="blu">share.</span>
-                <span class="blu">learn.</span>
-                <span class="blu">grow.</span>
-            </div>
+
+            <div id="tagline">share. learn. grow.</div>
+
         {% endif %}
     {% endblock %}
 
