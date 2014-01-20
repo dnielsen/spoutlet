@@ -42,7 +42,7 @@ class GroupType extends AbstractType
             ))
             ->add('groupAvatar', new MediaType(), array(
                 'image_label'   => 'Group Logo',
-                'image_help'    => 'Maximum width: 840px, maximum height: 160px. Please use JPEG or PNG.',
+                'image_help'    => 'Maximum width: 830px, maximum height: 72px. Please use JPEG or PNG.',
                 'with_remove_checkbox' => $this->group->getId() == null ? false : true
             ))
             ->add('backgroundImage', new MediaType(), array(

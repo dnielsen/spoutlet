@@ -47,8 +47,8 @@
     }
 #brand-group { /* see hack-global for #brand-group-txt styling */
     margin-top: 55px;
-    max-height: 75px;
-    max-width: 840px;
+    max-height: 72px;
+    max-width: 830px;
 }
 #tagline {
     position: absolute;
