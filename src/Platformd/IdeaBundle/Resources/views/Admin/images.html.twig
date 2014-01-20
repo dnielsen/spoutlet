@@ -2,7 +2,7 @@
 
 {% block event_content %}
 
-    <h1>Event Rotator Images</h1>
+    <h1>Event Slider Images</h1>
 
     <h2>Add Image</h2> (Approximately 644 x 340)
 
@@ -22,18 +22,5 @@
         <a href="{{ path('idea_admin_remove_image', {'groupSlug': group.slug, 'eventId': event.id, 'imageId': image.id}) }}">Delete</a>
         <br/><hr/>
     {% endfor %}
-
-    <table class="paddedTable">
-        <td>
-            <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}" method="get" id='home'>
-                <input type="submit" value="< {{ event.name | truncate(20) }}" form='home' />
-            </a>
-        </td>
-        <td>
-            <form action = {{ path('idea_admin_event', {'groupSlug': group.slug, 'eventId': event.id}) }} method="get">
-                <input type="submit" value="< Edit Event">
-            </form>
-        </td>
-    </table>
 
 {% endblock %}

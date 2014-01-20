@@ -481,10 +481,11 @@ class AdminController extends Controller
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         $params = array(
-            'group'     => $this->getGroup($groupSlug),
-            'event'     => $event,
-            'form'      => $form->createView(),
-            'isAdmin'   => $isAdmin,
+            'group'       => $this->getGroup($groupSlug),
+            'event'       => $event,
+            'breadCrumbs' => $this->getBreadCrumbsString($event, true),
+            'form'        => $form->createView(),
+            'isAdmin'     => $isAdmin,
         );
 
         if ('POST' === $request->getMethod()) {
