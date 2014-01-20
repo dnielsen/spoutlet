@@ -444,14 +444,14 @@ class Controller extends BaseController
 
         return $esRegRepo->getContainer($parentRegistration);
     }
-    protected function getBreadCrumbsString($scope)
+    protected function getBreadCrumbsString($scope, $showCurrentScope = false)
     {
         $breadCrumbs = $this->getHierarchy($scope);
 
         $breadCrumbsHtml = "";
 
         foreach ($breadCrumbs as $crumb) {
-            if ($crumb && $crumb != $scope){
+            if ($crumb && ($showCurrentScope || $crumb != $scope)) {
                 $breadCrumbsHtml = $breadCrumbsHtml."> <a href=\"".$this->generateUrl($crumb->getLinkableRouteName(), $crumb->getLinkableRouteParameters())."\">".$crumb->getName()."</a> ";
             }
         }
