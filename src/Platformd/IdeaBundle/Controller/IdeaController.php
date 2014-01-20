@@ -2,28 +2,24 @@
 
 namespace Platformd\IdeaBundle\Controller;
 
-use Platformd\GroupBundle\Entity\Group;
+use Platformd\EventBundle\Entity\Event;
 use Platformd\EventBundle\Entity\GroupEvent;
-use Symfony\Component\Form\Exception\NotValidException;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContext;
-
-use Platformd\SpoutletBundle\Controller\Controller;
-use Platformd\IdeaBundle\Entity\Idea;
+use Platformd\GroupBundle\Entity\Group;
 use Platformd\IdeaBundle\Entity\Comment;
+use Platformd\IdeaBundle\Entity\Document;
+use Platformd\IdeaBundle\Entity\EntrySet;
+use Platformd\IdeaBundle\Entity\FollowMapping;
+use Platformd\IdeaBundle\Entity\Idea;
+use Platformd\IdeaBundle\Entity\Link;
 use Platformd\IdeaBundle\Entity\Tag;
 use Platformd\IdeaBundle\Entity\Vote;
-use Platformd\IdeaBundle\Entity\FollowMapping;
-use Platformd\IdeaBundle\Entity\Document;
-use Platformd\IdeaBundle\Entity\Link;
-use Platformd\IdeaBundle\Entity\EntrySet;
-use Platformd\IdeaBundle\Entity\EntrySetRegistryRepository;
-use Platformd\EventBundle\Entity\Event;
-use Platformd\IdeaBundle\Entity\EntrySetScopeable;
+use Platformd\SpoutletBundle\Controller\Controller;
+use Symfony\Component\Form\Exception\NotValidException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class IdeaController extends Controller
 {
@@ -1135,77 +1131,6 @@ class IdeaController extends Controller
         return $attendance;
     }
 
-    public function getParentByIdea($idea)
-    {
-        $esRegistration = $idea->getParentRegistration();
-        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
-
-        return $esRegRepo->getContainer($esRegistration);
-    }
-    public function getParentByEntrySet($entrySet)
-    {
-        $parentRegistration = $entrySet->getEntrySetRegistration();
-        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
-
-        return $esRegRepo->getContainer($parentRegistration);
-    }
-
-    public function getBreadCrumbsString($scope)
-    {
-        $breadCrumbs = $this->getHierarchy($scope);
-
-        $breadCrumbsHtml = "";
-
-        foreach ($breadCrumbs as $crumb) {
-            if ($crumb && $crumb != $scope){
-                $breadCrumbsHtml = $breadCrumbsHtml."> <a href=\"".$this->generateUrl($crumb->getLinkableRouteName(), $crumb->getLinkableRouteParameters())."\">".$crumb->getName()."</a> ";
-            }
-        }
-
-        return $breadCrumbsHtml;
-    }
-
-    public function getHierarchy($scope)
-    {
-        $group    = null;
-        $event    = null;
-        $entrySet = null;
-        $entry    = null;
-
-        $entrySetParent   = null;
-
-        if ($scope instanceof Idea) {
-            $entry          = $scope;
-            $entrySet       = $entry->getEntrySet();
-            $entrySetParent = $this->getParentByEntrySet($entrySet);
-        }
-        elseif ($scope instanceof EntrySet) {
-            $entrySet       = $scope;
-            $entrySetParent = $this->getParentByEntrySet($entrySet);
-        }
-        elseif ($scope instanceof GroupEvent) {
-            $event          = $scope;
-            $group          = $event->getGroup();
-        }
-        elseif ($scope instanceof Group) {
-            $group          = $scope;
-        }
-
-        if ($entrySetParent instanceof GroupEvent) {
-            $event = $entrySetParent;
-            $group = $event->getGroup();
-        }
-        elseif ($entrySetParent instanceof Group) {
-            $group = $entrySetParent;
-        }
-
-        return array(
-            $group,
-            $event,
-            $entrySet,
-            $entry,
-        );
-    }
 
 }
 ?>

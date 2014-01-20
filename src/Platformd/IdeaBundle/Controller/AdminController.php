@@ -639,13 +639,6 @@ class AdminController extends Controller
         return $event;
     }
 
-    public function getParentByIdea($idea){
-        $esRegistration = $idea->getParentRegistration();
-        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
-
-        return $esRegRepo->getContainer($esRegistration);
-    }
-
     public function assignJudgesAction(Request $request, $groupSlug, $eventId, $ideaId)
     {
         $doc = $this->getDoctrine();
@@ -696,14 +689,6 @@ class AdminController extends Controller
         }
 
         return $entrySet;
-    }
-
-    public function getParentByEntrySet($entrySet)
-    {
-        $parentRegistration = $entrySet->getEntrySetRegistration();
-        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
-
-        return $esRegRepo->getContainer($parentRegistration);
     }
 
     public function canEditEntrySet($entrySet)
