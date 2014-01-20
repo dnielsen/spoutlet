@@ -21,10 +21,12 @@
 
         {% block banner %}
             {% if group.groupAvatar is not null %}
-                <img src="{{ media_path(group.groupAvatar) }}" alt="Group Logo" id="brand-group">
+                {% set bannerContent = '<img src="' ~ media_path(group.groupAvatar) ~ '" alt="Group Logo" id="brand-group">' %}
             {% else %}
-                <span id="groupHeader">{{ group.name }}</span>
+                {% set bannerContent = '<span id="groupHeader">' ~ group.name ~ '</span>' %}
             {% endif %}
+
+            <a href="{{ path('group_show', {'slug': group.slug}) }}">{{ bannerContent | raw }}</a>
 
             <div id="tagline-group">
                 <span class="blu">share.</span>

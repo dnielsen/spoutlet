@@ -1,21 +1,4 @@
-{% extends 'SpoutletBundle::layout.html.twig' %}
-
-{% block title %}{{ event.name }}{% endblock %}
-
-{% block header %}
-
-    {% embed 'SpoutletBundle::header.html.twig' %}
-        {% block extra_user_controls %}
-        {% endblock %}
-    {% endembed %}
-
-    {% embed 'SpoutletBundle::navigation.html.twig' %}
-    {% endembed %}
-
-{%  endblock %}
-
-{% block menu_items %}
-{% endblock %}
+{% extends 'IdeaBundle::group_layout.html.twig' %}
 
 {% block content %}
 
@@ -44,21 +27,8 @@
 
     {% if show == 'true' %}
 
-        {% if sidebar is defined and sidebar == true %}
-            <div class="col1">
-        {% endif %}
-
         {% block event_content %}
         {% endblock %}
-
-        {% if sidebar is defined and sidebar == true %}
-            </div>
-            <div class="col2">
-                {% block sidebar %}
-                    {% include 'IdeaBundle::sidebar.html.twig' %}
-                {% endblock %}
-            </div>
-        {% endif %}
 
     {% endif %}
 
