@@ -13,6 +13,9 @@
                 toggleLocationControls();
             });
 
+            $('#event_startsAt').datetimepicker();
+            $('#event_endsAt').datetimepicker();
+
             function toggleLocationControls() {
                 if($('#event_online').val() == '1') {
                     $('#location-controls').slideUp();
@@ -23,8 +26,10 @@
                     $('#location-controls').slideDown();
                 }
             }
+
         });
     </script>
+
 {% endblock %}
 
 {% block content %}
