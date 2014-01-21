@@ -13,8 +13,15 @@
                 toggleLocationControls();
             });
 
-            $('#event_startsAt').datetimepicker();
-            $('#event_endsAt').datetimepicker();
+            $('#event_startsAt').datetimepicker({step: 30, format:'Y-m-d H:i:s'});
+            $('#event_endsAt').datetimepicker({step: 30, format:'Y-m-d H:i:s'});
+
+            {% if isNew %}
+                var now = new Date();
+                var date = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+(now.getDate());
+                $('#event_startsAt').val(date + ' 18:00:00');
+                $('#event_endsAt').val(date + ' 22:00:00');
+            {% endif %}
 
             function toggleLocationControls() {
                 if($('#event_online').val() == '1') {
@@ -26,6 +33,7 @@
                     $('#location-controls').slideDown();
                 }
             }
+
 
         });
     </script>
@@ -64,7 +72,6 @@
         {% endif %}
 
         <br class="clr"/>
-        <br/>
 
 	    <input type="submit" value="Submit"/>
 		<input type="submit" value="Cancel" name="cancel" formnovalidate/>
