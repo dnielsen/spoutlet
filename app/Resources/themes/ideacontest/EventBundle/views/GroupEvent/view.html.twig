@@ -43,7 +43,11 @@
     </div>
 
     <div id="contentRt">
-        <h2 class="spnsrBar">Event Details</h2>
+        <h2 class="spnsrBar">Event Details
+            {% if not (event.isUserAttending(app.user)) %}
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny submit right marginlft">Attend</a>
+            {% endif %}
+        </h2>
         <table id="eventDetails" class="tblStyle">
             <tr>
                 <td><strong>Organizer:</strong></td>
@@ -90,7 +94,6 @@
         
         {% if not (event.isUserAttending(app.user)) %}
             <h2 class="left">{{ event.attendees|length }} attendee{% if event.attendees|length != 1 %}s{% endif %}</h2>
-            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny submit right marginlft">Attend</a>
         {% else %}
             <h3 class="left">You and {{ event.attendees|length - 1 }} other {% if event.attendees|length == 2 %}person{% else %}people{% endif %} are attending:</h3>
         {% endif %}
