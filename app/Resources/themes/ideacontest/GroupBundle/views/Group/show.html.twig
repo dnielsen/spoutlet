@@ -56,7 +56,9 @@
 
     <div class="rowBx">
         {{ group.description | raw }}
-        <a href="{{ path('group_events', {'slug': group.slug}) }}#past" class="blu right">Past Events</a>
+        {% if pastEvents|length > 0 %}
+            <a href="{{ path('group_events', {'slug': group.slug}) }}#past" class="blu right">Past Events</a>
+        {% endif %}
         <div class="clr"></div>
     </div>
     <hr/>
