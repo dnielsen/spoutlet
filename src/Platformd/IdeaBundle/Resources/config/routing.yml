@@ -60,7 +60,7 @@ idea_admin_member_approvals:
     defaults:   { _controller: IdeaBundle:Admin:approvals }
 
 idea_admin_process_approval:
-    pattern:    /{groupSlug}/event/{eventId}/admin/approvals/{userId}/{approval}
+    pattern:    /{groupSlug}/event/{eventId}/admin/approvals/{userId}/{action}
     defaults:   { _controller: IdeaBundle:Admin:processApproval }
 
 idea_summary:

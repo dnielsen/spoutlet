@@ -2,31 +2,25 @@
 
 namespace Platformd\IdeaBundle\Controller;
 
-use Platformd\EventBundle\Entity\EventRsvpAction;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
-use Platformd\SpoutletBundle\Controller\Controller;
-use Platformd\IdeaBundle\Entity\VoteCriteria;
+use DateTime;
 use Platformd\EventBundle\Entity\Event;
-use Platformd\IdeaBundle\Entity\EntrySet;
+use Platformd\EventBundle\Entity\EventRsvpAction;
 use Platformd\EventBundle\Entity\GroupEvent;
+use Platformd\EventBundle\Entity\GroupEventRsvpAction;
 use Platformd\GroupBundle\Entity\Group;
+use Platformd\IdeaBundle\Entity\EntrySet;
+use Platformd\IdeaBundle\Entity\VoteCriteria;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
-
-use Symfony\Component\EventDispatcher\EventDispatcher,
-    Symfony\Component\Security\Core\SecurityContextInterface,
-    Symfony\Component\Security\Acl\Model\MutableAclProviderInterface as aclProvider,
-    Symfony\Component\Security\Acl\Exception\AclAlreadyExistsException,
-    Symfony\Component\Security\Acl\Domain\ObjectIdentity,
-    Symfony\Component\Security\Acl\Domain\UserSecurityIdentity,
-    Symfony\Component\Security\Acl\Permission\MaskBuilder,
-    Symfony\Component\Routing\RouterInterface
-;
+use Platformd\SpoutletBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
+use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Symfony\Component\Security\Acl\Exception\AclAlreadyExistsException;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class AdminController extends Controller
 {
@@ -542,27 +536,35 @@ class AdminController extends Controller
         return $this->render('IdeaBundle:Admin:approvals.html.twig', $params);
     }
 
-    public function processApprovalAction($groupSlug, $eventId, $userId, $approval) {
+    public function processApprovalAction($groupSlug, $eventId, $userId, $action) {
 
-        $eventId = $this->getEvent($groupSlug, $eventId)->getId();
+        $event = $this->getEvent($groupSlug, $eventId);
         $user = $this->getDoctrine()->getRepository('UserBundle:User')->findOneBy(array('id'=>$userId));
 
         $rsvpRepo = $this->getDoctrine()->getRepository('EventBundle:GroupEventRsvpAction');
-        $userRsvpStatus = $rsvpRepo->findOneBy( array('user' => $userId,'event' => $eventId) );
+        $userRsvpActions = $rsvpRepo->findBy(
+            array('user' => $userId,'event' => $eventId),
+            array('updatedAt' => 'DESC')
+        );
+        $userRsvpStatus = reset($userRsvpActions);
 
         $em = $this->getDoctrine()->getEntityManager();
 
         if ($userRsvpStatus){
-            if ($approval == 'approve'){
-                $userRsvpStatus->setAttendance(EventRsvpAction::ATTENDING_YES);
+            if ($action == 'approve'){
+
+                $newRsvp = new GroupEventRsvpAction();
+                $newRsvp->setUser($user);
+                $newRsvp->setEvent($event);
+                $newRsvp->setRsvpAt(new DateTime('now'));
+                $newRsvp->setAttendance(EventRsvpAction::ATTENDING_YES);
+                $em->persist($newRsvp);
                 $em->flush();
-                $this->setFlash('success', $user->getName().' has been approved for the event.');
             }
             else {
-                $userRsvpStatus->setAttendance(EventRsvpAction::ATTENDING_REJECTED);
-                $em->flush();
-                $this->setFlash('success', $user->getName().' has been rejected for the event.');
+                $this->getGroupEventService()->unregister($event, $user, true);
             }
+            $this->setFlash('success', $user->getName().' has been '.$action.'ed for the event.');
         } else {
             $this->setFlash('error', $user->getName().' is not attending this event.');
         }
