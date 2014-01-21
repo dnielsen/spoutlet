@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    {% if event.private and not isAdmin %}
+    {% if event.private and not (isAdmin or event.user==app.user) %}
         {% if app.user is null %}
             This event is private. Please log in to view this page.<br/><br/>
             <a href="{{ path('fos_user_security_login') }}"><input type="button" value="{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}" class="btnMdm left"></a>
