@@ -8,7 +8,7 @@
             <a href="{{ path('fos_user_security_login') }}"><input type="button" value="{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}" class="btnMdm left"></a>
             <a href="{{ path('fos_user_registration_register') }}"><input type="button" value="Register" class="btnMdm left marginlft"></a>
             {% set show = 'false' %}
-        {% elseif not event.isUserAttending(app.user) %}
+        {% elseif attendance == null %}
             This event is private. Please apply for access and an administrator will review your application. <br/><br/>
             <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}"><input type="button" value="Apply Now"></a>
             {% set show = 'false' %}
