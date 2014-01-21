@@ -1,6 +1,5 @@
 {% extends 'IdeaBundle::group_layout.html.twig' %}
 
-
 {% block title %}
     {{ group.name }}
 {% endblock %}
@@ -57,7 +56,7 @@
 
     <div class="rowBx">
         {{ group.description | raw }}
-        <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blu right">See Events</a>
+        <a href="{{ path('group_events', {'slug': group.slug}) }}#past" class="blu right">Past Events</a>
         <div class="clr"></div>
     </div>
     <hr/>
@@ -100,7 +99,7 @@
                 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
                 <div id="event-location-map">{{ vichgeo_map_for('large_location', nextEvent) }}</div>
             {% elseif groupEvents %}
-                <h2 class="spnsrBar">More Events</h2>
+                <h2 class="spnsrBar">More Upcoming Events</h2>
                 <ul class="scrollableWidget">
                     {% for event in groupEvents %}
                         <li class="spcr-t spcr-l3">
@@ -108,6 +107,7 @@
                         </li>
                     {% endfor %}
                 </ul>
+                <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blu right">All Events</a>
             {% endif %}
         </div>
     {% endif %}
@@ -131,7 +131,7 @@
 
         {% if nextEvent %}
             {% if (not nextEvent.getOnline) and groupEvents %}
-                <h2 class="spnsrBar" style="margin-top:20px">More Events</h2>
+                <h2 class="spnsrBar" style="margin-top:20px">More Upcoming Events</h2>
                 <ul class="scrollableWidget">
                     {% for event in groupEvents %}
                         <li class="spcr-t spcr-l3">
@@ -139,6 +139,7 @@
                         </li>
                     {% endfor %}
                 </ul>
+                <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blu right">All Events</a>
             {% endif %}
         {% endif %}
 
