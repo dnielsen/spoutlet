@@ -213,6 +213,10 @@ idea_delete:
 #    requirements:
 #     _method:   POST
 
+info_page:
+    pattern:    /{groupSlug}/info/{page}
+    defaults:   { _controller: IdeaBundle:Idea:infoPage }
+
 login:
     pattern:   /login
     defaults:  { _controller: FOSUserBundle:Security:login }

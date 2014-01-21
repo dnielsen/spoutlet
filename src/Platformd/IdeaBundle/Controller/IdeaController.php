@@ -889,6 +889,16 @@ class IdeaController extends Controller
         ));
     }
 
+
+    public function infoPageAction($groupSlug, $page)
+    {
+        $group = $this->getGroup($groupSlug);
+        return $this->render('IdeaBundle::'.$page.'.html.twig', array(
+            'group' => $group,
+        ));
+    }
+
+
     //TODO: Move this to a model file?
     /******************************************************
      ****************    MODEL STUFF HERE    ***************
@@ -1130,6 +1140,7 @@ class IdeaController extends Controller
 
         return $attendance;
     }
+
 
 
 }
