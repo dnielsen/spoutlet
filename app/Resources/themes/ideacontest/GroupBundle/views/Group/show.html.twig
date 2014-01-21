@@ -37,59 +37,30 @@
 {% block content %}
 
 
+    {% if group.slides | default | length > 0 %}
+        <div class="content-slider-bg">
+            <div id="content-slider-1" class="royalSlider contentSlider rsDefault">
+                {% for slide in group.slides %}
+
+                    <div>
+                        <a href="{{ slide.url }}" target="_blank"><img class="sliderImage" src="{{ media_path(slide.image) }}"></a>
+                        <span class="rsTmb">
+                            {{ slide.text }}
+                        </span>
+                    </div>
+
+                {% endfor %}
+            </div>
+        </div>
+        <hr/>
+    {% endif %}
+
     <div class="rowBx">
         {{ group.description | raw }}
         <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blu right">See Events</a>
         <div class="clr"></div>
     </div>
-    
-{#
-    <!-- royalslider code start -->
-    <div class="content-slider-bg">
-        <div id="content-slider-1" class="royalSlider contentSlider rsDefault">
-
-            <div>
-                <a href="{{ path('group_events', {'slug': group.slug}) }}" target="_blank"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-find.jpg') }}" alt="" width="740" height="341"></a>
-                <span class="rsTmb">
-                    Find
-                </span>
-            </div>
-            <div>
-                <a href="{{ path('idea_admin_event', {'groupSlug': group.slug}) }}" target="_blank"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-organize.jpg') }}" alt="" width="740" height="341"></a>
-                <span class="rsTmb">
-                    Organize
-                </span>
-            </div>
-            <div>
-                <a href="{{ path('group_join', {'slug': group.slug}) }}" target="_blank"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-join.jpg') }}" alt="" width="740" height="341"></a>
-                <span class="rsTmb">
-                    Join
-                </span>
-            </div>
-            <div>
-                <a href="#"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-speak.jpg') }}" alt="" width="740" height="341"></a>
-                <span class="rsTmb">
-                    Speak
-                </span>
-            </div>
-            <div>
-                <a href="#"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-sponsor.jpg') }}" alt="" width="740" height="341"></a>
-                <span class="rsTmb">
-                    Sponsor
-                </span>
-            </div>
-            <div>
-                <a href="#"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/ss-volunteer.jpg') }}" alt="" width="740" height="341"></a>
-                <span class="rsTmb">
-                    Volunteer
-                </span>
-            </div>
-
-        </div>
-    </div> <!-- end royalslider -->
-
-    #}
-    <hr>
+    <hr/>
 
 
     {% if nextEvent %}

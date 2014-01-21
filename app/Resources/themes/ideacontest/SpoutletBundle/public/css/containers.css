@@ -300,6 +300,11 @@
 			margin-top: 20px;
 		} */
 
+    .sliderImage {
+        width: 740px;
+        height: 341px;
+    }
+
 /*::::::::::::::: TABLE :::::::::::::::*/
 
 table.tblStyle {
