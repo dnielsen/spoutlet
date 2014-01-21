@@ -36,6 +36,14 @@
 
 {% block content %}
 
+
+    <div class="rowBx">
+        {{ group.description | raw }}
+        <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blu right">See Events</a>
+        <div class="clr"></div>
+    </div>
+    
+{#
     <!-- royalslider code start -->
     <div class="content-slider-bg">
         <div id="content-slider-1" class="royalSlider contentSlider rsDefault">
@@ -80,7 +88,9 @@
         </div>
     </div> <!-- end royalslider -->
 
+    #}
     <hr>
+
 
     {% if nextEvent %}
         <div class="cBxLft">
@@ -136,12 +146,6 @@
 {% set sidebar = true %}
 {% block sidebar %}
     <div id="contentRt">
-
-        <div class="rowBx">
-            {{ group.description | raw }}
-            <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blu right">See Events</a>
-            <div class="clr"></div>
-        </div>
 
         {% if group.entrySets | length > 0 %}
             <h2 class="spnsrBar" style="margin-top:20px">Lists</h2>
