@@ -58,6 +58,11 @@ class EntrySet implements LinkableInterface {
     protected $type;
 
     /**
+     * @ORM\Column(type="text", nullable="true")
+     */
+    protected $description;
+
+    /**
      * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\Idea", mappedBy="entrySet", cascade={"persist", "remove"})
      */
     protected $entries;
@@ -185,6 +190,23 @@ class EntrySet implements LinkableInterface {
     public function getName()
     {
         return $this->name;
+    }
+
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**

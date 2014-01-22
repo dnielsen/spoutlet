@@ -159,13 +159,14 @@ class AdminController extends Controller
         }
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'entrySet', $entrySet)
-            ->add('name',               'text',     array('attr'    => array('size'  => '60%')))
+            ->add('name',               'text',     array('attr'    => array('style' => 'width:60%')))
             ->add('type',               'choice',   array('choices' => array(EntrySet::TYPE_IDEA      => 'Ideas',
                                                                              EntrySet::TYPE_SESSION   => 'Sessions',
                                                                              EntrySet::TYPE_THREAD    => 'Threads',)))
+            ->add('description',        'textarea', array('attr'    => array('style' => 'width:60%')))
             ->add('isSubmissionActive', 'choice',   array('choices' => array('1' => 'Yes', '0' => 'No')))
             ->add('isVotingActive',     'choice',   array('choices' => array('0' => 'No', '1' => 'Yes')))
-            ->add('allowedVoters',      'text',     array('max_length' => '5000', 'attr'    => array('size' => '60%', 'placeholder' => 'username1, username2, ...'), 'required' => '0',))
+            ->add('allowedVoters',      'text',     array('max_length' => '5000', 'attr'    => array('style' => 'width:60%', 'placeholder' => 'username1, username2, ...'), 'required' => '0',))
             ->getForm();
 
         if($request->getMethod() == 'POST') {
