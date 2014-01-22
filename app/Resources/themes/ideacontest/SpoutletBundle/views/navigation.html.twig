@@ -132,6 +132,9 @@
                 </li>
             {% endif %}
 
+            {% if not app.user %}
+                <li><a href="{{ path('fos_user_registration_register') }}">Join Campsite Now &rsaquo;</a></li>
+            {% endif %}
 
         </ul>
 
