@@ -121,6 +121,8 @@ h5 {
 
 .lrgtxt {
 	font-size: 28px;
+    font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
+    color: #616161;
 }
 .midtxt {
 	font-size: 21px;
@@ -152,6 +154,7 @@ h5 {
 .spcr-t2 { margin-top: 45px; }
 .spcr-t3 { margin-top: 25px; }
 .spcr-t4 { margin-top: 30px !important; }
+.spcr-t5 { margin-top: 15px; }
 .spcr-b { margin-bottom: 25px; }
 .spcr-b2 { margin-bottom: 10px; }
 .spcr-b3 { margin-bottom: 15px; }
