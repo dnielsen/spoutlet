@@ -385,7 +385,7 @@ parameters:
             - 台湾省
 
 jms_i18n_routing:
-    default_locale: en_sjsu
+    default_locale: en_campsite
     locales: %available_locales%
     strategy: custom
     hosts: %site_host_map%
