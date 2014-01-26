@@ -246,7 +246,7 @@ class IdeaController extends Controller
         return $this->render('IdeaBundle:Idea:createForm.html.twig', array(
                 'parent'     => $this->getParentByEntrySet($entrySet),
                 'entrySet'   => $entrySet,
-                'breadCrumbs'=> $this->getBreadCrumbsString($entrySet),
+                'breadCrumbs'=> $this->getBreadCrumbsString($entrySet, true),
                 'sidebar'    => true,
                 'attendance' => $attendance,
                 'isAdmin'    => $isAdmin,
