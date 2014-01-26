@@ -2050,7 +2050,6 @@ Alienware Arena Team
 
     private function processForm(Form $form, Request $request)
     {
-        $em         = $this->getEntityManager();
         $tagManager = $this->getTagManager();
 
         if ($request->getMethod() == 'POST') {
@@ -2085,10 +2084,13 @@ Alienware Arena Team
 
                 $this->getGroupManager()->saveGroup($group);
 
-                $esReg = $group->createEntrySetRegistration();
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($esReg);
-                $em->flush();
+                if (!$group->getEntrySetRegistration())
+                {
+                    $esReg = $group->createEntrySetRegistration();
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $em->persist($esReg);
+                    $em->flush();
+                }
 
                 $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
                 $group->getId() ? $tagManager->replaceTags($tags, $group) : $tagManager->addTags($tags, $group);
