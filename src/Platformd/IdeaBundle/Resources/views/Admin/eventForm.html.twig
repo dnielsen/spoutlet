@@ -13,24 +13,14 @@
                 toggleLocationControls();
             });
 
-            var startDate = $('#event_startsAt_date');
-            var startTime = $('#event_startsAt_time');
-
-            var endDate =   $('#event_endsAt_date');
-            var endTime =   $('#event_endsAt_time');
-
-            startDate.datetimepicker({timepicker: false, format:'M d, Y'});
-            startTime.datetimepicker({datepicker: false, step: 15, format:'H:i'});
-
-            endDate.datetimepicker({timepicker: false, format:'M d, Y'});
-            endTime.datetimepicker({datepicker: false, step: 15, format:'H:i'});
+            $('#event_startsAt').datetimepicker({step: 15, format:'Y-m-d H:i:s'});
+            $('#event_endsAt').datetimepicker({step: 15, format:'Y-m-d H:i:s'});
 
             {% if isNew %}
-                startTime.val('18:00');
-                endTime.val('22:00');
-            {% else %}
-                startTime.val(startTime.val().slice(0,5));
-                endTime.val(endTime.val().slice(0,5));
+                var now = new Date();
+                var date = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+(now.getDate());
+                $('#event_startsAt').val(date + ' 18:00:00');
+                $('#event_endsAt').val(date + ' 22:00:00');
             {% endif %}
 
             function toggleLocationControls() {
@@ -43,6 +33,7 @@
                     $('#location-controls').slideDown();
                 }
             }
+
 
         });
     </script>
