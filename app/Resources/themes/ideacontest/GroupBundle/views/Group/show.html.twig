@@ -98,7 +98,7 @@
                 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
                 <div id="event-location-map">{{ vichgeo_map_for('large_location', nextEvent) }}</div>
             {% elseif groupEvents %}
-                <h2 class="spnsrBar">More Upcoming Events</h2>
+                <h2 class="widgetHeader">More Upcoming Events</h2>
                 <ul class="scrollableWidget">
                     {% for event in groupEvents %}
                         <li class="spcr-t spcr-l3">
@@ -108,7 +108,7 @@
                 </ul>
                 <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blu right">All Events</a>
             {% elseif group.entrySets|length > 0 %}
-                <h2 class="spnsrBar">Lists</h2>
+                <h2 class="widgetHeader">Lists</h2>
                 <ul class="scrollableWidget">
                     {% for entrySet in group.entrySets %}
                         <li class="spcr-t spcr-l3">
@@ -117,7 +117,7 @@
                     {% endfor %}
                 </ul>
             {% elseif pastEvents|length > 0 %}
-                <h2 class="spnsrBar">Past Events</h2>
+                <h2 class="widgetHeader">Past Events</h2>
                 <ul class="scrollableWidget">
                     {% for event in pastEvents %}
                         <li class="spcr-t spcr-l3">
@@ -155,7 +155,7 @@
 
 
         {% if renderEntrySets %}
-            <h2 class="spnsrBar" style="margin-top:20px">Lists</h2>
+            <h2 class="widgetHeader spcr-t6">Lists</h2>
             <ul class="scrollableWidget">
                 {% for entrySet in group.entrySets %}
                     <li class="spcr-t spcr-l3">
@@ -166,7 +166,7 @@
         {% endif %}
 
         {% if renderMoreEvents %}
-            <h2 class="spnsrBar" style="margin-top:20px">More Upcoming Events</h2>
+            <h2 class="widgetHeader spcr-t6">More Upcoming Events</h2>
             <ul class="scrollableWidget">
                 {% for event in groupEvents %}
                     <li class="spcr-t spcr-l3">
@@ -178,7 +178,7 @@
         {% endif %}
 
         {% if renderPastEvents %}
-            <h2 class="spnsrBar" style="margin-top:20px">Past Events</h2>
+            <h2 class="widgetHeader spcr-t6">Past Events</h2>
             <ul class="scrollableWidget">
                 {% for event in pastEvents %}
                     <li class="spcr-t spcr-l3">
@@ -189,10 +189,10 @@
             <a href="{{ path('group_events', {'slug': group.slug}) }}#past" class="blu right">See All</a>
         {% endif %}
 
-        <h2 class="spnsrBar" style="margin-top:20px">Organizer</h2>
+        <h2 class="widgetHeader spcr-t6">Organizer</h2>
         <a href="{{ path('profile', {userId: group.owner.id}) }}"><h3 class="blu spcr-t spcr-l3">{{ group.owner.name }}</h3></a>
 
-        <h2 class="spnsrBar" style="margin-top:20px">{{ group.members|length }} Member{% if group.members|length > 1 %}s{% endif %}</h2>
+        <h2 class="widgetHeader spcr-t6">{{ group.members|length }} Member{% if group.members|length > 1 %}s{% endif %}</h2>
         <ul>
             {% for member in group.members %}
                 <li class="spcr-t spcr-l3">
