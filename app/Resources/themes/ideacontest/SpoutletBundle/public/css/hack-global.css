@@ -32,7 +32,7 @@ img {
 hr {
 	height: 1px;
 	border: none 0; 
-	border-top: 1px dashed #ccc;
+	border-top: 1px solid #ccc;
 	margin: 20px 0 !important;
 }
 
@@ -186,11 +186,11 @@ h5 {
 
 .bdr {
     padding-bottom: 5px;
-    border-top: 1px dashed #ccc;
+    border-top: 1px solid #ccc;
 }
 .bdr2 {
     padding: 10px;
-    border: 1px dashed #ccc;
+    border: 1px solid #ccc;
 }
 
 .fillWidth {

@@ -69,8 +69,8 @@
     height: 32px;
     padding-top: 12px;
     margin: 0 auto 20px;
-    border-top: 1px dashed #ccc;
-    border-bottom: 1px dashed #ccc;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
 }
 
 /*::::::::::::::: PAGE CONTENT CONTAINERs :::::::::::::::*/
@@ -168,11 +168,11 @@
 		width: 100%;	
 		margin-top: 15px;
 		padding-top: 15px;
-		border-top: 1px dashed #ccc;
+		border-top: 1px solid #ccc;
 	} */
 		/* .row.bdrRt {
 			padding-right: 15px;
-			border-right: 1px dashed #ccc;
+			border-right: 1px solid #ccc;
 		} */
 		.cBxLft {
 			float: left;
@@ -186,7 +186,7 @@
 			width: 364px;
 			height: 250px;
 			padding-left: 10px;
-			border-left: 1px dashed #ccc;
+			border-left: 1px solid #ccc;
 		}
 
 #contentRt { /* see lists-links.css for button positioning */
@@ -201,14 +201,14 @@
 	/* .cBx1 {
 		position: relative;
 		padding-top: 15px;
-		border-top: 1px dashed #ccc;
+		border-top: 1px solid #ccc;
 	}
 	.cBx2 {
 		position: relative;
 		width: 275px;
 		margin-top: 14px;
 		padding: 15px 0 25px 15px;
-		border-top: 1px dashed #ccc;			
+		border-top: 1px solid #ccc;
 	}
 	.cBx3 div {	
 		margin-left: 10px;
@@ -236,7 +236,7 @@
 		width: 698px;
 		padding-right: 20px;
 		padding-bottom: 30px;
-		border-right: 1px dashed #ccc;
+		border-right: 1px solid #ccc;
 	}
 		.col1 > h2 {
 			margin-top: 15px;
@@ -249,7 +249,7 @@
 			width: 824px;
 			padding-left: 20px;
 			border-right: 0 none;
-			border-left: 1px dashed #ccc;
+			border-left: 1px solid #ccc;
 		}
 	.col2 {
 		float: right;
@@ -394,7 +394,7 @@ table.tblStyle2 {
 }
 #footer { /* For footer link lists refer to lists-links.css */
 	width: 100%;
-	border-top: 1px dashed #ccc;
+	border-top: 1px solid #ccc;
 	background: #f9f9f9;
 }
 	#ftr-content { 
@@ -419,14 +419,14 @@ table.tblStyle2 {
 		float: right;
 		width: 250px;
 		padding-left: 20px;
-		border-left: 1px dashed #ccc;	
+		border-left: 1px solid #ccc;
 	}
 
 /*::::::::::::::: SITE CREDIT, COPYRIGHT :::::::::::::::*/
 
 #credit, #copyright, #cloud {
 	height: 10px;
-	border-top: 1px dashed #ccc;
+	border-top: 1px solid #ccc;
 	padding-top: 10px;
 	font: 11px/16px 'Muli', Arial, sans-serif;
 	font-weight: 400;

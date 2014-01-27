@@ -146,14 +146,14 @@ nav.spoutlet-pager .current {
     width: 698px;
     padding-right: 20px;
     padding-bottom: 30px;
-    border-right: 1px dashed #ccc;
+    border-right: 1px solid #ccc;
 }
 
 .profile-rightcol.bdrLft {
     width: 824px;
     padding-left: 20px;
     border-right: 0 none;
-    border-left: 1px dashed #ccc;
+    border-left: 1px solid #ccc;
 }
 
 a.profile-cancelBtn {
