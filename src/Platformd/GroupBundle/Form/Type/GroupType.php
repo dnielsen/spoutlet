@@ -30,8 +30,7 @@ class GroupType extends AbstractType
     {
         $builder
             ->add('name', null, array(
-                'label' => 'Group Name',
-                'help'  => 'Do not use the word "Official" in the group name. All groups containing the word "Official" will be renamed.',
+                'label' => 'Name',
             ))
             ->add('slug', new SlugType(), array(
                 'label' => 'URL Text',
@@ -56,7 +55,7 @@ class GroupType extends AbstractType
                 'with_remove_checkbox' => $this->group->getId() == 0 ? false : true
             ))
             ->add('description', 'purifiedTextarea', array(
-                'label' => 'Group Description',
+                'label' => 'Description',
                 'attr'  => array('class' => 'ckeditor')
             ))
             ->add('isPublic', 'choice', array(

@@ -4,42 +4,57 @@
 {% set showAdminOpts = form.sites is defined or form.deleted is defined or form.featured is defined or form.discussionsEnabled is defined %}
 
 <div class="game-page-form">
+
     {{ form_errors(form) }}
 
         <div class="span11">
 
             {{ form_row(form.name) }}
-
-            <div class="styled-select">
-                {{ form_row(form.category) }}
-            </div>
-            <div id="group-location-controls">
-                {{ form_widget(form.location) }}
-            </div>
-            {{ form_row(form.isPublic) }}
             {{ form_row(form.description) }}
+
             {{ form_widget(form.groupAvatar) }}
+            {{ form_row(form.isPublic) }}
 
             <div id="admin-options" style="margin-top:15px;">
 
                 {% if showAdminOpts %}
                     <h2 style="margin-bottom: 15px;">Admin Options</h2>
+
                     {{ form_row(form.slug) }}
+
+                    {% if form.sites is defined %}
+                        {{ form_row(form.sites) }}
+                        {{ form_row(form.allLocales) }}
+                    {% endif %}
+
+                    {% if form.deleted is defined %}
+                        {{ form_row(form.deleted) }}
+                    {% endif %}
+
+                    {% if form.featured is defined %}
+                        {{ form_row(form.featured) }}
+                    {% endif %}
+
+
+                    <div class="styled-select">
+                        {{ form_row(form.category) }}
+                    </div>
+
                 {% endif %}
 
-                {% if form.sites is defined %}
-                    {{ form_row(form.sites) }}
-                    {{ form_row(form.allLocales) }}
-                {% endif %}
+            </div>
 
-                {% if form.deleted is defined %}
-                    {{ form_row(form.deleted) }}
-                {% endif %}
+            {% if not showAdminOpts %}
+                <div id="category" class="styled-select hidden">
+                    {{ form_row(form.category) }}
+                </div>
+            {% endif %}
 
-                {% if form.featured is defined %}
-                    {{ form_row(form.featured) }}
-                {% endif %}
-
+            <div id="group-location-controls">
+                <strong>City / Metro Area</strong>
+                {{ form_widget(form.location.city) }}
+                <strong>State / Province</strong>
+                {{ form_widget(form.location.state_province) }}
             </div>
 
         </div>
@@ -57,6 +72,29 @@
                 scrollTop: ($('.control-group.error').first().offset().top) - 100
             }, 400);
         }
+
+        $('#cancel').delegate('','click change',function(){
+            window.location = $(this).attr('rel');
+            return false;
+        });
+
+        var nonAdminCategoryWrapper = $('#category');
+        var category                = $('#platformd_groupbundle_grouptype_category');
+
+        if(nonAdminCategoryWrapper.val() !== undefined) { // user is not admin, set group type to location
+            category.val('location');
+        }
+        else if (category.val() == 'topic'){    // user is an admin and category is set to 'topic', so hide location controls initially
+            $('#group-location-controls').hide();
+        }
+
+        category.change(function () {
+            if($(this).val() == 'topic') {
+                $('#group-location-controls').slideUp();
+            } else {
+                $('#group-location-controls').slideDown();
+            }
+        });
 
     });
 </script>

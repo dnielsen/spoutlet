@@ -13,7 +13,7 @@
 
         <div class="form-actions" style="float: left;">
             <input type="submit" value="{{ 'save' | trans({}, 'admin') }}" formnovalidate>
-            <input type="button" id="cancel" value="Cancel" rel="{{ group | pd_link }}">
+            <input type="submit" id="cancel" value="Cancel" rel="{{ group | pd_link }}">
             {% set numEntrySets =  group.entrySets|length %}
             {% set numEvents =  group.numEvents %}
             {% if numEntrySets > 0 or numEvents > 0 %}
@@ -26,35 +26,8 @@
         </div>
     </form>
 {% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     {% include 'GroupBundle:Group:_css_assets.html.twig' %}
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript">
-        $(function () {
-
-            var groupType = $('#platformd_groupbundle_grouptype_category').val();
-
-            if(groupType == 'topic') {
-                $('#group-location-controls').hide();
-            }
-
-            $('#cancel').delegate('','click change',function(){
-                window.location = $(this).attr('rel');
-                return false;
-            });
-
-            $('#platformd_groupbundle_grouptype_category').change(function () {
-                var groupType = $(this).val();
-                if(groupType == 'topic') {
-                    $('#group-location-controls').fadeOut();
-                } else {
-                    $('#group-location-controls').fadeIn();
-                }
-            });
-        });
-    </script>
 {% endblock %}

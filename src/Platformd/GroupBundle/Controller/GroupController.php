@@ -1758,7 +1758,7 @@ Alienware Arena Team
                 $then
             );
 
-            $group->setDescription('Welcome to my group! <br /><br />This is the place to share your thoughts with like-minded folks on this topic. <br /><br />Feel free to upload relevant images and videos, or start a discussion on this topic.');
+            $group->setDescription('Welcome to my group! <br /><br />This is the place to share your thoughts with like-minded folks on this topic. <br /><br />Feel free to start a discussion on this topic.');
         }
 
         $form = $this->createForm(new GroupType($this->getUser(), $group, $tagManager, false), $group);
