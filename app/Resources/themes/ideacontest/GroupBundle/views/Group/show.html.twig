@@ -108,7 +108,7 @@
                 </ul>
                 <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blu right">All Events</a>
             {% elseif group.entrySets|length > 0 %}
-                <h2 class="spnsrBar" style="margin-top:20px">Lists</h2>
+                <h2 class="spnsrBar">Lists</h2>
                 <ul class="scrollableWidget">
                     {% for entrySet in group.entrySets %}
                         <li class="spcr-t spcr-l3">
@@ -117,7 +117,7 @@
                     {% endfor %}
                 </ul>
             {% elseif pastEvents|length > 0 %}
-                <h2 class="spnsrBar" style="margin-top:20px">Past Events</h2>
+                <h2 class="spnsrBar">Past Events</h2>
                 <ul class="scrollableWidget">
                     {% for event in pastEvents %}
                         <li class="spcr-t spcr-l3">
