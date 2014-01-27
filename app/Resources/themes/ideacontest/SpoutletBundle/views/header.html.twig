@@ -6,35 +6,31 @@
 
     <div id="topNav">
         <ul>
-            <li><a href="{{ path('default_index') }}">Home</a></li>
             {% if app.user is null %}
                 <li><a href="{{ path('fos_user_security_login') }}">{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}</a></li>
                 <li><a href="{{ path('fos_user_registration_register') }}">Join Now</a></li>
             {% else %}
                 <li><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a></li>
+                <li>Welcome, <a href="{{ path('profile', {'userId': app.user.id}) }}" class="blu">{% if app.user.name %}{{app.user.name}}{% else %}{{app.user.username}}{% endif %}</a></li>
                 <li><a href="{{ path('accounts_settings') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
             {% endif %}
             <li><a href="{{ path('global_events_index') }}">{{ 'platformd.layout.main_menu.events' | pd_trans }}</a></li>
             <li><a href="{{ path('groups') }}">{{ 'platformd.layout.main_menu.groups' | pd_trans }}</a></li>
+            <li><a href="{{ path('default_index') }}">Home</a></li>
 
             {% if is_granted("ROLE_SUPER_ADMIN") %}
                 <li><a href="{{ path('admin_index') }}">Site Admin</a></li>
             {% endif %}
 
             {% set feedbackKey = app.request.get('_route') %}
-            {% if feedbackKey in feedback_ids|keys %}<li>
-                <a class="feedback" href="{{ path('entry_set_view', {'entrySetId': feedback_ids[feedbackKey] }) }}">Feedback</a>
-            </li>{% endif %}
-
+            {% if feedbackKey in feedback_ids|keys %}
+                <li>
+                    <a class="feedback" href="{{ path('entry_set_view', {'entrySetId': feedback_ids[feedbackKey] }) }}">Feedback</a>
+                </li>
+            {% endif %}
         </ul>
-
-        {% if app.user %}
-            <ul>
-                <li>Welcome, <a href="{{ path('profile', {'userId': app.user.id}) }}" class="blu">{% if app.user.name %}{{app.user.name}}{% else %}{{app.user.username}}{% endif %}</a></li>
-            </ul>
-        {% endif %}
-
     </div>
+    <div class="clr"></div>
 
     {% block banner %}
         {% if asset_exists('themes/' ~ site.theme ~ '/spoutlet/img/logo_'~site.defaultLocale~'_large.jpg') %}
@@ -45,7 +41,7 @@
             {% else %}
                 {% set bannerString = 'themes/' ~ site.theme ~ '/spoutlet/img/logo-campsite.png' %}
             {% endif %}
-            <a href="{{ path('default_index') }}"><img src="{{ asset(bannerString) }}" width="305" height="72" alt="Campsite" id="brand-campsite"></a>
+            <a href="{{ path('default_index') }}"><img src="{{ asset(bannerString) }}" alt="Campsite" id="brand-campsite"></a>
 
             <div id="tagline">share. learn. grow.</div>
 

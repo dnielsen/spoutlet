@@ -28,33 +28,37 @@
 	position: relative;
 	width: 1050px;
 	margin: 0 auto;
-    height: 130px;
+    height: 110px;
 }
 #topNav { /* For styling, see list-links.css */
-    position: absolute;
-    top: 5px;
-    right: 0;
+    width: 100%;
+    height: 30px;
     font-size: 11px;
+    border-bottom: 1px solid #ccc;
+}
+#brand-campsite, #brand-group {
+    margin: 4px 0px;
 }
 #brand-campsite {
-    margin-top: 55px;
-    padding-bottom: 10px;
+    width: 305px;
+    height: 72px;
 }
-    .brand-small {
-        position: absolute;
-        top: 8px;
-        left: 0;
-    }
+
+.brand-small {
+    position: absolute;
+    top: 8px;
+    left: 0;
+}
 #brand-group { /* see hack-global for #brand-group-txt styling */
-    margin-top: 55px;
+    position: absolute;
+    bottom: 0px;
     max-height: 72px;
     max-width: 830px;
 }
 #tagline {
     position: absolute;
-    top: 105px;
-    right: 0;
-
+    bottom: 0px;
+    right: 0px;
     font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
     font-size: 28px;
     font-weight: bold;
