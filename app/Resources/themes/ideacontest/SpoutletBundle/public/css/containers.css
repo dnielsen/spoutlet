@@ -28,13 +28,39 @@
 	position: relative;
 	width: 1050px;
 	margin: 0 auto;
-    height: 110px;
+    height: 120px;
 }
-#topNav { /* For styling, see list-links.css */
+#topNav {
+    position: fixed;
+    top: 0px;
     width: 100%;
-    height: 30px;
-    font-size: 11px;
+    z-index: 100;
+    background: white;
+    height: 40px;
+    font-size: 13px;
     border-bottom: 1px solid #ccc;
+}
+#topNav-content {
+    width: 1050px;
+    margin: 0 auto;
+}
+#topNav ul {
+    height: 40px;
+    float: right;
+}
+#topNav li {
+    float: right;
+    padding-top: 10px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+#topNav li {
+    font-family: 'Muli', Arial, sans-serif;
+    color: #777;
+    text-transform: uppercase;
+}
+#topNav li a {
+    display: inline;
 }
 #brand-campsite, #brand-group {
     margin: 4px 0px;
@@ -44,10 +70,11 @@
     height: 72px;
 }
 
-.brand-small {
+#brand-small {
     position: absolute;
-    top: 8px;
-    left: 0;
+    top: 4px;
+    max-height: 36px;
+    max-width: 200px;
 }
 #brand-group { /* see hack-global for #brand-group-txt styling */
     position: absolute;
@@ -72,7 +99,7 @@
     width: 1050px;
     height: 32px;
     padding-top: 12px;
-    margin: 0 auto 20px;
+    margin: 0px auto 20px;
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
 }

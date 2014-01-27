@@ -114,25 +114,6 @@ ol {
     list-style-position: inside;
 }
 
-/*::::::::::::::: topNav LIST STYLES :::::::::::::::*/
-
-#topNav ul {
-	height: 30px;
-}
-#topNav li {
-	float: right;
-	padding-top: 5px;
-	padding-left: 15px;
-}	
-#topNav li {
-	font-family: 'Muli', Arial, sans-serif;
-	font-size: 11px;
-	color: #777;
-	text-transform: uppercase;
-}
-	#topNav li a {
-		display: inline;
-	}
 
 /*::::::::::::::: nav LIST STYLES :::::::::::::::*/
 
