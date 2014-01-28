@@ -25,10 +25,10 @@
                     <ul>
                         <li><a href="{{ path('accounts_settings') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
                         <li><a href="{{ path('profile', {'userId': app.user.id}) }}">Profile</li>
-                        <li><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a></li>
                         {% if is_granted("ROLE_SUPER_ADMIN") %}
                             <li><a href="{{ path('admin_index') }}">Site Admin</a></li>
                         {% endif %}
+                        <li><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a></li>
                     </ul>
                 </li>
 
