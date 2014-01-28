@@ -37,7 +37,7 @@
     z-index: 100;
     background: white;
     height: 40px;
-    font-size: 13px;
+    font-size: 14px;
     border-bottom: 1px solid #ccc;
 }
 #topNav-content {
@@ -45,19 +45,14 @@
     margin: 0 auto;
 }
 #topNav ul {
-    height: 40px;
     float: right;
+    list-style: none;
 }
 #topNav li {
     float: right;
-    padding-top: 10px;
+    padding-top: 14px;
     padding-left: 8px;
     padding-right: 8px;
-}
-#topNav li {
-    font-family: 'Muli', Arial, sans-serif;
-    color: #777;
-    text-transform: uppercase;
 }
 #topNav li a {
     display: inline;
@@ -72,7 +67,7 @@
 
 #brand-small {
     position: absolute;
-    top: 4px;
+    top: 2px;
     max-height: 36px;
     max-width: 200px;
 }
