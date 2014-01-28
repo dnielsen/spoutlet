@@ -35,7 +35,7 @@
     top: 0px;
     width: 100%;
     z-index: 100;
-    background: white;
+    background: linear-gradient(white, #eee);
     height: 40px;
     font-size: 14px;
     border-bottom: 1px solid #ccc;
