@@ -41,7 +41,8 @@
     border-bottom: 1px solid #ccc;
 }
 #topNav-content {
-    width: 1050px;
+    width: 100%;
+    max-width: 1050px;
     margin: 0 auto;
 }
 #topNav ul {
