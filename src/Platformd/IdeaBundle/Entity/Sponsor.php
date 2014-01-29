@@ -22,7 +22,7 @@ class Sponsor {
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-    
+
     /**
      * A generic name for this media
      *
@@ -50,6 +50,11 @@ class Sponsor {
      * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", inversedBy="idea", cascade={"remove"})
      */
     protected $image;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySetRegistry", cascade={"persist"})
+     */
+    protected $entrySetRegistration;
 
     /**
      * @param mixed $creator
