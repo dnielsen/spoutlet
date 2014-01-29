@@ -283,6 +283,11 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     protected $entrySetRegistration;
 
     /**
+     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\SponsorRegistry", cascade={"persist", "remove"})
+     */
+    protected $sponsorRegistration;
+
+    /**
      * Constructor
      */
     public function __construct()

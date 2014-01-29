@@ -1,16 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: gimballock
- * Date: 12/4/13
- * Time: 12:22 PM
- */
 
 namespace Platformd\IdeaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
-use Doctrine\Common\Collections\ArrayCollection;
 
 
 /**
@@ -19,9 +11,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class SponsorRegistry {
     const SPONSORSHIP_LEVEL_PLATINUM = "platinum";
-    const SPONSORSHIP_LEVEL_GOLD = "gold";
-    const SPONSORSHIP_LEVEL_SILVER = "silver";
-    const SPONSORSHIP_LEVEL_BRONZE = "bronze";
+    const SPONSORSHIP_LEVEL_GOLD     = "gold";
+    const SPONSORSHIP_LEVEL_SILVER   = "silver";
+    const SPONSORSHIP_LEVEL_BRONZE   = "bronze";
 
     /**
      * @ORM\Id
@@ -41,12 +33,12 @@ class SponsorRegistry {
     protected $containerId;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\Sponsor", mappedBy="sponsorRegistration", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\Sponsor", inversedBy="sponsorRegistration", cascade={"persist"})
      */
-    protected $sponsors;
+    protected $sponsor;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
     protected $level;
 
@@ -55,53 +47,36 @@ class SponsorRegistry {
      */
     public function __construct($container)
     {
-        $this->sponsors = new ArrayCollection();
         $this->containerId = $container->getId();
-
         $className = get_class($container);
+
         $this->scope = preg_replace('/\w+\\\\(\w+Bundle)\\\\Entity\\\\(\w+)/', "$1:$2", $className);
     }
 
-    /**
-     * @return mixed
-     */
+    public function getId()
+    {
+        return $this->id;
+    }
+    public function getScope()
+    {
+        return $this->scope;
+    }
     public function getContainerId()
     {
         return $this->containerId;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getScope()
-    {
-        return $this->scope;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getSponsors()
     {
-        return $this->sponsors;
+        return $this->sponsor;
     }
-
-    public function addSponsor($sponsor) {
-        $this->sponsors->add($sponsor);
+    public function setSponsor($sponsor) {
+        $this->sponsor = $sponsor;
     }
 
     public function getLevel() {
         return $this->level;
     }
-
     public function setLevel($level) {
         $this->level = $level;
     }

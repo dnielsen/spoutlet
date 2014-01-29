@@ -24,37 +24,33 @@ class Sponsor {
     protected $id;
 
     /**
-     * A generic name for this media
-     *
+     * A name for this sponsor
      * @var string
-     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $name;
 
     /**
-     * A generic name for this media
-     *
+     * Link to sponsor's page
      * @var string
-     *
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $url;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", inversedBy="ideas")
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", inversedBy="sponsors")
      */
     protected $creator;
 
     /**
-     * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", inversedBy="idea", cascade={"remove"})
+     * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove", "persist"})
      */
     protected $image;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySetRegistry", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\SponsorRegistry", cascade={"remove", "persist"})
      */
-    protected $entrySetRegistration;
+    protected $sponsorRegistration;
 
     /**
      * @param mixed $creator

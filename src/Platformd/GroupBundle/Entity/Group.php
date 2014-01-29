@@ -305,7 +305,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     protected $entrySetRegistration;
 
     /**
-     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\SponsorRegistry", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\SponsorRegistry", cascade={"persist", "remove"})
      */
     protected $sponsorRegistration;
 
