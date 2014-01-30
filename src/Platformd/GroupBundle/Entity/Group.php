@@ -1088,9 +1088,6 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         return $this->sponsorRegistration->getSponsors();
     }
 
-    public function getFirstEntrySet() {
-        return $this->entrySetRegistration->getEntrySets()->get(0);
-    }
 
     public function isMemberOf(User $user) {
         if($user->getId() == $this->getOwner()->getId())
