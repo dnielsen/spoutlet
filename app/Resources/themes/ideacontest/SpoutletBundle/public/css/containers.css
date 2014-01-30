@@ -48,6 +48,7 @@
 #topNav ul {
     float: right;
     list-style: none;
+    font-size: 16px;
 }
 #topNav li {
     float: right;
