@@ -7,6 +7,26 @@ profile_edit:
     pattern:    /profile/{userId}/edit
     defaults:   { _controller: IdeaBundle:Idea:profileEdit }
 
+sponsors:
+    pattern:    /sponsors
+    defaults:   { _controller: IdeaBundle:Idea:sponsors }
+
+sponsor_form:
+    pattern:    /sponsors/{id}
+    defaults:   { _controller: IdeaBundle:Idea:sponsorForm }
+
+sponsor_add_form:
+    pattern:    /sponsors/{id}/addSponsor
+    defaults:   { _controller: IdeaBundle:Idea:sponsorAddForm }
+
+sponsor_remove:
+    pattern:    /sponsors/{id}/remove
+    defaults:   { _controller: IdeaBundle:Idea:sponsorRemove }
+
+sponsor_delete:
+    pattern:    /sponsors/{id}/delete
+    defaults:   { _controller: IdeaBundle:Idea:sponsorDelete }
+
 # EntrySet Routes
 
 entry_set_view:

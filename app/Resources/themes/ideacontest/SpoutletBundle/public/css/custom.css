@@ -211,3 +211,24 @@ a.profile-cancelBtn {
     line-height: 160px;
     font-size: 48px;
 }
+
+#sponsorWrapper {
+    width: 100%;
+    max-width: 1050px;
+    margin: 0 auto;
+}
+.sponsorBx {
+    float: left;
+    height: 160px;
+    width: 140px;
+    margin: 5px;
+}
+.sponsorImageBox {
+    width: 140px;
+    height: 140px;
+    float: left;
+}
+.sponsorImageBox img {
+    max-width: 140px;
+    max-height: 140px;
+}

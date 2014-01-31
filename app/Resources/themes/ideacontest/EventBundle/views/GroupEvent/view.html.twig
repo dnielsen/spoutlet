@@ -88,6 +88,17 @@
             </ul>
         {% endif %}
 
+        {% if event.sponsors|length > 0 %}
+            <h2 class="widgetHeader">Sponsors</h2>
+            <ul class="spcr-b3">
+                {% for sponsor in event.sponsors %}
+                    <div class="sponsorImageBox">
+                        <a href="{{ sponsor.url }}"><img src="{{ media_path(sponsor.image) }}"></a>
+                    </div>
+                {% endfor %}
+            </ul>
+            <div class="clr"></div>
+        {% endif %}
         
         {% if not (event.isUserAttending(app.user)) %}
             <h2 class="widgetHeader">{{ event.attendees|length }} attendee{% if event.attendees|length != 1 %}s{% endif %}</h2>

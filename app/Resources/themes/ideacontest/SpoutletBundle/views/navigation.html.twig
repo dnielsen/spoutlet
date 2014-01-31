@@ -2,9 +2,9 @@
     <div id="nav">
         <ul class="sf-menu sf-js-enabled sf-list" id="nav-list">
             <li><a href="{{ path('about') }}">About</a></li>
+            <li><a href="{{ path('sponsors') }}">Sponsor</a></li>
             {% block menu_items %}
                 <li><a href="#">Speak</a></li>
-                <li><a href="#">Sponsor</a></li>
                 <li><a href="#">Volunteer</a></li>
             {% endblock %}
             <li><a href="{{ path('contact') }}">Contact Us</a></li>
@@ -60,26 +60,6 @@
                 {% endif %}
             {% endif %}
 
-            {#<li class="more">#}
-                {#<a>Events</a>#}
-                {#<ul>#}
-                    {#<li><a href="{{ path('global_events_index') }}">All Events</a></li>#}
-                    {#<li><a href="{{ path('accounts_events') }}">My Events</a></li>#}
-                    {#{% if group_id is defined %}#}
-                        {#<li><a href="{{ path('idea_admin_event', {'groupSlug': group_id, 'eventId': 'newEvent'}) }}">Create Event</a></li>#}
-                    {#{% endif %}#}
-                {#</ul>#}
-            {#</li>#}
-
-            {#<li class="more">#}
-                {#<a>{{ 'platformd.layout.main_menu.groups' | pd_trans }}</a>#}
-                {#<ul>#}
-                    {#<li><a href="{{ path('groups') }}">All Groups</a></li>#}
-                    {#<li><a href="{{ path('accounts_groups') }}">My Groups</a></li>#}
-                    {#<li><a href="{{ path('group_new') }}">Create Group</a></li>#}
-                {#</ul>#}
-            {#</li>#}
-
             {% set _here = app.request.get('_route') %}
             {% if app.user and (menu_scope != 'other') %}
                 <li class="more">
@@ -90,7 +70,8 @@
                                 <li><a href="{{ path('group_edit', {'slug': _key}) }}">Edit Group Details</a></li>
                                 <li><a href="{{ path('idea_admin_event', {'groupSlug': _key}) }}">Create Event</a></li>
                                 {% if _regId|default %}
-                                    <li><a href = "{{ path('entry_set_new', {'registrationId': _regId, 'entrySetId': 'new'}) }}">Create List</a></li>
+                                    <li><a href="{{ path('entry_set_new', {'registrationId': _regId, 'entrySetId': 'new'}) }}">Create List</a></li>
+                                    <li><a href="{{ path('sponsors', {'scope': 'group', 'containerId': group.id}) }}">Manage Sponsors</a></li>
                                 {% endif %}
                                 {% if not group.isPublic %}
                                     <li><a href="{{ path('group_applications', { 'slug': _key }) }}">Member Approvals</a></li>
@@ -105,6 +86,7 @@
                                 {% if _regId|default %}
                                     <li><a href = "{{ path('entry_set_new', {'registrationId': _regId, 'entrySetId': 'new'}) }}">Create List</a></li>
                                     <li><a href="{{ path('group_event_attendees', {'eventId': _key, 'groupSlug': _key2}) }}">Manage Attendees</a></li>
+                                    <li><a href="{{ path('sponsors', {'scope': 'event', 'containerId': event.id}) }}">Manage Sponsors</a></li>
                                 {% endif %}
                                 {% if _canContact %}
                                     <li><a href="{{ path('group_event_contact', {'eventId': _key, 'groupSlug': _key2}) }}">Email Attendees</a></li>

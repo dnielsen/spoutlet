@@ -1,0 +1,20 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+
+    <h1>Add {{ sponsor.name }} to Your {{ scope | capitalize }} as a Sponsor</h1>
+
+    <a href="{{ sponsor.url }}"><img src="{{ media_path(sponsor.image) }}"></a>
+
+    <form action="{{ path('sponsor_add_form', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" method="post" {{ form_enctype(form) }}>
+
+        {{ form_row(form.level) }}
+        {{ form_rest(form) }}
+
+        <div class="spcr-t6">
+            <input type="submit" value="Submit"/>
+            <input type="submit" name="cancel" value="Cancel" formnovalidate/>
+        </div>
+    </form>
+
+{% endblock %}

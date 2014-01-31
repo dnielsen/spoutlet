@@ -140,6 +140,7 @@
         {% if groupEvents %}{% set renderMoreEvents = true %}{% else %}{% set renderMoreEvents = false %}{% endif %}
         {% if group.entrySets|length > 0 %}{% set renderEntrySets = true %}{% else %}{% set renderEntrySets = false %}{% endif %}
         {% if pastEvents|length > 0 %}{% set renderPastEvents = true %}{% else %}{% set renderPastEvents = false %}{% endif %}
+        {% if group.sponsors|length > 0 %}{% set renderSponsors = true %}{% else %}{% set renderSponsors = false %}{% endif %}
 
         {% if nextEvent %}
             {% if nextEvent.getOnline %}
@@ -191,6 +192,18 @@
 
         <h2 class="widgetHeader">Organizer</h2>
         <a href="{{ path('profile', {userId: group.owner.id}) }}"><h3 class="blu spcr-t spcr-l3 spcr-b3">{{ group.owner.name }}</h3></a>
+
+        {% if renderSponsors %}
+            <h2 class="widgetHeader">Sponsors</h2>
+            <ul class="spcr-b3">
+                {% for sponsor in group.sponsors %}
+                    <div class="sponsorImageBox">
+                        <a href="{{ sponsor.url }}"><img src="{{ media_path(sponsor.image) }}"></a>
+                    </div>
+                {% endfor %}
+            </ul>
+            <div class="clr"></div>
+        {% endif %}
 
         <h2 class="widgetHeader">{{ group.members|length }} Member{% if group.members|length > 1 %}s{% endif %}</h2>
         <ul class="spcr-b3">

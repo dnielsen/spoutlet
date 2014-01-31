@@ -2,7 +2,6 @@
 
 namespace Platformd\IdeaBundle\Controller;
 
-use Platformd\EventBundle\Entity\Event;
 use Platformd\EventBundle\Entity\GroupEvent;
 use Platformd\GroupBundle\Entity\Group;
 use Platformd\IdeaBundle\Entity\Comment;
@@ -11,13 +10,15 @@ use Platformd\IdeaBundle\Entity\EntrySet;
 use Platformd\IdeaBundle\Entity\FollowMapping;
 use Platformd\IdeaBundle\Entity\Idea;
 use Platformd\IdeaBundle\Entity\Link;
+use Platformd\IdeaBundle\Entity\SponsorRegistry;
 use Platformd\IdeaBundle\Entity\Tag;
 use Platformd\IdeaBundle\Entity\Vote;
+use Platformd\IdeaBundle\Entity\Sponsor;
 use Platformd\SpoutletBundle\Controller\Controller;
+use Platformd\MediaBundle\Entity\Media;
 use Symfony\Component\Form\Exception\NotValidException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -778,6 +779,168 @@ class IdeaController extends Controller
         return new RedirectResponse($ideaListUrl);
     }
 
+    public function sponsorsAction(Request $request)
+    {
+        $scope = $request->get('scope');
+        $containerId = $request->get('containerId');
+
+        $sponsorRepo = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor');
+        $sponsors = $sponsorRepo->findAll();
+
+
+        return $this->render('IdeaBundle:Idea:sponsors.html.twig', array(
+            'sponsors'          => $sponsors,
+            'scope'             => $scope,
+            'containerId'       => $containerId,
+        ));
+    }
+
+    public function sponsorFormAction(Request $request, $id)
+    {
+        $this->enforceUserSecurity();
+
+        if ($request->get('cancel') == 'Cancel') {
+            return $this->redirect($this->generateUrl('sponsors'));
+        }
+
+        $scope = $request->get('scope');
+        $containerId = $request->get('containerId');
+        $sponsorRepo = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor');
+
+        if( $id == 'new' )
+        {
+            $sponsor = new Sponsor();
+        }
+        else
+        {
+            $sponsor = $sponsorRepo->find($id);
+            if (!$sponsor) {
+                throw new NotFoundHttpException();
+            }
+        }
+
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'sponsor', $sponsor)
+            ->add('name',               'text',         array('attr'    => array('style' => 'width:60%')))
+            ->add('url',                'text',         array('attr'    => array('style' => 'width:60%')))
+            ->add('image',              'file',         array('attr'    => array('style' => 'width:60%')))
+            ->getForm();
+
+        if($request->getMethod() == 'POST') {
+
+            $form->bindRequest($request);
+
+            if($form->isValid()) {
+
+                $sponsor->setCreator($this->getCurrentUser());
+
+                $image = $sponsor->getImage();
+
+                if ($image == null) {
+                    $this->setFlash('error', 'You must select an image file');
+                }
+                else {
+
+                    $media = new Media();
+                    $media->setName($sponsor->getName());
+                    $media->setFileObject($image);
+
+                    $mUtil = $this->getMediaUtil();
+                    $mUtil->persistRelatedMedia($media);
+
+                    $sponsor->setImage($media);
+                }
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($sponsor);
+                $em->flush();
+
+                if ($scope){
+                    return $this->redirect($this->generateUrl('sponsor_add_form', array(
+                        'id'            => $sponsor->getId(),
+                        'scope'         => $scope,
+                        'containerId'   => $containerId)));
+                }
+
+                return $this->redirect($this->generateUrl('sponsors'));
+            }
+        }
+
+        return $this->render('IdeaBundle:Idea:sponsorForm.html.twig', array(
+            'id'            => $id,
+            'scope'         => $scope,
+            'containerId'   => $containerId,
+            'form'          => $form->createView(),
+        ));
+    }
+
+    public function sponsorAddFormAction(Request $request, $id)
+    {
+        $this->enforceUserSecurity();
+
+        if ($request->get('cancel') == 'Cancel') {
+            return $this->redirect($this->generateUrl('sponsors'));
+        }
+
+        $sponsor = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor')->find($id);
+        if (!$sponsor) {
+            throw new NotFoundHttpException();
+        }
+
+        $scope = $request->get('scope');
+        $containerId = $request->get('containerId');
+
+        $sponsorRegistry = null;
+        $targetUrl = null;
+
+        if ($scope == 'group') {
+            $group = $this->getDoctrine()->getRepository('GroupBundle:Group')->find($containerId);
+            $sponsorRegistry = new SponsorRegistry($group, null, $sponsor, null);
+            $targetUrl = $this->generateUrl($group->getLinkableRouteName(), $group->getLinkableRouteParameters());
+        }
+
+        elseif ($scope == 'event') {
+            $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($containerId);
+            $sponsorRegistry = new SponsorRegistry(null, $event, $sponsor, null);
+            $targetUrl = $this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters());
+        }
+
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'sponsor_add', $sponsorRegistry)
+            ->add('level', 'choice', array('choices' => array(SponsorRegistry::SPONSORSHIP_LEVEL_BRONZE   => 'Bronze',
+                                                              SponsorRegistry::SPONSORSHIP_LEVEL_SILVER   => 'Silver',
+                                                              SponsorRegistry::SPONSORSHIP_LEVEL_GOLD     => 'Gold',
+                                                              SponsorRegistry::SPONSORSHIP_LEVEL_PLATINUM => 'Platinum',)))
+            ->getForm();
+
+
+        if($request->getMethod() == 'POST') {
+
+            $form->bindRequest($request);
+
+            if($form->isValid()) {
+
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($sponsorRegistry);
+                $em->flush();
+
+                return $this->redirect($targetUrl);
+            }
+        }
+
+        return $this->render('IdeaBundle:Idea:sponsorAddForm.html.twig', array(
+            'sponsor'       => $sponsor,
+            'scope'         => $scope,
+            'containerId'   => $containerId,
+            'form'          => $form->createView(),
+        ));
+    }
+
+    public function sponsorDeleteAction(Request $request, $id)
+    {
+        $this->setFlash('error', 'Delete function not yet implemented');
+        return $this->redirect($request->headers->get('referer'));
+    }
+
 
     public function profileAction($userId = null)
     {
@@ -1141,6 +1304,17 @@ class IdeaController extends Controller
         return $attendance;
     }
 
+    public function getSponsorContainer($scope, $containerId)
+    {
+        $container = null;
+        if ($scope == 'group') {
+            $container = $this->getDoctrine()->getRepository('GroupBundle:Group')->find($containerId);
+        }
+        elseif ($scope == 'event') {
+            $container = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($containerId);
+        }
+        return $container;
+    }
 
 
 }
