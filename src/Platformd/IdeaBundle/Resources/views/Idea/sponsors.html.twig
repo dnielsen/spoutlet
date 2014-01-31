@@ -13,22 +13,30 @@
     <hr/>
 
     <div id="sponsorWrapper">
+
         {% for sponsor in sponsors %}
             <div class="sponsorBx">
-                <div class="sponsorImageBox">
-                    {% if scope %}
-                        {% set sponsorLink = path('sponsor_add_form', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) %}
-                    {% else %}
-                        {% set sponsorLink = sponsor.url %}
-                    {% endif %}
-                    <a href="{{ sponsorLink }}"><img src="{{ media_path(sponsor.image) }}"></a>
-                </div>
+
+                {% if scope %}
+                    {% set sponsorLink = path('sponsor_add_form', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) %}
+                {% else %}
+                    {% set sponsorLink = sponsor.url %}
+                {% endif %}
+
+                <a href="{{ sponsorLink }}">
+                    <div class="sponsorImageBox">
+                        <img src="{{ media_path(sponsor.image) }}">
+                    </div>
+                </a>
+
                 {% if sponsor.creator == app.user or is_granted('ROLE_ADMIN') %}
                     <a href="{{ path('sponsor_form', {'id': sponsor.id}) }}">Edit</a>&nbsp;&nbsp;|&nbsp;&nbsp;
                     <a href="{{ path('sponsor_delete', {'id': sponsor.id}) }}" onclick="return confirm('Are you sure you want to delete this sponsor?');">Delete</a>
                 {% endif %}
+
             </div>
         {% endfor %}
+
     </div>
 
 {% endblock %}
