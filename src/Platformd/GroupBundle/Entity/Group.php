@@ -305,9 +305,9 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     protected $entrySetRegistration;
 
     /**
-     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\SponsorRegistry", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\SponsorRegistry", mappedBy="group", cascade={"persist", "remove"})
      */
-    protected $sponsorRegistration;
+    protected $sponsorRegistrations;
 
 
     public function __construct()
@@ -320,6 +320,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         $this->deals                    = new ArrayCollection();
         $this->videos                   = new ArrayCollection();
         $this->events                   = new ArrayCollection();
+        $this->sponsorRegistrations     = new ArrayCollection();
     }
 
     public function __toString() {
@@ -1075,19 +1076,34 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         return $this->entrySetRegistration->getEntrySets();
     }
 
-    public function getSponsorRegistration() {
-        return $this->sponsorRegistration;
+    public function addSponsorRegistration($sponsorRegistration)
+    {
+        $this->sponsorRegistrations->add($sponsorRegistration);
+    }
+    public function getSponsorRegistrations()
+    {
+        return $this->sponsorRegistrations;
     }
 
-    public function createSponsorRegistration() {
-        $this->sponsorRegistration = new SponsorRegistry($this);
-        return $this->sponsorRegistration;
+    public function createSponsorRegistration()
+    {
+        $sponsorRegistration = new SponsorRegistry($this, null, null, null);
+        $this->addSponsorRegistration($sponsorRegistration);
+
+        return $sponsorRegistration;
     }
 
-    public function getSponsors() {
-        return $this->sponsorRegistration->getSponsors();
-    }
+    public function getSponsors()
+    {
+        $sponsorRegistrations = $this->sponsorRegistrations;
 
+        $sponsors = array();
+        foreach ($sponsorRegistrations as $reg){
+            $sponsors[] = $reg->getSponsor();
+        }
+
+        return $sponsors;
+    }
 
     public function isMemberOf(User $user) {
         if($user->getId() == $this->getOwner()->getId())

@@ -23,17 +23,17 @@ class SponsorRegistry {
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group", inversedBy="sponsorRegistrations", cascade={"persist"})
      */
-    protected $scope;
+    protected $group;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GroupEvent", inversedBy="sponsorRegistrations", cascade={"persist"})
      */
-    protected $containerId;
+    protected $event;
 
     /**
-     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\Sponsor", inversedBy="sponsorRegistration", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Platformd\IdeaBundle\Entity\Sponsor", inversedBy="sponsorRegistrations", cascade={"persist"})
      */
     protected $sponsor;
 
@@ -45,39 +45,57 @@ class SponsorRegistry {
     /**
      * Constructor
      */
-    public function __construct($container)
+    public function __construct($group = null, $event = null, $sponsor = null, $level = null)
     {
-        $this->containerId = $container->getId();
-        $className = get_class($container);
+        if ($group) {
+            $this->group = $group;
+        }
+        elseif ($event) {
+            $this->event = $event;
+        }
 
-        $this->scope = preg_replace('/\w+\\\\(\w+Bundle)\\\\Entity\\\\(\w+)/', "$1:$2", $className);
+        if ($sponsor) {
+            $this->sponsor = $sponsor;
+        }
+        if ($level) {
+            $this->level = $level;
+        }
     }
 
     public function getId()
     {
         return $this->id;
     }
-    public function getScope()
+    public function setEvent($event)
     {
-        return $this->scope;
+        $this->event = $event;
     }
-    public function getContainerId()
+    public function getEvent()
     {
-        return $this->containerId;
+        return $this->event;
     }
-
-    public function getSponsors()
+    public function setGroup($group)
+    {
+        $this->group = $group;
+    }
+    public function getGroup()
+    {
+        return $this->group;
+    }
+    public function setSponsor($sponsor)
+    {
+        $this->sponsor = $sponsor;
+    }
+    public function getSponsor()
     {
         return $this->sponsor;
     }
-    public function setSponsor($sponsor) {
-        $this->sponsor = $sponsor;
-    }
-
-    public function getLevel() {
-        return $this->level;
-    }
-    public function setLevel($level) {
+    public function setLevel($level)
+    {
         $this->level = $level;
+    }
+    public function getLevel()
+    {
+        return $this->level;
     }
 } 

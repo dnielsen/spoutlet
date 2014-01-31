@@ -283,20 +283,21 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     protected $entrySetRegistration;
 
     /**
-     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\SponsorRegistry", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\SponsorRegistry", mappedBy="event", cascade={"persist", "remove"})
      */
-    protected $sponsorRegistration;
+    protected $sponsorRegistrations;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->attendees    = new ArrayCollection();
-        $this->createdAt    = new DateTime();
-        $this->startsAt     = new \DateTime('now');
-        $this->endsAt       = new \DateTime('now');
-        $this->currentRound = 1;
+        $this->attendees            = new ArrayCollection();
+        $this->sponsorRegistrations = new ArrayCollection();
+        $this->createdAt            = new DateTime();
+        $this->startsAt             = new \DateTime('now');
+        $this->endsAt               = new \DateTime('now');
+        $this->currentRound         = 1;
     }
 
     /**
@@ -1043,6 +1044,35 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         else {
             return array();
         }
+    }
+
+    public function addSponsorRegistration($sponsorRegistration)
+    {
+        $this->sponsorRegistrations->add($sponsorRegistration);
+    }
+    public function getSponsorRegistrations()
+    {
+        return $this->sponsorRegistrations;
+    }
+
+    public function createSponsorRegistration()
+    {
+        $sponsorRegistration = new SponsorRegistry(null, $this, null, null);
+        $this->addSponsorRegistration($sponsorRegistration);
+
+        return $sponsorRegistration;
+    }
+
+    public function getSponsors()
+    {
+        $sponsorRegistrations = $this->sponsorRegistrations;
+
+        $sponsors = array();
+        foreach ($sponsorRegistrations as $reg){
+            $sponsors[] = $reg->getSponsor();
+        }
+
+        return $sponsors;
     }
 
     public function isMemberOf(User $user) {

@@ -48,69 +48,99 @@ class Sponsor {
     protected $image;
 
     /**
-     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\SponsorRegistry", cascade={"remove", "persist"})
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\SponsorRegistry", mappedBy="sponsor", cascade={"remove", "persist"})
      */
-    protected $sponsorRegistration;
+    protected $sponsorRegistrations;
 
-    /**
-     * @param mixed $creator
-     */
+
+    public function __construct()
+    {
+        $this->sponsorRegistrations = new ArrayCollection();
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function addSponsorRegistration($sponsorRegistration)
+    {
+        $this->sponsorRegistrations->add($sponsorRegistration);
+    }
+    public function getSponsorRegistrations()
+    {
+        return $this->sponsorRegistrations;
+    }
+
+    public function createSponsorRegistration()
+    {
+        $sponsorRegistration = new SponsorRegistry(null, null, $this, null);
+        $this->addSponsorRegistration($sponsorRegistration);
+
+        return $sponsorRegistration;
+    }
+
+    public function getGroups()
+    {
+        $sponsorRegistrations = $this->sponsorRegistrations;
+
+        $groups = array();
+        foreach ($sponsorRegistrations as $reg){
+            $group = $reg->getGroup();
+            if ($group){
+                $groups[] = $group;
+            }
+        }
+
+        return $groups;
+    }
+
+    public function getEvents()
+    {
+        $sponsorRegistrations = $this->sponsorRegistrations;
+
+        $events = array();
+        foreach ($sponsorRegistrations as $reg){
+            $event = $reg->getEvent();
+            if ($event){
+                $events[] = $event;
+            }
+        }
+
+        return $events;
+    }
+
     public function setCreator($creator)
     {
         $this->creator = $creator;
     }
-
-    /**
-     * @return mixed
-     */
     public function getCreator()
     {
         return $this->creator;
     }
 
-    /**
-     * @param mixed $image
-     */
     public function setImage($image)
     {
         $this->image = $image;
     }
-
-    /**
-     * @return mixed
-     */
     public function getImage()
     {
         return $this->image;
     }
 
-    /**
-     * @param string $name
-     */
     public function setName($name)
     {
         $this->name = $name;
     }
-
-    /**
-     * @return string
-     */
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * @param string $url
-     */
     public function setUrl($url)
     {
         $this->url = $url;
     }
-
-    /**
-     * @return string
-     */
     public function getUrl()
     {
         return $this->url;
