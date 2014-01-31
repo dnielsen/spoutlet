@@ -937,8 +937,23 @@ class IdeaController extends Controller
 
     public function sponsorDeleteAction(Request $request, $id)
     {
-        $this->setFlash('error', 'Delete function not yet implemented');
-        return $this->redirect($request->headers->get('referer'));
+        $this->enforceUserSecurity();
+
+        $sponsor = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor')->find($id);
+
+        if ($this->getCurrentUser() == $sponsor->getCreator() || $this->isGranted('ROLE_ADMIN'))
+        {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->remove($sponsor);
+            $em->flush();
+
+            $this->setFlash('success', $sponsor->getName().' was successfully deleted.');
+        }
+        else {
+            $this->setFlash('error', 'You are not authorized to delete this sponsor!');
+        }
+
+        return $this->redirect($this->generateUrl('sponsors'));
     }
 
 
