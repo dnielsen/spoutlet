@@ -818,6 +818,7 @@ class IdeaController extends Controller
         if( $id == 'new' )
         {
             $sponsor = new Sponsor();
+            $imgFieldAttributes = array();
         }
         else
         {
@@ -825,29 +826,28 @@ class IdeaController extends Controller
             if (!$sponsor) {
                 throw new NotFoundHttpException();
             }
+            $imgFieldAttributes = array('required' => false);
         }
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'sponsor', $sponsor)
             ->add('name',               'text',         array('attr'    => array('style' => 'width:60%')))
             ->add('url',                'text',         array('attr'    => array('style' => 'width:60%')))
-            ->add('image',              'file',         array('attr'    => array('style' => 'width:60%')))
-            ->getForm();
+            ->add('image',              'file',         $imgFieldAttributes)
+        ->getForm();
 
         if($request->getMethod() == 'POST') {
+
+            $oldImage = $sponsor->getImage();
 
             $form->bindRequest($request);
 
             if($form->isValid()) {
 
                 $sponsor->setCreator($this->getCurrentUser());
-
                 $image = $sponsor->getImage();
 
-                if ($image == null) {
-                    $this->setFlash('error', 'You must select an image file');
-                }
-                else {
-
+                if ($image)
+                {
                     $media = new Media();
                     $media->setName($sponsor->getName());
                     $media->setFileObject($image);
@@ -856,12 +856,15 @@ class IdeaController extends Controller
 
                     $sponsor->setImage($media);
                 }
+                else {
+                    $sponsor->setImage($oldImage);
+                }
 
                 $em = $this->getDoctrine()->getEntityManager();
                 $em->persist($sponsor);
                 $em->flush();
 
-                if ($scope && $id == 'new'){
+                if ($scope && $id == 'new') {
                     return $this->redirect($this->generateUrl('sponsor_add_form', array(
                         'id'            => $sponsor->getId(),
                         'scope'         => $scope,
@@ -876,6 +879,7 @@ class IdeaController extends Controller
             'id'            => $id,
             'scope'         => $scope,
             'containerId'   => $containerId,
+            'sponsor'       => $sponsor,
             'form'          => $form->createView(),
         ));
     }

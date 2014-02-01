@@ -14,7 +14,16 @@
 
         {{ form_row(form.name) }}
         {{ form_row(form.url) }}
-        {{ form_row(form.image) }}
+        {% if id != 'new' %}
+            <h3>Current Logo:</h3>
+            <div class="sponsorImageBox">
+                <img src="{{ media_path(sponsor.image) }}"/>
+            </div>
+            <div class="left spcr-l3">
+                {{ form_row(form.image) }}
+            </div>
+            <div class="clr"></div>
+        {% endif %}
         {{ form_rest(form) }}
 
         <div class="spcr-t6">
