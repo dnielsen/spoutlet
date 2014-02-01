@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="sponsor_registry")
- * @ORM\Entity(repositoryClass="Platformd\IdeaBundle\Entity\SponsorRegistryRepository")
+ * @ORM\Entity()
  */
 class SponsorRegistry {
     const SPONSORSHIP_LEVEL_PLATINUM = "platinum";

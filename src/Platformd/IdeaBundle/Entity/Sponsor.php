@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Platformd\IdeaBundle\Entity\SponsorRepository")
  * @ORM\Table(name="sponsor")
  */
 class Sponsor {

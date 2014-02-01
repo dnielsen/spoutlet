@@ -781,14 +781,23 @@ class IdeaController extends Controller
 
     public function sponsorsAction(Request $request)
     {
-        $scope = $request->get('scope');
+        $scope       = $request->get('scope');
         $containerId = $request->get('containerId');
 
         $sponsorRepo = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor');
-        $sponsors = $sponsorRepo->findAll();
 
+        $attachedSponsors = null;
+
+        if ($scope) {
+            $attachedSponsors = $sponsorRepo->findAttachedSponsors($scope, $containerId);
+            $sponsors         = $sponsorRepo->findUnattachedSponsors($scope, $containerId);
+        }
+        else {
+            $sponsors         = $sponsorRepo->findAll();
+        }
 
         return $this->render('IdeaBundle:Idea:sponsors.html.twig', array(
+            'attachedSponsors'  => $attachedSponsors,
             'sponsors'          => $sponsors,
             'scope'             => $scope,
             'containerId'       => $containerId,
@@ -799,13 +808,12 @@ class IdeaController extends Controller
     {
         $this->enforceUserSecurity();
 
-        if ($request->get('cancel') == 'Cancel') {
-            return $this->redirect($this->generateUrl('sponsors'));
-        }
-
-        $scope = $request->get('scope');
+        $scope       = $request->get('scope');
         $containerId = $request->get('containerId');
-        $sponsorRepo = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor');
+
+        if ($request->get('cancel') == 'Cancel') {
+            return $this->redirect($this->generateUrl('sponsors', array('scope' => $scope, 'containerId' => $containerId)));
+        }
 
         if( $id == 'new' )
         {
@@ -813,7 +821,7 @@ class IdeaController extends Controller
         }
         else
         {
-            $sponsor = $sponsorRepo->find($id);
+            $sponsor = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor')->find($id);
             if (!$sponsor) {
                 throw new NotFoundHttpException();
             }
@@ -844,8 +852,7 @@ class IdeaController extends Controller
                     $media->setName($sponsor->getName());
                     $media->setFileObject($image);
 
-                    $mUtil = $this->getMediaUtil();
-                    $mUtil->persistRelatedMedia($media);
+                    $this->getMediaUtil()->persistRelatedMedia($media);
 
                     $sponsor->setImage($media);
                 }
@@ -854,14 +861,14 @@ class IdeaController extends Controller
                 $em->persist($sponsor);
                 $em->flush();
 
-                if ($scope){
+                if ($scope && $id == 'new'){
                     return $this->redirect($this->generateUrl('sponsor_add_form', array(
                         'id'            => $sponsor->getId(),
                         'scope'         => $scope,
                         'containerId'   => $containerId)));
                 }
 
-                return $this->redirect($this->generateUrl('sponsors'));
+                return $this->redirect($this->generateUrl('sponsors', array('scope' => $scope, 'containerId' => $containerId)));
             }
         }
 
@@ -877,8 +884,11 @@ class IdeaController extends Controller
     {
         $this->enforceUserSecurity();
 
+        $scope       = $request->get('scope');
+        $containerId = $request->get('containerId');
+
         if ($request->get('cancel') == 'Cancel') {
-            return $this->redirect($this->generateUrl('sponsors'));
+            return $this->redirect($this->generateUrl('sponsors', array('scope' => $scope, 'containerId' => $containerId)));
         }
 
         $sponsor = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor')->find($id);
@@ -886,22 +896,18 @@ class IdeaController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $scope = $request->get('scope');
-        $containerId = $request->get('containerId');
-
         $sponsorRegistry = null;
-        $targetUrl = null;
 
         if ($scope == 'group') {
             $group = $this->getDoctrine()->getRepository('GroupBundle:Group')->find($containerId);
+            $containerOwner = $group->getOwner();
             $sponsorRegistry = new SponsorRegistry($group, null, $sponsor, null);
-            $targetUrl = $this->generateUrl($group->getLinkableRouteName(), $group->getLinkableRouteParameters());
         }
 
         elseif ($scope == 'event') {
             $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($containerId);
+            $containerOwner = $event->getUser();
             $sponsorRegistry = new SponsorRegistry(null, $event, $sponsor, null);
-            $targetUrl = $this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters());
         }
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'sponsor_add', $sponsorRegistry)
@@ -918,12 +924,18 @@ class IdeaController extends Controller
 
             if($form->isValid()) {
 
+                if ($this->getCurrentUser() == $containerOwner || $this->isGranted('ROLE_ADMIN')) {
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $em->persist($sponsorRegistry);
+                    $em->flush();
 
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($sponsorRegistry);
-                $em->flush();
+                    $this->setFlash('success', $sponsor->getName().' was successfully added to your '.$scope);
+                }
+                else {
+                    $this->setFlash('error', 'You are not authorized to add this sponsor!');
+                }
 
-                return $this->redirect($targetUrl);
+                return $this->redirect($this->generateUrl('sponsors', array('scope' => $scope, 'containerId' => $containerId)));
             }
         }
 
@@ -935,11 +947,50 @@ class IdeaController extends Controller
         ));
     }
 
+    public function sponsorRemoveAction(Request $request, $id)
+    {
+        $this->enforceUserSecurity();
+
+        $scope       = $request->get('scope');
+        $containerId = $request->get('containerId');
+
+        $sponsor     = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor')->find($id);
+
+        $sponsorRegistryRepo = $this->getDoctrine()->getRepository('IdeaBundle:SponsorRegistry');
+        $sponsorRegistration = $sponsorRegistryRepo->findOneBy(array('sponsor' => $id,
+                                                                     $scope    => $containerId));
+
+        if ($scope == 'group') {
+            $group = $this->getDoctrine()->getRepository('GroupBundle:Group')->find($containerId);
+            $containerOwner = $group->getOwner();
+        }
+        elseif ($scope == 'event') {
+            $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($containerId);
+            $containerOwner = $event->getUser();
+        }
+
+        if ($this->getCurrentUser() == $containerOwner || $this->isGranted('ROLE_ADMIN')) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->remove($sponsorRegistration);
+            $em->flush();
+
+            $this->setFlash('success', $sponsor->getName().' was successfully removed.');
+        }
+        else {
+            $this->setFlash('error', 'You are not authorized to remove this sponsor!');
+        }
+
+        return $this->redirect($this->generateUrl('sponsors', array('scope' => $scope, 'containerId' => $containerId)));
+    }
+
     public function sponsorDeleteAction(Request $request, $id)
     {
         $this->enforceUserSecurity();
 
-        $sponsor = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor')->find($id);
+        $scope       = $request->get('scope');
+        $containerId = $request->get('containerId');
+
+        $sponsor     = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor')->find($id);
 
         if ($this->getCurrentUser() == $sponsor->getCreator() || $this->isGranted('ROLE_ADMIN'))
         {
@@ -953,7 +1004,7 @@ class IdeaController extends Controller
             $this->setFlash('error', 'You are not authorized to delete this sponsor!');
         }
 
-        return $this->redirect($this->generateUrl('sponsors'));
+        return $this->redirect($this->generateUrl('sponsors', array('scope' => $scope, 'containerId' => $containerId)));
     }
 
 
