@@ -25,11 +25,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class AdminController extends Controller
 {
 
-    public function eventAction(Request $request, $groupSlug, $eventId) {
-
+    public function eventAction(Request $request, $groupSlug, $eventId)
+    {
         // test if submission is from a 'cancel' button press
-        $event = $this->getEvent($groupSlug, $eventId);
-         
         if ($request->get('cancel') == 'Cancel') {
             if ($eventId == 'newEvent'){
                 return $this->redirect($this->generateUrl('group_show', array(
@@ -44,6 +42,7 @@ class AdminController extends Controller
         }
 
         $group = $this->getGroup($groupSlug);
+        $event = $this->getEvent($groupSlug, $eventId);
 
         $isNew = false;
 
@@ -71,23 +70,24 @@ class AdminController extends Controller
 
                 $em = $this->getDoctrine()->getEntityManager();
 
-                $group->addEvent($event);
+                if ($isNew) {
 
-                $event->setUser($this->getCurrentUser());
-                $event->setTimezone('UTC');
-                $event->setActive(true);
-                $event->setApproved(true);
-                $event->setRegistrationOption(Event::REGISTRATION_ENABLED);
-                $em->persist($event);
-                $em->flush();
+                    $group->addEvent($event);
 
-                // Registration needs to be created after event is persisted, relies on generated event ID
-                $esReg = $event->getEntrySetRegistration();
-                if ($esReg == null){
+                    $event->setUser($this->getCurrentUser());
+                    $event->setTimezone('UTC');
+                    $event->setActive(true);
+                    $event->setApproved(true);
+                    $event->setRegistrationOption(Event::REGISTRATION_ENABLED);
+                    $em->persist($event);
+                    $em->flush();
+
+                    // Registration needs to be created after event is persisted, relies on generated event ID
                     $esReg = $event->createEntrySetRegistration();
                     $em->persist($esReg);
-                    $em->flush();
                 }
+
+                $em->flush();
 
                 // ACLs
                 $aclProvider = $this->container->get('security.acl.provider');
@@ -106,14 +106,12 @@ class AdminController extends Controller
             }
         }
 
-        $isAdmin = $this->isGranted('ROLE_ADMIN');
-
         return $this->render('IdeaBundle:Admin:eventForm.html.twig', array(
-                'form' => $form->createView(),
-                'isNew' => $isNew,
-                'group' => $group,
-                'event' => $event,
-                'isAdmin'    => $isAdmin,
+                'form'      => $form->createView(),
+                'isNew'     => $isNew,
+                'group'     => $group,
+                'event'     => $event,
+                'isAdmin'   => $this->isGranted('ROLE_ADMIN'),
             ));
     }
 
