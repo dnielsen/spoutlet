@@ -309,6 +309,11 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
      */
     protected $sponsorRegistrations;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\RegistrationField", mappedBy="group", cascade={"persist", "remove"})
+     */
+    protected $registrationFields;
+
 
     public function __construct()
     {
@@ -321,6 +326,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         $this->videos                   = new ArrayCollection();
         $this->events                   = new ArrayCollection();
         $this->sponsorRegistrations     = new ArrayCollection();
+        $this->registrationFields       = new ArrayCollection();
     }
 
     public function __toString() {
@@ -1103,6 +1109,16 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         }
 
         return $sponsors;
+    }
+
+    public function addRegistrationField($registrationField)
+    {
+        $this->registrationFields->add($registrationField);
+    }
+
+    public function getRegistrationFields()
+    {
+        return $this->registrationFields;
     }
 
     public function isMemberOf(User $user) {

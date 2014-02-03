@@ -288,12 +288,18 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     protected $sponsorRegistrations;
 
     /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\RegistrationField", mappedBy="event", cascade={"persist", "remove"})
+     */
+    protected $registrationFields;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->attendees            = new ArrayCollection();
         $this->sponsorRegistrations = new ArrayCollection();
+        $this->registrationFields   = new ArrayCollection();
         $this->createdAt            = new DateTime();
         $this->startsAt             = new \DateTime('now');
         $this->endsAt               = new \DateTime('now');
@@ -1073,6 +1079,16 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         }
 
         return $sponsors;
+    }
+
+    public function addRegistrationField($registrationField)
+    {
+        $this->registrationFields->add($registrationField);
+    }
+
+    public function getRegistrationFields()
+    {
+        return $this->registrationFields;
     }
 
     public function isMemberOf(User $user) {
