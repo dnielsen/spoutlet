@@ -123,6 +123,23 @@ class AdminController extends Controller
                         'eventId' => $event->getId(),
                     )));
             }
+            else {
+                $errorString = '';
+                foreach ($form->getErrors() as $key => $error) {
+                    $template = $error->getMessageTemplate();
+                    $parameters = $error->getMessageParameters();
+
+                    foreach($parameters as $var => $value){
+                        $template = str_replace($var, $value, $template);
+                    }
+
+                    $errorString .= $template.'<br/>';
+                }
+                if (!$errorString) {
+                    $errorString = 'Please see fields below for errors';
+                }
+                $this->setFlash('error', $errorString);
+            }
         }
 
         return $this->render('IdeaBundle:Admin:eventForm.html.twig', array(
