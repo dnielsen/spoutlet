@@ -1,11 +1,5 @@
 
-profile:
-    pattern:    /profile/{userId}
-    defaults:   { _controller: IdeaBundle:Idea:profile, userId:null }
-
-profile_edit:
-    pattern:    /profile/{userId}/edit
-    defaults:   { _controller: IdeaBundle:Idea:profileEdit }
+# Sponsor Routes
 
 sponsors:
     pattern:    /sponsors
@@ -45,7 +39,7 @@ entry_set_delete:
     pattern:    /list/{entrySetId}/delete
     defaults:   { _controller: IdeaBundle:Admin:entrySetDelete }
 
-# ADMIN ROUTES
+# Admin Routes
 
 idea_admin_event:
     pattern:    /{groupSlug}/event/{eventId}/admin/configure
@@ -134,7 +128,7 @@ add_entry_set_creators:
     pattern:    /admin/addEntrySetCreators
     defaults:   { _controller: IdeaBundle:Admin:addEntrySetCreators }
 
-# NON-ADMIN
+# Entry Routes
 
 idea_create:
     pattern:    /list/{entrySetId}/create
@@ -153,7 +147,6 @@ idea_show:
     defaults:   { _controller: IdeaBundle:Idea:show }
     requirements:
       _method: GET
-
 
 idea_edit:
     pattern:    /list/{entrySetId}/entry/{entryId}/edit
@@ -230,12 +223,16 @@ idea_comment_delete:
 idea_delete:
     pattern:    /list/{entrySetId}/entry/{entryId}/delete
     defaults:   { _controller: IdeaBundle:Idea:delete }
-#    requirements:
-#     _method:   POST
 
-info_page:
-    pattern:    /{groupSlug}/info/{page}
-    defaults:   { _controller: IdeaBundle:Idea:infoPage }
+# Account Routes
+
+profile:
+    pattern:    /profile/{userId}
+    defaults:   { _controller: IdeaBundle:Idea:profile, userId:null }
+
+profile_edit:
+    pattern:    /profile/{userId}/edit
+    defaults:   { _controller: IdeaBundle:Idea:profileEdit }
 
 login:
     pattern:   /login
@@ -245,10 +242,15 @@ logout:
     pattern:   /logout
     defaults: { _controller: FOSUserBundle:Security:logout }
 
-
 change_password:
     pattern: /password
     defaults: { _controller: FOSUserBundle:ChangePassword:changePassword }
     requirements:
       _method: GET|POST
 
+# Misc Routes
+
+info_page:
+    pattern:    /{groupSlug}/info/{page}
+    defaults:   { _controller: IdeaBundle:Idea:infoPage }
+    
