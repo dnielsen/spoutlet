@@ -122,5 +122,6 @@ entrySet_allowedVoters: Which users should be able to judge?
 sponsor_name: Name
 sponsor_url: Link
 sponsor_image: Logo
-
 sponsor_add_level: Level
+
+event_registrationFields: Attendee Registration Questions (Optional)
