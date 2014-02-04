@@ -214,3 +214,6 @@
     git=https://github.com/sandip2451984/SendGrid.git
     target=/sendgrid-php
 
+[php-amqplib]
+git=http://github.com/videlalvaro/php-amqplib.git
+target=videlalvaro/php-amqplib
