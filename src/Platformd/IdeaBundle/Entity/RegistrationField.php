@@ -41,7 +41,7 @@ class RegistrationField {
 
     public function __construct()
     {
-        $this->$answers = new ArrayCollection();
+        $this->answers = new ArrayCollection();
     }
 
     public function getId()
