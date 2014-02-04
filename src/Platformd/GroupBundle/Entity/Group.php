@@ -1113,7 +1113,16 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
 
     public function addRegistrationField($registrationField)
     {
+        $registrationField->setGroup($this);
         $this->registrationFields->add($registrationField);
+    }
+
+    public function setRegistrationFields($registrationFields)
+    {
+        $this->registrationFields = new ArrayCollection();
+        foreach ($registrationFields as $field) {
+            $this->addRegistrationField($field);
+        }
     }
 
     public function getRegistrationFields()

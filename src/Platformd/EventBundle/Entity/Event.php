@@ -1083,7 +1083,16 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
     public function addRegistrationField($registrationField)
     {
+        $registrationField->setEvent($this);
         $this->registrationFields->add($registrationField);
+    }
+
+    public function setRegistrationFields($registrationFields)
+    {
+        $this->registrationFields = new ArrayCollection();
+        foreach ($registrationFields as $field) {
+            $this->addRegistrationField($field);
+        }
     }
 
     public function getRegistrationFields()

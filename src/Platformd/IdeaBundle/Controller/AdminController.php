@@ -65,8 +65,7 @@ class AdminController extends Controller
             ->add('registrationFields', 'collection',       array('type'            => new RegistrationFieldFormType(),
                                                                   'allow_add'       => true,
                                                                   'allow_delete'    => true,
-                                                                  'by_reference'    => false,
-                                                                  'required'        => false))
+                                                                  'by_reference'    => false))
             ->getForm();
 
         if($request->getMethod() == 'POST') {
