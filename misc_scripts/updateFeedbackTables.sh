@@ -1,11 +1,11 @@
 
 # This script installs the feedback lists for each page of campsite.
 
-# The output sould be pasted into the app/config/parameters.ini replacing older content if neccessary.
+# The output should be pasted into the app/config/parameters.ini replacing older content if necessary.
 # These parameters map the feedback links on each page to the correct feedback list in the database.
 
 # PREREQUISITE
-#It requires that the site entity has a valid entry set registry id.
+# It requires that the site entity has a valid entry set registry id.
 
 # Get db username, pass, schema from parameters.ini
 
@@ -64,7 +64,6 @@ if [[ -z "$esr" ]]; then
 fi
 
 # Print out the config.yml stanza
-echo "Add/Update config.yml under section parameters:feedback_ids with the following:"
 for ((i=0; i<size; i+=2))
 do
 
@@ -76,7 +75,6 @@ END_TEXT`
         continue
     fi
 
-    echo "    ${values[$i]}: %${values[$i]}%"
 done
 
 echo

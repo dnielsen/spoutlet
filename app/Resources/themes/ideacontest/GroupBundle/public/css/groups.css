@@ -9,7 +9,7 @@
 }
 
 .default-group-thumbnail {
-    width: 135px;
+    width: 320px;
     height: 80px;
     background:url('../img/default_group_thumbnail.png') top left no-repeat;
     border: 1px solid #e1e1e8;
@@ -22,25 +22,30 @@
     margin: 10px 0 10px 0;
 }
 
+.group-index-link {
+    color: #2faad9;
+    font-weight: bold;
+    font-size: 20px;
+}
+
 .group-list-item {
     display: inline-table;
-    width: 135px;
-    height: 130px;
+    width: 320px;
+    height: 90px;
     margin: 5px;
     position: relative;
 }
 
 .group-list-item .details {
     margin-top: 2px;
-    line-height: 14px;
 }
 
 .group-list-item .item-detail {
-    font-size: 10px;
+    font-size: 14px;
 }
 
 .group-list-item img {
-    width: 135px;
+    width: 320px;
     height: 80px;
     border: 1px solid #e1e1e8;
 }

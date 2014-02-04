@@ -313,7 +313,7 @@ class EventService
      * @param \Platformd\EventBundle\Entity\Event $event
      * @param \Platformd\UserBundle\Entity\User $user
      */
-    public function unregister(Event $event, User $user)
+    public function unregister(Event $event, User $user, $rejected = false)
     {
         if ($event->getId() && !$this->repository->isUserAttending($event, $user)) {
             return;
@@ -323,7 +323,12 @@ class EventService
 
         $rsvpAction->setUser($user);
         $rsvpAction->setEvent($event);
-        $rsvpAction->setAttendance(EventRsvpAction::ATTENDING_NO);
+        if ($rejected) {
+            $rsvpAction->setAttendance(EventRsvpAction::ATTENDING_REJECTED);
+        }
+        else {
+            $rsvpAction->setAttendance(EventRsvpAction::ATTENDING_NO);
+        }
         $rsvpAction->setRsvpAt(new DateTime('now'));
 
         $event->getRsvpActions()->add($rsvpAction);

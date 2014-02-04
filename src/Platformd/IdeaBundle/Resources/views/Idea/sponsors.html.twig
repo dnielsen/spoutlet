@@ -1,0 +1,70 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+
+    <a href="{{ path('sponsor_form', {'id': 'new', 'scope': scope, 'containerId': containerId}) }}">Create a new Sponsor</a>
+    <hr/>
+
+    {% if attachedSponsors %}
+
+        <h1>Remove Current Sponsors</h1>
+
+        <div id="sponsorWrapper">
+
+        {% for sponsor in attachedSponsors %}
+            <div class="sponsorBx">
+
+                <a href="{{ path('sponsor_remove', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}"  onclick="return confirm('Are you sure you want to remove this sponsor?');">
+                    <div class="sponsorImageBox">
+                        <img src="{{ media_path(sponsor.image) }}">
+                    </div>
+                </a>
+
+                {% if sponsor.creator == app.user or is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('sponsor_form', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}">Edit</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a href="{{ path('sponsor_delete', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" onclick="return confirm('Are you sure you want to delete this sponsor?');">Delete</a>
+                {% endif %}
+
+            </div>
+        {% endfor %}
+
+        </div>
+        <div class="clr"></div>
+        <hr/>
+
+    {% endif %}
+
+    {% if scope %}
+        <h1>Add a New Sponsor to Your {{ scope | capitalize }}</h1>
+    {% else %}
+        <h1>All Sponsors</h1>
+    {% endif %}
+
+    <div id="sponsorWrapper">
+
+        {% for sponsor in sponsors %}
+            <div class="sponsorBx">
+
+                {% if scope %}
+                    {% set sponsorLink = path('sponsor_add_form', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) %}
+                {% else %}
+                    {% set sponsorLink = sponsor.url %}
+                {% endif %}
+
+                <a href="{{ sponsorLink }}">
+                    <div class="sponsorImageBox">
+                        <img src="{{ media_path(sponsor.image) }}">
+                    </div>
+                </a>
+
+                {% if sponsor.creator == app.user or is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('sponsor_form', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}">Edit</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a href="{{ path('sponsor_delete', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" onclick="return confirm('Are you sure you want to delete this sponsor?');">Delete</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+    </div>
+    <div class="clr"></div>
+
+{% endblock %}

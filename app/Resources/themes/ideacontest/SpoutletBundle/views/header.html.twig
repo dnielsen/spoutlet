@@ -1,52 +1,84 @@
-<div id="header">
 
-    <div id="topNav">
-        <ul>
+<div id="topNav">
+    <div id="topNav-content">
+
+        {% if asset_exists('themes/' ~ site.theme ~ '/spoutlet/img/logo_'~site.defaultLocale~'_sm.jpg') %}
+            {% set topNavBannerPath = 'themes/' ~ site.theme ~ '/spoutlet/img/logo_'~site.defaultLocale~'_sm.jpg' %}
+        {% else %}
+            {% set topNavBannerPath = 'themes/' ~ site.theme ~ '/spoutlet/img/logo-campsite.png' %}
+        {% endif %}
+
+        <a href="{{ path('default_index') }}" class="left">
+            <img src="{{ asset(topNavBannerPath) }}" alt="Campsite Small" id="brand-small">
+        </a>
+
+        <ul class="sf-menu sf-list">
+
             {% if app.user is null %}
                 <li><a href="{{ path('fos_user_security_login') }}">{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}</a></li>
                 <li><a href="{{ path('fos_user_registration_register') }}">Join Now</a></li>
-            {% else %}
-                <li><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a></li>
-                <li><a href="{{ path('accounts_settings') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
-            {% endif %}
-            {% if group is defined and group is not null %}
-                {% if event is defined and event is not null %}
-                    {% if is_granted('ROLE_ADMIN') or event.user == (app.user) %}
-                        <li><a href="{{ path('idea_admin', {'groupSlug': group.slug, 'eventId': event.id}) }}">Event Admin</a></li>
-                    {% endif %}
-                {% endif %}
-            {% endif %}
-            <li><a href="{{ path('default_index') }}">Home</a></li>
-            {% if is_granted("ROLE_SUPER_ADMIN") %}
-                <li><a href="{{ path('admin_index') }}">Site Admin</a></li>
-            {% endif %}
+                <li><a href="{{ path('global_events_index') }}">Events</a></li>
+                <li><a href="{{ path('groups') }}">Groups</a></li>
 
-            {% set feedbackKey = app.request.get('_route') %}
-            {% if feedbackKey in feedback_ids|keys %}<li>
-                <a class="feedback" href="{{ path('entry_set_view', {'entrySetId': feedback_ids[feedbackKey] }) }}">Feedback</a>
-            </li>{% endif %}
+            {% else %}
+                <li><a>{{ app.user.name }}</a>
+                    <ul>
+                        <li><a href="{{ path('accounts_settings') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
+                        <li><a href="{{ path('profile', {'userId': app.user.id}) }}">Profile</li>
+                        {% if is_granted("ROLE_SUPER_ADMIN") %}
+                            <li><a href="{{ path('admin_index') }}">Site Admin</a></li>
+                        {% endif %}
+                        <li><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a></li>
+                    </ul>
+                </li>
+
+                <li><a>Events</a>
+                    <ul>
+                        <li><a href="{{ path('global_events_index') }}">All Events</a></li>
+                        <li><a href="{{ path('accounts_events') }}">My Events</a></li>
+                        <li><a href="{{ path('accounts_groups', {'then': 'campsite_event'}) }}">Create Event</a></li>
+                    </ul>
+                </li>
+
+                <li><a>Groups</a>
+                    <ul>
+                        <li><a href="{{ path('groups') }}">All Groups</a></li>
+                        <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
+                        <li><a href="{{ path('group_new') }}">Create Group</a></li>
+                    </ul>
+                </li>
+
+            {% endif %}
 
         </ul>
-
-        {% if app.user %}
-            <ul>
-                <li>Welcome, <a href="{{ path('profile', {'userId': app.user.id}) }}">{% if app.user.name %}{{app.user.name}}{% else %}{{app.user.username}}{% endif %}</a></li>
-            </ul>
+        {% set feedbackKey = app.request.get('_route') %}
+        {% if feedbackKey in feedback_ids|keys %}
+            <li style="display: inline;">
+                <a class="feedback" href="{{ path('entry_set_view', {'entrySetId': feedback_ids[feedbackKey] }) }}">Feedback</a>
+            </li>
         {% endif %}
-
     </div>
+</div>
 
-    {% block banner %}
-        {% if asset_exists('themes/' ~ site.theme ~ '/spoutlet/img/logo_'~site.defaultLocale~'_large.jpg') %}
-            <a href="{{ path('default_index') }}"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/logo_'~site.defaultLocale~'_large.jpg') }}" alt="Campsite" id="brand"></a>
-        {% else %}
-            <a href="{{ path('default_index') }}"><img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/logo_'~site.defaultLocale~'.jpg') }}" alt="Campsite" id="brand_small"></a>
-            <img src="{{ asset('themes/' ~ site.theme ~ '/spoutlet/img/tagline.gif') }}" alt="" width="235" height="31" id="tagline">
-        {% endif %}
-    {% endblock %}
+<div class="clr"></div>
 
+{% block banner %}
+    {# push navigation bar down below fixed topNav menu #}
+    <div style="height:40px;"></div>
+{% endblock %}
 
-    <br class="clr">
+<script type="text/javascript">
 
-</div> <!-- end header -->
+    jQuery(document).ready(function(){
+        jQuery('ul.sf-menu').supersubs({
+            minWidth:    10,   // minimum width of submenus in em units
+            maxWidth:    27,   // maximum width of submenus in em units
+            extraWidth:  1     // extra width can ensure lines don't sometimes turn over
+            // due to slight rounding differences and font-family
+        }).superfish({
+            delay:      150,
+            animation:  {opacity:'show',height:'show'}
+        });
+    });
 
+</script>

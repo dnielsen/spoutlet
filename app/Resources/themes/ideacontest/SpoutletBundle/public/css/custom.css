@@ -146,14 +146,14 @@ nav.spoutlet-pager .current {
     width: 698px;
     padding-right: 20px;
     padding-bottom: 30px;
-    border-right: 1px dashed #ccc;
+    border-right: 1px solid #ccc;
 }
 
 .profile-rightcol.bdrLft {
     width: 824px;
     padding-left: 20px;
     border-right: 0 none;
-    border-left: 1px dashed #ccc;
+    border-left: 1px solid #ccc;
 }
 
 a.profile-cancelBtn {
@@ -204,4 +204,32 @@ a.profile-cancelBtn {
 
 .feedback:hover {
     background-color: rgba(135, 135, 135, 0.50);
+}
+
+#groupHeader {
+    text-align: center;
+    line-height: 160px;
+    font-size: 48px;
+}
+
+#sponsorWrapper {
+    width: 100%;
+    max-width: 1050px;
+    margin: 0 auto;
+}
+.sponsorBx {
+    float: left;
+    height: 160px;
+    width: 140px;
+    margin: 5px;
+}
+.sponsorImageBox {
+    width: 140px;
+    height: 140px;
+    margin: 2px;
+    float: left;
+}
+.sponsorImageBox img {
+    max-width: 140px;
+    max-height: 140px;
 }

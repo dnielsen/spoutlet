@@ -2,15 +2,20 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Platformd\SpoutletBundle\Util\HttpUtil;
-use Platformd\SpoutletBundle\Link\LinkableInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Platformd\EventBundle\Entity\Event;
+use Platformd\EventBundle\Entity\GroupEvent;
+use Platformd\GroupBundle\Entity\Group;
+use Platformd\IdeaBundle\Entity\EntrySet;
+use Platformd\IdeaBundle\Entity\Idea;
 use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
+use Platformd\SpoutletBundle\Link\LinkableInterface;
+use Platformd\SpoutletBundle\Util\HttpUtil;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Our custom base controller
@@ -424,5 +429,76 @@ class Controller extends BaseController
         }
 
         return $errors;
+    }
+
+
+    public function getParentByIdea($idea)
+    {
+        $esRegistration = $idea->getParentRegistration();
+        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
+
+        return $esRegRepo->getContainer($esRegistration);
+    }
+    public function getParentByEntrySet($entrySet)
+    {
+        $parentRegistration = $entrySet->getEntrySetRegistration();
+        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
+
+        return $esRegRepo->getContainer($parentRegistration);
+    }
+    protected function getBreadCrumbsString($scope, $showCurrentScope = false)
+    {
+        $breadCrumbs = $this->getHierarchy($scope);
+
+        $breadCrumbsHtml = "";
+
+        foreach ($breadCrumbs as $crumb) {
+            if ($crumb && ($showCurrentScope || $crumb != $scope)) {
+                $breadCrumbsHtml = $breadCrumbsHtml."> <a href=\"".$this->generateUrl($crumb->getLinkableRouteName(), $crumb->getLinkableRouteParameters())."\">".$crumb->getName()."</a> ";
+            }
+        }
+
+        return $breadCrumbsHtml;
+    }
+    protected function getHierarchy($scope)
+    {
+        $group    = null;
+        $event    = null;
+        $entrySet = null;
+        $entry    = null;
+
+        $entrySetParent   = null;
+
+        if ($scope instanceof Idea) {
+            $entry          = $scope;
+            $entrySet       = $entry->getEntrySet();
+            $entrySetParent = $this->getParentByEntrySet($entrySet);
+        }
+        elseif ($scope instanceof EntrySet) {
+            $entrySet       = $scope;
+            $entrySetParent = $this->getParentByEntrySet($entrySet);
+        }
+        elseif ($scope instanceof GroupEvent) {
+            $event          = $scope;
+            $group          = $event->getGroup();
+        }
+        elseif ($scope instanceof Group) {
+            $group          = $scope;
+        }
+
+        if ($entrySetParent instanceof GroupEvent) {
+            $event = $entrySetParent;
+            $group = $event->getGroup();
+        }
+        elseif ($entrySetParent instanceof Group) {
+            $group = $entrySetParent;
+        }
+
+        return array(
+            $group,
+            $event,
+            $entrySet,
+            $entry,
+        );
     }
 }

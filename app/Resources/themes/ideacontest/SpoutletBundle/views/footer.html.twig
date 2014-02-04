@@ -14,6 +14,7 @@
             <ul>
                 <li><a href="{{ path('global_events_index') }}">All Events</a></li>
                 <li><a href="{{ path('accounts_events') }}">My Events</a></li>
+                <li><a href="{{ path('accounts_groups', {'then': 'campsite_event'}) }}">Create Event</a></li>
             </ul>
         </div>
         <div class="ftrcol">
@@ -37,10 +38,13 @@
         <br class="clr" />
 
         <div id="credit">
-            Site created by <a href="http://www.takeflightgraphics.com" target="_blank">Take Flight Graphics</a> <img src="{{ asset('/themes/' ~ site.theme ~ '/spoutlet/img/icon-tfg.png') }}" width="14" height="8" alt="Take Flight Graphics"></a>
+            Site design by <a href="http://www.takeflightgraphics.com" target="_blank">Take Flight Graphics</a> <img src="{{ asset('/themes/' ~ site.theme ~ '/spoutlet/img/icon-tfg.png') }}" width="14" height="8" alt="Take Flight Graphics">
+        </div>
+        <div id="cloud">
+            Powered by <a href="http://www.hpcloud.com" target="_blank">HP Public Cloud</a>
         </div>
         <div id="copyright">
-            <script language="JavaScript">document.write(include_copyright(2012));</script>
+            <script language="JavaScript">document.write(include_copyright(2014));</script>
         </div>
     </div><!-- end footer content -->
 </div><!-- end footer -->

@@ -1,7 +1,10 @@
-<div class="cBx2">
-    <h2 class="spcr-b">Upcoming Events</h2>
+<h2 class="left">Upcoming Events</h2>
 
-    <table summary="Upcoming Event Dates" class="tblStyle">
+<a href="{{ path('accounts_groups', {'then': 'campsite_event'}) }}" target="_blank" class="right btn bld bgBtn">Create Event &rsaquo;</a>
+
+<div class="clr"></div>
+
+<table summary="Upcoming Event Dates" class="tblStyle">
     <thead>
         <tr>
             <th>Name</th>
@@ -9,16 +12,20 @@
         </tr>
     </thead>
     <tbody>
+        {% set i=0 %}
         {% for event in events %}
-            <tr class="fill">
+            {% set i=i+1 %}
+            <tr {% if i%2 %}class="fill"{% endif %}>
                 <td><a href="{{ event | pd_link }}">{{ event.name }}</a></td>
                 <td>{{ event.startsAt|date('m.d.y') }}</td>
             </tr>
         {% else %}
-            <tr>
-                <td colspan="2">No upcoming events</td>
-            </tr>
+        <tr>
+            <td colspan="2">No upcoming events</td>
+        </tr>
         {% endfor %}
     </tbody>
-    </table>
-</div>
+
+</table>
+
+<p></p>

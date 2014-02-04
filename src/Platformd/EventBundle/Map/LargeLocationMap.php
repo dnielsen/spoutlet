@@ -21,8 +21,8 @@ class LargeLocationMap extends Map
 
         $this->setAutoZoom(false);
         $this->setContainerId('map_canvas');
-        $this->setWidth(390);
-        $this->setHeight(280);
+        $this->setWidth(350);
+        $this->setHeight(250);
         $this->setShowMapTypeControl(true);
         $this->setShowZoomControl(true);
     }

@@ -45,9 +45,12 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     const DELETED_BY_REPORT = 'REPORTED_PENDING_INVESTIGATION';
     const DELETED_BY_REPORT_ADMIN = 'REPORTED_AND_REMOVED_BY_ADMIN';
 
+    const CAT_TOPIC = 'topic';
+    const CAT_LOCATION = 'location';
+
     static private $validCategories = array(
-        'topic',
-        'location',
+        self::CAT_TOPIC,
+        self::CAT_LOCATION,
     );
 
     static private $validDeletedReasons = array(
@@ -301,6 +304,16 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
      */
     protected $entrySetRegistration;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\SponsorRegistry", mappedBy="group", cascade={"persist", "remove"})
+     */
+    protected $sponsorRegistrations;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\RegistrationField", mappedBy="group", cascade={"persist", "remove"})
+     */
+    protected $registrationFields;
+
 
     public function __construct()
     {
@@ -312,6 +325,8 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         $this->deals                    = new ArrayCollection();
         $this->videos                   = new ArrayCollection();
         $this->events                   = new ArrayCollection();
+        $this->sponsorRegistrations     = new ArrayCollection();
+        $this->registrationFields       = new ArrayCollection();
     }
 
     public function __toString() {
@@ -1067,8 +1082,52 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         return $this->entrySetRegistration->getEntrySets();
     }
 
-    public function getFirstEntrySet() {
-        return $this->entrySetRegistration->getEntrySets()->get(0);
+    public function addSponsorRegistration($sponsorRegistration)
+    {
+        $this->sponsorRegistrations->add($sponsorRegistration);
+    }
+    public function getSponsorRegistrations()
+    {
+        return $this->sponsorRegistrations;
+    }
+
+    public function createSponsorRegistration()
+    {
+        $sponsorRegistration = new SponsorRegistry($this, null, null, null);
+        $this->addSponsorRegistration($sponsorRegistration);
+
+        return $sponsorRegistration;
+    }
+
+    public function getSponsors()
+    {
+        $sponsorRegistrations = $this->sponsorRegistrations;
+
+        $sponsors = array();
+        foreach ($sponsorRegistrations as $reg){
+            $sponsors[] = $reg->getSponsor();
+        }
+
+        return $sponsors;
+    }
+
+    public function addRegistrationField($registrationField)
+    {
+        $registrationField->setGroup($this);
+        $this->registrationFields->add($registrationField);
+    }
+
+    public function setRegistrationFields($registrationFields)
+    {
+        $this->registrationFields = new ArrayCollection();
+        foreach ($registrationFields as $field) {
+            $this->addRegistrationField($field);
+        }
+    }
+
+    public function getRegistrationFields()
+    {
+        return $this->registrationFields;
     }
 
     public function isMemberOf(User $user) {

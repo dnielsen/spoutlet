@@ -315,8 +315,8 @@ Alienware Arena Team
         $groupManager = $this->getGroupManager();
 
         $featuredGroups = $repo->findAllFeaturedGroupsForSite($site);
-        $locationGroups = $repo->findGroupsByCategoryAndSite('location', $site);
-        $topicGroups    = $repo->findGroupsByCategoryAndSite('topic', $site);
+        $locationGroups = $repo->findAllGroupsByCategoryAndSite('location', $site);
+        $topicGroups    = $repo->findAllGroupsByCategoryAndSite('topic', $site);
         $recentGroups   = $repo->findMostRecentlyCreatedGroupsForSite($site);
         $popularGroups  = $repo->findMostPopularGroupsForSite($site);
 
@@ -347,12 +347,12 @@ Alienware Arena Team
             }
         }
 
-        $locationGroups = json_encode($location, JSON_HEX_APOS);
-        $topicGroups    = json_encode($topic, JSON_HEX_APOS);
+//        $locationGroups = json_encode($location, JSON_HEX_APOS);
+//        $topicGroups    = json_encode($topic, JSON_HEX_APOS);
 
         return $this->render('GroupBundle:Group:index.html.twig', array(
-            'locationGroups' => $locationGroups,
-            'topicGroups'    => $topicGroups,
+            'locationGroups' => $location,
+            'topicGroups'    => $topic,
             'recentGroups'   => $recentGroups,
             'popularGroups'  => $popularGroups,
             'featuredGroups' => $featuredGroups,
@@ -1758,7 +1758,7 @@ Alienware Arena Team
                 $then
             );
 
-            $group->setDescription('Welcome to my group! <br /><br />This is the place to share your thoughts with like-minded folks on this topic. <br /><br />Feel free to upload relevant images and videos, or start a discussion on this topic.');
+            $group->setDescription('Welcome to my group! <br /><br />This is the place to share your thoughts with like-minded folks on this topic. <br /><br />Feel free to start a discussion on this topic.');
         }
 
         $form = $this->createForm(new GroupType($this->getUser(), $group, $tagManager, false), $group);
@@ -2051,7 +2051,6 @@ Alienware Arena Team
 
     private function processForm(Form $form, Request $request)
     {
-        $em         = $this->getEntityManager();
         $tagManager = $this->getTagManager();
 
         if ($request->getMethod() == 'POST') {
@@ -2086,10 +2085,13 @@ Alienware Arena Team
 
                 $this->getGroupManager()->saveGroup($group);
 
-                $esReg = $group->createEntrySetRegistration();
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($esReg);
-                $em->flush();
+                if (!$group->getEntrySetRegistration())
+                {
+                    $esReg = $group->createEntrySetRegistration();
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $em->persist($esReg);
+                    $em->flush();
+                }
 
                 $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
                 $group->getId() ? $tagManager->replaceTags($tags, $group) : $tagManager->addTags($tags, $group);

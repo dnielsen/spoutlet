@@ -9,11 +9,7 @@
             <div class="std_1col">
 
                 <div class="widget-100 fillWidth" style="margin-bottom:20px;">
-                    <div class="widget-header">
-                        <div class="widget-title">
-                            {{ "platformd.events.event_listings.my_registered_events" | pd_trans }}
-                        </div>
-                    </div>
+                    <h2>{{ "platformd.events.event_listings.my_registered_events" | pd_trans }}</h2>
                     <div class="widget-content">
                         {% set no_events_message = 'platformd.account_page.events.no_registered_events' | pd_trans({'%url%': path('global_events_index')}) %}
                         {% include 'SpoutletBundle:Account:_eventList.html.twig' with {
@@ -34,11 +30,7 @@
 
                 {% if features.hasGroups %}
                     <div class="widget-100 fillWidth" style="margin-bottom:20px;">
-                        <div class="widget-header">
-                            <div class="widget-title">
-                                {{ "platformd.events.event_listings.my_owned_events" | pd_trans }}
-                            </div>
-                        </div>
+                        <h2>{{ "platformd.events.event_listings.my_owned_events" | pd_trans }}</h2>
                         <div class="widget-content">
                             {% set no_events_message = 'platformd.account_page.events.no_created_events' | pd_trans ~ " " ~ 'platformd.events.event_listings.create_event_message' | pd_trans | replace({'%1': path('accounts_groups', { 'then': "group_event" }), '%2' : path('group_new', { 'then': "group_event" }) }) %}
                             {% include 'SpoutletBundle:Account:_eventList.html.twig' with {

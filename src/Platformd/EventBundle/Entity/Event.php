@@ -303,15 +303,27 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     protected $entrySetRegistration;
 
     /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\SponsorRegistry", mappedBy="event", cascade={"persist", "remove"})
+     */
+    protected $sponsorRegistrations;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\RegistrationField", mappedBy="event", cascade={"persist", "remove"})
+     */
+    protected $registrationFields;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->attendees    = new ArrayCollection();
-        $this->createdAt    = new DateTime();
-        $this->startsAt     = new \DateTime('now');
-        $this->endsAt       = new \DateTime('now');
-        $this->currentRound = 1;
+        $this->attendees            = new ArrayCollection();
+        $this->sponsorRegistrations = new ArrayCollection();
+        $this->registrationFields   = new ArrayCollection();
+        $this->createdAt            = new DateTime();
+        $this->startsAt             = new \DateTime('now');
+        $this->endsAt               = new \DateTime('now');
+        $this->currentRound         = 1;
     }
 
     /**
@@ -704,6 +716,27 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
             return null;
         }
     }
+    public function getDateAndTime()
+    {
+        $dateAndTime = '';
+
+        if ($this->getStartsAt() && $this->getEndsAt())
+        {
+            $startsAtDate   = $this->getStartsAt()->format('M d, Y');
+            $startsAtTime   = $this->getStartsAt()->format('g:i a');
+            $endsAtDate     = $this->getEndsAt()->format('M d, Y');
+            $endsAtTime     = $this->getEndsAt()->format('g:i a');
+
+            if ($startsAtDate == $endsAtDate) {
+                $dateAndTime = $startsAtDate.'<br/>'.$startsAtTime.' - '.$endsAtTime;
+            }
+            else {
+                $dateAndTime = $startsAtDate.' '.$startsAtTime.' - <br/>'.$endsAtDate.' '.$endsAtTime;
+            }
+        }
+
+        return $dateAndTime;
+    }
 
     /**
      * Returns the start datetime converted into the timezone of the user
@@ -1031,7 +1064,60 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     }
 
     public function getEntrySets() {
-        return $this->entrySetRegistration->getEntrySets();
+        if($this->entrySetRegistration){
+            return $this->entrySetRegistration->getEntrySets();
+        }
+        else {
+            return array();
+        }
+    }
+
+    public function addSponsorRegistration($sponsorRegistration)
+    {
+        $this->sponsorRegistrations->add($sponsorRegistration);
+    }
+    public function getSponsorRegistrations()
+    {
+        return $this->sponsorRegistrations;
+    }
+
+    public function createSponsorRegistration()
+    {
+        $sponsorRegistration = new SponsorRegistry(null, $this, null, null);
+        $this->addSponsorRegistration($sponsorRegistration);
+
+        return $sponsorRegistration;
+    }
+
+    public function getSponsors()
+    {
+        $sponsorRegistrations = $this->sponsorRegistrations;
+
+        $sponsors = array();
+        foreach ($sponsorRegistrations as $reg){
+            $sponsors[] = $reg->getSponsor();
+        }
+
+        return $sponsors;
+    }
+
+    public function addRegistrationField($registrationField)
+    {
+        $registrationField->setEvent($this);
+        $this->registrationFields->add($registrationField);
+    }
+
+    public function setRegistrationFields($registrationFields)
+    {
+        $this->registrationFields = new ArrayCollection();
+        foreach ($registrationFields as $field) {
+            $this->addRegistrationField($field);
+        }
+    }
+
+    public function getRegistrationFields()
+    {
+        return $this->registrationFields;
     }
 
     public function isMemberOf(User $user) {

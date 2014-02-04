@@ -8,15 +8,10 @@
     {% for user in awaitingApproval %}
         <tr>
             <td><a href="{{ path('profile', {'userId': user.id}) }}"> {{ user.name }}</a><br/></td>
-            <td><a href="{{ path('idea_admin_process_approval', {'groupSlug': group.slug, 'eventId': event.id, 'userId': user.id, 'approval': 'approve'}) }}" class="btn marginlft">Approve</a></td>
-            <td><a href="{{ path('idea_admin_process_approval', {'groupSlug': group.slug, 'eventId': event.id, 'userId': user.id, 'approval': 'reject'}) }}" class="btn redButton marginlft">Reject</a></td>
+            <td><a href="{{ path('idea_admin_process_approval', {'groupSlug': group.slug, 'eventId': event.id, 'userId': user.id, 'action': 'approve'}) }}" class="btn marginlft">Approve</a></td>
+            <td><a href="{{ path('idea_admin_process_approval', {'groupSlug': group.slug, 'eventId': event.id, 'userId': user.id, 'action': 'reject'}) }}" class="btn redButton marginlft">Reject</a></td>
         </tr>
     {% endfor %}
     </table>
-
-    <br/>
-    <a href="{{ path('idea_admin', {'groupSlug': group.slug, 'eventId': event.id}) }}">
-        <input type="submit" value="Back">
-    </a>
 
 {% endblock %}

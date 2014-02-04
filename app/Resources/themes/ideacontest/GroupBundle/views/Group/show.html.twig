@@ -1,124 +1,220 @@
 {% extends 'IdeaBundle::group_layout.html.twig' %}
 
-{% block title %}{{ group.name }}{% endblock %}
+{% block title %}
+    {{ group.name }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script id="addJS">
+        jQuery(document).ready(function($) {
+            // Please note that autoHeight option has some conflicts with options like imageScaleMode, imageAlignCenter and autoScaleSlider
+            // it's recommended to disable them when using autoHeight module
+            $('#content-slider-1').royalSlider({
+                autoHeight: true,
+                arrowsNav: false,
+                fadeinLoadedSlide: false,
+                controlNavigationSpacing: 0,
+                controlNavigation: 'tabs',
+                imageScaleMode: 'none',
+                imageAlignCenter:false,
+                loop: false,
+                loopRewind: true,
+                numImagesToPreload: 6,
+                keyboardNavEnabled: true,
+                usePreloader: false,
+                autoPlay: {
+                    enabled: true,
+                    pauseOnHover: true,
+                    delay: 5000
+                }
+            });
+        });
+    </script>
+{% endblock %}
 
 {% block content %}
-    <div id="contentLft">
-        <h2 class="left spcr-t">{{ group.name }}</h2>
-        <br/><br/>
-        {% include 'GroupBundle:Group:_subNav.html.twig' %}
-        
-        <div class="rowBx">
-            {{ group.description | raw }}
+
+
+    {% if group.slides | default | length > 0 %}
+        <div class="content-slider-bg">
+            <div id="content-slider-1" class="royalSlider contentSlider rsDefault">
+                {% for slide in group.slides %}
+
+                    <div>
+                        <a href="{{ slide.url }}" target="_blank"><img class="sliderImage" src="{{ media_path(slide.image) }}"></a>
+                        <span class="rsTmb">
+                            {{ slide.text }}
+                        </span>
+                    </div>
+
+                {% endfor %}
+            </div>
         </div>
+        <hr/>
+    {% endif %}
 
+    <div class="rowBx">
+        {{ group.description | raw }}
+        <div class="clr"></div>
     </div>
+    <hr/>
 
+
+    {% if nextEvent %}
+        <div class="cBxLft">
+            <h2 class="left">
+                <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="blu">{{ nextEvent.name }}</a>
+            </h2>
+            {% if not (nextEvent.isUserAttending(app.user)) %}
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right">Attend</a>
+            {% endif %}
+            <div class="clr"></div>
+
+            <table class="tblStyle">
+                <tbody>
+                <tr>
+                    <td width="20%"><strong>When:</strong></td>
+                    <td width="80%">{{ nextEvent.DateAndTime|raw }}</td>
+                </tr>
+                {% if not nextEvent.getOnline %}
+                    <tr>
+                        <td><strong>Where:</strong></td>
+                        <td>{{ nextEvent.location }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Address:</strong></td>
+                        <td><a href="http://maps.google.com/?q={{ nextEvent.address1 }}, {{ nextEvent.address2 }}">{{ nextEvent.address1 }}<br/>{{ nextEvent.address2 }}</a></td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td colspan="2">{{ nextEvent.attendeeCount }} attendee{% if nextEvent.attendeeCount != 1 %}s{% endif %}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="cBxRt">
+            {% if not nextEvent.getOnline %}
+                <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+                <div id="event-location-map">{{ vichgeo_map_for('large_location', nextEvent) }}</div>
+            {% elseif groupEvents %}
+                <h2 class="widgetHeader">More Upcoming Events</h2>
+                <ul class="scrollableWidget">
+                    {% for event in groupEvents %}
+                        <li class="spcr-t spcr-l3">
+                            <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu">{{ event.name }}</h3></a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blu right">All Events</a>
+            {% elseif group.entrySets|length > 0 %}
+                <h2 class="widgetHeader">Lists</h2>
+                <ul class="scrollableWidget">
+                    {% for entrySet in group.entrySets %}
+                        <li class="spcr-t spcr-l3">
+                            <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% elseif pastEvents|length > 0 %}
+                <h2 class="widgetHeader">Past Events</h2>
+                <ul class="scrollableWidget">
+                    {% for event in pastEvents %}
+                        <li class="spcr-t spcr-l3">
+                            <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu">{{ event.name }}</h3></a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <a href="{{ path('group_events', {'slug': group.slug}) }}#past" class="blu right">See All</a>
+            {% endif %}
+
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% set sidebar = true %}
+{% block sidebar %}
     <div id="contentRt">
 
-        {% if group.entrySets | length > 0 %}
-            <h2 class="stepBar">Group Lists</h2>
-            <div class="scrollableSidebarWidget">
-                {% for entrySet in group.entrySets %}
-                <div class="scrollableSidebarWidgetItem">
-                    <h2>{{ entrySet.name }}</h2>
-                    <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" class="btnTny left marginlft">View Ideas</a>
-                    {% if group.isMember(app.user) or group.isOwner(app.user) %}
-                        {# <a href="{{ path('idea_create_form', {'groupSlug': group.slug, 'eventId': event.id, 'entrySetId': entrySet.id}) }}" class="btnTny left marginlft">Propose {{ entrySet.type | capitalize }}</a> #}
-                        <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}" class="btnTny left marginlft">Add Idea</a>
-                    {% endif %}
-                    <div class="clear"></div>
-                </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+        {% if groupEvents %}{% set renderMoreEvents = true %}{% else %}{% set renderMoreEvents = false %}{% endif %}
+        {% if group.entrySets|length > 0 %}{% set renderEntrySets = true %}{% else %}{% set renderEntrySets = false %}{% endif %}
+        {% if pastEvents|length > 0 %}{% set renderPastEvents = true %}{% else %}{% set renderPastEvents = false %}{% endif %}
+        {% if group.sponsors|length > 0 %}{% set renderSponsors = true %}{% else %}{% set renderSponsors = false %}{% endif %}
 
         {% if nextEvent %}
-        <h2 class="stepBar"><a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}">{{ nextEvent.name }}</a></h2>
-        <table summary="Next Event" class="tblStyle">
-            <tbody>
-            <tr>
-                <td width="25%"><strong>DATE:</strong></td>
-                <td width="75%">{{ nextEvent.DateRangeString }}</td>
-            </tr>
-            <tr>
-                <td width="25%"><strong>TIME:</strong></td>
-                <td width="75%">{{ nextEvent.startsAt|date('g:i a') }} - {{ nextEvent.endsAt|date('g:i a') }}</td>
-            </tr>
-            {% if not nextEvent.getOnline %}
-                <tr>
-                    <td width="25%"><strong>LOCATION:</strong></td>
-                    <td width="75%">
-                        {{ nextEvent.location }}<br>
-                        {{ nextEvent.address1 }}<br>
-                        {{ nextEvent.address2 }}
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
-                        <div id="event-location-map">{{ vichgeo_map_for('large_location', nextEvent) }}</div>
-                    </td>
-                </tr>
+            {% if nextEvent.getOnline %}
+                {% if groupEvents %}
+                    {% set renderMoreEvents = false %}
+                {% elseif group.entrySets|length > 0 %}
+                    {% set renderEntrySets = false %}
+                {% elseif pastEvents|length > 0 %}
+                    {% set renderPastEvents = false %}
+                {% endif %}
             {% endif %}
-            <tr>
-                <td width="25%">{{ nextEvent.attendeeCount }} attendee{% if nextEvent.attendeeCount != 1 %}s{% endif %}</td>
-                <td width="75%%">
-                    <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right">View Event</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        {% endif %}
-
-        {% if groupEvents %}
-        <h2 class="stepBar">More Events</h2>
-        <div class="scrollableSidebarWidget">
-            {% for event in groupEvents %}
-                <div class="scrollableSidebarWidgetItem">
-                    <div class="left">
-                        <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt">{{ event.name }}</a><br>
-                        {{ event.DateRangeString | default("Ongoing Event") }} | {% if event.getOnline %}Online Event{% else %}{{ event.location }}{% endif %}
-                    </div>
-                    <div class="right">
-                        <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny">View Event</a>
-                    </div>
-                    <div class="clr"></div>
-                </div>
-            {% endfor %}
-        </div>
         {% endif %}
 
 
-        {% if pastEvents %}
-        <h2 class="stepBar">Past Events</h2>
-            <div class="scrollableSidebarWidget">
+        {% if renderEntrySets %}
+            <h2 class="widgetHeader">Lists</h2>
+            <ul class="scrollableWidget spcr-b3">
+                {% for entrySet in group.entrySets %}
+                    <li class="spcr-t spcr-l3">
+                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if renderMoreEvents %}
+            <h2 class="widgetHeader">More Upcoming Events</h2>
+            <ul class="scrollableWidget spcr-b3">
+                {% for event in groupEvents %}
+                    <li class="spcr-t spcr-l3">
+                        <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu">{{ event.name }}</h3></a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blu right">All Events</a>
+        {% endif %}
+
+        {% if renderPastEvents %}
+            <h2 class="widgetHeader">Past Events</h2>
+            <ul class="scrollableWidget spcr-b3">
                 {% for event in pastEvents %}
-                    <div class="scrollableSidebarWidgetItem">
-                        <div class="left">
-                            <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt">{{ event.name }}</a><br>
-                            {{ event.DateRangeString }} | {% if event.getOnline %}Online Event{% else %}{{ event.location }}{% endif %}
-                        </div>
-                        <div class="right">
-                            <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny">View Event</a>
-                        </div>
-                        <div class="clr"></div>
+                    <li class="spcr-t spcr-l3">
+                        <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu">{{ event.name }}</h3></a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <a href="{{ path('group_events', {'slug': group.slug}) }}#past" class="blu right">See All</a>
+        {% endif %}
+
+        <h2 class="widgetHeader">Organizer</h2>
+        <a href="{{ path('profile', {userId: group.owner.id}) }}"><h3 class="blu spcr-t spcr-l3 spcr-b3">{{ group.owner.name }}</h3></a>
+
+        {% if renderSponsors %}
+            <h2 class="widgetHeader">Sponsors</h2>
+            <ul class="spcr-b3">
+                {% for sponsor in group.sponsors %}
+                    <div class="sponsorImageBox">
+                        <a href="{{ sponsor.url }}"><img src="{{ media_path(sponsor.image) }}"></a>
                     </div>
                 {% endfor %}
-            </div>
+            </ul>
+            <div class="clr"></div>
         {% endif %}
 
-        <h2 class="stepBar">{{ group.members|length }} Member{% if group.members|length > 1 %}s{% endif %}</h2>
-        <div class="scrollableSidebarWidget">
+        <h2 class="widgetHeader">{{ group.members|length }} Member{% if group.members|length > 1 %}s{% endif %}</h2>
+        <ul class="spcr-b3">
             {% for member in group.members %}
-                <div class="scrollableSidebarWidgetItem">
-                    <a href="{{ path('profile', {'userId': member.id}) }}">{{ member.name }}</a>
-                </div>
+                <li class="spcr-t spcr-l3">
+                    <a href="{{ path('profile', {'userId': member.id}) }}"><h3 class="blu">{{ member.name }}</h3></a>
+                </li>
             {% else %}
                 There are no members of this group yet.
             {% endfor %}
-        </div>
-
+        </ul>
     </div>
 
 

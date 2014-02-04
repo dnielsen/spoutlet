@@ -8,8 +8,8 @@
     {% if entries | length > 0 %}
         <table class="profileTable ideasTable">
             <tr>
-                <td><strong>List</strong></td>
                 <td><strong>Entry</strong></td>
+                <td><strong>List</strong></td>
             </tr>
 
             {% for entry in entries %}
@@ -17,10 +17,10 @@
                 {% set entrySet = entry.entrySet %}
                 <tr>
                     <td>
-                        <a href="{{ path(entrySet.getLinkableRouteName(), entrySet.getLinkableRouteParameters()) }}">{{ parent.getName }} - {{ entrySet.name }}</a>
+                        <a href="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': entry.id}) }}">{{ entry.name }}</a>
                     </td>
                     <td>
-                        <a href="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': entry.id}) }}">{{ entry.name }}</a>
+                        <a href="{{ path(entrySet.getLinkableRouteName(), entrySet.getLinkableRouteParameters()) }}">{{ parent.getName }} - {{ entrySet.name }}</a>
                     </td>
                 </tr>
             {% endfor %}

@@ -2,29 +2,33 @@
 
 namespace Platformd\IdeaBundle\Controller;
 
-use Platformd\EventBundle\Entity\EventRsvpAction;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContext;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
-use Platformd\SpoutletBundle\Controller\Controller;
-use Platformd\IdeaBundle\Entity\VoteCriteria;
+use DateTime;
 use Platformd\EventBundle\Entity\Event;
-use Platformd\IdeaBundle\Entity\EntrySet;
+use Platformd\EventBundle\Entity\EventRsvpAction;
 use Platformd\EventBundle\Entity\GroupEvent;
+use Platformd\EventBundle\Entity\GroupEventRsvpAction;
+use Platformd\GroupBundle\Entity\Group;
+use Platformd\IdeaBundle\Entity\EntrySet;
+use Platformd\IdeaBundle\Entity\VoteCriteria;
+use Platformd\IdeaBundle\Form\Type\RegistrationFieldFormType;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
+use Platformd\SpoutletBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
+use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
+use Symfony\Component\Security\Acl\Exception\AclAlreadyExistsException;
+use Symfony\Component\Security\Acl\Permission\MaskBuilder;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class AdminController extends Controller
 {
 
-    public function eventAction(Request $request, $groupSlug, $eventId) {
-
+    public function eventAction(Request $request, $groupSlug, $eventId)
+    {
         // test if submission is from a 'cancel' button press
-        $event = $this->getEvent($groupSlug, $eventId);
-         
         if ($request->get('cancel') == 'Cancel') {
             if ($eventId == 'newEvent'){
                 return $this->redirect($this->generateUrl('group_show', array(
@@ -39,6 +43,7 @@ class AdminController extends Controller
         }
 
         $group = $this->getGroup($groupSlug);
+        $event = $this->getEvent($groupSlug, $eventId);
 
         $isNew = false;
 
@@ -52,12 +57,15 @@ class AdminController extends Controller
             ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
             ->add('online',             'choice',           array('choices' => array('1' => 'Yes', '0' => 'No')))
             ->add('private',            'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
-            ->add('startsAt',           'datetime',         array('attr'    => array('size' => '60%'), 'required' => '0'))
-            ->add('endsAt',             'datetime',         array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('startsAt',           'datetime',         array('widget'  => 'single_text', 'required' => '0'))
+            ->add('endsAt',             'datetime',         array('widget'  => 'single_text', 'required' => '0'))
             ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address2',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
-
+            ->add('registrationFields', 'collection',       array('type'            => new RegistrationFieldFormType(),
+                                                                  'allow_add'       => true,
+                                                                  'allow_delete'    => true,
+                                                                  'by_reference'    => false))
             ->getForm();
 
         if($request->getMethod() == 'POST') {
@@ -66,23 +74,34 @@ class AdminController extends Controller
 
                 $em = $this->getDoctrine()->getEntityManager();
 
-                $group->addEvent($event);
+                if ($isNew) {
 
-                $event->setUser($this->getCurrentUser());
-                $event->setTimezone('UTC');
-                $event->setActive(true);
-                $event->setApproved(true);
-                $event->setRegistrationOption(Event::REGISTRATION_ENABLED);
-                $em->persist($event);
-                $em->flush();
+                    $group->addEvent($event);
 
-                // Registration needs to be created after event is persisted, relies on generated event ID
-                $esReg = $event->getEntrySetRegistration();
-                if ($esReg == null){
+                    $event->setUser($this->getCurrentUser());
+                    $event->setTimezone('UTC');
+                    $event->setActive(true);
+                    $event->setApproved(true);
+                    $event->setRegistrationOption(Event::REGISTRATION_ENABLED);
+                    $em->persist($event);
+                    $em->flush();
+
+                    // Registration needs to be created after event is persisted, relies on generated event ID
                     $esReg = $event->createEntrySetRegistration();
                     $em->persist($esReg);
-                    $em->flush();
                 }
+
+                $em->flush();
+
+                // ACLs
+                $aclProvider = $this->container->get('security.acl.provider');
+                $objectIdentity = ObjectIdentity::fromDomainObject($event);
+                $securityIdentity = UserSecurityIdentity::fromAccount($event->getUser());
+                try {
+                    $acl = $aclProvider->createAcl($objectIdentity);
+                    $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+                    $aclProvider->updateAcl($acl);
+                } catch(AclAlreadyExistsException $e) {}
 
                 return $this->redirect($this->generateUrl('group_event_view', array(
                         'groupSlug' => $groupSlug,
@@ -91,14 +110,12 @@ class AdminController extends Controller
             }
         }
 
-        $isAdmin = $this->isGranted('ROLE_ADMIN');
-
         return $this->render('IdeaBundle:Admin:eventForm.html.twig', array(
-                'form' => $form->createView(),
-                'isNew' => $isNew,
-                'group' => $group,
-                'event' => $event,
-                'isAdmin'    => $isAdmin,
+                'form'      => $form->createView(),
+                'isNew'     => $isNew,
+                'group'     => $group,
+                'event'     => $event,
+                'isAdmin'   => $this->isGranted('ROLE_ADMIN'),
             ));
     }
 
@@ -144,13 +161,14 @@ class AdminController extends Controller
         }
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'entrySet', $entrySet)
-            ->add('name',               'text',     array('attr'    => array('size'  => '60%')))
+            ->add('name',               'text',     array('attr'    => array('style' => 'width:60%')))
             ->add('type',               'choice',   array('choices' => array(EntrySet::TYPE_IDEA      => 'Ideas',
                                                                              EntrySet::TYPE_SESSION   => 'Sessions',
                                                                              EntrySet::TYPE_THREAD    => 'Threads',)))
+            ->add('description',        'textarea', array('attr'    => array('style' => 'width:60%')))
             ->add('isSubmissionActive', 'choice',   array('choices' => array('1' => 'Yes', '0' => 'No')))
             ->add('isVotingActive',     'choice',   array('choices' => array('0' => 'No', '1' => 'Yes')))
-            ->add('allowedVoters',      'text',     array('max_length' => '5000', 'attr'    => array('size' => '60%', 'placeholder' => 'username1, username2, ...'), 'required' => '0',))
+            ->add('allowedVoters',      'text',     array('max_length' => '5000', 'attr'    => array('style' => 'width:60%', 'placeholder' => 'username1, username2, ...'), 'required' => '0',))
             ->getForm();
 
         if($request->getMethod() == 'POST') {
@@ -172,6 +190,7 @@ class AdminController extends Controller
                     }
                 }
 
+                $entrySet->setCreator($this->getCurrentUser());
                 $entrySet->setEntrySetRegistration($entrySetRegistration);
                 $entrySet->setAllowedVoters(implode(",", $validatedJudges));
 
@@ -204,6 +223,8 @@ class AdminController extends Controller
             $em->remove($entrySet);
             $em->flush();
 
+            $this->setFlash('success', 'List \''.$entrySet->getName().'\' has been deleted.');
+
             $url = $this->generateUrl($parent->getLinkableRouteName(), $parent->getLinkableRouteParameters());
             return $this->redirect($url);
         }
@@ -211,6 +232,7 @@ class AdminController extends Controller
             throw new AccessDeniedException;
         }
     }
+
 
     // Edit requets will provide id using GET
     // New request will not provide id using GET
@@ -457,10 +479,11 @@ class AdminController extends Controller
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         $params = array(
-            'group'     => $this->getGroup($groupSlug),
-            'event'     => $event,
-            'form'      => $form->createView(),
-            'isAdmin'   => $isAdmin,
+            'group'       => $this->getGroup($groupSlug),
+            'event'       => $event,
+            'breadCrumbs' => $this->getBreadCrumbsString($event, true),
+            'form'        => $form->createView(),
+            'isAdmin'     => $isAdmin,
         );
 
         if ('POST' === $request->getMethod()) {
@@ -509,6 +532,7 @@ class AdminController extends Controller
         $params = array(
             'group'             => $this->getGroup($groupSlug),
             'event'             => $event,
+            'breadCrumbs'       => $this->getBreadCrumbsString($event, true),
             'awaitingApproval'  => $awaitingApproval,
             'isAdmin'           => $isAdmin,
         );
@@ -516,27 +540,35 @@ class AdminController extends Controller
         return $this->render('IdeaBundle:Admin:approvals.html.twig', $params);
     }
 
-    public function processApprovalAction($groupSlug, $eventId, $userId, $approval) {
+    public function processApprovalAction($groupSlug, $eventId, $userId, $action) {
 
-        $eventId = $this->getEvent($groupSlug, $eventId)->getId();
+        $event = $this->getEvent($groupSlug, $eventId);
         $user = $this->getDoctrine()->getRepository('UserBundle:User')->findOneBy(array('id'=>$userId));
 
         $rsvpRepo = $this->getDoctrine()->getRepository('EventBundle:GroupEventRsvpAction');
-        $userRsvpStatus = $rsvpRepo->findOneBy( array('user' => $userId,'event' => $eventId) );
+        $userRsvpActions = $rsvpRepo->findBy(
+            array('user' => $userId,'event' => $eventId),
+            array('updatedAt' => 'DESC')
+        );
+        $userRsvpStatus = reset($userRsvpActions);
 
         $em = $this->getDoctrine()->getEntityManager();
 
         if ($userRsvpStatus){
-            if ($approval == 'approve'){
-                $userRsvpStatus->setAttendance(EventRsvpAction::ATTENDING_YES);
+            if ($action == 'approve'){
+
+                $newRsvp = new GroupEventRsvpAction();
+                $newRsvp->setUser($user);
+                $newRsvp->setEvent($event);
+                $newRsvp->setRsvpAt(new DateTime('now'));
+                $newRsvp->setAttendance(EventRsvpAction::ATTENDING_YES);
+                $em->persist($newRsvp);
                 $em->flush();
-                $this->setFlash('success', $user->getName().' has been approved for the event.');
             }
             else {
-                $userRsvpStatus->setAttendance(EventRsvpAction::ATTENDING_REJECTED);
-                $em->flush();
-                $this->setFlash('success', $user->getName().' has been rejected for the event.');
+                $this->getGroupEventService()->unregister($event, $user, true);
             }
+            $this->setFlash('success', $user->getName().' has been '.$action.'ed for the event.');
         } else {
             $this->setFlash('error', $user->getName().' is not attending this event.');
         }
@@ -615,13 +647,6 @@ class AdminController extends Controller
         return $event;
     }
 
-    public function getParentByIdea($idea){
-        $esRegistration = $idea->getParentRegistration();
-        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
-
-        return $esRegRepo->getContainer($esRegistration);
-    }
-
     public function assignJudgesAction(Request $request, $groupSlug, $eventId, $ideaId)
     {
         $doc = $this->getDoctrine();
@@ -674,14 +699,6 @@ class AdminController extends Controller
         return $entrySet;
     }
 
-    public function getParentByEntrySet($entrySet)
-    {
-        $parentRegistration = $entrySet->getEntrySetRegistration();
-        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
-
-        return $esRegRepo->getContainer($parentRegistration);
-    }
-
     public function canEditEntrySet($entrySet)
     {
         $parent = $this->getParentByEntrySet($entrySet);
@@ -731,5 +748,70 @@ class AdminController extends Controller
         $response->setContent($csvString);
         return $response;
     }
+
+
+    // Admin Scripts
+
+    public function fixEventACLsAction(Request $request) {
+        $eventEm = $this->getDoctrine()->getRepository('EventBundle:GroupEvent');
+        $aclProvider = $this->container->get('security.acl.provider');
+
+        $output = "";
+        $allEvents = $eventEm->findAll();
+        $index = 0;
+        foreach($allEvents as $event) {
+            $index++;
+
+            $objectIdentity = ObjectIdentity::fromDomainObject($event);
+            $securityIdentity = new UserSecurityIdentity($event->getUser()->getUsername(),'Platformd\UserBundle\Entity\User');
+
+            try {
+                $acl = $aclProvider->createAcl($objectIdentity);
+                $output .= $index.'. creating acl for \''.$event->getName().'\': '.$event->getUser()->getUsername().'<br>';
+            } catch(AclAlreadyExistsException $e) {
+                $acl = $aclProvider->findAcl($objectIdentity,array($securityIdentity));
+                $output .= $index.': updating acl for \''.$event->getName().'\': '.$event->getUser()->getUsername().'<br>';
+            }
+            $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
+            $aclProvider->updateAcl($acl);
+        }
+        $this->setFlash('success', $output);
+
+        return $this->redirect($this->generateUrl('default_index'));
+    }
+
+    public function addEntrySetCreatorsAction(Request $request){
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $entrySets = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet')->findAll();
+
+        $output = '';
+
+        foreach ($entrySets as $entrySet){
+
+            $parent = $this->getParentByEntrySet($entrySet);
+            $parentOwner = null;
+
+            if ($parent instanceof GroupEvent){
+                $parentOwner = $parent->getUser();
+            }
+            elseif ($parent instanceof Group){
+                $parentOwner = $parent->getOwner();
+            }
+
+            if ($parentOwner){
+                $entrySet->setCreator($parentOwner);
+                $output = $output.$entrySet->getName().'\'s creator is now '.$parentOwner->getName().'<br/>';
+            }
+        }
+        if ($output){
+            $em->flush();
+            $this->setFlash('success', $output);
+        }
+
+        return $this->redirect($this->generateUrl('default_index'));
+    }
+
+
 }
 

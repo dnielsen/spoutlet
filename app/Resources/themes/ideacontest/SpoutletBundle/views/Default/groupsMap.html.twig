@@ -1,10 +1,5 @@
-<div id="map">
-    <h2 class="spcr-b2">Find a Group Near You</h2>
-        <div>
-            <input id="map-location-search" type="text" size="50" placeholder="Enter your location" autocomplete="off">
-        </div>
-    <div id="map-canvas"></div>
-</div>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script type="text/javascript" src="/themes/ideacontest/spoutlet/js/gmaps_custom.js"></script>
 
 <script type="text/javascript">
     var groupsArray = [];
@@ -28,3 +23,11 @@
         {% endfor %}
     });
 </script>
+
+<div id="map">
+    <h2 class="spcr-b2">Find a Group Near You</h2>
+
+    <input id="map-location-search" type="text" placeholder="Enter your location" autocomplete="off">
+
+    <div id="map-canvas"></div>
+</div>

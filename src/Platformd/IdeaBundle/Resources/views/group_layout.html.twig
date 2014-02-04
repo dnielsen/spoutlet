@@ -5,13 +5,37 @@
     {% embed 'SpoutletBundle::header.html.twig' %}
 
         {% block extra_user_controls %}
-            {% if is_granted('ROLE_ADMIN') and group.isOwner(app.user) %}
-                <li><a href="{{ path('group_edit', {'slug': group.slug} ) }}">Edit Group</a></li>
-            {% endif %}
+        {% endblock %}
+
+        {% block banner %}
+            <div id="header-group">
+                {% if group.groupAvatar is not null %}
+                    {% set bannerContent = '<img src="' ~ media_path(group.groupAvatar) ~ '" alt="Group Logo" id="brand-group">' %}
+                {% else %}
+                    {% set bannerContent = '<span id="groupHeader">' ~ group.name ~ '</span>' %}
+                {% endif %}
+
+                <a href="{{ path('group_show', {'slug': group.slug}) }}">{{ bannerContent | raw }}</a>
+
+                <div id="tagline">share. learn. grow.</div>
+            </div>
+
         {% endblock %}
 
     {% endembed %}
 
-    {% embed 'SpoutletBundle::navigation.html.twig' %}{% endembed %}
+    {% embed 'SpoutletBundle::navigation.html.twig' %}
+
+        {% block menu_items %}
+
+            <li><a href="{{ path('info_page', {'groupSlug': group.slug, 'page': 'speak'}) }}">Speak</a></li>
+            <li><a href="{{ path('info_page', {'groupSlug': group.slug, 'page': 'volunteer'}) }}">Volunteer</a></li>
+
+        {% endblock %}
+
+    {% endembed %}
 
 {%  endblock %}
+
+
+

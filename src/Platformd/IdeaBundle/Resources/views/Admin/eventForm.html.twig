@@ -1,4 +1,4 @@
-{% extends 'SpoutletBundle::layout.html.twig' %}
+{% extends 'IdeaBundle::group_layout.html.twig' %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -13,6 +13,16 @@
                 toggleLocationControls();
             });
 
+            $('#event_startsAt').datetimepicker({step: 15, format:'Y-m-d H:i:s'});
+            $('#event_endsAt').datetimepicker({step: 15, format:'Y-m-d H:i:s'});
+
+            {% if isNew %}
+                var now = new Date();
+                var date = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+(now.getDate());
+                $('#event_startsAt').val(date + ' 18:00:00');
+                $('#event_endsAt').val(date + ' 22:00:00');
+            {% endif %}
+
             function toggleLocationControls() {
                 if($('#event_online').val() == '1') {
                     $('#location-controls').slideUp();
@@ -23,8 +33,63 @@
                     $('#location-controls').slideDown();
                 }
             }
+
+            var $addFieldLink = $('<a href="#" class="blu">Add a new question</a>');
+
+            $collectionHolder = $('#event_registrationFields');
+            $collectionHolder.append($addFieldLink);
+
+            // count the current form inputs we have, use that as the new
+            // index when inserting an item
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+            $addFieldLink.on('click', function(e) {
+                e.preventDefault();
+                addField($collectionHolder, $addFieldLink);
+            });
+
+            function addField($collectionHolder, $addFieldLink) {
+
+                var prototype = $collectionHolder.data('prototype');
+                var index     = $collectionHolder.data('index');
+
+                // Replace '$$name$$' in the prototype's HTML to
+                // instead be a number based on how many items we have
+                var newForm = prototype.replace(/\$\$name\$\$/g, index);
+
+                $collectionHolder.data('index', index + 1);
+
+                var newFieldDiv = '<div id=\'field' + index + '\' style=\'display:none\'></div>'
+                var $newField = $(newFieldDiv).append(newForm);
+                $addFieldLink.before($newField);
+
+                $('#field' + index).slideDown();
+            }
         });
     </script>
+
+{% endblock %}
+
+{# Custom Form for registration fields -- no labels on individual fields, custom data prototype #}
+{% form_theme form _self %}
+
+{% block _event_registrationFields_widget %}
+    {% spaceless %}
+        {% if prototype is defined %}
+            {% set data_prototype = "<div id=\"event_registrationFields_$$name$$\"><input type=\"text\" id=\"event_registrationFields_$$name$$_question\" name=\"event[registrationFields][$$name$$][question]\" required=\"required\" size=\"60%\" class=\" form-txt\"></div>" %}
+            {% set attr = attr|merge({'data-prototype': data_prototype}) %}
+        {% endif %}
+        {{ form_label(form) }}
+        <div {{ block('widget_container_attributes') }}>
+            {% block field_rows %}
+                {{ form_errors(form) }}
+                {% for child in form %}
+                    {{ form_widget(child) }}
+                {% endfor %}
+            {% endblock %}
+            {{ form_rest(form) }}
+        </div>
+    {% endspaceless %}
 {% endblock %}
 
 {% block content %}
@@ -51,18 +116,30 @@
         {{ form_row(form.address2) }}
         </div>
         {{ form_row(form.private) }}
+        {{ form_widget(form.registrationFields) }}
 
         {{ form_rest(form) }}
 
-        <a href="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventId': event.id}) }}">
-            Add Images
-        </a>
-        <br class="clr"/>
-        <br/>
+        <br class="clr"/><br/>
+
+        {% if not isNew %}
+            <a href="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="blu">Manage Image Slider</a>
+            <br class="clr"/><br/>
+        {% endif %}
 
 	    <input type="submit" value="Submit"/>
-		<button type="submit" value="Cancel" name="cancel" formnovalidate/>Cancel</button>
-	
-	</form>
+		<input type="submit" value="Cancel" name="cancel" formnovalidate/>
+
+        {% if not isNew %}
+            {% if event.entrySets|length == 0 %}
+                <a href="{{ path("group_event_delete", {"groupSlug": group.slug, "eventId": event.id}) }}">
+                    <input type="button" class="spcr-l redButton" value="Delete" onclick="return confirm('Are you sure you want to delete this list?');">
+                </a>
+            {% else %}
+                <input type="button" class="spcr-l greyButton" value="Delete Disabled" title="Remove the {{ event.EntrySets|length }} list(s) attached to this Event to enable the delete option.">
+            {% endif %}
+        {% endif %}
+
+    </form>
 
 {% endblock %}

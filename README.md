@@ -99,16 +99,16 @@ INSTALLATION
     If you see any issues, you may need to install more things. You can
     choose to ignore any issues, they may or may not affect you.
 
-    $ php app/check.php -c /etc/php5/apache2/php.ini
+    $ php -c /etc/php5/apache2/php.ini app/check.php 
 
 * Create the database, migrate up to the current schema
-
+```
     $ php app/console doctrine:database:create  
-    $ php app/console doctrine:mig:mig 
+    $ php app/console doctrine:mig:mig  
     
-    $ php app/console doctrine:database:create --connection="acl" --env=prod
+    $ php app/console doctrine:database:create --connection="acl" --env=prod  
     $ php app/console init:acl --env=prod
-    
+```    
     Connect to database and update:  
 
         pd_site          - Add a site for each community with name, defaultLocale, fullDomain, and theme

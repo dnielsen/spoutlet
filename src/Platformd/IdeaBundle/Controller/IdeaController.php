@@ -2,28 +2,25 @@
 
 namespace Platformd\IdeaBundle\Controller;
 
-use Platformd\GroupBundle\Entity\Group;
 use Platformd\EventBundle\Entity\GroupEvent;
-use Symfony\Component\Form\Exception\NotValidException;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\SecurityContext;
-
-use Platformd\SpoutletBundle\Controller\Controller;
-use Platformd\IdeaBundle\Entity\Idea;
+use Platformd\GroupBundle\Entity\Group;
 use Platformd\IdeaBundle\Entity\Comment;
+use Platformd\IdeaBundle\Entity\Document;
+use Platformd\IdeaBundle\Entity\EntrySet;
+use Platformd\IdeaBundle\Entity\FollowMapping;
+use Platformd\IdeaBundle\Entity\Idea;
+use Platformd\IdeaBundle\Entity\Link;
+use Platformd\IdeaBundle\Entity\SponsorRegistry;
 use Platformd\IdeaBundle\Entity\Tag;
 use Platformd\IdeaBundle\Entity\Vote;
-use Platformd\IdeaBundle\Entity\FollowMapping;
-use Platformd\IdeaBundle\Entity\Document;
-use Platformd\IdeaBundle\Entity\Link;
-use Platformd\IdeaBundle\Entity\EntrySet;
-use Platformd\IdeaBundle\Entity\EntrySetRegistryRepository;
-use Platformd\EventBundle\Entity\Event;
-use Platformd\IdeaBundle\Entity\EntrySetScopeable;
+use Platformd\IdeaBundle\Entity\Sponsor;
+use Platformd\SpoutletBundle\Controller\Controller;
+use Platformd\MediaBundle\Entity\Media;
+use Symfony\Component\Form\Exception\NotValidException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class IdeaController extends Controller
 {
@@ -250,7 +247,7 @@ class IdeaController extends Controller
         return $this->render('IdeaBundle:Idea:createForm.html.twig', array(
                 'parent'     => $this->getParentByEntrySet($entrySet),
                 'entrySet'   => $entrySet,
-                'breadCrumbs'=> $this->getBreadCrumbsString($entrySet),
+                'breadCrumbs'=> $this->getBreadCrumbsString($entrySet, true),
                 'sidebar'    => true,
                 'attendance' => $attendance,
                 'isAdmin'    => $isAdmin,
@@ -782,6 +779,238 @@ class IdeaController extends Controller
         return new RedirectResponse($ideaListUrl);
     }
 
+    public function sponsorsAction(Request $request)
+    {
+        $scope       = $request->get('scope');
+        $containerId = $request->get('containerId');
+
+        $sponsorRepo = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor');
+
+        $attachedSponsors = null;
+
+        if ($scope) {
+            $attachedSponsors = $sponsorRepo->findAttachedSponsors($scope, $containerId);
+            $sponsors         = $sponsorRepo->findUnattachedSponsors($scope, $containerId);
+        }
+        else {
+            $sponsors         = $sponsorRepo->findAll();
+        }
+
+        return $this->render('IdeaBundle:Idea:sponsors.html.twig', array(
+            'attachedSponsors'  => $attachedSponsors,
+            'sponsors'          => $sponsors,
+            'scope'             => $scope,
+            'containerId'       => $containerId,
+        ));
+    }
+
+    public function sponsorFormAction(Request $request, $id)
+    {
+        $this->enforceUserSecurity();
+
+        $scope       = $request->get('scope');
+        $containerId = $request->get('containerId');
+
+        if ($request->get('cancel') == 'Cancel') {
+            return $this->redirect($this->generateUrl('sponsors', array('scope' => $scope, 'containerId' => $containerId)));
+        }
+
+        if( $id == 'new' )
+        {
+            $sponsor = new Sponsor();
+            $imgFieldAttributes = array();
+        }
+        else
+        {
+            $sponsor = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor')->find($id);
+            if (!$sponsor) {
+                throw new NotFoundHttpException();
+            }
+            $imgFieldAttributes = array('required' => false);
+        }
+
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'sponsor', $sponsor)
+            ->add('name',               'text',         array('attr'    => array('style' => 'width:60%')))
+            ->add('url',                'text',         array('attr'    => array('style' => 'width:60%')))
+            ->add('image',              'file',         $imgFieldAttributes)
+        ->getForm();
+
+        if($request->getMethod() == 'POST') {
+
+            $oldImage = $sponsor->getImage();
+
+            $form->bindRequest($request);
+
+            if($form->isValid()) {
+
+                $sponsor->setCreator($this->getCurrentUser());
+                $image = $sponsor->getImage();
+
+                if ($image)
+                {
+                    $media = new Media();
+                    $media->setName($sponsor->getName());
+                    $media->setFileObject($image);
+
+                    $this->getMediaUtil()->persistRelatedMedia($media);
+
+                    $sponsor->setImage($media);
+                }
+                else {
+                    $sponsor->setImage($oldImage);
+                }
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($sponsor);
+                $em->flush();
+
+                if ($scope && $id == 'new') {
+                    return $this->redirect($this->generateUrl('sponsor_add_form', array(
+                        'id'            => $sponsor->getId(),
+                        'scope'         => $scope,
+                        'containerId'   => $containerId)));
+                }
+
+                return $this->redirect($this->generateUrl('sponsors', array('scope' => $scope, 'containerId' => $containerId)));
+            }
+        }
+
+        return $this->render('IdeaBundle:Idea:sponsorForm.html.twig', array(
+            'id'            => $id,
+            'scope'         => $scope,
+            'containerId'   => $containerId,
+            'sponsor'       => $sponsor,
+            'form'          => $form->createView(),
+        ));
+    }
+
+    public function sponsorAddFormAction(Request $request, $id)
+    {
+        $this->enforceUserSecurity();
+
+        $scope       = $request->get('scope');
+        $containerId = $request->get('containerId');
+
+        if ($request->get('cancel') == 'Cancel') {
+            return $this->redirect($this->generateUrl('sponsors', array('scope' => $scope, 'containerId' => $containerId)));
+        }
+
+        $sponsor = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor')->find($id);
+        if (!$sponsor) {
+            throw new NotFoundHttpException();
+        }
+
+        $sponsorRegistry = null;
+
+        if ($scope == 'group') {
+            $group = $this->getDoctrine()->getRepository('GroupBundle:Group')->find($containerId);
+            $containerOwner = $group->getOwner();
+            $sponsorRegistry = new SponsorRegistry($group, null, $sponsor, null);
+        }
+
+        elseif ($scope == 'event') {
+            $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($containerId);
+            $containerOwner = $event->getUser();
+            $sponsorRegistry = new SponsorRegistry(null, $event, $sponsor, null);
+        }
+
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'sponsor_add', $sponsorRegistry)
+            ->add('level', 'choice', array('choices' => array(SponsorRegistry::SPONSORSHIP_LEVEL_BRONZE   => 'Bronze',
+                                                              SponsorRegistry::SPONSORSHIP_LEVEL_SILVER   => 'Silver',
+                                                              SponsorRegistry::SPONSORSHIP_LEVEL_GOLD     => 'Gold',
+                                                              SponsorRegistry::SPONSORSHIP_LEVEL_PLATINUM => 'Platinum',)))
+            ->getForm();
+
+
+        if($request->getMethod() == 'POST') {
+
+            $form->bindRequest($request);
+
+            if($form->isValid()) {
+
+                if ($this->getCurrentUser() == $containerOwner || $this->isGranted('ROLE_ADMIN')) {
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $em->persist($sponsorRegistry);
+                    $em->flush();
+
+                    $this->setFlash('success', $sponsor->getName().' was successfully added to your '.$scope);
+                }
+                else {
+                    $this->setFlash('error', 'You are not authorized to add this sponsor!');
+                }
+
+                return $this->redirect($this->generateUrl('sponsors', array('scope' => $scope, 'containerId' => $containerId)));
+            }
+        }
+
+        return $this->render('IdeaBundle:Idea:sponsorAddForm.html.twig', array(
+            'sponsor'       => $sponsor,
+            'scope'         => $scope,
+            'containerId'   => $containerId,
+            'form'          => $form->createView(),
+        ));
+    }
+
+    public function sponsorRemoveAction(Request $request, $id)
+    {
+        $this->enforceUserSecurity();
+
+        $scope       = $request->get('scope');
+        $containerId = $request->get('containerId');
+
+        $sponsor     = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor')->find($id);
+
+        $sponsorRegistryRepo = $this->getDoctrine()->getRepository('IdeaBundle:SponsorRegistry');
+        $sponsorRegistration = $sponsorRegistryRepo->findOneBy(array('sponsor' => $id,
+                                                                     $scope    => $containerId));
+
+        if ($scope == 'group') {
+            $group = $this->getDoctrine()->getRepository('GroupBundle:Group')->find($containerId);
+            $containerOwner = $group->getOwner();
+        }
+        elseif ($scope == 'event') {
+            $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($containerId);
+            $containerOwner = $event->getUser();
+        }
+
+        if ($this->getCurrentUser() == $containerOwner || $this->isGranted('ROLE_ADMIN')) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->remove($sponsorRegistration);
+            $em->flush();
+
+            $this->setFlash('success', $sponsor->getName().' was successfully removed.');
+        }
+        else {
+            $this->setFlash('error', 'You are not authorized to remove this sponsor!');
+        }
+
+        return $this->redirect($this->generateUrl('sponsors', array('scope' => $scope, 'containerId' => $containerId)));
+    }
+
+    public function sponsorDeleteAction(Request $request, $id)
+    {
+        $this->enforceUserSecurity();
+
+        $scope       = $request->get('scope');
+        $containerId = $request->get('containerId');
+
+        $sponsor     = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor')->find($id);
+
+        if ($this->getCurrentUser() == $sponsor->getCreator() || $this->isGranted('ROLE_ADMIN'))
+        {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->remove($sponsor);
+            $em->flush();
+
+            $this->setFlash('success', $sponsor->getName().' was successfully deleted.');
+        }
+        else {
+            $this->setFlash('error', 'You are not authorized to delete this sponsor!');
+        }
+
+        return $this->redirect($this->generateUrl('sponsors', array('scope' => $scope, 'containerId' => $containerId)));
+    }
+
 
     public function profileAction($userId = null)
     {
@@ -876,6 +1105,32 @@ class IdeaController extends Controller
             'parents'   => $parents,
         ));
     }
+
+    public function userEntrySetsAction()
+    {
+        $userEntrySets = $this->getCurrentUser()->getEntrySets();
+
+        $parents = array();
+        foreach($userEntrySets as $entrySet) {
+            $parent = $this->getParentByEntrySet($entrySet);
+            $parents[$entrySet->getId()] = $parent;
+        }
+
+        return $this->render('IdeaBundle:Idea:userEntrySets.html.twig', array(
+            'entrySets' => $userEntrySets,
+            'parents'   => $parents,
+        ));
+    }
+
+
+    public function infoPageAction($groupSlug, $page)
+    {
+        $group = $this->getGroup($groupSlug);
+        return $this->render('IdeaBundle::'.$page.'.html.twig', array(
+            'group' => $group,
+        ));
+    }
+
 
     //TODO: Move this to a model file?
     /******************************************************
@@ -1119,77 +1374,18 @@ class IdeaController extends Controller
         return $attendance;
     }
 
-    public function getParentByIdea($idea)
+    public function getSponsorContainer($scope, $containerId)
     {
-        $esRegistration = $idea->getParentRegistration();
-        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
-
-        return $esRegRepo->getContainer($esRegistration);
-    }
-    public function getParentByEntrySet($entrySet)
-    {
-        $parentRegistration = $entrySet->getEntrySetRegistration();
-        $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
-
-        return $esRegRepo->getContainer($parentRegistration);
+        $container = null;
+        if ($scope == 'group') {
+            $container = $this->getDoctrine()->getRepository('GroupBundle:Group')->find($containerId);
+        }
+        elseif ($scope == 'event') {
+            $container = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($containerId);
+        }
+        return $container;
     }
 
-    public function getBreadCrumbsString($scope)
-    {
-        $breadCrumbs = $this->getHierarchy($scope);
-
-        $breadCrumbsHtml = "";
-
-        foreach ($breadCrumbs as $crumb) {
-            if ($crumb && $crumb != $scope){
-                $breadCrumbsHtml = $breadCrumbsHtml."> <a href=\"".$this->generateUrl($crumb->getLinkableRouteName(), $crumb->getLinkableRouteParameters())."\">".$crumb->getName()."</a> ";
-            }
-        }
-
-        return $breadCrumbsHtml;
-    }
-
-    public function getHierarchy($scope)
-    {
-        $group    = null;
-        $event    = null;
-        $entrySet = null;
-        $entry    = null;
-
-        $entrySetParent   = null;
-
-        if ($scope instanceof Idea) {
-            $entry          = $scope;
-            $entrySet       = $entry->getEntrySet();
-            $entrySetParent = $this->getParentByEntrySet($entrySet);
-        }
-        elseif ($scope instanceof EntrySet) {
-            $entrySet       = $scope;
-            $entrySetParent = $this->getParentByEntrySet($entrySet);
-        }
-        elseif ($scope instanceof GroupEvent) {
-            $event          = $scope;
-            $group          = $event->getGroup();
-        }
-        elseif ($scope instanceof Group) {
-            $group          = $scope;
-        }
-
-        if ($entrySetParent instanceof GroupEvent) {
-            $event = $entrySetParent;
-            $group = $event->getGroup();
-        }
-        elseif ($entrySetParent instanceof Group) {
-            $group = $entrySetParent;
-        }
-
-        return array(
-            $group,
-            $event,
-            $entrySet,
-            $entry,
-        );
-    }
 
 }
 ?>

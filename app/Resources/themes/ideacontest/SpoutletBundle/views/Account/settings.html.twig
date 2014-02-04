@@ -81,17 +81,13 @@
                             {{ form_widget(form.plainPassword.second) }}
                             <span class="form-msg-error">{{ new_conf_error }}</span>
                         </div>
+                        <input type="submit" value="Save" class="right"/>
                     </fieldset>
 
                     <div class="clear"></div>
-
                     {{ form_rest(form) }}
-
-                    <div id="form-buttons">
-                        <button type="submit" class="btn btn-primary">{{ 'submit'|trans }}</button>
-                        <a href="{{ path('accounts_index') }}" class="btn">{{ 'cancel' | pd_trans }}</a>
-                    </div>
                 </form>
+
                 <br/>
                 <div class="clear"></div>
                 <form action="{{ path('subscription_settings') }}" {{ form_enctype(subscriptionForm) }} method="POST" class="fos_user_change_password form form-horizontal">
@@ -103,11 +99,8 @@
                                 <td>{{ form_label(subscriptionForm.subscribedAlienwareEvents) }}</td>
                             </tr>
                         </table>
+                        <input type="submit" value="Save" class="right"/>
                     </fieldset>
-                    <div id="form-buttons">
-                        <button type="submit" class="btn btn-primary">{{ 'submit'|trans }}</button>
-                        <a href="{{ path('accounts_index') }}" class="btn">{{ 'cancel' | pd_trans }}</a>
-                    </div>
                 </form>
             </div>
         </div>

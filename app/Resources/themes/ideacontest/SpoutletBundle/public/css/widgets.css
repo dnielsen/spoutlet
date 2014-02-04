@@ -1,33 +1,33 @@
 /** Widget Stuff **/
 .widget-33 { width: 323px; height: auto; padding-top:1px; overflow: hidden; border-radius: 5px; }
-.widget-33 .widget-header { padding: 0px 5px 0 5px; background-color: #e1e1e8;}
-.widget-33 .widget-footer { color: #727272; background: #e1e1e8; padding: 5px; margin: 0 auto; border-top: 1px solid #f7f7f9; border-bottom: 1px solid #f7f7f9; height: 15px; }
-.widget-33 .widget-content { color: #727272; padding: 5px; margin: 0 auto; background: #f7f7f9; }
+.widget-33 .widget-header { padding: 0px 5px 0 5px;}
+.widget-33 .widget-footer { color: #727272; padding: 5px; margin: 0 auto; border-top: 1px solid #f7f7f9; border-bottom: 1px solid #f7f7f9; height: 15px; }
+.widget-33 .widget-content { color: #727272; padding: 5px; margin: 0 auto; }
 .widget-33 .widget-title { font-size: 18.67px; font-weight: bold; color: #727272; padding: 7px 0 4px 5px; }
 .widget-33 .widget-icon { float: right; padding: 1px 0 0 0; }
-.widget-33 .widget-item { -moz-border-radius: 5px; -webkit-border-radius: 5px; margin: 3px 3px 3px 3px; background: #e1e1e8; padding: 2px 2px 2px 5px; }
-.widget-33 .widget-item-subtext { font-size: 11px; color: #b3b3b3; }
+.widget-33 .widget-item { -moz-border-radius: 5px; -webkit-border-radius: 5px; margin: 3px 3px 3px 3px; padding: 2px 2px 2px 5px; }
+.widget-33 .widget-item-subtext { color: #b3b3b3; }
 
 .widget-66 { width: 690px; overflow: hidden; border-radius: 5px; }
-.widget-66 .widget-header { padding: 0px 5px 0 5px; background-color: #e1e1e8; }
+.widget-66 .widget-header { padding: 0px 5px 0 5px; }
 .widget-66 .widget-title { font-size: 18.67px; font-weight: bold; color: #727272; padding: 7px 0 4px 5px;  }
-.widget-66 .widget-footer { color: #727272; background: #e1e1e8; padding: 5px; margin: 0 auto; border-top: 1px solid #f7f7f9; border-bottom: 1px solid #f7f7f9; }
-.widget-66 .widget-content { color: #727272; padding: 5px; margin: 0 auto; background: #f7f7f9; overflow: hidden; }
+.widget-66 .widget-footer { color: #727272; padding: 5px; margin: 0 auto; border-top: 1px solid #f7f7f9; border-bottom: 1px solid #f7f7f9; }
+.widget-66 .widget-content { color: #727272; padding: 5px; margin: 0 auto; overflow: hidden; }
 .widget-66 .widget-icon { float: right; padding: 1px 0 0 0; }
-.widget-66 .widget-item { -moz-border-radius: 5px; -webkit-border-radius: 5px; margin: 3px; background: #e1e1e8; padding: 2px 2px 2px 5px; min-height: 20px; padding: 4px 0 0 5px; }
-.widget-66 .widget-item-subtext { font-size: 11px; color: #b3b3b3; }
+.widget-66 .widget-item { -moz-border-radius: 5px; -webkit-border-radius: 5px; margin: 3px; padding: 2px 2px 2px 5px; min-height: 20px; padding: 4px 0 0 5px; }
+.widget-66 .widget-item-subtext { color: #b3b3b3; }
 
 .widget-100 { width: 1050px; overflow: hidden; float: left; overflow: hidden; border-radius: 5px; }
-.widget-100 .widget-header { padding: 0px 5px 0 5px; background-color: #e1e1e8; }
+.widget-100 .widget-header { padding: 0px 5px 0 5px; }
 .widget-100 .widget-title { font-size: 18.67px; font-weight: bold; color: #727272; padding: 7px 0 4px 5px; }
-.widget-100 .widget-footer { color: #727272; background: #e1e1e8; padding: 5px; margin: 0 auto; border-top: 1px solid #f7f7f9; border-bottom: 1px solid #f7f7f9; }
-.widget-100 .widget-content { color: #727272; padding: 10px; margin: 0 auto; background: #f7f7f9; overflow: hidden; }
+.widget-100 .widget-footer { color: #727272; padding: 5px; margin: 0 auto; border-top: 1px solid #f7f7f9; border-bottom: 1px solid #f7f7f9; }
+.widget-100 .widget-content { color: #727272; padding: 10px; margin: 0 auto; overflow: hidden; }
 .widget-100 .widget-icon { float: right; padding: 1px 0 0 0; }
-.widget-100 .widget-item { -moz-border-radius: 5px; -webkit-border-radius: 5px; margin: 3px; background: #e1e1e8; padding: 2px 2px 2px 5px; min-height: 20px; padding: 4px 0 0 5px; }
-.widget-100 .widget-item-subtext { font-size: 11px; color: #b3b3b3; }
+.widget-100 .widget-item { -moz-border-radius: 5px; -webkit-border-radius: 5px; margin: 3px; padding: 2px 2px 2px 5px; min-height: 20px; padding: 4px 0 0 5px; }
+.widget-100 .widget-item-subtext { color: #b3b3b3; }
 
-.widget-100 th { color: #616161; font-size:12px; text-align:left; padding-bottom:4px; }
-.widget-100 td { color: #727272; font-size: 12px; padding: 4px 2px; }
+.widget-100 th { color: #616161; text-align:left; padding-bottom:4px; }
+.widget-100 td { color: #727272; padding: 4px 2px; }
 
 #featured-content { overflow: hidden; }
 #featured-content .widget-content { overflow: auto; }

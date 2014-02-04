@@ -1,0 +1,36 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+
+    <h1>
+    {% if id == 'new' %}
+        Add a new Sponsor{% if scope %} to your {{ scope|capitalize }}{% endif %}
+    {% else %}
+        Edit Sponsor
+    {% endif %}
+    </h1>
+
+    <form action="{{ path('sponsor_form', {'id': id, 'scope': scope, 'containerId': containerId}) }}" method="post" {{ form_enctype(form) }}>
+
+        {{ form_row(form.name) }}
+        {{ form_row(form.url) }}
+        {% if id != 'new' %}
+            <h3>Current Logo:</h3>
+            <div class="sponsorImageBox">
+                <img src="{{ media_path(sponsor.image) }}"/>
+            </div>
+            <div class="left spcr-l3">
+                {{ form_row(form.image) }}
+            </div>
+            <div class="clr"></div>
+        {% endif %}
+        {{ form_rest(form) }}
+
+        <div class="spcr-t6">
+            <input type="submit" value="Submit"/>
+            <input type="submit" name="cancel" value="Cancel" formnovalidate/>
+            {% if id != 'new' %}<a href="{{ path('sponsor_delete', {'id': id}) }}"><input type="button" class="spcr-l redButton" value="Delete" class="redButton" onclick="return confirm('Are you sure you want to delete this sponsor?');"></a>{% endif %}
+        </div>
+    </form>
+
+{% endblock %}

@@ -10,6 +10,10 @@ accounts_events:
     pattern: /profile/events
     defaults: { _controller: SpoutletBundle:Account:events }
 
+accounts_entrySets:
+    pattern:  /profile/lists
+    defaults: { _controller: IdeaBundle:Idea:userEntrySets }
+
 accounts_entries:
     pattern: /profile/entries
     defaults: { _controller: IdeaBundle:Idea:userEntries }

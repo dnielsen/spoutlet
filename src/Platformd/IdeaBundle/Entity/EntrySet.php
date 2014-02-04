@@ -43,6 +43,11 @@ class EntrySet implements LinkableInterface {
     protected $name;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", inversedBy="entrySets")
+     */
+    protected $creator;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySetRegistry", cascade={"persist"})
      */
     protected $entrySetRegistration;
@@ -51,6 +56,11 @@ class EntrySet implements LinkableInterface {
      * @ORM\Column(type="string", length=255, nullable="true")
      */
     protected $type;
+
+    /**
+     * @ORM\Column(type="text", nullable="true")
+     */
+    protected $description;
 
     /**
      * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\Idea", mappedBy="entrySet", cascade={"persist", "remove"})
@@ -78,6 +88,16 @@ class EntrySet implements LinkableInterface {
     public function __construct()
     {
         $this->entries = new ArrayCollection();
+    }
+
+    public function setCreator($creator)
+    {
+        $this->creator = $creator;
+    }
+
+    public function getCreator()
+    {
+        return $this->creator;
     }
 
     public function getEntrySetRegistration() {
@@ -170,6 +190,23 @@ class EntrySet implements LinkableInterface {
     public function getName()
     {
         return $this->name;
+    }
+
+
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**

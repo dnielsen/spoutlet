@@ -8,11 +8,15 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\HttpFoundation\Request;
 
 use Platformd\SpoutletBundle\Controller\Controller;
-
+use Platformd\GroupBundle\Entity\Group;
 
 
 class ApiController extends Controller
 {
+    protected function getMediaPathResolver() {
+        return $this->get('platformd.media_path_resolver');
+    }
+
     public function entrySetAction(Request $request, $entrySetId)
     {
         $entrySet = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet')->find($entrySetId);
@@ -185,7 +189,7 @@ class ApiController extends Controller
                 'entries'   => $entries,
             );
         }
-        $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group, 1);
+        $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group);
         $nextEvent = reset($upcomingEvents);
         $pastEvents = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group, 6);
 
@@ -202,17 +206,40 @@ class ApiController extends Controller
                 'url'       => $this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
             );
         }
-        $nextEvent = array(
-            'id'            => $nextEvent->getId(),
-            'name'          => $nextEvent->getName(),
-            'daterange'     => $nextEvent->getDateRangeString(),
-            'timerange'     => $nextEvent->getStartsAt()->format('g:i a').' - '.$nextEvent->getEndsAt()->format('g:i a'),
-            'location'      => $nextEvent->getLocation(),
-            'address1'      => $nextEvent->getAddress1(),
-            'address2'      => $nextEvent->getAddress2(),
-            'url'           => $this->generateUrl($nextEvent->getLinkableRouteName(), $nextEvent->getLinkableRouteParameters(), true),
-        );
 
+        $upcomingEventData = array();
+        foreach ($upcomingEvents as $event) {
+            $upcomingEventData[] = array(
+                'id'        => $event->getId(),
+                'name'      => $event->getName(),
+                'daterange' => $event->getDateRangeString(),
+                'timerange' => $event->getStartsAt()->format('g:i a').' - '.$event->getEndsAt()->format('g:i a'),
+                'location'  => $event->getLocation(),
+                'address1'  => $event->getAddress1(),
+                'address2'  => $event->getAddress2(),
+                'url'       => $this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
+            );
+        }
+
+        if($nextEvent != null) {
+            $nextEvent = array(
+                'id'            => $nextEvent->getId(),
+                'name'          => $nextEvent->getName(),
+                'daterange'     => $nextEvent->getDateRangeString(),
+                'timerange'     => $nextEvent->getStartsAt()->format('g:i a').' - '.$nextEvent->getEndsAt()->format('g:i a'),
+                'location'      => $nextEvent->getLocation(),
+                'address1'      => $nextEvent->getAddress1(),
+                'address2'      => $nextEvent->getAddress2(),
+                'url'           => $this->generateUrl($nextEvent->getLinkableRouteName(), $nextEvent->getLinkableRouteParameters(), true),
+            );
+        }
+
+        $avatarPath = null;
+        $avatar = $group->getGroupAvatar();
+        if($avatar) {
+            $mediaResolver =$this->getMediaPathResolver();
+            $avatarPath = $mediaResolver->getPath($group->getGroupAvatar(), array());
+        }
 
         $groupData = array(
             'meta'                 => array(
@@ -223,13 +250,61 @@ class ApiController extends Controller
             'creator'               => $group->getOwner()->getUserName(),
             'name'                  => $group->getName(),
             'description'           => $group->getDescription(),
+            'avatarPath'            => $avatarPath ? $avatarPath : null,
+            'url'                   => $this->generateUrl($group->getLinkableRouteName(), $group->getLinkableRouteParameters(), true),
             'pastEvents'            => $pastEventData,
+            'upcomingEvents'        => $upcomingEventData,
             'nextEvent'             => $nextEvent,
             'entrySets'             => $entrySets,
         );
 
         $encoder = new JsonEncoder();
         $jsonData = $encoder->encode($groupData, $format = 'json');
+        $response->setContent($this->jsonpWrapper($request,$jsonData));
+        $response->headers->set('Content-Type', 'application/json');
+
+
+        return $response;
+    }
+
+    public function allGroupsAction(Request $request) {
+        $site = $this->getCurrentSite();
+        $groups = $this->getGroupManager()->getAllGroupsForSite($site);
+
+        $response= new Response();
+        if (!$groups){
+            return $response->setStatusCode(404);
+        }
+
+        $response->setStatusCode(200);
+
+        $groupsData = array();
+        foreach($groups as $group) {
+
+            //only public groups
+            if(!$group->getIsPublic()) {
+                continue;
+            }
+
+            $data = array(
+                'name' => $group->getName(),
+                'isTopic' => $group->getCategory() == Group::CAT_TOPIC,
+                'isFeatured' => $group->getFeatured(),
+                'url'  => $this->generateUrl($group->getLinkableRouteName(), $group->getLinkableRouteParameters(), true),
+            );
+            $groupsData[] = $data;
+        }
+
+        $responseData = array(
+            'meta'                 => array(
+                'self'  => $this->generateUrl('api_all_groups', array(), true),
+                'mimetype' => "application/json"
+            ),
+            'groups'                => $groupsData
+        );
+
+        $encoder = new JsonEncoder();
+        $jsonData = $encoder->encode($responseData, $format = 'json');
         $response->setContent($this->jsonpWrapper($request,$jsonData));
         $response->headers->set('Content-Type', 'application/json');
 

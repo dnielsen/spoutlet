@@ -30,8 +30,7 @@ class GroupType extends AbstractType
     {
         $builder
             ->add('name', null, array(
-                'label' => 'Group Name',
-                'help'  => 'Do not use the word "Official" in the group name. All groups containing the word "Official" will be renamed.',
+                'label' => 'Name',
             ))
             ->add('slug', new SlugType(), array(
                 'label' => 'URL Text',
@@ -41,8 +40,8 @@ class GroupType extends AbstractType
                 'label'     => 'Group Category',
             ))
             ->add('groupAvatar', new MediaType(), array(
-                'image_label'   => 'Group Banner',
-                'image_help'    => 'Recommended size: 950x120. File formats accepted: JPEG and PNG.',
+                'image_label'   => 'Group Logo',
+                'image_help'    => 'Maximum width: 830px, maximum height: 72px. Please use JPEG or PNG.',
                 'with_remove_checkbox' => $this->group->getId() == null ? false : true
             ))
             ->add('backgroundImage', new MediaType(), array(
@@ -56,7 +55,7 @@ class GroupType extends AbstractType
                 'with_remove_checkbox' => $this->group->getId() == 0 ? false : true
             ))
             ->add('description', 'purifiedTextarea', array(
-                'label' => 'Group Description',
+                'label' => 'Description',
                 'attr'  => array('class' => 'ckeditor')
             ))
             ->add('isPublic', 'choice', array(
@@ -86,18 +85,18 @@ class GroupType extends AbstractType
 
                 if ($this->group->getId() > 0) {
                     $builder->add('deleted', 'checkbox', array(
-                        'label' => 'Disable Group', 'help' => 'Use this to administratively disable this group.',
+                        'label' => 'Delete Group', 'help' => 'Administratively disable this group.',
                     ));
                 }
 
                 $builder->add('featured', 'checkbox', array(
                     'label' => 'Featured',
-                    'help'  => 'Check this checkbox to make this group featured on the groups homepage.',
+                    'help'  => 'Make this group featured on the homepage.',
                 ));
 
                 $builder->add('discussionsEnabled', 'checkbox', array(
                     'label' => 'Discussions',
-                    'help'  => 'Check this checkbox to enabled discussions for this group.',
+                    'help'  => 'Enable discussions for this group.',
                 ));
             }
 

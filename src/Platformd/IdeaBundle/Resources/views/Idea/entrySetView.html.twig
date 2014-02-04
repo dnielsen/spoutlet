@@ -2,9 +2,19 @@
 
 {% block content %}
 
-    <h1 class = "left">{{ entrySet.name }} {% if showAllRounds == 'true' %}- All Rounds{% else %}{% if round > 1 %}- Round {{ round }}{% endif %}{% endif %}</h1>{% if isAdmin %}<a class="left marginlft" href="{{ path('entry_set_edit', {'entrySetId': entrySet.id}) }}">Edit</a> {% endif %}
-    <div class="clear"></div>
-    <div>
+    <span class = "lrgtxt left">{{ entrySet.name }} {% if showAllRounds == 'true' %}- All Rounds{% else %}{% if round > 1 %}- Round {{ round }}{% endif %}{% endif %}</span>
+
+    <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}">
+        <input type="submit" value="Add {{ entrySet.type | capitalize }}" class="right">
+    </a>
+
+
+    <div class="clr"></div>
+
+    {{ entrySet.description }}
+
+    <div class="spcr-t5">
+
         {% if (entrySet.entries|length > 0) %}
         <form action = "{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" id='filterForm' method="get" class="left">
             <table>
@@ -16,29 +26,6 @@
             </table>
         </form>
         {% endif %}
-
-        {# TODO: push down authentication and membership check to the submit idea page #}
-        <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}">
-            <input type="submit" value="Add {{ entrySet.type | capitalize }}" class="right">
-        </a>
-
-        {#
-        {% if canSubmit %}
-           <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}">
-               <input type="submit" value="Add {{ entrySet.type | capitalize }}" class="right">
-           </a>
-        {% else %}
-            {% if event is defined and event is not null %}
-                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}">
-                   <input type="submit" value="Register" class="right">
-                </a>
-            {% elseif group is defined and group is not null %}
-                <a href="{{ path('group_join', {'slug': group.slug}) }}">
-                    <input type="submit" value="Register" class="right">
-                </a>
-            {% endif %}
-        {%  endif %}
-        #}
 
     </div>
     
@@ -129,11 +116,11 @@
                     <input type="hidden" name="id" value="{{idea.id}}">
                     <input type="hidden" name="source" value="list">
                     <input type="hidden" name="tag" value="{{ tag }}">
-                    <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnTny" value="Vote"{% else %}class="btnTny redButton" value="Remove Vote"{% endif %}{% else %}class="btnTny" value="Vote"{% endif %}>
+                    <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnVote" value="Vote"{% else %}class="btnVote redButton" value="Remove Vote"{% endif %}{% else %}class="btnVote" value="Vote"{% endif %}>
                 </form>
             </div>
 
-            <div class="{% if sidebar %}session{% else %}sessionWide{% endif %}">
+            <div class="session">
                 <a href="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}">
                     <h3>{{ idea.name }}</h3>
                 </a>

@@ -1,11 +1,25 @@
 
-profile:
-    pattern:    /profile/{userId}
-    defaults:   { _controller: IdeaBundle:Idea:profile, userId:null }
+# Sponsor Routes
 
-profile_edit:
-    pattern:    /profile/{userId}/edit
-    defaults:   { _controller: IdeaBundle:Idea:profileEdit }
+sponsors:
+    pattern:    /sponsors
+    defaults:   { _controller: IdeaBundle:Idea:sponsors }
+
+sponsor_form:
+    pattern:    /sponsors/{id}
+    defaults:   { _controller: IdeaBundle:Idea:sponsorForm }
+
+sponsor_add_form:
+    pattern:    /sponsors/{id}/addSponsor
+    defaults:   { _controller: IdeaBundle:Idea:sponsorAddForm }
+
+sponsor_remove:
+    pattern:    /sponsors/{id}/remove
+    defaults:   { _controller: IdeaBundle:Idea:sponsorRemove }
+
+sponsor_delete:
+    pattern:    /sponsors/{id}/delete
+    defaults:   { _controller: IdeaBundle:Idea:sponsorDelete }
 
 # EntrySet Routes
 
@@ -25,7 +39,7 @@ entry_set_delete:
     pattern:    /list/{entrySetId}/delete
     defaults:   { _controller: IdeaBundle:Admin:entrySetDelete }
 
-# ADMIN ROUTES
+# Admin Routes
 
 idea_admin_event:
     pattern:    /{groupSlug}/event/{eventId}/admin/configure
@@ -60,7 +74,7 @@ idea_admin_member_approvals:
     defaults:   { _controller: IdeaBundle:Admin:approvals }
 
 idea_admin_process_approval:
-    pattern:    /{groupSlug}/event/{eventId}/admin/approvals/{userId}/{approval}
+    pattern:    /{groupSlug}/event/{eventId}/admin/approvals/{userId}/{action}
     defaults:   { _controller: IdeaBundle:Admin:processApproval }
 
 idea_summary:
@@ -105,7 +119,16 @@ idea_admin_export_votes:
     requirements:
       _method: GET
 
-# NON-ADMIN
+# Admin Scripts
+all_event_acl_fix:
+    pattern:    /admin/fixEventACLs
+    defaults:   { _controller: IdeaBundle:Admin:fixEventACLs }
+
+add_entry_set_creators:
+    pattern:    /admin/addEntrySetCreators
+    defaults:   { _controller: IdeaBundle:Admin:addEntrySetCreators }
+
+# Entry Routes
 
 idea_create:
     pattern:    /list/{entrySetId}/create
@@ -124,7 +147,6 @@ idea_show:
     defaults:   { _controller: IdeaBundle:Idea:show }
     requirements:
       _method: GET
-
 
 idea_edit:
     pattern:    /list/{entrySetId}/entry/{entryId}/edit
@@ -201,8 +223,16 @@ idea_comment_delete:
 idea_delete:
     pattern:    /list/{entrySetId}/entry/{entryId}/delete
     defaults:   { _controller: IdeaBundle:Idea:delete }
-    requirements:
-     _method:   POST
+
+# Account Routes
+
+profile:
+    pattern:    /profile/{userId}
+    defaults:   { _controller: IdeaBundle:Idea:profile, userId:null }
+
+profile_edit:
+    pattern:    /profile/{userId}/edit
+    defaults:   { _controller: IdeaBundle:Idea:profileEdit }
 
 login:
     pattern:   /login
@@ -212,10 +242,15 @@ logout:
     pattern:   /logout
     defaults: { _controller: FOSUserBundle:Security:logout }
 
-
 change_password:
     pattern: /password
     defaults: { _controller: FOSUserBundle:ChangePassword:changePassword }
     requirements:
       _method: GET|POST
 
+# Misc Routes
+
+info_page:
+    pattern:    /{groupSlug}/info/{page}
+    defaults:   { _controller: IdeaBundle:Idea:infoPage }
+    
