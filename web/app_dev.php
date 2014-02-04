@@ -1,4 +1,5 @@
 <?php
+ini_set('memory_limit','-1');
 umask(0000); // This will let the permissions be 0777
 
 // this check prevents access to debug front controllers that are deployed by accident to production servers.

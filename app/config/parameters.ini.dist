@@ -90,6 +90,13 @@
     sendgridUsername     = dnielsen
     sendgridPassword     = Deepblue1
     
+    ; queue_service (1)RabbitMQ (2) AWS_SQS (3) HPCloud
+    queue_service        = RabbitMQ
+    rabbitmq_host        = 15.185.109.210
+    rabbitmq_port        = 5672
+    rabbitmq_username    = platformd
+    rabbitmq_password    = platformd
+        
     ; only set to true if you have implemented the API authentication system and have configured it properly
     api_authentication    = false
 

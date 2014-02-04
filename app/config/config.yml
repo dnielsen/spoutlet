@@ -135,7 +135,7 @@ fos_user:
 
 vich_geographical:
     db_driver: orm
-
+    
 parameters:
 
     feedback_ids:
@@ -217,6 +217,11 @@ parameters:
     ip2location_lookup_directory: %kernel.root_dir%/../external_data/ip2location/
     object_storage: %objectStorage%
    
+    queue_service: %queue.service%   
+    rabbitmq_host: %rabbitmq.host%
+    rabbitmq_port: %rabbitmq.port%
+    rabbitmq_username:  %rabbitmq.username%
+    rabbitmq_password:  %rabbitmq.password%
     hpcloud_accesskey:  %hpcloudAccesskey%
     hpcloud_secreatkey: %hpcloudSecreatkey%
     hpcloud_tenantid:   %hpcloudTenantid%
@@ -430,7 +435,9 @@ services:
     session.storage.pdo:
         class:     Symfony\Component\HttpFoundation\SessionStorage\PdoSessionStorage
         arguments: [@pdo_session, %session.storage.options%, %pdo.session_db_options% ]
-
+    upload_picture_service:
+        class: Platformd\SpoutletBundle\Consumer\UploadPictureConsumer
+         
 knp_gaufrette:
     adapters:
         platformd.avatar:

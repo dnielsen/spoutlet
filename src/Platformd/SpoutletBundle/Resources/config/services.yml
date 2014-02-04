@@ -164,7 +164,12 @@ services:
             - "%hpcloud_tenantid%"
             - "%hpcloud_messaging_url%"
             - "%object_storage%"
-
+            - "%queue_service%"
+            - "%rabbitmq_host%" 
+            - "%rabbitmq_port%"
+            - "%rabbitmq_username%"
+            - "%rabbitmq_password%"
+            
     platformd.model.ip_lookup_util:
         class: Platformd\SpoutletBundle\Util\IpLookupUtil
         arguments:
