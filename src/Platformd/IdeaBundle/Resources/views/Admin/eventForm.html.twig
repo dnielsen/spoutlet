@@ -34,10 +34,62 @@
                 }
             }
 
+            var $addFieldLink = $('<a href="#" class="blu">Add a new question</a>');
 
+            $collectionHolder = $('#event_registrationFields');
+            $collectionHolder.append($addFieldLink);
+
+            // count the current form inputs we have, use that as the new
+            // index when inserting an item
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+            $addFieldLink.on('click', function(e) {
+                e.preventDefault();
+                addField($collectionHolder, $addFieldLink);
+            });
+
+            function addField($collectionHolder, $addFieldLink) {
+
+                var prototype = $collectionHolder.data('prototype');
+                var index     = $collectionHolder.data('index');
+
+                // Replace '$$name$$' in the prototype's HTML to
+                // instead be a number based on how many items we have
+                var newForm = prototype.replace(/\$\$name\$\$/g, index);
+
+                $collectionHolder.data('index', index + 1);
+
+                var newFieldDiv = '<div id=\'field' + index + '\' style=\'display:none\'></div>'
+                var $newField = $(newFieldDiv).append(newForm);
+                $addFieldLink.before($newField);
+
+                $('#field' + index).slideDown();
+            }
         });
     </script>
 
+{% endblock %}
+
+{# Custom Form for registration fields -- no labels on individual fields, custom data prototype #}
+{% form_theme form _self %}
+
+{% block _event_registrationFields_widget %}
+    {% spaceless %}
+        {% if prototype is defined %}
+            {% set data_prototype = "<div id=\"event_registrationFields_$$name$$\"><input type=\"text\" id=\"event_registrationFields_$$name$$_question\" name=\"event[registrationFields][$$name$$][question]\" required=\"required\" size=\"60%\" class=\" form-txt\"></div>" %}
+            {% set attr = attr|merge({'data-prototype': data_prototype}) %}
+        {% endif %}
+        {{ form_label(form) }}
+        <div {{ block('widget_container_attributes') }}>
+            {% block field_rows %}
+                {{ form_errors(form) }}
+                {% for child in form %}
+                    {{ form_widget(child) }}
+                {% endfor %}
+            {% endblock %}
+            {{ form_rest(form) }}
+        </div>
+    {% endspaceless %}
 {% endblock %}
 
 {% block content %}
@@ -64,16 +116,16 @@
         {{ form_row(form.address2) }}
         </div>
         {{ form_row(form.private) }}
+        {{ form_widget(form.registrationFields) }}
 
         {{ form_rest(form) }}
 
+        <br class="clr"/><br/>
+
         {% if not isNew %}
             <a href="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="blu">Manage Image Slider</a>
+            <br class="clr"/><br/>
         {% endif %}
-
-        {{ form_row(form.registrationFields) }}
-
-        <br class="clr"/>
 
 	    <input type="submit" value="Submit"/>
 		<input type="submit" value="Cancel" name="cancel" formnovalidate/>
