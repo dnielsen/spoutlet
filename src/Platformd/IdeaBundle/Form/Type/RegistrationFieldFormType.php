@@ -10,7 +10,7 @@ class RegistrationFieldFormType extends AbstractType
     public function buildForm(FormBuilder $builder, array $options)
     {
         $builder
-            ->add('question', 'text', array('attr' => array('size' => '60%')))
+            ->add('question', 'text', array('attr' => array('size' => '60%'), 'required' => true))
         ;
     }
 
