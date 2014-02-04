@@ -10,6 +10,7 @@ use Platformd\EventBundle\Entity\GroupEventRsvpAction;
 use Platformd\GroupBundle\Entity\Group;
 use Platformd\IdeaBundle\Entity\EntrySet;
 use Platformd\IdeaBundle\Entity\VoteCriteria;
+use Platformd\IdeaBundle\Form\Type\RegistrationFieldFormType;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SpoutletBundle\Controller\Controller;
@@ -61,7 +62,11 @@ class AdminController extends Controller
             ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address2',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
-
+            ->add('registrationFields', 'collection',       array('type'            => new RegistrationFieldFormType(),
+                                                                  'allow_add'       => true,
+                                                                  'allow_delete'    => true,
+                                                                  'by_reference'    => false,
+                                                                  'required'        => false))
             ->getForm();
 
         if($request->getMethod() == 'POST') {
@@ -228,6 +233,7 @@ class AdminController extends Controller
             throw new AccessDeniedException;
         }
     }
+
 
     // Edit requets will provide id using GET
     // New request will not provide id using GET

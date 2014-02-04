@@ -71,6 +71,8 @@
             <a href="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="blu">Manage Image Slider</a>
         {% endif %}
 
+        {{ form_row(form.registrationFields) }}
+
         <br class="clr"/>
 
 	    <input type="submit" value="Submit"/>
