@@ -586,7 +586,7 @@ exercise_html_purifier:
 
 liip_theme:
     themes: %liip_enabled_themes%
-    active_theme: 'marketingcamp'
+    active_theme: 'ideacontest'
     path_patterns:
         app_resource:
             - %%app_path%%/themes/%%current_theme%%/%%template%%

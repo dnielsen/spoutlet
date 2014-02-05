@@ -11,7 +11,7 @@
  */
 namespace Platformd\SpoutletBundle\HPCloud;
 //namespace HPCloud;
-use HPCloud\HPCloud;
+//use HPCloud\HPCloud;
 use HPCloud\Bootstrap;
 //require_once 'Bootstrap.php';
 use HPCloud\Services\IdentityServices;
