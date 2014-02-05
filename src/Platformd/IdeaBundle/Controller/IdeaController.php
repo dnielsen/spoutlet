@@ -17,6 +17,7 @@ use Platformd\IdeaBundle\Entity\Sponsor;
 use Platformd\IdeaBundle\Entity\RegistrationAnswer;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\MediaBundle\Entity\Media;
+use Platformd\MediaBundle\Form\Type\MediaType;
 use Symfony\Component\Form\Exception\NotValidException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -436,79 +437,67 @@ class IdeaController extends Controller
         }
     }
 
-    public function uploadAction($entrySetId, $entryId)
+    public function uploadAction(Request $request, $entrySetId, $entryId)
     {
         $this->enforceUserSecurity();
 
-        $idea = $this->getEntry($entryId);
-        list($group, $event, $entrySet, $idea) = $this->getHierarchy($idea);
+        $entry    = $this->getEntry($entryId);
+        $newImage = new Media();
 
-        $document = new Document();
-        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'image', $document)
-            ->add('file')
-            ->getForm()
-        ;
+        $form = $this->createForm(new MediaType(), $newImage, array('image_label' => 'Image File:'));
 
-        if ($this->getRequest()->getMethod() === 'POST') {
-
-            $form->bindRequest($this->getRequest());
+        if ('POST' === $request->getMethod()) {
+            $form->bindRequest($request);
 
             if ($form->isValid()) {
 
+                $image = $form->getData();
 
-                if ($document->isValid()){
-                    $document->upload($entryId);
-                }
-                else{
-
+                if ($image->getFileObject() == null) {
                     $this->setFlash('error', 'You must select an image file');
-
-                    return new RedirectResponse($this->generateUrl('idea_upload_form', array(
-                            'entrySetId'=> $entrySetId,
-                            'entryId'   => $entryId,
-                        )));
                 }
+                else {
+                    $image->setName($entry->getName());
 
-                $idea->setImage($document);
-                $document->setIdea($idea);
+                    $mUtil = $this->getMediaUtil();
+                    $mUtil->persistRelatedMedia($image);
+                    $entry->setImage($image);
 
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($document);
-                $em->flush();
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $em->flush();
 
-                $ideaUrl = $this->generateUrl('idea_show', array(
+                    $ideaUrl = $this->generateUrl('idea_show', array(
                         'entrySetId'=> $entrySetId,
                         'entryId'   => $entryId,
                     ));
-                return new RedirectResponse($ideaUrl);
+                    return new RedirectResponse($ideaUrl);
+                }
             }
         }
 
-        $attendance = $this->getCurrentUserApproved($entrySet);
-        $isAdmin = $this->isGranted('ROLE_ADMIN');
-
         return $this->render('IdeaBundle:Idea:upload.html.twig', array(
-                'group'     => $group,
-                'event'     => $event,
-                'entrySet'  => $entrySet,
-                'idea'      => $idea,
-                'breadCrumbs'=> $this->getBreadCrumbsString($idea),
-                'form'      => $form->createView(),
-                'sidebar'   => true,
-                'attendance'=> $attendance,
-                'isAdmin'   => $isAdmin,
-            ));
+                'entrySetId'  => $entrySetId,
+                'entryId'     => $entryId,
+                'breadCrumbs' => $this->getBreadCrumbsString($entry, true),
+                'form'        => $form->createView(),
+                'sidebar'     => true,
+                'attendance'  => $this->getCurrentUserApproved($entry->getEntrySet()),
+                'isAdmin'     => $this->isGranted('ROLE_ADMIN'),
+        ));
     }
 
     public function deleteImageAction($entrySetId, $entryId)
     {
         $this->enforceUserSecurity();
 
-        $idea = $this->getEntry($entryId);
+        $entry = $this->getEntry($entryId);
+        $image = $entry->getImage();
 
-        $image = $idea->getImage();
-        $image->delete();
-        $idea->removeImage();
+        if (!$image) {
+            throw new NotFoundHttpException();
+        }
+
+        $entry->removeImage();
 
         $em = $this->getDoctrine()->getEntityManager();
         $em->remove($image);
@@ -517,7 +506,7 @@ class IdeaController extends Controller
         $ideaUrl = $this->generateUrl('idea_show', array(
                 'entrySetId'=> $entrySetId,
                 'entryId'   => $entryId,
-            ));
+        ));
         return new RedirectResponse($ideaUrl);
     }
 
