@@ -1123,6 +1123,32 @@ class IdeaController extends Controller
         ));
     }
 
+    public function userRegistrationAnswersAction($groupSlug, $eventId, $userId)
+    {
+        $event = $this->getEvent($groupSlug, $eventId);
+        $user  = $this->getDoctrine()->getRepository('UserBundle:User')->find($userId);
+
+        $regAnswerRepo = $this->getDoctrine()->getRepository('IdeaBundle:RegistrationAnswer');
+
+        $fields = $event->getRegistrationFields();
+
+        $answers = array();
+
+        foreach ($fields as $field)
+        {
+            $answer = $regAnswerRepo->findOneBy(array('field' => $field->getId(), 'user' => $user->getId()));
+            if ($answer) {
+                $answers[$field->getQuestion()] = $answer->getAnswer();
+            }
+        }
+        return $this->render('IdeaBundle:Idea:userRegistrationAnswers.html.twig', array(
+            'group'   => $event->getGroup(),
+            'event'   => $event,
+            'user'    => $user,
+            'answers' => $answers,
+        ));
+    }
+
     public function eventRegistrationFormAction(Request $request, $groupSlug, $eventId)
     {
         $group = $this->getGroup($groupSlug);

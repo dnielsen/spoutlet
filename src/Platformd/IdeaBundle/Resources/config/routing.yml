@@ -257,4 +257,8 @@ info_page:
 event_registration:
     pattern:    /{groupSlug}/event/{eventId}/registrationForm
     defaults:   { _controller: IdeaBundle:Idea:eventRegistrationForm }
+
+user_event_reg_answers:
+    pattern:    /{groupSlug}/event/{eventId}/user/{userId}
+    defaults:   { _controller: IdeaBundle:Idea:userRegistrationAnswers }
     

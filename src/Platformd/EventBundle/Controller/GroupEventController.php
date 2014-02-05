@@ -571,7 +571,7 @@ class GroupEventController extends Controller
 
         $groupEvent = $this->getGroupEventService()->findOneBy(array(
             'group' => $group->getId(),
-            'id' => $eventId,
+            'id'    => $eventId,
         ));
 
         if (!$groupEvent) {
@@ -581,7 +581,8 @@ class GroupEventController extends Controller
         $attendees = $this->getGroupEventService()->getAttendeeList($groupEvent);
 
         return $this->render('EventBundle:GroupEvent:attendees.html.twig', array(
-            'event' => $groupEvent,
+            'group'     => $group,
+            'event'     => $groupEvent,
             'attendees' => $attendees,
         ));
     }
