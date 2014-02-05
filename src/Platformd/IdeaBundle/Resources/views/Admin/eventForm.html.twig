@@ -79,6 +79,19 @@
                     $(this).parent().remove();
                 });
             }
+
+            // Clear out empty registration fields on submit
+            $('#event').submit(function() {
+
+                $('#event_registrationFields :input').each(function()
+                {
+                    if ($(this).val().trim() == '') {
+                        $(this).parent().remove();
+                    }
+                });
+                return true;
+            });
+
         });
     </script>
 
