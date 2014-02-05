@@ -10,7 +10,7 @@
 
         {% for field in fields %}
             <h3>{{ field.question }}</h3>
-            <textarea name="{{ field.id }}" style="width:60%;"></textarea>
+            <textarea name="{{ field.id }}" style="width:60%;" required="required"></textarea>
         {% endfor %}
 
         <input type="submit"/>
