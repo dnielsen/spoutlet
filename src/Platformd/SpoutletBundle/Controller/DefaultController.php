@@ -569,7 +569,7 @@ class DefaultController extends Controller
     public function groupEventsAction()
     {
         $site = $this->getCurrentSite();
-        $events  = $this->getGroupEventService()->findUpcomingEventsForSiteLimited($site);
+        $events  = $this->getGroupEventService()->findUpcomingEventsForSiteLimited($site, 8);
 
         return $this->render('SpoutletBundle:Default:events.html.twig', array('events' => $events));
     }
