@@ -253,4 +253,8 @@ change_password:
 info_page:
     pattern:    /{groupSlug}/info/{page}
     defaults:   { _controller: IdeaBundle:Idea:infoPage }
+
+event_registration:
+    pattern:    /{groupSlug}/event/{eventId}/registrationForm
+    defaults:   { _controller: IdeaBundle:Idea:eventRegistrationForm }
     

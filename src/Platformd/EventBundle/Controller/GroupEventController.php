@@ -869,7 +869,15 @@ class GroupEventController extends Controller
             $this->setFlash('error', $this->trans('platformd.events.event_show.not_allowed_register'));
             return $this->redirect($this->generateUrl('group_event_view', array(
                 'groupSlug' => $groupSlug,
-                'eventId' => $groupEvent->getId(),
+                'eventId'   => $groupEvent->getId(),
+            )));
+        }
+
+
+        if ($groupEvent->getRegistrationFields()->count() > 0) {
+            return $this->redirect($this->generateUrl('event_registration', array(
+                'groupSlug' => $groupSlug,
+                'eventId'   => $groupEvent->getId(),
             )));
         }
 

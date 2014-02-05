@@ -14,6 +14,7 @@ use Platformd\IdeaBundle\Entity\SponsorRegistry;
 use Platformd\IdeaBundle\Entity\Tag;
 use Platformd\IdeaBundle\Entity\Vote;
 use Platformd\IdeaBundle\Entity\Sponsor;
+use Platformd\IdeaBundle\Entity\RegistrationAnswer;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\MediaBundle\Entity\Media;
 use Symfony\Component\Form\Exception\NotValidException;
@@ -1119,6 +1120,65 @@ class IdeaController extends Controller
         return $this->render('IdeaBundle:Idea:userEntrySets.html.twig', array(
             'entrySets' => $userEntrySets,
             'parents'   => $parents,
+        ));
+    }
+
+    public function eventRegistrationFormAction(Request $request, $groupSlug, $eventId)
+    {
+        $group = $this->getGroup($groupSlug);
+        $event = $this->getEvent($groupSlug, $eventId);
+        $user  = $this->getCurrentUser();
+
+        if ($request->get('cancel') == 'Cancel') {
+            return $this->redirect($this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters()));
+        }
+
+        $registrationFields = $event->getRegistrationFields();
+
+        if($request->getMethod() == 'POST') {
+
+            $em = $this->getDoctrine()->getEntityManager();
+
+            foreach ($registrationFields as $field)
+            {
+                $answer = new RegistrationAnswer();
+                $answer->setField($field);
+                $answer->setUser($user);
+                $answer->setAnswer($request->request->get($field->getId()));
+
+                $em->persist($answer);
+            }
+            $em->flush();
+
+            $wasGroupMember = $group->isMember($user);
+
+            $this->getGroupEventService()->register($event, $user);
+            $this->getGroupManager()->autoJoinGroup($group, $user);
+
+            if ($event->getPrivate()){
+                $this->setFlash('success', "We have received your request for private access. You will receive a response by an administrator when your account has been reviewed.");
+            }
+            else {
+
+                if ($wasGroupMember || $group->isOwner($user)) {
+                    $this->setFlash('success', $this->trans('platformd.events.event_show.now_attending'));
+                }
+                else {
+                    $this->setFlash('success', $this->trans(
+                        'platformd.events.event_show.group_joined', array('%groupName%' => $group->getName())));
+                }
+            }
+
+            return $this->redirect($this->generateUrl('group_event_view', array(
+                'groupSlug' => $groupSlug,
+                'eventId'   => $event->getId(),
+            )));
+        }
+
+        return $this->render('IdeaBundle:Idea:eventRegistrationForm.html.twig', array(
+            'fields'      => $registrationFields,
+            'group'       => $group,
+            'event'       => $event,
         ));
     }
 
