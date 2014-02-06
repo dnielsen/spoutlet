@@ -5,6 +5,7 @@
 
     <script type="text/javascript">
         $(function() {
+
             // Initialize location controls state based on default online value
             toggleLocationControls();
 
@@ -34,37 +35,63 @@
                 }
             }
 
-            var $addFieldLink = $('<a href="#" class="blu">Add a new question</a>');
+            // Dynamically add registration fields to form as needed
+            var addFieldLink     = $('<a href="#" class="blu">Add a new question</a>');
+            var deleteFieldLink  = '<a href="#" class="deleteField left spcr-r"><img src="{{ asset("themes/ideacontest/spoutlet/img/delete-icon.png") }}" width="20px" height="20px"/></a>';
+            var collectionHolder = $('#event_registrationFields');
 
-            $collectionHolder = $('#event_registrationFields');
-            $collectionHolder.append($addFieldLink);
-
-            // count the current form inputs we have, use that as the new
-            // index when inserting an item
-            $collectionHolder.data('index', $collectionHolder.find(':input').length);
-
-            $addFieldLink.on('click', function(e) {
-                e.preventDefault();
-                addField($collectionHolder, $addFieldLink);
+            // Add delete link to each existing registration field
+            collectionHolder.find('div').each(function(){
+                $(this).prepend(deleteFieldLink);
             });
 
-            function addField($collectionHolder, $addFieldLink) {
+            // Add the 'Add question' link to bottom of form
+            collectionHolder.append(addFieldLink);
 
-                var prototype = $collectionHolder.data('prototype');
-                var index     = $collectionHolder.data('index');
+            // count the current registration fields we have, use that as index for adding new fields
+            collectionHolder.data('index', collectionHolder.find(':input').length);
 
-                // Replace '$$name$$' in the prototype's HTML to
-                // instead be a number based on how many items we have
-                var newForm = prototype.replace(/\$\$name\$\$/g, index);
+            addFieldLink.on('click', function(e) {
+                e.preventDefault();
+                addField(collectionHolder, addFieldLink, deleteFieldLink);
+            });
 
-                $collectionHolder.data('index', index + 1);
+            $('.deleteField').on('click', function(e) {
+                e.preventDefault();
+                $(this).parent().remove();
+            });
 
-                var newFieldDiv = '<div id=\'field' + index + '\' style=\'display:none\'></div>'
-                var $newField = $(newFieldDiv).append(newForm);
-                $addFieldLink.before($newField);
+            function addField(collectionHolder, addFieldLink, deleteFieldLink) {
 
-                $('#field' + index).slideDown();
+                var prototype = collectionHolder.data('prototype');
+                var index     = collectionHolder.data('index');
+                var newForm   = $(prototype.replace(/\$\$name\$\$/g, index));
+
+                collectionHolder.data('index', index + 1);
+
+                var deleteLink = $(deleteFieldLink);
+                newForm = newForm.prepend(deleteLink);
+
+                addFieldLink.before(newForm);
+
+                $(deleteLink).on('click', function(e) {
+                    e.preventDefault();
+                    $(this).parent().remove();
+                });
             }
+
+            // Clear out empty registration fields on submit
+            $('#event').submit(function() {
+
+                $('#event_registrationFields :input').each(function()
+                {
+                    if ($(this).val().trim() == '') {
+                        $(this).parent().remove();
+                    }
+                });
+                return true;
+            });
+
         });
     </script>
 
@@ -120,14 +147,14 @@
 
         {{ form_rest(form) }}
 
-        <br class="clr"/><br/>
+        <br class="clr"/>
 
         {% if not isNew %}
             <a href="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="blu">Manage Image Slider</a>
             <br class="clr"/><br/>
         {% endif %}
 
-	    <input type="submit" value="Submit"/>
+	    <input type="submit" value="Submit" id="submit"/>
 		<input type="submit" value="Cancel" name="cancel" formnovalidate/>
 
         {% if not isNew %}

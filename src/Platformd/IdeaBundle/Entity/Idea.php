@@ -114,7 +114,7 @@ class Idea implements LinkableInterface
     protected $isPrivate;
 
     /**
-     * @ORM\OneToOne(targetEntity="Document", inversedBy="idea", cascade={"remove"})
+     * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
      */
     protected $image;
 
@@ -610,21 +610,11 @@ class Idea implements LinkableInterface
         return $this->isPrivate;
     }
 
-    /**
-     * Set image
-     *
-     * @param Platformd\IdeaBundle\Entity\Document $image
-     */
-    public function setImage(\Platformd\IdeaBundle\Entity\Document $image)
+    public function setImage($image)
     {
         $this->image = $image;
     }
 
-    /**
-     * Get image
-     *
-     * @return Platformd\IdeaBundle\Entity\Document
-     */
     public function getImage()
     {
         return $this->image;

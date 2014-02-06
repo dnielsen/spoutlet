@@ -1,0 +1,21 @@
+{% extends 'IdeaBundle::event_layout.html.twig' %}
+
+{% block content %}
+
+    <h2 class="spcr-b2">
+        Please answer the following questions to register for <a href="{{ path('group_event_view', {'groupSlug':group.slug, 'eventId': event.id}) }}" class="blu">{{ event.name }}</a>
+    </h2>
+
+    <form action = "{{ path('event_registration', {'groupSlug': group.slug, 'eventId': event.id}) }}" method="POST">
+
+        {% for field in fields %}
+            <h3>{{ field.question }}</h3>
+            <textarea name="{{ field.id }}" style="width:60%;" required="required"></textarea>
+        {% endfor %}
+
+        <input type="submit"/>
+        <input type="submit" value="Cancel" name="cancel" formnovalidate/>
+
+    </form>
+
+{% endblock %}

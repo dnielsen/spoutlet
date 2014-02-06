@@ -571,7 +571,7 @@ class GroupEventController extends Controller
 
         $groupEvent = $this->getGroupEventService()->findOneBy(array(
             'group' => $group->getId(),
-            'id' => $eventId,
+            'id'    => $eventId,
         ));
 
         if (!$groupEvent) {
@@ -581,7 +581,8 @@ class GroupEventController extends Controller
         $attendees = $this->getGroupEventService()->getAttendeeList($groupEvent);
 
         return $this->render('EventBundle:GroupEvent:attendees.html.twig', array(
-            'event' => $groupEvent,
+            'group'     => $group,
+            'event'     => $groupEvent,
             'attendees' => $attendees,
         ));
     }
@@ -869,7 +870,15 @@ class GroupEventController extends Controller
             $this->setFlash('error', $this->trans('platformd.events.event_show.not_allowed_register'));
             return $this->redirect($this->generateUrl('group_event_view', array(
                 'groupSlug' => $groupSlug,
-                'eventId' => $groupEvent->getId(),
+                'eventId'   => $groupEvent->getId(),
+            )));
+        }
+
+
+        if ($groupEvent->getRegistrationFields()->count() > 0) {
+            return $this->redirect($this->generateUrl('event_registration', array(
+                'groupSlug' => $groupSlug,
+                'eventId'   => $groupEvent->getId(),
             )));
         }
 

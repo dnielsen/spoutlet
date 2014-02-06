@@ -93,7 +93,7 @@ class EventRepository extends EntityRepository
         }
 
         $result = $this->createQueryBuilder('e')
-            ->select('u.id, u.username, u.email, MAX(rsvp.rsvpAt) rsvpAt')
+            ->select('u.id, u.username, u.name, u.email, MAX(rsvp.rsvpAt) rsvpAt')
             ->leftJoin('e.attendees', 'a')
             ->leftJoin('e.rsvpActions', 'rsvp')
             ->leftJoin('rsvp.user', 'u')

@@ -14,8 +14,10 @@ use Platformd\IdeaBundle\Entity\SponsorRegistry;
 use Platformd\IdeaBundle\Entity\Tag;
 use Platformd\IdeaBundle\Entity\Vote;
 use Platformd\IdeaBundle\Entity\Sponsor;
+use Platformd\IdeaBundle\Entity\RegistrationAnswer;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\MediaBundle\Entity\Media;
+use Platformd\MediaBundle\Form\Type\MediaType;
 use Symfony\Component\Form\Exception\NotValidException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -435,79 +437,67 @@ class IdeaController extends Controller
         }
     }
 
-    public function uploadAction($entrySetId, $entryId)
+    public function uploadAction(Request $request, $entrySetId, $entryId)
     {
         $this->enforceUserSecurity();
 
-        $idea = $this->getEntry($entryId);
-        list($group, $event, $entrySet, $idea) = $this->getHierarchy($idea);
+        $entry    = $this->getEntry($entryId);
+        $newImage = new Media();
 
-        $document = new Document();
-        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'image', $document)
-            ->add('file')
-            ->getForm()
-        ;
+        $form = $this->createForm(new MediaType(), $newImage, array('image_label' => 'Image File:'));
 
-        if ($this->getRequest()->getMethod() === 'POST') {
-
-            $form->bindRequest($this->getRequest());
+        if ('POST' === $request->getMethod()) {
+            $form->bindRequest($request);
 
             if ($form->isValid()) {
 
+                $image = $form->getData();
 
-                if ($document->isValid()){
-                    $document->upload($entryId);
-                }
-                else{
-
+                if ($image->getFileObject() == null) {
                     $this->setFlash('error', 'You must select an image file');
-
-                    return new RedirectResponse($this->generateUrl('idea_upload_form', array(
-                            'entrySetId'=> $entrySetId,
-                            'entryId'   => $entryId,
-                        )));
                 }
+                else {
+                    $image->setName($entry->getName());
 
-                $idea->setImage($document);
-                $document->setIdea($idea);
+                    $mUtil = $this->getMediaUtil();
+                    $mUtil->persistRelatedMedia($image);
+                    $entry->setImage($image);
 
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($document);
-                $em->flush();
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $em->flush();
 
-                $ideaUrl = $this->generateUrl('idea_show', array(
+                    $ideaUrl = $this->generateUrl('idea_show', array(
                         'entrySetId'=> $entrySetId,
                         'entryId'   => $entryId,
                     ));
-                return new RedirectResponse($ideaUrl);
+                    return new RedirectResponse($ideaUrl);
+                }
             }
         }
 
-        $attendance = $this->getCurrentUserApproved($entrySet);
-        $isAdmin = $this->isGranted('ROLE_ADMIN');
-
         return $this->render('IdeaBundle:Idea:upload.html.twig', array(
-                'group'     => $group,
-                'event'     => $event,
-                'entrySet'  => $entrySet,
-                'idea'      => $idea,
-                'breadCrumbs'=> $this->getBreadCrumbsString($idea),
-                'form'      => $form->createView(),
-                'sidebar'   => true,
-                'attendance'=> $attendance,
-                'isAdmin'   => $isAdmin,
-            ));
+                'entrySetId'  => $entrySetId,
+                'entryId'     => $entryId,
+                'breadCrumbs' => $this->getBreadCrumbsString($entry, true),
+                'form'        => $form->createView(),
+                'sidebar'     => true,
+                'attendance'  => $this->getCurrentUserApproved($entry->getEntrySet()),
+                'isAdmin'     => $this->isGranted('ROLE_ADMIN'),
+        ));
     }
 
     public function deleteImageAction($entrySetId, $entryId)
     {
         $this->enforceUserSecurity();
 
-        $idea = $this->getEntry($entryId);
+        $entry = $this->getEntry($entryId);
+        $image = $entry->getImage();
 
-        $image = $idea->getImage();
-        $image->delete();
-        $idea->removeImage();
+        if (!$image) {
+            throw new NotFoundHttpException();
+        }
+
+        $entry->removeImage();
 
         $em = $this->getDoctrine()->getEntityManager();
         $em->remove($image);
@@ -516,7 +506,7 @@ class IdeaController extends Controller
         $ideaUrl = $this->generateUrl('idea_show', array(
                 'entrySetId'=> $entrySetId,
                 'entryId'   => $entryId,
-            ));
+        ));
         return new RedirectResponse($ideaUrl);
     }
 
@@ -1119,6 +1109,91 @@ class IdeaController extends Controller
         return $this->render('IdeaBundle:Idea:userEntrySets.html.twig', array(
             'entrySets' => $userEntrySets,
             'parents'   => $parents,
+        ));
+    }
+
+    public function userRegistrationAnswersAction($groupSlug, $eventId, $userId)
+    {
+        $event = $this->getEvent($groupSlug, $eventId);
+        $user  = $this->getDoctrine()->getRepository('UserBundle:User')->find($userId);
+
+        $regAnswerRepo = $this->getDoctrine()->getRepository('IdeaBundle:RegistrationAnswer');
+
+        $fields = $event->getRegistrationFields();
+
+        $answers = array();
+
+        foreach ($fields as $field)
+        {
+            $answer = $regAnswerRepo->findOneBy(array('field' => $field->getId(), 'user' => $user->getId()));
+            if ($answer) {
+                $answers[$field->getQuestion()] = $answer->getAnswer();
+            }
+        }
+        return $this->render('IdeaBundle:Idea:userRegistrationAnswers.html.twig', array(
+            'group'   => $event->getGroup(),
+            'event'   => $event,
+            'user'    => $user,
+            'answers' => $answers,
+        ));
+    }
+
+    public function eventRegistrationFormAction(Request $request, $groupSlug, $eventId)
+    {
+        $group = $this->getGroup($groupSlug);
+        $event = $this->getEvent($groupSlug, $eventId);
+        $user  = $this->getCurrentUser();
+
+        if ($request->get('cancel') == 'Cancel') {
+            return $this->redirect($this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters()));
+        }
+
+        $registrationFields = $event->getRegistrationFields();
+
+        if($request->getMethod() == 'POST') {
+
+            $em = $this->getDoctrine()->getEntityManager();
+
+            foreach ($registrationFields as $field)
+            {
+                $answer = new RegistrationAnswer();
+                $answer->setField($field);
+                $answer->setUser($user);
+                $answer->setAnswer($request->request->get($field->getId()));
+
+                $em->persist($answer);
+            }
+            $em->flush();
+
+            $wasGroupMember = $group->isMember($user);
+
+            $this->getGroupEventService()->register($event, $user);
+            $this->getGroupManager()->autoJoinGroup($group, $user);
+
+            if ($event->getPrivate()){
+                $this->setFlash('success', "We have received your request for private access. You will receive a response by an administrator when your account has been reviewed.");
+            }
+            else {
+
+                if ($wasGroupMember || $group->isOwner($user)) {
+                    $this->setFlash('success', $this->trans('platformd.events.event_show.now_attending'));
+                }
+                else {
+                    $this->setFlash('success', $this->trans(
+                        'platformd.events.event_show.group_joined', array('%groupName%' => $group->getName())));
+                }
+            }
+
+            return $this->redirect($this->generateUrl('group_event_view', array(
+                'groupSlug' => $groupSlug,
+                'eventId'   => $event->getId(),
+            )));
+        }
+
+        return $this->render('IdeaBundle:Idea:eventRegistrationForm.html.twig', array(
+            'fields'      => $registrationFields,
+            'group'       => $group,
+            'event'       => $event,
         ));
     }
 

@@ -4,7 +4,7 @@
 
     <h1>Upload File</h1>
 
-    <form action="{{ path('idea_upload', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ path('idea_upload', {'entrySetId': entrySetId, 'entryId': entryId}) }}" method="post" {{ form_enctype(form) }}>
         {{ form_widget(form) }}
 
         <br><br>
