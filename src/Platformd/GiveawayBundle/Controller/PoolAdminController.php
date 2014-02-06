@@ -90,9 +90,8 @@ class DealPoolAdminController extends Controller
          $form = $this->createForm(new DealPoolType(), $pool);
 
         if ('POST' === $request->getMethod()) {
-   
             $form->bindRequest($request);
-         
+
             if ($form->isValid()) {
                 $this->savePool($pool);
 

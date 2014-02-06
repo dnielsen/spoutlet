@@ -9,6 +9,7 @@ use
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface
 ;
+
 use Platformd\UserBundle\Entity\Avatar;
 use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 
@@ -90,7 +91,7 @@ EOT
         $userUuid    = $user->getUuid();
         $avatarUuid  = $avatar->getUuid();
         $newFilename = $size.'x'.$size.'.png';
-        
+
         $cropDetails = array();
         list($cropDetails['width'], $cropDetails['height'], $cropDetails['x'], $cropDetails['y']) = explode(',', $avatar->getCropDimensions());
 
@@ -114,7 +115,7 @@ EOT
         $this->output(6, 'Retrieving "'.$rawFilename.'" from s3...', false);
         if($this->hpObject == 0) {
           $response = $this->s3->get_object($bucket, $filepath);
-        
+
         if (!$response->isOk()) { // We does not retrieved the image file from S3
             $this->output();
             $this->output(8, 'Error whilst downloading file from s3.');

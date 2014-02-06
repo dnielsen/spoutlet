@@ -19,7 +19,6 @@ use Platformd\GiveawayBundle\Entity\KeyRequestState;
 use Platformd\UserBundle\Entity\RegistrationSource;
 use Platformd\SpoutletBundle\Util\CacheUtil;
 
-
 /**
 *
 */

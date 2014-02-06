@@ -23,7 +23,6 @@ use Platformd\UserBundle\Exception\UserRegistrationTimeoutException;
 use Platformd\CEVOBundle\Api\ApiManager as CevoApiManager;
 use Platformd\CEVOBundle\Api\ApiException as CevoApiException;
 use Platformd\GroupBundle\Model\GroupManager;
-
 use Platformd\UserBundle\Entity\RegistrationSource;
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 

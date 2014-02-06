@@ -108,14 +108,4 @@ class Country
     {
         return $this->regions;
     }
-
-    public function setStates($value)
-    {
-        $this->states = $value;
-    }
-
-    public function getStates()
-    {
-        return $this->states;
-    }
 }

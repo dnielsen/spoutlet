@@ -19,7 +19,6 @@ use Platformd\UserBundle\Entity\User;
 abstract class MassEmail
 {
     const EMAIL_LIMIT_COUNT  = 2;
-
     const EMAIL_LIMIT_PERIOD = '24 hours';
 
     /**
@@ -249,5 +248,4 @@ abstract class MassEmail
     abstract protected function getLinkedEntityClass();
     abstract protected function getLinkedEntity();
     abstract protected function getLinkedEntityAllRecipientsField();
-
 }

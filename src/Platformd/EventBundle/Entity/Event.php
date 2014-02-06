@@ -273,11 +273,6 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     private $tags;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\Idea", mappedBy="event", cascade={"remove"})
-     */
-    protected $ideas;
-
-    /**
      * @ORM\Column(type="integer")
      */
     protected $currentRound;

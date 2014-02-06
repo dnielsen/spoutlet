@@ -145,7 +145,7 @@ EOT
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
-    {      
+    {
         $this->stdOutput     = $output;
         $container           = $this->getContainer();
         $em                  = $container->get('doctrine')->getEntityManager();
@@ -155,7 +155,7 @@ EOT
         $this->privateBucket = $container->getParameter('s3_private_bucket_name');
         $this->publicBucket  = $container->getParameter('s3_bucket_name');
         $userRepo            = $em->getRepository('UserBundle:User');
-      
+
         $this->output(0);
         $this->output(0, 'PlatformD Avatar Resize Queue Processor');
         $this->output(0);
@@ -171,7 +171,7 @@ EOT
           $hpObject = 1 ;
         }
         while ($message = $this->queueUtil->retrieveFromQueue(new AvatarResizeQueueMessage())) {
-            
+
             usleep(self::DELAY_BETWEEN_AVATARS_MILLISECONDS);
 
             $deleteMessage = true;
@@ -273,16 +273,14 @@ EOT
 
                     // Delete private bucket raw file as this is now in the public bucket
                     $response = $this->s3->delete_object($this->privateBucket, $filepath);
-                    
+
                     }
-                    
                 } else {
                     $em->persist($avatar);
                     $em->flush();
                 }
 
-            }
-              else {
+            } else {
 
                 $this->output();
                 $this->output(4, "An error occurred whilst downloading image file from S3:");
@@ -295,11 +293,9 @@ EOT
                           $deleteMessage = false;
                       }
                   }
+                } else {
+                  $this->error("File not found on S3.");               
                 }
-                else {
-                          $this->error("File not found on S3.");               
-                }
-                
             }
 
             if ($deleteMessage) {

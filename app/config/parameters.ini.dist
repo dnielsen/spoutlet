@@ -7,11 +7,11 @@
     database_port           =
     database_name           = platformd
     database_user           = root
-    database_password       = deepblue
+    database_password       =
 
     acl_database_name       = platformd_acl
 
-    allow_caching           = false
+    allow_caching           = true
 
     mailer_transport        = smtp
     mailer_host             = localhost
@@ -24,20 +24,20 @@
 
     secret                  = ThisTokenIsNotSoSecretChangeIt
 
-    recaptcha.public_key    = 6LemkeYSAAAAAD0RJpFzjorYVMzdyNNAdeie8E_H 
-    recaptcha.private_key   = 6LemkeYSAAAAAMSThoiYLRurxAMM7HL7GB9SkS7R
+    recaptcha.public_key    =
+    recaptcha.private_key   =
 
     china_host_prefix = china
     base_host         = site.com
     host_suffix       =
 
-    base_host               = 15.185.111.85.xip.io
+    base_host               = site.com
     host_suffix             =
 
-    s3.access_key           = AKIAI2DNRRJAPYAAFNOA
-    s3.secret_key           = 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
-    s3_bucket_name          = platformd-public
-    s3_private_bucket_name  = platformd-privates
+    s3.access_key           =
+    s3.secret_key           =
+    s3_bucket_name          = platformd-testing
+    s3_private_bucket_name  = platformd-private-testing
 
     cloudsearch_domain_name = alienwarearena
     cloudsearch_domain_id   = biglongidfromawsconsole
@@ -62,14 +62,12 @@
     memcached_server1_port  = 11211
 
     ; Here we must have at least default
-    liip_enabled_themes[] = marketingcamp
-    liip_enabled_themes[] = ideacontest
+    liip_enabled_themes[] = default
+    liip_enabled_themes[] = test_theme
 
     secure_url_scheme     = https
 
-    queue_prefix          = https://sqs.us-east-1.amazonaws.com/694891348995/PD_TESTING_
-
-    allow_caching         = false
+    queue_prefix          = https://sqs.us-east-1.amazonaws.com/042124576429/PD_TESTING_
 
     api_base_url          = https://api.alienwarearena.com/v1/
     api_access_key        = yourAccessKeyHere
@@ -79,23 +77,24 @@
     
     ; used for HP Cloud HpObjectStorage and for aws use AWSObjectStorage
     objectStorage        = HpObjectStorage
-    hpcloudAccesskey     = YS11LX9TT81LNVXKSKM7
-    hpcloudSecreatkey    = r8zsRj+i/SfVSXkOiUlVZg2SJBw2p2izogqKlo+W
-    hpcloudTenantid      = 10873218563681
+    hpcloudAccesskey     = 
+    hpcloudSecreatkey    = 
+    hpcloudTenantid      = 
     hpcloudUrl           = https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/
-    hpcloudMessagingUrl = https://region-a.geo-1.messaging.hpcloudsvc.com/v1.1/10873218563681
+    hpcloudMessagingUrl  = https://region-a.geo-1.messaging.hpcloudsvc.com/v1.1/10873218563681
     hpcloudContainer     = platformd-public
+
     ; For use SendGrid Email service use SendGrid and for Aws use AWS_SES
     emailService         = SendGrid
-    sendgridUsername     = dnielsen
-    sendgridPassword     = Deepblue1
+    sendgridUsername     = 
+    sendgridPassword     = 
     
     ; queue_service (1)RabbitMQ (2) AWS_SQS (3) HPCloud
     queue_service        = RabbitMQ
-    rabbitmq_host        = 15.185.109.210
+    rabbitmq_host        = 
     rabbitmq_port        = 5672
-    rabbitmq_username    = platformd
-    rabbitmq_password    = platformd
+    rabbitmq_username    = 
+    rabbitmq_password    = 
         
     ; only set to true if you have implemented the API authentication system and have configured it properly
     api_authentication    = false

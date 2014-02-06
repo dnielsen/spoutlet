@@ -1992,7 +1992,6 @@ Alienware Arena Team
         ));
     }
 
-
     public function emailPreviewAction($slug, Request $request)
     {
         $group = $this->getGroupBySlug($slug);

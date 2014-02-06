@@ -392,7 +392,7 @@ class User extends BaseUser
      * @ORM\JoinTable(name="pd_groups_members")
      */
     private $pdGroups;
-  
+
     /**
      * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupMembershipAction", mappedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(onDelete="SET NULL")
@@ -454,7 +454,6 @@ class User extends BaseUser
      * @ORM\OneToOne(targetEntity="Platformd\UserBundle\Entity\RegistrationSource", cascade={"persist"}, mappedBy="user")
      */
     protected $registrationSource;
-
 
     /**
      * @ORM\Column(type="string", length="255", nullable=true)
@@ -564,6 +563,7 @@ class User extends BaseUser
      */
     public function isAvatarApproved()
     {
+    echo "isAvatarApproved - returns true always";
 	return 1;
         return $this->avatar->isApproved();
     }

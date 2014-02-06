@@ -57,8 +57,7 @@ class SearchManager
         $this->objectStorage     = $objectStorage;
         $this->hpcloud_container = $hpcloud_container;
         $this->hpcloud_url       = $hpcloud_url;
-	      $this->hpCloudObj        = new HPCloudPHP($hpcloud_accesskey,$hpcloud_secreatkey,$hpcloud_tenantid);
-        
+	    $this->hpCloudObj        = new HPCloudPHP($hpcloud_accesskey,$hpcloud_secreatkey,$hpcloud_tenantid);
     }
 
     public function search($criteria, $params = array(), $site, $category = null)

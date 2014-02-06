@@ -20,11 +20,11 @@ class AvatarController extends Controller
     public function avatarAction(Request $request)
     {
         $this->checkSecurity();
-        
+
         $avatarManager = $this->getAvatarManager();
         $data          = $avatarManager->getAvatarListingData($this->getUser(), 84);
         $newAvatar     = new Avatar();
-      
+
         $newAvatar->setUser($this->getUser());
 
         $form = $this->createForm(new AvatarType(), $newAvatar);
@@ -71,14 +71,13 @@ class AvatarController extends Controller
     public function cropAvatarAction($uuid = null)
     {
         $this->checkSecurity();
-        
+
         if (!$uuid) {
             $this->setFlash('error', 'platformd.user.avatars.invalid_avatar');
             return $this->redirect($this->generateUrl('accounts_settings'));
         }
 
         $avatar = $this->findAvatar($uuid);
-  
 
         if (!$avatar) {
             $this->setFlash('error', 'platformd.user.avatars.invalid_avatar');
