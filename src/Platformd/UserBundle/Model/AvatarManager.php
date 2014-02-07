@@ -32,7 +32,17 @@ class AvatarManager
     private $userManager;
     private $objectStorage = '';
 
-    public function __construct(EntityManager $em, Filesystem $filesystem, $publicBucket, $privateBucket, $s3, $queueUtil, $userManager, $hpcloud_accesskey='', $hpcloud_secreatkey='', $hpcloud_tenantid='', $hpcloud_url='', $hpcloud_container='',$objectStorage='')
+    public function __construct(EntityManager $em, Filesystem $filesystem,
+            $publicBucket,
+            $privateBucket,
+            $s3, $queueUtil,
+            $userManager,
+            $hpcloud_accesskey='',
+            $hpcloud_secretkey='',
+            $hpcloud_tenantid='',
+            $hpcloud_url='',
+            $hpcloud_container='',
+            $objectStorage='')
     {
         $this->em            = $em;
         $this->filesystem    = $filesystem;
@@ -42,13 +52,13 @@ class AvatarManager
         $this->s3            = $s3;
         $this->queueUtil     = $queueUtil;
         $this->userManager   = $userManager;
-       // if($objectStorage == "HpObjectStorage") {
-        $this->objectStorage = $objectStorage;
-        $this->hpcloud_container =   $hpcloud_container;
-        $this->hpcloud_url = $hpcloud_url;
-	$this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey,$hpcloud_secreatkey,$hpcloud_tenantid);
-        
-        //}
+
+        if($objectStorage == "HpObjectStorage") {
+            $this->objectStorage = $objectStorage;
+            $this->hpcloud_container =   $hpcloud_container;
+            $this->hpcloud_url = $hpcloud_url;
+            $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secretkey, $hpcloud_tenantid);
+        }
     }
 
     public function save(Avatar $avatar)
