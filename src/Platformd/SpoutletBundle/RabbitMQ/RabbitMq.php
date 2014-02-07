@@ -20,7 +20,7 @@ class RabbitMq
     public $msgData = array();
     
     function __construct($hostName=null,$port=null,$userName=null,$password=null)
-    { //$this->connection = new AMQPConnection('15.185.109.210', 5672, 'platformd', 'platformd');
+    { 
       $this->connection = new AMQPConnection($hostName, $port, $userName, $password);      
       $this->channelObj = $this->connection->channel();     
     }
@@ -43,6 +43,7 @@ class RabbitMq
     } 
     public function processMsg(AMQPMessage $message)
     {
+      //echo 'Process Message is Called ';
       $this->setMsgData($message->body);  
       return true;
     }
@@ -52,7 +53,7 @@ class RabbitMq
       $this->channelObj->queue_declare($queueName, false, false, false, true);
       $this->channelObj->basic_consume($queueName, '', false, false, false, false, array($this,'processMsg'));
       
-      while(count($this->channelObj->callbacks) >0) {
+      while(count($this->channelObj->callbacks) >0) {        
           try {
                $this->channelObj->wait(null,false,2);
                break;
@@ -61,13 +62,11 @@ class RabbitMq
               }
       }
       $msgData = $this->getMsgData();
+      // unset the value of msgData 
+      //var_dump($msgContent);
+      $this->msgData = array();
       return (isset($msgData[0]) ) ? $msgData[0] : $msgData;
     }
   
-    function __destruct()
-    {
-      $this->channelObj->close();
-      $this->connection->close();
-    }
 }
 ?>

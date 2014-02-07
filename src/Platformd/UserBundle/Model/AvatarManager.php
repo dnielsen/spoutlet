@@ -138,7 +138,10 @@ class AvatarManager
 
     protected function uuidGen()
     {
-        return str_replace("\n", '', `uuidgen -r`);
+      $html = file_get_contents("http://www.famkruithof.net/uuid/uuidgen");
+      preg_match("/<h3>(.*)<\/h3>/i", $html, $match);
+      $title = $match[1];
+      return $title;
     }
 
     public function getSignedImageUrl($avatarUuid, $filename, User $user)
