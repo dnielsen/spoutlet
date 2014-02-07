@@ -25,7 +25,7 @@
             </ul>
         </div>
 
-        <p class="right tnytxt">Proposed by: <a href="{{ path('profile', {'userId': idea.creator.id}) }}">{{idea.creator.name}}</a>{% if idea.members %}, {{idea.members}}{% endif %}</p>
+        <p class="right tnytxt">Proposed by: <a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blu">{{idea.creator.name}}</a>{% if idea.members %}, {{idea.members}}{% endif %}</p>
 
         <br class="clr">
 
@@ -52,7 +52,7 @@
                 {% endif %}
 
             {% elseif canEdit %}
-                <a href="{{ path('idea_upload_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}">Add Image</a>
+                <a href="{{ path('idea_upload_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="blu">Add Image</a>
             {% endif %}
         </div>
         <div id="links" style="padding-bottom: 15px;">
@@ -73,7 +73,7 @@
             {% endif %}
 
             {% if canEdit %}
-                <a href = "{{ path('idea_add_link_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" style="clear: both">Add Link</a>
+                <a href="{{ path('idea_add_link_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="blu clr">Add Link</a>
             {% endif %}
         </div>
     </div>
@@ -85,7 +85,7 @@
             <label class="midtxt">{{idea.comments.count}} Comments</label>
             {% for comment in idea.comments %}
                 <hr>
-                <a href="{{ path('profile', {'userId': comment.user.id}) }}">{{ comment.user.name }}</a> commented on <em>{{ comment.timestamp }}</em>
+                <a href="{{ path('profile', {'userId': comment.user.id}) }}" class="blu">{{ comment.user.name }}</a> commented on <em>{{ comment.timestamp }}</em>
                 {% if canRemoveComments %}
                     <form action="{{ path('idea_comment_delete', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post" class="left padrt">
                         <input type="hidden" name="idea" value="{{ idea.id }}">
@@ -110,7 +110,7 @@
 
         {% else %}
             <div class="spcr-l2">
-                You must <a href="{{ path('login') }}">login</a> to join the discussion.<br/>
+                You must <a href="{{ path('login') }}" class="blu">login</a> to join the discussion.<br/>
             </div>
         {% endif %}
 
