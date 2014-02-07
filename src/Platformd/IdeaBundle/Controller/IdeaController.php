@@ -575,7 +575,7 @@ class IdeaController extends Controller
 
         $idea = $this->getEntry($entryId);
 
-        $linkId = $request->get('link');
+        $linkId = $request->get('linkId');
         $link = $this->getDoctrine()->getRepository('IdeaBundle:Link')->find($linkId);
 
         $idea->removeLink($link);
@@ -680,7 +680,7 @@ class IdeaController extends Controller
     public function commentDeleteAction(Request $request, $entrySetId, $entryId)
     {
         $this->enforceUserSecurity();
-        $commentId = $request->get('comment');
+        $commentId = $request->get('commentId');
 
         $idea = $this->getEntry($entryId);
         $comment = $this->getDoctrine()->getRepository('IdeaBundle:Comment')->find($commentId);

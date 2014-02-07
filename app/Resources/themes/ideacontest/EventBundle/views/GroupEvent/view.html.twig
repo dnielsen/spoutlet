@@ -39,7 +39,41 @@
             </script>
         {% endif %}
 
-        <p>{{ event.content | raw }}</p>
+        {{ event.content | raw }}
+
+        <hr/>
+
+        {# For now -- get first entrySet -- need to implement list chooser #}
+        {% if event.entrySets | length > 0 %}
+        {% set entrySet = event.entrySets[0] %}
+            <h2 class="left">{{ entrySet.name }}</h2><a href="{{ entrySet | pd_link }}" class="right btn">View All Ideas</a>
+            <table class="tblStyle">
+
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Votes</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% set i=0 %}
+                    {% for entry in entrySet.popularEntries %}
+                        {% set i=i+1 %}
+                        <tr{% if i%2 %} class="fill"{% endif %}>
+                            <td><a href="{{ entry | pd_link }}">{{ entry.name }}</a></td>
+                            <td>{{ entry.numVotes }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="2">There are no ideas yet</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        {% endif %}
+
     </div>
 
     <div id="contentRt">
