@@ -1,0 +1,206 @@
+{% extends 'UserBundle::accountLayout.html.twig' %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="/bundles/user/facedetect/css/sandbox.css" >   
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+
+
+<!--   <script src="/bundles/facedetect/js/js_5mTro90pXSmFLUU_xf8ZU3ChWmrhhl1AVmSDDfrZWnU.js" type="text/javascript"></script> 
+    <script src="/bundles/facedetect/js/js__Uy1gizlMaQSAtclCKJIzm9AiYCSIxMsR3UGw2uopQA.js" type="text/javascript"></script> -->
+
+    <script>        $ = jQuery;
+
+    </script>
+    <script src="/bundles/user/facedetect/js/config.js"></script>    
+    <!-- <script src="/bundles/user/facedetect/js/jquery-ui-1.js" type="text/javascript"></script> -->
+    <script src="/bundles/user/facedetect/js/formatJSON.js" type="text/javascript"></script>
+    <script src="/bundles/user/facedetect/js/formatXML.js" type="text/javascript"></script>
+    <script src="/bundles/user/facedetect/js/xml2string.js" type="text/javascript"></script>
+    <script src="/bundles/user/facedetect/js/shCore.js" type="text/javascript"></script>
+    <script src="/bundles/user/facedetect/js/shBrushJScript.js" type="text/javascript"></script>
+    <script src="/bundles/user/facedetect/js/shBrushXml.js" type="text/javascript"></script>
+    <script src="/bundles/user/facedetect/js/xml2json.js" type="text/javascript"></script>
+    <!-- <script src="/bundles/facedetect/js/jquery.js" type="text/javascript"></script> -->
+    <script src="/bundles/user/facedetect/js/api-Face-Detection.js" type="text/javascript"></script>   
+    <script src="/bundles/user/facedetect/js/drawroi.js" type="text/javascript"></script>
+
+{% endblock %}
+
+{% block body %}
+{% block title %}{{ "platformd.user.account.avatars" | pd_trans }}{% endblock %}
+
+{% block content %}
+
+    <div class="widget-100">
+        <div class="widget-header">
+            <div class="widget-title">
+                <h2 class="tip">Face Detection</h2>
+            </div>
+        </div>
+        <div class="widget-content">
+          <div  id="main-container">
+            <div class="content_container">
+                <div class="content_parameter">
+		  <form id="form1" name="form1" enctype="multipart/form-data">
+                      <div class="content_parameter_left">
+                         <div class="content_parameter_left_content" style="display:none">
+                            <select id="method" class="text">
+                                <option>Face Demographic</option>
+                                <option>Feature Extraction</option>
+                                <option>Face Detection</option>
+                                <option>Image Matching</option>
+                                <option>Image Collage</option>							   
+                            </select>
+                        </div>
+                        
+                        <div class="content_parameter_left_content">
+                            <select id="response_format" class="text" style="display:none">
+                                <option selected="selected">JSON</option>
+                                <option>XML</option>
+                            </select>
+                        </div>
+                        <div class="content_parameter_left_content" style="display:none">
+                            <ul class="parameterType">
+                                <li>
+                                    <input type="radio" id="parameterType1" checked="checked" value="url" name="parameterType">
+					<label for="parameterType1">Use Image URL</label>
+				</li>
+                                <li>
+                                    <input type="radio" id="parameterType2" value="file" name="parameterType"><label for="parameterType2">Upload File</label>
+				</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="content_parameter_right" >
+                       <div id="parameters" style="display:none">
+				<div class="content_parameter_right_title">URL</div>
+				<div class="content_parameter_right_content">
+					<input type="text" value="{{avatarUrl}}" class="source_url txt_source textarea ui-droppable">
+				</div>
+			</div>
+                        
+                    </div>
+		</form>
+            </div> <!-- end of class content_paramter -->
+
+                <div class="call_method" style="display:none">
+                    <input type="button" id="call_method">
+                    <div class="btn_arr"></div>
+                </div>
+                <div class="result-box">
+                    <!-- <div class="tip">
+                        
+                    </div -->
+                    <div class="content_images">
+                   
+                    </div>
+                </div> <!-- end of div class result-box -->
+            
+            </div>
+            <!-- #main -->
+            <div style="display: none;" class="loading"></div>
+        </div> <!-- end of Main Container -->
+      
+              <div class="avatar-previews">
+                 <div id="preview1-wrapper" class="preview-panel" style="margin-left:30px;margin-top:5px;margin-bottom:0px">
+                 <!--   <button class="btn btn-primary" id="submit-facedetect1">{{ 'platformd.user.avatars.submit' | pd_trans }}</button> -->
+<button class="btn btn-primary"  value="submit" onClick="javascript:FaceDetect(this)">Confirm</button> 
+<button class="btn btn-primary"  value="cancel" onClick="javascript:FaceDetect(this)">Cancel</button>
+
+                </div>
+                <div id="face-dialog" style="display:none"> Is this Your Face ?  </div>
+              </div>  
+     <div class="clear> </div>
+     </div> <!-- end of widget-content -->
+        <div class="widget-footer">
+            &nbsp;
+        </div> <!-- end of widget-footer -->
+    </div> <!-- end of class widget-100 -->
+
+            
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+<script type="text/javascript">
+
+function FaceDetect(obj){
+
+var value = obj.value;
+if(value == "submit"){
+ var facePrintIdVal = document.getElementById('facePrintId').value;
+ var facePrintImage = document.getElementById('facePrintImage').value;
+
+  if (facePrintIdVal == 'undefined' || facePrintIdVal == ''){
+             window.location = '{{ path("avatars") }}'
+        }
+  else {
+           var url = "{{ path('avatar_faceprint_save', {'uuid': uuid, 'facePrintId' : 'text', 'facePrintImage' : 'text1'}) }}";
+                url = url.replace("text", facePrintIdVal);
+                url = url.replace("text1",facePrintImage);
+               //alert(url);
+                window.location = url;
+
+     }   
+} 
+// if its cancel
+else {
+ window.location = '{{  path('avatars') }}';
+
+}
+
+}
+$('#submit-facedetect').click(function() {
+         alert($(this).val());     
+        var facePrintIdVal = $("#facePrintId").val();//alert(facePrintIdVal);
+	if (facePrintIdVal == 'undefined' || facePrintIdVal == ''){
+             window.location = '{{ path("avatar_crop", { "uuid": uuid }) }}'
+        } else {
+  //           $( "#face-dialog" ).dialog({
+//	     resizable: false,height:140,modal: true,
+//	       buttons: {
+//		"Yes": function() {
+		//$( this ).dialog( "close" );
+               //window.location = '{{ path("avatar_faceprint_save", { "uuid": uuid, "facePrintId": '+ facePrintId+' }) }}';
+       //         var url = "{{ path('avatar_faceprint_save', {'uuid': uuid, 'facePrintId' : 'text'}) }}";
+    //          url = url.replace("text", facePrintIdVal);
+  //              window.location = url;	
+//	         },
+//	         "NO": function() {
+//		     window.location = '{{  path('avatars') }}';
+//	        }
+//	    }	
+//       });
+
+         var result = confirm("Is this Your Face ?");
+         if(result==true)  {
+               var url = "{{ path('avatar_faceprint_save', {'uuid': uuid, 'facePrintId' : 'text'}) }}";
+                url = url.replace("text", facePrintIdVal);
+                window.location = url;
+
+             }
+         else {
+		window.location = '{{  path('avatars') }}';
+           }
+	
+         }
+            //window.location = '{{ path("avatar_process", { "uuid": uuid }) }}' + '/' + getCoords();
+        });
+
+</script>       
+
+
+<script type="text/javascript" src="/bundles/spoutlet/js/jquery.Jcrop.min.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jCrop.custom.js"></script>
+    
+<script src="/bundles/user/facedetect/js/JSON.js" type="text/javascript"></script>
+
+    <script src="/bundles/user/facedetect/js/SyntaxHighlight.js" type="text/javascript"></script>
+    <script type="text/javascript" src="/bundles/user/facedetect/js/sandbox.js"></script>
+    <script src="/bundles/user/facedetect/js/container.js" type="text/javascript"></script>
+     <!--[if lt IE 7 ]> <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.2/CFInstall.min.js"></script>
+    <script>window.attachEvent("onload",function(){CFInstall.check({mode:"overlay"})})</script>
+    <![endif]-->
+
+{% endblock %}
+{% endblock %}
