@@ -96,15 +96,15 @@ class HPCloudPHP {
         $this->token = $this->identity->token();
     }
 
-    private function setConfigurations($account,$secreat,$tenantId,$identity_url,$streamtransport)
+    private function setConfigurations($account,$secret,$tenantId,$identity_url,$streamtransport)
     {
         $settings = array(
             'account' => $account,
-            'secret' => $secreat,
+            'secret' => $secret,
             'tenantid' => $tenantId,
             'endpoint' => $identity_url,
             'transport' => $streamtransport,
-            'transport.debug' => TRUE,
+            'transport.debug' => false,
         );
         Bootstrap::setConfiguration($settings);
         return 1;
