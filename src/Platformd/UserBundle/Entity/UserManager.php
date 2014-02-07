@@ -306,8 +306,12 @@ class UserManager extends BaseUserManager
 
     private function uuidGen()
     {
-        return str_replace("\n", '', `uuidgen -r`);
-    }
+      //$html = $this->getHTML("http://www.famkruithof.net/uuid/uuidgen",10);
+      $html = file_get_contents("http://www.famkruithof.net/uuid/uuidgen");
+      preg_match("/<h3>(.*)<\/h3>/i", $html, $match);
+      $title = $match[1];
+      return $title;
+    } 
 
     public function addLoginRecord($user, $request)
     {
