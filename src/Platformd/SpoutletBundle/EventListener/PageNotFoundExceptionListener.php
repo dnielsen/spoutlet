@@ -34,7 +34,6 @@ class PageNotFoundExceptionListener
         }
 
         $exception = $event->getException();
-        $request   = $event->getRequest();
 
         if (!$exception instanceof NotFoundHttpException) {
             return;
@@ -71,46 +70,32 @@ class PageNotFoundExceptionListener
 
         $features    = $currentSite->getSiteFeatures();
 
-        if ($features->getHasForwardOn404()) {
-            $config      = $currentSite->getSiteConfig();
-
-            $forwardBaseUrl = $config->getForwardBaseUrl();
-            $forwardedPaths = $config->getForwardedPaths();
-            $request        = $event->getRequest();
-            $matcher        = new RequestMatcher();
-
-            foreach ($forwardedPaths as $forwardedPath) {
-                $matcher->matchPath($forwardedPath);
-
-                if ($matcher->matches($request)) {
-                    $path = $request->getPathInfo();
-
-                    if (isset(self::$urlMap[$path])) {
-                        $path = self::$urlMap[$path];
-                    }
-
-                    $absoluteUrl = sprintf('%s%s', $forwardBaseUrl, $path);
-
-                    $response = new RedirectResponse($absoluteUrl);
-                    $event->setResponse($response);
-                }
-            }
+        if (!$features->getHasForwardOn404()) {
+            return;
         }
 
-        $referer = $request->headers->get('referer');
-        $refererHost = parse_url($referer, PHP_URL_HOST);
-        $refererPath = parse_url($referer, PHP_URL_PATH);
+        $config      = $currentSite->getSiteConfig();
 
-        $requestHost = $request->getHost();
-        $requestPath = $request->getBaseUrl().$request->getPathInfo();
+        $forwardBaseUrl = $config->getForwardBaseUrl();
+        $forwardedPaths = $config->getForwardedPaths();
+        $request        = $event->getRequest();
+        $matcher        = new RequestMatcher();
 
-        $differentHost = $refererHost != $requestHost;
-        $samePath      = $refererPath == $requestPath;
+        foreach ($forwardedPaths as $forwardedPath) {
+            $matcher->matchPath($forwardedPath);
 
-        // if we have been sent here by the user clicking the "change region link"
-        if ($differentHost && $samePath) {
-            $response = new RedirectResponse($this->router->generate('default_index'));
-            $event->setResponse($response);
+            if ($matcher->matches($request)) {
+                $path = $request->getPathInfo();
+
+                if (isset(self::$urlMap[$path])) {
+                    $path = self::$urlMap[$path];
+                }
+
+                $absoluteUrl = sprintf('%s%s', $forwardBaseUrl, $path);
+
+                $response = new RedirectResponse($absoluteUrl);
+                $event->setResponse($response);
+            }
         }
 
         return;

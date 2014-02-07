@@ -24,10 +24,10 @@ class UserExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-       $container->setParameter(
+        $container->setParameter(
           'fos_user.registration.form.type',
           'platformd_user_registration'
-    );
+        );
 
         $loader->load('repositories.yml');
     }

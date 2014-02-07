@@ -31,7 +31,7 @@ elif [ $ENV = 'prod' ]; then
     php app/console assetic:dump -e prod --no-debug
     echo '============================='
     echo 'Clearing Symfony cache'
-    echo
+    sudo rm -rf app/cache/*
     php app/console cache:clear -e prod --no-debug
 fi
 echo '============================='

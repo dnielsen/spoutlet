@@ -121,7 +121,7 @@ services:
     platformd.model.ip_lookup_util:
         class: Platformd\SpoutletBundle\Util\IpLookupUtil
         arguments:
-            - %maxmind_lookup_directory%
+            - %ip2location_lookup_directory%
             - %ip_lookup_override%
 
 
@@ -173,7 +173,7 @@ services:
     platformd.model.ip_lookup_util:
         class: Platformd\SpoutletBundle\Util\IpLookupUtil
         arguments:
-            - %maxmind_lookup_directory%
+            - %ip2location_lookup_directory%
             - %ip_lookup_override%
 
     platformd.util.site_util:

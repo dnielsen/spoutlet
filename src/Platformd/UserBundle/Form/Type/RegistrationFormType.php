@@ -61,7 +61,6 @@ class RegistrationFormType extends BaseType
 
     public function buildForm(FormBuilder $builder, array $options)
     {
-        
         parent::buildForm($builder, $options);
 
         $builder
@@ -105,11 +104,7 @@ class RegistrationFormType extends BaseType
                 'error_bubbling' => true,
             ));
         } else {
-            $builder->add('state', 'choice', array(
-                'choices'        => array(),
-                'required'       => true,
-                'error_bubbling' => true
-            ));
+            $builder->add('state', 'text', array('required' => true, 'error_bubbling' => true));
         }
 
         $countryOptions = array(
@@ -118,7 +113,6 @@ class RegistrationFormType extends BaseType
         );
 
         $builder->add('country', 'country', $countryOptions);
-        $builder->add('name');
 
         if ($this->includeRecaptcha) {
             $builder->add('recaptcha', 'ewz_recaptcha', array(
@@ -147,6 +141,7 @@ class RegistrationFormType extends BaseType
         if($countryCode != 'US') {
             $builder->add('subscribedAlienwareEvents');
         }
+
     }
 
     public function getDefaultOptions(array $options)

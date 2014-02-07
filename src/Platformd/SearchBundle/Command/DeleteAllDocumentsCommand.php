@@ -1,4 +1,5 @@
 <?php
+
 namespace Platformd\SearchBundle\Command;
 
 use
@@ -8,6 +9,7 @@ use
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface
 ;
+
 use Platformd\SearchBundle\QueueMessage\SearchIndexQueueMessage;
 use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 
@@ -95,7 +97,7 @@ EOT
         $container           = $this->getContainer();
         $em                  = $container->get('doctrine')->getEntityManager();
         $this->searchManager = $container->get('platformd.model.search_manager');
-      
+
         $confirmDelete       = $input->getOption('confirm-delete');
 
         $this->output(0);

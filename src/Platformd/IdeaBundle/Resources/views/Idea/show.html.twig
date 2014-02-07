@@ -42,7 +42,7 @@
 
         <div style="padding-bottom: 15px">
             {% if (idea.getImage()) and (idea.canUserView(app.user)) %}
-                <img src="{{ asset(idea.image.getWebPath()) }}" style="max-width:100%">
+                <img src="{{ media_path(idea.image) }}" style="max-width:100%">
 
                 {% if canEdit %}
                     <form action="{{ path('idea_image_delete', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="post">

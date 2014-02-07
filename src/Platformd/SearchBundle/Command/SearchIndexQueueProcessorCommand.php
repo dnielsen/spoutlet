@@ -9,6 +9,7 @@ use
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface
 ;
+
 use Platformd\SearchBundle\QueueMessage\SearchIndexQueueMessage;
 use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 class SearchIndexQueueProcessorCommand extends ContainerAwareCommand
@@ -89,7 +90,6 @@ EOT
         $container           = $this->getContainer();
         $em                  = $container->get('doctrine')->getEntityManager();
         $this->searchManager = $container->get('platformd.model.search_manager');
-        
         $s3                  = $container->get('aws_s3');
         $queueUtil           = $container->get('platformd.util.queue_util');
 
@@ -135,7 +135,7 @@ EOT
                 $this->tick();
                 $this->output(4, 'Sending document to CloudSearch for indexing...');
 
-                $indexData =  $response->body;
+                $indexData = $response->body;
 
                 $indexDataArr = json_decode($indexData, true);
 
@@ -187,6 +187,7 @@ EOT
                 $this->deleteMessageWithOutput($message);
             }
         }
+
         $this->output();
         $this->output(2, 'No more messages in queue.');
 

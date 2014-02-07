@@ -1,7 +1,7 @@
 <?php
 
 namespace Platformd\SpoutletBundle\Util;
-
+use Platformd\SpoutletBundle\Location\Ip2Location;
 use Symfony\Component\HttpFoundation\Request;
 
 
@@ -12,7 +12,7 @@ class IpLookupUtil
 
     public function __construct($lookupDir, $override)
     {
-        $this->lookupFile = $lookupDir.'GeoIP.dat';
+        $this->lookupFile = $lookupDir.'ipLookup.bin';
 
         if ($override) {
             $overrideFile = $lookupDir.'overrideCountry';
@@ -20,28 +20,45 @@ class IpLookupUtil
         }
     }
 
-    public function getCountryName($ipAddress)
+    public function getAll($ipAddress)
     {
-        return $this->get('geoip_country_name_by_addr', $ipAddress);
-    }
-
-    public function getCountryCode($ipAddress)
-    {
-        $result = $this->testCountryCode ?: $this->get('geoip_country_code_by_addr', $ipAddress);
-
-        if (empty($result)) {
-            return 'US';
-        }
+        $ip = new Ip2Location();
+        $ip->open($this->lookupFile);
+        $result = $ip->getAll($ipAddress);
 
         return $result;
     }
 
-    private function get($method, $ipAddress)
+    public function getCountryName($ipAddress)
     {
-        if ($this->isIPv4($ipAddress)) {
+        return $this->get('countryLong', $ipAddress);
+    }
 
-            $gi = geoip_open($this->lookupFile, GEOIP_STANDARD);
-            return $method($gi, $ipAddress);
+    public function getCountryCode($ipAddress)
+    {
+        return $this->testCountryCode ?: $this->get('countryShort', $ipAddress);
+    }
+
+    public function getRegion($ipAddress)
+    {
+        return $this->get('region', $ipAddress);
+    }
+
+    public function getCity($ipAddress)
+    {
+        return $this->get('city', $ipAddress);
+    }
+
+    private function get($parameter, $ipAddress)
+    {
+        $ip = new Ip2Location();
+        $method = 'get'.ucfirst($parameter);
+
+        if (method_exists($ip, $method) && $this->isIPv4($ipAddress)) {
+            $ip->open($this->lookupFile);
+            $result = $ip->$method($ipAddress);
+
+            return $result;
         }
 
         return false;

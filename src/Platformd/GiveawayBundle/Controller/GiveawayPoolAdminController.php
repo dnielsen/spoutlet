@@ -12,8 +12,8 @@ use Platformd\GiveawayBundle\QueueMessage\KeyPoolQueueMessage;
 use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 
 /**
- *
- */
+*
+*/
 class GiveawayPoolAdminController extends Controller
 {
     /**
@@ -218,15 +218,12 @@ class GiveawayPoolAdminController extends Controller
                     $message->poolClass = implode('', array_slice(explode('\\', get_class($pool)), -1, 1));
 
                     if($this->container->getParameter('object_storage') == 'HpObjectStorage') {
-                       
                      $queue_response = $this->hpCloudObj->sendMessageToQueue(KeyPoolQueueMessage::QUEUE_NAME, json_encode($message));
                      $queue_response_data = json_decode($queue_response);
                      $queue_response_id = $queue_response_data->{'id'};
                      $this->setFlash($queue_response_id != '' ? 'success' : 'error', $queue_response_id != ''  ? 'platformd.giveaway_pool.admin.queued' : 'platformd.giveaway_pool.admin.queue_error');
                      return $queue_response_id ? true : false;
-
                     } else {
-
                     $sqs = $this->container->get('aws_sqs');
                     $queue_url = $this->container->getParameter('queue_prefix').KeyPoolQueueMessage::QUEUE_NAME;
                     $queue_response = $sqs->send_message($queue_url, json_encode($message));

@@ -125,7 +125,7 @@ fos_user:
             type: platformd_user_registration
             handler: platformd_user.registration.form.handler
         confirmation:
-            enabled: false
+            enabled: true
     profile:
         form:
             type: platformd_user_profile
@@ -135,7 +135,7 @@ fos_user:
 
 vich_geographical:
     db_driver: orm
-    
+
 parameters:
 
     feedback_ids:
@@ -208,12 +208,11 @@ parameters:
     email_destination_override_with: osman@platformd.com
 
     # if set to true, the ipLookupUtil will read the contents of a file named "overrideCountry"
-    # in the %maxmind_lookup_directory_lookup_directory% directory and return it after an ip address lookup.
+    # in the %ip2location_lookup_directory% directory and return it after an ip address lookup.
     # This allows developers to fake the country that they are logged in from by writing a string
     # to this file that is the 2 character country code of the desired country.
     # If the file does not exist or is empty, default country is "US".
     ip_lookup_override: false
-
     ip2location_lookup_directory: %kernel.root_dir%/../external_data/ip2location/
     object_storage: %objectStorage%
    
@@ -279,7 +278,7 @@ parameters:
     # an array of "sites" where we host their main site
     # used by the SiteProtectionListener to prevent, for example, Latin America users
     # from accessing pages on our site, other than the few that we host of theirs
-    allowed_sites: [en, ja1, zh]
+    allowed_sites: [en, ja, zh]
 
 
     # Used for the translation admin
@@ -586,7 +585,7 @@ exercise_html_purifier:
 
 liip_theme:
     themes: %liip_enabled_themes%
-    active_theme: 'marketingcamp'
+    active_theme: 'default'
     path_patterns:
         app_resource:
             - %%app_path%%/themes/%%current_theme%%/%%template%%

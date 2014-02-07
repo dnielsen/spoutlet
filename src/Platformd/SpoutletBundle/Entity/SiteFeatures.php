@@ -186,11 +186,6 @@ class SiteFeatures
      */
     private $hasMultiSiteGroups = false;
 
-    /*
-     * @ORM\Column(name="has_country_site_redirection", type="boolean")
-     */
-    private $hasCountrySiteRedirection = false;
-
     /**
      * Get id
      *
@@ -561,16 +556,6 @@ class SiteFeatures
     public function setHasMultiSiteGroups($value)
     {
         $this->hasMultiSiteGroups = $value;
-    }
-
-    public function getHasCountrySiteRedirection()
-    {
-        return $this->hasCountrySiteRedirection;
-    }
-
-    public function setHasCountrySiteRedirection($value)
-    {
-        $this->hasCountrySiteRedirection = $value;
         return $this;
     }
 }

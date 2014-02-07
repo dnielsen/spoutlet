@@ -256,11 +256,11 @@ EOT
             }
 
         } else {
+
             $output->writeLn($cross);
             $output->write("\n\t<error>An error occurred while retrieving the message.</error>\n");
             $output->writeLn('');
         }
-     
     }
 
     private function sendErrorEmail($user, $output, $pool = null)

@@ -273,26 +273,6 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     private $tags;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\Idea", mappedBy="event", cascade={"remove"})
-     */
-    protected $ideas;
-
-    /**
-     * @ORM\Column(type="boolean", nullable="true")
-     */
-    protected $isVotingActive;
-
-    /**
-     * @ORM\Column(type="boolean", nullable="true")
-     */
-    protected $isSubmissionActive;
-
-    /**
-     * @ORM\Column(type="string", nullable="true")
-     */
-    protected $allowedVoters;
-
-    /**
      * @ORM\Column(type="integer")
      */
     protected $currentRound;
@@ -1105,6 +1085,12 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     {
         $registrationField->setEvent($this);
         $this->registrationFields->add($registrationField);
+    }
+
+    public function removeRegistrationField($registrationField)
+    {
+        $registrationField->setEvent(null);
+        $this->registrationFields->remove($registrationField);
     }
 
     public function setRegistrationFields($registrationFields)

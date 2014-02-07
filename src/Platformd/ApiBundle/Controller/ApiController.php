@@ -273,7 +273,8 @@ class ApiController extends Controller
 
         $response= new Response();
         if (!$groups){
-            return $response->setStatusCode(404);
+            $response->setStatusCode(404);
+            return $response;
         }
 
         $response->setStatusCode(200);

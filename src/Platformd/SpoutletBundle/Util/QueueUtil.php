@@ -19,7 +19,6 @@ class QueueUtil implements QueueUtilInterface
     private $hpcloudObj;
     public function __construct($sqsClient, $logger, $queueUrlPrefix, $mockWorkingFile, $hpcloud_accesskey='', $hpcloud_secreatkey='', $hpcloud_tenantid='', $hpcloud_messaging_url='', $object_storage='', $queue_service='', $rabbitmq_host = '',$rabbitmq_port='',$rabbitmq_username='',$rabbitmq_password='')
     {
-     
         $this->sqsClient      = $sqsClient;
         $this->logger         = $logger;
         $this->queueUrlPrefix = $queueUrlPrefix;
@@ -40,7 +39,6 @@ class QueueUtil implements QueueUtilInterface
         $this->logger->crit(self::LOG_MESSAGE_PREFIX.$message);
         throw new QueueFailureException($message);
     }
-
 
     private function getFullQueueUrl($message) {
         $queueName = $message->getQueueName();
@@ -67,8 +65,9 @@ class QueueUtil implements QueueUtilInterface
     public function addToQueue(SqsMessageBase $message) {
 
         $fullQueueUrl = $this->getFullQueueUrl($message);
-        
+
         $this->logger->debug(self::LOG_MESSAGE_PREFIX.'addToQueue - sending message to queue "'.$fullQueueUrl.'".');
+
         $messageBody = serialize($message);
         
         if($this->queue_service == 'RabbitMQ') {
@@ -91,7 +90,7 @@ class QueueUtil implements QueueUtilInterface
             return false;
           }
         }
-    
+
         $this->logger->debug(self::LOG_MESSAGE_PREFIX.'addToQueue - message successfully sent to queue "'.$fullQueueUrl.'".');          
         return true;
     }
@@ -169,13 +168,13 @@ class QueueUtil implements QueueUtilInterface
         if (!$result->isOK()) {
             $this->logger->err(self::LOG_MESSAGE_PREFIX.'retrieveFromQueue - could not retrieve message from queue "'.$fullQueueUrl.'" because of error => "'.$result->body->Error->Message.'".');
             return null;
-        }     
+        }
 
         if (!$result->body->ReceiveMessageResult->Message->Body) {
             $this->logger->debug(self::LOG_MESSAGE_PREFIX.'retrieveFromQueue - queue is empty "'.$fullQueueUrl.'".');
             return null;
         }
-                
+
         $message                      = unserialize(base64_decode($result->body->ReceiveMessageResult->Message->Body));
         $messageIdInfo                = $result->body->ReceiveMessageResult->Message->MessageId->to_array();
         $message->amazonSqsId         = $messageIdInfo[0];
@@ -184,14 +183,14 @@ class QueueUtil implements QueueUtilInterface
 
         $this->logger->debug(self::LOG_MESSAGE_PREFIX.'retrieveFromQueue - message "'.$message->amazonSqsId.'" successfully retrieved from queue "'.$fullQueueUrl.'".');
       }
-      
+
         return $message;
     }
 
     public function getMessageCount(SqsMessageBase $message) {
 
         $fullQueueUrl = $this->getFullQueueUrl($message);
-        
+
         $this->logger->debug(self::LOG_MESSAGE_PREFIX.'getMessageCount - retrieving count from queue "'.$fullQueueUrl.'".');
 
         $result = $this->sqsClient->get_queue_size($fullQueueUrl);

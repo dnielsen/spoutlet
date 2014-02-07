@@ -45,12 +45,6 @@ class Country
      */
     private $regions;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\CountryState", mappedBy="country")
-     * @ORM\OrderBy({"name" = "ASC"})
-     */
-    private $states;
-
     public function __toString() {
         return 'Country => { Id = '.$this->getId().', Name = "'.$this->getName().'" }';
     }
@@ -113,15 +107,5 @@ class Country
     public function getRegions()
     {
         return $this->regions;
-    }
-
-    public function setStates($value)
-    {
-        $this->states = $value;
-    }
-
-    public function getStates()
-    {
-        return $this->states;
     }
 }

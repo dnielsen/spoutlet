@@ -28,6 +28,7 @@ class MassEmailQueueProcessorCommand extends BaseCommand
             ->setDescription('Processes mass emails queued to be sent via Amazon SES.')
             ->setHelp(<<<EOT
 The <info>%command.name%</info> command gets a list of mass emails to be sent from an Amazon SQS queue and queues emails to be sent in batches.
+
   <info>php %command.full_name%</info>
 EOT
             );
@@ -48,7 +49,7 @@ EOT
         $em              = $container->get('doctrine')->getEntityManager();
         $queueUtil       = $container->get('platformd.util.queue_util');
         $emailManager    = $container->get('platformd.model.email_manager');
-        
+
         $this->output();
         $this->output(0, 'PlatformD Mass Email Queue Processor');
 
@@ -56,9 +57,9 @@ EOT
         $this->output(0, 'Processing queue for the Key Requests.');
 
         $iterationCount = 0;
-        
+
         while ($message = $queueUtil->retrieveFromQueue(new MassEmailQueueMessage())) {
-                            
+
             $iterationCount++;
 
             if ($iterationCount > self::ITERATION_COUNT) {
@@ -72,22 +73,21 @@ EOT
                 $this->output(0, 'Process terminated - exiting.');
                 exit;
             }
-            
+
             $this->output();
             $this->output(0, 'Iteration '.$iterationCount);
 
             $this->output();
             $this->output(1, 'Processing message.');
 
-            //            $this->output(2, $message);
+            $this->output(2, $message);
 
-            
             if (!$message->hasValidEmailType()) {
                 $this->output(2, 'Unknown email type = "'.$message->emailType.'".');
                 $this->deleteMessageWithOutput($message);
                 continue;
             }
-            
+
             $repoClass = MassEmailQueueMessage::$typeClassMap[$message->emailType];
             $repo = $this->getRepo($repoClass);
 
@@ -106,6 +106,7 @@ EOT
             $this->output(3, 'Email sent to '.$sendCount.' recipients.');
             $this->deleteMessageWithOutput($message);
         }
+
         $this->output();
         $this->output(1, 'No more emails.');
 

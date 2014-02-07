@@ -22,6 +22,7 @@ use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Exception\AclAlreadyExistsException;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class AdminController extends Controller
 {
@@ -45,11 +46,17 @@ class AdminController extends Controller
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventId);
 
-        $isNew = false;
+        $originalRegistrationFields = new ArrayCollection();
 
         if (!$event) {
-            $event = new GroupEvent($group);
             $isNew = true;
+            $event = new GroupEvent($group);
+        }
+        else {
+            $isNew = false;
+            foreach ($event->getRegistrationFields() as $field){
+                $originalRegistrationFields->add($field);
+            }
         }
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
@@ -90,6 +97,14 @@ class AdminController extends Controller
                     $esReg = $event->createEntrySetRegistration();
                     $em->persist($esReg);
                 }
+                else {
+                    // If the form no longer contains fields that were in the original list, delete them
+                    foreach ($originalRegistrationFields as $field) {
+                        if ($event->getRegistrationFields()->contains($field) === false) {
+                            $em->remove($field);
+                        }
+                    }
+                }
 
                 $em->flush();
 
@@ -107,6 +122,23 @@ class AdminController extends Controller
                         'groupSlug' => $groupSlug,
                         'eventId' => $event->getId(),
                     )));
+            }
+            else {
+                $errorString = '';
+                foreach ($form->getErrors() as $key => $error) {
+                    $template = $error->getMessageTemplate();
+                    $parameters = $error->getMessageParameters();
+
+                    foreach($parameters as $var => $value){
+                        $template = str_replace($var, $value, $template);
+                    }
+
+                    $errorString .= $template.'<br/>';
+                }
+                if (!$errorString) {
+                    $errorString = 'Please see fields below for errors';
+                }
+                $this->setFlash('error', $errorString);
             }
         }
 

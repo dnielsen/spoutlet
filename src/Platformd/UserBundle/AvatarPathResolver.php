@@ -16,21 +16,18 @@ class AvatarPathResolver extends PathResolver
     $options           = array_merge($defaultOptions, $options);
 
     $filename          = $options['size'].'x'.$options['size'].'.png';
-    
+
     if ($entity instanceof User) {
-     
       $avatar    = $entity->getAvatar();
       $userUuid  = $entity->getUuid();
       $userFaceImage = $entity->getFaceprintImage();
       $directory ='by_size';
     } else {
-   
       $avatar    = $entity;
       $userUuid  = $entity->getUser()->getUuid();
       $directory =$entity->getUuid();
     }
 
-    
     $avatarUsable  = $avatar && $avatar->isUsable();
 
     if ($this->bucketName == "platformd") {
@@ -43,11 +40,9 @@ class AvatarPathResolver extends PathResolver
     if($this->objectStorage == 'HpObjectStorage') {
       $url = $avatarUsable ? $cf.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$directory.'/'.$filename : false;
       $url = $cf.'/'.$userFaceImage."_s";
-   } 
-  else {
-
+   } else {
       $url = self::AVATAR_BASE_URL.$this->bucketName."/images/avatars/".$userUuid;
-   }    
+   }
     return $url;
   }
 

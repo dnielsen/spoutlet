@@ -100,7 +100,7 @@ EOT
         $userManager     = $container->get('fos_user.user_manager');
         $apiAuth         = $container->getParameter('api_authentication');
         $apiManager      = $container->get('platformd.user.api.manager');
-        
+
         $this->output(0);
         $this->output(0, 'PlatformD Avatar Filesystem Actions Queue Processor');
         $this->output(0);
@@ -198,7 +198,6 @@ EOT
               } // end for foreach
               
             } else {
-                           
             foreach ($items as $item) {
                 $filePath        = (string)$item;
                 $destinationPath = $action == AvatarFileSystemActionsQueueMessage::AVATAR_FILESYSTEM_ACTION_APPROVE ? $filePath : (Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/by_size/'.basename($filePath));

@@ -129,7 +129,6 @@ class AvatarManager
     protected function uuidGen()
     {
         return str_replace("\n", '', `uuidgen -r`);
-      // return rand(5, 15);
     }
 
     public function getSignedImageUrl($avatarUuid, $filename, User $user)
