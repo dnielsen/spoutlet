@@ -95,6 +95,11 @@ a.btnTny:hover, input.btnTny:hover, input.btnTnyInv:hover {
 	color: #1799c1;
 }
 
+img.delete {
+    height: 20px;
+    width: 20px;
+}
+
 /* unordered lists: links */
 
 ul {
