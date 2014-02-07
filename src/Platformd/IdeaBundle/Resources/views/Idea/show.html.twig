@@ -52,7 +52,7 @@
                 {% endif %}
 
             {% elseif canEdit %}
-                <a href="{{ path('idea_upload_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="blu">Add Image</a>
+                <a href="{{ path('idea_upload_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="blu btn">Add Image</a>
             {% endif %}
         </div>
         <div id="links" style="padding-bottom: 15px;">
@@ -73,7 +73,7 @@
             {% endif %}
 
             {% if canEdit %}
-                <a href="{{ path('idea_add_link_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="blu clr">Add Link</a>
+                <a href="{{ path('idea_add_link_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="blu btn clr">Add Link</a>
             {% endif %}
         </div>
     </div>
