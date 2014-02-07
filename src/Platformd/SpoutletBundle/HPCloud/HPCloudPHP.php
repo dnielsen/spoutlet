@@ -104,7 +104,7 @@ class HPCloudPHP {
             'tenantid' => $tenantId,
             'endpoint' => $identity_url,
             'transport' => $streamtransport,
-            'transport.debug' => false,
+            'transport.debug' => true,
         );
         Bootstrap::setConfiguration($settings);
         return 1;
