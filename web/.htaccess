@@ -5,6 +5,5 @@
     RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [L,R=301]
 
     RewriteCond %{REQUEST_FILENAME} !-f
-
-    RewriteRule ^(.*)$ app_dev.php [QSA]
+    RewriteRule ^(.*)$ app.php [QSA]
 </IfModule>

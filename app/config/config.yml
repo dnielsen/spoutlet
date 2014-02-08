@@ -1,3 +1,4 @@
+
 imports:
     - { resource: parameters.ini }
     - { resource: security.yml }
@@ -15,7 +16,6 @@ imports:
     - { resource: "@TagBundle/Resources/config/services.yml" }
     - { resource: "@SweepstakesBundle/Resources/config/services.yml" }
     - { resource: "@IdeaBundle/Resources/config/services.yml" }
-   # - { resource: "@UserBundle/Resources/config/services.yml" }
 
 framework:
     #esi:             ~
@@ -231,7 +231,6 @@ parameters:
     email_service: %emailService%
     sendgrid_username: %sendgridUsername%
     sendgrid_password: %sendgridPassword%
-    maxmind_lookup_directory: %kernel.root_dir%/../external_data/maxmind/
 
 
     available_locales:

@@ -148,7 +148,6 @@ class RegistrationFormType extends BaseType
     {
         return array(
             'data_class' => 'Platformd\UserBundle\Entity\User',
-	    'csrf_protection' => false,
         );
     }
 
