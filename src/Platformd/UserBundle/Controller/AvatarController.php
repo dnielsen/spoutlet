@@ -5,14 +5,14 @@ namespace Platformd\UserBundle\Controller;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response
-    ;
+;
 
 use Platformd\SpoutletBundle\Controller\Controller,
     Platformd\UserBundle\Entity\User,
     Platformd\UserBundle\Entity\Avatar,
     Platformd\UserBundle\Form\Type\AvatarType,
     Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage
-    ;
+;
 use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 
 class AvatarController extends Controller
