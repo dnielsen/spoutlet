@@ -46,7 +46,7 @@
         {# For now -- get first entrySet -- need to implement list chooser #}
         {% if event.entrySets | length > 0 %}
         {% set entrySet = event.entrySets[0] %}
-            <h2 class="left">{{ entrySet.name }}</h2><a href="{{ entrySet | pd_link }}" class="right btn">View All Ideas</a>
+            <h2 class="left">{{ entrySet.name }}</h2><a href="{{ entrySet | pd_link }}" class="right btn">View All {{ entrySet.type | capitalize }}s</a>
             <table class="tblStyle">
 
                 <thead>
@@ -66,7 +66,7 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="2">There are no ideas yet</td>
+                            <td colspan="2">There are no {{ entrySet.type }}s yet</td>
                         </tr>
                     {% endfor %}
                 </tbody>
