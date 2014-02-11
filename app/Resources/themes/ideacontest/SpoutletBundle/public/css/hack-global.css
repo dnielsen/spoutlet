@@ -36,6 +36,10 @@ hr {
 	margin: 20px 0 !important;
 }
 
+hr.entrySet {
+    margin: 10px 0 !important;
+}
+
 /*::::::::::::::: TEXT STYLES :::::::::::::::*/
 
 body,td,p { 
@@ -53,12 +57,18 @@ h1 {
 	font-size: 26px;
 	line-height: 30px;
 }
+
+h1.idea-name {
+    margin-bottom:15px;
+}
+
 	#brand-group-txt {
 		position: absolute;
 		top: 155px;
 		left: 0;
 		font-size: 42px;
 	}
+
 h2 {
 	font-size: 22px;
 	line-height: 26px;

@@ -1,7 +1,7 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
 {% block content %}
-    <h1>{{ idea.name }}</h1>
+    <h1 class="idea-name">{{ idea.name }}</h1>
 
     <div class="voteBx">
         <p><strong class="lrgtxt">{{ idea.numFollowers }}</strong><br>
@@ -25,16 +25,17 @@
             </ul>
         </div>
 
-        <p class="right tnytxt">Proposed by: <a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blu">{{idea.creator.name}}</a>{% if idea.members %}, {{idea.members}}{% endif %}</p>
-
+        <span class="right tnytxt">Proposed by: <a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blu">{{idea.creator.name}}</a>{% if idea.members %}, {{idea.members}}{% endif %}</span>
         <br class="clr">
 
-        <div class="left">
+        <em class="tnytxt">{{ idea.dateTimeString }}</em>
+
+        <p class="left">
             {% if idea.canUserView(app.user) %}{{ idea.description | nl2br }}
             {% else %}[This {{ entrySet.type }} is private]
             {% endif %}
-        </div>
-        <br class="clr"><br>
+        </p>
+        <br class="clr"/>
 
         {% if idea.stage %}<hr/><strong>Idea Stage:</strong> {{ idea.stage }}<hr/>{% endif %}
         {% if idea.forCourse %}<strong>Course Professor(s):</strong> {{ idea.professors }}<hr/>{% endif %}

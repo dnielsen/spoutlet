@@ -745,6 +745,11 @@ class Idea implements LinkableInterface
         $this->createdAt = $time;
     }
 
+    public function getDateTimeString()
+    {
+        return 'Submitted on '.$this->createdAt->format('M j, Y').' at '.$this->createdAt->format('h:i A');
+    }
+
     /**
      * Get judges
      *
