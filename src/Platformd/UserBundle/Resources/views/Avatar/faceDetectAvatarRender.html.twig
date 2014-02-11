@@ -137,52 +137,35 @@ else {
 $('#submit-facedetect').click(function() {
          alert($(this).val());     
         var facePrintIdVal = $("#facePrintId").val();//alert(facePrintIdVal);
-	if (facePrintIdVal == 'undefined' || facePrintIdVal == ''){
+	     if (facePrintIdVal == 'undefined' || facePrintIdVal == ''){
              window.location = '{{ path("avatar_crop", { "uuid": uuid }) }}'
         } else {
-  //           $( "#face-dialog" ).dialog({
-//	     resizable: false,height:140,modal: true,
-//	       buttons: {
-//		"Yes": function() {
-		//$( this ).dialog( "close" );
-               //window.location = '{{ path("avatar_faceprint_save", { "uuid": uuid, "facePrintId": '+ facePrintId+' }) }}';
-       //         var url = "{{ path('avatar_faceprint_save', {'uuid': uuid, 'facePrintId' : 'text'}) }}";
-    //          url = url.replace("text", facePrintIdVal);
-  //              window.location = url;	
-//	         },
-//	         "NO": function() {
-//		     window.location = '{{  path('avatars') }}';
-//	        }
-//	    }	
-//       });
-
-         var result = confirm("Is this Your Face ?");
-         if(result==true)  {
-               var url = "{{ path('avatar_faceprint_save', {'uuid': uuid, 'facePrintId' : 'text'}) }}";
+            var result = confirm("Is this Your Face ?");
+            if(result==true)  {
+                var url = "{{ path('avatar_faceprint_save', {'uuid': uuid, 'facePrintId' : 'text'}) }}";
                 url = url.replace("text", facePrintIdVal);
                 window.location = url;
-
              }
          else {
-		window.location = '{{  path('avatars') }}';
+		        window.location = '{{  path('avatars') }}';
            }
 	
          }
             //window.location = '{{ path("avatar_process", { "uuid": uuid }) }}' + '/' + getCoords();
         });
 
-</script>       
-
-
-<script type="text/javascript" src="/bundles/spoutlet/js/jquery.Jcrop.min.js"></script>
-    <script type="text/javascript" src="/bundles/spoutlet/js/jCrop.custom.js"></script>
-    
-<script src="/bundles/user/facedetect/js/JSON.js" type="text/javascript"></script>
-
+    </script>       
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.Jcrop.min.js"></script>
+    <script type="text/javascript" src="/bundles/spoutlet/js/jCrop.custom.js"></script>    
+    <script src="/bundles/user/facedetect/js/JSON.js" type="text/javascript"></script>
     <script src="/bundles/user/facedetect/js/SyntaxHighlight.js" type="text/javascript"></script>
     <script type="text/javascript" src="/bundles/user/facedetect/js/sandbox.js"></script>
     <script src="/bundles/user/facedetect/js/container.js" type="text/javascript"></script>
-     <!--[if lt IE 7 ]> <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.2/CFInstall.min.js"></script>
+    <script type="text/javascript">
+      {% set base_url = hpcloud_url ~ hpcloud_container ~ "/images/avatar/" %}      
+      var base_url = "{{ base_url }}";       
+    </script>
+    <!--[if lt IE 7 ]> <script src="//ajax.googleapis.com/ajax/libs/chrome-frame/1.0.2/CFInstall.min.js"></script>
     <script>window.attachEvent("onload",function(){CFInstall.check({mode:"overlay"})})</script>
     <![endif]-->
 

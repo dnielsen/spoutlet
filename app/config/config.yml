@@ -54,7 +54,8 @@ twig:
         facebook_app_id: %facebook_app_id%
         google_api_key: %google_api_key%
         feedback_ids: %feedback_ids%
-
+        hpcloud_container: %hpcloudContainer%       
+        hpcloud_url:        %hpcloudUrl% 
 # Assetic Configuration
 assetic:
     debug:          %kernel.debug%
@@ -125,7 +126,7 @@ fos_user:
             type: platformd_user_registration
             handler: platformd_user.registration.form.handler
         confirmation:
-            enabled: true
+            enabled: false
     profile:
         form:
             type: platformd_user_profile
@@ -585,7 +586,7 @@ exercise_html_purifier:
 
 liip_theme:
     themes: %liip_enabled_themes%
-    active_theme: 'default'
+    active_theme: 'ideacontest'
     path_patterns:
         app_resource:
             - %%app_path%%/themes/%%current_theme%%/%%template%%
