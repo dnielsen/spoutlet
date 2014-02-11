@@ -263,7 +263,7 @@ class EventRepository extends EntityRepository
         $qb = $this->createQueryBuilder('e')
             ->select('e', 's')
             ->leftJoin('e.sites', 's')
-            ->where('e.startsAt >= :now')
+            ->where('e.endsAt >= :now')
             ->andWhere('e.published = :published')
             ->andWhere('e.active = :published')
             ->andWhere('s = :site')
