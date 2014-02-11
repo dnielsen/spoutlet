@@ -20,6 +20,7 @@ a.btn, a.btnLg, a.btnLg2, a.btnBdr {
 	-webkit-border-radius: 6px;
 	-moz-border-radius: 6px;
 	border-radius: 6px;
+    border: 1px solid;
 	behavior: url("PIE.htc");
 	background: #2faad9;
 	font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
@@ -47,8 +48,10 @@ a.btnLg2 {
 	text-align: center;
 }
 	a.btn:hover, a.btnLg:hover, a.btnLg2:hover, a.btnBdr:hover {
-		background: #ca43bb;
-		text-decoration: none;
+        color: #2faad9;
+        background: #FFFFFF;
+        border: 1px solid #2faad9;
+        text-decoration: none;
 	}
 	a.btnBdr:hover {
 		border-color: transparent;
@@ -61,6 +64,7 @@ a.btnTny, .btnTnyInv {
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
+    border: 1px solid;
 	background: #2faad9;
 	behavior: url("PIE.php");
 	font-family: 'Century Gothic', 'AvalonMediumRegular', sans-serif;
@@ -78,9 +82,10 @@ a.btnTny, .btnTnyInv {
 	    background: #ee0000;
 	}
 a.btnTny:hover, input.btnTny:hover, input.btnTnyInv:hover {
-    background: #d757c8;
+    color: #2faad9;
+    background: #FFFFFF;
+    border: 1px solid #2faad9;
     text-decoration: none;
-    color: #fff;
 }
 .btnVote {
     width: 100% !important;
@@ -93,6 +98,11 @@ a.btnTny:hover, input.btnTny:hover, input.btnTnyInv:hover {
 
 .tblStyle2 td a {
 	color: #1799c1;
+}
+
+img.delete {
+    height: 20px;
+    width: 20px;
 }
 
 /* unordered lists: links */
@@ -199,16 +209,19 @@ ul.inline li {
 		}
 	.kWords ul li a, .kWords a {
 		padding: 2px 3px;
-		border: 1px solid #ccc;
+		border: 1px solid #2faad9;
+        color: #2F9CC5;
 		-webkit-border-radius: 4px;
 		-moz-border-radius: 4px;
 		border-radius: 4px;
-		background: #fff;
+		background: #F2FBFF;
 		behavior: url("PIE.htc");
-		font-size: 11px;
+		font-size: 12px;
 	}
 	.kWords ul li a:hover, .kWords a:hover {
-		border: 1px solid #ca43bb;
+		border: 1px solid #2faad9;
+        background: #2faad9;
+        color: #F2FBFF;
 		text-decoration: none;
 	}
 

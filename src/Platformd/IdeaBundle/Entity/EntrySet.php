@@ -166,6 +166,32 @@ class EntrySet implements LinkableInterface {
         $this->entries = $entries;
     }
 
+    public function getPopularEntries($limit = 6)
+    {
+        $entries = $this->entries->toArray();
+
+        usort($entries, function($a, $b)
+        {
+            $aVotes = $a->getNumVotes();
+            $bVotes = $b->getNumVotes();
+
+            if ($aVotes == $bVotes) {
+                return 0;
+            }
+            return ($aVotes < $bVotes) ? +1 : -1;
+        });
+
+        $topEntries = array_slice($entries, 0, $limit);
+
+        // filter out any entries with 0 votes
+       /* $popularEntries = array_filter($topEntries, function($entry)
+        {
+            return ($entry->getNumVotes() > 0);
+        });*/
+
+        return $topEntries;
+    }
+
     public function setType($type)
     {
         $this->type = $type;

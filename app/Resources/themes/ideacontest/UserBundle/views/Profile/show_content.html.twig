@@ -1,7 +1,7 @@
 <div class="fos_user_user_show memberProfile">
     <div class="memberProfileLeft">
         <div class="profileAvatar_big">
-            {% if asset(user.avatar) and user.isAvatarApproved %}
+            {% if asset(user.avatar) %}
                 <img src="{{ media_path(user) }}" alt="" />
             {% else %}
                 <div class="defaultAvatar"></div>

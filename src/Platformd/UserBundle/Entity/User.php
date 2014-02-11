@@ -457,6 +457,7 @@ class User extends BaseUser
 
     /**
      * @ORM\Column(type="string", length="255", nullable=true)
+     * @Assert\NotBlank(message="Please enter your name.", groups={"Registration", "Profile"})
      */
     protected $name = null;
 
@@ -563,8 +564,6 @@ class User extends BaseUser
      */
     public function isAvatarApproved()
     {
-    echo "isAvatarApproved - returns true always";
-	return 1;
         return $this->avatar->isApproved();
     }
 
@@ -1556,6 +1555,7 @@ class User extends BaseUser
         $this->codeAssignmentCodes = $value;
     }
 
+
     public function getLinkedIn() {
         return $this->linkedIn;
     }
@@ -1586,4 +1586,5 @@ class User extends BaseUser
     public function setMailingAddress($value) {
         $this->mailingAddress = $value;
     }
+
 }

@@ -54,11 +54,11 @@
 
                 <div class="clear"></div>
 
+                {% include 'IdeaBundle:Idea:breadcrumbs.html.twig' %}
+
                 {% if sidebar|default %}
                     <div id="contentLft{% if _isFrontPage %}MP{% endif %}">
                 {% endif %}
-
-                {% include 'IdeaBundle:Idea:breadcrumbs.html.twig' %}
 
                 {% block content %}
                 {% endblock %}

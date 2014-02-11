@@ -126,7 +126,7 @@
                 </a>
                 <p>{{ idea.description|truncate(300) }}</p>
 
-                <p class="right tnytxt">Proposed by: <a href="{{ path('profile', {'userId': idea.creator.id}) }}">{{idea.creator.name}}</a>{% if idea.members %}, {{idea.members}}{% endif %}</p>
+                <p class="right tnytxt">Proposed by: <a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blu">{{idea.creator.name}}</a>{% if idea.members %}, {{idea.members}}{% endif %}</p>
                 <div class="kWords">
                     <ul>
                         <li>Tags</li>

@@ -175,8 +175,6 @@ idea_upload_form:
 idea_image_delete:
     pattern:    /list/{entrySetId}/entry/{entryId}/deleteImage
     defaults:   { _controller: IdeaBundle:Idea:deleteImage }
-    requirements:
-     _method: POST
 
 idea_add_link:
     pattern:    /list/{entrySetId}/entry/{entryId}/addLink
@@ -193,8 +191,6 @@ idea_add_link_form:
 idea_link_delete:
     pattern:    /list/{entrySetId}/entry/{entryId}/deleteLink
     defaults:   { _controller: IdeaBundle:Idea:deleteLink }
-    requirements:
-     _method: POST
 
 idea_follow:
     pattern:    /list/{entrySetId}/entry/{entryId}/follow
@@ -217,8 +213,6 @@ idea_comment:
 idea_comment_delete:
     pattern:    /list/{entrySetId}/entry/{entryId}/commentDelete
     defaults:   { _controller: IdeaBundle:Idea:commentDelete }
-    requirements:
-     _method:    POST
 
 idea_delete:
     pattern:    /list/{entrySetId}/entry/{entryId}/delete

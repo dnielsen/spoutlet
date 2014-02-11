@@ -39,9 +39,9 @@ class HomepageBannerManager
 	}
      
     }
-   
-	public function save(HomepageBanner $banner)
-	{
+
+    public function save(HomepageBanner $banner)
+    {
         if ($banner->banner_file) {
             $banner->setBanner($this->upload($banner->banner_file, 'banner'));
         }
