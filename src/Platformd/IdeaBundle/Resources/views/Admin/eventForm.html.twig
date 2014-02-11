@@ -36,7 +36,7 @@
             }
 
             // Dynamically add registration fields to form as needed
-            var addFieldLink     = $('<a href="#" class="blu">Add a new question</a>');
+            var addFieldLink     = $('<a href="#" class="blue">Add a new question</a>');
             var deleteFieldLink  = '<a href="#" class="deleteField left spcr-r"><img src="{{ asset("themes/ideacontest/spoutlet/img/delete-icon.png") }}" class="delete"/></a>';
             var collectionHolder = $('#event_registrationFields');
 
@@ -150,7 +150,7 @@
         <br class="clr"/>
 
         {% if not isNew %}
-            <a href="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="blu">Manage Image Slider</a>
+            <a href="{{ path('idea_admin_images', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="blue">Manage Image Slider</a>
             <br class="clr"/><br/>
         {% endif %}
 

@@ -25,7 +25,7 @@
             </ul>
         </div>
 
-        <span class="right tnytxt">Proposed by: <strong><a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blu">{{idea.creator.name}}</a></strong>{% if idea.members %}, {{idea.members}}{% endif %}</span>
+        <span class="right tnytxt">Proposed by: <strong><a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blue">{{idea.creator.name}}</a></strong>{% if idea.members %}, {{idea.members}}{% endif %}</span>
         <br class="clr">
 
         <em class="tnytxt">{{ idea.dateTimeString }}</em>
@@ -52,7 +52,7 @@
                 {% endif %}
 
             {% elseif canEdit %}
-                <a href="{{ path('idea_upload_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="blu btn">Add Image</a>
+                <a href="{{ path('idea_upload_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="blue btn">Add Image</a>
             {% endif %}
         </div>
         <div id="links" style="padding-bottom: 15px;">
@@ -65,13 +65,13 @@
                             <img src="{{ asset('themes/ideacontest/spoutlet/img/delete-icon.png') }}" class="delete"/>
                         </a>
                     {% endif %}
-                    <strong><a href="{{ link.url }}" class="blu">{{ link.title }}</a></strong> - {{ link.linkDescription }}<br>
+                    <strong><a href="{{ link.url }}" class="blue">{{ link.title }}</a></strong> - {{ link.linkDescription }}<br>
                 {% endfor %}
                 <hr>
             {% endif %}
 
             {% if canEdit %}
-                <a href="{{ path('idea_add_link_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="blu btn clr">Add Link</a>
+                <a href="{{ path('idea_add_link_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="blue btn clr">Add Link</a>
             {% endif %}
         </div>
     </div>
@@ -88,7 +88,7 @@
                         <img src="{{ asset('themes/ideacontest/spoutlet/img/delete-icon.png') }}" class="delete"/>
                     </a>
                 {% endif %}
-                <strong><a href="{{ path('profile', {'userId': comment.user.id}) }}" class="blu">{{ comment.user.name }}</a></strong> commented on <em>{{ comment.timestamp }}</em>
+                <strong><a href="{{ path('profile', {'userId': comment.user.id}) }}" class="blue">{{ comment.user.name }}</a></strong> commented on <em>{{ comment.timestamp }}</em>
                 <br/>
                 {{ comment.text }}
             {% endfor %}
@@ -106,7 +106,7 @@
 
         {% else %}
             <div class="spcr-l2">
-                You must <a href="{{ path('login') }}" class="blu">login</a> to join the discussion.<br/>
+                You must <a href="{{ path('login') }}" class="blue">login</a> to join the discussion.<br/>
             </div>
         {% endif %}
 

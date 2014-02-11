@@ -64,7 +64,7 @@
     {% if nextEvent %}
         <div class="cBxLft">
             <h2 class="left">
-                <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="blu">{{ nextEvent.name }}</a>
+                <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="blue">{{ nextEvent.name }}</a>
             </h2>
             {% if not (nextEvent.isUserAttending(app.user)) %}
                 <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right">Attend</a>
@@ -106,7 +106,7 @@
                         </li>
                     {% endfor %}
                 </ul>
-                <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blu right">All Events</a>
+                <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blue right">All Events</a>
             {% elseif group.entrySets|length > 0 %}
                 <h2 class="widgetHeader">Lists</h2>
                 <ul class="scrollableWidget">
@@ -125,7 +125,7 @@
                         </li>
                     {% endfor %}
                 </ul>
-                <a href="{{ path('group_events', {'slug': group.slug}) }}#past" class="blu right">See All</a>
+                <a href="{{ path('group_events', {'slug': group.slug}) }}#past" class="blue right">See All</a>
             {% endif %}
 
         </div>
@@ -175,7 +175,7 @@
                     </li>
                 {% endfor %}
             </ul>
-            <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blu right">All Events</a>
+            <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blue right">All Events</a>
         {% endif %}
 
         {% if renderPastEvents %}
@@ -187,7 +187,7 @@
                     </li>
                 {% endfor %}
             </ul>
-            <a href="{{ path('group_events', {'slug': group.slug}) }}#past" class="blu right">See All</a>
+            <a href="{{ path('group_events', {'slug': group.slug}) }}#past" class="blue right">See All</a>
         {% endif %}
 
         <h2 class="widgetHeader">Organizer</h2>

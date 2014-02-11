@@ -34,7 +34,7 @@
     {% if (entrySet.entries|length > 0) %} {# No entries in entrySet #}
         {% if app.user %}
             {% if viewPrivate %}
-                <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'viewPrivate': false, 'sortBy': sortBy, 'showAllRounds': showAllRounds}) }}">Public {{ entrySet.type | capitalize }}s</a>
+                <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'viewPrivate': false, 'sortBy': sortBy, 'showAllRounds': showAllRounds}) }}" class="blue">Public {{ entrySet.type | capitalize }}s</a>
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 <strong>
                     {% if isAdmin %}
@@ -49,7 +49,7 @@
             {% else %}
                 <strong>Public {{ entrySet.type | capitalize }}s</strong>
                 &nbsp;&nbsp;|&nbsp;&nbsp;
-            <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'viewPrivate': true, 'sortBy': sortBy, 'showAllRounds': showAllRounds}) }}">
+            <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'viewPrivate': true, 'sortBy': sortBy, 'showAllRounds': showAllRounds}) }}" class="blue">
                 {% if isAdmin %}
                     Private {{ entrySet.type | capitalize }}s</a>
                 {% elseif isJudge %}
@@ -68,7 +68,7 @@
             <strong>Sort By Votes</strong>
 
         {% else %}
-            <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': 'vote', 'viewPrivate': viewPrivate, 'showAllRounds': showAllRounds}) }}">Sort By Votes</a>
+            <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': 'vote', 'viewPrivate': viewPrivate, 'showAllRounds': showAllRounds}) }}" class="blue">Sort By Votes</a>
 
         {% endif %}
 
@@ -78,7 +78,7 @@
             <strong>Sort By Newest</strong>
 
         {% else %}
-            <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': 'createdAt', 'viewPrivate': viewPrivate, 'showAllRounds': showAllRounds}) }}">Sort By Newest</a>
+            <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': 'createdAt', 'viewPrivate': viewPrivate, 'showAllRounds': showAllRounds}) }}" class="blue">Sort By Newest</a>
 
         {% endif %}
 
@@ -86,7 +86,7 @@
 
         {% if round > 1 %}
             {% if showAllRounds == 'true' %}
-                <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': sortBy, 'viewPrivate': viewPrivate, 'showAllRounds': 'false'}) }}">
+                <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': sortBy, 'viewPrivate': viewPrivate, 'showAllRounds': 'false'}) }}" class="blue">
                     Current Round
                 </a>
             {% else %}
@@ -96,7 +96,7 @@
             {% if showAllRounds == 'true' %}
                 <strong>All Rounds</strong>
             {% else %}
-                <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': sortBy, 'viewPrivate': viewPrivate, 'showAllRounds': 'true'}) }}">
+                <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': sortBy, 'viewPrivate': viewPrivate, 'showAllRounds': 'true'}) }}" class="blue">
                     All Rounds
                 </a>
             {% endif %}
@@ -140,7 +140,7 @@
                 {% endif %}
 
                 <span class="right tnytxt spcr-t">
-                    Proposed by: <strong><a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blu">{{idea.creator.name}}</a></strong>{% if idea.members %}, {{idea.members}}{% endif %}
+                    Proposed by: <strong><a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blue">{{idea.creator.name}}</a></strong>{% if idea.members %}, {{idea.members}}{% endif %}
                 </span>
 
             </div>
