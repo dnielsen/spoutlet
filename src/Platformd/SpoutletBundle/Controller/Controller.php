@@ -455,7 +455,7 @@ class Controller extends BaseController
 
         foreach ($breadCrumbs as $crumb) {
             if ($crumb && ($showCurrentScope || $crumb != $scope)) {
-                $breadCrumbsHtml = $breadCrumbsHtml."> <a href=\"".$this->generateUrl($crumb->getLinkableRouteName(), $crumb->getLinkableRouteParameters())."\">".$crumb->getName()."</a> ";
+                $breadCrumbsHtml = $breadCrumbsHtml."> <a href=\"".$this->generateUrl($crumb->getLinkableRouteName(), $crumb->getLinkableRouteParameters())."\" class=\"blu\">".$crumb->getName()."</a> ";
             }
         }
 
