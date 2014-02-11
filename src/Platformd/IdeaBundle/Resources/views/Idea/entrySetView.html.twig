@@ -140,7 +140,7 @@
                 {% endif %}
 
                 <span class="right tnytxt spcr-t">
-                    Proposed by: <a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blu">{{idea.creator.name}}</a>{% if idea.members %}, {{idea.members}}{% endif %}
+                    Proposed by: <strong><a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blu">{{idea.creator.name}}</a></strong>{% if idea.members %}, {{idea.members}}{% endif %}
                 </span>
 
             </div>

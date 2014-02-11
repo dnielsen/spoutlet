@@ -25,7 +25,7 @@
             </ul>
         </div>
 
-        <span class="right tnytxt">Proposed by: <a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blu">{{idea.creator.name}}</a>{% if idea.members %}, {{idea.members}}{% endif %}</span>
+        <span class="right tnytxt">Proposed by: <strong><a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blu">{{idea.creator.name}}</a></strong>{% if idea.members %}, {{idea.members}}{% endif %}</span>
         <br class="clr">
 
         <em class="tnytxt">{{ idea.dateTimeString }}</em>
@@ -65,7 +65,7 @@
                             <img src="{{ asset('themes/ideacontest/spoutlet/img/delete-icon.png') }}" class="delete"/>
                         </a>
                     {% endif %}
-                    <a href="{{ link.url }}" class="blu">{{ link.title }}</a> - {{ link.linkDescription }}<br>
+                    <strong><a href="{{ link.url }}" class="blu">{{ link.title }}</a></strong> - {{ link.linkDescription }}<br>
                 {% endfor %}
                 <hr>
             {% endif %}
@@ -88,7 +88,7 @@
                         <img src="{{ asset('themes/ideacontest/spoutlet/img/delete-icon.png') }}" class="delete"/>
                     </a>
                 {% endif %}
-                <a href="{{ path('profile', {'userId': comment.user.id}) }}" class="blu">{{ comment.user.name }}</a> commented on <em>{{ comment.timestamp }}</em>
+                <strong><a href="{{ path('profile', {'userId': comment.user.id}) }}" class="blu">{{ comment.user.name }}</a></strong> commented on <em>{{ comment.timestamp }}</em>
                 <br/>
                 {{ comment.text }}
             {% endfor %}
