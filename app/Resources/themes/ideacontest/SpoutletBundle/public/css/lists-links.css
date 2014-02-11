@@ -5,6 +5,10 @@ a {
 	color: #5a5654; /* #1c92cf; */
 	text-decoration: none; 
 }
+a.blue {
+    color: #2faad9;
+    font-weight:bold;
+}
 a:hover {
 	color: #ca43bb;
 	text-decoration: underline;
