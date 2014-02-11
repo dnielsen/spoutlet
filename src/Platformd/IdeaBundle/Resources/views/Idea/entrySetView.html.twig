@@ -125,17 +125,24 @@
                     <h3>{{ idea.name }}</h3>
                 </a>
                 <em class="tnytxt">{{ idea.dateTimeString }}</em><br/>
-                {{ idea.description|truncate(300) }}<br/>
+                {{ idea.description|truncate(300) }}
 
-                <p class="right tnytxt">Proposed by: <a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blu">{{idea.creator.name}}</a>{% if idea.members %}, {{idea.members}}{% endif %}</p>
-                <div class="kWords">
-                    <ul>
-                        <li>Tags</li>
-                        {% for tag in idea.tags %}
-                            <li><a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'tag': tag.tagName}) }}">{{ tag.tagName }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
+                {% if idea.tags|length > 0 %}
+                    <br/>
+                    <div class="kWords left">
+                        <ul>
+                            <li>Tags</li>
+                            {% for tag in idea.tags %}
+                                <li><a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'tag': tag.tagName}) }}">{{ tag.tagName }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <span class="right tnytxt spcr-t">
+                    Proposed by: <a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blu">{{idea.creator.name}}</a>{% if idea.members %}, {{idea.members}}{% endif %}
+                </span>
+
             </div>
             <div class="clr"></div>
             <hr class="entrySet"/>
