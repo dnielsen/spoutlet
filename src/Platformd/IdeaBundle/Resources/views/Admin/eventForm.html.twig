@@ -8,11 +8,16 @@
 
             // Initialize location controls state based on default online value
             toggleLocationControls();
+            toggleRegistrationControls();
 
             // Toggle location controls on online update
             $('#event_online').change(function() {
                 toggleLocationControls();
             });
+
+            $('#event_registrationOption').change(function() {
+                toggleRegistrationControls();
+            })
 
             $('#event_startsAt').datetimepicker({step: 15, format:'Y-m-d H:i:s'});
             $('#event_endsAt').datetimepicker({step: 15, format:'Y-m-d H:i:s'});
@@ -35,8 +40,29 @@
                 }
             }
 
+            function toggleRegistrationControls() {
+
+                if($('#event_registrationOption').val() == '{{ constant("Platformd\\EventBundle\\Entity\\Event::REGISTRATION_ENABLED") }}') {
+
+                    // Using campsite registration
+                    $('#external-registration').slideUp();
+                    $('#event_externalUrl').val(null);
+                    $('#registration-controls').slideDown();
+                }
+                else {
+
+                    // Using external registration
+                    $('#registration-controls').slideUp();
+                    $('#external-registration').slideDown();
+                    $('#event_registrationFields :input').each(function() {
+                        $(this).parent().remove();
+                    });
+                }
+
+            }
+
             // Dynamically add registration fields to form as needed
-            var addFieldLink     = $('<a href="#" class="blue">Add a new question</a>');
+            var addFieldLink     = $('<a href="#" class="blue">Add a registration field</a>');
             var deleteFieldLink  = '<a href="#" class="deleteField left spcr-r"><img src="{{ asset("themes/ideacontest/spoutlet/img/delete-icon.png") }}" class="delete"/></a>';
             var collectionHolder = $('#event_registrationFields');
 
@@ -103,7 +129,7 @@
 {% block _event_registrationFields_widget %}
     {% spaceless %}
         {% if prototype is defined %}
-            {% set data_prototype = "<div id=\"event_registrationFields_$$name$$\"><input type=\"text\" id=\"event_registrationFields_$$name$$_question\" name=\"event[registrationFields][$$name$$][question]\" required=\"required\" size=\"60%\" class=\" form-txt\"></div>" %}
+            {% set data_prototype = "<div id=\"event_registrationFields_$$name$$\" class=\"form_row\"><input type=\"text\" id=\"event_registrationFields_$$name$$_question\" name=\"event[registrationFields][$$name$$][question]\" required=\"required\" size=\"60%\" class=\" form-txt\"></div>" %}
             {% set attr = attr|merge({'data-prototype': data_prototype}) %}
         {% endif %}
         {{ form_label(form) }}
@@ -134,17 +160,22 @@
     <form action="{{ formpath }}" method="post" {{ form_enctype(form) }} id="event" novalidate>
         {{ form_row(form.name) }}
         {{ form_row(form.content) }}
+        {{ form_row(form.registrationOption) }}
+        <div id="external-registration">
+            {{ form_row(form.externalUrl) }}
+        </div>
+        <div id="registration-controls" class="spcr-b2">
+            {{ form_widget(form.registrationFields) }}
+        </div>
         {{ form_row(form.startsAt) }}
         {{ form_row(form.endsAt) }}
         {{ form_row(form.online) }}
         <div id="location-controls">
-        {{ form_row(form.location) }}
-        {{ form_row(form.address1) }}
-        {{ form_row(form.address2) }}
+            {{ form_row(form.location) }}
+            {{ form_row(form.address1) }}
+            {{ form_row(form.address2) }}
         </div>
         {{ form_row(form.private) }}
-        {{ form_widget(form.registrationFields) }}
-
         {{ form_rest(form) }}
 
         <br class="clr"/>

@@ -62,17 +62,20 @@ class AdminController extends Controller
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
             ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
             ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
-            ->add('online',             'choice',           array('choices' => array('1' => 'Yes', '0' => 'No')))
-            ->add('private',            'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
-            ->add('startsAt',           'datetime',         array('widget'  => 'single_text', 'required' => '0'))
-            ->add('endsAt',             'datetime',         array('widget'  => 'single_text', 'required' => '0'))
-            ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
-            ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
-            ->add('address2',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('registrationOption', 'choice',           array('choices' => array(Event::REGISTRATION_ENABLED   => 'Campsite',
+                                                                                     Event::REGISTRATION_3RD_PARTY => 'External')))
             ->add('registrationFields', 'collection',       array('type'            => new RegistrationFieldFormType(),
                                                                   'allow_add'       => true,
                                                                   'allow_delete'    => true,
                                                                   'by_reference'    => false))
+            ->add('externalUrl',        'text',             array('attr'    => array('size' => '60%', 'placeholder' => 'http://')))
+            ->add('startsAt',           'datetime',         array('widget'  => 'single_text', 'required' => '0'))
+            ->add('endsAt',             'datetime',         array('widget'  => 'single_text', 'required' => '0'))
+            ->add('online',             'choice',           array('choices' => array('1' => 'Yes', '0' => 'No')))
+            ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('address2',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('private',            'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
             ->getForm();
 
         if($request->getMethod() == 'POST') {
@@ -89,7 +92,6 @@ class AdminController extends Controller
                     $event->setTimezone('UTC');
                     $event->setActive(true);
                     $event->setApproved(true);
-                    $event->setRegistrationOption(Event::REGISTRATION_ENABLED);
                     $em->persist($event);
                     $em->flush();
 
