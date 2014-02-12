@@ -8,39 +8,23 @@ function setFaceDetectionURL() {
 
 function faceDetectionSubmit() {
     var sourcetext = $.trim($(".txt_source").val());
-    
-	var type;
+	  var type;
     var sources = sourcetext.split(";");
-	if(sources==''){
-		type='post';
-	}else{
-		type='get';
-	}
-    //var content = "url_pic=" + sources;
-   // http://h5926e0c7296f55bd19c9ce2d388c71a3.cdn.hpcloudsvc.com/44d2b96e72d297f3676e608aefd7bf50dee6a4a6
-    //var url_pic = "url_pic=https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/cloudcamp/44d2b96e72d297f3676e608aefd7bf50dee6a4a6";
-	  //var content = "url_pic=" + url_pic;
-   // var content= url_pic;
-    var content = "?url_pic=" + sources;
-    //var content = "url_pic=https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/cloudcamp/images/avatars/0820afb3-c4ce-437f-8056-e0fb76ed739e";
-    
+	  if(sources==''){
+		  type='post';
+	  }else{
+		  type='get';
+	  }
+    var content = "?url_pic=" + sources;    
     var url = "";
-//    var url = "http://"+ window.location.host+"/account/profile/avatars/facedetect/";
     var url = document.URL;
-  //  alert(url);
-    //var url = "http://15.185.97.217/facedetect?";
-    //var url =   "/facedetect?";
-
-    
-    ajaxRequest(url, content, type, faceDetectionShow, faildcallback);
-    
-    
+    ajaxRequest(url, content, type, faceDetectionShow, faildcallback);    
 }
 
 function faceDetectionShow(responseText) {
 	
   if(responseText.body){
-//  alert('sdsin'); 
+
 		responseText=responseText.body.firstChild.innerHTML;
 		responseText=responseText.replace(/\&lt;/g,'<').replace(/\&gt;/g,'>');
 		function createXml(str) {
@@ -67,7 +51,6 @@ function faceDetectionShow(responseText) {
         response = responseText;
     }
   
-    // var base_url = "http://h52f1fb19ff2faf32caa0e791c47c1b6e.cdn.hpcloudsvc.com/";
     $(".content_images").append('<div class="topimgbox" ></div><div class="bottomimgbox"></div>');
 
     //draw source pic
@@ -118,6 +101,8 @@ function faceDetectionShow(responseText) {
     var box = $sourceImg.parent();
     var faceId;
     var faceprintImage = '';
+    var cnt = 0;
+    // here also check if its detect more than one face
     $sourceFaceData.each(function (index, item) {
         var top = item.bb_top * rate + (parseInt($sourceImg.css("max-height")) - imgheight) / 2
         var left = item.bb_left * rate + (parseInt($sourceImg.css("max-width")) - imgwidth) / 2
@@ -126,12 +111,12 @@ function faceDetectionShow(responseText) {
         // var group = item.bb_top + "_" + item.bb_left;
         box.append('<div  class="sourcefacebox"  fid="' + item.id_face + '" style="left:' + (left + 1) + 'px;top:' + (top + 1) + 'px;width:' + width + 'px; height:' + height + 'px;border-color:white;border-style:solid;border-width:2px"></div>')
         box.append('<div  class="sourcefacebox"  fid="' + item.id_face + '" style="left:' + left + 'px;top:' + top + 'px;width:' + width + 'px; height:' + height + 'px;border-color:red;border-style:solid;border-width:2px"></div>')
-     faceId = item.id_face;
-     faceprintImage = item.id_pic;
+        faceId = item.id_face;
+        faceprintImage = item.id_pic;
+        cnt++;
     });
     
-    if(faceId == 'undefined' || faceId == null) {
-    
+    if(faceId == 'undefined' || faceId == null || cnt > 1) {
       $('.tip').html('No face Found');
     	$(":button[value=submit]").css('display','none');
     }else {
