@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Follower
- * @ORM\Table(name="followMappings")
+ * @ORM\Table(name="follow_mappings")
  * @ORM\Entity
  */
 class FollowMapping

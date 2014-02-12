@@ -9,6 +9,7 @@ use Platformd\SpoutletBundle\Entity\Site;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="giveaway_translation")
  */
 class GiveawayTranslation
 {
