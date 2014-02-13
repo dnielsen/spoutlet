@@ -1,5 +1,4 @@
 <?php
-
 namespace Platformd\UserBundle\Model;
 
 use Doctrine\ORM\EntityRepository,
@@ -15,7 +14,8 @@ use Platformd\UserBundle\Entity\User,
     Platformd\UserBundle\QueueMessage\AvatarResizeQueueMessage,
     Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage
 ;
-use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
+use Symfony\Component\DependencyInjection\ContainerInterface as Container;
+
 class GallaryManager
 {
     const IMAGE_CROP_MAX_WIDTH  = 512;
@@ -30,7 +30,7 @@ class GallaryManager
     private $queueUtil;
     private $userManager;
 
-    public function __construct(EntityManager $em, Filesystem $filesystem, $publicBucket, $privateBucket, $s3, $queueUtil, $userManager, $hpcloud_accesskey='', $hpcloud_secreatkey='', $hpcloud_tenantid='', $hpcloud_url='', $hpcloud_container='',$objectStorage='')
+    public function __construct(Container $container, EntityManager $em, Filesystem $filesystem, $publicBucket, $privateBucket, $s3, $queueUtil, $userManager)
     {
         $this->em            = $em;
         $this->filesystem    = $filesystem;
@@ -40,12 +40,7 @@ class GallaryManager
         $this->s3            = $s3;
         $this->queueUtil     = $queueUtil;
         $this->userManager   = $userManager;
-
-        $this->objectStorage = $objectStorage;
-        $this->hpcloud_container =   $hpcloud_container;
-        $this->hpcloud_url = $hpcloud_url;
-        $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey,$hpcloud_secreatkey,$hpcloud_tenantid);
-
+        $this->container     = $container;
     }
 
     public function save(Gallary $gallary)
@@ -100,7 +95,12 @@ class GallaryManager
             'user' => $user->getId(),
         ));
     }
-
+    
+    private function getMediaManager()
+    {
+        return $this->container->get('platformd.media.entity_uploadStorage');
+    }
+    
     protected function upload(File $file, User $user)
     {
         $fileUuid = $this->uuidGen();
@@ -111,18 +111,9 @@ class GallaryManager
         $filename = $user->getUuid().'/'.$fileUuid.'/'.$rawFilename;
         
         $filename = $user->getUuid().".".$file->guessExtension();
-        //$filename = $fileUuid;
-         if($this->objectStorage == 'HpObjectStorage') {
-  	  $this->hpCloudObj->SaveToObjectStorage($this->hpcloud_container,$filename,$file,Gallary::GALLARY_DIRECTORY_PREFIX);
-         }
-         else {
-          $data = $this->filesystem->write($filename, file_get_contents($file),$opts);
-         }
-
-     //   $this->filesystem->write($user->getUuid().'/'.$fileUuid.'/'.$rawFilename, file_get_contents($file), $opts);
+        $this->getMediaManager()->uploadToStorage($this->filesystem, $filename, $file, Gallary::GALLARY_DIRECTORY_PREFIX, $opts);
 
         unlink($file);
-
         return $fileUuid;
     }
 
@@ -258,21 +249,7 @@ class GallaryManager
 
     public function getGallaryUrl($userUuid, $size, $fileUuid = 'by_size',$subDir= null)
     {
-        if ($this->publicBucket == "platformd") {
-            $cf = "http://media.alienwarearena.com";
-        } else {
-            $cf = ($this->objectStorage == "HpObjectStorage") ? $this->hpcloud_url.$this->hpcloud_container :  "https://s3.amazonaws.com/platformd-public" ;
-        }
-       if($subDir != "") {
-           $url = $this->hpcloud_url.$this->hpcloud_container.'/'.Gallary::GALLARY_DIRECTORY_PREFIX;
-           return $url.$userUuid;
-
-       }
-        
-        //return $cf.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$fileUuid.'/'.$size.'x'.$size.'.png';
-       return  $cf.'/'.Gallary::GALLARY_DIRECTORY_PREFIX.'/'.$userUuid.".jpg";
-    
-
+        return $this->getMediaManager()->getMediaUrl($userUuid, $this->publicBucket, Gallary::GALLARY_DIRECTORY_PREFIX, $subDir = ($subDir != null ) ? Gallary::GALLARY_DIRECTORY_PREFIX : '','.jpg');
     }
 
     private function checkUserUuid($user)

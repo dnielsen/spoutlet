@@ -1,5 +1,4 @@
 <?php
-
 namespace Platformd\UserBundle\Model;
 
 use Doctrine\ORM\EntityRepository,
@@ -15,8 +14,8 @@ use Platformd\UserBundle\Entity\User,
     Platformd\UserBundle\QueueMessage\AvatarResizeQueueMessage,
     Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage
 ;
+use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 
-use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 class AvatarManager
 {
     const IMAGE_CROP_MAX_WIDTH  = 512;
@@ -30,19 +29,8 @@ class AvatarManager
     private $s3;
     private $queueUtil;
     private $userManager;
-    private $objectStorage = '';
 
-    public function __construct(EntityManager $em, Filesystem $filesystem,
-            $publicBucket,
-            $privateBucket,
-            $s3, $queueUtil,
-            $userManager,
-            $hpcloud_accesskey='',
-            $hpcloud_secretkey='',
-            $hpcloud_tenantid='',
-            $hpcloud_url='',
-            $hpcloud_container='',
-            $objectStorage='')
+    public function __construct(Container $container,EntityManager $em, Filesystem $filesystem, $publicBucket,$privateBucket,$s3, $queueUtil,$userManager)
     {
         $this->em            = $em;
         $this->filesystem    = $filesystem;
@@ -52,15 +40,14 @@ class AvatarManager
         $this->s3            = $s3;
         $this->queueUtil     = $queueUtil;
         $this->userManager   = $userManager;
-
-        if($objectStorage == "HpObjectStorage") {
-            $this->objectStorage = $objectStorage;
-            $this->hpcloud_container =   $hpcloud_container;
-            $this->hpcloud_url = $hpcloud_url;
-            $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secretkey, $hpcloud_tenantid);
-        }
+        $this->container = $container;
     }
-
+    
+     private function getMediaManager()
+    {
+        return $this->container->get('platformd.media.entity_uploadStorage');
+    }
+    
     public function save(Avatar $avatar)
     {
         if ($avatar->file) {
@@ -118,21 +105,15 @@ class AvatarManager
     {
         $fileUuid = $this->uuidGen();
         $this->checkUserUuid($user);
-
-        $rawFilename = 'raw.'.$file->guessExtension();
+      
+        $rawFilename = 'raw.'.$file->guessExtension();        
         $opts = array('headers' => array('Cache-Control' => 'max-age=0'));
         $filename = $user->getUuid().'/'.$fileUuid.'/'.$rawFilename;
         
-        $filename = $user->getUuid();
-        //$filename = $fileUuid;
-        if($this->objectStorage == 'HpObjectStorage') {
-	    $this->hpCloudObj->SaveToObjectStorage($this->hpcloud_container,$filename,$file,AVATAR::AVATAR_DIRECTORY_PREFIX);
-	}
-        else {
-          $data = $this->filesystem->write($filename, file_get_contents($file),$opts);
-        }
+        $filename = $user->getUuid();               
+        $this->getMediaManager()->uploadToStorage($this->filesystem, $filename, $file, AVATAR::AVATAR_DIRECTORY_PREFIX, $opts);
+    
         unlink($file);
-
         return $fileUuid;
     }
 
@@ -267,26 +248,10 @@ class AvatarManager
     }
 
     public function getAvatarUrl($userUuid, $size, $fileUuid = 'by_size',$subDir= null)
-    {
-        if ($this->publicBucket == "platformd") {
-            $cf = "http://media.alienwarearena.com";
-        } else {
-	
-            $cf = ($this->objectStorage == "HpObjectStorage") ?  $this->hpcloud_url.$this->hpcloud_container : "https://s3.amazonaws.com/platformd-public";
-           // $cf =  "https://s3.amazonaws.com/platformd-public";
-        }
-       if($subDir != "") {
-           $url = $this->hpcloud_url.$this->hpcloud_container."/images/avatar/";
-           return $url.$userUuid;
-
-       }
-        
-        //return $cf.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$fileUuid.'/'.$size.'x'.$size.'.png';
-       return  $cf.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid;
-    
-
+    {       
+        return $this->getMediaManager()->getMediaUrl($userUuid, $this->publicBucket, Avatar::AVATAR_DIRECTORY_PREFIX, $subDir = ($subDir != null ) ? '/images/avatar/' : '');
     }
-
+    
     private function checkUserUuid($user)
     {
         if (!$user->getUuid()) {
@@ -294,3 +259,4 @@ class AvatarManager
         }
     }
 }
+

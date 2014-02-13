@@ -7,7 +7,8 @@ use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\ORM\EntityManager;
 use Gaufrette\Filesystem;
 use Platformd\SpoutletBundle\Util\Image;
-use HPCloud\HPCloudPHP;
+use Platformd\MediaBundle\Entity\Media;
+use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 
 /**
 * 
@@ -23,23 +24,22 @@ class HomepageBannerManager
     * @var Gaufrette\Filesystem
     */
     private $filesystem;
-
+ 
     private $objectStorage = '';
-
-    public function __construct(EntityManager $manager, Filesystem $filesystem,$hpcloud_accesskey='', $hpcloud_secreatkey='', $hpcloud_tenantid='', $hpcloud_url='', $hpcloud_container='',  $objectStorage='',$bannerDir='')
+    private $container;
+    public function __construct(Container $container,EntityManager $manager, Filesystem $filesystem,$bannerDir='')
     {
         $this->manager = $manager;
         $this->filesystem = $filesystem;
-        if($objectStorage == 'HpObjectStorage') {
-	     $this->objectStorage = $objectStorage;
-             $this->hpcloud_url = $hpcloud_url;
-             $this->hpcloud_container =  $hpcloud_container;
-             $this->bannerDir = $bannerDir;
-	     $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey,$hpcloud_secreatkey,$hpcloud_tenantid);
-	}
-     
+        $this->saveDir = $bannerDir;    
+        $this->container = $container; 
     }
-
+    
+    private function getMediaManager()
+    {
+        return $this->container->get('platformd.media.entity_uploadStorage');
+    }
+    
     public function save(HomepageBanner $banner)
     {
         if ($banner->banner_file) {
@@ -63,15 +63,11 @@ class HomepageBannerManager
         // round the image
         $roundedPath = $this->createRoundedImage($file, $size);
 
-        $filename = $this->generateFilename($size, $file);
-        
-        if($this->objectStorage == "HpObjectStorage")
-          $this->hpCloudObj->SaveToObjectStorage($this->hpcloud_container,$filename,$roundedPath, $this->bannerDir);
-        else
-	    $this->filesystem->write($filename, file_get_contents($roundedPath));
+        $filename = $this->generateFilename($size, $file);             
+        $this->getMediaManager()->uploadToStorage($this->filesystem, $filename, $roundedPath, $this->saveDir);
+      
         // remove the founded path
         unlink($roundedPath);
-
         return $filename;
     }
 
@@ -108,6 +104,7 @@ class HomepageBannerManager
      * @param $filename
      * @return resource
      */
+     
     private function getImageResourceFromFile($filename)
     {
         list($sourceWidth, $sourceHeight, $sourceType) = getimagesize($filename);

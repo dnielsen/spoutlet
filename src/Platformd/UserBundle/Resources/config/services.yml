@@ -157,6 +157,7 @@ services:
     platformd.model.avatar_manager:
         class: Platformd\UserBundle\Model\AvatarManager
         arguments:
+            - '@service_container'
             - '@doctrine.orm.entity_manager'
             - '@avatar_filesystem'
             - '%s3_bucket_name%'
@@ -164,16 +165,11 @@ services:
             - '@platformd.s3'
             - '@platformd.util.queue_util'
             - '@fos_user.user_manager'
-            - '%hpcloud_accesskey%'
-            - '%hpcloud_secreatkey%'
-            - '%hpcloud_tenantid%'
-            - '%hpcloud_url%'
-            - '%hpcloud_container%'
-            - '%object_storage%'
 
     platformd.model.gallary_manager:
         class: Platformd\UserBundle\Model\GallaryManager
-        arguments:
+        arguments: 
+            - '@service_container'
             - '@doctrine.orm.entity_manager'
             - '@gallary_filesystem'
             - '%s3_bucket_name%'
@@ -181,13 +177,7 @@ services:
             - '@platformd.s3'
             - '@platformd.util.queue_util'
             - '@fos_user.user_manager'
-            - '%hpcloud_accesskey%'
-            - '%hpcloud_secreatkey%'
-            - '%hpcloud_tenantid%'
-            - '%hpcloud_url%'
-            - '%hpcloud_container%'
-            - '%object_storage%'
-
+            
     platformd.avatar.s3.adapter:
         class: Gaufrette\Adapter\AmazonS3
         arguments:

@@ -10,14 +10,9 @@ services:
   platformd.homepage_banner.manager:
     class: Platformd\SpoutletBundle\Entity\HomepageBannerManager
     arguments:
+      - @service_container
       - @doctrine.orm.entity_manager
       - @homepage_banners_filesystem
-      - "%hpcloud_accesskey%"
-      - "%hpcloud_secreatkey%"
-      - "%hpcloud_tenantid%"
-      - "%hpcloud_url%"
-      - "%hpcloud_container%"
-      - "%object_storage%"
       - "homepage-banners"
   platformd.homepage_banner_resolver:
     class:  'Platformd\SpoutletBundle\HomepageBannerPathResolver'

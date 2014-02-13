@@ -10,7 +10,17 @@ services:
             - "%s3_bucket_name%"
         calls:
           - [ "setDirectory", [ %media_s3_directory%]]
-
+          
+    # set for Save on Hpcloud and Amazon S3  
+    platformd.media.entity_uploadStorage:
+        class: Platformd\MediaBundle\Entity\Media
+        arguments:
+           - "%hpcloud_accesskey%"
+           - "%hpcloud_secreatkey%"
+           - "%hpcloud_tenantid%"
+           - "%hpcloud_url%"
+           - "%hpcloud_container%"
+           - "%object_storage%"          
     # media exposer path resolver
     platformd.media_path_resolver:
         class: Platformd\MediaBundle\Exposer\MediaPathResolver

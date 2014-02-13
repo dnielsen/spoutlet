@@ -9,7 +9,7 @@ use Knp\MediaBundle\Model\MediaOwnerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Platformd\SiteBundle\Entity\Site;
 use Doctrine\Common\Collections\ArrayCollection;
-
+use HPCloud\HPCloudPHP;
 /**
  * Our media entity
  *
@@ -59,7 +59,17 @@ class Media extends BaseMedia implements MediaOwnerInterface
      * @ORM\Column(name="is_admin", type="boolean")
      */
     private $isAdmin = false;
-
+    
+    public function __construct($hpcloud_accesskey='', $hpcloud_secreatkey='', $hpcloud_tenantid='', $hpcloud_url='', $hpcloud_container='',  $objectStorage='')
+    { 
+        $this->objectStorage = $objectStorage;
+        if($this->objectStorage == 'HpObjectStorage') {  
+          $this->hpcloud_url = $hpcloud_url;
+          $this->hpcloud_container =  $hpcloud_container;
+   	      $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey,$hpcloud_secreatkey,$hpcloud_tenantid);
+	      }    	      
+    }
+    
     /**
      * @return \Platformd\UserBundle\Entity\User
      */
@@ -126,5 +136,29 @@ class Media extends BaseMedia implements MediaOwnerInterface
     public function setIsAdmin($value)
     {
         $this->isAdmin = $value;
+    }
+    
+    public function uploadToStorage($fileSystem,$fileName,$roundedPath,$saveDir,$opts =array() )
+    {
+       if($this->objectStorage == "HpObjectStorage") 
+         $this->hpCloudObj->SaveToObjectStorage($this->hpcloud_container,$fileName,$roundedPath, $saveDir);
+       else {
+	       $fileSystem->write($fileName, file_get_contents($roundedPath),$opts);	       
+       }     
+    }
+    
+    public function getMediaUrl($userUuid, $bucketName='', $path='', $subDir='')
+    {
+      if($this->objectStorage == "HpObjectStorage") {
+        $cf  = $this->hpcloud_url.$this->hpcloud_container;
+      }
+      else {
+        $cf  = "https://s3.amazonaws.com/".$bucketName;
+      }
+      if($subDir != "") {
+        $url = $this->hpcloud_url.$this->hpcloud_container.$subDir;
+        return $url.$userUuid;
+      } 
+      return  $cf.'/'.$path.'/'.$userUuid;
     }
 }
