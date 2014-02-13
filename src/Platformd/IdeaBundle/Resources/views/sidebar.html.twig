@@ -2,7 +2,7 @@
 
     <h2 class="widgetHeader">Event Details
         {% if not (event.isUserAttending(app.user)) %}
-            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny right">Attend</a>
+            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny right">{% if event.externalUrl %}Join Event{% else %}Attend{% endif %}</a>
         {% endif %}
     </h2>
     <table id="eventDetails" class="tblStyle spcr-b3">
