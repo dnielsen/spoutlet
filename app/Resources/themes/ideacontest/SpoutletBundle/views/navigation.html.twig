@@ -87,6 +87,7 @@
                                     <li><a href = "{{ path('entry_set_new', {'registrationId': _regId, 'entrySetId': 'new'}) }}">Create List</a></li>
                                     <li><a href="{{ path('group_event_attendees', {'eventId': _key, 'groupSlug': _key2}) }}">Manage Attendees</a></li>
                                     <li><a href="{{ path('sponsors', {'scope': 'event', 'containerId': event.id}) }}">Manage Sponsors</a></li>
+                                    <li><a href="{{ path('idea_admin_images', {'groupSlug': _key2, 'eventId': _key}) }}">Manage Images</a></li>
                                 {% endif %}
                                 {% if _canContact %}
                                     <li><a href="{{ path('group_event_contact', {'eventId': _key, 'groupSlug': _key2}) }}">Email Attendees</a></li>
