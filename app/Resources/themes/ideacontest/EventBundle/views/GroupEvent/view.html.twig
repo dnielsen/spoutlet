@@ -18,8 +18,13 @@
                 window.open('{{ event.externalUrl }}');
             });
         </script>
-
+        {% set userNoun = 'contributor' %}
+        {% set userVerb = 'contributing' %}
+    {% else %}
+        {% set userNoun = 'attendee' %}
+        {% set userVerb = 'attending' %}
     {% endif %}
+
 
     <div id="contentLft">
         <h1 class="ctr">{{ event.name }}</h1>
@@ -155,9 +160,9 @@
         {% endif %}
         
         {% if not (event.isUserAttending(app.user)) %}
-            <h2 class="widgetHeader">{{ event.attendees|length }} attendee{% if event.attendees|length != 1 %}s{% endif %}</h2>
+            <h2 class="widgetHeader">{{ event.attendees|length }} {{ userNoun }}{% if event.attendees|length != 1 %}s{% endif %}</h2>
         {% else %}
-            <h3 class="left">You and {{ event.attendees|length - 1 }} other {% if event.attendees|length == 2 %}person{% else %}people{% endif %} are attending:</h3>
+            <h3 class="left">You and {{ event.attendees|length - 1 }} other {% if event.attendees|length == 2 %}person{% else %}people{% endif %} are {{ userVerb }}:</h3>
             <hr class="clr">
         {% endif %}
         <ul class="spcr-b3">
