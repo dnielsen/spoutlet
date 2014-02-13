@@ -53,6 +53,8 @@ class AdminController extends Controller
             $event = new GroupEvent($group);
         }
         else {
+            $this->validateAuthorization($event);
+
             $isNew = false;
             foreach ($event->getRegistrationFields() as $field){
                 $originalRegistrationFields->add($field);
@@ -158,9 +160,7 @@ class AdminController extends Controller
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventId);
 
-        if (!$this->canEditEvent($event)) {
-            throw new AccessDeniedException();
-        }
+        $this->validateAuthorization($event);
 
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
@@ -284,6 +284,8 @@ class AdminController extends Controller
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventId);
 
+        $this->validateAuthorization($event);
+
         $vcRepo = $this->getDoctrine()->getRepository('IdeaBundle:VoteCriteria');
 
         //retrieve criteria id if available
@@ -350,6 +352,8 @@ class AdminController extends Controller
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventId);
+
+        $this->validateAuthorization($event);
 
         $doc = $this->getDoctrine();
         $vcRepo = $doc->getRepository('IdeaBundle:VoteCriteria');
@@ -418,6 +422,9 @@ class AdminController extends Controller
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($groupSlug, $eventId);
+
+        $this->validateAuthorization($event);
+
         $entrySets = $event->getEntrySets();
 
         $isAdmin = $this->isGranted('ROLE_ADMIN');
@@ -477,6 +484,8 @@ class AdminController extends Controller
 
         $event = $this->getEvent($groupSlug, $eventId);
 
+        $this->validateAuthorization($event);
+
         //update current round
         $currentRound = $event->getCurrentRound() + 1;
         $event->setCurrentRound($currentRound);
@@ -509,6 +518,8 @@ class AdminController extends Controller
         $form = $this->createForm(new MediaType(), $newImage, array('image_label' => 'Image File:'));
 
         $event = $this->getEvent($groupSlug, $eventId);
+
+        $this->validateAuthorization($event);
 
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
@@ -547,6 +558,9 @@ class AdminController extends Controller
     public function approvalsAction($groupSlug, $eventId) {
 
         $event = $this->getEvent($groupSlug, $eventId);
+
+        $this->validateAuthorization($event);
+
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         $attendees = $event->getAttendees();
@@ -577,6 +591,9 @@ class AdminController extends Controller
     public function processApprovalAction($groupSlug, $eventId, $userId, $action) {
 
         $event = $this->getEvent($groupSlug, $eventId);
+
+        $this->validateAuthorization($event);
+
         $user = $this->getDoctrine()->getRepository('UserBundle:User')->findOneBy(array('id'=>$userId));
 
         $rsvpRepo = $this->getDoctrine()->getRepository('EventBundle:GroupEventRsvpAction');
@@ -615,6 +632,8 @@ class AdminController extends Controller
     }
 
     public function removeImageAction($groupSlug, $eventId, $imageId) {
+
+        $this->validateAuthorization($this->getEvent($groupSlug, $eventId));
 
         $image = $this->getDoctrine()->getRepository('MediaBundle:Media')->find($imageId);
 
@@ -685,9 +704,7 @@ class AdminController extends Controller
     {
         $doc = $this->getDoctrine();
 
-        if (!$this->canEditEvent($this->getEvent($groupSlug, $eventId))) {
-            throw new AccessDeniedException();
-        }
+        $this->validateAuthorization($this->getEvent($groupSlug, $eventId));
 
         $judgeAssignment = $request->request->get('judgeAssignment');
         $idea = $doc->getRepository('IdeaBundle:Idea')->findOneBy(array('id' => $ideaId));
@@ -749,6 +766,9 @@ class AdminController extends Controller
 
 
 	public function exportIdeasAction($groupSlug, $eventId) {
+
+        $this->validateAuthorization($this->getEvent($groupSlug, $eventId));
+
         $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
         $csvString = $ideaRepo->toCSV();
 
@@ -759,7 +779,10 @@ class AdminController extends Controller
         return $response;
     }
 
-    public function exportUsersAction() {
+    public function exportUsersAction($groupSlug, $eventId) {
+
+        $this->validateAuthorization($this->getEvent($groupSlug, $eventId));
+
         $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
         $csvString = $userRepo->toCSV();
 
@@ -771,7 +794,9 @@ class AdminController extends Controller
     }
 
     public function exportVotesAction($groupSlug, $eventId) {
+
         $event = $this->getEvent($groupSlug, $eventId);
+        $this->validateAuthorization($event);
 
         $voteRepo = $this->getDoctrine()->getRepository('IdeaBundle:Vote');
         $csvString = $voteRepo->toCSV($event);
@@ -782,7 +807,6 @@ class AdminController extends Controller
         $response->setContent($csvString);
         return $response;
     }
-
 
     // Admin Scripts
 
@@ -846,6 +870,11 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('default_index'));
     }
 
-
+    public function validateAuthorization($event)
+    {
+        if (!$this->canEditEvent($event)) {
+            throw new AccessDeniedException();
+        }
+    }
 }
 
