@@ -94,6 +94,8 @@
                                 {% if _isPrivate %}
                                     <li><a href="{{ path('idea_admin_member_approvals', {'groupSlug': _key2, 'eventId': _key}) }}">Membership Approvals</a></li>
                                 {% endif %}
+                            {% elseif event.isUserAttending(user) %}
+                                <li><a href="{{ path('group_event_unregister', {'groupSlug': _key2, 'eventId': _key}) }}" onclick="return confirm('Are you sure you want to leave this event?');">Leave Event</a></li>
                             {% endif %}
                             {% if _canDelete %}
                                 <li><a href="{{ path("group_event_delete", {"eventId": _key, "groupSlug": _key2}) }}" onclick="return confirm('Are you sure you want to delete this event?');">Delete Event</a></li>

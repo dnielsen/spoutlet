@@ -907,6 +907,22 @@ class GroupEventController extends Controller
         )));
     }
 
+    public function unregisterAction($groupSlug, $eventId)
+    {
+        $groupEvent = $this->getGroupEventService()->find($eventId);
+        $user = $this->getCurrentUser();
+
+        if (!$groupEvent) {
+            throw new NotFoundHttpException('Event does not exist.');
+        }
+
+        $this->getGroupEventService()->unregister($groupEvent, $user);
+        $this->setFlash('success', 'You are no longer attending this event.');
+
+        return $this->redirect($this->generateUrl('group_event_view', array('groupSlug' => $groupSlug, 'eventId' => $eventId)));
+    }
+
+
     public function disableAjaxAction(Request $request)
     {
         $response = new Response();
