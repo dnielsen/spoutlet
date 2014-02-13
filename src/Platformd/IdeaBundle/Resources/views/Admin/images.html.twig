@@ -19,7 +19,9 @@
 
     {%  for image in event.rotatorImages %}
         <img src="{{  media_path(image) }}" style="max-width: 150px;max-height: 150px;vertical-align: middle"/>
-        <a href="{{ path('idea_admin_remove_image', {'groupSlug': group.slug, 'eventId': event.id, 'imageId': image.id}) }}">Delete</a>
+        <a href="{{ path('idea_admin_remove_image', {'groupSlug': group.slug, 'eventId': event.id, 'imageId': image.id}) }}" onclick="return confirm('Are you sure you want to delete this image?');">
+            <img src="{{ asset('themes/ideacontest/spoutlet/img/delete-icon.png') }}" class="delete"/>
+        </a>
         <br/><hr/>
     {% endfor %}
 
