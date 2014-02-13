@@ -121,69 +121,46 @@
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 <script type="text/javascript">
 
-function FaceDetect(obj){
+  function FaceDetect(obj){
 
-var value = obj.value;
-if(value == "submit"){
- var facePrintIdVal = document.getElementById('facePrintId').value;
- var facePrintImage = document.getElementById('facePrintImage').value;
-
-  if (facePrintIdVal == 'undefined' || facePrintIdVal == ''){
-             window.location = '{{ path("avatars") }}'
-        }
-  else {
-           var url = "{{ path('avatar_faceprint_save', {'uuid': uuid, 'facePrintId' : 'text', 'facePrintImage' : 'text1'}) }}";
-                url = url.replace("text", facePrintIdVal);
-                url = url.replace("text1",facePrintImage);
-               //alert(url);
-                window.location = url;
-
-     }   
-} 
-// if its cancel
-else {
- window.location = '{{  path('avatars') }}';
-
-}
-
-}
-$('#submit-facedetect').click(function() {
+    var value = obj.value;
+    if(value == "submit"){
+      var facePrintIdVal = document.getElementById('facePrintId').value;
+      var facePrintImage = document.getElementById('facePrintImage').value;
+      if (facePrintIdVal == 'undefined' || facePrintIdVal == ''){
+        window.location = '{{ path("avatars") }}'
+      }
+      else {
+        var url = "{{ path('avatar_faceprint_save', {'uuid': uuid, 'facePrintId' : 'text', 'facePrintImage' : 'text1'}) }}";
+        url = url.replace("text", facePrintIdVal);
+        url = url.replace("text1",facePrintImage);
+        window.location = url;
+      }   
+    } 
+    // if its cancel
+    else {
+     window.location = '{{  path('avatars') }}';
+    }
+  }
+  
+   $('#submit-facedetect').click(function() {
          alert($(this).val());     
-        var facePrintIdVal = $("#facePrintId").val();//alert(facePrintIdVal);
-	if (facePrintIdVal == 'undefined' || facePrintIdVal == ''){
-             window.location = '{{ path("avatar_crop", { "uuid": uuid }) }}'
-        } else {
-  //           $( "#face-dialog" ).dialog({
-//	     resizable: false,height:140,modal: true,
-//	       buttons: {
-//		"Yes": function() {
-		//$( this ).dialog( "close" );
-               //window.location = '{{ path("avatar_faceprint_save", { "uuid": uuid, "facePrintId": '+ facePrintId+' }) }}';
-       //         var url = "{{ path('avatar_faceprint_save', {'uuid': uuid, 'facePrintId' : 'text'}) }}";
-    //          url = url.replace("text", facePrintIdVal);
-  //              window.location = url;	
-//	         },
-//	         "NO": function() {
-//		     window.location = '{{  path('avatars') }}';
-//	        }
-//	    }	
-//       });
-
-         var result = confirm("Is this Your Face ?");
-         if(result==true)  {
-               var url = "{{ path('avatar_faceprint_save', {'uuid': uuid, 'facePrintId' : 'text'}) }}";
-                url = url.replace("text", facePrintIdVal);
-                window.location = url;
-
-             }
+         var facePrintIdVal = $("#facePrintId").val();//alert(facePrintIdVal);
+	       if (facePrintIdVal == 'undefined' || facePrintIdVal == ''){
+           window.location = '{{ path("avatar_crop", { "uuid": uuid }) }}'
+         } 
          else {
-		window.location = '{{  path('avatars') }}';
+           var result = confirm("Is this Your Face ?");
+           if(result==true)  {
+             var url = "{{ path('avatar_faceprint_save', {'uuid': uuid, 'facePrintId' : 'text'}) }}";
+             url = url.replace("text", facePrintIdVal);
+             window.location = url;
            }
-	
+           else {
+		         window.location = '{{  path('avatars') }}';
+           }
          }
-            //window.location = '{{ path("avatar_process", { "uuid": uuid }) }}' + '/' + getCoords();
         });
-
 </script>       
 
 
