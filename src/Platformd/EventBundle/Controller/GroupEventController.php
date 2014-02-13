@@ -848,12 +848,12 @@ class GroupEventController extends Controller
         return $response;
     }
 
-    public function registerAction($groupSlug, $eventId, Request $request)
+    public function registerAction($groupSlug, $eventId)
     {
         $this->basicSecurityCheck('ROLE_USER');
 
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
-        $user = $this->getUser();
+        $user  = $this->getUser();
 
         if (!$group) {
             throw new NotFoundHttpException('Group does not exist.');
@@ -866,20 +866,21 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Event does not exist.');
         }
 
+        $params = array(
+            'groupSlug' => $groupSlug,
+            'eventId'   => $eventId,
+        );
+
         if (!$this->getGroupManager()->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinEvent')) {
             $this->setFlash('error', $this->trans('platformd.events.event_show.not_allowed_register'));
-            return $this->redirect($this->generateUrl('group_event_view', array(
-                'groupSlug' => $groupSlug,
-                'eventId'   => $groupEvent->getId(),
-            )));
+            return $this->redirect($this->generateUrl('group_event_view', $params));
         }
-
-
+        if ($groupEvent->isUserAttending($user)) {
+            $this->setFlash('success', 'You are already attending this event.');
+            return $this->redirect($this->generateUrl('group_event_view', $params));
+        }
         if ($groupEvent->getRegistrationFields()->count() > 0) {
-            return $this->redirect($this->generateUrl('event_registration', array(
-                'groupSlug' => $groupSlug,
-                'eventId'   => $groupEvent->getId(),
-            )));
+            return $this->redirect($this->generateUrl('event_registration', $params));
         }
 
         $wasGroupMember = $group->isMember($user);
@@ -888,23 +889,21 @@ class GroupEventController extends Controller
         $this->getGroupManager()->autoJoinGroup($group, $user);
 
         if ($groupEvent->getPrivate()){
-            $this->setFlash('success', "We have received your request for private access. You will receive a response by an administrator when your account has been reviewed.");
+            $flashMessage = "We have received your request for private access. You will receive a response by an administrator when your account has been reviewed.";
         }
         else {
-
             if ($wasGroupMember || $group->isOwner($user)) {
-                $this->setFlash('success', $this->trans('platformd.events.event_show.now_attending'));
+                $flashMessage = $this->trans('platformd.events.event_show.now_attending');
             }
             else {
-                $this->setFlash('success', $this->trans(
-                        'platformd.events.event_show.group_joined', array('%groupName%' => $group->getName())));
+                $flashMessage = $this->trans(
+                    'platformd.events.event_show.group_joined', array('%groupName%' => $group->getName()));
             }
         }
+        $this->setFlash('success', $flashMessage);
 
-        return $this->redirect($this->generateUrl('group_event_view', array(
-            'groupSlug' => $groupSlug,
-            'eventId' => $groupEvent->getId(),
-        )));
+        return $this->redirect($this->generateUrl('group_event_view', $params));
+
     }
 
     public function unregisterAction($groupSlug, $eventId)

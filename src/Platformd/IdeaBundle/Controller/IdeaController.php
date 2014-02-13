@@ -1171,18 +1171,18 @@ class IdeaController extends Controller
             $this->getGroupManager()->autoJoinGroup($group, $user);
 
             if ($event->getPrivate()){
-                $this->setFlash('success', "We have received your request for private access. You will receive a response by an administrator when your account has been reviewed.");
+                $flashMessage = "We have received your request for private access. You will receive a response by an administrator when your account has been reviewed.";
             }
             else {
-
                 if ($wasGroupMember || $group->isOwner($user)) {
-                    $this->setFlash('success', $this->trans('platformd.events.event_show.now_attending'));
+                    $flashMessage = $this->trans('platformd.events.event_show.now_attending');
                 }
                 else {
-                    $this->setFlash('success', $this->trans(
-                        'platformd.events.event_show.group_joined', array('%groupName%' => $group->getName())));
+                    $flashMessage = $this->trans(
+                        'platformd.events.event_show.group_joined', array('%groupName%' => $group->getName()));
                 }
             }
+            $this->setFlash('success', $flashMessage);
 
             return $this->redirect($this->generateUrl('group_event_view', array(
                 'groupSlug' => $groupSlug,
