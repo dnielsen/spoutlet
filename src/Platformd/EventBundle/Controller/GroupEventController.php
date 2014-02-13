@@ -917,11 +917,21 @@ class GroupEventController extends Controller
         }
 
         $this->getGroupEventService()->unregister($groupEvent, $user);
+
+        $fields = $groupEvent->getRegistrationFields();
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $answerRepo = $this->getDoctrine()->getRepository('IdeaBundle:RegistrationAnswer');
+
+        foreach ($fields as $field){
+            $answer = $answerRepo->findOneBy(array('field' => $field->getId(), 'user' => $user->getId()));
+            $em->remove($answer);
+        }
+        $em->flush();
         $this->setFlash('success', 'You are no longer attending this event.');
 
         return $this->redirect($this->generateUrl('group_event_view', array('groupSlug' => $groupSlug, 'eventId' => $eventId)));
     }
-
 
     public function disableAjaxAction(Request $request)
     {
