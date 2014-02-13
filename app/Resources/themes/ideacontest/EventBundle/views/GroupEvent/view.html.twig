@@ -1,6 +1,26 @@
 {% extends 'IdeaBundle::event_layout.html.twig' %}
 
 {% block event_content %}
+
+    {% if event.externalUrl %}
+        {% if not event.isUserAttending(user) %}
+            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="externalRegLink" id="externalRegWindow">
+        {% else %}
+            <a href="{{ event.externalUrl }}" class="externalRegLink" target="_blank">
+        {% endif %}
+            <div id="externalReg">
+                This event uses an external site for registration. Please click here to register.
+            </div>
+        </a>
+
+        <script type="text/javascript">
+            $('#externalRegWindow').click(function() {
+                window.open('{{ event.externalUrl }}');
+            });
+        </script>
+
+    {% endif %}
+
     <div id="contentLft">
         <h1 class="ctr">{{ event.name }}</h1>
 
@@ -78,7 +98,7 @@
 
     <div id="contentRt">
         <h2 class="widgetHeader">Event Details
-            {% if not (event.isUserAttending(app.user)) %}
+            {% if not event.externalUrl and not event.isUserAttending(user) %}
                 <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny right">Attend</a>
             {% endif %}
         </h2>
