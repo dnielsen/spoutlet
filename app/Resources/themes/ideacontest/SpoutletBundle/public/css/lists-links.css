@@ -90,6 +90,7 @@ a.btnTny:hover, input.btnTny:hover, input.btnTnyInv:hover {
     background: #FFFFFF;
     border: 1px solid #2faad9;
     text-decoration: none;
+    text-shadow: none;
 }
 .btnVote {
     width: 100% !important;
