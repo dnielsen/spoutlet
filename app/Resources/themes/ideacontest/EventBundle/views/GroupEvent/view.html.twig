@@ -28,45 +28,45 @@
 
     <div id="contentLft">
         <h1 class="ctr">{{ event.name }}</h1>
+        <div id="eventSummary">
 
-        {% if event.rotatorImages | length > 0 %}
-            <div class="intro">
-                <div id="slideshow" class="pics">
+            {% if event.rotatorImages | length > 0 %}
+                <div class="intro">
+                    <div id="slideshow" class="pics">
 
-                    {% for image in event.rotatorImages %}
+                        {% for image in event.rotatorImages %}
 
-                    <div class="unicusSlides">
-                        <a href="#">
-                            <img src="{{  media_path(image) }}" width="644" height="340"/>
-                        </a>
+                        <div class="unicusSlides">
+                            <a href="#">
+                                <img src="{{  media_path(image) }}" width="644" height="340"/>
+                            </a>
+                        </div>
+
+                        {% endfor %}
+
                     </div>
 
-                    {% endfor %}
+                    <ul id="bullets"></ul> <!-- nav bullets -->
+                 </div>
 
-                </div>
-
-                <ul id="bullets"></ul> <!-- nav bullets -->
-             </div>
-
-            <script type="text/javascript">
-                $(function() {
-                    $('#slideshow').cycle({
-                        fx:     'scrollHorz',
-                        speed:  400,
-                        timeout: 6000,
-                        cleartypeNoBg: true,
-                        pager:  '#bullets',
-                        pagerAnchorBuilder: function paginate(idx, el) {
-                            return '<a class="service' + idx + '" href="#" >&bull;</a>';
-                        }
+                <script type="text/javascript">
+                    $(function() {
+                        $('#slideshow').cycle({
+                            fx:     'scrollHorz',
+                            speed:  400,
+                            timeout: 6000,
+                            cleartypeNoBg: true,
+                            pager:  '#bullets',
+                            pagerAnchorBuilder: function paginate(idx, el) {
+                                return '<a class="service' + idx + '" href="#" >&bull;</a>';
+                            }
+                        });
                     });
-                });
-            </script>
-        {% endif %}
+                </script>
+            {% endif %}
 
-        {{ event.content | raw }}
-
-        <hr/>
+            {{ event.content | raw }}
+        </div>
 
         {# For now -- get first entrySet -- need to implement list chooser #}
         {% if event.entrySets | length > 0 %}
