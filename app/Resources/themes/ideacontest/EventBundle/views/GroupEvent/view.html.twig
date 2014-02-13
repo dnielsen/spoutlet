@@ -30,7 +30,9 @@
         <h1 class="ctr">{{ event.name }}</h1>
         <div id="eventSummary">
 
-            {% if event.rotatorImages | length > 0 %}
+            {% set numImages = event.rotatorImages|length %}
+
+            {% if numImages > 0 %}
                 <div class="intro">
                     <div id="slideshow" class="pics">
 
@@ -45,8 +47,9 @@
                         {% endfor %}
 
                     </div>
-
-                    <ul id="bullets"></ul> <!-- nav bullets -->
+                    {% if numImages > 1 %}
+                        <ul id="bullets"></ul> <!-- nav bullets -->
+                    {% endif %}
                  </div>
 
                 <script type="text/javascript">
