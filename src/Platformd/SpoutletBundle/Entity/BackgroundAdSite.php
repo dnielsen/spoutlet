@@ -7,6 +7,7 @@ use Platformd\SpoutletBundle\Entity\Site;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(name="background_ad_site")
  **/
 class BackgroundAdSite
 {

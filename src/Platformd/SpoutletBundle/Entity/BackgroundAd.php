@@ -9,6 +9,7 @@ use Platformd\SpoutletBundle\Validator\Constraints\UniqueBackgroundAdPerTime;
 
 /**
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\BackgroundAdRepository")
+ * @ORM\Table(name="background_ad")
  * @UniqueBackgroundAdPerTime(message="Error! This schedule conflicts with another banner that is scheduled at the same time. Please uncheck the conflicting site.")
  **/
 
