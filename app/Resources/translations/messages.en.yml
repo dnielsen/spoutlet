@@ -284,6 +284,7 @@ platformd:
             edit_event: Edit Event
             delete_event: Delete Event
             not_allowed_register: You are not allowed to rsvp to this event!
+            now_attending_external: You have successfully joined the discussion on Campsite. Make sure to register for the in-person event if you plan to attend.
             now_attending: You are now attending this event.
             group_joined: Welcome to %groupName%. You are now attending this event.
             group_home: Group Home

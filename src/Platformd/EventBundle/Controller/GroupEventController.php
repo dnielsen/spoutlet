@@ -891,14 +891,14 @@ class GroupEventController extends Controller
         if ($groupEvent->getPrivate()){
             $flashMessage = "We have received your request for private access. You will receive a response by an administrator when your account has been reviewed.";
         }
+        elseif ($groupEvent->getExternalUrl()) {
+            $flashMessage = $this->trans('platformd.events.event_show.now_attending_external');
+        }
+        elseif ($wasGroupMember || $group->isOwner($user)) {
+            $flashMessage = $this->trans('platformd.events.event_show.now_attending');
+        }
         else {
-            if ($wasGroupMember || $group->isOwner($user)) {
-                $flashMessage = $this->trans('platformd.events.event_show.now_attending');
-            }
-            else {
-                $flashMessage = $this->trans(
-                    'platformd.events.event_show.group_joined', array('%groupName%' => $group->getName()));
-            }
+            $flashMessage = $this->trans('platformd.events.event_show.group_joined', array('%groupName%' => $group->getName()));
         }
         $this->setFlash('success', $flashMessage);
 
