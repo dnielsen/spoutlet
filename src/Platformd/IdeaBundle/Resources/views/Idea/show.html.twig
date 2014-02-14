@@ -16,19 +16,21 @@
 
     {% if sidebar %}<div class="session">{% else %}<div class="sessionWide">{% endif %}
 
-        <div class="left kWords">
-            <ul>
-                <li>Tags</li>
-                {% for tag in idea.tags %}
-                    <li><a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'tag': tag.tagName}) }}">{{ tag.tagName }}</a></li>
-                {% endfor %}
-            </ul>
-        </div>
-
         <span class="right tnytxt">Proposed by: <strong><a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blue">{{idea.creator.name}}</a></strong>{% if idea.members %}, {{idea.members}}{% endif %}</span>
-        <br class="clr">
 
-        <em class="tnytxt">{{ idea.dateTimeString }}</em>
+        {% if idea.tags|length > 0 %}
+            <div class="left kWords spcr-b2">
+                <ul>
+                    <li>Tags</li>
+                    {% for tag in idea.tags %}
+                        <li><a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'tag': tag.tagName}) }}">{{ tag.tagName }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="clr"></div>
+        {% endif %}
+
+        <em class="tnytxt left">{{ idea.dateTimeString }}</em><div class="clr"></div>
 
         <p class="left">
             {% if idea.canUserView(app.user) %}{{ idea.description | nl2br }}
