@@ -398,6 +398,7 @@ Alienware Arena Team
         $ownedEvents = $this->getGroupEventService()->findBy(array(
                 'user' => $user->getId(),
                 'group' => $group->getId(),
+                'deleted' => 0,
                 'active' => 1,
             ));
 
@@ -405,7 +406,7 @@ Alienware Arena Team
 
         if (count($ownedEvents) > 0) {
             foreach ($ownedEvents as $event) {
-                if ($event->getEndsAtUtc() > new \DateTime()) {
+                if ($event->getEndsAt() > new \DateTime()) {
                     $unexpired++;
                 }
             }
