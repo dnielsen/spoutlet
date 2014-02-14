@@ -240,17 +240,7 @@ a.profile-cancelBtn {
     margin-bottom: 15px;
 }
 
-#externalReg {
-    background:lightgoldenrodyellow;
-    border-top:1px solid;
-    border-bottom:1px solid;
+#registrationBanner {
+    border-bottom:1px solid #ccc;
     text-align: center;
-    padding-top: 15px;
-    padding-bottom: 15px;
-    margin-bottom: 10px;
-}
-.externalRegLink:hover {
-    text-decoration: none;
-    font-weight: bold;
-    color: black;
 }

@@ -1,10 +1,21 @@
 {% if event|default %}
 
-    <h2 class="widgetHeader">Event Details
-        {% if not (event.isUserAttending(app.user)) %}
-            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnTny right">{% if event.externalUrl %}Join Event{% else %}Attend{% endif %}</a>
-        {% endif %}
-    </h2>
+    {% if event.externalUrl|default or not event.isUserAttending(user) %}
+        <div id="registrationBanner">
+            {% if event.externalUrl|default %}
+
+                <a href="{{ event.externalUrl }}" class="btnLg2" target="_blank">Register to Attend</a>
+                {% if not event.isUserAttending(user) %}
+                    <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Join Discussion</a>
+                {% endif %}
+
+            {% elseif not event.isUserAttending(user) %}
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Attend Event</a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <h2 class="widgetHeader">Event Details</h2>
     <table id="eventDetails" class="tblStyle spcr-b3">
         <tr>
             <td><strong>Organizer:</strong></td>
@@ -47,6 +58,13 @@
     {% endif %}
 
 {% elseif group|default %}
+
+    {% if not group.isMember(user) %}
+        <div id="registrationBanner">
+            <a href="{{ path('group_join', {'slug': group.slug}) }}" class="btnLg2">Join This Group</a>
+        </div>
+    {% endif %}
+
     <h2 class="widgetHeader">Group Description</h2>
     <div class="scrollableWidgetLarge spcr-b3">
         {{ group.description | raw }}

@@ -44,8 +44,9 @@ a.btnBdr {
 	color: #5a5654; /* #1c92cf; */
 }
 a.btnLg2 {
-	display: block;
+    display: block;
 	padding: 15px 20px;
+    margin: 0px 0px 5px;
 	font-size: 24px;
 	font-weight: bold;
 	line-height: 30px;

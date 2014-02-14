@@ -35,7 +35,6 @@
 
 {% block content %}
 
-
     {% if group.slides | default | length > 0 %}
         <div class="content-slider-bg">
             <div id="content-slider-1" class="royalSlider contentSlider rsDefault">
@@ -67,7 +66,7 @@
                 <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="blue">{{ nextEvent.name }}</a>
             </h2>
             {% if not (nextEvent.isUserAttending(app.user)) %}
-                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right">{% if nextEvent.externalUrl %}Join Event{% else %}Attend{% endif %}</a>
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right">{% if nextEvent.externalUrl %}Join Discussion{% else %}Attend{% endif %}</a>
             {% endif %}
             <div class="clr"></div>
 
@@ -135,6 +134,13 @@
 
 {% set sidebar = true %}
 {% block sidebar %}
+
+    {% if not group.isMember(user) %}
+        <div id="registrationBanner">
+            <a href="{{ path('group_join', {'slug': group.slug}) }}" class="btnLg2">Join This Group</a>
+        </div>
+    {% endif %}
+
     <div id="contentRt">
 
         {% if groupEvents %}{% set renderMoreEvents = true %}{% else %}{% set renderMoreEvents = false %}{% endif %}
