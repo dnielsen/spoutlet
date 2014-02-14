@@ -26,6 +26,11 @@ then
 fi
 
 echo '============================='
+echo 'Nuking cache'
+echo
+sudo rm -rf app/cache/*
+
+echo '============================='
 echo 'Pulling latest code from git'
 echo
 git pull 
@@ -61,7 +66,6 @@ php app/console doc:mig:mig --no-interaction
 
 echo '============================='
 echo 'Clearing Symfony cache'
-sudo rm -rf app/cache/*
 if [ $ENV == 'dev' ]; then
     php app/console cache:clear
 elif [ $ENV == 'prod' ]; then 
