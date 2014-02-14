@@ -18,9 +18,6 @@ use Gedmo\Mapping\Annotation as Gedmo,
 use Platformd\GameBundle\Entity\Game,
     Platformd\SpoutletBundle\Link\LinkableInterface,
     Platformd\UserBundle\Entity\User,
-    Platformd\EventBundle\Entity\GlobalEvent,
-    Platformd\EventBundle\Entity\GroupEvent,
-    Platformd\IdeaBundle\Entity\EntrySet,
     Platformd\IdeaBundle\Entity\EntrySetRegistry,
     Platformd\IdeaBundle\Entity\EntrySetScopeable,
     Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil,
@@ -291,6 +288,12 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\RegistrationField", mappedBy="event", cascade={"persist", "remove"})
      */
     protected $registrationFields;
+
+    /**
+     * @var EventSession
+     * @ORM\OneToMany(targetEntity="Platformd\EventBundle\Entity\EventSession", mappedBy="event", cascade={"persist", "remove"})
+     */
+    protected $sessions;
 
     /**
      * Constructor
