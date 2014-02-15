@@ -45,6 +45,10 @@ idea_admin_event:
     pattern:    /{groupSlug}/event/{eventId}/admin/configure
     defaults:   { _controller: IdeaBundle:Admin:event, eventId:newEvent}
 
+event_session_edit:
+    pattern:    /{groupSlug}/event/{eventId}/session/{sessionId}
+    defaults:   { _controller: IdeaBundle:Admin:createEventSession, sessionId:newSession}
+
 idea_admin:
     pattern:    /{groupSlug}/event/{eventId}/admin
     defaults:   { _controller: IdeaBundle:Admin:admin }

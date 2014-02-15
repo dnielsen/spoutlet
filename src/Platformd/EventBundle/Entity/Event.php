@@ -1120,4 +1120,8 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
         return false;
     }
+
+    public function addSession(EventSession $evtSession) {
+        $this->sessions->add($evtSession);
+    }
 }

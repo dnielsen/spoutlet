@@ -124,3 +124,8 @@ sponsor_url: Link
 sponsor_image: Logo
 sponsor_add_level: Level
 
+evtSession_name: Name
+evtSession_description: Description
+evtSession_startsAt: Starting Time
+evtSession_endsAt: Ending Time
+

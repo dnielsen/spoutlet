@@ -8,6 +8,7 @@
 
 namespace Platformd\EventBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -80,6 +81,22 @@ class EventSession //implements EntrySetScopeable
      * @ORM\OrderBy({"username" = "ASC"})
      */
     protected $attendees;
+
+    /**
+     * Constructor
+     */
+    public function __construct(GroupEvent $event) {
+        $this->event            = $event;
+        $attendees = new ArrayCollection();
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
 //    /**
 //     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySetRegistry", cascade={"persist"})

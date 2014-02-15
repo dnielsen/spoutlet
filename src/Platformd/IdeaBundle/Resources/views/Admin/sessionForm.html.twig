@@ -1,0 +1,37 @@
+{% extends 'IdeaBundle::event_layout.html.twig' %}
+
+{% block content %}
+    {% if isNew %}
+        {% set verb = 'Create' %}
+    {% else %}
+        {% set verb = 'Modify' %}
+    {% endif %}
+
+    <h1>{{ verb }} Your Session</h1>
+
+    <form action="{{ path('event_session_edit', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': evtSession.id}) }}"
+          method="post" {{ form_enctype(form) }} id="evtSession" novalidate>
+        {{ form_row(form.name) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.startsAt) }}
+        {{ form_row(form.endsAt) }}
+        {{ form_rest(form) }}
+
+        <br class="clr"/>
+
+        <input type="submit" value="Submit" id="submit"/>
+        <input type="submit" value="Cancel" name="cancel" formnovalidate/>
+
+        {# {% if not isNew %}
+            {% if event.entrySets|length == 0 %}
+                <a href="{{ path("group_event_delete", {"groupSlug": group.slug, "eventId": event.id}) }}">
+                    <input type="button" class="spcr-l redButton" value="Delete" onclick="return confirm('Are you sure you want to delete this list?');">
+                </a>
+            {% else %}
+                <input type="button" class="spcr-l greyButton" value="Delete Disabled" title="Remove the {{ event.EntrySets|length }} list(s) attached to this Event to enable the delete option.">
+            {% endif %}
+        {% endif %} #}
+
+    </form>
+
+{% endblock %}
