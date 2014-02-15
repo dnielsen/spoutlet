@@ -464,8 +464,8 @@ Alienware Arena Team
         $groupManager = $this->getGroupManager();
 
         if ($groupManager->isMember($user, $group) || $group->isOwner($user)) {
-            $this->setFlash('error', 'You are already a member of this group!');
-            return $this->redirect($this->generateUrl('groups'));
+            $this->setFlash('success', 'You are already a member of this group!');
+            return $this->redirect($this->generateUrl('group_show', array('slug'=>$slug)));
         }
 
         $this->ensureAllowed($group, 'JoinGroup');
