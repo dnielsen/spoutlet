@@ -14,7 +14,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
 use FOS\UserBundle\Validator\Password;
 
-use  Platformd\UserBundle\Validator\User as ValidateUser;
+use Platformd\EventBundle\Entity\GroupEvent;
+use Platformd\UserBundle\Validator\User as ValidateUser;
 
 /**
  * Platformd\UserBundle\Entity\User
@@ -500,6 +501,11 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\Comment", mappedBy="user")
      */
     protected $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\RegistrationAnswer", mappedBy="user", cascade={"remove", "persist"})
+     */
+    protected $answers;
    
     /**
      * The id for facematching
@@ -538,7 +544,6 @@ class User extends BaseUser
      */
     protected $mailingAddress;
 
-
     public function __construct()
     {
         parent::__construct();
@@ -551,6 +556,7 @@ class User extends BaseUser
         $this->gallarys                 = new ArrayCollection();
         $this->ideas                    = new ArrayCollection();
         $this->comments                 = new ArrayCollection();
+        $this->answers                  = new ArrayCollection();
     }
 
     public function __toString() {
@@ -1518,7 +1524,34 @@ class User extends BaseUser
     {
         return $this->ideas;
     }
+    public function addAnswer($answer)
+    {
+        $this->answers[] = $answer;
+    }
+    public function removeAnswer($answer)
+    {
+        $this->answers->removeElement($answer);
+    }
+    public function getAnswers()
+    {
+        return $this->answers;
+    }
 
+    public function getAnswersForEvent(GroupEvent $event)
+    {
+        $answers = $this->answers;
+
+        $eventFields = $event->getRegistrationFields()->toArray();
+        $eventAnswers = array();
+
+        foreach ($answers as $answer) {
+            if (in_array($answer->getField(), $eventFields)) {
+                $eventAnswers[] = $answer;
+            }
+        }
+
+        return $eventAnswers;
+    }
 
    /**
      * @return string

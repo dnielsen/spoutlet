@@ -23,7 +23,7 @@ class RegistrationAnswer {
     protected $field;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", inversedBy="answers")
      */
     protected $user;
 
