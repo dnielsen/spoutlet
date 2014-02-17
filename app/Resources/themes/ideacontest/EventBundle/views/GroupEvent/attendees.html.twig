@@ -40,7 +40,12 @@
                                         <td style="padding:5px 0;">
                                             {% set attendeeAnswers = attendee.answersForEvent(event) %}
                                             {% if attendeeAnswers|default %}
-                                                <a href="{{ path('user_event_reg_answers', {'groupSlug': group.slug, 'eventId': event.id, 'userId': attendee.id}) }}" class="viewAnswers">View Answers</a>
+                                                <a href="#" class="viewAnswers" data-id="{{ attendee.id }}" data-name="{{ attendee.name }}">View Answers</a>
+                                                <div id="regAnswers{{ attendee.id }}" style="display:none">
+                                                    {% for answer in attendeeAnswers %}
+                                                        <strong>{{ answer.field.question }}</strong>: {{ answer.answer }}<br/>
+                                                    {% endfor %}
+                                                </div>
                                             {% endif %}
                                         </td>
                                     {% endif %}
@@ -58,6 +63,24 @@
                                     </td>
                                 </tr>
                             {% endfor %}
+
+                            <script type="text/javascript">
+                                $(function() {
+                                    $('.viewAnswers').click(function(e) {
+                                        e.preventDefault();
+
+                                        var userId = $(this).attr('data-id');
+                                        var userName = $(this).attr('data-name');
+
+                                        $('#regAnswers' + userId).dialog({
+                                            show: 'fade',
+                                            hide: 'fade',
+                                            title: userName,
+                                            width: 400
+                                        });
+                                    });
+                                })
+                            </script>
                         </tbody>
                     </table>
                 </div>
