@@ -348,9 +348,6 @@ class GroupEventController extends Controller
         $groupEvent = $this->getGroupEventService()->findOneBy(array(
             'group' => $group->getId(),
             'id' => $eventId,
-            'published' => true,
-            'deleted' => false,
-            'approved' => true,
         ));
 
         if (!$groupEvent) {
@@ -368,12 +365,6 @@ class GroupEventController extends Controller
         if ($hitEmailLimit) {
             $this->setFlash('error', 'platformd.events.event_contact.limit_hit');
 
-            if ($groupEvent->getExternalUrl()) {
-                return $this->redirect($this->generateUrl('group_show', array(
-                    'slug' => $group->getSlug()
-                )) . '#events');
-            }
-
             return $this->redirect($this->generateUrl('group_event_view', array(
                 'groupSlug' => $groupSlug,
                 'eventId' => $groupEvent->getId()
@@ -390,11 +381,15 @@ class GroupEventController extends Controller
             $emailLocale
         ));
 
-        $form = $this->createFormBuilder($email)
+        // Optionally pass in recipient username to pre-populate recipient field
+        $recipient = $request->get('recipient');
+
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'email', $email)
             ->add('users', 'text', array(
                 'property_path' => false,
                 'label' => 'platformd.events.event_contact.form.recipients',
                 'help' => 'platformd.events.event_contact.form.recipient_help',
+                'attr' => array('value' => $recipient),
             ))
             ->add('message', 'purifiedTextarea', array(
                 'attr'  => array('class' => 'ckeditor'),
@@ -469,12 +464,6 @@ class GroupEventController extends Controller
                     array('%attendeeCount%' => ($recipientCount > 0 ? $recipientCount : 'all'))
                 ));
 
-                if ($groupEvent->getExternalUrl()) {
-                    return $this->redirect($this->generateUrl('group_show', array(
-                        'slug' => $group->getSlug()
-                    )) . '#events');
-                }
-
                 return $this->redirect($this->generateUrl('group_event_view', array(
                     'groupSlug' => $groupSlug,
                     'eventId' => $groupEvent->getId()
@@ -485,9 +474,10 @@ class GroupEventController extends Controller
         }
 
         return $this->render('EventBundle:GroupEvent:contact.html.twig', array(
-            'group' => $group,
-            'event' => $groupEvent,
-            'form'  => $form->createView(),
+            'group'       => $group,
+            'event'       => $groupEvent,
+            'form'        => $form->createView(),
+            'breadCrumbs' => $this->getBreadCrumbsString($groupEvent, true),
         ));
     }
 
@@ -578,12 +568,13 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Event does not exist.');
         }
 
-        $attendees = $this->getGroupEventService()->getAttendeeList($groupEvent);
+        $attendees = $groupEvent->getAttendees();
 
         return $this->render('EventBundle:GroupEvent:attendees.html.twig', array(
-            'group'     => $group,
-            'event'     => $groupEvent,
-            'attendees' => $attendees,
+            'group'       => $group,
+            'event'       => $groupEvent,
+            'attendees'   => $attendees,
+            'breadCrumbs' => $this->getBreadCrumbsString($groupEvent, true),
         ));
     }
 

@@ -6,62 +6,50 @@
 
 {% block content %}
 
-    <div class="std_1col" style="padding:0;">
-        {% if event.bannerImage %}
-            <div id="event-banner" style="background:url('{{ media_path_nice(event.bannerImage) }}') top left no-repeat; background-size: 100% 100%; margin: -10px 0 0 0;"></div>
-        {% else %}
-            <div id="event-default-banner"></div>
-        {% endif %}
-    </div>
+    {% if event.registrationFields|length > 0 %}
+        {% set hasRegFields = 1 %}
+    {% endif %}
 
-    <div class="std_1col" style="padding: 0;">
-        <div class="sub-nav-wrapper events-sub-nav-wrapper">
-           <div class="sub-nav events-sub-nav">
-                <ul>
-                    <li><a href="{{ event | pd_link }}">{{ 'platformd.events.event_attendees.back_to_event' | pd_trans }}</a></li>
-                    {% if app.user == event.user or (app.user is not null and app.user.adminLevel == 'ROLE_SUPER_ADMIN') %}
-                        <li><a href="{{ path("group_event_edit", { 'eventId': event.id, "groupSlug": event.group.slug }) }}">{{ 'platformd.events.event_show.edit_event' | pd_trans }}</a></li>
-                        {% if event.registrationOption == "REGISTRATION_ENABLED" %}
-                            <li><a href="{{ path("group_event_contact", event.getLinkableRouteParameters) }}">{{ 'platformd.events.event_show.contact_attendees' | pd_trans }}</a></li>
-                        {% endif %}
-                    {% endif %}
-                    <li><a href="{{ path(event.group.getLinkableRouteName, event.group.getLinkableRouteParameters) }}">Group Home</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
 
     <div class="std_2col" style="margin-top: 10px;">
         <div class="left">
             <div class="widget-66">
                 <div class="widget-header">
-                    <div class="widget-title">Attendees</div>
+                    <div class="widget-title left">Attendees</div>
+                    <a href="{{ path('group_event_contact', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btn right">Contact Attendees</a>
+                    <div class="clr"></div>
                 </div>
                 <div class="widget-content">
                     <table style="width: 100%;">
                         <thead style="text-align:left;">
                             <tr>
-                                {% if canRemove %}<th style="width: 125px; padding:5px 0;">{{ 'platformd.events.event_attendees.action' | pd_trans }}</th>{% endif %}
                                 <th style="padding:5px 0;">Name</th>
-                                <th style="width: 200px; padding:5px 0;">{{ 'platformd.events.event_attendees.joined' | pd_trans }}</th>
-                                <th style="padding:5px 0;">Registration Information</th>
+                                <th style="padding:5px 0;">Contact</th>
+                                {% if hasRegFields|default %}
+                                    <th style="padding:5px 0;">Registration Information</th>
+                                {% endif %}
+                                {% if canRemove %}<th style="width: 125px; padding:5px 0;">{{ 'platformd.events.event_attendees.action' | pd_trans }}</th>{% endif %}
                             </tr>
                         </thead>
                         <tbody>
                             {% for attendee in attendees %}
                                 <tr>
+                                    <td style="padding:5px 0;"><a href="{{ path('profile', {'userId': attendee.id}) }}">{{ attendee.name }}</a></td>
+                                    <td style="padding:5px 0;"><a href="{{ path('group_event_contact', {'groupSlug': group.slug, 'eventId': event.id, 'recipient': attendee.username}) }}">Send Message</a></td>
+                                    {% if hasRegFields|default %}
+                                        <td style="padding:5px 0;">
+                                            {% set attendeeAnswers = attendee.answersForEvent(event) %}
+                                            {% if attendeeAnswers|default %}
+                                                <a href="{{ path('user_event_reg_answers', {'groupSlug': group.slug, 'eventId': event.id, 'userId': attendee.id}) }}" class="viewAnswers">View Answers</a>
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
                                     {% if canRemove %}
                                         <td style="padding:5px 0;">
                                             <a href="{{ path('group_event_remove_attendee', { 'groupSlug': group.slug, 'eventId': event.id, 'userId' : attendee.id }) }}" onclick="return confirm('Are you sure you want to remove \'{{ attendee.username }}\' from this event?');">Remove</a>
                                         </td>
                                     {% endif %}
-                                    <td style="padding:5px 0;">
-                                        <a href="{{ path('profile', {'userId': attendee.id}) }}">{{ attendee.name }}</a>
-                                    </td>
-                                    <td style="padding:5px 0;">{{ attendee.rsvpAt | date('date_format' | pd_trans) }}</td>
-                                    <td style="padding:5px 0;">
-                                        <a href="{{ path('user_event_reg_answers', {'groupSlug': group.slug, 'eventId': event.id, 'userId' : attendee.id }) }}">View Answers</a>
-                                    </td>
+
                                 </tr>
                             {% else %}
                                 <tr>

@@ -124,3 +124,5 @@ sponsor_url: Link
 sponsor_image: Logo
 sponsor_add_level: Level
 
+email_users: Recipients
+email_message: Email Message
