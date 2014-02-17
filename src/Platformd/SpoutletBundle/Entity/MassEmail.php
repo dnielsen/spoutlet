@@ -18,7 +18,7 @@ use Platformd\UserBundle\Entity\User;
  */
 abstract class MassEmail
 {
-    const EMAIL_LIMIT_COUNT  = 2;
+    const EMAIL_LIMIT_COUNT  = 6;
     const EMAIL_LIMIT_PERIOD = '24 hours';
 
     /**
