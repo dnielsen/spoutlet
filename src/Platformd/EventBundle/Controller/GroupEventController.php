@@ -500,7 +500,7 @@ class GroupEventController extends Controller
             $emailLocale
         ));
 
-        $form = $this->createFormBuilder($email)
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'email', $email)
             ->add('users', 'text', array(
                 'property_path' => false,
                 'label' => 'platformd.events.event_contact.form.recipients',

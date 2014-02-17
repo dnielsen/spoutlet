@@ -18,8 +18,8 @@
                         <form id="event-contact-form" action="{{ path('group_event_contact', event.linkableRouteParameters) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
                             {{ form_widget(form) }}
                             <div class="form-actions right" >
-                                <input type="submit" id="preview" class="btn" formnovalidate value="Preview"/>
-                                <input type="submit" id="submit" class="btn" formnovalidate value="Send"/>
+                                <input type="submit" id="preview" formnovalidate value="Preview"/>
+                                <input type="submit" id="submit" formnovalidate value="Send"/>
                                 <a class="btnLg" href="{{ path('group_event_attendees', {'eventId': event.id, 'groupSlug': group.slug}) }}">Cancel</a>
                             </div>
                         </form>
