@@ -5,6 +5,7 @@ namespace Platformd\IdeaBundle\Controller;
 use DateTime;
 use Platformd\EventBundle\Entity\Event;
 use Platformd\EventBundle\Entity\EventRsvpAction;
+use Platformd\EventBundle\Entity\EventSession;
 use Platformd\EventBundle\Entity\GroupEvent;
 use Platformd\EventBundle\Entity\GroupEventRsvpAction;
 use Platformd\GroupBundle\Entity\Group;
@@ -26,6 +27,87 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class AdminController extends Controller
 {
+
+
+    /**
+     * @param Request $request
+     * @param string $groupSlug
+     * @param int $eventId
+     */
+    public function createEventSessionAction(Request $request, $groupSlug, $eventId, $sessionId) {
+        $group = $this->getGroup($groupSlug);
+        $event = $this->getEvent($groupSlug, $eventId);
+        $evtSession = $this->getEventSession($groupSlug, $eventId, $sessionId);
+
+        $isNew = $evtSession == null;
+        if ($isNew) {
+            $evtSession = new EventSession($event);
+        }
+
+        else {
+            $this->validateAuthorization($event);
+        }
+
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'evtSession', $evtSession)
+            ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
+            ->add('description',        'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
+            ->add('startsAt',           'datetime',         array('widget'  => 'single_text', 'required' => '0'))
+            ->add('endsAt',             'datetime',         array('widget'  => 'single_text', 'required' => '0'))
+            ->getForm();
+
+        if($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+            if($form->isValid()) {
+
+                $em = $this->getDoctrine()->getEntityManager();
+
+                if ($isNew) {
+
+                    $event->addSession($evtSession);
+
+                    //$evtSession->setUser($this->getCurrentUser());
+                    $em->persist($evtSession);
+
+                    // Registration needs to be created after event is persisted, relies on generated event ID
+                    //$esReg = $evtSession->createEntrySetRegistration();
+                    //$em->persist($esReg);
+                }
+
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('group_event_view', array(
+                    'groupSlug' => $groupSlug,
+                    'eventId' => $event->getId(),
+                )));
+            }
+            else {
+                $errorString = '';
+                foreach ($form->getErrors() as $key => $error) {
+                    $template = $error->getMessageTemplate();
+                    $parameters = $error->getMessageParameters();
+
+                    foreach($parameters as $var => $value){
+                        $template = str_replace($var, $value, $template);
+                    }
+
+                    $errorString .= $template.'<br/>';
+                }
+                if (!$errorString) {
+                    $errorString = 'Please see fields below for errors';
+                }
+                $this->setFlash('error', $errorString);
+            }
+        }
+
+        return $this->render('IdeaBundle:Admin:sessionForm.html.twig', array(
+            'form'      => $form->createView(),
+            'isNew'     => $isNew,
+            'group'     => $group,
+            'event'     => $event,
+            'evtSession'=> $evtSession,
+            'isAdmin'   => $this->isGranted('ROLE_ADMIN'),
+        ));
+    }
 
     public function eventAction(Request $request, $groupSlug, $eventId)
     {
@@ -700,6 +782,27 @@ class AdminController extends Controller
         return $event;
     }
 
+    public function getEventSession($groupSlug, $eventId, $sessionId)
+    {
+        $event = $this->getEvent($groupSlug, $eventId);
+
+        if (!$event){
+            return false;
+        }
+
+        $evtSessionEm = $this->getDoctrine()->getRepository('EventBundle:EventSession');
+        $evtSession = $evtSessionEm->findOneBy(
+            array(
+                'event' => $event->getId(),
+                'id' => $sessionId,
+            )
+        );
+        if ($evtSession == null){
+            return false;
+        }
+        return $evtSession;
+    }
+
     public function assignJudgesAction(Request $request, $groupSlug, $eventId, $ideaId)
     {
         $doc = $this->getDoctrine();
@@ -870,7 +973,7 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('default_index'));
     }
 
-    public function validateAuthorization($event)
+    public function validateAuthorization(Event $event)
     {
         if (!$this->canEditEvent($event)) {
             throw new AccessDeniedException();
