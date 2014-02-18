@@ -12,7 +12,12 @@
             {% set _isOwner = false %}
             {% set _canDelete = false %}
             {% set menu_scope = 'other' %}
-            {% if app.request.get('entryId')|default %}
+            {% if app.request.get('sessionId')|default %}
+                {% set menu_scope = 'session' %}
+                {% if eventSession|default %}
+                    {% set _isOwner = (eventSession.event.user == app.user) or (is_granted('ROLE_ADMIN')) %}
+                {% endif %}
+            {% elseif app.request.get('entryId')|default %}
                 {% set menu_scope = 'entry' %}
                 {% set _key = app.request.get('entryId') %}
                 {% set _key2 = app.request.get('entrySetId') %}
@@ -91,7 +96,7 @@
                                     <li><a href="{{ path('group_event_attendees', {'eventId': _key, 'groupSlug': _key2}) }}">Manage Attendees</a></li>
                                     <li><a href="{{ path('sponsors', {'scope': 'event', 'containerId': event.id}) }}">Manage Sponsors</a></li>
                                     <li><a href="{{ path('idea_admin_images', {'groupSlug': _key2, 'eventId': _key}) }}">Manage Images</a></li>
-                                    <li><a href="{{ path('event_session_edit', {'eventId': _key, 'groupSlug': _key2}) }}">Create Session</a></li>
+                                    <li><a href="{{ path('event_session_create', {'eventId': _key, 'groupSlug': _key2}) }}">Create Session</a></li>
                                 {% endif %}
                                 {% if _isPrivate %}
                                     <li><a href="{{ path('idea_admin_member_approvals', {'groupSlug': _key2, 'eventId': _key}) }}">Membership Approvals</a></li>
@@ -117,7 +122,12 @@
                             {% if _canDelete %}
                                 <li><a href="{{ path('idea_delete', {'entryId': _key, 'entrySetId': _key2}) }}" onclick="return confirm('Are you sure you want to delete this entry?');">Delete Entry</a></li>
                             {% endif %}
+                        {% elseif menu_scope == 'session' %}
+                            {% if _isOwner %}
+                                <li><a href="{{ path('event_session_edit', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': eventSession.id}) }}">Edit Session</a></li>
+                            {% endif %}
                         {% endif %}
+
                     </ul>
                 </li>
             {% endif %}
