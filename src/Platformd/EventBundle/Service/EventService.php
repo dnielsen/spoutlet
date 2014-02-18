@@ -287,7 +287,7 @@ class EventService
         $rsvpAction->setUser($user);
         $rsvpAction->setEvent($event);
 
-        if ($event->getPrivate()) {
+        if ($event->getPrivate() && ($event->getUser() != $user) ) {
             $rsvpAction->setAttendance(EventRsvpAction::ATTENDING_PENDING);
         }
         else {

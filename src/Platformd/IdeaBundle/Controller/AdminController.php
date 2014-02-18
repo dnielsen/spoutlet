@@ -171,6 +171,8 @@ class AdminController extends Controller
                     // Registration needs to be created after event is persisted, relies on generated event ID
                     $esReg = $event->createEntrySetRegistration();
                     $em->persist($esReg);
+
+                    $this->getGroupEventService()->register($event, $event->getUser());
                 }
                 else {
                     // If the form no longer contains fields that were in the original list, delete them
