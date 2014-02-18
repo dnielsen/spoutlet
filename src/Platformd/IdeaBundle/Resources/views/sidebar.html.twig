@@ -17,10 +17,6 @@
 
     <h2 class="widgetHeader">Event Details</h2>
     <table id="eventDetails" class="tblStyle spcr-b3">
-        <tr>
-            <td><strong>Organizer:</strong></td>
-            <td><a href="{{ path('profile', {'userId':event.user.id}) }}">{{ event.user.name }}</a></td>
-        </tr>
         {% if event.startsAt %}
             <tr>
                 <td width="25%"><strong>When:</strong></td>
