@@ -1197,6 +1197,41 @@ class IdeaController extends Controller
         ));
     }
 
+    public function eventSessionAction ($groupSlug, $eventId, $sessionId) {
+
+        $event = $this->getEvent($groupSlug, $eventId);
+
+        $eventSession = $this->getEventSession($groupSlug, $eventId, $sessionId);
+
+        if (!$eventSession) {
+            throw new NotFoundHttpException('Session not found.');
+        }
+
+        return $this->render('IdeaBundle:Idea:session.html.twig', array(
+            'group'        => $event->getGroup(),
+            'event'        => $event,
+            'eventSession' => $eventSession,
+            'sidebar'       => true,
+            'breadCrumbs'  => $this->getBreadCrumbsString($eventSession),
+        ));
+    }
+
+    public function eventSessionsAction ($groupSlug, $eventId)
+    {
+        $event = $this->getEvent($groupSlug, $eventId);
+
+        if (!$event) {
+            throw new NotFoundHttpException('Event not found.');
+        }
+
+        return $this->render('IdeaBundle:Idea:sessions.html.twig', array (
+            'group'        => $event->getGroup(),
+            'event'        => $event,
+            'sidebar'      => true,
+            'breadCrumbs'  => $this->getBreadCrumbsString($event, true),
+        ));
+    }
+
 
     public function infoPageAction($groupSlug, $page)
     {
@@ -1377,6 +1412,23 @@ class IdeaController extends Controller
         }
 
         return $entry;
+    }
+
+    public function getEventSession($groupSlug, $eventId, $sessionId)
+    {
+        $event = $this->getEvent($groupSlug, $eventId);
+
+        if (!$event){
+            return false;
+        }
+
+        $evtSession = $this->getDoctrine()->getRepository('EventBundle:EventSession')->find($sessionId);
+
+        if ($evtSession == null){
+            return false;
+        }
+
+        return $evtSession;
     }
 
     public function canEditEntrySet($entrySet)

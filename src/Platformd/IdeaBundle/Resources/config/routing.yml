@@ -39,15 +39,29 @@ entry_set_delete:
     pattern:    /list/{entrySetId}/delete
     defaults:   { _controller: IdeaBundle:Admin:entrySetDelete }
 
+# Session Routes
+
+event_session_create:
+    pattern:    /{groupSlug}/event/{eventId}/createSession
+    defaults:   { _controller: IdeaBundle:Admin:eventSession }
+
+event_session_edit:
+    pattern:    /{groupSlug}/event/{eventId}/session/{sessionId}/edit
+    defaults:   { _controller: IdeaBundle:Admin:eventSession }
+
+event_session:
+    pattern:    /{groupSlug}/event/{eventId}/session/{sessionId}
+    defaults:   { _controller: IdeaBundle:Idea:eventSession }
+
+event_session_schedule:
+    pattern:    /{groupSlug}/event/{eventId}/sessions
+    defaults:   { _controller: IdeaBundle:Idea:eventSessions }
+
 # Admin Routes
 
 idea_admin_event:
     pattern:    /{groupSlug}/event/{eventId}/admin/configure
     defaults:   { _controller: IdeaBundle:Admin:event, eventId:newEvent}
-
-event_session_edit:
-    pattern:    /{groupSlug}/event/{eventId}/session/{sessionId}
-    defaults:   { _controller: IdeaBundle:Admin:createEventSession, sessionId:newSession}
 
 idea_admin:
     pattern:    /{groupSlug}/event/{eventId}/admin

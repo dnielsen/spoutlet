@@ -3,14 +3,15 @@
 {% block content %}
     {% if isNew %}
         {% set verb = 'Create' %}
+        {% set formAction = path('event_session_create', {'groupSlug': group.slug, 'eventId': event.id }) %}
     {% else %}
         {% set verb = 'Modify' %}
+        {% set formAction = path('event_session_edit', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': evtSession.id}) %}
     {% endif %}
 
     <h1>{{ verb }} Your Session</h1>
 
-    <form action="{{ path('event_session_edit', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': evtSession.id}) }}"
-          method="post" {{ form_enctype(form) }} id="evtSession" novalidate>
+    <form action="{{ formAction }}" method="post" {{ form_enctype(form) }} id="evtSession" novalidate>
         {{ form_row(form.name) }}
         {{ form_row(form.description) }}
         {{ form_row(form.startsAt) }}

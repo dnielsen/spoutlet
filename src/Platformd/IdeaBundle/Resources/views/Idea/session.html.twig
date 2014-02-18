@@ -1,0 +1,9 @@
+{% extends 'IdeaBundle::event_layout.html.twig' %}
+
+{% block content %}
+    <h1 class="idea-name">{{ eventSession.name }}</h1>
+
+    {{ eventSession.description | raw }}
+
+{% endblock %}
+

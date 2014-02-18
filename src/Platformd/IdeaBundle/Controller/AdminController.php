@@ -34,18 +34,23 @@ class AdminController extends Controller
      * @param string $groupSlug
      * @param int $eventId
      */
-    public function createEventSessionAction(Request $request, $groupSlug, $eventId, $sessionId) {
-        $group = $this->getGroup($groupSlug);
+    public function eventSessionAction(Request $request, $groupSlug, $eventId, $sessionId = null)
+    {
         $event = $this->getEvent($groupSlug, $eventId);
-        $evtSession = $this->getEventSession($groupSlug, $eventId, $sessionId);
 
-        $isNew = $evtSession == null;
-        if ($isNew) {
-            $evtSession = new EventSession($event);
+        if (!$event) {
+            throw new NotFoundHttpException('Event not found.');
         }
 
-        else {
+        $isNew = false;
+
+        if ($sessionId) {
             $this->validateAuthorization($event);
+            $evtSession = $this->getEventSession($groupSlug, $eventId, $sessionId);
+        }
+        else {
+            $evtSession = new EventSession($event);
+            $isNew = true;
         }
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'evtSession', $evtSession)
@@ -55,57 +60,41 @@ class AdminController extends Controller
             ->add('endsAt',             'datetime',         array('widget'  => 'single_text', 'required' => '0'))
             ->getForm();
 
-        if($request->getMethod() == 'POST') {
+        if($request->getMethod() == 'POST')
+        {
             $form->bindRequest($request);
-            if($form->isValid()) {
 
+            if($form->isValid())
+            {
                 $em = $this->getDoctrine()->getEntityManager();
 
                 if ($isNew) {
 
                     $event->addSession($evtSession);
-
-                    //$evtSession->setUser($this->getCurrentUser());
                     $em->persist($evtSession);
 
                     // Registration needs to be created after event is persisted, relies on generated event ID
+                    //$em->flush();
                     //$esReg = $evtSession->createEntrySetRegistration();
                     //$em->persist($esReg);
                 }
 
                 $em->flush();
 
-                return $this->redirect($this->generateUrl('group_event_view', array(
+                return $this->redirect($this->generateUrl('event_session', array(
                     'groupSlug' => $groupSlug,
-                    'eventId' => $event->getId(),
+                    'eventId'   => $eventId,
+                    'sessionId' => $evtSession->getId(),
                 )));
-            }
-            else {
-                $errorString = '';
-                foreach ($form->getErrors() as $key => $error) {
-                    $template = $error->getMessageTemplate();
-                    $parameters = $error->getMessageParameters();
-
-                    foreach($parameters as $var => $value){
-                        $template = str_replace($var, $value, $template);
-                    }
-
-                    $errorString .= $template.'<br/>';
-                }
-                if (!$errorString) {
-                    $errorString = 'Please see fields below for errors';
-                }
-                $this->setFlash('error', $errorString);
             }
         }
 
         return $this->render('IdeaBundle:Admin:sessionForm.html.twig', array(
             'form'      => $form->createView(),
             'isNew'     => $isNew,
-            'group'     => $group,
+            'group'     => $event->getGroup(),
             'event'     => $event,
             'evtSession'=> $evtSession,
-            'isAdmin'   => $this->isGranted('ROLE_ADMIN'),
         ));
     }
 
@@ -790,16 +779,12 @@ class AdminController extends Controller
             return false;
         }
 
-        $evtSessionEm = $this->getDoctrine()->getRepository('EventBundle:EventSession');
-        $evtSession = $evtSessionEm->findOneBy(
-            array(
-                'event' => $event->getId(),
-                'id' => $sessionId,
-            )
-        );
+        $evtSession = $this->getDoctrine()->getRepository('EventBundle:EventSession')->find($sessionId);
+
         if ($evtSession == null){
             return false;
         }
+
         return $evtSession;
     }
 
