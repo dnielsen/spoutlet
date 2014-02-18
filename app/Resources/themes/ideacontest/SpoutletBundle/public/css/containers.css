@@ -337,6 +337,9 @@
 
 /*::::::::::::::: TABLE :::::::::::::::*/
 
+table.sessions {
+    width: 100%;
+}
 table.sessions td:first-child {
     width: 25%;
     font-weight: bold;
@@ -345,6 +348,11 @@ table.sessions td {
     padding: 10px;
     border-bottom: 1px solid #e5e5e5;
     line-height: 18px;
+}
+table.sessions th {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 table.tblStyle {
