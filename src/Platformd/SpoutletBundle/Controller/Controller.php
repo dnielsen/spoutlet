@@ -4,6 +4,7 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\EventBundle\Entity\Event;
 use Platformd\EventBundle\Entity\GroupEvent;
+use Platformd\EventBundle\Entity\EventSession;
 use Platformd\GroupBundle\Entity\Group;
 use Platformd\IdeaBundle\Entity\EntrySet;
 use Platformd\IdeaBundle\Entity\Idea;
@@ -463,13 +464,19 @@ class Controller extends BaseController
     }
     protected function getHierarchy($scope)
     {
-        $group    = null;
-        $event    = null;
-        $entrySet = null;
-        $entry    = null;
+        $group         = null;
+        $event         = null;
+        $entrySet      = null;
+        $entry         = null;
+        $eventSession  = null;
 
         $entrySetParent   = null;
 
+        if ($scope instanceof EventSession) {
+            $eventSession = $scope;
+            $event        = $eventSession->getEvent();
+            $group        = $event->getGroup();
+        }
         if ($scope instanceof Idea) {
             $entry          = $scope;
             $entrySet       = $entry->getEntrySet();
@@ -500,6 +507,7 @@ class Controller extends BaseController
             $event,
             $entrySet,
             $entry,
+            $eventSession,
         );
     }
 }
