@@ -142,8 +142,14 @@ class AdminController extends Controller
                                                                   'allow_delete'    => true,
                                                                   'by_reference'    => false))
             ->add('externalUrl',        'text',             array('attr'    => array('size' => '60%', 'placeholder' => 'http://')))
-            ->add('startsAt',           'datetime',         array('widget'  => 'single_text', 'required' => '0'))
-            ->add('endsAt',             'datetime',         array('widget'  => 'single_text', 'required' => '0'))
+            ->add('startsAt',           'datetime',         array('date_widget'  => 'single_text',
+                                                                  'date_format'  => 'L/dd/yyyy',
+                                                                  'time_widget'  => 'single_text',
+                                                                  'required' => '0'))
+            ->add('endsAt',             'datetime',         array('date_widget'  => 'single_text',
+                                                                  'date_format'  => 'L/dd/yyyy',
+                                                                  'time_widget'  => 'single_text',
+                                                                  'required' => '0'))
             ->add('online',             'choice',           array('choices' => array('1' => 'Yes', '0' => 'No')))
             ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))

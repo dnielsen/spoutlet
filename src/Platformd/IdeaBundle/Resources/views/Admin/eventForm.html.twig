@@ -17,16 +17,68 @@
 
             $('#event_registrationOption').change(function() {
                 toggleRegistrationControls();
-            })
+            });
 
-            $('#event_startsAt').datetimepicker({step: 15, format:'Y-m-d H:i:s'});
-            $('#event_endsAt').datetimepicker({step: 15, format:'Y-m-d H:i:s'});
+            var startDateInput = $('#event_startsAt_date');
+            var startTimeInput = $('#event_startsAt_time');
+            var endDateInput   = $('#event_endsAt_date');
+            var endTimeInput   = $('#event_endsAt_time');
+
+            startDateInput.datetimepicker({
+                timepicker: false,
+                format: 'n/d/Y',
+                onChangeDateTime:function(){
+                    startDateInput.change();
+                }
+            });
+            endDateInput.datetimepicker({
+                timepicker: false,
+                format: 'n/d/Y'
+            });
+            startTimeInput.datetimepicker({
+                datepicker:false,
+                format: 'H:i:s',
+                step: 15,
+                onChangeDateTime:function(){
+                    startTimeInput.change();
+                }
+            });
+            endTimeInput.datetimepicker({
+                datepicker:false,
+                format: 'H:i:s',
+                step: 15
+            });
 
             {% if isNew %}
                 var now = new Date();
-                var date = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+(now.getDate());
-                $('#event_startsAt').val(date + ' 18:00:00');
-                $('#event_endsAt').val(date + ' 22:00:00');
+                var date = (now.getMonth()+1)+'/'+(now.getDate())+'/'+now.getFullYear();
+                startDateInput.val(date);
+                endDateInput.val(date);
+                startTimeInput.val('18:30:00');
+                endTimeInput.val('21:00:00');
+
+                startDateInput.change(function() {
+                    endDateInput.val($(this).val());
+                });
+
+                startTimeInput.change(function() {
+                    var startTime = $(this).val();
+                    var startHour = parseInt(startTime.substring(0,2));
+                    var endTime;
+
+                    if (startHour >= 22) {
+                        endTime = '23:45:00';
+                    }
+                    else {
+                        var endHour = startHour + 2;
+                        if (endHour < 10) {
+                            endHour = '0' + endHour;
+                        }
+                        endTime = endHour + startTime.substring(2);
+                    }
+                    endTimeInput.val(endTime);
+                });
+
             {% endif %}
 
             function toggleLocationControls() {
