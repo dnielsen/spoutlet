@@ -120,12 +120,10 @@ services:
 
     platformd.avatar_resolver:
         class:  'Platformd\UserBundle\AvatarPathResolver'
-        arguments:
+        arguments:            
             - @avatar_filesystem
             - avatars
-            - "%object_storage%"
-            - "%hpcloud_url%"
-            - "%hpcloud_container%"
+            - @service_container
         parent: platformd.path_resolver
         tags:
             - { name: 'knp_media_exposer.resolver' }
@@ -135,10 +133,7 @@ services:
         arguments:
             - @gallary_filesystem
             - gallarys
-            - "%object_storage%"
-            - "%hpcloud_url%"
-            - "%hpcloud_container%"
-
+            - @service_container
         parent: platformd.path_resolver
         tags:
             - { name: 'knp_media_exposer.resolver' }

@@ -161,4 +161,17 @@ class Media extends BaseMedia implements MediaOwnerInterface
       } 
       return  $cf.'/'.$path.'/'.$userUuid;
     }
+    
+    public function getImagePathUrl($bucketName='',$path='',$prefix='')
+    {
+      if($this->objectStorage == "HpObjectStorage"){
+         $cf = $this->hpcloud_url.$this->hpcloud_container;
+      }
+      else {
+        $cf = "https://s3.amazonaws.com/".$bucketName;
+      }
+      //echo "URL IS--".$cf.$prefix.'/'.$path;exit;
+      
+      return sprintf('%s%s/%s', $cf, $prefix, $path); 
+    }
 }

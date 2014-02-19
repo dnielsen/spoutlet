@@ -9,6 +9,8 @@ services:
         class:  'Platformd\SpoutletBundle\BannerPathResolver'
         arguments:
             - @event_filesystem
+            - '0'
+            - @service_container
         parent: platformd.path_resolver
         tags:
             - { name: 'knp_media_exposer.resolver' }

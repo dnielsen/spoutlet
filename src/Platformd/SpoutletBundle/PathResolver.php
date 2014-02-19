@@ -6,8 +6,9 @@ use MediaExposer\PathResolver as BasePathResolver;
 use Gaufrette\Adapter\AmazonS3;
 use Gaufrette\Filesystem;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-//use Symfony\Component\DependencyInjection\Container as Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface as Container;
+
 /**
  * Our generic Path resolver that gets things from Gaufrette
  *
@@ -30,18 +31,21 @@ abstract class PathResolver implements BasePathResolver
    * @var string
    */
   protected $bucketName;
-
-  protected $objectStorage;
+  
   /**
    * @param Gaufrette\Filesystem $filesystem
-   */
-  public function __construct(Filesystem $filesystem, $prefix = '', $objectStorage = '', $hpcloud_url ='', $hpcloud_container='')
+   */ 
+  public function __construct(Filesystem $filesystem, $prefix = '',Container $container)
   {
     $this->filesystem = $filesystem;
     $this->prefix = $prefix == '' ?: substr($prefix, 0, 1) == "/" ? $prefix : '/'.$prefix;
-    $this->objectStorage = $objectStorage;
-    $this->hpcloud_url = $hpcloud_url;
-    $this->hpcloud_container = $hpcloud_container;
+    $this->container = $container;
+  }
+  
+  
+  public function getMediaManager()
+  {
+    return $this->container->get('platformd.media.entity_uploadStorage');
   }
 
   /**
@@ -55,16 +59,9 @@ abstract class PathResolver implements BasePathResolver
     $this->bucketName = $name;
   }
 
-  public function getPath($path, array $options)
+  public function getPath($path, array $options) 
   {
-    if ($this->filesystem->getAdapter() instanceof AmazonS3) {
-
-        $cf = 'http://'.$this->bucketName.'.s3.amazonaws.com';
-
-        return sprintf('%s%s/%s', $cf, $this->prefix, $path);
-    }
-
-    return '/uploads'.$this->prefix.'/'.$path;
+    echo 'called';exit;
+    return $this->getMediaManager()->getImagePathUrl($this->bucketName, $path, $this->prefix);
   }
-
 }

@@ -7,6 +7,9 @@ use Platformd\SpoutletBundle\Entity\AbstractEvent;
 use Platformd\GiveawayBundle\Entity\Giveaway;
 use Platformd\GiveawayBundle\Entity\GiveawayTranslation;
 
+use Gaufrette\Filesystem;
+use Symfony\Component\DependencyInjection\ContainerInterface as Container;
+
 /**
 * Path resolver for the event images
 */
@@ -38,10 +41,10 @@ class BannerPathResolver extends PathResolver
         default:
             throw new \InvalidArgumentException('Invalid type '.$type);
     }
-
+    //return $this->getMediaManager()->getImagePathUrl($this->bucketName, $path, $this->prefix); 
     return parent::getPath($path, $options);
   }
-
+  
   /**
    * {@inheritDoc}
    */

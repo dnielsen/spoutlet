@@ -6,6 +6,9 @@ use Platformd\SpoutletBundle\PathResolver;
 use Platformd\UserBundle\Entity\User;
 use Platformd\UserBundle\Entity\Avatar;
 
+use Gaufrette\Filesystem;
+use Symfony\Component\DependencyInjection\ContainerInterface as Container;
+
 class AvatarPathResolver extends PathResolver
 {
   const AVATAR_BASE_URL = 'http://s3.amazonaws.com/';
@@ -37,6 +40,7 @@ class AvatarPathResolver extends PathResolver
        $cf = $this->hpcloud_url.$this->hpcloud_container."/images/avatar";
      //  $cf= "http://h5926e0c7296f55bd19c9ce2d388c71a3.cdn.hpcloudsvc.com";
     }
+    
     if($this->objectStorage == 'HpObjectStorage') {
       $url = $avatarUsable ? $cf.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$directory.'/'.$filename : false;
       $url = $cf.'/'.$userFaceImage."_s";
