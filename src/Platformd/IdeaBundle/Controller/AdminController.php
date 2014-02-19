@@ -95,7 +95,33 @@ class AdminController extends Controller
             'group'     => $event->getGroup(),
             'event'     => $event,
             'evtSession'=> $evtSession,
+            'breadCrumbs' => $this->getBreadCrumbsString($evtSession),
         ));
+    }
+
+    public function eventSessionDeleteAction($groupSlug, $eventId, $sessionId) {
+
+        $event = $this->getEvent($groupSlug, $eventId);
+
+        if (!$event) {
+            throw new NotFoundHttpException('Event not found.');
+        }
+
+        $this->validateAuthorization($event);
+
+        $evtSession = $this->getEventSession($groupSlug, $eventId, $sessionId);
+
+        if (!$evtSession) {
+            throw new NotFoundHttpException('Session not found.');
+        }
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->remove($evtSession);
+        $em->flush();
+
+        $this->setFlash('success', 'Session \''.$evtSession->getName().'\' has been deleted.');
+
+        return $this->redirect($this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters()));
     }
 
     public function eventAction(Request $request, $groupSlug, $eventId)

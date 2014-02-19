@@ -125,6 +125,7 @@
                         {% elseif menu_scope == 'session' %}
                             {% if _isOwner %}
                                 <li><a href="{{ path('event_session_edit', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': eventSession.id}) }}">Edit Session</a></li>
+                                <li><a href="{{ path('event_session_delete', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': eventSession.id}) }}" onclick="return confirm('Are you sure you want to delete this session?');">Delete Session</a></li>
                             {% endif %}
                         {% endif %}
 
