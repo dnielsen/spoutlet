@@ -36,6 +36,13 @@ class AdminController extends Controller
      */
     public function eventSessionAction(Request $request, $groupSlug, $eventId, $sessionId = null)
     {
+        if ($request->get('cancel') == 'Cancel') {
+            return $this->redirect($this->generateUrl('group_event_view', array(
+                'groupSlug'  => $groupSlug,
+                'eventId'    => $eventId,
+            )));
+        }
+
         $event = $this->getEvent($groupSlug, $eventId);
 
         if (!$event) {
