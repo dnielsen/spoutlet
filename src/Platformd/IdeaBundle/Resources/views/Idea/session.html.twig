@@ -3,6 +3,11 @@
 {% block content %}
     <h1 class="idea-name">{{ eventSession.name }}</h1>
 
+    <hr class="small-margin"/>
+    {{ eventSession.dateString }}<br/>
+    {{ eventSession.timeRangeString }}
+    <hr/>
+
     {{ eventSession.description | raw }}
 
 {% endblock %}

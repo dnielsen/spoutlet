@@ -721,6 +721,22 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         return $dateAndTime;
     }
 
+    public function getStartDateString() {
+        return $this->getStartsAt()->format('n/d/Y');
+    }
+
+    public function getEndDateString() {
+        return $this->getEndsAt()->format('n/d/Y');
+    }
+
+    public function isMultiDay()
+    {
+        if ($this->getStartDateString() == $this->getEndDateString()) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Returns the start datetime converted into the timezone of the user
      *

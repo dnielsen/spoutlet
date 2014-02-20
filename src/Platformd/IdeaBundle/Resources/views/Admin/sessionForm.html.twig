@@ -14,6 +14,9 @@
     <form action="{{ formAction }}" method="post" {{ form_enctype(form) }} id="evtSession" novalidate>
         {{ form_row(form.name) }}
         {{ form_row(form.description) }}
+        <div id="date-row" style="display:none;">
+            {{ form_row(form.date) }}
+        </div>
         {{ form_row(form.startsAt) }}
         {{ form_row(form.endsAt) }}
         {{ form_rest(form) }}
@@ -30,5 +33,75 @@
         {% endif %}
 
     </form>
+
+    <script type="text/javascript">
+        $(function() {
+
+            var dateInput      = $('#evtSession_date');
+            var startTimeInput = $('#evtSession_startsAt');
+            var endTimeInput   = $('#evtSession_endsAt');
+
+            {% if event.isMultiDay %}
+                $('#date-row').show();
+                dateInput.datetimepicker({
+                    timepicker: false,
+                    format: 'n/d/Y',
+                    formatDate: 'n/d/Y',
+                    minDate: '{{ event.startDateString }}',
+                    maxDate: '{{ event.endDateString }}'
+                });
+            {% endif %}
+
+            {% if isNew %}
+                dateInput.val('{{ event.startDateString }}');
+                startTimeInput.val('18:30:00');
+                endTimeInput.val('19:00:00');
+            {% endif %}
+
+            startTimeInput.datetimepicker({
+                datepicker:false,
+                format: 'H:i:s',
+                step: 15,
+                onChangeDateTime:function(){
+                    startTimeInput.change();
+                }
+            });
+            endTimeInput.datetimepicker({
+                datepicker:false,
+                format: 'H:i:s',
+                step: 15
+            });
+
+            startTimeInput.change(function() {
+                var startTime = $(this).val();
+                var startHour = parseInt(startTime.substring(0,2));
+                var startMinutes = parseInt(startTime.substring(3,5));
+                var endHour;
+                var endMinutes;
+
+                if (startMinutes >= 30) {
+                    endHour = startHour + 1;
+                    endMinutes = startMinutes-30;
+                }
+                else {
+                    endHour = startHour;
+                    endMinutes = startMinutes + 30;
+                }
+                if (endMinutes < 10) {
+                    endMinutes = '0' + endMinutes;
+                }
+                if (endHour < 10) {
+                    endHour = '0' + endHour;
+                }
+                if (endHour > 23) {
+                    endHour = 23;
+                    endMinutes = 59;
+                }
+                endTimeInput.val(endHour + ':' + endMinutes + ':00');
+            });
+
+        })
+    </script>
+
 
 {% endblock %}

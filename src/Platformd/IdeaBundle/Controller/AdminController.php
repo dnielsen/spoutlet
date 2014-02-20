@@ -62,9 +62,12 @@ class AdminController extends Controller
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'evtSession', $evtSession)
             ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
-            ->add('description',        'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
-            ->add('startsAt',           'datetime',         array('widget'  => 'single_text', 'required' => '0'))
-            ->add('endsAt',             'datetime',         array('widget'  => 'single_text', 'required' => '0'))
+            ->add('description',        'textarea',         array('attr'    => array('class' => 'inPt', 'rows' => '6')))
+            ->add('date',               'date',             array('widget'  => 'single_text',
+                                                                  'format'  => 'L/dd/yyyy',
+                                                                  'required' => false))
+            ->add('startsAt',           'time',             array('widget'  => 'single_text', 'required' => false))
+            ->add('endsAt',             'time',             array('widget'  => 'single_text', 'required' => false))
             ->getForm();
 
         if($request->getMethod() == 'POST')
@@ -75,23 +78,27 @@ class AdminController extends Controller
             {
                 $em = $this->getDoctrine()->getEntityManager();
 
-                if ($isNew) {
+                $date = $evtSession->getDate();
+                $year = $date->format('Y');
+                $month = $date->format('n');
+                $day = $date->format('d');
 
+                // Set date for start and end times from date input
+                $evtSession->getStartsAt()->setDate($year, $month, $day);
+                $evtSession->getEndsAt()->setDate($year, $month, $day);
+
+                if ($isNew)
+                {
                     $event->addSession($evtSession);
                     $em->persist($evtSession);
-
-                    // Registration needs to be created after event is persisted, relies on generated event ID
-                    //$em->flush();
-                    //$esReg = $evtSession->createEntrySetRegistration();
-                    //$em->persist($esReg);
                 }
 
                 $em->flush();
 
                 return $this->redirect($this->generateUrl('event_session', array(
-                    'groupSlug' => $groupSlug,
-                    'eventId'   => $eventId,
-                    'sessionId' => $evtSession->getId(),
+                    'groupSlug'   => $groupSlug,
+                    'eventId'     => $eventId,
+                    'sessionId'   => $evtSession->getId(),
                 )));
             }
         }

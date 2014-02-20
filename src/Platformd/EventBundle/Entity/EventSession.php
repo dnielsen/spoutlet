@@ -57,6 +57,12 @@ class EventSession //implements EntrySetScopeable
     protected $event;
 
     /**
+     * @var \DateTime $date
+     * @ORM\Column(name="date", type="datetime", nullable=true)
+     */
+    protected $date;
+
+    /**
      * Event starts at
      *
      * @var \DateTime $startsAt
@@ -166,6 +172,34 @@ class EventSession //implements EntrySetScopeable
     {
         return $this->name;
     }
+
+    /**
+     * @param \DateTime $date
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    public function getDateString()
+    {
+        $date = $this->getDate();
+        if ($date){
+            return $date->format('M d, Y');
+        }
+        else {
+            return null;
+        }
+    }
+
 
     public function getTimeRangeString()
     {
