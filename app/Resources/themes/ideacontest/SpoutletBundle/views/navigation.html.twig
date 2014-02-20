@@ -93,10 +93,10 @@
                                 <li><a href="{{ path('idea_admin_event', {'eventId': _key, 'groupSlug': _key2}) }}">Edit Event Details</a></li>
                                 {% if _regId|default %}
                                     <li><a href = "{{ path('entry_set_new', {'registrationId': _regId, 'entrySetId': 'new'}) }}">Create List</a></li>
+                                    <li><a href="{{ path('event_session_create', {'eventId': _key, 'groupSlug': _key2}) }}">Create Session</a></li>
                                     <li><a href="{{ path('group_event_attendees', {'eventId': _key, 'groupSlug': _key2}) }}">Manage Attendees</a></li>
                                     <li><a href="{{ path('sponsors', {'scope': 'event', 'containerId': event.id}) }}">Manage Sponsors</a></li>
                                     <li><a href="{{ path('idea_admin_images', {'groupSlug': _key2, 'eventId': _key}) }}">Manage Images</a></li>
-                                    <li><a href="{{ path('event_session_create', {'eventId': _key, 'groupSlug': _key2}) }}">Create Session</a></li>
                                 {% endif %}
                                 {% if _isPrivate %}
                                     <li><a href="{{ path('idea_admin_member_approvals', {'groupSlug': _key2, 'eventId': _key}) }}">Membership Approvals</a></li>
