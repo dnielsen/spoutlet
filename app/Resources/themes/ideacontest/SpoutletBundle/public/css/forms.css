@@ -36,6 +36,9 @@ input[type="text"], input[type="email"], input[type="password"], input[type="int
 	.inPt {
 		width: 87%;
 	}
+    .formRowWidth {
+        width: 60%;
+    }
 	.comments {
 		width: 605px;
 	}

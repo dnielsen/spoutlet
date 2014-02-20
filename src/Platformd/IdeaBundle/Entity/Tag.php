@@ -13,7 +13,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Tag
 {
-
     /**
      * @var string
      *
@@ -27,80 +26,69 @@ class Tag
      */
     protected $ideas;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Platformd\EventBundle\Entity\EventSession", mappedBy="tags")
+     */
+    protected $sessions;
+
     public function __construct($tagName)
     {
-        $this->tagName = $tagName;
-        $this->ideas = new ArrayCollection();
+        $this->tagName  = $tagName;
+        $this->ideas    = new ArrayCollection();
+        $this->sessions = new ArrayCollection();
     }
 
 
     /**
      * Get tag name
-     *
      * @return string
      */
     public function getTagName()
     {
         return $this->tagName;
     }
-
-
     /**
-     * Add idea, synchronously update idea with tag
-     *
-     * @param \Platformd\IdeaBundle\Entity\Idea $idea
-     * @return Tag
+     * Set tagName
+     * @param string $tagName
      */
-    public function addIdeaCascade(\Platformd\IdeaBundle\Entity\Idea $idea)
+    public function setTagName($tagName)
     {
-        if (!$this->hasIdea($idea)){
-            $this->ideas[] = $idea;
-            $idea->addTag($this);
-        }
-
-        return $this;
+        $this->tagName = $tagName;
     }
 
     /**
      * Add idea
-     *
      * @param \Platformd\IdeaBundle\Entity\Idea $idea
-     * @return Tag
      */
     public function addIdea(\Platformd\IdeaBundle\Entity\Idea $idea)
     {
-        if (!$this->hasIdea($idea)){
+        if (!$this->hasIdea($idea)) {
             $this->ideas[] = $idea;
-        }
-
-        return $this;
-    }
-
-
-    /**
-     * Remove idea, synchronously remove this tag from the idea
-     *
-     * @param \Platformd\IdeaBundle\Entity\Idea $idea
-     */
-    public function removeIdeaCascade(\Platformd\IdeaBundle\Entity\Idea $idea)
-    {
-        if ($this->hasIdea($idea))
-        {
-            $this->ideas->removeElement($idea);
-            $idea->removeTag($this);
         }
     }
 
     /**
      * Remove idea
-     *
      * @param \Platformd\IdeaBundle\Entity\Idea $idea
      */
     public function removeIdea(\Platformd\IdeaBundle\Entity\Idea $idea)
     {
-        if ($this->hasIdea($idea))
-        {
+        if ($this->hasIdea($idea)) {
             $this->ideas->removeElement($idea);
+        }
+    }
+
+    public function addSession ($session)
+    {
+        if (!$this->hasSession($session)) {
+            $this->sessions[] = $session;
+        }
+    }
+
+    public function removeSession($session)
+    {
+        if ($this->hasSession($session)) {
+            $this->sessions->removeElement($session);
         }
     }
 
@@ -113,7 +101,8 @@ class Tag
      {
         foreach ($ideas as $idea)
         {
-            $this->addIdeaCascade($idea);
+            $this->addIdea($idea);
+            $idea->addTag($this);
         }
     }
 
@@ -133,14 +122,24 @@ class Tag
 
      * @return Array of strings $ideaNames
      */
-     public function getIdeaNames()
-     {
+    public function getIdeaNames()
+    {
         $ideaNames = array();
         foreach ($this->ideas as $idea)
         {
             $ideaNames[] = $idea->getName();
         }
         return $ideaNames;
+    }
+
+    public function getSessionNames()
+    {
+        $sessionNames = array();
+        foreach ($this->sessions as $session)
+        {
+            $sessionNames[] = $session->getName();
+        }
+        return $sessionNames;
     }
 
     /**
@@ -153,17 +152,9 @@ class Tag
     {
         return in_array($idea->getName(), $this->getIdeaNames());
     }
-
-    /**
-     * Set tagName
-     *
-     * @param string $tagName
-     * @return Tag
-     */
-    public function setTagName($tagName)
+    public function hasSession($session)
     {
-        $this->tagName = $tagName;
-
-        return $this;
+        return in_array($session->getName(), $this->getSessionNames());
     }
+
 }

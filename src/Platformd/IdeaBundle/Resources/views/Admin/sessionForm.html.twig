@@ -14,9 +14,14 @@
     <form action="{{ formAction }}" method="post" {{ form_enctype(form) }} id="evtSession" novalidate>
         {{ form_row(form.name) }}
         {{ form_row(form.description) }}
+
+        <label>Tags</label>
+        <textarea name="tags" placeholder="tag1, tag2, tag3, etc&#8230;" class="formRowWidth" rows="1">{% if not isNew %}{{ evtSession.implodedTagString }}{% endif %}</textarea>
+
         <div id="date-row" style="display:none;">
             {{ form_row(form.date) }}
         </div>
+
         {{ form_row(form.startsAt) }}
         {{ form_row(form.endsAt) }}
         {{ form_rest(form) }}

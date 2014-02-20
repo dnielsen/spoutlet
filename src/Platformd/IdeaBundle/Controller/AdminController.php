@@ -61,8 +61,8 @@ class AdminController extends Controller
         }
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'evtSession', $evtSession)
-            ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
-            ->add('description',        'textarea',         array('attr'    => array('class' => 'inPt', 'rows' => '6')))
+            ->add('name',               'text',             array('attr'    => array('class' => 'formRowWidth')))
+            ->add('description',        'textarea',         array('attr'    => array('class' => 'formRowWidth', 'rows' => '6')))
             ->add('date',               'date',             array('widget'  => 'single_text',
                                                                   'format'  => 'L/dd/yyyy',
                                                                   'required' => false))
@@ -70,7 +70,7 @@ class AdminController extends Controller
             ->add('endsAt',             'time',             array('widget'  => 'single_text', 'required' => false))
             ->getForm();
 
-        if($request->getMethod() == 'POST')
+        if ($request->getMethod() == 'POST')
         {
             $form->bindRequest($request);
 
@@ -87,12 +87,18 @@ class AdminController extends Controller
                 $evtSession->getStartsAt()->setDate($year, $month, $day);
                 $evtSession->getEndsAt()->setDate($year, $month, $day);
 
+                $tagString = $request->get('tags');
+
                 if ($isNew)
                 {
                     $event->addSession($evtSession);
                     $em->persist($evtSession);
                 }
+                else {
+                    $evtSession->removeAllTags();
+                }
 
+                $evtSession->addTags($this->getIdeaService()->processTags($tagString));
                 $em->flush();
 
                 return $this->redirect($this->generateUrl('event_session', array(
