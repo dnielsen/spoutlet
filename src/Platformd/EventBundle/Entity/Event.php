@@ -1145,6 +1145,16 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         return $this->sessions;
     }
 
+    public function getSessionsByDate() {
+
+        $sessionsByDate = array();
+
+        foreach ($this->getSortedSessions() as $session){
+            $sessionsByDate[$session->getDateString()][] = $session;
+        }
+        return $sessionsByDate;
+    }
+
     public function getSortedSessions() {
 
         $sessions = $this->sessions->toArray();
