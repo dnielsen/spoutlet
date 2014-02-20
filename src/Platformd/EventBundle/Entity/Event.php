@@ -1144,4 +1144,22 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     public function getSessions() {
         return $this->sessions;
     }
+
+    public function getSortedSessions() {
+
+        $sessions = $this->sessions->toArray();
+
+        usort($sessions, function($a, $b)
+        {
+            $aStartTime = $a->getStartsAt()->format('U');
+            $bStartTime = $b->getStartsAt()->format('U');
+
+            if ($aStartTime == $bStartTime) {
+                return 0;
+            }
+            return ($aStartTime > $bStartTime) ? +1 : -1;
+        });
+
+        return $sessions;
+    }
 }

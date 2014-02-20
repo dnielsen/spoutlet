@@ -4,9 +4,11 @@
     <h1 class="event-name">Session List</h1>
 
     <table class="sessions">
-        {% for eventSession in event.sessions %}
+        {% for eventSession in event.sortedSessions %}
             <tr>
-                <td>{{ eventSession.timeRangeString }}</td>
+                <td>{{ eventSession.dateString }}<br/>
+                    {{ eventSession.timeRangeString }}
+                </td>
                 <td>
                     <a href="{{ eventSession | pd_link }}" class="blue">{{ eventSession.name }}</a><br/>
                     {{ eventSession.description | truncate(300) | striptags }}
