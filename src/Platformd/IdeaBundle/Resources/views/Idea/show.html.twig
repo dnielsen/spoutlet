@@ -3,18 +3,21 @@
 {% block content %}
     <h1 class="idea-name">{{ idea.name }}</h1>
 
-    <div class="voteBx">
-        <p><strong class="lrgtxt">{{ idea.numFollowers }}</strong><br>
-            <span class="tnytxt gry">vote{% if idea.numFollowers != 1 %}s{% endif %}</span></p>
-        <form action = "{{ path('idea_follow', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="POST">
-              <input type="hidden" name="id" value="{{idea.id}}">
-              <input type="hidden" name="source" value="detail">
-              <input type="hidden" name="tag">
-              <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnVote" value="Vote"{% else %}class="btnVote redButton" value="Remove Vote"{% endif %}{% else %}class="btnVote" value="Vote"{% endif %}>
-        </form>
+    <div class="idea_left_column">
+        <div class="voteBx">
+            <p><strong class="lrgtxt">{{ idea.numFollowers }}</strong><br>
+                <span class="tnytxt gry">vote{% if idea.numFollowers != 1 %}s{% endif %}</span></p>
+            <form action = "{{ path('idea_follow', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="POST">
+                  <input type="hidden" name="id" value="{{idea.id}}">
+                  <input type="hidden" name="source" value="detail">
+                  <input type="hidden" name="tag">
+                  <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnVote" value="Vote"{% else %}class="btnVote redButton" value="Remove Vote"{% endif %}{% else %}class="btnVote" value="Vote"{% endif %}>
+            </form>
+        </div>
+        <div class="clr"></div>
     </div>
 
-    {% if sidebar %}<div class="session">{% else %}<div class="sessionWide">{% endif %}
+    <div class="session">
 
         <span class="right tnytxt">Proposed by: <strong><a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blue">{{idea.creator.name}}</a></strong>{% if idea.members %}, {{idea.members}}{% endif %}</span>
 

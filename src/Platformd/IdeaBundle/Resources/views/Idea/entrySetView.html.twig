@@ -106,18 +106,21 @@
     <hr class="small-margin"/>
 
     {% for idea in ideas %}
-        <div id="idea">
-            <div class="voteBx">
-                <p>
-                    <strong class="lrgtxt">{{ idea.numFollowers }}</strong><br>
-                    <span class="tnytxt gry">vote{% if idea.numFollowers != 1 %}s{% endif %}</span>
-                </p>
-                <form action = "{{ path('idea_follow', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="POST">
-                    <input type="hidden" name="id" value="{{idea.id}}">
-                    <input type="hidden" name="source" value="list">
-                    <input type="hidden" name="tag" value="{{ tag }}">
-                    <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnVote" value="Vote"{% else %}class="btnVote redButton" value="Remove Vote"{% endif %}{% else %}class="btnVote" value="Vote"{% endif %}>
-                </form>
+        <div class="idea">
+            <div class="idea_left_column">
+                <div class="voteBx">
+                    <p>
+                        <strong class="lrgtxt">{{ idea.numFollowers }}</strong><br>
+                        <span class="tnytxt gry">vote{% if idea.numFollowers != 1 %}s{% endif %}</span>
+                    </p>
+                    <form action = "{{ path('idea_follow', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="POST">
+                        <input type="hidden" name="id" value="{{idea.id}}">
+                        <input type="hidden" name="source" value="list">
+                        <input type="hidden" name="tag" value="{{ tag }}">
+                        <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnVote" value="Vote"{% else %}class="btnVote redButton" value="Remove Vote"{% endif %}{% else %}class="btnVote" value="Vote"{% endif %}>
+                    </form>
+                </div>
+                <div class="clr"></div>
             </div>
 
             <div class="session">
@@ -145,9 +148,7 @@
 
             </div>
             <div class="clr"></div>
-            <hr class="small-margin"/>
         </div>
-
     {% else %}
         <div class="left">There are no {{ entrySet.type }}s yet.</div>
         <br/><br/><hr/>

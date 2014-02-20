@@ -295,9 +295,27 @@
 	.kWords p {
 		padding-top: 0;
 	}
+    .idea {
+        border: 1px solid;
+        padding: 10px;
+        margin-bottom: 15px;
+        box-shadow: #ccc 5px 5px 5px;
+        -webkit-box-shadow: #ccc 5px 5px 5px;
+        -moz-box-shadow: #ccc 5px 5px 5px;
+    }
+    .idea:hover{
+        box-shadow: #2faad9 5px 5px 5px;
+        -webkit-box-shadow: #2faad9 5px 5px 5px;
+        -moz-box-shadow: #2faad9 5px 5px 5px;
+    }
+    .idea_left_column {
+        float: left;
+        width: 75px;
+        margin-right: 20px;
+    }
 	.voteBx {
 		float: left;
-		width: 75px; /* margin-right: 20px; */
+		width: 100%;
 		background: #fbfbfb;
 	}
 		.voteBx p {
@@ -311,13 +329,9 @@
 			color: #616161;
 			text-align: center;
 		}
+
 	.session {
-		float: right;
-		width: 650px;
-	}
-	.session-mp {
-		float: right;
-		width: 640px;
+		overflow:hidden;
 	}
 
 	/* .sponsorLogo a {
