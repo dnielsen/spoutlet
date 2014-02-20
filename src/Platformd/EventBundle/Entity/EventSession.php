@@ -10,6 +10,7 @@ namespace Platformd\EventBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -18,7 +19,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="event_session")
  * @ORM\Entity
  */
-class EventSession //implements EntrySetScopeable
+class EventSession implements LinkableInterface //,EntrySetScopeable
 {
     /**
      * @var integer $id
@@ -264,43 +265,42 @@ class EventSession //implements EntrySetScopeable
 //        // TODO: Implement getEntrySets() method.
 //    }
 //
-//    public function getId()
-//    {
-//        // TODO: Implement getId() method.
-//    }
-//
 //    public function isMemberOf(User $user)
 //    {
 //        // TODO: Implement isMemberOf() method.
 //    }
 //
-//    /**
-//     * If there is a set URL that should be used without doing anything else, return it here
-//     *
-//     * @return string
-//     */
-//    function getLinkableOverrideUrl()
-//    {
-//        // TODO: Implement getLinkableOverrideUrl() method.
-//    }
-//
-//    /**
-//     * Returns the name of the route used to link to this object
-//     *
-//     * @return string
-//     */
-//    function getLinkableRouteName()
-//    {
-//        // TODO: Implement getLinkableRouteName() method.
-//    }
-//
-//    /**
-//     * Returns an array route parameters to link to this object
-//     *
-//     * @return array
-//     */
-//    function getLinkableRouteParameters()
-//    {
-//        // TODO: Implement getLinkableRouteParameters() method.
-//    }
+    /**
+     * If there is a set URL that should be used without doing anything else, return it here
+     *
+     * @return string
+     */
+    function getLinkableOverrideUrl()
+    {
+        return false;
+    }
+
+    /**
+     * Returns the name of the route used to link to this object
+     *
+     * @return string
+     */
+    function getLinkableRouteName()
+    {
+        return "event_session";
+    }
+
+    /**
+     * Returns an array route parameters to link to this object
+     *
+     * @return array
+     */
+    function getLinkableRouteParameters()
+    {
+        return array(
+            'groupSlug' => $this->event->getGroup()->getSlug(),
+            'eventId'   => $this->event->getId(),
+            'sessionId' => $this->id,
+        );
+    }
 }

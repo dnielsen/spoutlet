@@ -8,7 +8,7 @@
             <tr>
                 <td>{{ eventSession.timeRangeString }}</td>
                 <td>
-                    <a href="{{ path('event_session', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': eventSession.id}) }}" class="blue">{{ eventSession.name }}</a><br/>
+                    <a href="{{ eventSession | pd_link }}" class="blue">{{ eventSession.name }}</a><br/>
                     {{ eventSession.description | truncate(300) | striptags }}
                 </td>
             </tr>
