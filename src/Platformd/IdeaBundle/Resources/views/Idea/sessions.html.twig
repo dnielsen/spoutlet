@@ -1,21 +1,36 @@
 {% extends 'IdeaBundle::event_layout.html.twig' %}
 
 {% block content %}
-    <h1 class="event-name">Session List</h1>
+    <h2 class="event-name">Session List</h2>
 
-    <table class="sessions">
-        {% for eventSession in event.sortedSessions %}
-            <tr>
-                <td>{{ eventSession.dateString }}<br/>
-                    {{ eventSession.timeRangeString }}
-                </td>
-                <td>
-                    <a href="{{ eventSession | pd_link }}" class="blue">{{ eventSession.name }}</a><br/>
-                    {{ eventSession.description | truncate(300) | striptags }}
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
+    {% set eventSessions = event.sessionsByDate %}
+    {% if eventSessions|length > 0 %}
+
+        <table class="sessions">
+            {% for date,sessions in eventSessions %}
+                <tr class="date">
+                    <td colspan="2">
+                        {{ date }}
+                    </td>
+                </tr>
+                {% set i=0 %}
+                {% for eventSession in sessions %}
+                    {% set i=i+1 %}
+                    <tr{% if i%2 %} class="fill"{% endif %}>
+                        <td>
+                            {{ eventSession.timeRangeString }}
+                        </td>
+                        <td>
+                            <a href="{{ eventSession | pd_link }}" class="blue">{{ eventSession.name }}</a><br/>
+                            {{ eventSession.description | truncate(300) | striptags }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </table>
+    {% else %}
+        <h3>There are no sessions yet.</h3>
+    {% endif %}
 
 {% endblock %}
 

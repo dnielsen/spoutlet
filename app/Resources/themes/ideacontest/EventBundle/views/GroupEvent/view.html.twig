@@ -49,27 +49,24 @@
 
         {# For now -- get first entrySet -- need to implement list chooser #}
         {% if event.sessions | length > 0 %}
-            <h2 class="left">Sessions</h2><a href="{{ path('event_session_schedule', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="right btn">View All Sessions</a>
+            <h2 class="left">Sessions</h2><a href="{{ path('event_session_schedule', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="blue right">View All</a>
 
             <table class="clr sessions">
-                <thead>
-                <tr>
-                    <th>Time</th>
-                    <th>Session</th>
-                </tr>
-                </thead>
-
-                <tbody>
-                {% set i=0 %}
-                {% for evtSession in event.sortedSessions %}
-                    {% set i=i+1 %}
-                    <tr{% if i%2 %} class="fill"{% endif %}>
-                        <td>{{ evtSession.timeRangeString }}</td>
-                        <td><a href="{{ path('event_session', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': evtSession.id}) }}">{{ evtSession.name }}</a></td>
+                {% for date,sessions in event.sessionsByDate %}
+                    <tr class="date">
+                        <td colspan="2">
+                            {{ date }}
+                        </td>
                     </tr>
+                    {% set i=0 %}
+                    {% for evtSession in sessions %}
+                        {% set i=i+1 %}
+                        <tr{% if i%2 %} class="fill"{% endif %}>
+                            <td>{{ evtSession.timeRangeString }}</td>
+                            <td><a href="{{ path('event_session', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': evtSession.id}) }}">{{ evtSession.name }}</a></td>
+                        </tr>
+                    {% endfor %}
                 {% endfor %}
-                </tbody>
-
             </table>
         {% elseif event.entrySets | length > 0 %}
         {% set entrySet = event.entrySets[0] %}

@@ -340,6 +340,13 @@
 table.sessions {
     width: 100%;
 }
+tr.date {
+    background: #2faad9;
+}
+tr.date td {
+    color: white;
+    text-align: center;
+}
 table.sessions td:first-child {
     width: 25%;
     font-weight: bold;
