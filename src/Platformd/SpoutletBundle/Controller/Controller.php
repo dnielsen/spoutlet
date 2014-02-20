@@ -351,6 +351,11 @@ class Controller extends BaseController
         return $this->get('platformd.model.group_manager');
     }
 
+    protected function getIdeaService()
+    {
+        return $this->get('platformd.service.idea');
+    }
+
     protected function getSiteManager()
     {
         return $this->get('platformd.model.site_manager');

@@ -300,7 +300,7 @@ class IdeaController extends Controller
             }
         }
 
-        $idea->addTags($this->parseTags($params['tags']));
+        $idea->addTags($this->getIdeaService()->processTags($params['tags']));
 
         if (isset($params['isPrivate'])){
             $idea->setIsPrivate(true);
@@ -391,7 +391,7 @@ class IdeaController extends Controller
         }
 
         $idea->removeAllTags();
-        $idea->addTags($this->parseTags($params['tags']));
+        $idea->addTags($this->getIdeaService()->processTags($params['tags']));
 
         if (isset($params['isPrivate'])){
             $idea->setIsPrivate(true);
@@ -1315,50 +1315,6 @@ class IdeaController extends Controller
         return $this->isGranted('ROLE_ADMIN') || $this->isCreator($idea);
     }
 
-    /**
-     * Takes the user submitted string of tags, parses it, and returns an array of new tag objects
-     */
-    public function parseTags($allTagsString)
-    {
-        $newTags = array();
-
-        $allTagsString = trim(strtolower($allTagsString));
-
-        if(empty($allTagsString)){
-            return $newTags;
-        }
-
-        $tagStrings = preg_split("/[\s,]+/", $allTagsString);
-        $allTagNames = $this->getAllTagNames();
-
-        $em = $this->getDoctrine()->getEntityManager();
-
-        foreach ($tagStrings as $tagString)
-        {
-            $tagString = trim($tagString);
-            if (empty($tagString)){
-                continue;
-            }
-
-            if (!in_array($tagString, $allTagNames))
-            {
-                $newTag = new Tag($tagString);
-                if(!in_array($newTag, $newTags))
-                {
-                    $newTags[] = $newTag;
-                    $em->persist($newTag);
-                }
-            }
-            else
-            {
-                $newTags[] = $this->getDoctrine()->getRepository('IdeaBundle:Tag')->find($tagString);
-            }
-        }
-        $em->flush();
-        return $newTags;
-    }
-
-
     public function getGroup($groupSlug)
     {
         $group = $this->getGroupManager()->getGroupBySlug($groupSlug);
@@ -1446,19 +1402,6 @@ class IdeaController extends Controller
     }
 
 
-    /*
-     * Gets array of tag name strings
-     */
-    public function getAllTagNames()
-    {
-        $tagNames = array();
-        $allTags = $this->getDoctrine()->getRepository('IdeaBundle:Tag')->findAll();
-        foreach ($allTags as $tag)
-        {
-            $tagNames[] = $tag->getTagName();
-        }
-        return $tagNames;
-    }
 
     /**
      * @param $ideas

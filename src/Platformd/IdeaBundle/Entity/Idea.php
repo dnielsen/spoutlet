@@ -301,24 +301,6 @@ class Idea implements LinkableInterface
         return $this;
     }
 
-
-    /**
-     * Add tag, synchronously update tag with this idea
-     *
-     * @param \Platformd\IdeaBundle\Entity\Tag $tags
-     * @return Idea
-     */
-    public function addTagCascade(\Platformd\IdeaBundle\Entity\Tag $tag)
-    {
-        if (!$this->hasTag($tag)){
-            $this->tags[] = $tag;
-            $tag->addIdea($this);
-        }
-
-        return $this;
-    }
-
-
     /**
      * Add several tags
      *
@@ -328,7 +310,8 @@ class Idea implements LinkableInterface
      {
         foreach ($tags as $tag)
         {
-            $this->addTagCascade($tag);
+            $this->addTag($tag);
+            $tag->addIdea($this);
         }
     }
 
@@ -345,29 +328,15 @@ class Idea implements LinkableInterface
         }
     }
 
-
-    /**
-     * Remove tag, synchronously remove this idea from the tag
-     *
-     * @param \Platformd\IdeaBundle\Entity\Tag $tag
-     */
-    public function removeTagCascade(\Platformd\IdeaBundle\Entity\Tag $tag)
-    {
-        if ($this->hasTag($tag)){
-            $this->tags->removeElement($tag);
-            $tag->removeIdea($this);
-        }
-    }
-
-
     /**
      * Removes all tags
      */
     public function removeAllTags()
     {
-        foreach ($this->getTags() as $tag)
+        foreach ($this->tags as $tag)
         {
-            $this->removeTagCascade($tag);
+            $this->removeTag($tag);
+            $tag->removeIdea($this);
         }
     }
 
@@ -402,7 +371,7 @@ class Idea implements LinkableInterface
     /**
      * Get string of tags (to populate twig template for edit page)
      *
-     * @return imploded string of tag names
+     * @return string imploded string of tag names
      */
     public function getImplodedTagString()
     {
