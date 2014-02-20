@@ -222,13 +222,16 @@ ul.inline li {
 		padding: 2px 3px;
 		border: 1px solid #2faad9;
         color: #2faad9;
+        background: white;
 		-webkit-border-radius: 4px;
 		-moz-border-radius: 4px;
 		border-radius: 4px;
-		background: #F2FBFF;
 		behavior: url("PIE.htc");
         font-weight: bold;
 		font-size: 12px;
+        box-shadow: #ACD7FF 3px 3px 3px;
+        -webkit-box-shadow: #ACD7FF 3px 3px 3px;
+        -moz-box-shadow: #ACD7FF 3px 3px 3px;
 	}
 	.kWords ul li a:hover, .kWords a:hover {
 		border: 1px solid #2faad9;
