@@ -295,15 +295,15 @@
 	.kWords p {
 		padding-top: 0;
 	}
-    .idea {
+    .card {
         border: 1px solid;
         padding: 10px;
-        margin-bottom: 15px;
         box-shadow: #ccc 5px 5px 5px;
         -webkit-box-shadow: #ccc 5px 5px 5px;
         -moz-box-shadow: #ccc 5px 5px 5px;
+
     }
-    .idea:hover{
+    .card:hover {
         box-shadow: #2faad9 5px 5px 5px;
         -webkit-box-shadow: #2faad9 5px 5px 5px;
         -moz-box-shadow: #2faad9 5px 5px 5px;
