@@ -315,6 +315,20 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     protected $registrationFields;
 
 
+    /**
+     * @var \Platformd\GroupBundle\Entity\Group
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group", inversedBy="childGroups")
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $parentGroup;
+
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\Group", mappedBy="parentGroup")
+     */
+    protected $childGroups;
+
+
     public function __construct()
     {
         $this->sites                    = new ArrayCollection();
@@ -327,6 +341,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         $this->events                   = new ArrayCollection();
         $this->sponsorRegistrations     = new ArrayCollection();
         $this->registrationFields       = new ArrayCollection();
+        $this->childGroups              = new ArrayCollection();
     }
 
     public function __toString() {
@@ -1140,5 +1155,22 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         }
 
         return false;
+    }
+    
+    
+    public function getParent() {
+        return $this->parentGroup;    
+    }
+    
+    public function setParent(Group $parent) {
+        $this->parentGroup = $parent;
+    }
+    
+    public function addChild(Group $child) {
+        $this->childGroups->add($child);
+    }
+
+    public function getChildren() {
+        return $this->childGroups;
     }
 }
