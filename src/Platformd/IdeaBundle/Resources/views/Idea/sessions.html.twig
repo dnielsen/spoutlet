@@ -1,11 +1,10 @@
 {% extends 'IdeaBundle::event_layout.html.twig' %}
 
 {% block content %}
-    <h2 class="event-name left">Session List</h2>
+    <h2 class="event-name left">Session Schedule</h2>
     {% if isAdmin %}<a href="{{ path('event_session_create', event.linkableRouteParameters) }}" class="btnLg right spcr-b3">Create Session</a>{% endif %}
     <div class="clr"></div>
 
-    {% set eventSessions = event.sessionsByDate %}
     {% if eventSessions|length > 0 %}
 
         <table class="sessions">
