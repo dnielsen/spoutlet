@@ -122,6 +122,10 @@
             </div>
         {% endif %}
 
+        {% if event.sessions | length > 0 %}
+            <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}" class="btnLg2">Session Schedule</a>
+        {% endif %}
+
         <h2 class="widgetHeader">Event Details</h2>
         <table id="eventDetails" class="tblStyle spcr-b3">
             {% if event.startsAt %}

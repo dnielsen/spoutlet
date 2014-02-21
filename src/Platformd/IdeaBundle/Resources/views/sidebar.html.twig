@@ -1,5 +1,6 @@
 {% if event|default %}
 
+    {# Always display registration link if it's external, only show it if you're not attending if it's internal #}
     {% if event.externalUrl|default or not event.isUserAttending(user) %}
         <div id="registrationBanner">
             {% if event.externalUrl|default %}
@@ -13,6 +14,11 @@
                 <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Attend Event</a>
             {% endif %}
         </div>
+    {% endif %}
+
+    {# If there are sessions scheduled, and we're not already looking at the schedule page #}
+    {% if event.sessions | length > 0 and not eventSessions|default %}
+        <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}" class="btnLg2">Session Schedule</a>
     {% endif %}
 
     <h2 class="widgetHeader">Event Details</h2>

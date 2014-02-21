@@ -1231,6 +1231,7 @@ class IdeaController extends Controller
         return $this->render('IdeaBundle:Idea:sessions.html.twig', array (
             'group'        => $event->getGroup(),
             'event'        => $event,
+            'eventSessions'=> $event->getSessionsByDate(),
             'isAdmin'      => $isAdmin,
             'sidebar'      => true,
             'breadCrumbs'  => $this->getBreadCrumbsString($event, true),
