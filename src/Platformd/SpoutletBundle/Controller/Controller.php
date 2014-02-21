@@ -463,6 +463,10 @@ class Controller extends BaseController
             if ($crumb && ($showCurrentScope || $crumb != $scope)) {
                 $breadCrumbsHtml = $breadCrumbsHtml."> <a href=\"".$this->generateUrl($crumb->getLinkableRouteName(), $crumb->getLinkableRouteParameters())."\" class=\"blue\">".$crumb->getName()."</a> ";
             }
+            if ($crumb instanceof EventSession) {
+                $event = $crumb->getEvent();
+                $breadCrumbsHtml = $breadCrumbsHtml."> <a href=\"".$this->generateUrl('event_session_schedule', $event->getLinkableRouteParameters())."\" class=\"blue\">Session Schedule</a> ";
+            }
         }
 
         return $breadCrumbsHtml;
