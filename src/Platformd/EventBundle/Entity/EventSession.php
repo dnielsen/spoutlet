@@ -101,6 +101,7 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
 
     /**
      * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\Idea", inversedBy="evtSession")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $source_idea;
 
