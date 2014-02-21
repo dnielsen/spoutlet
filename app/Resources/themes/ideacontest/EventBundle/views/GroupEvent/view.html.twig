@@ -51,7 +51,7 @@
         {% if event.sessions | length > 0 %}
             <h2 class="left">Session Schedule</h2><a href="{{ path('event_session_schedule', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="blue right">View All</a>
 
-            <table class="clr sessions">
+            <table class="clr sessions fillWidth">
                 {% for date,sessions in event.sessionsByDate %}
                     <tr class="date">
                         <td colspan="2">
