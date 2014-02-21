@@ -26,16 +26,16 @@ class Tag
      */
     protected $ideas;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Platformd\EventBundle\Entity\EventSession", mappedBy="tags")
-     */
-    protected $sessions;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Platformd\EventBundle\Entity\EventSession", mappedBy="tags")
+//     */
+//    protected $sessions;
 
     public function __construct($tagName)
     {
         $this->tagName  = $tagName;
         $this->ideas    = new ArrayCollection();
-        $this->sessions = new ArrayCollection();
+//        $this->sessions = new ArrayCollection();
     }
 
 
@@ -78,19 +78,19 @@ class Tag
         }
     }
 
-    public function addSession ($session)
-    {
-        if (!$this->hasSession($session)) {
-            $this->sessions[] = $session;
-        }
-    }
-
-    public function removeSession($session)
-    {
-        if ($this->hasSession($session)) {
-            $this->sessions->removeElement($session);
-        }
-    }
+//    public function addSession ($session)
+//    {
+//        if (!$this->hasSession($session)) {
+//            $this->sessions[] = $session;
+//        }
+//    }
+//
+//    public function removeSession($session)
+//    {
+//        if ($this->hasSession($session)) {
+//            $this->sessions->removeElement($session);
+//        }
+//    }
 
     /**
      * Add several ideas
@@ -131,16 +131,16 @@ class Tag
         }
         return $ideaNames;
     }
-
-    public function getSessionNames()
-    {
-        $sessionNames = array();
-        foreach ($this->sessions as $session)
-        {
-            $sessionNames[] = $session->getName();
-        }
-        return $sessionNames;
-    }
+//
+//    public function getSessionNames()
+//    {
+//        $sessionNames = array();
+//        foreach ($this->sessions as $session)
+//        {
+//            $sessionNames[] = $session->getName();
+//        }
+//        return $sessionNames;
+//    }
 
     /**
      * Check if an idea is associated with the tag
@@ -152,9 +152,9 @@ class Tag
     {
         return in_array($idea->getName(), $this->getIdeaNames());
     }
-    public function hasSession($session)
-    {
-        return in_array($session->getName(), $this->getSessionNames());
-    }
+//    public function hasSession($session)
+//    {
+//        return in_array($session->getName(), $this->getSessionNames());
+//    }
 
 }

@@ -25,16 +25,16 @@
                         <td>
                             <a href="{{ eventSession | pd_link }}" class="blue">{{ eventSession.name }}</a><br/>
                             {{ eventSession.description | truncate(300) | striptags }}
-                            {% if eventSession.tags|length > 0 %}
-                                <div class="kWords">
-                                    <ul>
-                                        <li>Tags</li>
-                                        {% for tag in eventSession.tags %}
-                                            <li><a href="#">{{ tag.tagName }}</a></li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                            {% endif %}
+                            {#{% if eventSession.tags|length > 0 %}#}
+                                {#<div class="kWords">#}
+                                    {#<ul>#}
+                                        {#<li>Tags</li>#}
+                                        {#{% for tag in eventSession.tags %}#}
+                                            {#<li><a href="#">{{ tag.tagName }}</a></li>#}
+                                        {#{% endfor %}#}
+                                    {#</ul>#}
+                                {#</div>#}
+                            {#{% endif %}#}
                         </td>
                     </tr>
                 {% endfor %}

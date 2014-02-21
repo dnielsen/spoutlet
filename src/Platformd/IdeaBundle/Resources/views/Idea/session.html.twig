@@ -3,17 +3,17 @@
 {% block content %}
     <h1 class="idea-name">{{ eventSession.name }}</h1>
 
-    {% if eventSession.tags|length > 0 %}
-        <div class="left kWords spcr-b2">
-            <ul>
-                <li>Tags</li>
-                {% for tag in eventSession.tags %}
-                    <li><a href="#">{{ tag.tagName }}</a></li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="clr"></div>
-    {% endif %}
+    {#{% if eventSession.tags|length > 0 %}#}
+        {#<div class="left kWords spcr-b2">#}
+            {#<ul>#}
+                {#<li>Tags</li>#}
+                {#{% for tag in eventSession.tags %}#}
+                    {#<li><a href="#">{{ tag.tagName }}</a></li>#}
+                {#{% endfor %}#}
+            {#</ul>#}
+        {#</div>#}
+        {#<div class="clr"></div>#}
+    {#{% endif %}#}
 
 
     <hr class="small-margin"/>

@@ -89,7 +89,7 @@ class AdminController extends Controller
                     $evtSession->setSourceIdea($idea);
                     $evtSession->setName($idea->getName());
                     $evtSession->setDescription($idea->getDescription());
-                    $evtSession->addTags($idea->getTags());
+//                    $evtSession->addTags($idea->getTags());
 
                     $eventStart = $event->getStartsAt();
 
@@ -115,13 +115,13 @@ class AdminController extends Controller
                     $evtSession->getStartsAt()->setDate($year, $month, $day);
                     $evtSession->getEndsAt()->setDate($year, $month, $day);
 
-                    $tagString = $request->get('tags');
+//                    $tagString = $request->get('tags');
 
-                    if (!$isNew) {
-                        $evtSession->removeAllTags();
-                    }
+//                    if (!$isNew) {
+//                        $evtSession->removeAllTags();
+//                    }
 
-                    $evtSession->addTags($this->getIdeaService()->processTags($tagString));
+//                    $evtSession->addTags($this->getIdeaService()->processTags($tagString));
                 }
 
                 if ($isNew){

@@ -90,14 +90,14 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
      */
     protected $attendees;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Platformd\IdeaBundle\Entity\Tag", inversedBy="sessions")
-     * @ORM\JoinTable(name="tag_session",
-     *      joinColumns={@ORM\JoinColumn(name="session_id", referencedColumnName="id", onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="tag", referencedColumnName="tag", onDelete="CASCADE")}
-     * )
-     */
-    protected $tags;
+//    /**
+//     * @ORM\ManyToMany(targetEntity="Platformd\IdeaBundle\Entity\Tag", inversedBy="sessions")
+//     * @ORM\JoinTable(name="tag_session",
+//     *      joinColumns={@ORM\JoinColumn(name="session", referencedColumnName="id")},
+//     *      inverseJoinColumns={@ORM\JoinColumn(name="tag", referencedColumnName="tag")}
+//     *      )
+//     */
+//    protected $tags;
 
     /**
      * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\Idea", inversedBy="evtSession")
@@ -111,7 +111,7 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     public function __construct(GroupEvent $event) {
         $this->event        = $event;
         $this->attendees    = new ArrayCollection();
-        $this->tags         = new ArrayCollection();
+//        $this->tags         = new ArrayCollection();
     }
 
     /**
@@ -285,75 +285,75 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
         $this->endsAt = $endsAt;
     }
 
-    public function addTag(Tag $tag)
-    {
-        if (!$this->hasTag($tag)){
-            $this->tags[] = $tag;
-        }
-    }
-
-    public function addTags($tags)
-    {
-        foreach ($tags as $tag)
-        {
-            $this->addTag($tag);
-            $tag->addSession($this);
-        }
-    }
-
-    /**
-     * Remove tag
-     *
-     * @param \Platformd\IdeaBundle\Entity\Tag $tag
-     */
-    public function removeTag(Tag $tag)
-    {
-        if ($this->hasTag($tag)){
-            $this->tags->removeElement($tag);
-        }
-    }
-
-    /**
-     * Removes all tags
-     */
-    public function removeAllTags()
-    {
-        foreach ($this->tags as $tag)
-        {
-            $this->removeTag($tag);
-            $tag->removeSession($this);
-        }
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getTags()
-    {
-        return $this->tags;
-    }
-
-    /**
-     * Get string of tags (to populate twig template for edit page)
-     * @return string imploded string of tag names
-     */
-    public function getImplodedTagString()
-    {
-        $tagNames = array();
-        foreach ($this->tags as $tag){
-            $tagNames[] = $tag->getTagName();
-        }
-        return implode(" ", $tagNames);
-    }
-
-    public function hasTag(Tag $tag)
-    {
-        $tagNames = array();
-        foreach ($this->tags as $tag_iter){
-            $tagNames[] = $tag_iter->getTagName();
-        }
-        return in_array($tag->getTagName(), $tagNames);
-    }
+//    public function addTag(Tag $tag)
+//    {
+//        if (!$this->hasTag($tag)){
+//            $this->tags[] = $tag;
+//        }
+//    }
+//
+//    public function addTags($tags)
+//    {
+//        foreach ($tags as $tag)
+//        {
+//            $this->addTag($tag);
+//            $tag->addSession($this);
+//        }
+//    }
+//
+//    /**
+//     * Remove tag
+//     *
+//     * @param \Platformd\IdeaBundle\Entity\Tag $tag
+//     */
+//    public function removeTag(Tag $tag)
+//    {
+//        if ($this->hasTag($tag)){
+//            $this->tags->removeElement($tag);
+//        }
+//    }
+//
+//    /**
+//     * Removes all tags
+//     */
+//    public function removeAllTags()
+//    {
+//        foreach ($this->tags as $tag)
+//        {
+//            $this->removeTag($tag);
+//            $tag->removeSession($this);
+//        }
+//    }
+//
+//    /**
+//     * @return mixed
+//     */
+//    public function getTags()
+//    {
+//        return $this->tags;
+//    }
+//
+//    /**
+//     * Get string of tags (to populate twig template for edit page)
+//     * @return string imploded string of tag names
+//     */
+//    public function getImplodedTagString()
+//    {
+//        $tagNames = array();
+//        foreach ($this->tags as $tag){
+//            $tagNames[] = $tag->getTagName();
+//        }
+//        return implode(" ", $tagNames);
+//    }
+//
+//    public function hasTag(Tag $tag)
+//    {
+//        $tagNames = array();
+//        foreach ($this->tags as $tag_iter){
+//            $tagNames[] = $tag_iter->getTagName();
+//        }
+//        return in_array($tag->getTagName(), $tagNames);
+//    }
 
 
 //    public function createEntrySetRegistration()
