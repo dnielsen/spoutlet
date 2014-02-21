@@ -62,7 +62,7 @@
                     {% for evtSession in sessions %}
                         {% set i=i+1 %}
                         <tr{% if i%2 %} class="fill"{% endif %}>
-                            <td>{{ evtSession.timeRangeString }}</td>
+                            <td>{% if evtSession.startsAt|default %}{{ evtSession.timeRangeString }}{% endif %}</td>
                             <td><a href="{{ path('event_session', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': evtSession.id}) }}">{{ evtSession.name }}</a></td>
                         </tr>
                     {% endfor %}
