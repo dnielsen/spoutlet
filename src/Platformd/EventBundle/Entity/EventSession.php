@@ -100,6 +100,11 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     protected $tags;
 
     /**
+     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\Idea", inversedBy="evtSession")
+     */
+    protected $source_idea;
+
+    /**
      * Constructor
      */
     public function __construct(GroupEvent $event) {
@@ -168,6 +173,24 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     {
         return $this->event;
     }
+
+    /**
+     * @param mixed $source_idea
+     */
+    public function setSourceIdea($source_idea)
+    {
+        $this->source_idea = $source_idea;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSourceIdea()
+    {
+        return $this->source_idea;
+    }
+
+
 
     /**
      * @param string $name

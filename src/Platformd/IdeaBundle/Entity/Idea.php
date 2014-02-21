@@ -123,6 +123,11 @@ class Idea implements LinkableInterface
      */
     protected $links;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\EventBundle\Entity\EventSession", mappedBy="source_idea")
+     */
+    protected $evtSession;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -784,4 +789,22 @@ class Idea implements LinkableInterface
             'entrySetId' => $this->getEntrySet()->getId(),
         );
     }
+
+    /**
+     * @param mixed $evtSession
+     */
+    public function setEvtSession($evtSession)
+    {
+        $this->evtSession = $evtSession;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEvtSession()
+    {
+        return $this->evtSession;
+    }
+
+
 }
