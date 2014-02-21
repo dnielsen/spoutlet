@@ -47,6 +47,21 @@
         {% endif %}
     </table>
 
+    {% set minEntrySetNumber = 0 %} {% if entrySet|default %} {% set minEntrySetNumber = 1 %} {% endif %}
+
+    {% if event.entrySets | length > minEntrySetNumber %}
+        <h2 class="widgetHeader">Collaboration Lists</h2>
+        <ul class="scrollableWidget spcr-b3">
+            {% for es in event.entrySets %}
+                {% if entrySet is not defined or (entrySet.id != es.id) %}
+                <li class="spcr-t spcr-l3">
+                    <a href="{{ path('entry_set_view', {'entrySetId': es.id}) }}"><h3 class="blu">{{ es.name }}</h3></a>
+                </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     {% if event.sponsors|length > 0 %}
         <h2 class="widgetHeader">Sponsors</h2>
         <ul class="spcr-b3">
@@ -71,6 +86,21 @@
     <div class="scrollableWidgetLarge spcr-b3">
         {{ group.description | raw }}
     </div>
+
+    {% set minEntrySetNumber = 0 %} {% if entrySet|default %} {% set minEntrySetNumber = 1 %} {% endif %}
+
+    {% if group.entrySets | length > minEntrySetNumber %}
+        <h2 class="widgetHeader">Collaboration Lists</h2>
+        <ul class="scrollableWidget spcr-b3">
+            {% for es in group.entrySets %}
+                {% if entrySet is not defined or (entrySet.id != es.id) %}
+                    <li class="spcr-t spcr-l3">
+                        <a href="{{ path('entry_set_view', {'entrySetId': es.id}) }}"><h3 class="blu">{{ es.name }}</h3></a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
 
     {% if group.sponsors|length > 0 %}
         <h2 class="widgetHeader">Sponsors</h2>
