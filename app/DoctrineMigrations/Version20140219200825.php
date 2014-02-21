@@ -16,8 +16,8 @@ class Version20140219200825 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != "mysql");
         
         $this->addSql("CREATE TABLE tag_session (session_id INT NOT NULL, tag VARCHAR(100) NOT NULL, INDEX IDX_E275F87E613FECDF (session_id), INDEX IDX_E275F87E389B783 (tag), PRIMARY KEY(session_id, tag)) ENGINE = InnoDB");
-        $this->addSql("ALTER TABLE tag_session ADD CONSTRAINT FK_E275F87E613FECDF FOREIGN KEY (session_id) REFERENCES event_session(id)");
-        $this->addSql("ALTER TABLE tag_session ADD CONSTRAINT FK_E275F87E389B783 FOREIGN KEY (tag) REFERENCES tags(tag)");
+        $this->addSql("ALTER TABLE tag_session ADD CONSTRAINT FK_E275F87E389B783 FOREIGN KEY (tag) REFERENCES tags(tag) ON DELETE CASCADE");
+        $this->addSql("ALTER TABLE tag_session ADD CONSTRAINT FK_E275F87E613FECDF FOREIGN KEY (session_id) REFERENCES event_session(id) ON DELETE CASCADE");
     }
 
     public function down(Schema $schema)

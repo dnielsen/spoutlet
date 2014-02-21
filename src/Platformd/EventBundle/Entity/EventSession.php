@@ -93,8 +93,8 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     /**
      * @ORM\ManyToMany(targetEntity="Platformd\IdeaBundle\Entity\Tag", inversedBy="sessions")
      * @ORM\JoinTable(name="tag_session",
-     *      joinColumns={@ORM\JoinColumn(name="session_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="tag", referencedColumnName="tag")}
+     *      joinColumns={@ORM\JoinColumn(name="session_id", referencedColumnName="id", onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="tag", referencedColumnName="tag", onDelete="CASCADE")}
      * )
      */
     protected $tags;
