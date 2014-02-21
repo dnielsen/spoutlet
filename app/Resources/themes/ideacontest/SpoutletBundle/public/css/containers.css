@@ -301,16 +301,16 @@
     .card {
         border: 1px solid #ccc;
         padding: 10px;
-        box-shadow: #ccc 5px 5px 5px;
-        -webkit-box-shadow: #ccc 5px 5px 5px;
-        -moz-box-shadow: #ccc 5px 5px 5px;
+        box-shadow: #ccc 3px 3px 3px;
+        -webkit-box-shadow: #ccc 3px 3px 3px;
+        -moz-box-shadow: #ccc 3px 3px 3px;
 
     }
     .card:hover {
         border: 1px solid #2faad9;
-        box-shadow: #2faad9 5px 5px 5px;
-        -webkit-box-shadow: #2faad9 5px 5px 5px;
-        -moz-box-shadow: #2faad9 5px 5px 5px;
+        box-shadow: #2faad9 3px 3px 3px;
+        -webkit-box-shadow: #2faad9 3px 3px 3px;
+        -moz-box-shadow: #2faad9 3px 3px 3px;
     }
     .idea_left_column {
         float: left;
