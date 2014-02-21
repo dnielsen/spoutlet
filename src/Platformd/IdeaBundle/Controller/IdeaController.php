@@ -46,23 +46,25 @@ class IdeaController extends Controller
         //filter the idea list using the query parameters
         $userParam  = $viewPrivate ? $this->getCurrentUser() : null;
         $round = null;
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         $canSubmit = $entrySet->getIsSubmissionActive();
         if ($event) {
-            $round = $event->getCurrentRound();
+            $isAdmin    = $isAdmin || ( $this->getCurrentUser() == $event->getUser() );
+            $round      = $event->getCurrentRound();
             $roundParam = $showAllRounds == 'true' ? null : $round;
-            $canSubmit = $canSubmit && ($event->isUserAttending($this->getCurrentUser()) || $event->getUser() == $this->getCurrentUser());
+            $canSubmit  = $canSubmit && ($event->isUserAttending($this->getCurrentUser()) || $isAdmin);
         } else {
             $roundParam = null;
             if ($group){
-                $canSubmit = $canSubmit && ($group->isMember($this->getCurrentUser()) || $group->isOwner($this->getCurrentUser()) );
+                $isAdmin    = $isAdmin || ( $group->isOwner($this->getCurrentUser()) );
+                $canSubmit  = $canSubmit && ($group->isMember($this->getCurrentUser()) || $isAdmin);
             }
         }
 
         $ideaRepo 	= $this->getDoctrine()->getRepository('IdeaBundle:Idea');
         $ideaList 	= $ideaRepo->filter($entrySet, $roundParam, $tag, $userParam);
 
-        $isAdmin    = $this->isGranted('ROLE_ADMIN');
 
         //For admin remove the public ideas from the full list to just show private ideas
         if ($viewPrivate && $isAdmin) {
