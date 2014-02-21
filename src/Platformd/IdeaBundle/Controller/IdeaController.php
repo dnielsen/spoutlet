@@ -1226,9 +1226,12 @@ class IdeaController extends Controller
             throw new NotFoundHttpException('Event not found.');
         }
 
+        $isAdmin = $this->isGranted('ROLE_ADMIN') || ($event->getUser() == $this->getCurrentUser());
+
         return $this->render('IdeaBundle:Idea:sessions.html.twig', array (
             'group'        => $event->getGroup(),
             'event'        => $event,
+            'isAdmin'      => $isAdmin,
             'sidebar'      => true,
             'breadCrumbs'  => $this->getBreadCrumbsString($event, true),
         ));
