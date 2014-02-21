@@ -1161,8 +1161,16 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
         usort($sessions, function($a, $b)
         {
-            $aStartTime = $a->getStartsAt()->format('U');
-            $bStartTime = $b->getStartsAt()->format('U');
+            $aStartTime = $a->getStartsAt();
+            $bStartTime = $b->getStartsAt();
+            if (!$aStartTime) {
+                return +1;
+            }
+            if (!$bStartTime){
+                return -1;
+            }
+            $aStartTime = $aStartTime->format('U');
+            $bStartTime = $bStartTime->format('U');
 
             if ($aStartTime == $bStartTime) {
                 return 0;
