@@ -57,10 +57,10 @@
                 });
             {% endif %}
 
-            if (startTimeInput.empty()){
+            if (!startTimeInput.val()) {
                 startTimeInput.val('18:30:00');
             }
-            if (endTimeInput.empty()){
+            if (!endTimeInput.val()){
                 endTimeInput.val('19:00:00');
             }
 
