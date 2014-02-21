@@ -47,6 +47,9 @@
                 {% block pre_content_nav %}{% endblock %}
 
                 {% render url('_flash_message') with {}, {'standalone': true } %}
+                <script type="text/javascript">
+                    $('.notice').draggable();
+                </script>
 
                 <div class="clear"></div>
 
