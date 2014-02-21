@@ -357,6 +357,10 @@
 
 table.sessions {
     width: 100%;
+    border: 1px solid #ccc;
+    box-shadow: #ccc 5px 5px 5px;
+    -webkit-box-shadow: #ccc 5px 5px 5px;
+    -moz-box-shadow: #ccc 5px 5px 5px;
 }
 tr.date {
     background: #2faad9;
