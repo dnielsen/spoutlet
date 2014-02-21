@@ -57,10 +57,15 @@
                 });
             {% endif %}
 
+            if (startTimeInput.empty()){
+                startTimeInput.val('18:30:00');
+            }
+            if (endTimeInput.empty()){
+                endTimeInput.val('19:00:00');
+            }
+
             {% if isNew %}
                 dateInput.val('{{ event.startDateString }}');
-                startTimeInput.val('18:30:00');
-                endTimeInput.val('19:00:00');
             {% endif %}
 
             startTimeInput.datetimepicker({
