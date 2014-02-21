@@ -39,6 +39,9 @@
     height: 40px;
     font-size: 14px;
     border-bottom: 1px solid #ccc;
+    box-shadow: #BBBBBB 0px 3px 10px;
+    -webkit-box-shadow: #BBBBBB 0px 3px 10px;
+    -moz-box-shadow: #BBBBBB 0px 3px 10px;
 }
 #topNav-content {
     width: 100%;

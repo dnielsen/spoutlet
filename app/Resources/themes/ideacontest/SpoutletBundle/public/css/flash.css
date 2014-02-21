@@ -2,7 +2,6 @@
 .xnotices {
     display: none;
     position: fixed;
-    opacity: .96;
     max-width: 30%;
     right: 10px;
     top: 50px;
@@ -14,7 +13,10 @@
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     background: linear-gradient(white, #eee);
-    border: 1px solid;
+    border: 1px solid #bbb;
+    box-shadow: #bbb 5px 5px 10px;
+    -moz-box-shadow: #bbb 5px 5px 10px;
+    -webkit-box-shadow: #bbb 5px 5px 10px;
 }
 .xnotices h3 {
     font-size:18px;
