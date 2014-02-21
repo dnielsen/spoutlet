@@ -295,6 +295,9 @@
 		margin-right: 20px;
 	}
 
+    .kWords {
+        padding: 0px 0px 2px;
+    }
 	.kWords p {
 		padding-top: 0;
 	}
