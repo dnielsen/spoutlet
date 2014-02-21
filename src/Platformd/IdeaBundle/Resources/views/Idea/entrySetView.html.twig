@@ -5,7 +5,7 @@
     <span class = "lrgtxt left">{{ entrySet.name }} {% if showAllRounds == 'true' %}- All Rounds{% else %}{% if round > 1 %}- Round {{ round }}{% endif %}{% endif %}</span>
 
     <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}">
-        <input type="submit" value="Add {{ entrySet.type | capitalize }}" class="right">
+        <input type="submit" value="Propose {{ entrySet.type | capitalize }}" class="right">
     </a>
 
 
