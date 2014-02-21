@@ -295,15 +295,18 @@
 		margin-right: 20px;
 	}
 
+    .kWords {
+        padding: 0px 0px 2px;
+    }
 	.kWords p {
 		padding-top: 0;
 	}
     .card {
         border: 1px solid #ccc;
         padding: 10px;
-        box-shadow: #ccc 3px 3px 3px;
-        -webkit-box-shadow: #ccc 3px 3px 3px;
-        -moz-box-shadow: #ccc 3px 3px 3px;
+        box-shadow: #ccc 2px 2px 2px;
+        -webkit-box-shadow: #ccc 2px 2px 2px;
+        -moz-box-shadow: #ccc 2px 2px 2px;
 
     }
     .card:hover {
