@@ -67,9 +67,9 @@
 
             {% set _here = app.request.get('_route') %}
             {% if app.user and (menu_scope != 'other') %}
-                <li class="more">
+                <li class="more" id="settingsLink">
                     <a>{{ 'platformd.layout.main_menu.settings' | pd_trans }}</a>
-                    <ul>
+                    <ul id="settingsList">
                         {% if menu_scope == 'group' %}
                             {% if _isOwner %}
                                 <li><a href="{{ path('group_edit', {'slug': _key}) }}">Edit Group Details</a></li>
@@ -151,15 +151,13 @@
             extraWidth:  1     // extra width can ensure lines don't sometimes turn over
             // due to slight rounding differences and font-family
         }).superfish({
-                    delay:      150,
-                    animation:  {opacity:'show',height:'show'},
-                    speed:      'fast'
-                });
+            delay:      150,
+            animation:  {opacity:'show',height:'show'},
+            speed:      'fast'
+        });
 
-        $('.tablesorter').tablesorter();
-
-        // clearing overlay defaults so they can be loaded in from css (div.blockOverlay)
-        $.blockUI.defaults.overlayCSS = {};
-        $.fn.qtip.defaults.style.classes = 'qtip-green qtip-shadow qtip-rounded';
+        if ($('ul#settingsList li').length < 1) {
+            $('#settingsLink').hide();
+        }
     });
 </script>
