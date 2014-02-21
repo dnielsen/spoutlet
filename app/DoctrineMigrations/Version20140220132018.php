@@ -16,7 +16,7 @@ class Version20140220132018 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != "mysql");
         
         $this->addSql("ALTER TABLE event_session ADD source_idea_id INT DEFAULT NULL");
-        $this->addSql("ALTER TABLE event_session ADD CONSTRAINT FK_55137C7B12B05715 FOREIGN KEY (source_idea_id) REFERENCES idea(id)");
+        $this->addSql("ALTER TABLE event_session ADD CONSTRAINT FK_55137C7B12B05715 FOREIGN KEY (source_idea_id) REFERENCES idea(id    ) ON DELETE SET NULL");
         $this->addSql("CREATE UNIQUE INDEX UNIQ_55137C7B12B05715 ON event_session (source_idea_id)");
     }
 
