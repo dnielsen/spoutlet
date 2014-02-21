@@ -101,7 +101,7 @@ class AdminController extends Controller
 
                         $evtSession->setDate($sessionDate);
                     }
-                    $this->setFlash('success', $evtSession->getName().' has been successfully added to the session list.');
+                    $this->setFlash('success', $evtSession->getName().' has been successfully added to the session schedule.');
                     $url = $this->generateUrl($idea->getEntrySet()->getLinkableRouteName(), $idea->getEntrySet()->getLinkableRouteParameters());
                 }
                 else {
