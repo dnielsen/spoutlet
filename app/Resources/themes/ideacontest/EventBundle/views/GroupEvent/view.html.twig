@@ -49,7 +49,7 @@
 
         {# For now -- get first entrySet -- need to implement list chooser #}
         {% if event.sessions | length > 0 %}
-            <h2 class="left">Sessions</h2><a href="{{ path('event_session_schedule', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="blue right">View All</a>
+            <h2 class="left">Session Schedule</h2><a href="{{ path('event_session_schedule', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="blue right">View All</a>
 
             <table class="clr sessions">
                 {% for date,sessions in event.sessionsByDate %}
