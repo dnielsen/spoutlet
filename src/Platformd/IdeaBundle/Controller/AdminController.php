@@ -73,39 +73,69 @@ class AdminController extends Controller
         if ($request->getMethod() == 'POST')
         {
             $form->bindRequest($request);
+            $ideaId = $request->get('ideaId');
 
-            if($form->isValid())
+            if($form->isValid() || $ideaId)
             {
                 $em = $this->getDoctrine()->getEntityManager();
+                $url = null;
 
-                $date = $evtSession->getDate();
-                $year = $date->format('Y');
-                $month = $date->format('n');
-                $day = $date->format('d');
+                if ($ideaId){
+                    $idea = $em->getRepository('IdeaBundle:Idea')->find($ideaId);
+                    if (!$idea){
+                        throw new NotFoundHttpException('Idea not found.');
+                    }
 
-                // Set date for start and end times from date input
-                $evtSession->getStartsAt()->setDate($year, $month, $day);
-                $evtSession->getEndsAt()->setDate($year, $month, $day);
+                    $evtSession->setSourceIdea($idea);
+                    $evtSession->setName($idea->getName());
+                    $evtSession->setDescription($idea->getDescription());
+                    $evtSession->addTags($idea->getTags());
 
-                $tagString = $request->get('tags');
+                    $eventStart = $event->getStartsAt();
 
-                if ($isNew)
-                {
+                    if ($eventStart) {
+
+                        $sessionDate = new DateTime();
+                        $sessionDate->setDate($eventStart->format('Y'),  $eventStart->format('n'), $eventStart->format('d'));
+                        $sessionDate->setTime($eventStart->format('H'), $eventStart->format('i'));
+
+                        $evtSession->setDate($sessionDate);
+                    }
+                    $this->setFlash('success', $evtSession->getName().' has been successfully added to the session list.');
+                    $url = $this->generateUrl($idea->getEntrySet()->getLinkableRouteName(), $idea->getEntrySet()->getLinkableRouteParameters());
+                }
+                else {
+
+                    $date = $evtSession->getDate();
+                    $year = $date->format('Y');
+                    $month = $date->format('n');
+                    $day = $date->format('d');
+
+                    // Set date for start and end times from date input
+                    $evtSession->getStartsAt()->setDate($year, $month, $day);
+                    $evtSession->getEndsAt()->setDate($year, $month, $day);
+
+                    $tagString = $request->get('tags');
+
+                    if (!$isNew) {
+                        $evtSession->removeAllTags();
+                    }
+
+                    $evtSession->addTags($this->getIdeaService()->processTags($tagString));
+                }
+
+                if ($isNew){
                     $event->addSession($evtSession);
                     $em->persist($evtSession);
                 }
-                else {
-                    $evtSession->removeAllTags();
-                }
 
-                $evtSession->addTags($this->getIdeaService()->processTags($tagString));
                 $em->flush();
 
-                return $this->redirect($this->generateUrl('event_session', array(
-                    'groupSlug'   => $groupSlug,
-                    'eventId'     => $eventId,
-                    'sessionId'   => $evtSession->getId(),
-                )));
+                if (!$url){
+                    $url = $this->generateUrl($evtSession->getLinkableRouteName(), $evtSession->getLinkableRouteParameters());
+                }
+
+                return $this->redirect($url);
             }
         }
 
@@ -141,7 +171,7 @@ class AdminController extends Controller
 
         $this->setFlash('success', 'Session \''.$evtSession->getName().'\' has been deleted.');
 
-        return $this->redirect($this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters()));
+        return $this->redirect($this->generateUrl('event_session_schedule', $event->getLinkableRouteParameters()));
     }
 
     public function eventAction(Request $request, $groupSlug, $eventId)

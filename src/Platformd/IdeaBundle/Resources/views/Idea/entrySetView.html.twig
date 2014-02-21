@@ -121,6 +121,11 @@
                     </form>
                 </div>
                 <div class="clr"></div>
+                {% if entrySet.type == constant('\\Platformd\\IdeaBundle\\Entity\\EntrySet::TYPE_SESSION') and isAdmin and not idea.evtSession %}
+                    <form action="{{ path('event_session_create', {'groupSlug': group.slug, 'eventId': event.id, 'ideaId': idea.id}) }}" method="POST">
+                        <a href="javascript:void(0);" class="btnTny spcr-t" onClick="$(this).closest('form').submit();">Create Session</a>
+                    </form>
+                {% endif %}
             </div>
 
             <div class="session">
