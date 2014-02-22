@@ -2,6 +2,7 @@
 
 namespace Platformd\GroupBundle\Form\Type;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
 use Platformd\GroupBundle\Entity\Group;
@@ -18,12 +19,14 @@ class GroupType extends AbstractType
     private $group;
     private $tagManager;
     private $hasMultiSiteGroups;
+    private $topicGroups;
 
-    public function __construct($user, $group, $tagManager, $hasMultiSiteGroups) {
+    public function __construct($user, $group, $tagManager, $hasMultiSiteGroups, $topicGroups=null) {
         $this->user         = $user;
         $this->group        = $group;
         $this->tagManager   = $tagManager;
         $this->hasMultiSiteGroups = $hasMultiSiteGroups;
+        $this->topicGroups = $topicGroups;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
@@ -98,6 +101,24 @@ class GroupType extends AbstractType
                     'label' => 'Discussions',
                     'help'  => 'Enable discussions for this group.',
                 ));
+
+
+                if ($this->topicGroups){
+                    $choices = array();
+                    $numChoices = 0;
+                    foreach ($this->topicGroups as $group) {
+                        $choices[$group->getId()] = $group->getName();
+                        $numChoices++;
+                    }
+
+                    $formAttributes = array('class'=>"formRowWidth", 'size' => ($numChoices > 6 ? 6 : $numChoices));
+                    $builder->add('parent', 'choice', array(
+                        'choices' => $choices,
+                        'required' => false,
+                        'empty_value' => false,
+                        'attr' => $formAttributes,
+                    ));
+                }
             }
 
             $builder->add('tags', 'text', array(

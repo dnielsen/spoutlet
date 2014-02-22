@@ -360,6 +360,21 @@ Alienware Arena Team
         ));
     }
 
+    /**
+     * @return array
+     */
+    public function getTopicGroups()
+    {
+        $doctrine = $this->getDoctrine();
+        $groupRepo = $doctrine->getRepository('GroupBundle:Group');
+
+        $topicGroupData = $groupRepo->findAllGroupsByCategoryAndSite('topic', $this->getCurrentSite());
+        foreach ($topicGroupData as $groupInfo) {
+            $topicGroups[] = $groupInfo[0];
+        }
+        return $topicGroups;
+    }
+
     private function getGroupPages($groups)
     {
         $groupsPerPage = 8;
@@ -1762,7 +1777,11 @@ Alienware Arena Team
             $group->setDescription('Welcome to my group! <br /><br />This is the place to share your thoughts with like-minded folks on this topic. <br /><br />Feel free to start a discussion on this topic.');
         }
 
-        $form = $this->createForm(new GroupType($this->getUser(), $group, $tagManager, false), $group);
+        $topicGroups = array();
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $topicGroups = $this->getTopicGroups();
+        }
+        $form = $this->createForm(new GroupType($this->getUser(), $group, $tagManager, false, $topicGroups), $group);
 
         if($previous = $this->getReturnUrl($request)) {
             $request->getSession()->set(
@@ -1823,7 +1842,11 @@ Alienware Arena Team
         $tagManager = $this->getTagManager();
         $tagManager->loadTagging($group);
 
-        $editForm = $this->createForm(new GroupType($this->getUser(), $group, $tagManager, false), $group);
+        $topicGroups = array();
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $topicGroups = $this->getTopicGroups();
+        }
+        $editForm = $this->createForm(new GroupType($this->getUser(), $group, $tagManager, false, $topicGroups), $group);
 
         if ($this->processForm($editForm, $request)) {
             $this->setFlash('success', 'The group was saved!');
@@ -2059,6 +2082,10 @@ Alienware Arena Team
             if ($form->isValid()) {
 
                 $group = $form->getData();
+
+                $parent = $this->getGroupManager()->find($group->getParent());
+
+                $group->setParent($parent);
 
                 $userIsAdmin  = $this->getUser()->hasRole('ROLE_SUPER_ADMIN');
                 $noSitePicked = !$group->getAllLocales() && $group->getSites()->count() < 1;

@@ -316,7 +316,6 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
 
 
     /**
-     * @var \Platformd\GroupBundle\Entity\Group
      * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group", inversedBy="childGroups")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
@@ -1162,11 +1161,11 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         return $this->parentGroup;    
     }
     
-    public function setParent(Group $parent) {
+    public function setParent($parent) {
         $this->parentGroup = $parent;
     }
     
-    public function addChild(Group $child) {
+    public function addChild($child) {
         $this->childGroups->add($child);
     }
 
