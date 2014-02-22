@@ -147,6 +147,8 @@
         {% if group.entrySets|length > 0 %}{% set renderEntrySets = true %}{% else %}{% set renderEntrySets = false %}{% endif %}
         {% if pastEvents|length > 0 %}{% set renderPastEvents = true %}{% else %}{% set renderPastEvents = false %}{% endif %}
         {% if group.sponsors|length > 0 %}{% set renderSponsors = true %}{% else %}{% set renderSponsors = false %}{% endif %}
+        {% if group.children|length > 0 %}{% set renderChildrenGroups = true %}{% else %}{% set renderChildrenGroups = false %}{% endif %}
+        {% if group.parent|default %}{% set renderParentGroup = true %}{% else %}{% set renderParentGroup = false %}{% endif %}
 
         {% if nextEvent %}
             {% if nextEvent.getOnline %}
@@ -193,6 +195,20 @@
                     </li>
                 {% endfor %}
             </ul>
+        {% endif %}
+
+        {% if renderChildrenGroups %}
+            <h2 class="widgetHeader">Regional Groups</h2>
+            <ul class="scrollableWidget spcr-b3">
+                {% for child in group.children %}
+                    <a href="{{ child | pd_link }}" class="blue spcr-l3">{{ child.name }}</a><br/>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if renderParentGroup %}
+            <h2 class="widgetHeader">Parent Group</h2>
+            <a href="{{ group.parent | pd_link }}" class="blue spcr-l3">{{ group.parent.name }}</a>
         {% endif %}
 
         {% if renderSponsors %}

@@ -40,6 +40,10 @@
                         {{ form_row(form.category) }}
                     </div>
 
+                    <div id="group-parent-controls" style="display:none;">
+                        {{ form_row(form.parent) }}
+                    </div>
+
                 {% endif %}
 
             </div>
@@ -87,12 +91,18 @@
         else if (category.val() == 'topic'){    // user is an admin and category is set to 'topic', so hide location controls initially
             $('#group-location-controls').hide();
         }
+        else if(category.val() == 'location'){
+            $('#group-parent-controls').show();
+
+        }
 
         category.change(function () {
             if($(this).val() == 'topic') {
                 $('#group-location-controls').slideUp();
+                $('#group-parent-controls').slideUp();
             } else {
                 $('#group-location-controls').slideDown();
+                $('#group-parent-controls').slideDown();
             }
         });
 
