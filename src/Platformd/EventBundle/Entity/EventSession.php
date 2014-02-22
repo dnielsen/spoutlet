@@ -85,10 +85,16 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
-     * @ORM\JoinTable
+     * @ORM\JoinTable(name="event_session_attendees")
      * @ORM\OrderBy({"username" = "ASC"})
      */
     protected $attendees;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\JoinTable(name="event_session_followers")
+     */
+    protected $followers;
 
 //    /**
 //     * @ORM\ManyToMany(targetEntity="Platformd\IdeaBundle\Entity\Tag", inversedBy="sessions")
@@ -111,6 +117,7 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     public function __construct(GroupEvent $event) {
         $this->event        = $event;
         $this->attendees    = new ArrayCollection();
+        $this->followers    = new ArrayCollection();
 //        $this->tags         = new ArrayCollection();
     }
 
@@ -142,6 +149,23 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     {
         return $this->attendees;
     }
+
+    /**
+     * @param mixed $followers
+     */
+    public function setFollowers($followers)
+    {
+        $this->followers = $followers;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFollowers()
+    {
+        return $this->followers;
+    }
+
 
     /**
      * @param string $description
