@@ -358,8 +358,12 @@
 
 /*::::::::::::::: TABLE :::::::::::::::*/
 
+#sessionsDialog {
+    overflow-y: auto;
+    display:none;
+}
+
 table.sessions {
-    width: 100%;
     border: 1px solid #ccc;
     box-shadow: #ccc 5px 5px 5px;
     -webkit-box-shadow: #ccc 5px 5px 5px;
