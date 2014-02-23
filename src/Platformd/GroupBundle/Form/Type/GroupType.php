@@ -2,15 +2,14 @@
 
 namespace Platformd\GroupBundle\Form\Type;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Platformd\GroupBundle\Entity\Group;
 use Platformd\MediaBundle\Form\Type\MediaType;
-use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Platformd\SpoutletBundle\Form\Type\LocationType;
-use Platformd\SpoutletBundle\Entity\Location;
+use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Platformd\UserBundle\Entity\User;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilder;
+use Doctrine\ORM\EntityRepository;
 
 class GroupType extends AbstractType
 {
@@ -19,14 +18,14 @@ class GroupType extends AbstractType
     private $group;
     private $tagManager;
     private $hasMultiSiteGroups;
-    private $topicGroups;
+    private $currentSite;
 
-    public function __construct($user, $group, $tagManager, $hasMultiSiteGroups, $topicGroups=null) {
+    public function __construct($user, Group $group, $tagManager, $hasMultiSiteGroups, $currentSite=null) {
         $this->user         = $user;
         $this->group        = $group;
         $this->tagManager   = $tagManager;
         $this->hasMultiSiteGroups = $hasMultiSiteGroups;
-        $this->topicGroups = $topicGroups;
+        $this->currentSite = $currentSite;
     }
 
     public function buildForm(FormBuilder $builder, array $options)
@@ -102,21 +101,23 @@ class GroupType extends AbstractType
                     'help'  => 'Enable discussions for this group.',
                 ));
 
-
-                if ($this->topicGroups){
-                    $choices = array();
-                    $numChoices = 0;
-                    foreach ($this->topicGroups as $group) {
-                        $choices[$group->getId()] = $group->getName();
-                        $numChoices++;
-                    }
-
-                    $formAttributes = array('class'=>"formRowWidth", 'size' => ($numChoices > 6 ? 6 : $numChoices));
-                    $builder->add('parent', 'choice', array(
-                        'choices' => $choices,
-                        'required' => false,
-                        'empty_value' => false,
+                if ($this->currentSite){
+                    $formAttributes = array('class'=>"formRowWidth", 'size' => 6);
+                    $builder->add('parent', 'entity', array(
+                        'class' => 'Platformd\GroupBundle\Entity\Group',
+                        'property' => 'name',
                         'attr' => $formAttributes,
+                        'query_builder' => function(EntityRepository $er) {
+                                return $er->createQueryBuilder('g')
+                                    ->leftJoin('g.sites', 's')
+                                    ->where('g.category = :category')
+                                    ->andWhere('(s = :site OR g.allLocales = true)')
+                                    ->andWhere('g.deleted = false')
+                                    ->setParameter('category', 'topic')
+                                    ->setParameter('site', $this->currentSite);
+                            },
+
+
                     ));
                 }
             }
