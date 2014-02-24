@@ -166,7 +166,7 @@
             <h2 class="widgetHeader">More Upcoming Events</h2>
             <ul class="scrollableWidget spcr-b3">
                 {% for event in groupEvents %}
-                    <li class="spcr-t spcr-l3">
+                    <li class="spcr-l3">
                         <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu">{{ event.name }}</h3></a>
                     </li>
                 {% endfor %}
@@ -178,7 +178,7 @@
             <h2 class="widgetHeader">Past Events</h2>
             <ul class="scrollableWidget spcr-b3">
                 {% for event in pastEvents %}
-                    <li class="spcr-t spcr-l3">
+                    <li class="spcr-l3">
                         <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu">{{ event.name }}</h3></a>
                     </li>
                 {% endfor %}
@@ -190,7 +190,7 @@
             <h2 class="widgetHeader">Lists</h2>
             <ul class="scrollableWidget spcr-b3">
                 {% for entrySet in group.entrySets %}
-                    <li class="spcr-t spcr-l3">
+                    <li class="spcr-l3">
                         <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
                     </li>
                 {% endfor %}
@@ -201,14 +201,18 @@
             <h2 class="widgetHeader">Regional Groups</h2>
             <ul class="scrollableWidget spcr-b3">
                 {% for child in group.children %}
-                    <a href="{{ child | pd_link }}" class="blue spcr-l3">{{ child.name }}</a><br/>
+                    <li class="spcr-l3">
+                        <a href="{{ child | pd_link }}"><h3 class="blu">{{ child.name }}</h3></a>
+                    </li>
                 {% endfor %}
             </ul>
         {% endif %}
 
         {% if renderParentGroup %}
             <h2 class="widgetHeader">Parent Group</h2>
-            <a href="{{ group.parent | pd_link }}" class="blue spcr-l3">{{ group.parent.name }}</a>
+            <div class="spcr-b3 spcr-l3">
+                <a href="{{ group.parent | pd_link }}" ><h3 class="blu">{{ group.parent.name }}</h3></a>
+            </div>
         {% endif %}
 
         {% if renderSponsors %}
@@ -228,7 +232,7 @@
         <ul class="spcr-b3">
             {% for member in group.members %}
                 {% if member.id != group.owner.id %}
-                    <li class="spcr-t spcr-l3">
+                    <li class="spcr-l3">
                         <a href="{{ path('profile', {'userId': member.id}) }}"><h3 class="blu">{{ member.name }}</h3></a>
                     </li>
                 {% endif %}
