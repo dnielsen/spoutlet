@@ -1674,12 +1674,30 @@ Alienware Arena Team
 
         $groupEvents = array_merge($ongoingEvents, $moreEvents);
 
+        $locationGroups = array();
+        $locationGroups = $this->collectLocations($group, $locationGroups);
+
         return $this->render('GroupBundle:Group:show.html.twig', array(
             'group'          => $group,
             'nextEvent'      => $nextEvent,
             'groupEvents'    => $groupEvents,
             'pastEvents'     => $pastEvents,
+            'locationGroups' => $locationGroups,
         ));
+    }
+
+    private function collectLocations($thisGroup, &$locationGroups) {
+        foreach($thisGroup->getChildren() as $child) {
+            if($thisGroup->getCategory() == 'topic') {
+                array_merge($locationGroups, $this->collectLocations($child, $locationGroups));
+            }
+
+            $data = $this->getGroupManager()->getGroupIndexData($child);
+            if ($data) {
+                $locationGroups[] = $data;
+            }
+        }
+        return $locationGroups;
     }
 
     public function _groupShowContentAction($slug)

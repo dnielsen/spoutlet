@@ -6,6 +6,30 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+    <script type="text/javascript" src="/themes/ideacontest/spoutlet/js/gmaps_custom.js"></script>
+
+    <script type="text/javascript">
+        var groupsArray = [];
+
+        $(function () {
+
+            {% for curGroup in locationGroups %}
+            singleGroup = [];
+            singleGroup['name'] = '{{ curGroup.name }}';
+            singleGroup['lat'] = '{{ curGroup.latitude }}';
+            singleGroup['long'] = '{{ curGroup.longitude }}';
+            singleGroup['city'] = '{{ curGroup.city }}';
+            singleGroup['address1'] = '{{ curGroup.address1 }}';
+            singleGroup['address2'] = '{{ curGroup.address2 }}';
+            singleGroup['stateProvince'] = '{{ curGroup.stateProvince }}';
+            singleGroup['metroArea'] = '{{ curGroup.metroArea }}';
+            singleGroup['url'] = '{{ path(curGroup.urlRouteName, curGroup.urlRouteParams, true) }}';
+
+            groupsArray.push(singleGroup);
+            {% endfor %}
+        });
+    </script>
     <script id="addJS">
         jQuery(document).ready(function($) {
             // Please note that autoHeight option has some conflicts with options like imageScaleMode, imageAlignCenter and autoScaleSlider
@@ -59,6 +83,13 @@
     </div>
     <hr/>
 
+    {% if locationGroups|default %}
+    <div id="map">
+        <h2>Find a Group Near You</h2>
+        <input id="map-location-search" type="text" size="50" placeholder="Enter your location" autocomplete="off">
+        <div id="map-canvas" style="width:730px;height:320px"></div>
+    </div>
+    {% endif %}
 
     {% if nextEvent %}
         <div class="cBxLft">
