@@ -162,6 +162,8 @@
             {% endif %}
         {% endif %}
 
+        <div class="fb-like spcr-t" data-href="{{ path('group_show', {'slug': group.slug}) }}" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+
         {% if renderMoreEvents %}
             <h2 class="widgetHeader">More Upcoming Events</h2>
             <ul class="scrollableWidget spcr-b3">

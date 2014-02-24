@@ -126,6 +126,8 @@
             <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}" class="btnLg2">Session Schedule</a>
         {% endif %}
 
+        <div class="fb-like spcr-t" data-href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+
         <h2 class="widgetHeader">Event Details</h2>
         <table id="eventDetails" class="tblStyle spcr-b3">
             {% if event.startsAt %}

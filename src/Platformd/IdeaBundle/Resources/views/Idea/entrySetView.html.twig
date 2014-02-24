@@ -8,11 +8,11 @@
         <input type="submit" value="Propose {{ entrySet.type | capitalize }}" class="right">
     </a>
 
-    <div class="clr"></div>
+    <div class="clr">
+        {{ entrySet.description }}
+    </div>
 
-    {{ entrySet.description }}
-
-    <div class="spcr-t5">
+    <div class="left spcr-t5">
 
         {% if (entrySet.entries|length > 0) %}
         <form action = "{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" id='filterForm' method="get" class="left">
@@ -25,9 +25,10 @@
             </table>
         </form>
         {% endif %}
-
     </div>
-    
+
+    <div class="right spcr-t5 fb-like facebookWrapper" data-href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+
     <div class="clr"></div>
 
     {% if (entrySet.entries|length > 0) %} {# No entries in entrySet #}

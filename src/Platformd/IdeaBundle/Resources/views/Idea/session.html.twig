@@ -2,6 +2,7 @@
 
 {% block content %}
     <h1 class="idea-name">{{ eventSession.name }}</h1>
+    <div class="fb-like" data-href="{{ path('event_session', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': eventSession.id}) }}" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
 
     {#{% if eventSession.tags|length > 0 %}#}
         {#<div class="left kWords spcr-b2">#}
