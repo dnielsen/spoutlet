@@ -31,15 +31,19 @@
                 </ul>
             </div>
             <div class="clr"></div>
+
         {% endif %}
 
-        <em class="tnytxt left">{{ idea.dateTimeString }}</em><div class="clr"></div>
+        <em class="tnytxt left">{{ idea.dateTimeString }}</em>
+        <div class="clr"></div>
 
-        <p class="left">
-            {% if idea.canUserView(app.user) %}{{ idea.description | nl2br }}
-            {% else %}[This {{ entrySet.type }} is private]
+            {% if idea.canUserView(app.user) %}
+                <p class="left">
+                    {{ idea.description | nl2br }}
+                </p>
+            {% else %}
+                [This {{ entrySet.type }} is private]
             {% endif %}
-        </p>
         <br class="clr"/>
 
         {% if idea.stage %}<hr/><strong>Idea Stage:</strong> {{ idea.stage }}<hr/>{% endif %}
@@ -83,6 +87,8 @@
     <br class="clr">
 
     {% if idea.canUserView(app.user) %}
+        <div class="fb-like spcr-l2 spcr-b2" data-href="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+
         <div class="spcr-l2">
 
             <label class="midtxt">{{idea.comments.count}} Comments</label>

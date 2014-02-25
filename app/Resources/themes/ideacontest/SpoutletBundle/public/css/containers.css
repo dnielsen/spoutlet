@@ -356,6 +356,14 @@
         height: 341px;
     }
 
+    .facebookWrapper {
+        padding:9px;
+        border: 1px solid #ccc;
+        box-shadow: #ccc 1px 1px 1px;
+        -webkit-box-shadow: #ccc 1px 1px 1px;
+        -moz-box-shadow: #ccc 1px 1px 1px;
+    }
+
 /*::::::::::::::: TABLE :::::::::::::::*/
 
 #sessionsDialog {

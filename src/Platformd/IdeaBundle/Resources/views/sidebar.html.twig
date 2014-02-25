@@ -54,7 +54,7 @@
         <ul class="scrollableWidget spcr-b3">
             {% for es in event.entrySets %}
                 {% if entrySet is not defined or (entrySet.id != es.id) %}
-                <li class="spcr-t spcr-l3">
+                <li class="spcr-t7 spcr-l3">
                     <a href="{{ path('entry_set_view', {'entrySetId': es.id}) }}"><h3 class="blu">{{ es.name }}</h3></a>
                 </li>
                 {% endif %}
@@ -82,6 +82,7 @@
         </div>
     {% endif %}
 
+
     <h2 class="widgetHeader">Group Description</h2>
     <div class="scrollableWidgetLarge spcr-b3">
         {{ group.description | raw }}
@@ -94,7 +95,7 @@
         <ul class="scrollableWidget spcr-b3">
             {% for es in group.entrySets %}
                 {% if entrySet is not defined or (entrySet.id != es.id) %}
-                    <li class="spcr-t spcr-l3">
+                    <li class="spcr-t7 spcr-l3">
                         <a href="{{ path('entry_set_view', {'entrySetId': es.id}) }}"><h3 class="blu">{{ es.name }}</h3></a>
                     </li>
                 {% endif %}
