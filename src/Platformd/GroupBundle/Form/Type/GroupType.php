@@ -106,6 +106,7 @@ class GroupType extends AbstractType
                     $builder->add('parent', 'entity', array(
                         'class' => 'Platformd\GroupBundle\Entity\Group',
                         'property' => 'name',
+                        'empty_value' => '<None>',
                         'attr' => $formAttributes,
                         'query_builder' => function(EntityRepository $er) {
                                 return $er->createQueryBuilder('g')
