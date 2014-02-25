@@ -193,7 +193,12 @@
             {% endif %}
         {% endif %}
 
-        <div class="fb-like spcr-t" data-href="{{ path('group_show', {'slug': group.slug}) }}" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+        <div class="social spcr-t spcr-b2">
+            <div class="fb-like left" data-href="{{ path('group_show', {'slug': group.slug}) }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
+            <a href="https://twitter.com/share" class="twitter-share-button left spcr-l3 spcr-t8" data-url="{{ path('group_show', {'slug': group.slug}) }}" data-hashtags="campsite">Tweet</a>
+        </div>
+
+        <div class="clr"></div>
 
         {% if renderMoreEvents %}
             <h2 class="widgetHeader">More Upcoming Events</h2>
