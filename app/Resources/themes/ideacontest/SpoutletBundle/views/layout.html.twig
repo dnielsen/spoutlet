@@ -5,13 +5,15 @@
         <meta charset="UTF-8" />
         <title>
             {% block title %}
-                {% if idea is defined and idea is not null %}
+                {% if eventSession|default %}
+                    {{ eventSession.name }}
+                {% elseif idea|default %}
                     {{ idea.name }}
-                {% elseif entrySet is defined and entrySet is not null %}
+                {% elseif entrySet|default %}
                     {{ entrySet.name }}
-                {% elseif event is defined and event is not null %}
+                {% elseif event|default %}
                     {{ event.name }}
-                {% elseif group is defined and group is not null %}
+                {% elseif group|default %}
                     {{ group.name }}
                 {% else %}
                     Campsite
