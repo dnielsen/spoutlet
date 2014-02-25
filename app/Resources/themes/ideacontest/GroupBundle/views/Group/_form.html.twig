@@ -40,6 +40,10 @@
                         {{ form_row(form.category) }}
                     </div>
 
+                    <div id="group-children-controls" style="display:none;">
+                        {{ form_row(form.children) }}
+                    </div>
+
                     <div id="group-parent-controls" style="display:none;">
                         {{ form_row(form.parent) }}
                     </div>
@@ -71,6 +75,11 @@
 
         $('input#platformd_groupbundle_grouptype_name').css('width', '300px');
 
+        parentChoice = $('#platformd_groupbundle_grouptype_parent');
+        if(parentChoice.val() == null) {
+            parentChoice.children(':first-child').attr('selected','');
+        }
+
         if ($('.control-group.error').length > 0) {
             $('html, body').animate({
                 scrollTop: ($('.control-group.error').first().offset().top) - 100
@@ -90,6 +99,7 @@
         }
         else if (category.val() == 'topic'){    // user is an admin and category is set to 'topic', so hide location controls initially
             $('#group-location-controls').hide();
+            $('#group-children-controls').show();
         }
         else if(category.val() == 'location'){
             $('#group-parent-controls').show();
@@ -100,9 +110,11 @@
             if($(this).val() == 'topic') {
                 $('#group-location-controls').slideUp();
                 $('#group-parent-controls').slideUp();
+                $('#group-children-controls').slideDown();
             } else {
                 $('#group-location-controls').slideDown();
                 $('#group-parent-controls').slideDown();
+                $('#group-children-controls').slideUp();
             }
         });
 

@@ -103,6 +103,7 @@ class GroupType extends AbstractType
 
                 if ($this->currentSite){
                     $formAttributes = array('class'=>"formRowWidth", 'size' => 6);
+
                     $builder->add('parent', 'entity', array(
                         'class' => 'Platformd\GroupBundle\Entity\Group',
                         'property' => 'name',
@@ -115,6 +116,24 @@ class GroupType extends AbstractType
                                     ->andWhere('(s = :site OR g.allLocales = true)')
                                     ->andWhere('g.deleted = false')
                                     ->setParameter('category', 'topic')
+                                    ->setParameter('site', $this->currentSite);
+                            },
+
+
+                    ));
+
+                    $builder->add('children', 'entity', array(
+                        'class' => 'Platformd\GroupBundle\Entity\Group',
+                        'property' => 'name',
+                        'multiple' => true,
+                        'attr' => $formAttributes,
+                        'query_builder' => function(EntityRepository $er) {
+                                return $er->createQueryBuilder('g')
+                                    ->leftJoin('g.sites', 's')
+                                    ->where('g.category = :category')
+                                    ->andWhere('(s = :site OR g.allLocales = true)')
+                                    ->andWhere('g.deleted = false')
+                                    ->setParameter('category', 'location')
                                     ->setParameter('site', $this->currentSite);
                             },
 

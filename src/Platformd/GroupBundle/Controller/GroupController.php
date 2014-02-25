@@ -2079,8 +2079,16 @@ Alienware Arena Team
                 $group = $form->getData();
 
                 $parent = $group->getParent();
-
-                $group->setParent($parent);
+                $children = $group->getChildren();
+                if($group->getCategory() == 'topic') {
+                    $group->setParent(null);
+                    foreach($children as $child) {
+                        $child->setParent($group);
+                    }
+                } else {
+                    $group->setParent($parent);
+                    $children->clear();
+                }
 
                 $userIsAdmin  = $this->getUser()->hasRole('ROLE_SUPER_ADMIN');
                 $noSitePicked = !$group->getAllLocales() && $group->getSites()->count() < 1;
