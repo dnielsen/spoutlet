@@ -4,14 +4,23 @@ var infoArray = [];
 
 function initialize() {
 
+    var mapCanvas       = document.getElementById('map-canvas');
+    var zoomLevel       = mapCanvas.getAttribute('data-zoom');
+
+    if (zoomLevel == null) {
+        zoomLevel = 1;
+    }
+    else {
+        zoomLevel = parseInt(zoomLevel);
+    }
+
     var mapOptions = {
         center: new google.maps.LatLng(55.1136944, -6.6849769),
-        zoom: 1,
+        zoom: zoomLevel,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     };
 
-    var map = new google.maps.Map(document.getElementById('map-canvas'),
-        mapOptions);
+    var map = new google.maps.Map(mapCanvas, mapOptions);
 
     var input = document.getElementById('map-location-search');
     var autocomplete = new google.maps.places.Autocomplete(input);
@@ -48,7 +57,7 @@ function initialize() {
                 '<div class="map-info-address2">' + groupsArray[i]['address2'] + '</div>' +
                 '<div class="map-info-city">' + groupsArray[i]['city'] + '</div>' +
                 '<div class="map-info-state">' + groupsArray[i]['stateProvince'] + '</div>' +
-            '</div>';
+                '</div>';
 
             var marker = new google.maps.Marker({
                 position: new google.maps.LatLng (groupsArray[i]['lat'], groupsArray[i]['long']),

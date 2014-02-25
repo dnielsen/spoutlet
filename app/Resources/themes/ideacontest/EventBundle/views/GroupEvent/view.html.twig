@@ -126,7 +126,12 @@
             <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}" class="btnLg2">Session Schedule</a>
         {% endif %}
 
-        <div class="fb-like spcr-t" data-href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+        <div class="spcr-t spcr-b2">
+            <div class="fb-like left" data-href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
+            <a href="https://twitter.com/share" class="twitter-share-button left spcr-l3 spcr-t8" data-url="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}" data-hashtags="campsite">Tweet</a>
+        </div>
+
+        <div class="clr"></div>
 
         <h2 class="widgetHeader">Event Details</h2>
         <table id="eventDetails" class="tblStyle spcr-b3">

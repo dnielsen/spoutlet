@@ -5,13 +5,15 @@
         <meta charset="UTF-8" />
         <title>
             {% block title %}
-                {% if idea is defined and idea is not null %}
+                {% if eventSession|default %}
+                    {{ eventSession.name }}
+                {% elseif idea|default %}
                     {{ idea.name }}
-                {% elseif entrySet is defined and entrySet is not null %}
+                {% elseif entrySet|default %}
                     {{ entrySet.name }}
-                {% elseif event is defined and event is not null %}
+                {% elseif event|default %}
                     {{ event.name }}
-                {% elseif group is defined and group is not null %}
+                {% elseif group|default %}
                     {{ group.name }}
                 {% else %}
                     Campsite
@@ -35,7 +37,7 @@
     <body>
         <noscript>For optimal site interaction, please turn javascript on in your browser. For Firefox, go to Tools &rsaquo; Options &rsaquo; Content. For Internet Explorer, go to Tools &rsaquo; Internet Options &rsaquo; Security &rsaquo; Internet &rsaquo; Custom Level &rsaquo; Enable Active Scripting.<br>Otherwise, please visit our <a href="#sitemap">sitemap</a> for easier navigation.</noscript>
 
-        {% embed 'IdeaBundle::facebook.html.twig' %}{% endembed %}
+        {% embed 'IdeaBundle::social_scripts.html.twig' %}{% endembed %}
 
         <div id="wrapper-ht">
 

@@ -84,16 +84,20 @@
             {% endif %}
         </div>
     </div>
-    <br class="clr">
 
     {% if idea.canUserView(app.user) %}
-        <div class="fb-like spcr-l2 spcr-b2" data-href="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+
+        <div class="spcr-l2 spcr-b2 socialWrapper">
+            <div class="fb-like left" data-href="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
+            <a href="https://twitter.com/share" class="twitter-share-button left spcr-l3 spcr-t8" data-url="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" data-hashtags="campsite">Tweet</a>
+            <div class="clr"></div>
+        </div>
 
         <div class="spcr-l2">
 
             <label class="midtxt">{{idea.comments.count}} Comments</label>
             {% for comment in idea.comments %}
-                <hr>
+                <hr class="small-margin"/>
                 {% if canRemoveComments %}
                     <a href="{{ path('idea_comment_delete', {'entrySetId': entrySet.id, 'entryId': idea.id, 'commentId': comment.id }) }}" class="left padrt padbtm" onclick="return confirm('Are you sure you want to delete this comment?');">
                         <img src="{{ asset('themes/ideacontest/spoutlet/img/delete-icon.png') }}" class="delete"/>
@@ -103,7 +107,7 @@
                 <br/>
                 {{ comment.text }}
             {% endfor %}
-            <hr>
+            <hr/>
         </div>
 
         {% if app.user %}
