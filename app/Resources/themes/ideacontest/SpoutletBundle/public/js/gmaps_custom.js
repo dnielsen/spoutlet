@@ -4,14 +4,14 @@ var infoArray = [];
 
 function initialize() {
 
-    var mapCanvas       = document.getElementById('map-canvas');
-    var zoomLevel       = mapCanvas.getAttribute('data-zoom');
+    var mapCanvas = document.getElementById('map-canvas');
+    var zoomLevel = 1;
 
-    if (zoomLevel == null) {
-        zoomLevel = 1;
-    }
-    else {
-        zoomLevel = parseInt(zoomLevel);
+    if (mapCanvas) {
+        var suggestedZoom = mapCanvas.getAttribute('data-zoom');
+        if (suggestedZoom != null){
+            zoomLevel = parseInt(suggestedZoom);
+        }
     }
 
     var mapOptions = {

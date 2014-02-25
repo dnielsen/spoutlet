@@ -6,30 +6,33 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
-    <script type="text/javascript" src="/themes/ideacontest/spoutlet/js/gmaps_custom.js"></script>
 
-    <script type="text/javascript">
-        var groupsArray = [];
+    {% if locationGroups|default %}
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+        <script type="text/javascript" src="/themes/ideacontest/spoutlet/js/gmaps_custom.js"></script>
 
-        $(function () {
+        <script type="text/javascript">
+            var groupsArray = [];
 
-            {% for curGroup in locationGroups %}
-            singleGroup = [];
-            singleGroup['name'] = '{{ curGroup.name }}';
-            singleGroup['lat'] = '{{ curGroup.latitude }}';
-            singleGroup['long'] = '{{ curGroup.longitude }}';
-            singleGroup['city'] = '{{ curGroup.city }}';
-            singleGroup['address1'] = '{{ curGroup.address1 }}';
-            singleGroup['address2'] = '{{ curGroup.address2 }}';
-            singleGroup['stateProvince'] = '{{ curGroup.stateProvince }}';
-            singleGroup['metroArea'] = '{{ curGroup.metroArea }}';
-            singleGroup['url'] = '{{ path(curGroup.urlRouteName, curGroup.urlRouteParams, true) }}';
+            $(function () {
 
-            groupsArray.push(singleGroup);
-            {% endfor %}
-        });
-    </script>
+                {% for curGroup in locationGroups %}
+                singleGroup = [];
+                singleGroup['name'] = '{{ curGroup.name }}';
+                singleGroup['lat'] = '{{ curGroup.latitude }}';
+                singleGroup['long'] = '{{ curGroup.longitude }}';
+                singleGroup['city'] = '{{ curGroup.city }}';
+                singleGroup['address1'] = '{{ curGroup.address1 }}';
+                singleGroup['address2'] = '{{ curGroup.address2 }}';
+                singleGroup['stateProvince'] = '{{ curGroup.stateProvince }}';
+                singleGroup['metroArea'] = '{{ curGroup.metroArea }}';
+                singleGroup['url'] = '{{ path(curGroup.urlRouteName, curGroup.urlRouteParams, true) }}';
+
+                groupsArray.push(singleGroup);
+                {% endfor %}
+            });
+        </script>
+    {% endif %}
     <script id="addJS">
         jQuery(document).ready(function($) {
             // Please note that autoHeight option has some conflicts with options like imageScaleMode, imageAlignCenter and autoScaleSlider
