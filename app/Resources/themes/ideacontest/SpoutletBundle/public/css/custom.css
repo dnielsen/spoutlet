@@ -256,3 +256,19 @@ a.profile-cancelBtn {
     border-bottom:1px solid #ccc;
     text-align: center;
 }
+
+#socialWidget {
+    position:fixed;
+    right:10px;
+    top:50px;
+    z-index:999;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: #ccc 2px 2px 2px;
+    -webkit-box-shadow: #ccc 2px 2px 2px;
+    -moz-box-shadow: #ccc 2px 2px 2px;
+}
+
+#socialPanel {
+    padding: 0 5px 5px 5px;
+}

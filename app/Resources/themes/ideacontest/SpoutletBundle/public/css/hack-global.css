@@ -191,6 +191,9 @@ h5 {
 .padlft { padding-left: 20px; }
 .padrt { padding-right: 20px; }
 .padbtm { padding-bottom: 10px; }
+
+.smallPadding { padding: 5px; }
+
 .marginlft { margin-left: 10px; }
 .marginrt { margin-right: 10px; }
 
