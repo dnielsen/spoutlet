@@ -192,7 +192,10 @@ h5 {
 .padrt { padding-right: 20px; }
 .padbtm { padding-bottom: 10px; }
 
-.smallPadding { padding: 5px; }
+.smallpad { padding: 5px; }
+.midpad { padding: 10px; }
+.largepad { padding: 20px; }
+.nopad { padding: 0 !important; }
 
 .marginlft { margin-left: 10px; }
 .marginrt { margin-right: 10px; }
