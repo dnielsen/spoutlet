@@ -108,6 +108,7 @@ class GroupType extends AbstractType
                         'class' => 'Platformd\GroupBundle\Entity\Group',
                         'property' => 'name',
                         'empty_value' => '<None>',
+                        'label' => 'Related Topic Group',
                         'attr' => $formAttributes,
                         'query_builder' => function(EntityRepository $er) {
                                 return $er->createQueryBuilder('g')
@@ -125,6 +126,7 @@ class GroupType extends AbstractType
                     $builder->add('children', 'entity', array(
                         'class' => 'Platformd\GroupBundle\Entity\Group',
                         'property' => 'name',
+                        'label' => 'Related Location Groups (ctrl+click to select multiple)',
                         'multiple' => true,
                         'attr' => $formAttributes,
                         'query_builder' => function(EntityRepository $er) {
