@@ -39,6 +39,13 @@
 
         {% embed 'IdeaBundle::social_scripts.html.twig' %}{% endembed %}
 
+        {% set feedbackKey = app.request.get('_route') %}
+        {% if feedbackKey in feedback_ids|keys %}
+            <a href="{{ path('entry_set_view', {'entrySetId': feedback_ids[feedbackKey] }) }}">
+                <div class="card feedback"><h3 class="blu">Feedback</h3></div>
+            </a>
+        {% endif %}
+
         <div id="wrapper-ht">
 
             {%  block header %}

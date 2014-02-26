@@ -202,21 +202,6 @@ a.profile-cancelBtn {
     margin-right: 20px;
 }
 
-.feedback {
-    position: fixed;
-    bottom: 2em;
-    right: 0px;
-    text-decoration: none;
-    color: #000000;
-    background-color: rgba(235, 235, 235, 0.80);
-    font-size: 12px;
-    padding: 1em;
-}
-
-.feedback:hover {
-    background-color: rgba(135, 135, 135, 0.50);
-}
-
 #groupHeader {
     text-align: center;
     line-height: 160px;
@@ -256,17 +241,24 @@ a.profile-cancelBtn {
     border-bottom:1px solid #ccc;
     text-align: center;
 }
-
 #socialWidget {
     position:fixed;
     left:10px;
-    bottom:2em;
+    bottom:5em;
     z-index:998;
     cursor: pointer;
 }
 #socialPanel {
     position:fixed;
     left:10px;
-    bottom:2em;
+    bottom:5em;
     z-index:999;
+}
+
+.feedback {
+    position: fixed;
+    left: 10px;
+    bottom: 2em;
+    z-index:998;
+    cursor: pointer;
 }

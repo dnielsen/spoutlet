@@ -51,12 +51,6 @@
             {% endif %}
 
         </ul>
-        {% set feedbackKey = app.request.get('_route') %}
-        {% if feedbackKey in feedback_ids|keys %}
-            <li style="display: inline;">
-                <a class="feedback" href="{{ path('entry_set_view', {'entrySetId': feedback_ids[feedbackKey] }) }}">Feedback</a>
-            </li>
-        {% endif %}
     </div>
 </div>
 
