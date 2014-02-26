@@ -122,7 +122,7 @@
             <h2>{{ 'platformd.groups.index.featured_groups' | pd_trans }}</h2>
             <div id="featured-groups">
                 {% for group in featuredGroups %}
-                    <div class="group-list-item">
+                    <div class="card group-list-item">
                         <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
                             {{ group[0].name }}
                         </a>
