@@ -221,6 +221,7 @@ a.profile-cancelBtn {
     text-align: center;
     line-height: 160px;
     font-size: 48px;
+    text-shadow: #bbb 2px 2px 2px;
 }
 
 #sponsorWrapper {
