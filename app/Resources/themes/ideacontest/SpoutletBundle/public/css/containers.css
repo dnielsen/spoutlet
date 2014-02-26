@@ -304,6 +304,8 @@
     .card {
         border: 1px solid #ccc;
         padding: 10px;
+        background: white;
+        z-index:999;
         box-shadow: #ccc 2px 2px 2px;
         -webkit-box-shadow: #ccc 2px 2px 2px;
         -moz-box-shadow: #ccc 2px 2px 2px;
@@ -358,6 +360,7 @@
 
     .socialWrapper {
         padding:9px;
+        background: white;
         border: 1px solid #ccc;
         width: 200px;
         box-shadow: #ccc 1px 1px 1px;
