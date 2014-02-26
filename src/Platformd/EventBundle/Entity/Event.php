@@ -1180,4 +1180,8 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
         return $sessions;
     }
+
+    public function getHashTag() {
+        return str_replace('-', '', $this->slug);
+    }
 }

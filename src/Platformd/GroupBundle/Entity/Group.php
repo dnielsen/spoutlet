@@ -1172,4 +1172,8 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     public function getChildren() {
         return $this->childGroups;
     }
+
+    public function getHashTag() {
+        return str_replace('-', '', $this->slug);
+    }
 }

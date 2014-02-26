@@ -28,7 +28,11 @@
     </div>
 
     <div class="spcr-t5 right socialWrapper">
-        <a href="https://twitter.com/share" class="twitter-share-button right spcr-t8" data-hashtags="campsite">Tweet</a>
+        {% set hashtags = '' %}
+        {% if group|default %}{% set hashtags = hashtags ~ group.hashtag %}{% endif %}
+        {% if event|default %}{% set hashtags = hashtags ~ ',' ~ event.hashtag %}{% endif %}
+
+        <a href="https://twitter.com/share" class="twitter-share-button right spcr-t8" data-hashtags="{{ hashtags }}">Tweet</a>
         <div class="fb-like right spcr-r3" data-href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
     </div>
     <div class="clr"></div>
