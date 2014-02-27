@@ -244,21 +244,21 @@ a.profile-cancelBtn {
 #socialWidget {
     position:fixed;
     left:10px;
-    bottom:5em;
+    top:100px;
     z-index:998;
     cursor: pointer;
 }
 #socialPanel {
     position:fixed;
     left:10px;
-    bottom:5em;
+    top:100px;
     z-index:999;
 }
 
 .feedback {
     position: fixed;
     left: 10px;
-    bottom: 2em;
+    top: 50px;
     z-index:998;
     cursor: pointer;
 }
