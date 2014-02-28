@@ -106,6 +106,7 @@ a.btnTny:hover, input.btnTny:hover, input.btnTnyInv:hover {
 img.delete {
     height: 20px;
     width: 20px;
+    cursor: pointer;
 }
 img.delete:hover {
     box-shadow: 0px 0px 5px red;
