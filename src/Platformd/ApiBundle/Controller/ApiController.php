@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\GroupBundle\Entity\Group;
+use Platformd\EventBundle\Entity\GroupEvent;
 
 
 class ApiController extends Controller
@@ -107,28 +108,7 @@ class ApiController extends Controller
 
         $response->setStatusCode(200);
 
-        $entrySets = array();
-        foreach ($event->getEntrySets() as $entrySet) {
-
-            $sortedEntries = $entrySet->getEntries()->toArray();
-            $this->getDoctrine()->getRepository('IdeaBundle:Idea')->sortByFollows($sortedEntries);
-
-            $entries = array();
-            foreach ($sortedEntries as $entry) {
-                $entries[] = array(
-                    'id'        => $entry->getId(),
-                    'name'      => $entry->getName(),
-                    'numVotes'  => $entry->getNumVotes(),
-                    'url'       => $this->generateUrl($entry->getLinkableRouteName(), $entry->getLinkableRouteParameters(), true),
-                );
-            }
-            $entrySets[] = array(
-                'id'        => $entrySet->getId(),
-                'name'      => $entrySet->getName(),
-                'url'       => $this->generateUrl($entrySet->getLinkableRouteName(), $entrySet->getLinkableRouteParameters(), true),
-                'entries'   => $entries,
-            );
-        }
+        $entrySets = $this->getEntrySets($event);
 
         $eventData = array(
             'meta'                 => array(
@@ -167,28 +147,8 @@ class ApiController extends Controller
 
         $response->setStatusCode(200);
 
-        $entrySets = array();
-        foreach ($group->getEntrySets() as $entrySet) {
+        $entrySets = $this->getEntrySets($group);
 
-            $sortedEntries = $entrySet->getEntries()->toArray();
-            $this->getDoctrine()->getRepository('IdeaBundle:Idea')->sortByFollows($sortedEntries);
-
-            $entries = array();
-            foreach ($sortedEntries as $entry) {
-                $entries[] = array(
-                    'id'        => $entry->getId(),
-                    'name'      => $entry->getName(),
-                    'numVotes'  => $entry->getNumVotes(),
-                    'url'       => $this->generateUrl($entry->getLinkableRouteName(), $entry->getLinkableRouteParameters(), true),
-                );
-            }
-            $entrySets[] = array(
-                'id'        => $entrySet->getId(),
-                'name'      => $entrySet->getName(),
-                'url'       => $this->generateUrl($entrySet->getLinkableRouteName(), $entrySet->getLinkableRouteParameters(), true),
-                'entries'   => $entries,
-            );
-        }
         $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group);
         $nextEvent = reset($upcomingEvents);
         $pastEvents = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group, 6);
@@ -241,6 +201,28 @@ class ApiController extends Controller
             $avatarPath = $mediaResolver->getPath($group->getGroupAvatar(), array());
         }
 
+        $childrenGroupData = array();
+        $parentGroupData = array();
+        if ($group->getCategory() == Group::CAT_TOPIC) {
+            $childrenGroups = $group->getChildren();
+            foreach ($childrenGroups as $child) {
+                $childrenGroupData[] = array(
+                    'id'        => $child->getId(),
+                    'creator'   => $child->getOwner()->getUserName(),
+                    'name'      => $child->getName(),
+                    'url'       => $this->generateUrl($child->getLinkableRouteName(), $child->getLinkableRouteParameters(), true),
+                );
+            }
+        }
+        else {
+            $parent = $group->getParent();
+            if ($parent) {
+                $parentGroupData['id']      = $parent->getId();
+                $parentGroupData['name']    = $parent->getName();
+                $parentGroupData['creator'] = $parent->getOwner()->getUserName();
+                $parentGroupData['url']     = $this->generateUrl($parent->getLinkableRouteName(), $parent->getLinkableRouteParameters(), true);
+            }
+        }
         $groupData = array(
             'meta'                 => array(
                 'self'  => $this->generateUrl('api_group', array('groupId'=>$group->getId()), true),
@@ -252,6 +234,8 @@ class ApiController extends Controller
             'description'           => $group->getDescription(),
             'avatarPath'            => $avatarPath ? $avatarPath : null,
             'url'                   => $this->generateUrl($group->getLinkableRouteName(), $group->getLinkableRouteParameters(), true),
+            'childrenGroups'        => $childrenGroupData,
+            'parentGroup'           => $parentGroupData,
             'pastEvents'            => $pastEventData,
             'upcomingEvents'        => $upcomingEventData,
             'nextEvent'             => $nextEvent,
@@ -361,6 +345,37 @@ class ApiController extends Controller
 
         return $callback . "(" . $jsonData . ")";
     }
+
+    /**
+     * @param $parent Group|GroupEvent
+     */
+    public function getEntrySets($parent) {
+        $entrySets = array();
+        foreach ($parent->getEntrySets() as $entrySet) {
+
+            $sortedEntries = $entrySet->getEntries()->toArray();
+            $this->getDoctrine()->getRepository('IdeaBundle:Idea')->sortByFollows($sortedEntries);
+
+            $entries = array();
+            foreach ($sortedEntries as $entry) {
+                $entries[] = array(
+                    'id'        => $entry->getId(),
+                    'name'      => $entry->getName(),
+                    'numVotes'  => $entry->getNumVotes(),
+                    'url'       => $this->generateUrl($entry->getLinkableRouteName(), $entry->getLinkableRouteParameters(), true),
+                );
+            }
+            $entrySets[] = array(
+                'id'        => $entrySet->getId(),
+                'name'      => $entrySet->getName(),
+                'url'       => $this->generateUrl($entrySet->getLinkableRouteName(), $entrySet->getLinkableRouteParameters(), true),
+                'entries'   => $entries,
+            );
+        }
+        return $entrySets;
+    }
+
+
 
 }
 
