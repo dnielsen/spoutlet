@@ -1,0 +1,99 @@
+#%RAML 0.8
+title: Campsite
+version: v1
+baseUri: www.campsite.org
+schemas:
+  - group: |
+      { "$schema": "http://json-schema.org/draft-03/schema",
+        "type": "object",
+        "description": "canonical group representation",
+        "properties": {
+          "this": {"type":"uri"},
+          "parent": {"type": "uri"},
+          "groupAvatar":{"type": "uri"},
+          "owner": {"type": "url"},
+          "name": {"type": "string"},
+          "category": {"type": "string"},
+          "description": {"type": "string"},
+          "isPublic": {"type": "boolean"},
+          "slug": {"type": "string"},
+          "featured": {"type": "boolean"},
+          "created_at": {"type": "timestamp"},
+          "updated_at": {"type": "timestamp"},
+          "featured_at": {"type": "timestamp"},
+        },
+        "required": ["name", "category"]
+      }
+  
+resourceTypes:
+  - base:
+      get?:
+        description: Show details
+        responses: &standardResponses
+          200:
+            description: OK
+      patch:
+        description: Partial update
+      delete:
+        description: Delete group
+  - collection:
+      type: base
+      get:
+        is: [ paged ]
+        description: Show details
+        responses:
+          200:
+            body: 
+              application/json:
+                schema: <<schema>>
+      post:
+        description: Create new group, no id provided
+        body:
+          application/json:
+            schema: <<schema>>
+      put:
+        description: Create or replace entire group if id exists
+  
+traits:
+  - paged:
+      displayName: paged
+      queryParameters:
+        page:
+          displayName: page
+          type: number
+        num_pages:
+          displayName: num_page
+          type: number
+          
+/groups:
+  type: { collection: { schema: group } }
+  get:
+    description: List groups
+    queryParameters:
+      type:
+        description: topic or location groups
+      nameContains:
+        description: title search
+  put:
+    description: Create entire entity, migration?
+  post:
+    description: Create new group, no id provided
+  /{groupId}:
+    get:
+      description: Show details
+    patch:
+      description: Partial update
+    delete:
+      description: Delete group
+
+/idea:
+  get:
+   queryParameters:
+     genre:
+       description: filter by genre
+  post:
+  /{ideaId}:
+   get:
+   put:
+   patch:
+   delete:
