@@ -312,6 +312,7 @@ class ApiController extends Controller
             }
 
             $data = array(
+                'id'   => $group->getId(),
                 'name' => $group->getName(),
                 'isTopic' => $group->getCategory() == Group::CAT_TOPIC,
                 'isFeatured' => $group->getFeatured(),
