@@ -1,6 +1,7 @@
 // Work from here: http://www.nodewiz.biz/nodejs-rest-api-with-mysql-and-express/
 
 var restify  = require('restify'),
+    common   = require('./common'),
     database = require('./database'),
     ideas    = require('./routes/ideas');
     lists    = require('./routes/lists');
@@ -8,19 +9,15 @@ var restify  = require('restify'),
     events   = require('./routes/events');
     groups   = require('./routes/groups');
     
-var dbconfig = { 
-    host: 'localhost', 
-    user: 'root',
-    password: 'sqladmin', 
-    database: 'campsite'};
-   
-database.connect(dbconfig);   
-
+//database.connect(dbconfig);   
+//knex.instance('pd_groups');
 
 var server = restify.createServer({name: 'api.campsite.org'});
 server.pre(restify.pre.userAgentConnection());
-server.use(restify.fullResponse());
-server.use(restify.queryParser());
+server.use(restify.acceptParser(server.acceptable));
+server.use(restify.gzipResponse());
+//server.use(restify.fullResponse()); //slowish
+server.use(restify.queryParser( { mapParams: false } ));
 server.use(restify.bodyParser());
 
 server.get('/ideas', ideas.findAll);

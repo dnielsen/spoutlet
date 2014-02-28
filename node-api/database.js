@@ -28,7 +28,7 @@ exports.connect = function(connectParams) {
 };
 
 exports.query = function(queryStr, callback) {
-    console.log(sql);
+    //console.log(sql);
     return exports.conn.query(queryStr, callback);
 }
 

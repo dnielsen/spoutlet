@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "mysql": "2.x",
+    "mysql": "~2.1.0",
     "restify": "~2.6.2",
     "knex": "~0.5.8"
   }
