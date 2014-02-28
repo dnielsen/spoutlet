@@ -7,6 +7,10 @@ api_all_groups:
     pattern:    /allGroups/
     defaults:   { _controller: ApiBundle:Api:allGroups }
 
+api_all_events:
+    pattern:    /allEvents/
+    defaults:   { _controller: ApiBundle:Api:allEvents }
+
 api_event:
     pattern:    /events/{eventId}
     defaults:   { _controller: ApiBundle:Api:event }

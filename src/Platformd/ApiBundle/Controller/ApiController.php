@@ -267,6 +267,46 @@ class ApiController extends Controller
         return $response;
     }
 
+    public function allEventsAction(Request $request) {
+        $events = $this->getGroupEventService()->findUpcomingEventsForSite($this->getCurrentSite());
+
+        $response= new Response();
+        if (!$events){
+            $response->setStatusCode(404);
+            return $response;
+        }
+
+        $response->setStatusCode(200);
+
+        $eventsData = array();
+        foreach($events as $event) {
+
+            $data = array(
+                'id'          => $event->getId(),
+                'creator'     => $event->getUser()->getUserName(),
+                'name'        => $event->getName(),
+                'description' => $event->getContent(),
+                'url'         => $this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
+            );
+            $eventsData[] = $data;
+        }
+
+        $responseData = array(
+            'meta'     => array(
+                'self'     => $this->generateUrl('api_all_events', array(), true),
+                'mimetype' => "application/json"
+            ),
+            'events' => $eventsData
+        );
+
+        $encoder = new JsonEncoder();
+        $jsonData = $encoder->encode($responseData, $format = 'json');
+        $response->setContent($this->jsonpWrapper($request,$jsonData));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
     public function allGroupsAction(Request $request) {
         $site = $this->getCurrentSite();
         $groups = $this->getGroupManager()->getAllGroupsForSite($site);
