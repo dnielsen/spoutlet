@@ -46,7 +46,7 @@ function getTotalCount(resp, callback) {
 //};
 
 exports.findAll = function(req, resp, next) {
-    var query = knex(tableName);
+    var query = knex(tableName).where({deleted:0});
     try {
         resource.processCollectionQueryParams(req, query, allowedFields, defaultFields);
     } catch(err) {
@@ -85,7 +85,7 @@ exports.findById = function(req, resp, next) {
         return next(new restify.InvalidArgumentError('group id must be a number: '+id));
     }
     
-    var query = knex(tableName).where('id',id);
+    var query = knex(tableName).where({'id':id, deleted:0});
     
     try {
         resource.processBasicQueryParams(req, query, allowedFields, defaultFields);
@@ -96,7 +96,7 @@ exports.findById = function(req, resp, next) {
     query.exec(function(err, resultSet) {
         if (err) {
             return next(new restify.RestError(err));
-        } else if (results === undefined || results.length == 0) {
+        } else if (resultSet === undefined || resultSet.length == 0) {
             return next(new restify.ResourceNotFoundError(id));
         }
         resp.send(resultSet[0]);
