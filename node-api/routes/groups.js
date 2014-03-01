@@ -1,8 +1,9 @@
 var restify = require('restify'),
-    util    = require('../util');
-    knex    = require('../common').knex;
+    knex    = require('../common').knex,
+    resource= require('../resource');
 
-var tableName = 'pd_groups';
+tableName = 'pd_groups';
+
 var allowedFields = [
     "id",
     "parentGroup_id",
@@ -19,48 +20,66 @@ var allowedFields = [
     "updated_at",
     "featured_at"];
     
-var defaultFields = ['slug', 'name', 'category', 'description', 'created_at', 'featured'];
-    
-function processFields( query, req ) {
-    var reqFields = req.query.fields.split(',');
-    for(i in reqFields) {
-        var field = reqFields[i];
-        if(allowedFields.indexOf(field) === -1) {
-            throw new restify.InvalidArgumentError(field);
-        }
-    }
-    query = query.select(reqFields);
-}
+var defaultFields = [
+    'slug', 
+    'name', 
+    'category', 
+    'description', 
+    'created_at', 
+    'featured'];
 
-function processBasicQueryParams(req, query) {
-    if(req.query.hasOwnProperty('fields')) {
-        processFields( query, req );
-    } else if(req.query.hasOwnProperty('verbose')) {
-        query = query.select(allowedFields);
-    } else {
-        query = query.select(defaultFields);
-    }
-}
+function getTotalCount(resp, callback) {
+    knex(tableName).count('*').where({deleted:0}).exec(callback);
+};
 
-exports.findAll = function(req, res, next) {
+//exports.getCount = function(req, resp, next) {
+//    knex(tableName).count('*').where({deleted:0}).exec(function(err, resultSet) {
+//        if (err) {
+//            throw new restify.RestError(err);
+//        } else if (resultSet === undefined) {
+//            new restify.ResourceNotFoundError();
+//        }
+//        var count = resultSet[0]["count(*)"];
+//        resp.header('X-Total-Length',count);
+//        resp.send(count);
+//    });
+//};
+
+exports.findAll = function(req, resp, next) {
     var query = knex(tableName);
     try {
-        processBasicQueryParams(req, query);
+        resource.processCollectionQueryParams(req, query, allowedFields, defaultFields);
     } catch(err) {
         return next(err); 
     }
     
-    query.exec(function(err, resp) {
+    query.exec(function(err, findAllResultSet) {
         if (err) {
             return next(new restify.RestError(err));
-        } else if (resp === undefined) {
+        } else if (findAllResultSet === undefined) {
             return next(new restify.ResourceNotFoundError());
         }
-        res.send(resp);
+        
+        //Set length of results
+        resp.header('X-Length', Object.keys(findAllResultSet).length);
+        
+        //Set length of all results
+        getTotalCount(resp, function(err, totalCountResultSet) {
+            if (err) {
+                throw new restify.RestError(err);
+            } else if (totalCountResultSet === undefined) {
+                new restify.ResourceNotFoundError();
+            }
+            var count = totalCountResultSet[0]["count(*)"];
+            resp.header('X-Total-Length', count);
+            
+            resp.send(findAllResultSet);
+        });
+        
     });
 };
 
-exports.findById = function(req, res, next) {
+exports.findById = function(req, resp, next) {
     var id = req.params.id;
     if (isNaN(id)) {
         return next(new restify.InvalidArgumentError('group id must be a number: '+id));
@@ -69,17 +88,17 @@ exports.findById = function(req, res, next) {
     var query = knex(tableName).where('id',id);
     
     try {
-        processBasicQueryParams(req, query);
+        resource.processBasicQueryParams(req, query, allowedFields, defaultFields);
     } catch(err) {
         return next(err); 
     }
     
-    query.exec(function(err, results) {
+    query.exec(function(err, resultSet) {
         if (err) {
             return next(new restify.RestError(err));
         } else if (results === undefined || results.length == 0) {
             return next(new restify.ResourceNotFoundError(id));
         }
-        res.send(results[0]);
+        resp.send(resultSet[0]);
     });
 };

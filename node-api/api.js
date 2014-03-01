@@ -2,7 +2,6 @@
 
 var restify  = require('restify'),
     common   = require('./common'),
-    database = require('./database'),
     ideas    = require('./routes/ideas');
     lists    = require('./routes/lists');
     sessions = require('./routes/sessions');
@@ -12,8 +11,8 @@ var restify  = require('restify'),
 //database.connect(dbconfig);   
 //knex.instance('pd_groups');
 
-var server = restify.createServer({name: 'api.campsite.org'});
-server.pre(restify.pre.userAgentConnection());
+var server = restify.createServer({name: common.baseHost});
+//server.pre(restify.pre.userAgentConnection());
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.gzipResponse());
 //server.use(restify.fullResponse()); //slowish
@@ -34,8 +33,9 @@ server.get('/events', events.findAll);
 server.get('/events/:id', events.findById);
 
 server.get('/groups', groups.findAll);
+//server.get('/groups/count', groups.getCount);
 server.get('/groups/:id', groups.findById);
 
-server.listen(8080, function() {
+server.listen(common.basePort, function() {
   console.log('%s listening at %s', server.name, server.url);
 });

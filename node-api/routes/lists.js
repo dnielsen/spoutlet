@@ -1,5 +1,4 @@
-var restify  = require('restify'),
-    db   = require('../database');
+var restify  = require('restify');
 
 exports.findAll = function(req, res, next){
     if (db.conn) {
