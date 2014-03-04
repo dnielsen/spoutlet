@@ -1,72 +1,38 @@
-var restify  = require('restify');
+var Resource  = require('../resource');
 
-exports.findAll = function(req, res, next){
-    if (db.conn) {
-        var sql = db.getAll('idea', '*');
-        db.query(sql, function(err, results) {
-            if (err) {
-                return next(new restify.RestError(err));
-            } else if (results === undefined) {
-                return next(new restify.ResourceNotFoundError());
-            }
-            res.send(results);
-        });
-    }
-};
-
-exports.findById = function(req, res, next) {
-    var id = req.params.id;
-    if (isNaN(id)) {
-        return next(new restify.InvalidArgumentError('id must be a number: '+id));
-    }
+var defaultFields = [
+    'id', 
+    'name', 
+    'creator_id', 
+    //'description', 
+    "members",
+    "isPrivate",];
     
-    if (db.conn) {
-        var sql = db.get('idea', '*', id);
-        db.query(sql, function(err, results) {
-            if (err) {
-                return next(new restify.RestError(err));
-            } else if (results === undefined || results.length == 0) {
-                return next(new restify.ResourceNotFoundError(id));
-            }
-            res.send(results[0]);
-        });
-    }
-};
+var allowedFields = [
+    "id",
+    "entrySet_id",
+    "creator_id",
+    "image_id",
+    "name",
+    "createdAt",
+    "description",
+    "members",
+    "highestRound",
+    "isPrivate"];
+
+var lists = new Resource('idea', defaultFields, allowedFields);
+
+exports.findAll = function(req, resp, next) { 
+    return lists.findAll(req, resp, next); 
+}
+exports.findById = function(req, resp, next) {
+    return lists.findById(req, resp, next); 
+}
 
 
 
-//title, description, additional members, tags, isPrivate
-//need: entrySetId, creatorId
 
-//INSERT INTO `campsite`.`idea`
-//(`id`,
-//`entrySet_id`,
-//`creator_id`,
-//`image_id`,
-//`name`,
-//`createdAt`,
-//`description`,
-//`stage`,
-//`forCourse`,
-//`professors`,
-//`amount`,
-//`members`,
-//`highestRound`,
-//`isPrivate`)
-//VALUES
-//(
-//<{id: }>,
-//<{entrySet_id: }>,
-//<{creator_id: }>,
-//<{image_id: }>,
-//<{name: }>,
-//<{createdAt: }>,
-//<{description: }>,
-//<{stage: }>,
-//<{forCourse: }>,
-//<{professors: }>,
-//<{amount: }>,
-//<{members: }>,
-//<{highestRound: }>,
-//<{isPrivate: }>
-//);
+
+
+
+

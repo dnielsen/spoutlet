@@ -1,8 +1,4 @@
-var restify = require('restify'),
-    knex    = require('../common').knex,
-    resource= require('../resource');
-
-tableName = 'pd_groups';
+var Resource  = require('../resource');
 
 var allowedFields = [
     "id",
@@ -28,77 +24,11 @@ var defaultFields = [
     'created_at', 
     'featured'];
 
-function getTotalCount(resp, callback) {
-    knex(tableName).count('*').where({deleted:0}).exec(callback);
-};
+var event = new Resource('pd_groups', defaultFields, allowedFields, 'deleted');
 
-//exports.getCount = function(req, resp, next) {
-//    knex(tableName).count('*').where({deleted:0}).exec(function(err, resultSet) {
-//        if (err) {
-//            throw new restify.RestError(err);
-//        } else if (resultSet === undefined) {
-//            new restify.ResourceNotFoundError();
-//        }
-//        var count = resultSet[0]["count(*)"];
-//        resp.header('X-Total-Length',count);
-//        resp.send(count);
-//    });
-//};
-
-exports.findAll = function(req, resp, next) {
-    var query = knex(tableName).where({deleted:0});
-    try {
-        resource.processCollectionQueryParams(req, query, allowedFields, defaultFields);
-    } catch(err) {
-        return next(err); 
-    }
-    
-    query.exec(function(err, findAllResultSet) {
-        if (err) {
-            return next(new restify.RestError(err));
-        } else if (findAllResultSet === undefined) {
-            return next(new restify.ResourceNotFoundError());
-        }
-        
-        //Set length of results
-        resp.header('X-Length', Object.keys(findAllResultSet).length);
-        
-        //Set length of all results
-        getTotalCount(resp, function(err, totalCountResultSet) {
-            if (err) {
-                throw new restify.RestError(err);
-            } else if (totalCountResultSet === undefined) {
-                new restify.ResourceNotFoundError();
-            }
-            var count = totalCountResultSet[0]["count(*)"];
-            resp.header('X-Total-Length', count);
-            
-            resp.send(findAllResultSet);
-        });
-        
-    });
-};
-
+exports.findAll = function(req, resp, next) { 
+    return event.findAll(req, resp, next); 
+}
 exports.findById = function(req, resp, next) {
-    var id = req.params.id;
-    if (isNaN(id)) {
-        return next(new restify.InvalidArgumentError('group id must be a number: '+id));
-    }
-    
-    var query = knex(tableName).where({'id':id, deleted:0});
-    
-    try {
-        resource.processBasicQueryParams(req, query, allowedFields, defaultFields);
-    } catch(err) {
-        return next(err); 
-    }
-    
-    query.exec(function(err, resultSet) {
-        if (err) {
-            return next(new restify.RestError(err));
-        } else if (resultSet === undefined || resultSet.length == 0) {
-            return next(new restify.ResourceNotFoundError(id));
-        }
-        resp.send(resultSet[0]);
-    });
-};
+    return event.findById(req, resp, next); 
+}

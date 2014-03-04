@@ -2,10 +2,10 @@
 
 var restify  = require('restify'),
     common   = require('./common'),
-    ideas    = require('./routes/ideas');
-    lists    = require('./routes/lists');
-    sessions = require('./routes/sessions');
-    events   = require('./routes/events');
+    ideas    = require('./routes/ideas'),
+    lists    = require('./routes/lists'),
+    sessions = require('./routes/sessions'),
+    events   = require('./routes/events'),
     groups   = require('./routes/groups');
     
 //database.connect(dbconfig);   
@@ -33,7 +33,6 @@ server.get('/events', events.findAll);
 server.get('/events/:id', events.findById);
 
 server.get('/groups', groups.findAll);
-//server.get('/groups/count', groups.getCount);
 server.get('/groups/:id', groups.findById);
 
 server.listen(common.basePort, function() {
