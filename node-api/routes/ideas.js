@@ -20,13 +20,17 @@ var allowedFields = [
     "highestRound",
     "isPrivate"];
 
-var lists = new Resource('idea', defaultFields, allowedFields);
-
+var idea = new Resource( {
+    tableName: 'idea', 
+    defaultFields: defaultFields, 
+    allowedFields: allowedFields
+} );
+    
 exports.findAll = function(req, resp, next) { 
-    return lists.findAll(req, resp, next); 
+    return idea.findAll(req, resp, next); 
 }
 exports.findById = function(req, resp, next) {
-    return lists.findById(req, resp, next); 
+    return idea.findById(req, resp, next); 
 }
 
 

@@ -32,7 +32,12 @@ var allowedFields = [
      "currentRound",
      "entrySetRegistration_id"];
 
-var event = new Resource('group_event', defaultFields, allowedFields, 'deleted');
+var event = new Resource( {
+    tableName: 'group_event', 
+    defaultFields: defaultFields, 
+    allowedFields: allowedFields, 
+    deleted_col:'deleted'
+} );
 
 exports.findAll = function(req, resp, next) { 
     return event.findAll(req, resp, next); 

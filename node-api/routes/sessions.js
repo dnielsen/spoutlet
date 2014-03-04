@@ -19,7 +19,11 @@ var allowedFields = [
     "source_idea_id"];
 
 
-var sessions = new Resource('event_session', defaultFields, allowedFields);
+var sessions = new Resource( {
+    tableName: 'event_session', 
+    defaultFields: defaultFields, 
+    allowedFields: allowedFields
+} );
 
 exports.findAll = function(req, resp, next) { 
     return sessions.findAll(req, resp, next); 

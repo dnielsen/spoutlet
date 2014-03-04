@@ -3,11 +3,11 @@ var restify = require('restify'),
     knex    = require('./common').knex;
     
 //Constructor
-var Resource = function (tableName, defaultFields, allowedFields, deleted_col) {
-    this.tableName = tableName;
-    this.defaultFields = defaultFields;
-    this.allowedFields = allowedFields;
-    this.deleted_col = deleted_col || false;
+var Resource = function (spec) {
+    this.tableName = spec.tableName;
+    this.defaultFields = spec.defaultFields;
+    this.allowedFields = spec.allowedFields;
+    this.deleted_col = spec.deleted_col || false;
 }
 
 module.exports = Resource

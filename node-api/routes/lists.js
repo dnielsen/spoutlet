@@ -19,7 +19,11 @@ var allowedFields = [
     "creator_id",
     "description"];
 
-var lists = new Resource('entry_set', defaultFields, allowedFields);
+var lists = new Resource( {
+    tableName: 'entry_set', 
+    defaultFields: defaultFields, 
+    allowedFields: allowedFields
+} );
 
 exports.findAll = function(req, resp, next) { 
     return lists.findAll(req, resp, next); 

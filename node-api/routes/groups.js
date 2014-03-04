@@ -24,11 +24,16 @@ var defaultFields = [
     'created_at', 
     'featured'];
 
-var event = new Resource('pd_groups', defaultFields, allowedFields, 'deleted');
+var group = new Resource( {
+    tableName: 'pd_groups', 
+    defaultFields: defaultFields, 
+    allowedFields: allowedFields, 
+    deleted_col:'deleted'
+} );
 
 exports.findAll = function(req, resp, next) { 
-    return event.findAll(req, resp, next); 
+    return group.findAll(req, resp, next); 
 }
 exports.findById = function(req, resp, next) {
-    return event.findById(req, resp, next); 
+    return group.findById(req, resp, next); 
 }
