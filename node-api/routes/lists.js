@@ -22,7 +22,11 @@ var allowedFields = [
 var lists = new Resource( {
     tableName: 'entry_set', 
     defaultFields: defaultFields, 
-    allowedFields: allowedFields
+    allowedFields: allowedFields,
+    filters: {
+        q: { field: 'name', operator: 'like' },
+        type: { field: 'type', operator: 'like' } // idea, session, thread
+    }
 } );
 
 exports.findAll = function(req, resp, next) { 

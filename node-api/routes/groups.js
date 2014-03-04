@@ -28,7 +28,11 @@ var group = new Resource( {
     tableName: 'pd_groups', 
     defaultFields: defaultFields, 
     allowedFields: allowedFields, 
-    deleted_col:'deleted'
+    deleted_col:'deleted',
+    filters: {
+        q: { field: 'name', operator: 'like' },
+        type: { field: 'category', operator: 'like' } //location, topic
+    }
 } );
 
 exports.findAll = function(req, resp, next) { 

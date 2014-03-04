@@ -1,13 +1,20 @@
 var restify = require('restify'),
     util    = require('./util');
     knex    = require('./common').knex;
-    
+
+// var operators = ['=', '<', '>', '<=', '>=', 'like', 'not like', 'between', 'ilike']
+
+
 //Constructor
 var Resource = function (spec) {
     this.tableName = spec.tableName;
     this.defaultFields = spec.defaultFields;
     this.allowedFields = spec.allowedFields;
     this.deleted_col = spec.deleted_col || false;
+    this.filters = spec.filters || { 
+        // label: [column_name [, operator]] 
+        q: { field: 'name', operator: 'like' }
+    };
 }
 
 module.exports = Resource
@@ -16,6 +23,13 @@ module.exports = Resource
 
 Resource.prototype.validateField = function( field ) {
     if(this.allowedFields.indexOf(field) === -1) {
+        return false;
+    }
+    return true;
+}
+
+Resource.prototype.validateOperator = function( op ) {
+    if(this.operators.indexOf(op) === -1) {
         return false;
     }
     return true;
@@ -35,13 +49,10 @@ Resource.prototype.processFields = function( query, req) {
 Resource.prototype.processBasicQueryParams = 
    function(req, query) {
         if(req.query.hasOwnProperty('fields')) {
-            console.log('has fields');
             this.processFields( query, req );
         } else if(req.query.hasOwnProperty('verbose')) {
-            console.log('has verbose');
             query.column(this.allowedFields);
         } else {
-            console.log('default fields');
             query.column(this.defaultFields);
         }
     }
@@ -53,7 +64,6 @@ Resource.prototype.processCollectionQueryParams =
         this.processBasicQueryParams(req, query);
         
         if(req.query.hasOwnProperty('limit')) {
-            console.log('has limit');
             var limit = req.query.limit;
             if(isNaN(limit))
                 throw new restify.InvalidArgumentError(limit);
@@ -61,7 +71,6 @@ Resource.prototype.processCollectionQueryParams =
             query.limit(limit);
             
             if(req.query.hasOwnProperty('offset')) {
-                console.log('has offset');
                 var offset = req.query.offset;
                 if(isNaN(offset))
                     throw new restify.InvalidArgumentError(offset);
@@ -89,6 +98,19 @@ Resource.prototype.processCollectionQueryParams =
                 query.orderBy(field, desc ? 'desc' : 'asc' );
             }
         }
+        
+        for(var label in this.filters) {
+            if(req.query.hasOwnProperty(label)) {
+                var field = this.filters[label].field;
+                var op    = this.filters[label].operator || 'like';
+                var value = req.query[label];
+                if(op === 'like')
+                    value = '%' + value + '%';
+                    
+                query.where(field, op, value);
+            }
+        }
+        
     }
 
 
@@ -108,8 +130,7 @@ Resource.prototype.findAll = function(req, resp, next) {
     var query = knex(this.tableName)
     if(this.deleted_col)
         query.where(this.deleted_col,0);
-       console.log('deleted_col: ' + this.deleted_col);
-    
+       
     try {
         this.processCollectionQueryParams(req, query);
     } catch(err) {
