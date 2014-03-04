@@ -2,7 +2,7 @@ var restify = require('restify'),
     util    = require('./util');
     knex    = require('./common').knex;
     
-    //archived
+//Constructor
 var Resource = function (tableName, defaultFields, allowedFields, deleted_col) {
     this.tableName = tableName;
     this.defaultFields = defaultFields;
@@ -14,12 +14,17 @@ module.exports = Resource
 
 //-------------------------------------------------
 
-//Adds a select statement to a query object from a comma delimited list of field names
+Resource.prototype.validateField = function( field ) {
+    if(this.allowedFields.indexOf(field) === -1) {
+        return false;
+    }
+    return true;
+}
+
 Resource.prototype.processFields = function( query, req) {
     var reqFields = req.query.fields.split(',');
     for(i in reqFields) {
-        var field = reqFields[i];
-        if(this.allowedFields.indexOf(field) === -1) {
+        if(!this.validateField(reqFields[i])) {
             throw new restify.InvalidArgumentError(field);
         }
     }
@@ -64,12 +69,20 @@ Resource.prototype.processCollectionQueryParams =
             }
         }
         
+        // Format: sort_by=[-]<field> including '-' will reverse sort the field
         if(req.query.hasOwnProperty('sort_by')) {
-            var offset = req.query.offset;
-            if(isNaN(offset))
-                throw new restify.InvalidArgumentError(offset);
-                
-            query = query.offset(offset);
+            var field = req.query.sort_by;
+            
+            var desc = false;
+            if(field.indexOf('-') === 0) {
+                field = field.substr(1);
+                desc = true;
+            }
+            
+            if(!this.validateField(field))
+                throw new restify.InvalidArgumentError("sort_by field not recognized");
+            
+            query = query.orderBy(field, desc ? 'desc' : 'asc' );
         }
     }
 
