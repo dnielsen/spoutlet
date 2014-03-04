@@ -24,7 +24,8 @@ Resource.prototype.validateField = function( field ) {
 Resource.prototype.processFields = function( query, req) {
     var reqFields = req.query.fields.split(',');
     for(i in reqFields) {
-        if(!this.validateField(reqFields[i])) {
+        var field = reqFields[i];
+        if(!this.validateField(field)) {
             throw new restify.InvalidArgumentError(field);
         }
     }
@@ -69,20 +70,24 @@ Resource.prototype.processCollectionQueryParams =
             }
         }
         
-        // Format: sort_by=[-]<field> including '-' will reverse sort the field
+        // Format: sort_by=[-]<field>[,[-]<field>] including '-' will reverse sort the field
+        // e.g. /groups?fields=id,category,featured&sort_by=-category,-featured
         if(req.query.hasOwnProperty('sort_by')) {
-            var field = req.query.sort_by;
-            
-            var desc = false;
-            if(field.indexOf('-') === 0) {
-                field = field.substr(1);
-                desc = true;
+            var fields = req.query.sort_by.split(',');
+            for(var i in fields) {
+                var field = fields[i];
+                
+                var desc = false;
+                if(field.indexOf('-') === 0) {
+                    field = field.substr(1);
+                    desc = true;
+                }
+                
+                if(!this.validateField(field))
+                    throw new restify.InvalidArgumentError("sort_by field not recognized");
+                
+                query.orderBy(field, desc ? 'desc' : 'asc' );
             }
-            
-            if(!this.validateField(field))
-                throw new restify.InvalidArgumentError("sort_by field not recognized");
-            
-            query = query.orderBy(field, desc ? 'desc' : 'asc' );
         }
     }
 
