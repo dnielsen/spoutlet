@@ -1,22 +1,32 @@
 var restify = require('restify'),
-    util    = require('./util');
-    knex    = require('./common').knex;
+    util    = require('./util'),
+    common  = require('./common'),
+    knex    = common.knex;
 
 // var operators = ['=', '<', '>', '<=', '>=', 'like', 'not like', 'between', 'ilike']
 
-
 //Constructor
 var Resource = function (spec) {
-    this.tableName = spec.tableName;
-    this.defaultFields = spec.defaultFields;
+    this.tableName =    spec.tableName;
+    
     this.allowedFields = spec.allowedFields;
-    this.deleted_col = spec.deleted_col || false;
-    this.filters = spec.filters || { 
+    
+    //Should validate that these are in allowedFields but will be unneccessary w/ schema format 
+    this.defaultFields = spec.defaultFields;
+    this.required =     spec.required || [],
+    this.read_only =    spec.read_only || [],
+    
+    this.deleted_col =  spec.deleted_col || false;
+    this.filters =      spec.filters || { 
         // label: [column_name [, operator]] 
         q: { field: 'name', operator: 'like' }
     };
 }
 
+//Assign constructor to module.exports
+//Usage: 
+//> var Resource = require(<this_file>);
+//> var myRes = new Resource(<my_spec>);
 module.exports = Resource
 
 //-------------------------------------------------
@@ -117,7 +127,7 @@ Resource.prototype.processCollectionQueryParams =
 //--------------------------------------------------------
 
 
-getTotalCount = function (tableName, deleted_col, callback) {
+var getTotalCount = function (tableName, deleted_col, callback) {
     var query = knex(tableName).count('*');
     if(deleted_col)
         query.where(deleted_col,0);
@@ -191,4 +201,74 @@ Resource.prototype.findById = function(req, resp, next) {
         resp.send(resultSet[0]);
     });
 };
+
+Resource.prototype.create = function(req, resp, next) {
+    var that = this;
+    
+    var data_object = req.body;
+    var fields = Object.keys(data_object);
+    
+    //must-contain validation
+    var required_fields = this.required;
+    for(var rf_i in required_fields) {
+        var rf = required_fields[rf_i];
+        
+        if(fields.indexOf(rf) === -1) {
+            return next(new restify.MissingParameterError('must provide '+rf));
+        }
+    }
+    
+    //must-not-contain validation
+    var banned_fields = this.read_only;
+    for(var f_i in fields) {
+        var f = fields[f_i];
+        
+        if(banned_fields.indexOf(f) > -1) {
+            return next(new restify.NotAuthorizedError('cannot accept '+f));
+        }
+        
+        //TODO: parameter validation (important: scrub text types)
+        
+    }
+    
+    //Process POST query parameters
+    var expand_result = false;
+    if(req.query.hasOwnProperty('expand'))
+        expand_result = true;
+    
+    var resource_id;
+    
+    var return_error = function(err) {
+        return next(new restify.RestError(err));
+    }
+    
+    var send_response = function(result) {
+        resp.header('Link', common.baseUrl + req.path() + "/" + resource_id);
+        
+        if(typeof result === 'object' )
+            resp.send(201, result[0]);
+        else
+            resp.send(201, result);
+    }
+    
+    var get_resource = function(id) {
+        resource_id = id;
+    
+        if(!expand_result) 
+            return send_response();
+            
+        knex(that.tableName).select(that.defaultFields).where('id',id).
+          then(send_response, return_error);
+    }
+    
+    //Assemble 
+    var sql_expr = knex(this.tableName)
+        .insert(data_object)
+        .then(get_resource, return_error);
+}
+
+
+
+
+
 

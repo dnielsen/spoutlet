@@ -1,5 +1,3 @@
-// Work from here: http://www.nodewiz.biz/nodejs-rest-api-with-mysql-and-express/
-
 var restify  = require('restify'),
     common   = require('./common'),
     ideas    = require('./routes/ideas'),
@@ -8,16 +6,13 @@ var restify  = require('restify'),
     events   = require('./routes/events'),
     groups   = require('./routes/groups');
     
-//database.connect(dbconfig);   
-//knex.instance('pd_groups');
-
 var server = restify.createServer({name: common.baseHost});
 //server.pre(restify.pre.userAgentConnection());
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.gzipResponse());
 //server.use(restify.fullResponse()); //slowish
 server.use(restify.queryParser( { mapParams: false } ));
-server.use(restify.bodyParser());
+server.use(restify.bodyParser({ mapParams: false }));
 
 server.get('/ideas', ideas.findAll);
 server.get('/ideas/:id', ideas.findById);
@@ -33,6 +28,7 @@ server.get('/events', events.findAll);
 server.get('/events/:id', events.findById);
 
 server.get('/groups', groups.findAll);
+server.post('/groups', groups.create);
 server.get('/groups/:id', groups.findById);
 
 server.listen(common.basePort, function() {
