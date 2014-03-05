@@ -48,7 +48,7 @@ var defaults = [
 var required = [
     'name', 
     'description', 
-    "category", ];
+    "category"];
 
 var read_only = [
     "id",

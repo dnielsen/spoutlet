@@ -32,10 +32,24 @@ var allowedFields = [
      "currentRound",
      "entrySetRegistration_id"];
 
+var required = [
+    'name', 
+    'content', 
+    "group_id"];
+
+var read_only = [
+    "id",
+    "user_id",
+    "created_at",
+    "updated_at",
+    "currentRound"];
+    
 var event = new Resource( {
     tableName: 'group_event', 
     defaultFields: defaultFields, 
     allowedFields: allowedFields, 
+    required: required,
+    read_only: read_only,
     deleted_col:'deleted'
 } );
 
@@ -46,3 +60,6 @@ exports.findById = function(req, resp, next) {
     return event.findById(req, resp, next); 
 }
 
+exports.create = function(req, resp, next) {
+    return event.create(req, resp, next);
+}
