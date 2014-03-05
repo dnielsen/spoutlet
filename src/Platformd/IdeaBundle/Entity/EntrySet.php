@@ -17,7 +17,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Collection of User Entries
  *
  * @ORM\Table(name="entry_set")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Platformd\IdeaBundle\Entity\EntrySetRepository")
  *
  */
 class EntrySet implements LinkableInterface {
@@ -190,6 +190,10 @@ class EntrySet implements LinkableInterface {
         });*/
 
         return $topEntries;
+    }
+
+    public function getNumEntries(){
+        return $this->entries->count();
     }
 
     public function setType($type)
