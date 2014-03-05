@@ -27,5 +27,9 @@ api_user:
     pattern:    /users/{userId}
     defaults:   { _controller: ApiBundle:Api:user }
 
+api_mobile:
+    pattern:    /mobile
+    defaults:   { _controller: ApiBundle:Api:mobile }
+
 
 

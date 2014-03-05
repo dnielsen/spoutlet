@@ -2,6 +2,7 @@
 
 namespace Platformd\ApiBundle\Controller;
 
+use Platformd\EventBundle\Entity\Event;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -252,7 +253,7 @@ class ApiController extends Controller
     }
 
     public function allEventsAction(Request $request) {
-        $events = $this->getGroupEventService()->findUpcomingEventsForSite($this->getCurrentSite());
+        $events = $this->getUpcomingEvents();
 
         $response= new Response();
         if (!$events){
@@ -262,25 +263,12 @@ class ApiController extends Controller
 
         $response->setStatusCode(200);
 
-        $eventsData = array();
-        foreach($events as $event) {
-
-            $data = array(
-                'id'          => $event->getId(),
-                'creator'     => $event->getUser()->getUserName(),
-                'name'        => $event->getName(),
-                'description' => $event->getContent(),
-                'url'         => $this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
-            );
-            $eventsData[] = $data;
-        }
-
         $responseData = array(
             'meta'     => array(
                 'self'     => $this->generateUrl('api_all_events', array(), true),
                 'mimetype' => "application/json"
             ),
-            'events' => $eventsData
+            'events' => $events
         );
 
         $encoder = new JsonEncoder();
@@ -338,6 +326,257 @@ class ApiController extends Controller
         return $response;
     }
 
+    public function mobileAction (Request $request) {
+
+        $response = new Response();
+
+        $groups     = $this->getGroups();
+        $events     = array_merge($this->getEvents(), $this->getEvents(false));
+        $entrySets  = $this->getEntrySets();
+
+        if (!$groups && !$events){
+            $response->setStatusCode(404);
+            return $response;
+        }
+
+        $response->setStatusCode(200);
+
+        $responseData = array(
+            'meta'                 => array(
+                'self'  => $this->generateUrl('api_all_groups', array(), true),
+                'mimetype' => "application/json"
+            ),
+            'groups'                => $groups,
+            'events'                => $events,
+            'entrySets'             => $entrySets,
+        );
+
+        $encoder = new JsonEncoder();
+        $jsonData = $encoder->encode($responseData, $format = 'json');
+        $response->setContent($this->jsonpWrapper($request,$jsonData));
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
+    }
+
+    public function getGroups() {
+
+        $groups = $this->getGroupManager()->getAllGroupsForSiteSorted($this->getCurrentSite());
+
+        $groupsData = array();
+        foreach($groups as $group) {
+
+            if(!$group->getIsPublic()) {
+                continue;
+            }
+
+            $parentGroup = $group->getParent();
+            $parentId = null;
+            if ($parentGroup) {
+                $parentId = $parentGroup->getId();
+            }
+
+            $childrenGroupData = array();
+            foreach ($group->getChildren() as $child) {
+                $childrenGroupData[] = array(
+                    'id'                => $child->getId(),
+                    'name'              => $child->getName(),
+                );
+            }
+
+            $avatarPath = null;
+            $avatar = $group->getGroupAvatar();
+            if($avatar) {
+                $mediaResolver =$this->getMediaPathResolver();
+                $avatarPath = $mediaResolver->getPath($group->getGroupAvatar(), array());
+            }
+
+            $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group);
+            $upcomingEventData = array();
+            foreach ($upcomingEvents as $event) {
+                $upcomingEventData[] = array(
+                    'id'        => $event->getId(),
+                    'name'      => $event->getName(),
+                );
+            }
+
+            $pastEvents = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group, 6);
+            $pastEventData = array();
+            foreach ($pastEvents as $event) {
+                $pastEventData[] = array(
+                    'id'        => $event->getId(),
+                    'name'      => $event->getName(),
+                );
+            }
+
+            $groupsData[] = array(
+                'id'            => $group->getId(),
+                'creator'       => $group->getOwner()->getUserName(),
+                'name'          => $group->getName(),
+                'description'   => $group->getDescription(),
+                'category'      => $group->getCategory(),
+                'memberCount'   => $group->getMembers()->count(),
+                'parentId'      => $parentId,
+                'children'      => $childrenGroupData,
+                'pastEvents'    => $pastEventData,
+                'upcomingEvents'=> $upcomingEventData,
+                'avatarPath'    => $avatarPath,
+                'entrySets'     => $this->getEntrySets($group),
+            );
+
+        }
+
+        return $groupsData;
+    }
+
+
+    public function getEvents($upcomingEvents = true) {
+
+        if ($upcomingEvents){
+            $events = $this->getGroupEventService()->findUpcomingEventsForSiteSorted($this->getCurrentSite());
+        } else {
+            $events = $this->getGroupEventService()->findPastEventsForSite($this->getCurrentSite());
+        }
+
+        if (!$events) {
+            return null;
+        }
+
+        $eventsData = array();
+        foreach($events as $event) {
+
+            $sessionsData = array();
+            foreach ($event->getSortedSessions() as $session) {
+                $sessionsData[] = array(
+                    'id'            => $session->getId(),
+                    'name'          => $session->getName(),
+                    'date'          => $session->getDateString(),
+                    'time'          => $session->getTimeRangeString(),
+                    'description'   => $session->getDescription(),
+                    'event'         => $event->getId(),
+                );
+            }
+
+            $group = $event->getGroup();
+            $avatarPath = null;
+            $avatar = $group->getGroupAvatar();
+            if($avatar) {
+                $mediaResolver =$this->getMediaPathResolver();
+                $avatarPath = $mediaResolver->getPath($avatar, array());
+            }
+
+            $data = array(
+                'id'                => $event->getId(),
+                'creator'           => $event->getUser()->getName(),
+                'name'              => $event->getName(),
+                'description'       => $event->getContent(),
+                'daterange'         => $event->getDateRangeString(),
+                'timerange'         => $event->getStartsAt()->format('g:i a').' - '.$event->getEndsAt()->format('g:i a'),
+                'startDateString'   => $event->getStartsAt()->format('M d, Y'),
+                'location'          => $event->getLocation(),
+                'address1'          => $event->getAddress1(),
+                'address2'          => $event->getAddress2(),
+                'group'             => $group->getId(),
+                'avatarPath'        => $avatarPath,
+                'sessions'          => $sessionsData,
+                'entrySets'         => $this->getEntrySets($event),
+                'url'               => $this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
+            );
+            if ($upcomingEvents) {
+                $data['upcoming'] = true;
+            } else {
+                $data['upcoming'] = false;
+            }
+            $eventsData[] = $data;
+        }
+
+        return $eventsData;
+    }
+
+    public function getEntrySets($parentFilter = null) {
+
+        $entrySets = null;
+
+        if ($parentFilter) {
+            $entrySets = $parentFilter->getEntrySets()->toArray();
+        }
+        else {
+            $entrySets = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet')->findAll();
+        }
+
+        $entrySets = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet')->sortByPopularity($entrySets);
+
+        $entrySetsData = array();
+
+        foreach ($entrySets as $entrySet) {
+
+            if ($parentFilter) {
+                $entrySetParent = $parentFilter;
+            }
+            else {
+                $entrySetParent = $this->getIdeaService()->getParentByEntrySet($entrySet);
+            }
+
+            // We only want entrySets for groups or events on the mobile app, no site feedback lists
+            if ($entrySetParent instanceof Group){
+                $parentType = 'group';
+                $avatar = $entrySetParent->getGroupAvatar();
+            }
+            elseif ($entrySetParent instanceof Event){
+                $parentType = 'event';
+                $avatar = $entrySetParent->getGroup()->getGroupAvatar();
+            }
+            else {
+                continue;
+            }
+
+            $avatarPath = null;
+            if($avatar) {
+                $avatarPath = $this->getMediaPathResolver()->getPath($avatar, array());
+            }
+
+            $sortedEntries = $entrySet->getEntries()->toArray();
+            $this->getDoctrine()->getRepository('IdeaBundle:Idea')->sortByFollows($sortedEntries);
+
+            $entries = array();
+            foreach ($sortedEntries as $entry) {
+
+                $entryData = array(
+                    'id'        => $entry->getId(),
+                    'name'      => $entry->getName(),
+                    'numVotes'  => $entry->getNumVotes(),
+                );
+
+                if (!$parentFilter) {
+                    $entryData['creator']     = $entry->getCreator()->getName();
+                    $entryData['description'] = $entry->getDescription();
+                    $entryData['tags']        = $entry->getImplodedTagString();
+                }
+
+                $entries[] = $entryData;
+            }
+
+            $entrySetData = array(
+                'id'          => $entrySet->getId(),
+                'name'        => $entrySet->getName(),
+                'parentName'  => $entrySetParent->getName(),
+                'entries'     => $entries,
+                'avatarPath'  => $avatarPath,
+            );
+
+            // Add these fields if we're getting all entrySets, the group and event calls only need minimal information
+            if (!$parentFilter) {
+                $entrySetData['description'] = $entrySet->getDescription();
+                $entrySetData['parentType']  = $parentType;
+                $entrySetData['parentId']    = $entrySetParent->getId();
+            }
+
+            $entrySetsData[] = $entrySetData;
+        }
+        return $entrySetsData;
+    }
+
+
     public function jsonpWrapper(Request $request, $jsonData)
     {
         $callback = $request->query->get('callback');
@@ -346,37 +585,6 @@ class ApiController extends Controller
 
         return $callback . "(" . $jsonData . ")";
     }
-
-    /**
-     * @param $parent Group|GroupEvent
-     */
-    public function getEntrySets($parent) {
-        $entrySets = array();
-        foreach ($parent->getEntrySets() as $entrySet) {
-
-            $sortedEntries = $entrySet->getEntries()->toArray();
-            $this->getDoctrine()->getRepository('IdeaBundle:Idea')->sortByFollows($sortedEntries);
-
-            $entries = array();
-            foreach ($sortedEntries as $entry) {
-                $entries[] = array(
-                    'id'        => $entry->getId(),
-                    'name'      => $entry->getName(),
-                    'numVotes'  => $entry->getNumVotes(),
-                    'url'       => $this->generateUrl($entry->getLinkableRouteName(), $entry->getLinkableRouteParameters(), true),
-                );
-            }
-            $entrySets[] = array(
-                'id'        => $entrySet->getId(),
-                'name'      => $entrySet->getName(),
-                'url'       => $this->generateUrl($entrySet->getLinkableRouteName(), $entrySet->getLinkableRouteParameters(), true),
-                'entries'   => $entries,
-            );
-        }
-        return $entrySets;
-    }
-
-
 
 }
 
