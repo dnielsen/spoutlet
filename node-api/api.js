@@ -14,21 +14,21 @@ server.use(restify.gzipResponse());
 server.use(restify.queryParser( { mapParams: false } ));
 server.use(restify.bodyParser({ mapParams: false }));
 
-server.get('/ideas', ideas.findAll);
-server.get('/ideas/:id', ideas.findById);
-server.post('/ideas', ideas.create);
+//server.get('/ideas', ideas.findAll);
+//server.get('/ideas/:id', ideas.findById);
+//server.post('/ideas', ideas.create);
 
-server.get('/lists', lists.findAll);
-server.get('/lists/:id', lists.findById);
-server.post('/lists', lists.create);
+//server.get('/lists', lists.findAll);
+//server.get('/lists/:id', lists.findById);
+//server.post('/lists', lists.create);
 
-server.get('/sessions', sessions.findAll);
-server.get('/sessions/:id', sessions.findById);
-server.post('/sessions', sessions.create);
+//server.get('/sessions', sessions.findAll);
+//server.get('/sessions/:id', sessions.findById);
+//server.post('/sessions', sessions.create);
 
-server.get('/events', events.findAll);
-server.get('/events/:id', events.findById);
-server.post('/events', events.create);
+//server.get('/events', events.findAll);
+//server.get('/events/:id', events.findById);
+//server.post('/events', events.create);
 
 server.get('/groups', groups.findAll);
 server.get('/groups/:id', groups.findById);

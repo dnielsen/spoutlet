@@ -3,22 +3,16 @@ var restify = require('restify'),
     common  = require('./common'),
     knex    = common.knex;
 
-// var operators = ['=', '<', '>', '<=', '>=', 'like', 'not like', 'between', 'ilike']
-
 //Constructor
 var Resource = function (spec) {
     this.tableName =    spec.tableName;
     
-    this.allowedFields = spec.allowedFields;
-    
-    //Should validate that these are in allowedFields but will be unneccessary w/ schema format 
-    this.defaultFields = spec.defaultFields;
-    this.required =     spec.required || [],
-    this.read_only =    spec.read_only || [],
+    this.schema = spec.schema;
     
     this.deleted_col =  spec.deleted_col || false;
     this.filters =      spec.filters || { 
         // label: [column_name [, operator]] 
+        // allowed operators '=', '<', '>', '<=', '>=', 'like', 'not like', 'between', 'ilike'
         q: { field: 'name', operator: 'like' }
     };
 }
@@ -31,40 +25,52 @@ module.exports = Resource
 
 //-------------------------------------------------
 
-Resource.prototype.validateField = function( field ) {
-    if(this.allowedFields.indexOf(field) === -1) {
-        return false;
+Resource.prototype._get_fields_for_property = function(prop) {
+    var matches = [];
+    
+    var schema = this.schema;
+    for(var field in schema) {
+        var info = schema[field];
+        if( info.props && info.props.indexOf(prop) !== -1 )
+            matches.push(field);
     }
-    return true;
+    return matches;
 }
 
-Resource.prototype.validateOperator = function( op ) {
-    if(this.operators.indexOf(op) === -1) {
-        return false;
+
+// quiet (default false) determines if bad requests return exceptions
+Resource.prototype.get_requested_fields = function(req, quiet) {
+    var use_fields = req.query.hasOwnProperty('fields');
+    var use_verbose = req.query.hasOwnProperty('verbose');
+    
+    if(!use_fields && !use_verbose)
+        return this._get_fields_for_property("default");
+    
+    var all_keys = Object.keys(this.schema);
+    if(use_verbose)
+        return all_keys;
+       
+    var fields = [];
+    var requested_fields = req.query.fields.split(',');
+    for(var i in requested_fields) {
+        var request = requested_fields[i];
+        if(all_keys.indexOf(request) !== -1)
+            fields.push(request);
+        else if(!quiet)
+            throw new restify.InvalidArgumentError(request);
     }
-    return true;
+    return fields;
 }
 
-Resource.prototype.processFields = function( query, req) {
-    var reqFields = req.query.fields.split(',');
-    for(i in reqFields) {
-        var field = reqFields[i];
-        if(!this.validateField(field)) {
-            throw new restify.InvalidArgumentError(field);
-        }
-    }
-    query.column(reqFields);
-}
-
+// Basic resource type's allow for customization of the fields returned
+// providing no query parameters (qp) returns just the default fields
+// verbose qp will return all available fields,
+// fields qp returns only the specified fields
+// fields=name[,name] | verbose | (none)
 Resource.prototype.processBasicQueryParams = 
    function(req, query) {
-        if(req.query.hasOwnProperty('fields')) {
-            this.processFields( query, req );
-        } else if(req.query.hasOwnProperty('verbose')) {
-            query.column(this.allowedFields);
-        } else {
-            query.column(this.defaultFields);
-        }
+        var fields = this.get_requested_fields(req,false);
+        query.column(fields);
     }
 
 Resource.prototype.processCollectionQueryParams = 
@@ -102,8 +108,8 @@ Resource.prototype.processCollectionQueryParams =
                     desc = true;
                 }
                 
-                if(!this.validateField(field))
-                    throw new restify.InvalidArgumentError("sort_by field not recognized");
+                if(!this.schema.hasOwnProperty(field))
+                    throw new restify.InvalidArgumentError("sort_by field '"+field+"' not recognized");
                 
                 query.orderBy(field, desc ? 'desc' : 'asc' );
             }
@@ -187,13 +193,14 @@ Resource.prototype.findById = function(req, resp, next) {
         return next(err); 
     }
     
-    query.exec(function(err, resultSet) {
-        if (err) {
-            return next(new restify.RestError(err));
-        } else if (resultSet === undefined || resultSet.length == 0) {
+    var send_response = function(results) {
+        if (results === undefined || results.length == 0)
             return next(new restify.ResourceNotFoundError(id));
-        }
-        resp.send(resultSet[0]);
+        resp.send(results[0]);
+    }
+    
+    query.then(send_response, function(err) {
+        return next(new restify.RestError(err));
     });
 };
 
@@ -204,7 +211,7 @@ Resource.prototype.create = function(req, resp, next) {
     var fields = Object.keys(data_object);
     
     //must-contain validation
-    var required_fields = this.required;
+    var required_fields = that._get_fields_for_property('required');
     for(var rf_i in required_fields) {
         var rf = required_fields[rf_i];
         
@@ -214,7 +221,7 @@ Resource.prototype.create = function(req, resp, next) {
     }
     
     //must-not-contain validation
-    var banned_fields = this.read_only;
+    var banned_fields = that._get_fields_for_property('read-only');
     for(var f_i in fields) {
         var f = fields[f_i];
         
@@ -251,8 +258,9 @@ Resource.prototype.create = function(req, resp, next) {
     
         if(!expand_result) 
             return send_response();
-            
-        knex(that.tableName).select(that.defaultFields).where('id',id).
+        
+        var default_fields = that._get_fields_for_property('default');
+        knex(that.tableName).select(default_fields).where('id',id).
           then(send_response, return_error);
     }
     
