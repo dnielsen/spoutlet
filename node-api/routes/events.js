@@ -8,48 +8,35 @@ var defaultFields = [
     'address1', 
     'address2'];
     
-var allowedFields = [    
-     "id",
-     "group_id",
-     "user_id",
-     "attendeeCount",
-     "private",
-     "name",
-     "slug",
-     "content",
-     "registration_option",
-     "online",
-     "starts_at",
-     "ends_at",
-     "external_url",
-     "location",
-     "address1",
-     "latitude",
-     "longitude",
-     "created_at",
-     "updated_at",
-     "address2",
-     "currentRound",
-     "entrySetRegistration_id"];
-
-var required = [
-    'name', 
-    'content', 
-    "group_id"];
-
-var read_only = [
-    "id",
-    "user_id",
-    "created_at",
-    "updated_at",
-    "currentRound"];
+var schema = {    
+     "id":                      { type: 'int',     props: ["read-only"] },
+     "group_id":                { type: 'int',     props: ["required"] },
+     "user_id":                 { type: 'int',     props: ["read-only"] },
+     "attendeeCount":           { type: 'int',     props: ["default"] },
+     "private":                 { type: 'boolean', props: [] },
+     "name":                    { type: 'string',  props: ["required","default"] },
+     "slug":                    { type: 'string',  props: ["default"] },
+     "content":                 { type: 'string',  props: ["required"] },
+     "registration_option":     { type: 'string',  props: [] },
+     "online":                  { type: 'boolean', props: [] },
+     "starts_at":               { type: 'date',    props: [] },
+     "ends_at":                 { type: 'date',    props: [] },
+     "external_url":            { type: 'string',  props: [] },
+     "location":                { type: 'string',  props: [] },
+     "address1":                { type: 'string',  props: ["default"] },
+     "address2":                { type: 'string',  props: ["default"] },
+     "latitude":                { type: 'string',  props: [] },
+     "longitude":               { type: 'string',  props: [] },
+     "created_at":              { type: 'date',    props: ["read-only"] },
+     "updated_at":              { type: 'date',    props: ["read-only"] },
+     "currentRound":            { type: 'int',     props: ["read-only"] },
+     "entrySetRegistration_id": { type: 'int',     props: [] },
+ };
     
 var event = new Resource( {
     tableName: 'group_event', 
-    defaultFields: defaultFields, 
-    allowedFields: allowedFields, 
-    required: required,
-    read_only: read_only,
+    schema: schema,
+    
     deleted_col:'deleted'
 } );
 

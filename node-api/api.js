@@ -26,9 +26,9 @@ server.use(restify.bodyParser({ mapParams: false }));
 //server.get('/sessions/:id', sessions.findById);
 //server.post('/sessions', sessions.create);
 
-//server.get('/events', events.findAll);
-//server.get('/events/:id', events.findById);
-//server.post('/events', events.create);
+server.get('/events', events.findAll);
+server.get('/events/:id', events.findById);
+server.post('/events', events.create);
 
 server.get('/groups', groups.findAll);
 server.get('/groups/:id', groups.findById);
