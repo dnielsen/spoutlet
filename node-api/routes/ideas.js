@@ -1,73 +1,38 @@
-var restify  = require('restify'),
-    db   = require('../database');
+var Resource  = require('../resource');
 
-exports.findAll = function(req, res, next){
-    if (db.conn) {
-        var sql = db.getAll('idea', '*');
-        db.query(sql, function(err, results) {
-            if (err) {
-                return next(new restify.RestError(err));
-            } else if (results === undefined) {
-                return next(new restify.ResourceNotFoundError());
-            }
-            res.send(results);
-        });
-    }
-};
-
-exports.findById = function(req, res, next) {
-    var id = req.params.id;
-    if (isNaN(id)) {
-        return next(new restify.InvalidArgumentError('id must be a number: '+id));
-    }
+var schema = {
+    "id":          { type: 'int', props: ["default","read_only"] },
+    "entrySet_id": { type: 'object:entry_set', props: ["required"] },
+    "creator_id":  { type: 'object:user', props: ["default","read_only"] },
+    "image_id":    { type: 'object:media', props: [""] },
+    "name":        { type: 'string', props: ["default","required"] },
+    "createdAt":   { type: 'date', props: ["read_only"] },
+    "description": { type: 'string', props: ["required"] },
+    "members":     { type: 'string', props: ["default"] },
+    "highestRound":{ type: 'int', props: ["read_only"] },
+    "isPrivate":   { type: 'boolean', props: ["default"] },
+}; 
+var idea = new Resource( {
+    tableName: 'idea', 
+    schema: schema
+} );
     
-    if (db.conn) {
-        var sql = db.get('idea', '*', id);
-        db.query(sql, function(err, results) {
-            if (err) {
-                return next(new restify.RestError(err));
-            } else if (results === undefined || results.length == 0) {
-                return next(new restify.ResourceNotFoundError(id));
-            }
-            res.send(results[0]);
-        });
-    }
-};
+exports.findAll = function(req, resp, next) { 
+    return idea.findAll(req, resp, next); 
+}
+
+exports.findById = function(req, resp, next) {
+    return idea.findById(req, resp, next); 
+}
+
+exports.create = function(req, resp, next) {
+    return idea.create(req, resp, next);
+}
 
 
 
-//title, description, additional members, tags, isPrivate
-//need: entrySetId, creatorId
 
-//INSERT INTO `campsite`.`idea`
-//(`id`,
-//`entrySet_id`,
-//`creator_id`,
-//`image_id`,
-//`name`,
-//`createdAt`,
-//`description`,
-//`stage`,
-//`forCourse`,
-//`professors`,
-//`amount`,
-//`members`,
-//`highestRound`,
-//`isPrivate`)
-//VALUES
-//(
-//<{id: }>,
-//<{entrySet_id: }>,
-//<{creator_id: }>,
-//<{image_id: }>,
-//<{name: }>,
-//<{createdAt: }>,
-//<{description: }>,
-//<{stage: }>,
-//<{forCourse: }>,
-//<{professors: }>,
-//<{amount: }>,
-//<{members: }>,
-//<{highestRound: }>,
-//<{isPrivate: }>
-//);
+
+
+
+

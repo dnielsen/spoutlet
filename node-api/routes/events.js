@@ -1,35 +1,44 @@
-var restify  = require('restify'),
-    db   = require('../database');
-
-exports.findAll = function(req, res, next){
-    if (db.conn) {
-        var sql = db.getAll('group_event', '*');
-        db.query(sql, function(err, results) {
-            if (err) {
-                return next(new restify.RestError(err));
-            } else if (results === undefined) {
-                return next(new restify.ResourceNotFoundError());
-            }
-            res.send(results);
-        });
-    }
-};
-
-exports.findById = function(req, res, next) {
-    var id = req.params.id;
-    if (isNaN(id)) {
-        return next(new restify.InvalidArgumentError('id must be a number: '+id));
-    }
+var Resource  = require('../resource');
     
-    if (db.conn) {
-        var sql = db.get('group_event', '*', id);
-        db.query(sql, function(err, results) {
-            if (err) {
-                return next(new restify.RestError(err));
-            } else if (results === undefined || results.length == 0) {
-                return next(new restify.ResourceNotFoundError(id));
-            }
-            res.send(results[0]);
-        });
-    }
-};
+var schema = {    
+     "id":                      { type: 'int',     props: ["read-only"] },
+     "group_id":                { type: 'int',     props: ["required"] },
+     "user_id":                 { type: 'int',     props: ["read-only"] },
+     "attendeeCount":           { type: 'int',     props: ["default"] },
+     "private":                 { type: 'boolean', props: [] },
+     "name":                    { type: 'string',  props: ["required","default"] },
+     "slug":                    { type: 'string',  props: ["default"] },
+     "content":                 { type: 'string',  props: ["required"] },
+     "registration_option":     { type: 'string',  props: [] },
+     "online":                  { type: 'boolean', props: [] },
+     "starts_at":               { type: 'date',    props: [] },
+     "ends_at":                 { type: 'date',    props: [] },
+     "external_url":            { type: 'string',  props: [] },
+     "location":                { type: 'string',  props: [] },
+     "address1":                { type: 'string',  props: ["default"] },
+     "address2":                { type: 'string',  props: ["default"] },
+     "latitude":                { type: 'string',  props: [] },
+     "longitude":               { type: 'string',  props: [] },
+     "created_at":              { type: 'date',    props: ["read-only"] },
+     "updated_at":              { type: 'date',    props: ["read-only"] },
+     "currentRound":            { type: 'int',     props: ["read-only"] },
+     "entrySetRegistration_id": { type: 'int',     props: [] },
+ };
+    
+var event = new Resource( {
+    tableName: 'group_event', 
+    schema: schema,
+    
+    deleted_col:'deleted'
+} );
+
+exports.findAll = function(req, resp, next) { 
+    return event.findAll(req, resp, next); 
+}
+exports.findById = function(req, resp, next) {
+    return event.findById(req, resp, next); 
+}
+
+exports.create = function(req, resp, next) {
+    return event.create(req, resp, next);
+}

@@ -1,35 +1,36 @@
-var restify  = require('restify'),
-    db   = require('../database');
-
-exports.findAll = function(req, res, next){
-    if (db.conn) {
-        var sql = db.getAll('event_session', '*');
-        db.query(sql, function(err, results) {
-            if (err) {
-                return next(new restify.RestError(err));
-            } else if (results === undefined) {
-                return next(new restify.ResourceNotFoundError());
-            }
-            res.send(results);
-        });
-    }
-};
-
-exports.findById = function(req, res, next) {
-    var id = req.params.id;
-    if (isNaN(id)) {
-        return next(new restify.InvalidArgumentError('id must be a number: '+id));
-    }
+var Resource  = require('../resource');
     
-    if (db.conn) {
-        var sql = db.get('event_session', '*', id);
-        db.query(sql, function(err, results) {
-            if (err) {
-                return next(new restify.RestError(err));
-            } else if (results === undefined || results.length == 0) {
-                return next(new restify.ResourceNotFoundError(id));
-            }
-            res.send(results[0]);
-        });
-    }
+var schema = {
+    "id":            { type: 'int', props: ["read_only", "default"] },
+    "event_id":      { type: 'object:event', props: ["required", "default"] },
+    "name":          { type: 'string', props: ["required", "default"] },
+    "content":       { type: 'string', props: ["required"] },
+    "starts_at":     { type: 'date', props: ["default"] },
+    "ends_at":       { type: 'date', props: ["default"] },
+    "date":          { type: 'date', props: [""] },
+    "source_idea_id":{ type: 'idea', props: [""] },
 };
+    
+var sessions = new Resource( {
+    tableName: 'event_session', 
+    schema: schema,
+} );
+
+exports.findAll = function(req, resp, next) { 
+    return sessions.findAll(req, resp, next); 
+}
+
+exports.findById = function(req, resp, next) {
+    return sessions.findById(req, resp, next); 
+}
+
+exports.create = function(req, resp, next) {
+    return sessions.create(req, resp, next);
+}
+
+
+
+
+
+
+

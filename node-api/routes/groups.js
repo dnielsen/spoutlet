@@ -1,35 +1,42 @@
-var restify  = require('restify'),
-    db   = require('../database');
+var Resource  = require('../resource');
 
-exports.findAll = function(req, res, next){
-    if (db.conn) {
-        var sql = db.getAll('pd_groups', '*');
-        db.query(sql, function(err, results) {
-            if (err) {
-                return next(new restify.RestError(err));
-            } else if (results === undefined) {
-                return next(new restify.ResourceNotFoundError());
-            }
-            res.send(results);
-        });
-    }
+var schema = {
+    "id":                       { type: 'int',            props: ["read-only","default"] },
+    "parentGroup_id":           { type: 'object:group',   props: ["read-only"] },
+    "groupAvatar_id":           { type: 'object:media',   props: ["read-only"] },
+    "owner_id":                 { type: 'object:user',    props: ["read-only"] },
+    "entrySetRegistration_id":  { type: 'object:entry_set_registration', props: ["read-only"] },
+    "name":                     { type: 'object:group',   props: ["default", "required"] },
+    "category":                 { type: 'string',         props: ["default"], validator: category_validator },
+    "description":              { type: 'string',         props: ["default"] },
+    "slug":                     { type: 'string',         props: ["default", "required"] },
+    "featured":                 { type: 'boolean',            initial: "false" },
+    "isPublic":                 { type: 'boolean',            initial: "true" },
+    "created_at":               { type: 'date',           props: ["read-only"], initial: ":now" },
+    "updated_at":               { type: 'date',           props: ["read-only"], initial: ":now" },
+    "featured_at":              { type: 'date',           props: ["read-only"], initial: ":now" },
 };
 
-exports.findById = function(req, res, next) {
-    var id = req.params.id;
-    if (isNaN(id)) {
-        return next(new restify.InvalidArgumentError('id must be a number: '+id));
+var category_validator = function() { return val === 'topic' || val === 'location'; }
+
+var group = new Resource( {
+    tableName: 'pd_groups', 
+    schema: schema,
+    deleted_col:'deleted',
+    filters: {
+        q: { field: 'name', operator: 'like' },
+        type: { field: 'category', operator: '=' } //location, topic
     }
-    
-    if (db.conn) {
-        var sql = db.get('pd_groups', '*', id);
-        db.query(sql, function(err, results) {
-            if (err) {
-                return next(new restify.RestError(err));
-            } else if (results === undefined || results.length == 0) {
-                return next(new restify.ResourceNotFoundError(id));
-            }
-            res.send(results[0]);
-        });
-    }
-};
+} );
+
+exports.findAll = function(req, resp, next) { 
+    return group.findAll(req, resp, next); 
+}
+
+exports.findById = function(req, resp, next) {
+    return group.findById(req, resp, next); 
+}
+
+exports.create = function(req, resp, next) {
+    return group.create(req, resp, next);
+}
