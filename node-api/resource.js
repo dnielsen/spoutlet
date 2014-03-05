@@ -127,51 +127,46 @@ Resource.prototype.processCollectionQueryParams =
 //--------------------------------------------------------
 
 
-var getTotalCount = function (tableName, deleted_col, callback) {
-    var query = knex(tableName).count('*');
-    if(deleted_col)
-        query.where(deleted_col,0);
-    query.exec(callback);
-};
-
 Resource.prototype.findAll = function(req, resp, next) {
     var that = this;
     
     var query = knex(this.tableName)
     if(this.deleted_col)
         query.where(this.deleted_col,0);
-       
+    
     try {
         this.processCollectionQueryParams(req, query);
     } catch(err) {
         return next(err); 
     }
     
-    query.exec(function(err, findAllResultSet) {
-        if (err) {
-            return next(new restify.RestError(err));
-        } else if (findAllResultSet === undefined) {
-            return next(new restify.ResourceNotFoundError());
-        }
+    var result_set;
+    
+    var return_error = function(err) {
+        return next(new restify.RestError(err));
+    }
+    
+    var send_response = function(count_result) {
+        var count = count_result[0]["count(*)"];
         
-        //Set length of results
-        resp.header('X-Length', findAllResultSet.length);
-        
-        //Set length of all results
-        //console.log('deleted_col: ' + that.deleted_col);
-        this.getTotalCount(that.tableName, that.deleted_col, function(err, totalCountResultSet) {
-            if (err) {
-                throw new restify.RestError(err);
-            } else if (totalCountResultSet === undefined) {
-                new restify.ResourceNotFoundError();
-            }
-            var count = totalCountResultSet[0]["count(*)"];
-            resp.header('X-Total-Length', count);
+        resp.header('X-Length', result_set.length);
+        resp.header('X-Total-Length', count);
             
-            resp.send(findAllResultSet);
-        });
+        resp.send(result_set);
+    }
+    
+    var ask_how_many = function(results) {
+        result_set = results;
         
-    });
+        var query = knex(that.tableName).count('*');
+        if(that.deleted_col)
+            query.where(that.deleted_col,0);
+            
+        query.then(send_response, return_error); 
+    }
+    
+    query.then(ask_how_many, return_error);
+    
 };
 
 
