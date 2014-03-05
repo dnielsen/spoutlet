@@ -159,6 +159,7 @@ Resource.prototype.findAll = function(req, resp, next) {
         resp.header('X-Total-Length', count);
             
         resp.send(result_set);
+        next();
     }
     
     var ask_how_many = function(results) {
@@ -197,11 +198,14 @@ Resource.prototype.findById = function(req, resp, next) {
         if (results === undefined || results.length == 0)
             return next(new restify.ResourceNotFoundError(id));
         resp.send(results[0]);
+        next();
     }
     
     query.then(send_response, function(err) {
         return next(new restify.RestError(err));
     });
+    
+    
 };
 
 Resource.prototype.create = function(req, resp, next) {
@@ -241,7 +245,19 @@ Resource.prototype.create = function(req, resp, next) {
     var resource_id;
     
     var return_error = function(err) {
-        return next(new restify.RestError(err));
+        console.error(err.message);
+        var response = "Internal Error";
+        
+        var orig_message = err.message;
+        if(orig_message.indexOf("ER_NO_REFERENCED_ROW_:") !== -1)
+            response = "Referenced object could not be found";
+        else if(orig_message.indexOf("ER_DUP_ENTRY") !== -1) 
+            response = "Duplicate entry";
+        else if(orig_message.indexOf("ER_BAD_FIELD_ERROR:") !== -1) 
+            response = "A field was not recognized";
+            
+        resp.send(new restify.RestError(new Error(response)));
+        next();
     }
     
     var send_response = function(result) {
@@ -251,6 +267,8 @@ Resource.prototype.create = function(req, resp, next) {
             resp.send(201, result[0]);
         else
             resp.send(201, result);
+            
+        return next();
     }
     
     var get_resource = function(id) {
@@ -261,7 +279,7 @@ Resource.prototype.create = function(req, resp, next) {
         
         var default_fields = that._get_fields_for_property('default');
         knex(that.tableName).select(default_fields).where('id',id).
-          then(send_response, return_error);
+          then(send_response,return_error);
     }
     
     //Assemble 
