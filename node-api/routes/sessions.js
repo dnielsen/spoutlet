@@ -1,36 +1,19 @@
 var Resource  = require('../resource');
-
-var defaultFields = [
-    'id', 
-    'name', 
-    'event_id', 
-    //'content', 
-    "starts_at",
-    "ends_at",];
     
-var allowedFields = [
-    "id",
-    "event_id",
-    "name",
-    "content",
-    "starts_at",
-    "ends_at",
-    "date",
-    "source_idea_id"];
-
-var required = [
-    'name', 
-    "content",
-    "event_id"];
-
-var read_only = ["id"];
+var schema = {
+    "id":            { type: 'int', props: ["read_only", "default"] },
+    "event_id":      { type: 'object:event', props: ["required", "default"] },
+    "name":          { type: 'string', props: ["required", "default"] },
+    "content":       { type: 'string', props: ["required"] },
+    "starts_at":     { type: 'date', props: ["default"] },
+    "ends_at":       { type: 'date', props: ["default"] },
+    "date":          { type: 'date', props: [""] },
+    "source_idea_id":{ type: 'idea', props: [""] },
+};
     
 var sessions = new Resource( {
     tableName: 'event_session', 
-    defaultFields: defaultFields, 
-    allowedFields: allowedFields,
-    required: required,
-    read_only: read_only,
+    schema: schema,
 } );
 
 exports.findAll = function(req, resp, next) { 

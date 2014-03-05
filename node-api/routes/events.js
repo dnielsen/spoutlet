@@ -1,12 +1,4 @@
 var Resource  = require('../resource');
-
-var defaultFields = [
-    'slug', 
-    'name', 
-    //'content', 
-    'attendeeCount', 
-    'address1', 
-    'address2'];
     
 var schema = {    
      "id":                      { type: 'int',     props: ["read-only"] },

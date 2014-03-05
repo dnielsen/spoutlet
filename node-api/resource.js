@@ -225,7 +225,7 @@ Resource.prototype.create = function(req, resp, next) {
     }
     
     //must-not-contain validation
-    var banned_fields = that._get_fields_for_property('read-only');
+    var banned_fields = that._get_fields_for_property('read_only');
     for(var f_i in fields) {
         var f = fields[f_i];
         

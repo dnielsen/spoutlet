@@ -5,7 +5,7 @@ var schema = {
     "parentGroup_id":           { type: 'object:group',   props: ["read-only"] },
     "groupAvatar_id":           { type: 'object:media',   props: ["read-only"] },
     "owner_id":                 { type: 'object:user',    props: ["read-only"] },
-    "entrySetRegistration_id":  { type: 'object:entry_set', props: ["read-only"] },
+    "entrySetRegistration_id":  { type: 'object:entry_set_registration', props: ["read-only"] },
     "name":                     { type: 'object:group',   props: ["default", "required"] },
     "category":                 { type: 'string',         props: ["default"], validator: category_validator },
     "description":              { type: 'string',         props: ["default"] },
