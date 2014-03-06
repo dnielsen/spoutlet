@@ -343,7 +343,7 @@ class ApiController extends Controller
 
         $responseData = array(
             'meta'                 => array(
-                'self'  => $this->generateUrl('api_all_groups', array(), true),
+                'self'  => $this->generateUrl('api_mobile', array(), true),
                 'mimetype' => "application/json"
             ),
             'groups'                => $groups,
