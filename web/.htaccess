@@ -1,8 +1,15 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    # If the host has no subdomain and is not secure, i.e., http://campsite.org
     RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+$
+    RewriteCond %{HTTPS} !=on
     RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [L,R=301]
+
+    # If the host has no subdomain and is secure, i.e., https://campsite.org
+    RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+$
+    RewriteCond %{HTTPS} =on
+    RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [L,R=301]
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^(.*)$ app.php [QSA]

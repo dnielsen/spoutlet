@@ -79,6 +79,10 @@ class GroupEventService extends EventService
         return $this->repository->findPastEventsForGroupMostRecentFirst($group, $limit);
     }
 
+    public function findUpcomingEventsForSiteSorted($site) {
+        return $this->repository->findUpcomingEventsForSiteSorted($site);
+    }
+
     /**
      * Retrieves all Events pending approval for a certain group
      *

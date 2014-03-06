@@ -67,4 +67,12 @@ class IdeaService
         return $tagNames;
     }
 
+    public function getParentByEntrySet($entrySet)
+    {
+        $parentRegistration = $entrySet->getEntrySetRegistration();
+        $esRegRepo = $this->em->getRepository('IdeaBundle:EntrySetRegistry');
+
+        return $esRegRepo->getContainer($parentRegistration);
+    }
+
 }

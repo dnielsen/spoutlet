@@ -516,6 +516,9 @@ class GroupManager
     {
         return $this->getRepository()->findAllGroupsRelevantForSite($site);
     }
+    public function getAllGroupsForSiteSorted(Site $site){
+        return $this->getRepository()->findAllGroupsRelevantForSiteSorted($site);
+    }
 
     public function getAllLocationGroupsForSite(Site $site)
     {

@@ -128,6 +128,34 @@ class GroupEventRepository extends EventRepository
     }
 
     /**
+     * Returns all upcoming events, sorted by start time
+     *
+     * @param \Platformd\SpoutletBundle\Entity\Site $site
+     * @param bool $published
+     * @return array
+     */
+    public function findUpcomingEventsForSiteSorted(Site $site,$published = true, $private = false)
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('e', 's')
+            ->leftJoin('e.sites', 's')
+            ->leftJoin('e.group', 'g')
+            ->where('e.endsAt >= :now')
+            ->andWhere('e.published = :published')
+            ->andWhere('s = :site')
+            ->andWhere('e.private = :private')
+            ->andWhere('e.deleted <> 1')
+            ->orderBy('e.startsAt', 'ASC')
+            ->setParameter('now', new DateTime())
+            ->setParameter('published', $published)
+            ->setParameter('site', $site)
+            ->setParameter('private', $private)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * Returns all past events, ability to paginate
      *
      * @param \Platformd\SpoutletBundle\Entity\Site $site

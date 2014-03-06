@@ -69,6 +69,18 @@ class GroupRepository extends EntityRepository
             ->execute();
     }
 
+    public function findAllGroupsRelevantForSiteSorted($site) {
+
+        return $this->getEntityManager()->createQuery('
+            SELECT g FROM GroupBundle:Group g
+            LEFT JOIN g.sites s
+            WHERE g.deleted = false
+            AND (g.allLocales = true OR s = :site)
+            ORDER BY g.name ASC')
+            ->setParameter('site', $site)
+            ->execute();
+    }
+
     public function findAllLocationGroupsRelevantForSite($site) {
 
         return $this->getEntityManager()->createQuery('
