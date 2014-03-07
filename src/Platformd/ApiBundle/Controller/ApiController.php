@@ -530,6 +530,11 @@ class ApiController extends Controller
                 continue;
             }
 
+            // Don't include lists whose parent is from a different site
+            if (!in_array($this->getCurrentSite(), $entrySetParent->getSites()->toArray())) {
+                continue;
+            }
+
             $avatarPath = null;
             if($avatar) {
                 $avatarPath = $this->getMediaPathResolver()->getPath($avatar, array());
