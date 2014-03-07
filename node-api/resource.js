@@ -136,13 +136,11 @@ Resource.prototype.assemble_paging_links = function(req, max) {
     if(offset > max) offset = max
 
 
-    var remainder = max % limit;
+    var current_page = Math.floor( offset / limit );
     var total_pages = Math.floor( max / limit );
-    if(remainder == 0)
+    if(max % limit == 0)
         total_pages = total_pages - 1;
 
-    var current_page = Math.floor( offset / limit );
-    
     var path = req.path();
 
     var first_queries = JSON.parse(JSON.stringify(req.query));
@@ -335,8 +333,11 @@ Resource.prototype.create = function(req, resp, next) {
     if(req.query.hasOwnProperty('expand'))
         expand_result = true;
     
-    var resource_id;
-    
+    var insert_data;
+    try {
+        insert_data = this.assemble_insert(req.body);
+    } catch(e) { return next(e); }
+
     var return_error = function(err) {
         console.error(err.message);
         var response = "Internal Error";
@@ -354,31 +355,30 @@ Resource.prototype.create = function(req, resp, next) {
     }
     
     var send_response = function(result) {
-        resp.header('Link', common.baseUrl + req.path() + "/" + resource_id);
-        
-        if(typeof result === 'object' )
+        if(typeof result === 'object' ) 
             resp.send(201, result[0]);
-        else
+        else 
             resp.send(201, result);
-            
         return next();
     }
     
-    var get_resource = function(id) {
-        resource_id = id;
-    
+    var get_resource = function() {
+        console.log("response from 'create': "+resource_id);
+        
+        resp.header('Link', common.baseUrl + req.path() + "/" + resource_id);
+        
         if(!expand_result) 
             return send_response();
         
         var default_fields = that._get_fields_for_property('default');
-        knex(that.tableName).select(default_fields).where('id',id).
-          then(send_response,return_error);
+
+        knex(that.tableName)
+        .select(default_fields)
+        .where(insert_data)
+        .then(send_response,return_error);
     }
     
-    var insert_data;
-    try {
-        insert_data = this.assemble_insert(req.body);
-    } catch(e) { return next(e); }
+    
 
     //Assemble 
     var sql_expr = knex(this.tableName)
