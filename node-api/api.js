@@ -4,7 +4,8 @@ var restify  = require('restify'),
     lists    = require('./routes/lists'),
     sessions = require('./routes/sessions'),
     events   = require('./routes/events'),
-    groups   = require('./routes/groups');
+    groups   = require('./routes/groups'),
+    votes    = require('./routes/votes');
     
 var server = restify.createServer({name: common.baseHost});
 //server.pre(restify.pre.userAgentConnection());
@@ -13,6 +14,9 @@ server.use(restify.gzipResponse());
 //server.use(restify.fullResponse()); //slowish
 server.use(restify.queryParser( { mapParams: false } ));
 server.use(restify.bodyParser({ mapParams: false }));
+
+server.get('/votes', votes.findAll);
+server.post('/votes', votes.create);
 
 server.get('/ideas', ideas.findAll);
 server.get('/ideas/:id', ideas.findById);

@@ -62,72 +62,85 @@ Resource.prototype.get_requested_fields = function(req, quiet) {
     return fields;
 }
 
+Resource.prototype.apply_filters = function(req, query) {
+    for(var label in this.filters) {
+        if(req.query.hasOwnProperty(label)) {
+            var field = this.filters[label].field;
+            var op    = this.filters[label].operator || 'like';
+            var value = req.query[label];
+            
+            if(op === 'like')
+                value = '%' + value + '%';
+                
+            query.where(field, op, value);
+        }
+    }
+}
+
+
+// Format: sort_by=[-]<field>[,[-]<field>] including '-' will reverse sort the field
+// e.g. /groups?fields=id,category,featured&sort_by=-category,-featured
+// On quiet refrain from throwing exceptions for invalid fields
+Resource.prototype.apply_sorting = function(req, query, quiet) {
+    if(req.query.hasOwnProperty('sort_by')) {
+        var fields = req.query.sort_by.split(',');
+        for(var i in fields) {
+            var field = fields[i];
+            
+            var desc = false;
+            if(field.indexOf('-') === 0) {
+                field = field.substr(1);
+                desc = true;
+            }
+            
+            if(this.schema.hasOwnProperty(field)) {
+                query.orderBy(field, desc ? 'desc' : 'asc' );
+            } else if(!quiet)
+                throw new restify.InvalidArgumentError("sort_by field '"+field+"' not recognized");
+            
+        }
+    }
+}
+
+//Allows user agent to request a view of the total data by size and starting count.
+//Format: limit=<size of result set>[,offset=<num to skip over>]
+Resource.prototype.apply_paging = function(req, query, quiet) {
+    if(req.query.hasOwnProperty('limit')) {
+        var limit = req.query.limit;
+        if(limit === '' || isNaN(limit)) {
+            if(quiet) return;
+            throw new restify.InvalidArgumentError("limit value" + limit);
+        }
+        
+        query.limit(limit);
+        
+        if(req.query.hasOwnProperty('offset')) {
+            var offset = req.query.offset;
+            if(offset === '' || isNaN(offset)) {
+                if(quiet) return;
+                throw new restify.InvalidArgumentError("offset value " + offset);
+            }
+            query.offset(offset);
+        }
+    }
+}
+
 // Basic resource type's allow for customization of the fields returned
 // providing no query parameters (qp) returns just the default fields
 // verbose qp will return all available fields,
 // fields qp returns only the specified fields
 // fields=name[,name] | verbose | (none)
-Resource.prototype.processBasicQueryParams = 
-   function(req, query) {
-        var fields = this.get_requested_fields(req,false);
-        query.column(fields);
-    }
+Resource.prototype.processBasicQueryParams = function(req, query) {
+    var fields = this.get_requested_fields(req,false);
+    query.column(fields);
+}
 
-Resource.prototype.processCollectionQueryParams = 
-    function(req, query) {
-    
-        //inherit base query parameters
-        this.processBasicQueryParams(req, query);
-        
-        if(req.query.hasOwnProperty('limit')) {
-            var limit = req.query.limit;
-            if(isNaN(limit))
-                throw new restify.InvalidArgumentError(limit);
-                
-            query.limit(limit);
-            
-            if(req.query.hasOwnProperty('offset')) {
-                var offset = req.query.offset;
-                if(isNaN(offset))
-                    throw new restify.InvalidArgumentError(offset);
-                    
-                query.offset(offset);
-            }
-        }
-        
-        // Format: sort_by=[-]<field>[,[-]<field>] including '-' will reverse sort the field
-        // e.g. /groups?fields=id,category,featured&sort_by=-category,-featured
-        if(req.query.hasOwnProperty('sort_by')) {
-            var fields = req.query.sort_by.split(',');
-            for(var i in fields) {
-                var field = fields[i];
-                
-                var desc = false;
-                if(field.indexOf('-') === 0) {
-                    field = field.substr(1);
-                    desc = true;
-                }
-                
-                if(!this.schema.hasOwnProperty(field))
-                    throw new restify.InvalidArgumentError("sort_by field '"+field+"' not recognized");
-                
-                query.orderBy(field, desc ? 'desc' : 'asc' );
-            }
-        }
-        
-        for(var label in this.filters) {
-            if(req.query.hasOwnProperty(label)) {
-                var field = this.filters[label].field;
-                var op    = this.filters[label].operator || 'like';
-                var value = req.query[label];
-                if(op === 'like')
-                    value = '%' + value + '%';
-                    
-                query.where(field, op, value);
-            }
-        }
-        
-    }
+Resource.prototype.processCollectionQueryParams = function(req, query) {
+    this.processBasicQueryParams(req, query);
+    this.apply_paging(req, query, false);
+    this.apply_sorting(req, query, false);
+    this.apply_filters(req, query);
+}
 
 
 //--------------------------------------------------------
@@ -168,7 +181,8 @@ Resource.prototype.findAll = function(req, resp, next) {
         var query = knex(that.tableName).count('*');
         if(that.deleted_col)
             query.where(that.deleted_col,0);
-            
+        
+        that.apply_filters(req, query);
         query.then(send_response, return_error); 
     }
     
