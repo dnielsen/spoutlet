@@ -151,8 +151,8 @@ Resource.prototype.assemble_paging_links = function(req, max) {
 
     var last_queries = JSON.parse(JSON.stringify(req.query));
     last_queries.limit = limit;
-    last_queries.offset = remainder > 0 ? max - remainder : max - limit; 
-        //(remainder > 0 ? total_pages : total_pages - 1) * limit;
+    last_queries.offset = total_pages * limit; //remainder > 0 ? max - remainder : max - limit; 
+
 
     var next_queries = JSON.parse(JSON.stringify(req.query));
     next_queries.limit = limit;
