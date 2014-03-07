@@ -108,6 +108,69 @@ Resource.prototype.apply_sorting = function(req, query, quiet) {
     }
 }
 
+Resource.prototype.assemble_url = function(path, queries) {
+    var query_string = "";
+    var is_first = true;
+    for(var query in queries) {
+        var value = queries[query];
+        if(is_first) {
+            is_first = false;
+            query_string += "?" + query + "=" + value;
+        } else {
+            query_string += "&" + query + "=" + value;
+        }
+    }
+    return common.baseUrl + path + query_string;
+}
+
+Resource.prototype.assemble_paging_links = function(req, max) {
+    var limit = req.query.limit;
+    var offset = req.query.offset;
+    if(max === '' || isNaN(max) || limit === '' || isNaN(limit))
+        return;
+
+    //sanatize limit and offset
+    if( limit > max) limit = max;
+    if( limit < 0) limit = 1;
+    if(offset === '' || isNaN(offset) || offset < 0) offset = 0;
+    if(offset > max) offset = max
+
+
+    var remainder = max % limit;
+    var total_pages = Math.floor( max / limit );
+    if(remainder == 0)
+        total_pages = total_pages - 1;
+
+    var current_page = Math.floor( offset / limit );
+    
+    var path = req.path();
+
+    var first_queries = JSON.parse(JSON.stringify(req.query));
+    first_queries.limit = limit
+    first_queries.offset  = 0;
+
+    var last_queries = JSON.parse(JSON.stringify(req.query));
+    last_queries.limit = limit;
+    last_queries.offset = remainder > 0 ? max - remainder : max - limit; 
+        //(remainder > 0 ? total_pages : total_pages - 1) * limit;
+
+    var next_queries = JSON.parse(JSON.stringify(req.query));
+    next_queries.limit = limit;
+    next_queries.offset = (current_page < total_pages ? current_page + 1 : current_page) * limit;
+
+    var prev_queries = JSON.parse(JSON.stringify(req.query));
+    prev_queries.limit = limit;
+    prev_queries.offset = (current_page > 0 ? current_page - 1 : current_page) * limit;
+
+    var return_value = {
+        first: this.assemble_url(path, first_queries),
+        last: this.assemble_url(path, last_queries),
+        next: this.assemble_url(path, next_queries),
+        prev: this.assemble_url(path, prev_queries),
+    };
+    return return_value;
+}
+
 //Allows user agent to request a view of the total data by size and starting count.
 //Format: limit=<size of result set>[,offset=<num to skip over>]
 Resource.prototype.apply_paging = function(req, query, quiet) {
@@ -115,9 +178,9 @@ Resource.prototype.apply_paging = function(req, query, quiet) {
         return;
 
     var limit = req.query.limit;
-    if(limit === '' || isNaN(limit)) {
+    if(limit === '' || isNaN(limit) || limit < 0) {
         if(quiet) return;
-        throw new restify.InvalidArgumentError("limit value" + limit);
+        throw new restify.InvalidArgumentError("limit value " + limit);
     }
     query.limit(limit);
     
@@ -177,7 +240,13 @@ Resource.prototype.findAll = function(req, resp, next) {
         
         resp.header('X-Length', result_set.length);
         resp.header('X-Total-Length', count);
-            
+        
+        var paging_links = that.assemble_paging_links(req, count);
+        resp.header('X-First', paging_links.first);
+        resp.header('X-Last', paging_links.last);
+        resp.header('X-Next', paging_links.next);
+        resp.header('X-Prev', paging_links.prev);
+
         resp.send(result_set);
         next();
     }
