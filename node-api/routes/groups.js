@@ -1,5 +1,7 @@
 var Resource  = require('../resource');
 
+var category_validator = function(value) { return value === 'topic' || value === 'location'; }
+
 var schema = {
     "id":                       { type: 'int',            props: ["read-only","default"] },
     "parentGroup_id":           { type: 'object:group',   props: ["read-only"] },
@@ -10,14 +12,13 @@ var schema = {
     "category":                 { type: 'string',         props: ["default"], validator: category_validator },
     "description":              { type: 'string',         props: ["default"] },
     "slug":                     { type: 'string',         props: ["default", "required"] },
-    "featured":                 { type: 'boolean',            initial: "false" },
-    "isPublic":                 { type: 'boolean',            initial: "true" },
-    "created_at":               { type: 'date',           props: ["read-only"], initial: ":now" },
-    "updated_at":               { type: 'date',           props: ["read-only"], initial: ":now" },
-    "featured_at":              { type: 'date',           props: ["read-only"], initial: ":now" },
+    "featured":                 { type: 'boolean',            initial: false },
+    "isPublic":                 { type: 'boolean',            initial: true },
+    "created_at":               { type: 'date',           props: ["read-only"], initial: function(){return new Date()} },
+    "updated_at":               { type: 'date',           props: ["read-only"], initial: function(){return new Date()} },
+    "featured_at":              { type: 'date',           props: ["read-only"], initial: function(){return new Date()} },
 };
 
-var category_validator = function() { return val === 'topic' || val === 'location'; }
 
 var group = new Resource( {
     tableName: 'pd_groups', 

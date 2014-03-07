@@ -1,32 +1,22 @@
-sudo apt-get update
 sudo apt-get install -y python-software-properties python g++ make
 sudo add-apt-repository ppa:chris-lea/node.js
 sudo apt-get update
 sudo apt-get install nodejs
+npm install  //if error retry
 
---------------------
-Old Method
+// install globally, needs admin pass
+sudo npm install forever -g
 
-node -v
-> v0.10.25
+forever start api.js
 
-npm info express info
-> 3.4.8
+// options:
+//  start          start SCRIPT as a daemon
+//  stop           stop the daemon SCRIPT
+//  stopall        stop all running forever scripts
+//  list           list all running forever scripts
 
-npm info mysql info
-> 2.1.0
-
-npm info raml-parser info
-> 0.8.5
-
-npm install mysql
-npm install express
-npm install raml-parser
---------------------
-
-npm install
-- uses package.json to install dependencies
-
-
-
+//To restart:
+//1) forever list
+//2) forever stop <number>
+//3) forever start api.js
 

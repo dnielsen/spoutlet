@@ -64,16 +64,22 @@ Resource.prototype.get_requested_fields = function(req, quiet) {
 
 Resource.prototype.apply_filters = function(req, query) {
     for(var label in this.filters) {
-        if(req.query.hasOwnProperty(label)) {
-            var field = this.filters[label].field;
-            var op    = this.filters[label].operator || 'like';
-            var value = req.query[label];
+        if(!req.query.hasOwnProperty(label))
+            continue;
+
+        var field = this.filters[label].field;
+        var op    = this.filters[label].operator || 'like';
+        var value = req.query[label];
+        
+        var field_def       = this.schema[field];
+        var fails_validation = field_def.hasOwnProperty('validator') && !field_def.validator(value)
+        if(fails_validation)
+            throw new restify.InvalidArgumentError("'" + value + "' invalid for " + field);
+
+        if(op === 'like')
+            value = '%' + value + '%';
             
-            if(op === 'like')
-                value = '%' + value + '%';
-                
-            query.where(field, op, value);
-        }
+        query.where(field, op, value);
     }
 }
 
@@ -82,47 +88,48 @@ Resource.prototype.apply_filters = function(req, query) {
 // e.g. /groups?fields=id,category,featured&sort_by=-category,-featured
 // On quiet refrain from throwing exceptions for invalid fields
 Resource.prototype.apply_sorting = function(req, query, quiet) {
-    if(req.query.hasOwnProperty('sort_by')) {
-        var fields = req.query.sort_by.split(',');
-        for(var i in fields) {
-            var field = fields[i];
-            
-            var desc = false;
-            if(field.indexOf('-') === 0) {
-                field = field.substr(1);
-                desc = true;
-            }
-            
-            if(this.schema.hasOwnProperty(field)) {
-                query.orderBy(field, desc ? 'desc' : 'asc' );
-            } else if(!quiet)
-                throw new restify.InvalidArgumentError("sort_by field '"+field+"' not recognized");
-            
+    if(!req.query.hasOwnProperty('sort_by'))
+        return;
+
+    var fields = req.query.sort_by.split(',');
+    for(var i in fields) {
+        var field = fields[i];
+        
+        var desc = false;
+        if(field.indexOf('-') === 0) {
+            field = field.substr(1);
+            desc = true;
         }
+        
+        if(this.schema.hasOwnProperty(field)) {
+            query.orderBy(field, desc ? 'desc' : 'asc' );
+        } else if(!quiet)
+            throw new restify.InvalidArgumentError("sort_by field '"+field+"' not recognized");
     }
 }
 
 //Allows user agent to request a view of the total data by size and starting count.
 //Format: limit=<size of result set>[,offset=<num to skip over>]
 Resource.prototype.apply_paging = function(req, query, quiet) {
-    if(req.query.hasOwnProperty('limit')) {
-        var limit = req.query.limit;
-        if(limit === '' || isNaN(limit)) {
-            if(quiet) return;
-            throw new restify.InvalidArgumentError("limit value" + limit);
-        }
-        
-        query.limit(limit);
-        
-        if(req.query.hasOwnProperty('offset')) {
-            var offset = req.query.offset;
-            if(offset === '' || isNaN(offset)) {
-                if(quiet) return;
-                throw new restify.InvalidArgumentError("offset value " + offset);
-            }
-            query.offset(offset);
-        }
+    if(!req.query.hasOwnProperty('limit'))
+        return;
+
+    var limit = req.query.limit;
+    if(limit === '' || isNaN(limit)) {
+        if(quiet) return;
+        throw new restify.InvalidArgumentError("limit value" + limit);
     }
+    query.limit(limit);
+    
+    if(!req.query.hasOwnProperty('offset'))
+        return;
+
+    var offset = req.query.offset;
+    if(offset === '' || isNaN(offset)) {
+        if(quiet) return;
+        throw new restify.InvalidArgumentError("offset value " + offset);
+    }
+    query.offset(offset);
 }
 
 // Basic resource type's allow for customization of the fields returned
@@ -187,12 +194,9 @@ Resource.prototype.findAll = function(req, resp, next) {
     }
     
     query.then(ask_how_many, return_error);
-    
 };
 
-
 Resource.prototype.findById = function(req, resp, next) {
-
     var id = req.params.id;
     if (isNaN(id)) {
         return next(new restify.InvalidArgumentError('id must be a number'));
@@ -217,39 +221,45 @@ Resource.prototype.findById = function(req, resp, next) {
     
     query.then(send_response, function(err) {
         return next(new restify.RestError(err));
-    });
-    
-    
+    });    
 };
+
+Resource.prototype.assemble_insert = function(post_data) {
+    var insert_data = {};
+
+    var all_fields = Object.keys(this.schema);
+    for(var i in all_fields) {
+        var field           = all_fields[i];
+        var was_posted      = post_data.hasOwnProperty(field);
+        var field_def       = this.schema[field];
+
+        var is_required     = field_def.hasOwnProperty("props") && field_def.props.indexOf("required") !== -1;
+        if(is_required && !was_posted )
+            throw new restify.MissingParameterError('must provide ' + field);
+
+        var is_read_only    = field_def.hasOwnProperty("props") && field_def.props.indexOf("read-only") !== -1;
+        if(is_read_only && was_posted)
+            throw new restify.InvalidArgumentError('cannot set field ' + field);
+
+        var has_default     = field_def.hasOwnProperty('initial');
+        if(!was_posted && !has_default)
+            continue;
+
+        var value           = was_posted ? post_data[field] : 
+            ( typeof field_def.initial === "function" ? field_def.initial() : field_def.initial);
+        
+        var fails_validation = field_def.hasOwnProperty('validator') && !field_def.validator(value)
+        if(fails_validation)
+            throw new restify.InvalidArgumentError("'" + value + "' invalid for " + field);
+
+        insert_data[field] = value;
+    }
+    
+    return insert_data;
+}
 
 Resource.prototype.create = function(req, resp, next) {
     var that = this;
-    
-    var data_object = req.body;
-    var fields = Object.keys(data_object);
-    
-    //must-contain validation
-    var required_fields = that._get_fields_for_property('required');
-    for(var rf_i in required_fields) {
-        var rf = required_fields[rf_i];
-        
-        if(fields.indexOf(rf) === -1) {
-            return next(new restify.MissingParameterError('must provide '+rf));
-        }
-    }
-    
-    //must-not-contain validation
-    var banned_fields = that._get_fields_for_property('read_only');
-    for(var f_i in fields) {
-        var f = fields[f_i];
-        
-        if(banned_fields.indexOf(f) > -1) {
-            return next(new restify.NotAuthorizedError('cannot accept '+f));
-        }
-        
-        //TODO: parameter validation (important: scrub text types)
-        
-    }
     
     //Process POST query parameters
     var expand_result = false;
@@ -296,9 +306,14 @@ Resource.prototype.create = function(req, resp, next) {
           then(send_response,return_error);
     }
     
+    var insert_data;
+    try {
+        insert_data = this.assemble_insert(req.body);
+    } catch(e) { return next(e); }
+
     //Assemble 
     var sql_expr = knex(this.tableName)
-        .insert(data_object)
+        .insert(insert_data)
         .then(get_resource, return_error);
 }
 

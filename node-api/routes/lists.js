@@ -1,10 +1,12 @@
 var Resource  = require('../resource');
-    
+
+var type_validator = function(value) { return value === 'idea' || value === 'session' || value === 'thread'; }
+
 var schema = {
     "id":                      { type: 'int',   props: ["default","read_only"] },
     "entrySetRegistration_id": { type: 'object:entry_set_registration',   props: ["required"] },
     "name":                    { type: 'string',   props: ["default","required"] },
-    "type":                    { type: 'string',   props: ["default"] },
+    "type":                    { type: 'string',   props: ["default"], validator: type_validator },
     "isVotingActive":          { type: 'boolean',   props: [] },
     "isSubmissionActive":      { type: 'boolean',   props: [] },
     "allowedVoters":           { type: 'string',   props: ["default"] },
