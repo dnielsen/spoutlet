@@ -15,9 +15,6 @@ use Platformd\EventBundle\Entity\GroupEvent;
 
 class ApiController extends Controller
 {
-    protected function getMediaPathResolver() {
-        return $this->get('platformd.media_path_resolver');
-    }
 
     public function entrySetAction(Request $request, $entrySetId)
     {
