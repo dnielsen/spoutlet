@@ -13,16 +13,17 @@ var schema = {
     "isPrivate":   { type: 'boolean', props: ["default"] },
 }; 
 var idea = new Resource( {
-    tableName: 'idea', 
+    tableName: 'idea',
+    primary_key:'id',
     schema: schema
 } );
     
-exports.findAll = function(req, resp, next) { 
-    return idea.findAll(req, resp, next); 
+exports.find_all = function(req, resp, next) { 
+    return idea.find_all(req, resp, next); 
 }
 
-exports.findById = function(req, resp, next) {
-    return idea.findById(req, resp, next); 
+exports.find_by_primary_key = function(req, resp, next) {
+    return idea.find_by_primary_key(req, resp, next); 
 }
 
 exports.create = function(req, resp, next) {

@@ -15,27 +15,30 @@ server.use(restify.gzipResponse());
 server.use(restify.queryParser( { mapParams: false } ));
 server.use(restify.bodyParser({ mapParams: false }));
 
-server.get('/votes', votes.findAll);
+server.get('/votes', votes.find_all);
+server.get('/votes/:user', votes.find_by_primary_key);
 server.post('/votes', votes.create);
+// server.patch('/votes/:idea', votes.update);
+// server.delete('/votes', votes.delete);
 
-server.get('/ideas', ideas.findAll);
-server.get('/ideas/:id', ideas.findById);
+server.get('/ideas', ideas.find_all);
+server.get('/ideas/:id', ideas.find_by_primary_key);
 server.post('/ideas', ideas.create);
 
-server.get('/lists', lists.findAll);
-server.get('/lists/:id', lists.findById);
+server.get('/lists', lists.find_all);
+server.get('/lists/:id', lists.find_by_primary_key);
 server.post('/lists', lists.create);
 
-server.get('/sessions', sessions.findAll);
-server.get('/sessions/:id', sessions.findById);
+server.get('/sessions', sessions.find_all);
+server.get('/sessions/:id', sessions.find_by_primary_key);
 server.post('/sessions', sessions.create);
 
-server.get('/events', events.findAll);
-server.get('/events/:id', events.findById);
+server.get('/events', events.find_all);
+server.get('/events/:id', events.find_by_primary_key);
 server.post('/events', events.create);
 
-server.get('/groups', groups.findAll);
-server.get('/groups/:id', groups.findById);
+server.get('/groups', groups.find_all);
+server.get('/groups/:id', groups.find_by_primary_key);
 server.post('/groups', groups.create);
 
 server.listen(common.basePort, function() {

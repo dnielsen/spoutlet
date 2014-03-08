@@ -13,15 +13,16 @@ var schema = {
     
 var sessions = new Resource( {
     tableName: 'event_session', 
+    primary_key:'id',
     schema: schema,
 } );
 
-exports.findAll = function(req, resp, next) { 
-    return sessions.findAll(req, resp, next); 
+exports.find_all = function(req, resp, next) { 
+    return sessions.find_all(req, resp, next); 
 }
 
-exports.findById = function(req, resp, next) {
-    return sessions.findById(req, resp, next); 
+exports.find_by_primary_key = function(req, resp, next) {
+    return sessions.find_by_primary_key(req, resp, next); 
 }
 
 exports.create = function(req, resp, next) {

@@ -28,15 +28,15 @@ var schema = {
 var event = new Resource( {
     tableName: 'group_event', 
     schema: schema,
-    
+    primary_key:'id',
     deleted_col:'deleted'
 } );
 
-exports.findAll = function(req, resp, next) { 
-    return event.findAll(req, resp, next); 
+exports.find_all = function(req, resp, next) { 
+    return event.find_all(req, resp, next); 
 }
-exports.findById = function(req, resp, next) {
-    return event.findById(req, resp, next); 
+exports.find_by_primary_key = function(req, resp, next) {
+    return event.find_by_primary_key(req, resp, next); 
 }
 
 exports.create = function(req, resp, next) {

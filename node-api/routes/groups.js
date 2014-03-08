@@ -23,6 +23,7 @@ var schema = {
 var group = new Resource( {
     tableName: 'pd_groups', 
     schema: schema,
+    primary_key:'id',
     deleted_col:'deleted',
     filters: {
         q: { field: 'name', operator: 'like' },
@@ -30,12 +31,12 @@ var group = new Resource( {
     }
 } );
 
-exports.findAll = function(req, resp, next) { 
-    return group.findAll(req, resp, next); 
+exports.find_all = function(req, resp, next) { 
+    return group.find_all(req, resp, next); 
 }
 
-exports.findById = function(req, resp, next) {
-    return group.findById(req, resp, next); 
+exports.find_by_primary_key = function(req, resp, next) {
+    return group.find_by_primary_key(req, resp, next); 
 }
 
 exports.create = function(req, resp, next) {

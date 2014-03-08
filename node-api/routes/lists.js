@@ -17,18 +17,19 @@ var schema = {
 var lists = new Resource( {
     tableName: 'entry_set', 
     schema: schema,
+    primary_key:'id',
     filters: {
         q: { field: 'name', operator: 'like' },
         type: { field: 'type', operator: 'like' } // idea, session, thread
     }
 } );
 
-exports.findAll = function(req, resp, next) { 
-    return lists.findAll(req, resp, next); 
+exports.find_all = function(req, resp, next) { 
+    return lists.find_all(req, resp, next); 
 }
 
-exports.findById = function(req, resp, next) {
-    return lists.findById(req, resp, next); 
+exports.find_by_primary_key = function(req, resp, next) {
+    return lists.find_by_primary_key(req, resp, next); 
 }
 
 exports.create = function(req, resp, next) {

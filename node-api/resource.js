@@ -6,9 +6,8 @@ var restify = require('restify'),
 //Constructor
 var Resource = function (spec) {
     this.tableName =    spec.tableName;
-    
-    this.schema = spec.schema;
-    
+    this.schema =       spec.schema;
+    this.primary_key =  spec.primary_key;
     this.deleted_col =  spec.deleted_col || false;
     this.filters =      spec.filters || { 
         // label: [column_name [, operator]] 
@@ -214,7 +213,7 @@ Resource.prototype.processCollectionQueryParams = function(req, query) {
 //--------------------------------------------------------
 
 
-Resource.prototype.findAll = function(req, resp, next) {
+Resource.prototype.find_all = function(req, resp, next) {
     var that = this;
     
     var query = knex(this.tableName)
@@ -240,10 +239,12 @@ Resource.prototype.findAll = function(req, resp, next) {
         resp.header('X-Total-Length', count);
         
         var paging_links = that.assemble_paging_links(req, count);
-        resp.header('X-First', paging_links.first);
-        resp.header('X-Last', paging_links.last);
-        resp.header('X-Next', paging_links.next);
-        resp.header('X-Prev', paging_links.prev);
+        if(paging_links) {
+            resp.header('X-First', paging_links.first);
+            resp.header('X-Last', paging_links.last);
+            resp.header('X-Next', paging_links.next);
+            resp.header('X-Prev', paging_links.prev);
+        }
 
         resp.send(result_set);
         next();
@@ -263,13 +264,23 @@ Resource.prototype.findAll = function(req, resp, next) {
     query.then(ask_how_many, return_error);
 };
 
-Resource.prototype.findById = function(req, resp, next) {
-    var id = req.params.id;
-    if (isNaN(id)) {
-        return next(new restify.InvalidArgumentError('id must be a number'));
-    }
+Resource.prototype.find_by_primary_key = function(req, resp, next) {
+    if(!this.primary_key)
+        return next(new restify.InvalidArgumentError('find by key not support for this resource'));
+
+    var primary_key_field = this.primary_key;
+    var primary_key = req.params[primary_key_field];
     
-    var query = knex(this.tableName).where('id',id);
+    //TODO: validate by type
+    var key_type = this.schema[primary_key_field].type;
+    console.log("key_type:"+key_type);
+    if(key_type == 'int' && isNaN(primary_key)) {
+        return next(new restify.InvalidArgumentError('identifier is not a number'));
+    } else if(key_type == 'string' && primary_key === "") {
+        return next(new restify.InvalidArgumentError('identifier is empty string'));
+    }
+
+    var query = knex(this.tableName).where(primary_key_field, primary_key);
     if(this.deleted_col)
         query.andWhere(this.deleted_col,0);
     
@@ -281,8 +292,8 @@ Resource.prototype.findById = function(req, resp, next) {
     
     var send_response = function(results) {
         if (results === undefined || results.length == 0)
-            return next(new restify.ResourceNotFoundError(id));
-        resp.send(results[0]);
+            return next(new restify.ResourceNotFoundError(primary_key));
+        resp.send(results.length === 1 ? results[0] : results);
         next();
     }
     
@@ -339,7 +350,6 @@ Resource.prototype.create = function(req, resp, next) {
     } catch(e) { return next(e); }
 
     var return_error = function(err) {
-        console.error(err.message);
         var response = "Internal Error";
         
         var orig_message = err.message;
@@ -377,8 +387,6 @@ Resource.prototype.create = function(req, resp, next) {
         .where(insert_data)
         .then(send_response,return_error);
     }
-    
-    
 
     //Assemble 
     var sql_expr = knex(this.tableName)
@@ -386,7 +394,37 @@ Resource.prototype.create = function(req, resp, next) {
         .then(get_resource, return_error);
 }
 
+// Resource.prototype.delete = function(req, resp, next) {
+//     var req_data = req.body;
 
+
+
+
+//     if (isNaN(id)) {
+//         return next(new restify.InvalidArgumentError('id must be a number'));
+//     }
+    
+//     var query = knex(this.tableName).where('id',id);
+//     if(this.deleted_col)
+//         query.andWhere(this.deleted_col,0);
+    
+//     try {
+//         this.processBasicQueryParams(req, query);
+//     } catch(err) {
+//         return next(err); 
+//     }
+    
+//     var send_response = function(results) {
+//         if (results === undefined || results.length == 0)
+//             return next(new restify.ResourceNotFoundError(id));
+//         resp.send(results[0]);
+//         next();
+//     }
+    
+//     query.then(send_response, function(err) {
+//         return next(new restify.RestError(err));
+//     });    
+// }
 
 
 
