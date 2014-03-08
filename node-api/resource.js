@@ -266,14 +266,13 @@ Resource.prototype.find_all = function(req, resp, next) {
 
 Resource.prototype.find_by_primary_key = function(req, resp, next) {
     if(!this.primary_key)
-        return next(new restify.InvalidArgumentError('find by key not support for this resource'));
+        return next(new restify.InvalidArgumentError('no primary key for this resource'));
 
     var primary_key_field = this.primary_key;
     var primary_key = req.params[primary_key_field];
     
     //TODO: validate by type
     var key_type = this.schema[primary_key_field].type;
-    console.log("key_type:"+key_type);
     if(key_type == 'int' && isNaN(primary_key)) {
         return next(new restify.InvalidArgumentError('identifier is not a number'));
     } else if(key_type == 'string' && primary_key === "") {
@@ -394,37 +393,42 @@ Resource.prototype.create = function(req, resp, next) {
         .then(get_resource, return_error);
 }
 
-// Resource.prototype.delete = function(req, resp, next) {
-//     var req_data = req.body;
+Resource.prototype.delete_by_primary_key = function(req, resp, next) {
+    if(!this.primary_key)
+        return next(new restify.InvalidArgumentError('no primary key for this resource'));
 
+    var primary_key_field = this.primary_key;
+    var primary_key = req.params[primary_key_field];
+    
+    //TODO: validate by type
+    var key_type = this.schema[primary_key_field].type;
+    if(key_type == 'int' && isNaN(primary_key)) {
+        return next(new restify.InvalidArgumentError('identifier is not a number'));
+    } else if(key_type == 'string' && primary_key === "") {
+        return next(new restify.InvalidArgumentError('identifier is empty string'));
+    }
+    
+    var send_response = function(results) {
+        if (results === undefined || results === 0 || results.length == 0)
+            return next(new restify.ResourceNotFoundError(primary_key));
+        
+        resp.send( 200, "Deleted: " + (results.length === 1 ? results[0] : results) );
+        next();
+    }
 
+    var report_error = function(err) {
+        return next(new restify.RestError(err));
+    }
 
-
-//     if (isNaN(id)) {
-//         return next(new restify.InvalidArgumentError('id must be a number'));
-//     }
-    
-//     var query = knex(this.tableName).where('id',id);
-//     if(this.deleted_col)
-//         query.andWhere(this.deleted_col,0);
-    
-//     try {
-//         this.processBasicQueryParams(req, query);
-//     } catch(err) {
-//         return next(err); 
-//     }
-    
-//     var send_response = function(results) {
-//         if (results === undefined || results.length == 0)
-//             return next(new restify.ResourceNotFoundError(id));
-//         resp.send(results[0]);
-//         next();
-//     }
-    
-//     query.then(send_response, function(err) {
-//         return next(new restify.RestError(err));
-//     });    
-// }
+    var query = knex(this.tableName).where(primary_key_field, primary_key);
+    if(this.deleted_col) {
+        var update = {};
+        update[this.deleted_col] = 1;
+        query.update(update).then(send_response, report_error);
+    } else {
+        query.del().then(send_response, report_error);
+    }
+}
 
 
 
