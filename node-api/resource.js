@@ -3,6 +3,13 @@ var restify = require('restify'),
     common  = require('./common'),
     knex    = common.knex;
 
+
+//Schema properties:
+// default : on GET this field will display unless 'filters' or 'verbose' queries are used
+// read-only: this field can not be modified with a POST, PUT, or PATCH
+// required: this field must be included in a PUT or POST
+// filterable: this field can be searched for with a query parameter matching its name (or an alias)
+
 //Constructor
 var Resource = function (spec) {
     this.tableName =    spec.tableName;
@@ -23,6 +30,21 @@ var Resource = function (spec) {
 module.exports = Resource
 
 //-------------------------------------------------
+
+Resource.prototype.assemble_url = function(path, queries) {
+    var query_string = "";
+    var is_first = true;
+    for(var query in queries) {
+        var value = queries[query];
+        if(is_first) {
+            is_first = false;
+            query_string += "?" + query + "=" + value;
+        } else {
+            query_string += "&" + query + "=" + value;
+        }
+    }
+    return common.baseUrl + path + query_string;
+}
 
 Resource.prototype._get_fields_for_property = function(prop) {
     var matches = [];
@@ -62,24 +84,46 @@ Resource.prototype.get_requested_fields = function(req, quiet) {
 }
 
 Resource.prototype.apply_filters = function(req, query) {
-    for(var label in this.filters) {
-        if(!req.query.hasOwnProperty(label))
-            continue;
-
-        var field = this.filters[label].field;
-        var op    = this.filters[label].operator || 'like';
-        var value = req.query[label];
-        
+    var all_fields = Object.keys(this.schema);
+    for(var i in all_fields) {
+        var field           = all_fields[i];
         var field_def       = this.schema[field];
-        var fails_validation = field_def.hasOwnProperty('validator') && !field_def.validator(value)
-        if(fails_validation)
-            throw new restify.InvalidArgumentError("'" + value + "' invalid for " + field);
 
-        if(op === 'like')
-            value = '%' + value + '%';
-            
-        query.where(field, op, value);
+        var is_filterable   = field_def.hasOwnProperty("props") && field_def.props.indexOf("filterable") !== -1;
+        
+        var label           = field_def.hasOwnProperty("alias") ? field_def.alias : field;
+        var was_provided    = req.query.hasOwnProperty(label);
+        if(!is_filterable || !was_provided)
+            continue;
+        
+        var value           = req.query[label];
+        var field_type      = field_def["type"];
+        
+        if(!field_type.validate(value))
+            throw new restify.InvalidArgumentError("'" + value + "' invalid for " + label);
+
+        //TODO: do the actual filtering!
+        console.log(value + "' validated for " + label);
     }
+
+    // for(var label in this.filters) {
+    //     if(!req.query.hasOwnProperty(label))
+    //         continue;
+
+    //     var field = this.filters[label].field;
+    //     var op    = this.filters[label].operator || 'like';
+    //     var value = req.query[label];
+        
+    //     var field_def       = this.schema[field];
+    //     var fails_validation = field_def.hasOwnProperty('validator') && !field_def.validator(value)
+    //     if(fails_validation)
+    //         throw new restify.InvalidArgumentError("'" + value + "' invalid for " + field);
+
+    //     if(op === 'like')
+    //         value = '%' + value + '%';
+            
+    //     query.where(field, op, value);
+    // }
 }
 
 
@@ -107,22 +151,43 @@ Resource.prototype.apply_sorting = function(req, query, quiet) {
     }
 }
 
-Resource.prototype.assemble_url = function(path, queries) {
-    var query_string = "";
-    var is_first = true;
-    for(var query in queries) {
-        var value = queries[query];
-        if(is_first) {
-            is_first = false;
-            query_string += "?" + query + "=" + value;
-        } else {
-            query_string += "&" + query + "=" + value;
-        }
+Resource.prototype.assemble_insert = function(post_data) {
+    var insert_data = {};
+
+    var all_fields = Object.keys(this.schema);
+    for(var i in all_fields) {
+        var field           = all_fields[i];
+        var field_def       = this.schema[field];
+        var was_posted      = post_data.hasOwnProperty(field);
+        
+        var is_required     = field_def.hasOwnProperty("props") && field_def.props.indexOf("required") !== -1;
+        if(is_required && !was_posted )
+            throw new restify.MissingParameterError('must provide ' + field);
+
+        var is_read_only    = field_def.hasOwnProperty("props") && field_def.props.indexOf("read-only") !== -1;
+        if(is_read_only && was_posted)
+            throw new restify.InvalidArgumentError('cannot set field ' + field);
+
+        var has_default     = field_def.hasOwnProperty('initial');
+        if(!was_posted && !has_default)
+            continue;
+
+        var value           = was_posted ? post_data[field] : 
+            ( typeof field_def.initial === "function" ? field_def.initial() : field_def.initial);
+        
+        var fails_validation = !field_def.type.validate(value)
+        if(fails_validation)
+            throw new restify.InvalidArgumentError("'" + value + "' invalid for " + field);
+
+        insert_data[field] = value;
     }
-    return common.baseUrl + path + query_string;
+    
+    return insert_data;
 }
 
 Resource.prototype.assemble_paging_links = function(req, max) {
+    var that = this;
+
     var limit = req.query.limit;
     var offset = req.query.offset;
     if(max === '' || isNaN(max) || limit === '' || isNaN(limit))
@@ -134,7 +199,6 @@ Resource.prototype.assemble_paging_links = function(req, max) {
     if(offset === '' || isNaN(offset) || offset < 0) offset = 0;
     if(offset > max) offset = max
 
-
     var current_page = Math.floor( offset / limit );
     var total_pages = Math.floor( max / limit );
     if(max % limit == 0)
@@ -142,28 +206,23 @@ Resource.prototype.assemble_paging_links = function(req, max) {
 
     var path = req.path();
 
-    var first_queries = JSON.parse(JSON.stringify(req.query));
-    first_queries.limit = limit
-    first_queries.offset  = 0;
+    var get_paging_link = function(limit, offset) {
+        var queries = JSON.parse(JSON.stringify(req.query));
+        queries.limit = limit
 
-    var last_queries = JSON.parse(JSON.stringify(req.query));
-    last_queries.limit = limit;
-    last_queries.offset = total_pages * limit; //remainder > 0 ? max - remainder : max - limit; 
+        if(offset == 0) 
+            delete queries.offset;
+        else 
+            queries.offset = offset;
 
-
-    var next_queries = JSON.parse(JSON.stringify(req.query));
-    next_queries.limit = limit;
-    next_queries.offset = (current_page < total_pages ? current_page + 1 : current_page) * limit;
-
-    var prev_queries = JSON.parse(JSON.stringify(req.query));
-    prev_queries.limit = limit;
-    prev_queries.offset = (current_page > 0 ? current_page - 1 : current_page) * limit;
+        return that.assemble_url(path, queries);
+    };
 
     var return_value = {
-        first: this.assemble_url(path, first_queries),
-        last: this.assemble_url(path, last_queries),
-        next: this.assemble_url(path, next_queries),
-        prev: this.assemble_url(path, prev_queries),
+        first: get_paging_link(limit,0),
+        last: get_paging_link(limit, total_pages*limit),
+        next: get_paging_link(limit, (current_page < total_pages ? current_page + 1 : current_page) * limit),
+        prev: get_paging_link(limit, (current_page > 0 ? current_page - 1 : current_page) * limit),
     };
     return return_value;
 }
@@ -271,13 +330,10 @@ Resource.prototype.find_by_primary_key = function(req, resp, next) {
     var primary_key_field = this.primary_key;
     var primary_key = req.params[primary_key_field];
     
-    //TODO: validate by type
-    var key_type = this.schema[primary_key_field].type;
-    if(key_type == 'int' && isNaN(primary_key)) {
-        return next(new restify.InvalidArgumentError('identifier is not a number'));
-    } else if(key_type == 'string' && primary_key === "") {
-        return next(new restify.InvalidArgumentError('identifier is empty string'));
-    }
+    var field_def = this.schema[primary_key_field];
+    var fails_validation = !field_def.type.validate(primary_key)
+    if(fails_validation)
+        throw new restify.InvalidArgumentError("'" + primary_key + "' invalid for " + primary_key_field);
 
     var query = knex(this.tableName).where(primary_key_field, primary_key);
     if(this.deleted_col)
@@ -301,39 +357,7 @@ Resource.prototype.find_by_primary_key = function(req, resp, next) {
     });    
 };
 
-Resource.prototype.assemble_insert = function(post_data) {
-    var insert_data = {};
 
-    var all_fields = Object.keys(this.schema);
-    for(var i in all_fields) {
-        var field           = all_fields[i];
-        var was_posted      = post_data.hasOwnProperty(field);
-        var field_def       = this.schema[field];
-
-        var is_required     = field_def.hasOwnProperty("props") && field_def.props.indexOf("required") !== -1;
-        if(is_required && !was_posted )
-            throw new restify.MissingParameterError('must provide ' + field);
-
-        var is_read_only    = field_def.hasOwnProperty("props") && field_def.props.indexOf("read-only") !== -1;
-        if(is_read_only && was_posted)
-            throw new restify.InvalidArgumentError('cannot set field ' + field);
-
-        var has_default     = field_def.hasOwnProperty('initial');
-        if(!was_posted && !has_default)
-            continue;
-
-        var value           = was_posted ? post_data[field] : 
-            ( typeof field_def.initial === "function" ? field_def.initial() : field_def.initial);
-        
-        var fails_validation = field_def.hasOwnProperty('validator') && !field_def.validator(value)
-        if(fails_validation)
-            throw new restify.InvalidArgumentError("'" + value + "' invalid for " + field);
-
-        insert_data[field] = value;
-    }
-    
-    return insert_data;
-}
 
 Resource.prototype.create = function(req, resp, next) {
     var that = this;
@@ -371,7 +395,7 @@ Resource.prototype.create = function(req, resp, next) {
         return next();
     }
     
-    var get_resource = function() {
+    var get_resource = function(resource_id) {
         console.log("response from 'create': "+resource_id);
         
         resp.header('Link', common.baseUrl + req.path() + "/" + resource_id);
@@ -400,18 +424,15 @@ Resource.prototype.delete_by_primary_key = function(req, resp, next) {
     var primary_key_field = this.primary_key;
     var primary_key = req.params[primary_key_field];
     
-    //TODO: validate by type
-    var key_type = this.schema[primary_key_field].type;
-    if(key_type == 'int' && isNaN(primary_key)) {
-        return next(new restify.InvalidArgumentError('identifier is not a number'));
-    } else if(key_type == 'string' && primary_key === "") {
-        return next(new restify.InvalidArgumentError('identifier is empty string'));
-    }
+    var field_def = this.schema[primary_key_field];
+    var fails_validation = !field_def.type.validate(primary_key)
+    if(fails_validation)
+        throw new restify.InvalidArgumentError("'" + primary_key + "' invalid for " + primary_key_field);
     
     var send_response = function(results) {
         if (results === undefined || results === 0 || results.length == 0)
             return next(new restify.ResourceNotFoundError(primary_key));
-        
+
         resp.send( 200, "Deleted: " + (results.length === 1 ? results[0] : results) );
         next();
     }

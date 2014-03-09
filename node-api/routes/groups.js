@@ -1,22 +1,25 @@
-var Resource  = require('../resource');
+var Resource  = require('../resource'),
+    Type      = require('../type');
 
+//TODO: reattach custom validators
 var category_validator = function(value) { return value === 'topic' || value === 'location'; }
+var category_type = new Type(category_validator);
 
 var schema = {
-    "id":                       { type: 'int',            props: ["read-only","default"] },
-    "parentGroup_id":           { type: 'object:group',   props: ["read-only"] },
-    "groupAvatar_id":           { type: 'object:media',   props: ["read-only"] },
-    "owner_id":                 { type: 'object:user',    props: ["read-only"] },
-    "entrySetRegistration_id":  { type: 'object:entry_set_registration', props: ["read-only"] },
-    "name":                     { type: 'object:group',   props: ["default", "required"] },
-    "category":                 { type: 'string',         props: ["default"], validator: category_validator },
-    "description":              { type: 'string',         props: ["default"] },
-    "slug":                     { type: 'string',         props: ["default", "required"] },
-    "featured":                 { type: 'boolean',            initial: false },
-    "isPublic":                 { type: 'boolean',            initial: true },
-    "created_at":               { type: 'date',           props: ["read-only"], initial: function(){return new Date()} },
-    "updated_at":               { type: 'date',           props: ["read-only"], initial: function(){return new Date()} },
-    "featured_at":              { type: 'date',           props: ["read-only"], initial: function(){return new Date()} },
+    "id":                       { type: Type.Int,  props: ["read-only","default","filterable"] },
+    "parentGroup_id":           { type: Type.Int,  props: ["read-only"] },
+    "groupAvatar_id":           { type: Type.Int,  props: ["read-only"] },
+    "owner_id":                 { type: Type.Int,  props: ["read-only"] },
+    "entrySetRegistration_id":  { type: Type.Int,  props: ["read-only"] },
+    "name":                     { type: Type.Str,  props: ["default", "required"] },
+    "category":                 { type: category_type, props: ["default","filterable"] },
+    "description":              { type: Type.Str,  props: ["default","filterable"] },
+    "slug":                     { type: Type.Str,  props: ["default", "required"] },
+    "featured":                 { type: Type.Bool, props: ["default","filterable"], initial: false },
+    "isPublic":                 { type: Type.Bool,  initial: true },
+    "created_at":               { type: Type.Date, props: ["read-only","filterable"], initial: function(){return new Date()} },
+    "updated_at":               { type: Type.Date, props: ["read-only"], initial: function(){return new Date()} },
+    "featured_at":              { type: Type.Date, props: ["read-only"], initial: function(){return new Date()} },
 };
 
 
