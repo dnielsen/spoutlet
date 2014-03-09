@@ -15,6 +15,33 @@ server.use(restify.gzipResponse());
 server.use(restify.queryParser( { mapParams: false } ));
 server.use(restify.bodyParser({ mapParams: false }));
 
+//----------------------------------------------------------
+
+var api_token_checker = function(req, res, next) {
+	var uuid = req.header("Api-Token");
+	
+	if(typeof uuid === "undefined")
+		return next(new restify.NotAuthorizedError("Missing Api-Token"));
+
+	if(!common.uuid_regex.test(uuid))
+		return next(new restify.InvalidHeaderError("Api-Token format invalid"));
+
+	var return_error = function(err) { return next(new restify.RestError(err)); };
+	var print_user = function(user_data) { 
+		if(user_data.length === 0)
+			return next(new restify.InvalidCredentialsError("Api-Token is not recognized"));
+
+		//Attach the user to the request for furthar processing
+		req.user = user_data[0]; 
+		next(); 
+	};
+
+	var user_data = common.knex("fos_user").where("uuid",uuid).then( print_user, return_error );
+};
+server.use(api_token_checker);
+
+//----------------------------------------------------------
+
 server.get('/votes', votes.find_all);
 server.post('/votes', votes.create);
 server.get('/votes/:idea', votes.find_by_primary_key);

@@ -16,6 +16,7 @@ var schema = {
 var resource = new Resource( {
     tableName: 'idea',
     primary_key:'id',
+    user_mapping: ['id','creator_id'],
     schema: schema
 } );
     

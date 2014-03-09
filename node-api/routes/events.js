@@ -30,6 +30,7 @@ var resource = new Resource( {
     tableName: 'group_event', 
     schema: schema,
     primary_key:'id',
+    user_mapping: ['id','user_id'],
     deleted_col:'deleted'
 } );
 

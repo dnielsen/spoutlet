@@ -16,7 +16,7 @@ var schema = {
     "description":              { type: Type.Str,  props: ["default","filterable"] },
     "slug":                     { type: Type.Str,  props: ["default", "required","filterable"] },
     "featured":                 { type: Type.Bool, props: ["default","filterable"], initial: false },
-    "isPublic":                 { type: Type.Bool, props: ["filterable"] initial: true },
+    "isPublic":                 { type: Type.Bool, props: ["filterable"], initial: true },
     "created_at":               { type: Type.Date, props: ["read-only","filterable"], initial: function(){return new Date()} },
     "updated_at":               { type: Type.Date, props: ["read-only"], initial: function(){return new Date()} },
     "featured_at":              { type: Type.Date, props: ["read-only"], initial: function(){return new Date()} },
@@ -27,6 +27,7 @@ var resource = new Resource( {
     tableName: 'pd_groups', 
     schema: schema,
     primary_key:'id',
+    user_mapping: ['id','owner_id'],
     deleted_col:'deleted',
     filters: {
         q: { field: 'name', operator: 'like' },

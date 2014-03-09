@@ -21,6 +21,7 @@ var resource = new Resource( {
     tableName: 'entry_set', 
     schema: schema,
     primary_key:'id',
+    user_mapping: ['id','creator_id'],
     filters: {
         q: { field: 'name', operator: 'like' },
         type: { field: 'type', operator: 'like' } // idea, session, thread

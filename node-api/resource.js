@@ -15,6 +15,7 @@ var Resource = function (spec) {
     this.tableName =    spec.tableName;
     this.schema =       spec.schema;
     this.primary_key =  spec.primary_key;
+    this.user_mapping = spec.user_mapping;
     this.deleted_col =  spec.deleted_col || false;
     this.filters =      spec.filters || { 
         // label: [column_name [, operator]] 
@@ -235,7 +236,6 @@ Resource.prototype.apply_paging = function(req, query, quiet) {
 // fields=name[,name] | verbose | (none)
 Resource.prototype.processBasicQueryParams = function(req, query) {
     var fields = this.get_requested_fields(req,false);
-    this.apply_filters(req, query);
     query.column(fields);
 }
 
@@ -243,7 +243,7 @@ Resource.prototype.processCollectionQueryParams = function(req, query) {
     this.processBasicQueryParams(req, query);
     this.apply_paging(req, query, false);
     this.apply_sorting(req, query, false);
-    //this.apply_filters(req, query);
+    this.apply_filters(req, query);
 }
 
 
@@ -389,6 +389,8 @@ Resource.prototype.create = function(req, resp, next) {
         .then(send_response,return_error);
     }
 
+    //TODO: use user mapping to automatically add user mapping and validate against its inclusion
+
     //Assemble 
     var sql_expr = knex(this.tableName)
         .insert(insert_data)
@@ -420,7 +422,15 @@ Resource.prototype.delete_by_primary_key = function(req, resp, next) {
     }
 
     var query = knex(this.tableName).where(primary_key_field, primary_key);
-    this.apply_filters(req, query);
+    
+    //Where this resource is owned by me
+    if( this.hasOwnProperty(user_mapping) ) {
+        var user_mapping = this.user_mapping;
+        
+        var user_id = req.user[user_mapping[0]];
+        var resource_field = user_mapping[1];
+        query.where(resource_field, user_id);
+    }
 
     if(this.deleted_col) {
         var update = {};

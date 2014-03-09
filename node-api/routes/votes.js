@@ -10,6 +10,7 @@ var resource = new Resource( {
     tableName: 'follow_mappings', 
     schema: schema,
     primary_key:'idea',
+    user_mapping: ['username','user'],
     filters: {
         user: { field: 'user', operator: 'like' },
         entry: { field: 'idea', operator: '=' } // idea, session, thread
