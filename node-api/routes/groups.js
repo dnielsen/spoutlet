@@ -1,22 +1,22 @@
 var Resource  = require('../resource'),
     Type      = require('../type');
 
-//TODO: reattach custom validators
 var category_validator = function(value) { return value === 'topic' || value === 'location'; }
-var category_type = new Type(category_validator);
+var category_type = new Type(category_validator,
+    function(column, query, value) { query.where(column, value); },{});
 
 var schema = {
     "id":                       { type: Type.Int,  props: ["read-only","default","filterable"] },
-    "parentGroup_id":           { type: Type.Int,  props: ["read-only"] },
-    "groupAvatar_id":           { type: Type.Int,  props: ["read-only"] },
-    "owner_id":                 { type: Type.Int,  props: ["read-only"] },
-    "entrySetRegistration_id":  { type: Type.Int,  props: ["read-only"] },
-    "name":                     { type: Type.Str,  props: ["default", "required"] },
+    "parentGroup_id":           { type: Type.Int,  props: ["read-only","filterable"] },
+    "groupAvatar_id":           { type: Type.Int,  props: ["read-only","filterable"] },
+    "owner_id":                 { type: Type.Int,  props: ["read-only","filterable"] },
+    "entrySetRegistration_id":  { type: Type.Int,  props: ["read-only","filterable"] },
+    "name":                     { type: Type.Str,  props: ["default", "required", "filterable"] },
     "category":                 { type: category_type, props: ["default","filterable"] },
     "description":              { type: Type.Str,  props: ["default","filterable"] },
-    "slug":                     { type: Type.Str,  props: ["default", "required"] },
+    "slug":                     { type: Type.Str,  props: ["default", "required","filterable"] },
     "featured":                 { type: Type.Bool, props: ["default","filterable"], initial: false },
-    "isPublic":                 { type: Type.Bool,  initial: true },
+    "isPublic":                 { type: Type.Bool, props: ["filterable"] initial: true },
     "created_at":               { type: Type.Date, props: ["read-only","filterable"], initial: function(){return new Date()} },
     "updated_at":               { type: Type.Date, props: ["read-only"], initial: function(){return new Date()} },
     "featured_at":              { type: Type.Date, props: ["read-only"], initial: function(){return new Date()} },

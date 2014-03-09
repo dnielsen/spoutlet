@@ -98,32 +98,9 @@ Resource.prototype.apply_filters = function(req, query) {
         
         var value           = req.query[label];
         var field_type      = field_def["type"];
-        
-        if(!field_type.validate(value))
-            throw new restify.InvalidArgumentError("'" + value + "' invalid for " + label);
 
-        //TODO: do the actual filtering!
-        console.log(value + "' validated for " + label);
+        field_type.apply_filter(field, query, value);
     }
-
-    // for(var label in this.filters) {
-    //     if(!req.query.hasOwnProperty(label))
-    //         continue;
-
-    //     var field = this.filters[label].field;
-    //     var op    = this.filters[label].operator || 'like';
-    //     var value = req.query[label];
-        
-    //     var field_def       = this.schema[field];
-    //     var fails_validation = field_def.hasOwnProperty('validator') && !field_def.validator(value)
-    //     if(fails_validation)
-    //         throw new restify.InvalidArgumentError("'" + value + "' invalid for " + field);
-
-    //     if(op === 'like')
-    //         value = '%' + value + '%';
-            
-    //     query.where(field, op, value);
-    // }
 }
 
 
@@ -258,6 +235,7 @@ Resource.prototype.apply_paging = function(req, query, quiet) {
 // fields=name[,name] | verbose | (none)
 Resource.prototype.processBasicQueryParams = function(req, query) {
     var fields = this.get_requested_fields(req,false);
+    this.apply_filters(req, query);
     query.column(fields);
 }
 
@@ -265,7 +243,7 @@ Resource.prototype.processCollectionQueryParams = function(req, query) {
     this.processBasicQueryParams(req, query);
     this.apply_paging(req, query, false);
     this.apply_sorting(req, query, false);
-    this.apply_filters(req, query);
+    //this.apply_filters(req, query);
 }
 
 
@@ -442,6 +420,8 @@ Resource.prototype.delete_by_primary_key = function(req, resp, next) {
     }
 
     var query = knex(this.tableName).where(primary_key_field, primary_key);
+    this.apply_filters(req, query);
+
     if(this.deleted_col) {
         var update = {};
         update[this.deleted_col] = 1;

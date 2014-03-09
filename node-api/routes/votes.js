@@ -1,14 +1,15 @@
-var Resource  = require('../resource');
+var Resource  = require('../resource'),
+    Type      = require('../type');
     
 var schema = {
-    "user":               { type: 'string',props: ["default","required"] },
-    "idea":               { type: 'int',   props: ["default","required"] },
+    "user":               { type: Type.Str,   props: ["default","required","filterable"] },
+    "idea":               { type: Type.Int,   props: ["default","required","filterable"] },
 };
     
 var resource = new Resource( {
     tableName: 'follow_mappings', 
     schema: schema,
-    primary_key:'user',
+    primary_key:'idea',
     filters: {
         user: { field: 'user', operator: 'like' },
         entry: { field: 'idea', operator: '=' } // idea, session, thread

@@ -1,17 +1,20 @@
-var Resource  = require('../resource');
+var Resource  = require('../resource'),
+    Type      = require('../type');
 
 var type_validator = function(value) { return value === 'idea' || value === 'session' || value === 'thread'; }
+var type_type = new Type(type_validator,
+    function(column, query, value) { query.where(column, value); },{});
 
 var schema = {
-    "id":                      { type: 'int',   props: ["default","read_only"] },
-    "entrySetRegistration_id": { type: 'object:entry_set_registration',   props: ["required"] },
-    "name":                    { type: 'string',   props: ["default","required"] },
-    "type":                    { type: 'string',   props: ["default"], validator: type_validator },
-    "isVotingActive":          { type: 'boolean',   props: [] },
-    "isSubmissionActive":      { type: 'boolean',   props: [] },
-    "allowedVoters":           { type: 'string',   props: ["default"] },
-    "creator_id":              { type: 'object:user',   props: ["read_only"] },
-    "description":             { type: 'string',   props: ["default", "required"] },
+    "id":                      { type: Type.Int,   props: ["default","read_only","filterable"] },
+    "entrySetRegistration_id": { type: Type.Int,   props: ["required","filterable"] },
+    "name":                    { type: Type.Str,   props: ["default","required","filterable"] },
+    "type":                    { type: type_type,   props: ["default","filterable"] },
+    "isVotingActive":          { type: Type.Bool,   props: ["filterable"] },
+    "isSubmissionActive":      { type: Type.Bool,   props: ["filterable"] },
+    "allowedVoters":           { type: Type.Str,   props: ["default","filterable"] },
+    "creator_id":              { type: Type.Int,   props: ["read_only","filterable"] },
+    "description":             { type: Type.Str,   props: ["default", "required","filterable"] },
 };
     
 var resource = new Resource( {

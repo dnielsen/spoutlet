@@ -1,16 +1,17 @@
-var Resource  = require('../resource');
+var Resource  = require('../resource'),
+    Type      = require('../type');
 
 var schema = {
-    "id":          { type: 'int', props: ["default","read_only"] },
-    "entrySet_id": { type: 'object:entry_set', props: ["required"] },
-    "creator_id":  { type: 'object:user', props: ["default","read_only"] },
-    "image_id":    { type: 'object:media', props: [""] },
-    "name":        { type: 'string', props: ["default","required"] },
-    "createdAt":   { type: 'date', props: ["read_only"] },
-    "description": { type: 'string', props: ["required"] },
-    "members":     { type: 'string', props: ["default"] },
-    "highestRound":{ type: 'int', props: ["read_only"] },
-    "isPrivate":   { type: 'boolean', props: ["default"] },
+    "id":          { type: Type.Int, props: ["default","read_only","filterable"] },
+    "entrySet_id": { type: Type.Int, props: ["required","filterable"] },
+    "creator_id":  { type: Type.Int, props: ["default","read_only","filterable"] },
+    "image_id":    { type: Type.Int, props: [""] },
+    "name":        { type: Type.Str, props: ["default","required","filterable"] },
+    "createdAt":   { type: Type.Date, props: ["read_only","filterable"] },
+    "description": { type: Type.Str, props: ["required","filterable"] },
+    "members":     { type: Type.Str, props: ["default","filterable"] },
+    "highestRound":{ type: Type.Int, props: ["read_only","filterable"] },
+    "isPrivate":   { type: Type.Bool, props: ["default"] },
 }; 
 var resource = new Resource( {
     tableName: 'idea',

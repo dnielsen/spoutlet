@@ -1,14 +1,15 @@
-var Resource  = require('../resource');
-    
+var Resource  = require('../resource'),
+    Type      = require('../type');
+
 var schema = {
-    "id":            { type: 'int', props: ["read_only", "default"] },
-    "event_id":      { type: 'object:event', props: ["required", "default"] },
-    "name":          { type: 'string', props: ["required", "default"] },
-    "content":       { type: 'string', props: ["required"] },
-    "starts_at":     { type: 'date', props: ["default"] },
-    "ends_at":       { type: 'date', props: ["default"] },
-    "date":          { type: 'date', props: [""] },
-    "source_idea_id":{ type: 'idea', props: [""] },
+    "id":            { type: Type.Int, props: ["read_only", "default","filterable"] },
+    "event_id":      { type: Type.Int, props: ["required", "default","filterable"] },
+    "name":          { type: Type.Str, props: ["required", "default","filterable"] },
+    "content":       { type: Type.Str, props: ["required","filterable"] },
+    "starts_at":     { type: Type.Date, props: ["default","filterable"] },
+    "ends_at":       { type: Type.Date, props: ["default"] },
+    "date":          { type: Type.Date, props: ["filterable"] },
+    "source_idea_id":{ type: Type.Int, props: ["filterable"] },
 };
     
 var resource = new Resource( {
