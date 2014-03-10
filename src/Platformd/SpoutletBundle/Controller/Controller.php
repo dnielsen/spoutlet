@@ -326,6 +326,11 @@ class Controller extends BaseController
         return $this->container->get('knp_media.util.media_util');
     }
 
+    protected function getMediaPathResolver() 
+    {
+        return $this->get('platformd.media_path_resolver');
+    }
+
     protected function getIpLookupUtil()
     {
         return $this->container->get('platformd.model.ip_lookup_util');

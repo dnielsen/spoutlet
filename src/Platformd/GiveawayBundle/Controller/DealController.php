@@ -383,10 +383,6 @@ class DealController extends Controller
         return $this->get('platformd.link.linkable_manager');
     }
 
-    protected function getMediaPathResolver() {
-        return $this->get('platformd.media_path_resolver');
-    }
-
     protected function getDealRepo()
     {
         return $this
