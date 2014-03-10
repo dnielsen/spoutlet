@@ -15,9 +15,6 @@ use Platformd\EventBundle\Entity\GroupEvent;
 
 class ApiController extends Controller
 {
-    protected function getMediaPathResolver() {
-        return $this->get('platformd.media_path_resolver');
-    }
 
     public function entrySetAction(Request $request, $entrySetId)
     {
@@ -25,10 +22,9 @@ class ApiController extends Controller
 
         $response = new Response();
 
-        if (!$entrySet){
+        if (!$entrySet) {
             $response->setStatusCode(404);
-        }
-        else {
+        } else {
             $response->setStatusCode(200);
 
             $entries = array();
@@ -55,8 +51,8 @@ class ApiController extends Controller
             );
 
             $encoder = new JsonEncoder();
-            $jsonData = $encoder->encode($entrySetData, $format = 'json');
-            $response->setContent($this->jsonpWrapper($request,$jsonData));
+            $jsonData = $encoder->encode($entrySetData, 'json');
+            $response->setContent($this->jsonpWrapper($request, $jsonData));
             $response->headers->set('Content-Type', 'application/json');
         }
 
@@ -69,10 +65,9 @@ class ApiController extends Controller
 
         $response = new Response();
 
-        if (!$entry){
+        if (!$entry) {
             $response->setStatusCode(404);
-        }
-        else {
+        } else {
             $response->setStatusCode(200);
 
             $entryData = array(
@@ -90,8 +85,8 @@ class ApiController extends Controller
             );
 
             $encoder = new JsonEncoder();
-            $jsonData = $encoder->encode($entryData, $format = 'json');
-            $response->setContent($this->jsonpWrapper($request,$jsonData));
+            $jsonData = $encoder->encode($entryData, 'json');
+            $response->setContent($this->jsonpWrapper($request, $jsonData));
             $response->headers->set('Content-Type', 'application/json');
         }
 
@@ -103,7 +98,7 @@ class ApiController extends Controller
         $event = $this->getGroupEventService()->find($eventId);
 
         $response= new Response();
-        if (!$event){
+        if (!$event) {
             return $response->setStatusCode(404);
         }
 
@@ -129,8 +124,8 @@ class ApiController extends Controller
         );
 
         $encoder = new JsonEncoder();
-        $jsonData = $encoder->encode($eventData, $format = 'json');
-        $response->setContent($this->jsonpWrapper($request,$jsonData));
+        $jsonData = $encoder->encode($eventData, 'json');
+        $response->setContent($this->jsonpWrapper($request, $jsonData));
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
@@ -142,7 +137,7 @@ class ApiController extends Controller
 
         $response= new Response();
 
-        if (!$group){
+        if (!$group) {
             return $response->setStatusCode(404);
         }
 
@@ -318,8 +313,8 @@ class ApiController extends Controller
         );
 
         $encoder = new JsonEncoder();
-        $jsonData = $encoder->encode($responseData, $format = 'json');
-        $response->setContent($this->jsonpWrapper($request,$jsonData));
+        $jsonData = $encoder->encode($responseData, 'json');
+        $response->setContent($this->jsonpWrapper($request, $jsonData));
         $response->headers->set('Content-Type', 'application/json');
 
 
@@ -334,7 +329,7 @@ class ApiController extends Controller
         $events     = array_merge($this->getEvents(), $this->getEvents(false));
         $entrySets  = $this->getEntrySets();
 
-        if (!$groups && !$events){
+        if (!$groups && !$events) {
             $response->setStatusCode(404);
             return $response;
         }
@@ -580,7 +575,6 @@ class ApiController extends Controller
         }
         return $entrySetsData;
     }
-
 
     public function jsonpWrapper(Request $request, $jsonData)
     {

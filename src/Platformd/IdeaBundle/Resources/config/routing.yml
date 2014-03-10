@@ -253,16 +253,19 @@ profile_edit:
 login:
     pattern:   /login
     defaults:  { _controller: FOSUserBundle:Security:login }
+    requirements:
+        _scheme: https
 
 logout:
     pattern:   /logout
     defaults: { _controller: FOSUserBundle:Security:logout }
 
 change_password:
-    pattern: /password
+    pattern:  /password
     defaults: { _controller: FOSUserBundle:ChangePassword:changePassword }
     requirements:
       _method: GET|POST
+      _scheme: https
 
 # Misc Routes
 

@@ -6,6 +6,7 @@
   "dependencies": {
     "mysql": "~2.1.0",
     "restify": "~2.6.2",
-    "knex": "~0.5.8"
+    "knex": "~0.5.8",
+    "crypto": "0.0.3"
   }
 }
