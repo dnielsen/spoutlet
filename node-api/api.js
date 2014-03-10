@@ -19,62 +19,74 @@ server.use(restify.bodyParser( { mapParams: false } ));
 
 server.use(restify.authorizationParser());
 
+var fail_auth = function(res, relm, message) {
+	res.header("WWW-Authenticate","Basic realm=\""+common.security_relm_token+"\"");
+	res.send(401, message);
+}
+
 var get_api_token = function(req, res, next) {
-	if(!req.authorization.hasOwnProperty("basic"))
-		return next(new restify.MissingParameterError("Username and password not provided"));
+	if(!req.authorization.hasOwnProperty("basic")) {
+		fail_auth(res, common.security_relm_login, "No credentials provided");
+		return; // no furthar processing, don't call next()
+	}
 
 	var req_username = req.authorization.basic.username;
 	var req_password = req.authorization.basic.password;
 
 	var return_error = function(err) { return next(new restify.RestError(err)); };
+
 	var validate_user = function(db_user_data_array) { 
-		if(db_user_data_array.length === 0)
-			return next(new restify.InvalidCredentialsError("Username is not recognized"));
-		
+		if(db_user_data_array.length === 0) {
+			fail_auth(res, common.security_relm_login, "Bad user name");
+			return; // no furthar processing, don't call next()
+		}
 		var db_user_data = db_user_data_array[0];
 		
 		var new_hashed_password = common.hash_password( req_password, db_user_data.salt );
 		var hashed_password = db_user_data.password;
 		
-		if(hashed_password != new_hashed_password)
-			return next(new restify.InvalidCredentialsError("Username is not recognized"));
-		
-		res.send(200, db_user_data.uuid)
-		
+		if(hashed_password != new_hashed_password) {
+			fail_auth(res, common.security_relm_login, "Bad password");
+			return; // no furthar processing, don't call next()
+		}
 
-		next(); 
+		//Credentials check out, return API key
+		res.send(200, db_user_data.uuid);
 	};
 
 	common.knex("fos_user").where("username",req.username).then( validate_user, return_error );
 };
 
-server.get('/token', get_api_token);
+server.get('/api_key', get_api_token);
 
 //----------------------------------------------------------
 
 var api_token_checker = function(req, res, next) {
-	var uuid = req.header("Api-Token");
-	
-	if(typeof uuid === "undefined") {
-		res.send(401, {"code":"UnauthorizedError", "message":"Missing Api-Token"});
-		return next();
+	if(!req.authorization.hasOwnProperty("basic")) {
+		fail_auth(res, common.security_relm_token, "No API key provided");
+		return; // no furthar processing, don't call next()
 	}
+	var uuid = req.authorization.basic.username;
 
-	if(!common.uuid_regex.test(uuid))
-		return next(new restify.InvalidHeaderError("Api-Token format invalid"));
+	if(!common.uuid_regex.test(uuid)) {
+		fail_auth(res, common.security_relm_token, "API key is invalid");
+		return;
+	}
 
 	var return_error = function(err) { return next(new restify.RestError(err)); };
 	var save_user = function(user_data) { 
-		if(user_data.length === 0)
-			return next(new restify.BadDigestError("Api-Token is not recognized"));
+		if(user_data.length === 0) {
+			fail_auth(res, common.security_relm_token, "API key was not recognized");
+			return;
+		}
 
-		//Attach the user to the request for furthar processing
+		//Credentials check out, save the user and continue processing the request
 		req.user = user_data[0]; 
 		next(); 
 	};
 
 	var user_data = common.knex("fos_user").where("uuid",uuid).then( save_user, return_error );
-};
+}
 
 server.use(api_token_checker);
 
