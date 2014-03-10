@@ -73,6 +73,10 @@ elif [ $ENV == 'prod' ]; then
 fi
 
 echo '============================='
+echo 'Restarting Node API Service'
+forever restartall
+
+echo '============================='
 echo 'Restarting Apache (gracefully)'
 echo 
 sudo apache2ctl graceful
