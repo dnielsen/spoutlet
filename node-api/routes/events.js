@@ -2,8 +2,8 @@ var Resource  = require('../resource'),
     Type      = require('../type');
     
 var schema = {    
-     "id":                      { type: Type.Int,     props: ["read-only","filterable"] },
-     "group_id":                { type: Type.Int,     props: ["required","filterable"] },
+     "id":                      { type: Type.Int,     props: ["default","read-only","filterable"] },
+     "group_id":                { type: Type.Int,     props: ["default","required","filterable"] },
      "user_id":                 { type: Type.Int,     props: ["read-only","filterable"] },
      "attendeeCount":           { type: Type.Int,     props: ["default","filterable"] },
      "private":                 { type: Type.Bool, props: [] },
@@ -12,8 +12,8 @@ var schema = {
      "content":                 { type: Type.Str,  props: ["required","filterable"] },
      "registration_option":     { type: Type.Str,  props: [] },
      "online":                  { type: Type.Bool, props: ["filterable"] },
-     "starts_at":               { type: Type.Date,    props: ["filterable"] },
-     "ends_at":                 { type: Type.Date,    props: ["filterable"] },
+     "starts_at":               { type: Type.Date,    props: ["default","filterable"] },
+     "ends_at":                 { type: Type.Date,    props: ["default","filterable"] },
      "external_url":            { type: Type.Str,  props: [] },
      "location":                { type: Type.Str,  props: ["filterable"] },
      "address1":                { type: Type.Str,  props: ["default","filterable"] },

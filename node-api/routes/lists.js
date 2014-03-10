@@ -7,7 +7,7 @@ var type_type = new Type(type_validator,
 
 var schema = {
     "id":                      { type: Type.Int,   props: ["default","read_only","filterable"] },
-    "entrySetRegistration_id": { type: Type.Int,   props: ["required","filterable"] },
+    "entrySetRegistration_id": { type: Type.Int,   props: ["default","required","filterable"] },
     "name":                    { type: Type.Str,   props: ["default","required","filterable"] },
     "type":                    { type: type_type,   props: ["default","filterable"] },
     "isVotingActive":          { type: Type.Bool,   props: ["filterable"] },
