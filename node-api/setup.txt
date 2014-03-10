@@ -1,31 +1,101 @@
-sudo apt-get update
 sudo apt-get install -y python-software-properties python g++ make
 sudo add-apt-repository ppa:chris-lea/node.js
 sudo apt-get update
 sudo apt-get install nodejs
+npm install  //if error retry
 
---------------------
-Old Method
+// install globally, needs admin pass
+sudo npm install forever -g
 
-node -v
-> v0.10.25
+forever start api.js
 
-npm info express info
-> 3.4.8
+// options:
+//  start          start SCRIPT as a daemon
+//  stop           stop the daemon SCRIPT
+//  stopall        stop all running forever scripts
+//  list           list all running forever scripts
 
-npm info mysql info
-> 2.1.0
+//To restart:
+//1) forever list
+//2) forever stop <number>
+//3) forever start api.js
 
-npm info raml-parser info
-> 0.8.5
+-------------------------------------------------------------------------
+- Generic framework for easily extending to additional "resources"
+- * Custom resource validators (e.g. list types only allow sessions,ideas,thread) 
+- Resources currently available: groups, events, sessions, lists, ideas, votes
+- gzip compressed responses to make large data transfer faster
+- Precise response codes and error handling with error codes and human readable messages 
 
-npm install mysql
-npm install express
-npm install raml-parser
---------------------
+GET requests (read-only): All of these features are completly orthogonal so you can mix and match any combination.
+For collections
+- pagination e.g. show x entries starting from y and report total size
+- sorting e.g. sort by field 1 ascending then sort by field 2 descending, etc.
+- * filtering e.g. show groups where category = location and name contain 'camp'
+For singular resources: 
+- default set of fields
+- verbose set
+- custom list of fields
 
-npm install
-- uses package.json to install dependencies
+POST requests (create new): Only singular resources supported for now (no bulk group creation for example)
+- support JSON formated request bodies
+- support for read only field designation
+- support for required field designation
+- * support for defaulted field designation
+- all other fields are option
+- * redirect to existing php handlers for now
+
+* Mostly funtional but still work in progress
+
+RESTful API status:
+
+It took a few days to figure out the right design abstractions but progress is moving fast now.  Osman made due while working out the UI of the mobile app by modifying the old api call that front loads all the data needed in one big call. This will quickly become unusable as soon as real data starts coming into the site.
+
+My API is designed to scale with our data by providing lots of ways to slice your requests up into small pieces with features like paging sorting and filtering directly from the database. 
+
+It's also a great opertunity to cleanly seperate our display logic from our model logic and route around a lot of the tech debt we have built up. To force this seperation I implimented the api on a completly different platform, node.js.  For read only requests there is no need to fallback on existing php logic when its simpler and faster to skip over symfony and doctine and go directly to the database.  For creating inherited entities like groups/events/users we can reroute back to php for the time being.
+
+Below is a fact sheet with some example queries.  The api is live at api.campsite.org you can try for yourself.  I recommend installing this chrome extension (chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc?hl=en)
+
+Examples:
+
+Specifying attributes
+http://api.campsite.org/groups                          Default attributes of all groups
+http://api.campsite.org/events/6?verbose                All attributes for event 6
+http://api.campsite.org/lists?fields=id,name            Specifically the name and id for all lists
+
+Soring results
+http://api.campsite.org/events?fields=name&sort_by=name Events sorted by name
+http://api.campsite.org/events?sort_by=-name            Events reverse sorted by name
+
+Groups sorted by category then reverse sorted by featured
+http://api.campsite.org/groups?fields=name,category,featured&sort_by=category,-featured
+
+Filtering (these are custom defined by each resource)
+http://api.campsite.org/groups?q=camp&type=topic        Show all topic groups containg 'camp' in the name
+http://api.campsite.org/votes?entry=66                  Show all votes for entry 66
+
+Pagination
+http://api.campsite.org/groups?limit=10                 Show first ten groups
+http://api.campsite.org/groups?limit=10&offset=10       Show second set of ten groups
+
+What you can't see is that I also send back the size of the result set and the total size available: 
+X-Length:10
+X-Total-Length:47
+
+For filtered queries the X-Total-Length header is limited to the filtered set so total votes for entry 66 is different than total votes in general.
+
+This email is getting way too long but quickly an example POST request to create a new group would look like this:
+curl -is -X POST -H "Content-Type: application/json" -d '{ "name": "eric14", "description": "example", "category":"location"}' http://localhost:8080/groups?expand
+
+TODO
+- API key for authenticated calls without using cookies
+- PATCH (update existing resources)
+- DELETE (this will redirect to php for now)
+- route aliases: lets you write /groups/3/events/4/sessions/5 instead of this /sessions?sid=5&gid=3&eid=4
+- More resources: entry_set_registration, users, images
+- type expansion: ability to return multiple resource types nested in a single call (show next event when you ask for a specific group)
+- help resource to tell what options are available
 
 
 

@@ -1,44 +1,51 @@
-var Resource  = require('../resource');
+var Resource  = require('../resource'),
+    Type      = require('../type');
     
 var schema = {    
-     "id":                      { type: 'int',     props: ["read-only"] },
-     "group_id":                { type: 'int',     props: ["required"] },
-     "user_id":                 { type: 'int',     props: ["read-only"] },
-     "attendeeCount":           { type: 'int',     props: ["default"] },
-     "private":                 { type: 'boolean', props: [] },
-     "name":                    { type: 'string',  props: ["required","default"] },
-     "slug":                    { type: 'string',  props: ["default"] },
-     "content":                 { type: 'string',  props: ["required"] },
-     "registration_option":     { type: 'string',  props: [] },
-     "online":                  { type: 'boolean', props: [] },
-     "starts_at":               { type: 'date',    props: [] },
-     "ends_at":                 { type: 'date',    props: [] },
-     "external_url":            { type: 'string',  props: [] },
-     "location":                { type: 'string',  props: [] },
-     "address1":                { type: 'string',  props: ["default"] },
-     "address2":                { type: 'string',  props: ["default"] },
-     "latitude":                { type: 'string',  props: [] },
-     "longitude":               { type: 'string',  props: [] },
-     "created_at":              { type: 'date',    props: ["read-only"] },
-     "updated_at":              { type: 'date',    props: ["read-only"] },
-     "currentRound":            { type: 'int',     props: ["read-only"] },
-     "entrySetRegistration_id": { type: 'int',     props: [] },
+     "id":                      { type: Type.Int,     props: ["read-only","filterable"] },
+     "group_id":                { type: Type.Int,     props: ["required","filterable"] },
+     "user_id":                 { type: Type.Int,     props: ["read-only","filterable"] },
+     "attendeeCount":           { type: Type.Int,     props: ["default","filterable"] },
+     "private":                 { type: Type.Bool, props: [] },
+     "name":                    { type: Type.Str,  props: ["required","default","filterable"] },
+     "slug":                    { type: Type.Str,  props: ["default","filterable"] },
+     "content":                 { type: Type.Str,  props: ["required","filterable"] },
+     "registration_option":     { type: Type.Str,  props: [] },
+     "online":                  { type: Type.Bool, props: ["filterable"] },
+     "starts_at":               { type: Type.Date,    props: ["filterable"] },
+     "ends_at":                 { type: Type.Date,    props: ["filterable"] },
+     "external_url":            { type: Type.Str,  props: [] },
+     "location":                { type: Type.Str,  props: ["filterable"] },
+     "address1":                { type: Type.Str,  props: ["default","filterable"] },
+     "address2":                { type: Type.Str,  props: ["default","filterable"] },
+     "latitude":                { type: Type.Str,  props: ["filterable"] },
+     "longitude":               { type: Type.Str,  props: [,"filterable"] },
+     "created_at":              { type: Type.Date,    props: ["read-only","filterable"] },
+     "updated_at":              { type: Type.Date,    props: ["read-only","filterable"] },
+     "currentRound":            { type: Type.Int,     props: ["read-only"] },
+     "entrySetRegistration_id": { type: Type.Int,     props: ["filterable"] },
  };
     
-var event = new Resource( {
+var resource = new Resource( {
     tableName: 'group_event', 
     schema: schema,
-    
+    primary_key:'id',
+    user_mapping: ['id','user_id'],
     deleted_col:'deleted'
 } );
 
-exports.findAll = function(req, resp, next) { 
-    return event.findAll(req, resp, next); 
+exports.find_all = function(req, resp, next) { 
+    return resource.find_all(req, resp, next); 
 }
-exports.findById = function(req, resp, next) {
-    return event.findById(req, resp, next); 
+
+exports.find_by_primary_key = function(req, resp, next) {
+    return resource.find_by_primary_key(req, resp, next); 
 }
 
 exports.create = function(req, resp, next) {
-    return event.create(req, resp, next);
+    return resource.create(req, resp, next);
+}
+
+exports.delete_by_primary_key = function(req, resp, next) {
+    return resource.delete_by_primary_key(req, resp, next); 
 }
