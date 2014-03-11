@@ -6,18 +6,6 @@ var restify  = require('restify'),
     events   = require('./routes/events'),
     groups   = require('./routes/groups'),
     votes    = require('./routes/votes');
-    
-var server = restify.createServer({name: common.baseHost});
-//server.pre(restify.pre.userAgentConnection());
-server.use(restify.acceptParser(server.acceptable));
-server.use(restify.gzipResponse());
-//server.use(restify.fullResponse()); //slowish
-server.use(restify.queryParser( { mapParams: false } ));
-server.use(restify.bodyParser( { mapParams: false } ));
-
-//----------------------------------------------------------
-
-server.use(restify.authorizationParser());
 
 var fail_auth = function(res, relm, message) {
 	res.header("WWW-Authenticate","Basic realm=\""+common.security_relm_token+"\"");
@@ -57,10 +45,6 @@ var get_api_token = function(req, res, next) {
 	common.knex("fos_user").where("username",req.username).then( validate_user, return_error );
 };
 
-server.get('/api_key', get_api_token);
-
-//----------------------------------------------------------
-
 var api_token_checker = function(req, res, next) {
 	if(!req.authorization.hasOwnProperty("basic")) {
 		fail_auth(res, common.security_relm_token, "No API key provided");
@@ -88,40 +72,75 @@ var api_token_checker = function(req, res, next) {
 	var user_data = common.knex("fos_user").where("uuid",uuid).then( save_user, return_error );
 }
 
-server.use(api_token_checker);
+var server = restify.createServer({name: common.baseHost});
 
-//----------------------------------------------------------
+//process the response formats user-agent accepts
+server.use(restify.acceptParser(server.acceptable));
+
+//If user-agent talks gzip use that 
+server.use(restify.gzipResponse());
+
+//parse request's query parameters into req.query
+server.use(restify.queryParser( { mapParams: false } ));
+
+//parse request's body into req.body
+server.use(restify.bodyParser( { mapParams: false } ));
+
+//parse request's authorization headers (or URI user/pass) into req.authorization
+server.use(restify.authorizationParser());
+
+//-------------------------  Anonymous calls here  ---------------------------------
+
+server.get('/api_key', get_api_token);
 
 server.get('/votes', votes.find_all);
-server.post('/votes', votes.create);
 server.get('/votes/:idea', votes.find_by_primary_key);
+
+server.get('/ideas', ideas.find_all);
+server.get('/ideas/:id', ideas.find_by_primary_key);
+
+server.get('/lists', lists.find_all);
+server.get('/lists/:id', lists.find_by_primary_key);
+
+server.get('/sessions', sessions.find_all);
+server.get('/sessions/:id', sessions.find_by_primary_key);
+
+server.get('/events', events.find_all);
+server.get('/events/:id', events.find_by_primary_key);
+
+server.get('/groups', groups.find_all);
+server.get('/groups/:id', groups.find_by_primary_key);
+
+//---------------------------------------------------------------------------------------------------
+// Token checker will fail any request, with 401 Unauthorized, which does not provide a valid API-Key
+// Therefore all request handlers defined below this call are secured calls. 
+// All handlers defined above are anonymous calls and do not require an api token.
+//---------------------------------------------------------------------------------------------------
+
+server.use(api_token_checker);
+
+//------------------------  Secured calls here  ----------------------------------
+
+server.post('/votes', votes.create);
 // server.patch('/votes/:idea', votes.update);
 server.del('/votes/:idea', votes.delete_by_primary_key);
 
-server.get('/ideas', ideas.find_all);
 server.post('/ideas', ideas.create);
-server.get('/ideas/:id', ideas.find_by_primary_key);
 server.del('/ideas/:id', ideas.delete_by_primary_key);
 
-server.get('/lists', lists.find_all);
 server.post('/lists', lists.create);
-server.get('/lists/:id', lists.find_by_primary_key);
 server.del('/lists/:id', lists.delete_by_primary_key);
 
-server.get('/sessions', sessions.find_all);
 server.post('/sessions', sessions.create);
-server.get('/sessions/:id', sessions.find_by_primary_key);
 server.del('/sessions/:id', sessions.delete_by_primary_key);
 
-server.get('/events', events.find_all);
 server.post('/events', events.create);
-server.get('/events/:id', events.find_by_primary_key);
 server.del('/events/:id', events.delete_by_primary_key);
 
-server.get('/groups', groups.find_all);
 server.post('/groups', groups.create);
-server.get('/groups/:id', groups.find_by_primary_key);
 server.del('/groups/:id', groups.delete_by_primary_key);
+
+//----------------------  Start the server  --------------------------------------
 
 server.listen(common.basePort, function() {
   console.log('%s listening at %s', server.name, server.url);

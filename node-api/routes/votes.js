@@ -2,7 +2,7 @@ var Resource  = require('../resource'),
     Type      = require('../type');
     
 var schema = {
-    "user":               { type: Type.Str,   props: ["default","required","filterable"] },
+    "user":               { type: Type.Str,   props: ["default","read-only","filterable"] },
     "idea":               { type: Type.Int,   props: ["default","required","filterable"] },
 };
     

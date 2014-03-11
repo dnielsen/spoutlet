@@ -229,6 +229,18 @@ Resource.prototype.apply_paging = function(req, query, quiet) {
     query.offset(offset);
 }
 
+//Where this resource is owned by me
+Resource.prototype.where_is_mine = function(req, query) {
+    if( !this.hasOwnProperty("user_mapping") )
+        return;
+
+    var user_mapping = this["user_mapping"];
+    
+    var user_id = req.user[user_mapping[0]];
+    var resource_field = user_mapping[1];
+    query.where(resource_field, user_id);
+}
+
 // Basic resource type's allow for customization of the fields returned
 // providing no query parameters (qp) returns just the default fields
 // verbose qp will return all available fields,
@@ -347,8 +359,25 @@ Resource.prototype.create = function(req, resp, next) {
     
     var insert_data;
     try {
+        var has_user_mapping = this.hasOwnProperty("user_mapping");
+        var my_field, user_field;
+        if(has_user_mapping) {
+            my_user_field = this.user_mapping[1];
+            assoc_user_field = this.user_mapping[0];
+
+            console.log("req.body.hasOwnProperty("+my_user_field+"): "+req.body.hasOwnProperty(my_user_field));
+            console.log("req.body["+my_user_field+"]: "+req.body[my_user_field]);
+            
+            if(req.body.hasOwnProperty(my_user_field)  && req.body[my_user_field] != req.user[assoc_user_field]) {
+                throw new restify.InvalidArgumentError('Cannot assign different user.');
+            }
+            req.body[my_user_field] = req.user[assoc_user_field];
+        }
+
         insert_data = this.assemble_insert(req.body);
-    } catch(e) { return next(e); }
+    } catch(e) { 
+        return next(e);
+    }
 
     var return_error = function(err) {
         var response = "Internal Error";
@@ -389,8 +418,6 @@ Resource.prototype.create = function(req, resp, next) {
         .then(send_response,return_error);
     }
 
-    //TODO: use user mapping to automatically add user mapping and validate against its inclusion
-
     //Assemble 
     var sql_expr = knex(this.tableName)
         .insert(insert_data)
@@ -423,14 +450,7 @@ Resource.prototype.delete_by_primary_key = function(req, resp, next) {
 
     var query = knex(this.tableName).where(primary_key_field, primary_key);
     
-    //Where this resource is owned by me
-    if( this.hasOwnProperty(user_mapping) ) {
-        var user_mapping = this.user_mapping;
-        
-        var user_id = req.user[user_mapping[0]];
-        var resource_field = user_mapping[1];
-        query.where(resource_field, user_id);
-    }
+    this.where_is_mine(req, query);
 
     if(this.deleted_col) {
         var update = {};
