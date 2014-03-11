@@ -1,7 +1,7 @@
 var Resource  = require('../resource'),
     Type      = require('../type');
 
-var type_validator = function(value) { return value === 'idea' || value === 'session' || value === 'thread'; }
+var type_validator = function(value) { return (value === 'idea' || value === 'session' || value === 'thread'); };
 var type_type = new Type(type_validator,
     function(column, query, value) { query.where(column, value); },{});
 

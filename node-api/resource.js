@@ -28,8 +28,8 @@ module.exports = Resource
 
 //Define a constructor for Resource Types that is a special form of Type
 var ResourceType = function( resource ) {
-    var validator = new function() {};
-    var default_operator = new function() {}
+    var validator = function() { return true; };
+    var default_operator = function() {};
     var prefix_operators = {};
 
     //Call the parent constructor 
@@ -300,7 +300,7 @@ Resource.prototype.apply_envelopes = function(expand, result_set) {
 
 Resource.prototype.apply_expand = function(req, query) {
     if(!req.query.hasOwnProperty("expand"))
-        return result_set;
+        return;
 
     var expansions = req.query.expand.split(",");
     
@@ -463,12 +463,13 @@ Resource.prototype.find_by_primary_key = function(req, resp, next) {
         if (result_set === undefined || result_set.length == 0)
             return next(new restify.ResourceNotFoundError(primary_key));
 
-        // if(!req.query.hasOwnProperty("expand")) {
-            resp.send(result_set[0]); next(); return;   
-        // }
+        var final_result_set = result_set[0];
+        if(req.query.hasOwnProperty("expand")) {
+            var expansions = req.query.expand.split(",");
+            //final_result_set =  that.apply_envelopes(expansions, final_result_set);
+        }
 
-        // var enveloped_result_set = that.apply_envelopes(req, result_set[0]);
-        // resp.send(enveloped_result_set);
+        resp.send(final_result_set);
         next();
     }
     
@@ -476,8 +477,6 @@ Resource.prototype.find_by_primary_key = function(req, resp, next) {
         return next(new restify.RestError(err));
     });    
 };
-
-
 
 Resource.prototype.create = function(req, resp, next) {
     var that = this;

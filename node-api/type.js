@@ -1,5 +1,5 @@
 var Type = function(validator, default_filter, prefix_filters) {
-	this.validate = validator;
+	this.validate = validator || function(){};
 	this.default_filter = default_filter;
 	this.prefix_filters = prefix_filters;
 }
