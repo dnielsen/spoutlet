@@ -90,7 +90,7 @@ server.use(restify.bodyParser( { mapParams: false } ));
 server.use(restify.authorizationParser());
 
 //Respond to jsonp requests with Content-Type: application/javascript
-server.use(restify.jsonpParser());
+server.use(restify.jsonp());
 
 //-------------------------  Anonymous calls here  ---------------------------------
 
