@@ -7,7 +7,7 @@ var category_type = new Type(category_validator,
 
 var schema = {
     "id":                       { type: Type.Int,  props: ["read-only","default","filterable"] },
-    "parentGroup_id":           { type: Type.Int,  props: ["read-only", "filterable"], mappedBy:"id" },
+    "parentGroup_id":           { type: Type.Int,  props: ["default","read-only","filterable"], mappedBy:"id"},
     "groupAvatar_id":           { type: Type.Int,  props: ["read-only","filterable"] },
     "owner_id":                 { type: Type.Int,  props: ["read-only","filterable"] },
     "entrySetRegistration_id":  { type: Type.Int,  props: ["read-only","filterable"] },
@@ -47,9 +47,6 @@ exports.delete_by_primary_key = function(req, resp, next) {
     return resource.delete_by_primary_key(req, resp, next);
 }
 
-//var groupType = new Resource.ResourceType(resource);
-
 Type.GroupType = new Resource.ResourceType(resource);
 
 resource.schema.parentGroup_id.type = Type.GroupType;
-

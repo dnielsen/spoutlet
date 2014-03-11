@@ -63,6 +63,7 @@ security:
         # admin is the lowest admin role - catch all for admin routes
         - { path: ^/([\w]+\/)?admin, role: ROLE_ADMIN, requires_channel: %secure_url_scheme% }
         - { path: ^/([\w]+\/)?account/settings, role: IS_AUTHENTICATED_FULLY }
+        - { path: ^/login, role: [IS_AUTHENTICATED_ANONYMOUSLY], requires_channel: %secure_url_scheme% }
 
         # facebook protection
         - { path: ^/secured/.*, role: [IS_AUTHENTICATED_FULLY] } # This is the route secured with fos_facebook
