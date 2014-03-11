@@ -9,7 +9,7 @@ var schema = {
      "private":                 { type: Type.Bool, props: [] },
      "name":                    { type: Type.Str,  props: ["required","default","filterable"] },
      "slug":                    { type: Type.Str,  props: ["default","filterable"] },
-     "content":                 { type: Type.Str,  props: ["required","filterable"] },
+     "content":                 { type: Type.Str,  props: ["default","required","filterable"] },
      "registration_option":     { type: Type.Str,  props: [] },
      "online":                  { type: Type.Bool, props: ["filterable"] },
      "starts_at":               { type: Type.Date,    props: ["default","filterable"] },

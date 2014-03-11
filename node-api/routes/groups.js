@@ -7,7 +7,7 @@ var category_type = new Type(category_validator,
 
 var schema = {
     "id":                       { type: Type.Int,  props: ["read-only","default","filterable"] },
-    "parentGroup_id":           { type: Type.Int,  props: ["read-only","filterable"] },
+    "parentGroup_id":           { type: Type.Int,  props: ["default","read-only","filterable"] },
     "groupAvatar_id":           { type: Type.Int,  props: ["read-only","filterable"] },
     "owner_id":                 { type: Type.Int,  props: ["read-only","filterable"] },
     "entrySetRegistration_id":  { type: Type.Int,  props: ["read-only","filterable"] },
