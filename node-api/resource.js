@@ -1,7 +1,8 @@
 var restify = require('restify'),
     util    = require('./util'),
     common  = require('./common'),
-    knex    = common.knex;
+    knex    = common.knex,
+    Type    = require('./type');
 
 
 //Schema properties:
@@ -17,11 +18,6 @@ var Resource = function (spec) {
     this.primary_key =  spec.primary_key;
     this.user_mapping = spec.user_mapping;
     this.deleted_col =  spec.deleted_col || false;
-    this.filters =      spec.filters || { 
-        // label: [column_name [, operator]] 
-        // allowed operators '=', '<', '>', '<=', '>=', 'like', 'not like', 'between', 'ilike'
-        q: { field: 'name', operator: 'like' }
-    };
 }
 
 //Assign constructor to module.exports
@@ -29,6 +25,23 @@ var Resource = function (spec) {
 //> var Resource = require(<this_file>);
 //> var myRes = new Resource(<my_spec>);
 module.exports = Resource
+
+//Define a constructor for Resource Types that is a special form of Type
+var ResourceType = function( resource ) {
+    var validator = new function() {};
+    var default_operator = new function() {}
+    var prefix_operators = {};
+
+    //Call the parent constructor 
+    Type.call(this, validator, default_operator, prefix_operators);
+
+    this.resource = resource;
+}
+//Attach the parent constructor as the prototype of this constructor
+ResourceType.prototype = new Type;
+
+//Make our new type accessable to other modules
+module.exports.ResourceType = ResourceType
 
 //-------------------------------------------------
 
@@ -241,6 +254,95 @@ Resource.prototype.where_is_mine = function(req, query) {
     query.where(resource_field, user_id);
 }
 
+Resource.prototype.apply_envelopes = function(req, result_set) {
+    if(!req.query.hasOwnProperty("expand"))
+        return result_set;
+
+    var requested_expansions = req.query.expand.split(",");
+    var new_result_set = {};
+
+    var keys = Object.keys(result_set);
+    for(var i in keys) {
+        var key = keys[i];
+        var split_key = key.split(':',2);
+    
+        if(split_key.length == 1) {
+            new_result_set[key] = result_set[key];
+            continue;
+        }
+
+        var envelope_temp_name = split_key[0];
+        var prop_name = split_key[1];
+
+        var envelope = new_result_set[envelope_temp_name] || {};
+        if(!new_result_set.hasOwnProperty(envelope_temp_name)) {
+            new_result_set[envelope_temp_name] = envelope;
+        } 
+        envelope[prop_name] = result_set[key];
+    }
+
+    //Rename the key from the temp value to the original key value
+    var new_keys = Object.keys(new_result_set);
+    for(var i in new_keys) {
+        var key = new_keys[i];
+
+        if(key.indexOf('expand_') === -1)
+            continue;
+
+        var value = new_result_set[key];
+
+        delete new_result_set[key];
+        
+        var expand_index_str = key.substring('expand_'.length);
+        var expand_index = parseInt(expand_index_str);
+        var new_key = requested_expansions[expand_index];
+        new_result_set[new_key] = value;
+    }
+    return new_result_set;
+}
+
+Resource.prototype.apply_expand = function(req, query) {
+    if(!req.query.hasOwnProperty("expand"))
+        return;
+
+    var requested_expansions = req.query.expand.split(",");
+
+    //verify each element is the name of a Resource Type
+    var all_fields = Object.keys(this.schema);
+    for(var i in all_fields) {
+        var field = all_fields[i];
+        var field_def = this.schema[field];
+
+        var type = field_def.type;
+
+        var is_resource_type = type instanceof ResourceType;
+        var request_index = requested_expansions.indexOf(field);
+        if( request_index >= 0 && is_resource_type ) {
+            var resource = type.resource;
+            var mapped_by = field_def.mappedBy;
+            var alias = 'expand_' + request_index;
+
+            //join the table renamed to expand_#
+            query.join(resource.tableName + ' as ' + alias
+                , this.tableName + '.' + field
+                , '='
+                , alias + '.' + mapped_by, "left");
+
+            //add the default fields of the expanded table to the select statement 
+            var resource_keys = Object.keys(resource.schema);
+            for(var j in resource_keys) {
+                var expanded_field = resource_keys[j];
+                var expanded_field_def = resource.schema[expanded_field];
+
+                if(expanded_field_def.props.indexOf('default') < 0)
+                    continue;
+
+                query.column( alias + '.' + expanded_field + ' as ' + alias + ':' + expanded_field);// 'parent.id as parent_id');
+            }
+        }
+    }
+}
+
 // Basic resource type's allow for customization of the fields returned
 // providing no query parameters (qp) returns just the default fields
 // verbose qp will return all available fields,
@@ -248,6 +350,9 @@ Resource.prototype.where_is_mine = function(req, query) {
 // fields=name[,name] | verbose | (none)
 Resource.prototype.processBasicQueryParams = function(req, query) {
     var fields = this.get_requested_fields(req,false);
+    for(var i in fields)
+        fields[i] = this.tableName + '.' + fields[i]; 
+    this.apply_expand(req,query);
     query.column(fields);
 }
 
@@ -265,9 +370,9 @@ Resource.prototype.processCollectionQueryParams = function(req, query) {
 Resource.prototype.find_all = function(req, resp, next) {
     var that = this;
     
-    var query = knex(this.tableName)
+    var query = knex(this.tableName);
     if(this.deleted_col)
-        query.where(this.deleted_col,0);
+        query.where(this.tableName + '.' + this.deleted_col,0);
     
     try {
         this.processCollectionQueryParams(req, query);
@@ -295,7 +400,11 @@ Resource.prototype.find_all = function(req, resp, next) {
             resp.header('X-Prev', paging_links.prev);
         }
 
-        resp.send(result_set);
+        if(result_set.length === 0)
+            resp.send([]);
+        
+        var enveloped_result_set = that.apply_envelopes(req, result_set);
+        resp.send(enveloped_result_set);
         next();
     }
     
@@ -314,6 +423,8 @@ Resource.prototype.find_all = function(req, resp, next) {
 };
 
 Resource.prototype.find_by_primary_key = function(req, resp, next) {
+    var that = this;
+
     if(!this.primary_key)
         return next(new restify.InvalidArgumentError('no primary key for this resource'));
 
@@ -325,9 +436,9 @@ Resource.prototype.find_by_primary_key = function(req, resp, next) {
     if(fails_validation)
         throw new restify.InvalidArgumentError("'" + primary_key + "' invalid for " + primary_key_field);
 
-    var query = knex(this.tableName).where(primary_key_field, primary_key);
+    var query = knex(this.tableName).where(this.tableName+'.'+primary_key_field, primary_key);
     if(this.deleted_col)
-        query.andWhere(this.deleted_col,0);
+        query.andWhere(this.tableName+'.'+this.deleted_col,0);
     
     try {
         this.processBasicQueryParams(req, query);
@@ -335,10 +446,12 @@ Resource.prototype.find_by_primary_key = function(req, resp, next) {
         return next(err); 
     }
     
-    var send_response = function(results) {
-        if (results === undefined || results.length == 0)
+    var send_response = function(result_set) {
+        if (result_set === undefined || result_set.length == 0)
             return next(new restify.ResourceNotFoundError(primary_key));
-        resp.send(results.length === 1 ? results[0] : results);
+
+        var enveloped_result_set = that.apply_envelopes(req, result_set[0]);
+        resp.send(enveloped_result_set);
         next();
     }
     
@@ -365,9 +478,6 @@ Resource.prototype.create = function(req, resp, next) {
             my_user_field = this.user_mapping[1];
             assoc_user_field = this.user_mapping[0];
 
-            console.log("req.body.hasOwnProperty("+my_user_field+"): "+req.body.hasOwnProperty(my_user_field));
-            console.log("req.body["+my_user_field+"]: "+req.body[my_user_field]);
-            
             if(req.body.hasOwnProperty(my_user_field)  && req.body[my_user_field] != req.user[assoc_user_field]) {
                 throw new restify.InvalidArgumentError('Cannot assign different user.');
             }
@@ -403,8 +513,6 @@ Resource.prototype.create = function(req, resp, next) {
     }
     
     var get_resource = function(resource_id) {
-        console.log("response from 'create': "+resource_id);
-        
         resp.header('Link', common.baseUrl + req.path() + "/" + resource_id);
         
         if(!expand_result) 

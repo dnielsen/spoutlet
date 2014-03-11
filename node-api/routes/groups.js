@@ -7,7 +7,7 @@ var category_type = new Type(category_validator,
 
 var schema = {
     "id":                       { type: Type.Int,  props: ["read-only","default","filterable"] },
-    "parentGroup_id":           { type: Type.Int,  props: ["read-only","filterable"] },
+    "parentGroup_id":           { type: Type.Int,  props: ["read-only", "filterable"], mappedBy:"id" },
     "groupAvatar_id":           { type: Type.Int,  props: ["read-only","filterable"] },
     "owner_id":                 { type: Type.Int,  props: ["read-only","filterable"] },
     "entrySetRegistration_id":  { type: Type.Int,  props: ["read-only","filterable"] },
@@ -29,10 +29,6 @@ var resource = new Resource( {
     primary_key:'id',
     user_mapping: ['id','owner_id'],
     deleted_col:'deleted',
-    filters: {
-        q: { field: 'name', operator: 'like' },
-        type: { field: 'category', operator: '=' } //location, topic
-    }
 } );
 
 exports.find_all = function(req, resp, next) { 
@@ -50,3 +46,10 @@ exports.create = function(req, resp, next) {
 exports.delete_by_primary_key = function(req, resp, next) {
     return resource.delete_by_primary_key(req, resp, next);
 }
+
+//var groupType = new Resource.ResourceType(resource);
+
+Type.GroupType = new Resource.ResourceType(resource);
+
+resource.schema.parentGroup_id.type = Type.GroupType;
+
