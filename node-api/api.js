@@ -89,6 +89,9 @@ server.use(restify.bodyParser( { mapParams: false } ));
 //parse request's authorization headers (or URI user/pass) into req.authorization
 server.use(restify.authorizationParser());
 
+//Respond to jsonp requests with Content-Type: application/javascript
+server.use(restify.jsonpParser());
+
 //-------------------------  Anonymous calls here  ---------------------------------
 
 server.get('/api_key', get_api_token);
