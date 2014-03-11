@@ -254,9 +254,11 @@ Resource.prototype.where_is_mine = function(req, query) {
     query.where(resource_field, user_id);
 }
 
-Resource.prototype.apply_envelopes = function(expand, result_set) {
+Resource.prototype.apply_envelopes = function(expansions, result_set) {
     
-    var get_original_field_name = function(temp_name) {
+    //if original field name endeds with '_id' then remove it
+    //otherwise use <original name>_details
+    var get_envelope_name = function(temp_name) {
         if(temp_name.indexOf('expand_') === -1) {
             console.log("can't understand temp attribut name: "+temp_name);
             return;
@@ -267,12 +269,14 @@ Resource.prototype.apply_envelopes = function(expand, result_set) {
         var original_field_name = expansions[expand_index];
         
         //strip off '_id' if present
-        return original_field_name.replace(/(.+)_id$/,'$1');
+        if(/_id$/.test(original_field_name))
+            return original_field_name.replace(/(.+)_id$/,'$1');
+        else
+            return original_field_name+'_details';
     }
 
     //processed elements list
     var new_result_set = {};
-
     var keys = Object.keys(result_set);
     for(var i in keys) {
         var key = keys[i];
@@ -285,7 +289,7 @@ Resource.prototype.apply_envelopes = function(expand, result_set) {
         }
 
         //save the parts of the composit name seperatly 
-        var envelope_name = get_original_field_name(split_key[0]);
+        var envelope_name = get_envelope_name(split_key[0]);
         var prop_name = split_key[1];
 
         //add element to envelope, creating it if necessary 
@@ -403,22 +407,19 @@ Resource.prototype.find_all = function(req, resp, next) {
             resp.header('X-Prev', paging_links.prev);
         }
 
-        // var is_empty_or_no_expand = (result_set.length === 0) || (!req.query.hasOwnProperty("expand")); 
-        // if(is_empty_or_no_expand) {
-            resp.send(result_set); next(); return;
-        // }
+        var final_result_set = result_set;
+        if(req.query.hasOwnProperty("expand")) {
+            var expansions = req.query.expand.split(",");
 
-        // var expanded_result_set = [];
+            final_result_set = [];
+            for(var i=0; i < result_set.length; i++) {
+                final_result_set[i] = that.apply_envelopes(expansions, result_set[i]);
+            }
+        }
 
-        // //get expand list name by parsing 
-        // var requested_expansions = req.query.expand.split(",");
-        // for(var i=0; i < result_set.length; i++) {
-        //     var single_element = result_set[i];
-        //     var expanded_single_element = that.apply_envelopes(requested_expansions, single_element);
-        //     expanded_result_set[i] = expanded_single_element;
-        // }
-        // resp.send(expanded_result_set);
-        // next();
+        resp.send(final_result_set); 
+        next(); 
+        return;
     }
     
     var ask_how_many = function(results) {
@@ -466,7 +467,7 @@ Resource.prototype.find_by_primary_key = function(req, resp, next) {
         var final_result_set = result_set[0];
         if(req.query.hasOwnProperty("expand")) {
             var expansions = req.query.expand.split(",");
-            //final_result_set =  that.apply_envelopes(expansions, final_result_set);
+            final_result_set =  that.apply_envelopes(expansions, final_result_set);
         }
 
         resp.send(final_result_set);
