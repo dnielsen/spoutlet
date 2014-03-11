@@ -7,13 +7,13 @@ var category_type = new Type(category_validator,
 
 var schema = {
     "id":                       { type: Type.Int,  props: ["read-only","default","filterable"] },
-    "parentGroup_id":           { type: Type.Int,  props: ["default","read-only","filterable"], mappedBy:"id"},
+    "parentGroup_id":           { type: {},  props: ["parent_id", "read-only","filterable"], mappedBy:"id"},
     "groupAvatar_id":           { type: Type.Int,  props: ["read-only","filterable"] },
     "owner_id":                 { type: Type.Int,  props: ["read-only","filterable"] },
     "entrySetRegistration_id":  { type: Type.Int,  props: ["read-only","filterable"] },
     "name":                     { type: Type.Str,  props: ["default", "required", "filterable"] },
     "category":                 { type: category_type, props: ["default","filterable"] },
-    "description":              { type: Type.Str,  props: ["default","filterable"] },
+    "description":              { type: Type.Str,  props: ["filterable"] },
     "slug":                     { type: Type.Str,  props: ["default", "required","filterable"] },
     "featured":                 { type: Type.Bool, props: ["default","filterable"], initial: false },
     "isPublic":                 { type: Type.Bool, props: ["filterable"], initial: true },
@@ -22,7 +22,6 @@ var schema = {
     "featured_at":              { type: Type.Date, props: ["read-only"], initial: function(){return new Date()} },
 };
 
-
 var resource = new Resource( {
     tableName: 'pd_groups', 
     schema: schema,
@@ -30,6 +29,9 @@ var resource = new Resource( {
     user_mapping: ['id','owner_id'],
     deleted_col:'deleted',
 } );
+
+Type.Group = new Resource.ResourceType(resource);
+resource.schema.parentGroup_id.type = Type.Group;
 
 exports.find_all = function(req, resp, next) { 
     return resource.find_all(req, resp, next); 
@@ -47,6 +49,4 @@ exports.delete_by_primary_key = function(req, resp, next) {
     return resource.delete_by_primary_key(req, resp, next);
 }
 
-Type.GroupType = new Resource.ResourceType(resource);
 
-resource.schema.parentGroup_id.type = Type.GroupType;

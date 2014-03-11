@@ -254,11 +254,23 @@ Resource.prototype.where_is_mine = function(req, query) {
     query.where(resource_field, user_id);
 }
 
-Resource.prototype.apply_envelopes = function(req, result_set) {
-    if(!req.query.hasOwnProperty("expand"))
-        return result_set;
+Resource.prototype.apply_envelopes = function(expand, result_set) {
+    
+    var get_original_field_name = function(temp_name) {
+        if(temp_name.indexOf('expand_') === -1) {
+            console.log("can't understand temp attribut name: "+temp_name);
+            return;
+        }
 
-    var requested_expansions = req.query.expand.split(",");
+        var expand_index_str = key.substring('expand_'.length);
+        var expand_index = parseInt(expand_index_str);
+        var original_field_name = expansions[expand_index];
+        
+        //strip off '_id' if present
+        return original_field_name.replace(/(.+)_id$/,'$1');
+    }
+
+    //processed elements list
     var new_result_set = {};
 
     var keys = Object.keys(result_set);
@@ -266,79 +278,69 @@ Resource.prototype.apply_envelopes = function(req, result_set) {
         var key = keys[i];
         var split_key = key.split(':',2);
     
+        //is envelope processing is not necessary?
         if(split_key.length == 1) {
             new_result_set[key] = result_set[key];
             continue;
         }
 
-        var envelope_temp_name = split_key[0];
+        //save the parts of the composit name seperatly 
+        var envelope_name = get_original_field_name(split_key[0]);
         var prop_name = split_key[1];
 
-        var envelope = new_result_set[envelope_temp_name] || {};
-        if(!new_result_set.hasOwnProperty(envelope_temp_name)) {
-            new_result_set[envelope_temp_name] = envelope;
+        //add element to envelope, creating it if necessary 
+        var envelope = new_result_set[envelope_name] || {};
+        if(!new_result_set.hasOwnProperty(envelope_name)) {
+            new_result_set[envelope_name] = envelope;
         } 
         envelope[prop_name] = result_set[key];
-    }
-
-    //Rename the key from the temp value to the original key value
-    var new_keys = Object.keys(new_result_set);
-    for(var i in new_keys) {
-        var key = new_keys[i];
-
-        if(key.indexOf('expand_') === -1)
-            continue;
-
-        var value = new_result_set[key];
-
-        delete new_result_set[key];
-        
-        var expand_index_str = key.substring('expand_'.length);
-        var expand_index = parseInt(expand_index_str);
-        var new_key = requested_expansions[expand_index];
-        new_result_set[new_key] = value;
     }
     return new_result_set;
 }
 
 Resource.prototype.apply_expand = function(req, query) {
     if(!req.query.hasOwnProperty("expand"))
-        return;
+        return result_set;
 
-    var requested_expansions = req.query.expand.split(",");
-
-    //verify each element is the name of a Resource Type
+    var expansions = req.query.expand.split(",");
+    
+    //Inspect each field of the schema to determine what joins to add to the query
     var all_fields = Object.keys(this.schema);
     for(var i in all_fields) {
         var field = all_fields[i];
         var field_def = this.schema[field];
 
         var type = field_def.type;
-
+    
         var is_resource_type = type instanceof ResourceType;
-        var request_index = requested_expansions.indexOf(field);
-        if( request_index >= 0 && is_resource_type ) {
-            var resource = type.resource;
-            var mapped_by = field_def.mappedBy;
-            var alias = 'expand_' + request_index;
+        if(!is_resource_type)
+            continue;
 
-            //join the table renamed to expand_#
-            query.join(resource.tableName + ' as ' + alias
-                , this.tableName + '.' + field
-                , '='
-                , alias + '.' + mapped_by, "left");
+        var request_index = expansions.indexOf(field);
+        if( request_index < 0)
+            continue;
 
-            //add the default fields of the expanded table to the select statement 
-            var resource_keys = Object.keys(resource.schema);
-            for(var j in resource_keys) {
-                var expanded_field = resource_keys[j];
-                var expanded_field_def = resource.schema[expanded_field];
+        var resource = type.resource;
+        var mapped_by = field_def.mappedBy;
+        var alias = 'expand_' + request_index;
 
-                if(expanded_field_def.props.indexOf('default') < 0)
-                    continue;
+        //join the table renamed to expand_#
+        query.join(resource.tableName + ' as ' + alias
+            , this.tableName + '.' + field
+            , '='
+            , alias + '.' + mapped_by, "left");
 
-                query.column( alias + '.' + expanded_field + ' as ' + alias + ':' + expanded_field);// 'parent.id as parent_id');
-            }
+        //select 'default' columns from joined table 
+        var resource_keys = Object.keys(resource.schema);
+        for(var j in resource_keys) {
+            var expanded_field = resource_keys[j];
+            var expanded_field_def = resource.schema[expanded_field];
+
+            if(expanded_field_def.props.indexOf('default') < 0)
+                continue;
+
+            //name the new column 'expand_<#>:<field>'
+            query.column( alias + '.' + expanded_field + ' as ' + alias + ':' + expanded_field);
         }
     }
 }
@@ -352,6 +354,7 @@ Resource.prototype.processBasicQueryParams = function(req, query) {
     var fields = this.get_requested_fields(req,false);
     for(var i in fields)
         fields[i] = this.tableName + '.' + fields[i]; 
+
     this.apply_expand(req,query);
     query.column(fields);
 }
@@ -400,12 +403,22 @@ Resource.prototype.find_all = function(req, resp, next) {
             resp.header('X-Prev', paging_links.prev);
         }
 
-        if(result_set.length === 0)
-            resp.send([]);
-        
-        var enveloped_result_set = that.apply_envelopes(req, result_set);
-        resp.send(enveloped_result_set);
-        next();
+        // var is_empty_or_no_expand = (result_set.length === 0) || (!req.query.hasOwnProperty("expand")); 
+        // if(is_empty_or_no_expand) {
+            resp.send(result_set); next(); return;
+        // }
+
+        // var expanded_result_set = [];
+
+        // //get expand list name by parsing 
+        // var requested_expansions = req.query.expand.split(",");
+        // for(var i=0; i < result_set.length; i++) {
+        //     var single_element = result_set[i];
+        //     var expanded_single_element = that.apply_envelopes(requested_expansions, single_element);
+        //     expanded_result_set[i] = expanded_single_element;
+        // }
+        // resp.send(expanded_result_set);
+        // next();
     }
     
     var ask_how_many = function(results) {
@@ -450,8 +463,12 @@ Resource.prototype.find_by_primary_key = function(req, resp, next) {
         if (result_set === undefined || result_set.length == 0)
             return next(new restify.ResourceNotFoundError(primary_key));
 
-        var enveloped_result_set = that.apply_envelopes(req, result_set[0]);
-        resp.send(enveloped_result_set);
+        // if(!req.query.hasOwnProperty("expand")) {
+            resp.send(result_set[0]); next(); return;   
+        // }
+
+        // var enveloped_result_set = that.apply_envelopes(req, result_set[0]);
+        // resp.send(enveloped_result_set);
         next();
     }
     

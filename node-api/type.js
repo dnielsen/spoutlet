@@ -90,7 +90,3 @@ Type.Date = new Type(
 		'<' : function(column, query, value) { query.where(column, '<', new Date(value)); }, 
 		'>' : function(column, query, value) { query.where(column, '>', new Date(value)); },
 	});
-
-//Type.URL??
-
-//Type._object = 	new Type();

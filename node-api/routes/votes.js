@@ -1,9 +1,11 @@
 var Resource  = require('../resource'),
     Type      = require('../type');
     
+require('./ideas');
+
 var schema = {
     "user":               { type: Type.Str,   props: ["default","read-only","filterable"] },
-    "idea":               { type: Type.Int,   props: ["default","required","filterable"] },
+    "idea":               { type: Type.Entry,   props: ["default","required","filterable"], mappedBy:'id' },
 };
     
 var resource = new Resource( {
@@ -12,6 +14,7 @@ var resource = new Resource( {
     primary_key:'idea',
     user_mapping: ['username','user'],
 } );
+Type.Vote = new Resource.ResourceType(resource);
 
 exports.find_all = function(req, resp, next) { 
     return resource.find_all(req, resp, next); 

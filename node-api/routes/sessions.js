@@ -1,9 +1,11 @@
 var Resource  = require('../resource'),
     Type      = require('../type');
 
+require("./events");
+
 var schema = {
     "id":            { type: Type.Int, props: ["read_only", "default","filterable"] },
-    "event_id":      { type: Type.Int, props: ["required", "default","filterable"] },
+    "event_id":      { type: Type.Event, props: ["required", "default","filterable"], mappedBy:'id' },
     "name":          { type: Type.Str, props: ["required", "default","filterable"] },
     "content":       { type: Type.Str, props: ["required","filterable"] },
     "starts_at":     { type: Type.Date, props: ["default","filterable"] },
@@ -17,6 +19,7 @@ var resource = new Resource( {
     primary_key:'id',
     schema: schema,
 } );
+Type.Session = new Resource.ResourceType(resource);
 
 exports.find_all = function(req, resp, next) { 
     return resource.find_all(req, resp, next); 

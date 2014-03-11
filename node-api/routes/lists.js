@@ -23,6 +23,7 @@ var resource = new Resource( {
     primary_key:'id',
     user_mapping: ['id','creator_id'],
 } );
+Type.List = new Resource.ResourceType(resource);
 
 exports.find_all = function(req, resp, next) { 
     return resource.find_all(req, resp, next); 

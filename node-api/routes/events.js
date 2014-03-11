@@ -1,9 +1,11 @@
 var Resource  = require('../resource'),
     Type      = require('../type');
     
+require("./groups");
+
 var schema = {    
      "id":                      { type: Type.Int,     props: ["default","read-only","filterable"] },
-     "group_id":                { type: Type.Int,     props: ["default","required","filterable"] },
+     "group_id":                { type: Type.Group,     props: ["default","required","filterable"], mappedBy:'id' },
      "user_id":                 { type: Type.Int,     props: ["read-only","filterable"] },
      "attendeeCount":           { type: Type.Int,     props: ["default","filterable"] },
      "private":                 { type: Type.Bool, props: [] },
@@ -33,6 +35,7 @@ var resource = new Resource( {
     user_mapping: ['id','user_id'],
     deleted_col:'deleted'
 } );
+Type.Event = new Resource.ResourceType(resource);
 
 exports.find_all = function(req, resp, next) { 
     return resource.find_all(req, resp, next); 

@@ -1,9 +1,11 @@
 var Resource  = require('../resource'),
     Type      = require('../type');
 
+require('./lists');
+
 var schema = {
     "id":          { type: Type.Int, props: ["default","read_only","filterable"] },
-    "entrySet_id": { type: Type.Int, props: ["required","filterable"] },
+    "entrySet_id": { type: Type.List, props: ["required","filterable"], mappedBy:'id' },
     "creator_id":  { type: Type.Int, props: ["default","read_only","filterable"] },
     "image_id":    { type: Type.Int, props: [""] },
     "name":        { type: Type.Str, props: ["default","required","filterable"] },
@@ -19,6 +21,8 @@ var resource = new Resource( {
     user_mapping: ['id','creator_id'],
     schema: schema
 } );
+Type.Entry = new Resource.ResourceType(resource);
+
     
 exports.find_all = function(req, resp, next) { 
     return resource.find_all(req, resp, next); 
