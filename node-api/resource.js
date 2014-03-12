@@ -113,7 +113,7 @@ Resource.prototype.apply_filters = function(req, query) {
         var value           = req.query[label];
         var field_type      = field_def["type"];
 
-        field_type.apply_filter(field, query, value);
+        field_type.apply_filter(this.tableName + '.' + field, query, value);
     }
 }
 
