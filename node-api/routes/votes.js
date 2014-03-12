@@ -2,10 +2,11 @@ var Resource  = require('../resource'),
     Type      = require('../type');
     
 require('./entries');
+require("./users");
 
 var schema = {
-    "user":               { type: Type.Str,   props: ["default","read-only","filterable"] },
-    "idea":               { type: Type.Entry,   props: ["default","required","filterable"], mappedBy:'id' },
+    "user": { type: Type.User,  props: ["default","read-only","filterable"], mappedBy:"username" },
+    "idea": { type: Type.Entry, props: ["default","required","filterable"], mappedBy:'id' },
 };
     
 var resource = new Resource( {

@@ -1,6 +1,7 @@
 var Resource  = require('../resource'),
     Type      = require('../type');
 
+require("./users");
 require("./registries");
 
 var category_validator = function(value) { return value === 'topic' || value === 'location'; }
@@ -11,10 +12,10 @@ var schema = {
     "id":                       { type: Type.Int,   props:  ["read-only","default","filterable"] },
     "parentGroup_id":           { type: {},         props:  ["parent_id", "read-only","filterable"], mappedBy:"id"},
     "groupAvatar_id":           { type: Type.Int,   props:  ["read-only","filterable"] },
-    "owner_id":                 { type: Type.Int,   props:  ["read-only","filterable"] },
+    "owner_id":                 { type: Type.User,  props:  ["read-only","filterable"], mappedBy:"id" },
     "entrySetRegistration_id":  { type: Type.Registry,props:["read-only","filterable"], mappedBy:"id" },
     "name":                     { type: Type.Str,   props:  ["default", "required", "filterable"] },
-    "category":                 { type: category_type, props:["default","filterable"] },
+    "category":                 { type: category_type,props:["default","filterable"] },
     "description":              { type: Type.Str,   props:  ["filterable"] },
     "slug":                     { type: Type.Str,   props:  ["default", "required","filterable"] },
     "featured":                 { type: Type.Bool,  props:  ["default","filterable"], initial: false },

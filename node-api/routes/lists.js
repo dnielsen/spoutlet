@@ -2,6 +2,7 @@ var Resource  = require('../resource'),
     Type      = require('../type');
 
 require("./registries");
+require("./users");
 
 var type_validator = function(value) { return (value === 'idea' || value === 'session' || value === 'thread'); };
 var type_type = new Type(type_validator,
@@ -15,7 +16,7 @@ var schema = {
     "isVotingActive":          { type: Type.Bool,    props: ["filterable"] },
     "isSubmissionActive":      { type: Type.Bool,    props: ["filterable"] },
     "allowedVoters":           { type: Type.Str,     props: ["default","filterable"] },
-    "creator_id":              { type: Type.Int,     props: ["read_only","filterable"] },
+    "creator_id":              { type: Type.User,    props: ["read_only","filterable"], mappedBy:"id" },
     "description":             { type: Type.Str,     props: ["default", "required","filterable"] },
 };
     

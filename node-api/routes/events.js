@@ -3,11 +3,12 @@ var Resource  = require('../resource'),
     
 require("./groups");
 require("./registries");
+require("./users");
 
 var schema = {    
      "id":                      { type: Type.Int,     props: ["default","read-only","filterable"] },
      "group_id":                { type: Type.Group,     props: ["default","required","filterable"], mappedBy:'id' },
-     "user_id":                 { type: Type.Int,     props: ["read-only","filterable"] },
+     "user_id":                 { type: Type.User,     props: ["read-only","filterable"], mappedBy:'id' },
      "attendeeCount":           { type: Type.Int,     props: ["default","filterable"] },
      "private":                 { type: Type.Bool, props: [] },
      "name":                    { type: Type.Str,  props: ["required","default","filterable"] },

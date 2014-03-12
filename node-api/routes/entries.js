@@ -2,11 +2,12 @@ var Resource  = require('../resource'),
     Type      = require('../type');
 
 require('./lists');
+require("./users");
 
 var schema = {
     "id":          { type: Type.Int, props: ["default","read_only","filterable"] },
     "entrySet_id": { type: Type.List, props: ["required","filterable"], mappedBy:'id' },
-    "creator_id":  { type: Type.Int, props: ["default","read_only","filterable"] },
+    "creator_id":  { type: Type.User, props: ["default","read_only","filterable"], mappedBy:'id' },
     "image_id":    { type: Type.Int, props: [""] },
     "name":        { type: Type.Str, props: ["default","required","filterable"] },
     "createdAt":   { type: Type.Date, props: ["read_only","filterable"] },

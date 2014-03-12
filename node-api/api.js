@@ -1,12 +1,13 @@
 var restify  = require('restify'),
     common   = require('./common'),
-    ideas    = require('./routes/entries'),
+    entries  = require('./routes/entries'),
     lists    = require('./routes/lists'),
     sessions = require('./routes/sessions'),
     events   = require('./routes/events'),
     groups   = require('./routes/groups'),
-    votes    = require('./routes/votes')
-    registries=require('./routes/registries');
+    votes    = require('./routes/votes'),
+    registries=require('./routes/registries'),
+    users	 = require('./routes/users');
 
 var fail_auth = function(res, relm, message) {
 	res.header("WWW-Authenticate","Basic realm=\""+common.security_relm_token+"\"");
@@ -97,14 +98,17 @@ server.use(restify.jsonp());
 
 server.get('/api_key', get_api_token);
 
+server.get('/users', users.find_all);
+server.get('/users/:id', users.find_by_primary_key);
+
 server.get('/registries', registries.find_all);
 server.get('/registries/:id', registries.find_by_primary_key);
 
 server.get('/votes', votes.find_all);
 server.get('/votes/:idea', votes.find_by_primary_key);
 
-server.get('/ideas', ideas.find_all);
-server.get('/ideas/:id', ideas.find_by_primary_key);
+server.get('/entries', entries.find_all);
+server.get('/entries/:id', entries.find_by_primary_key);
 
 server.get('/lists', lists.find_all);
 server.get('/lists/:id', lists.find_by_primary_key);
@@ -135,8 +139,8 @@ server.post('/votes', votes.create);
 // server.patch('/votes/:idea', votes.update);
 server.del('/votes/:idea', votes.delete_by_primary_key);
 
-server.post('/ideas', ideas.create);
-server.del('/ideas/:id', ideas.delete_by_primary_key);
+server.post('/entries', entries.create);
+server.del('/entries/:id', entries.delete_by_primary_key);
 
 server.post('/lists', lists.create);
 server.del('/lists/:id', lists.delete_by_primary_key);
