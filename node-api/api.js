@@ -1,11 +1,12 @@
 var restify  = require('restify'),
     common   = require('./common'),
-    ideas    = require('./routes/ideas'),
+    ideas    = require('./routes/entries'),
     lists    = require('./routes/lists'),
     sessions = require('./routes/sessions'),
     events   = require('./routes/events'),
     groups   = require('./routes/groups'),
-    votes    = require('./routes/votes');
+    votes    = require('./routes/votes')
+    registries=require('./routes/registries');
 
 var fail_auth = function(res, relm, message) {
 	res.header("WWW-Authenticate","Basic realm=\""+common.security_relm_token+"\"");
@@ -96,6 +97,9 @@ server.use(restify.jsonp());
 
 server.get('/api_key', get_api_token);
 
+server.get('/registries', registries.find_all);
+server.get('/registries/:id', registries.find_by_primary_key);
+
 server.get('/votes', votes.find_all);
 server.get('/votes/:idea', votes.find_by_primary_key);
 
@@ -123,6 +127,9 @@ server.get('/groups/:id', groups.find_by_primary_key);
 server.use(api_token_checker);
 
 //------------------------  Secured calls here  ----------------------------------
+
+server.post('/registries', registries.create);
+server.del('/registries/:id', registries.delete_by_primary_key);
 
 server.post('/votes', votes.create);
 // server.patch('/votes/:idea', votes.update);

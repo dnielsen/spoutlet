@@ -2,6 +2,7 @@ var Resource  = require('../resource'),
     Type      = require('../type');
     
 require("./groups");
+require("./registries");
 
 var schema = {    
      "id":                      { type: Type.Int,     props: ["default","read-only","filterable"] },
@@ -25,7 +26,7 @@ var schema = {
      "created_at":              { type: Type.Date,    props: ["read-only","filterable"] },
      "updated_at":              { type: Type.Date,    props: ["read-only","filterable"] },
      "currentRound":            { type: Type.Int,     props: ["read-only"] },
-     "entrySetRegistration_id": { type: Type.Int,     props: ["filterable"] },
+     "entrySetRegistration_id": { type: Type.Registry,     props: ["filterable"], mappedBy:"id" },
  };
     
 var resource = new Resource( {

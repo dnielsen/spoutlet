@@ -1,20 +1,22 @@
 var Resource  = require('../resource'),
     Type      = require('../type');
 
+require("./registries");
+
 var type_validator = function(value) { return (value === 'idea' || value === 'session' || value === 'thread'); };
 var type_type = new Type(type_validator,
     function(column, query, value) { query.where(column, value); },{});
 
 var schema = {
-    "id":                      { type: Type.Int,   props: ["default","read_only","filterable"] },
-    "entrySetRegistration_id": { type: Type.Int,   props: ["default","required","filterable"] },
-    "name":                    { type: Type.Str,   props: ["default","required","filterable"] },
-    "type":                    { type: type_type,   props: ["default","filterable"] },
-    "isVotingActive":          { type: Type.Bool,   props: ["filterable"] },
-    "isSubmissionActive":      { type: Type.Bool,   props: ["filterable"] },
-    "allowedVoters":           { type: Type.Str,   props: ["default","filterable"] },
-    "creator_id":              { type: Type.Int,   props: ["read_only","filterable"] },
-    "description":             { type: Type.Str,   props: ["default", "required","filterable"] },
+    "id":                      { type: Type.Int,     props: ["default","read_only","filterable"] },
+    "entrySetRegistration_id": { type: Type.Registry,props: ["default","required","filterable"], mappedBy:"id" },
+    "name":                    { type: Type.Str,     props: ["default","required","filterable"] },
+    "type":                    { type: type_type,    props: ["default","filterable"] },
+    "isVotingActive":          { type: Type.Bool,    props: ["filterable"] },
+    "isSubmissionActive":      { type: Type.Bool,    props: ["filterable"] },
+    "allowedVoters":           { type: Type.Str,     props: ["default","filterable"] },
+    "creator_id":              { type: Type.Int,     props: ["read_only","filterable"] },
+    "description":             { type: Type.Str,     props: ["default", "required","filterable"] },
 };
     
 var resource = new Resource( {

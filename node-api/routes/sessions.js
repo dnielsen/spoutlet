@@ -2,6 +2,7 @@ var Resource  = require('../resource'),
     Type      = require('../type');
 
 require("./events");
+require("./entries");
 
 var schema = {
     "id":            { type: Type.Int, props: ["read_only", "default","filterable"] },
@@ -11,7 +12,7 @@ var schema = {
     "starts_at":     { type: Type.Date, props: ["default","filterable"] },
     "ends_at":       { type: Type.Date, props: ["default"] },
     "date":          { type: Type.Date, props: ["filterable"] },
-    "source_idea_id":{ type: Type.Int, props: ["filterable"] },
+    "source_idea_id":{ type: Type.Entry, props: ["filterable"], mappedBy:'id' },
 };
     
 var resource = new Resource( {
