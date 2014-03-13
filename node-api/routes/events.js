@@ -1,14 +1,9 @@
-var Resource  = require('../resource'),
-    Type      = require('../type');
+var Type      = require('../type'),
+	Resource  = require('../resource');
     
-require("./groups");
-require("./registries");
-require("./users");
-
+    
 var schema = {    
      "id":                      { type: Type.Int,     props: ["default","read-only","filterable"] },
-     "group_id":                { type: Type.Group,     props: ["default","required","filterable"], mappedBy:'id' },
-     "user_id":                 { type: Type.User,     props: ["read-only","filterable"], mappedBy:'id' },
      "attendeeCount":           { type: Type.Int,     props: ["default","filterable"] },
      "private":                 { type: Type.Bool, props: [] },
      "name":                    { type: Type.Str,  props: ["required","default","filterable"] },
@@ -27,6 +22,9 @@ var schema = {
      "created_at":              { type: Type.Date,    props: ["read-only","filterable"] },
      "updated_at":              { type: Type.Date,    props: ["read-only","filterable"] },
      "currentRound":            { type: Type.Int,     props: ["read-only"] },
+     
+     "group_id":                { type: Type.Group,     props: ["default","required","filterable"], mappedBy:'id' },
+     "user_id":                 { type: Type.User,     props: ["read-only","filterable"], mappedBy:'id' },
      "entrySetRegistration_id": { type: Type.Registry,     props: ["filterable"], mappedBy:"id" },
  };
     
@@ -37,7 +35,8 @@ var resource = new Resource( {
     user_mapping: ['id','user_id'],
     deleted_col:'deleted'
 } );
-Type.Event = new Resource.ResourceType(resource);
+Type.Event.init(resource);
+
 
 exports.find_all = function(req, resp, next) { 
     return resource.find_all(req, resp, next); 

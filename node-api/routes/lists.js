@@ -1,20 +1,21 @@
-var Resource  = require('../resource'),
-    Type      = require('../type'),
+var Type      = require('../type'),
+    Resource  = require('../resource'),
     common    = require('../common'),
     knex      = common.knex;
 
-require("./registries");
-require("./users");
-
-var type_validator = function(value) { return (value === 'idea' || value === 'session' || value === 'thread'); };
-var type_type = new Type(type_validator,
-    function(column, query, value) { query.where(column, value); },{});
+Type.List.Type.init(
+    //validator
+    function(value) { return (value === 'idea' || value === 'session' || value === 'thread'); },
+    //default operator
+    function(column, query, value) { query.where(column, value); },
+    //prefix operator
+    {});
 
 var schema = {
     "id":                      { type: Type.Int,     props: ["default","read_only","filterable"] },
     "entrySetRegistration_id": { type: Type.Registry,props: ["default","required","filterable"], mappedBy:"id" },
     "name":                    { type: Type.Str,     props: ["default","required","filterable"] },
-    "type":                    { type: type_type,    props: ["default","filterable"] },
+    "type":                    { type: Type.List.Type,    props: ["default","filterable"] },
     "isVotingActive":          { type: Type.Bool,    props: ["filterable"] },
     "isSubmissionActive":      { type: Type.Bool,    props: ["filterable"] },
     "allowedVoters":           { type: Type.Str,     props: ["default","filterable"] },
@@ -28,7 +29,7 @@ var resource = new Resource( {
     primary_key:'id',
     user_mapping: ['id','creator_id'],
 } );
-Type.List = new Resource.ResourceType(resource);
+Type.List.init(resource);
 
 exports.find_all = function(req, resp, next) {
     return resource.find_all(req, resp, next);

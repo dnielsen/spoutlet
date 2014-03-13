@@ -1,5 +1,6 @@
-var Resource  = require('../resource'),
-    Type      = require('../type');
+var Type      = require('../type'),
+    Resource  = require('../resource');
+    
 
 var schema = {
     "id":                   { type: Type.Int, props: ["default", "filterable", "read_only"]},
@@ -36,7 +37,7 @@ var resource = new Resource( {
     primary_key:'id',
     schema: schema
 } );
-Type.User = new Resource.ResourceType(resource);
+Type.User.init(resource);
 
     
 exports.find_all = function(req, resp, next) { 

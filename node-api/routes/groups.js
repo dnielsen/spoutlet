@@ -1,21 +1,19 @@
-var Resource  = require('../resource'),
-    Type      = require('../type');
+var Type      = require('../type'),
+    Resource  = require('../resource');
 
-require("./users");
-require("./registries");
-
-var category_validator = function(value) { return value === 'topic' || value === 'location'; }
-var category_type = new Type(category_validator,
-    function(column, query, value) { query.where(column, value); },{});
+Type.Group.Category.init(
+    //validator
+    function(value) { return value === 'topic' || value === 'location'; },
+    //default filter
+    function(column, query, value) { query.where(column, value); },
+    //prefix_filters
+    {});
 
 var schema = {
     "id":                       { type: Type.Int,   props:  ["read-only","default","filterable"] },
-    "parentGroup_id":           { type: {},         props:  ["parent_id", "read-only","filterable"], mappedBy:"id"},
     "groupAvatar_id":           { type: Type.Int,   props:  ["read-only","filterable"] },
-    "owner_id":                 { type: Type.User,  props:  ["read-only","filterable"], mappedBy:"id" },
-    "entrySetRegistration_id":  { type: Type.Registry,props:["read-only","filterable"], mappedBy:"id" },
     "name":                     { type: Type.Str,   props:  ["default", "required", "filterable"] },
-    "category":                 { type: category_type,props:["default","filterable"] },
+    "category":                 { type: Type.Group.Category,props:["default","filterable"] },
     "description":              { type: Type.Str,   props:  ["filterable"] },
     "slug":                     { type: Type.Str,   props:  ["default", "required","filterable"] },
     "featured":                 { type: Type.Bool,  props:  ["default","filterable"], initial: false },
@@ -23,6 +21,10 @@ var schema = {
     "created_at":               { type: Type.Date,  props:  ["read-only","filterable"], initial: function(){return new Date()} },
     "updated_at":               { type: Type.Date,  props:  ["read-only"], initial: function(){return new Date()} },
     "featured_at":              { type: Type.Date,  props:  ["read-only"], initial: function(){return new Date()} },
+
+    "entrySetRegistration_id":  { type: Type.Registry,props:["read-only","filterable"], mappedBy:"id" },
+    "owner_id":                 { type: Type.User,  props:  ["read-only","filterable"], mappedBy:"id" },
+    "parentGroup_id":           { type: Type.Group,         props:  ["parent_id", "read-only","filterable"], mappedBy:"id"},
 };
 
 var resource = new Resource( {
@@ -33,8 +35,7 @@ var resource = new Resource( {
     deleted_col:'deleted',
 } );
 
-Type.Group = new Resource.ResourceType(resource);
-resource.schema.parentGroup_id.type = Type.Group;
+Type.Group.init(resource);
 
 exports.find_all = function(req, resp, next) { 
     return resource.find_all(req, resp, next); 

@@ -1,10 +1,27 @@
-var Type = function(validator, default_filter, prefix_filters) {
+var Type = function() {}
+module.exports = Type;
+
+
+
+
+//---------------------------------------------
+//-------- Primitave Type Declarations -------- 
+//---------------------------------------------
+Type.Int = 	new Type();
+Type.Bool = new Type();
+Type.Str = 	new Type();
+Type.Date = new Type();
+
+//--------------------------------------------
+
+
+
+
+Type.prototype.init = function(validator, default_filter, prefix_filters) {
 	this.validate = validator || function(){};
 	this.default_filter = default_filter;
 	this.prefix_filters = prefix_filters;
 }
-
-module.exports = Type;
 
 Type.prototype.apply_filter = function(column, query, value) {
 	var filter = this.default_filter;
@@ -28,8 +45,10 @@ Type.prototype.apply_filter = function(column, query, value) {
 	filter(column, query, raw_value);
 }
 
-Type.Int = 	new Type( 
-	
+
+//--------------------------- Primitive Types --------------------------------
+
+Type.Int.init( 
 	//validator
 	function(val){ return !isNaN(val); },
 
@@ -44,8 +63,7 @@ Type.Int = 	new Type(
 	});
 
 
-Type.Bool = new Type( 
-
+Type.Bool.init( 
 	//validator
 	function(val){ 
 		if(typeof val === 'boolean' || val === '1' || val === '0') 
@@ -64,7 +82,7 @@ Type.Bool = new Type(
 	{});
 
 
-Type.Str = 	new Type( 
+Type.Str.init( 
 	//validator
 	function(val){ return val !== ""; }, 
 	
@@ -76,8 +94,7 @@ Type.Str = 	new Type(
 	} );
 
 
-
-Type.Date = new Type( 
+Type.Date.init( 
 	//validator
 	function(val){ return !isNaN((new Date(val)).valueOf()); },  
 

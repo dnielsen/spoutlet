@@ -4,7 +4,6 @@ var restify = require('restify'),
     knex    = common.knex,
     Type    = require('./type');
 
-
 //Schema properties:
 // default : on GET this field will display unless 'filters' or 'verbose' queries are used
 // read-only: this field can not be modified with a POST, PUT, or PATCH
@@ -19,29 +18,48 @@ var Resource = function (spec) {
     this.user_mapping = spec.user_mapping;
     this.deleted_col =  spec.deleted_col || false;
 }
-
-//Assign constructor to module.exports
-//Usage: 
-//> var Resource = require(<this_file>);
-//> var myRes = new Resource(<my_spec>);
 module.exports = Resource
 
+
 //Define a constructor for Resource Types that is a special form of Type
-var ResourceType = function( resource ) {
-    var validator = function() { return true; };
-    var default_operator = function(column, query, value) { query.where(column, value); };
-    var prefix_operators = {};
+var ResourceType = function() {}
+Resource.ResourceType = ResourceType
 
-    //Call the parent constructor 
-    Type.call(this, validator, default_operator, prefix_operators);
 
-    this.resource = resource;
-}
 //Attach the parent constructor as the prototype of this constructor
 ResourceType.prototype = new Type;
 
-//Make our new type accessable to other modules
-module.exports.ResourceType = ResourceType
+
+
+//-------------------------------------------------------
+//------------ Resource Type Declarations ---------------
+//-------------------------------------------------------
+Type.Group = new Resource.ResourceType();
+Type.Group.Category = new Type();
+Type.Event = new Resource.ResourceType();
+Type.Session = new Resource.ResourceType();
+Type.List = new Resource.ResourceType();
+Type.List.Type = new Type();
+Type.Registry = new Resource.ResourceType();
+Type.Entry = new Resource.ResourceType();
+Type.User = new Resource.ResourceType();
+Type.Vote = new Resource.ResourceType();
+
+//--------------------------------------------------------
+
+
+
+ResourceType.prototype.init = function(resource) {
+    //assume the id is a number
+    var validator = function() { return !isNaN(val); };
+    var default_operator = function(column, query, value) { query.where(column, value); };
+    var prefix_operators = {};
+
+    //Call the parent initializer 
+    Type.prototype.init.call(this, validator, default_operator, prefix_operators);
+
+    this.resource = resource;
+}
 
 //-------------------------------------------------
 

@@ -1,9 +1,10 @@
-var Resource  = require('../resource'),
-    Type      = require('../type');
+var Type      = require('../type'),
+	Resource  = require('../resource');
+    
 
 var schema = {
-    "id": { type: Type.Int, props: ["default", "filterable", "read-only"]},
-    "scope": { type: Type.Str, props: ["default", "filterable", "required"]},
+    "id":          { type: Type.Int, props: ["default", "filterable", "read-only"]},
+    "scope":       { type: Type.Str, props: ["default", "filterable", "required"]},
     "containerId": { type: Type.Int, props: ["default", "filterable", "required"]},
 };
     
@@ -12,7 +13,7 @@ var resource = new Resource( {
     schema: schema,
     primary_key:'id'
 } );
-Type.Registry = new Resource.ResourceType(resource);
+Type.Registry.init(resource);
 
 exports.find_all = function(req, resp, next) { 
     return resource.find_all(req, resp, next); 
