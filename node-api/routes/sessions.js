@@ -2,23 +2,23 @@ var Type      = require('../type'),
     Resource  = require('../resource');
     
 
-var schema = {
-    "id":            { type: Type.Int, props: ["read_only", "default"] },
-    "name":          { type: Type.Str, props: ["required", "default"] },
-    "content":       { type: Type.Str, props: ["required"] },
-    "starts_at":     { type: Type.Date, props: ["default"] },
-    "ends_at":       { type: Type.Date, props: ["default"] },
-    "date":          { type: Type.Date, props: [] },
-    
-    "event_id":      { type: Type.Event, props: ["required", "default"], mappedBy:'id' },
-    "source_idea_id":{ type: Type.Entry, props: [], mappedBy:'id' },
-};
-    
-var resource = new Resource( {
+var spec = {
     tableName: 'event_session', 
     primary_key:'id',
-    schema: schema,
-} );
+    schema: {
+        "id":            { type: Type.Int, props: ["read_only", "default"] },
+        "name":          { type: Type.Str, props: ["required", "default"] },
+        "content":       { type: Type.Str, props: ["required"] },
+        "starts_at":     { type: Type.Date, props: ["default"] },
+        "ends_at":       { type: Type.Date, props: ["default"] },
+        "date":          { type: Type.Date, props: [] },
+
+        "event_id":      { type: Type.Event, props: ["required", "default"], mappedBy:'id' },
+        "source_idea_id":{ type: Type.Entry, props: [], mappedBy:'id' }
+    }
+};
+    
+var resource = new Resource( spec );
 Type.Session.init(resource);
 
 exports.find_all = function(req, resp, next) { 

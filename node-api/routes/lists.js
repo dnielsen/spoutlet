@@ -11,25 +11,25 @@ Type.List.Type.init(
     //prefix operator
     {});
 
-var schema = {
-    "id":                      { type: Type.Int,     props: ["default","read_only"] },
-    "name":                    { type: Type.Str,     props: ["default","required"] },
-    "type":                    { type: Type.List.Type,    props: ["default"] },
-    "isVotingActive":          { type: Type.Bool,    props: [] },
-    "isSubmissionActive":      { type: Type.Bool,    props: [] },
-    "allowedVoters":           { type: Type.Str,     props: ["default"] },
-    "description":             { type: Type.Str,     props: ["default", "required"] },
-
-    "entrySetRegistration_id": { type: Type.Registry,props: ["default","required"], mappedBy:"id" },
-    "creator_id":              { type: Type.User,    props: ["read_only"], mappedBy:"id" },
-};
-    
-var resource = new Resource( {
+var spec = { 
     tableName: 'entry_set',
-    schema: schema,
     primary_key:'id',
     user_mapping: ['id','creator_id'],
-} );
+    schema: {
+        "id":                      { type: Type.Int,     props: ["default","read_only"] },
+        "name":                    { type: Type.Str,     props: ["default","required"] },
+        "type":                    { type: Type.List.Type,    props: ["default"] },
+        "isVotingActive":          { type: Type.Bool,    props: [] },
+        "isSubmissionActive":      { type: Type.Bool,    props: [] },
+        "allowedVoters":           { type: Type.Str,     props: ["default"] },
+        "description":             { type: Type.Str,     props: ["default", "required"] },
+
+        "entrySetRegistration_id": { type: Type.Registry,props: ["default","required"], mappedBy:"id" },
+        "creator_id":              { type: Type.User,    props: ["read_only"], mappedBy:"id" },
+    }
+};
+    
+var resource = new Resource( spec );
 Type.List.init(resource);
 
 exports.find_all = function(req, resp, next) {

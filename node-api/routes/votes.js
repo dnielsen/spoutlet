@@ -2,17 +2,17 @@ var Type      = require('../type'),
     Resource  = require('../resource');
     
     
-var schema = {
-    "user": { type: Type.User,  props: ["default","read-only"], mappedBy:"username" },
-    "idea": { type: Type.Entry, props: ["default","required"], mappedBy:'id' },
-};
-    
-var resource = new Resource( {
+var spec = {
     tableName: 'follow_mappings', 
-    schema: schema,
     primary_key:'idea',
     user_mapping: ['username','user'],
-} );
+    schema: {
+        "user": { type: Type.User,  props: ["default","read-only"], mappedBy:"username" },
+        "idea": { type: Type.Entry, props: ["default","required"], mappedBy:'id' }
+    }
+};
+    
+var resource = new Resource( spec );
 Type.Vote.init(resource);
 
 exports.find_all = function(req, resp, next) { 

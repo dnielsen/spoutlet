@@ -2,17 +2,17 @@ var Type      = require('../type'),
 	Resource  = require('../resource');
     
 
-var schema = {
-    "id":          { type: Type.Int, props: ["default", "read-only"]},
-    "scope":       { type: Type.Str, props: ["default", "required"]},
-    "containerId": { type: Type.Int, props: ["default", "required"]},
+var spec = {
+    tableName: 'entry_set_registry', 
+    primary_key:'id',
+    schema: {
+        "id":          { type: Type.Int, props: ["default", "read-only"]},
+        "scope":       { type: Type.Str, props: ["default", "required"]},
+        "containerId": { type: Type.Int, props: ["default", "required"]},
+    }
 };
     
-var resource = new Resource( {
-    tableName: 'entry_set_registry', 
-    schema: schema,
-    primary_key:'id'
-} );
+var resource = new Resource( spec );
 Type.Registry.init(resource);
 
 exports.find_all = function(req, resp, next) { 
