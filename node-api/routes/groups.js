@@ -10,21 +10,21 @@ Type.Group.Category.init(
     {});
 
 var schema = {
-    "id":                       { type: Type.Int,   props:  ["read-only","default","filterable"] },
-    "groupAvatar_id":           { type: Type.Int,   props:  ["read-only","filterable"] },
-    "name":                     { type: Type.Str,   props:  ["default", "required", "filterable"] },
-    "category":                 { type: Type.Group.Category,props:["default","filterable"] },
-    "description":              { type: Type.Str,   props:  ["filterable"] },
-    "slug":                     { type: Type.Str,   props:  ["default", "required","filterable"] },
-    "featured":                 { type: Type.Bool,  props:  ["default","filterable"], initial: false },
-    "isPublic":                 { type: Type.Bool,  props:  ["filterable"], initial: true },
-    "created_at":               { type: Type.Date,  props:  ["read-only","filterable"], initial: function(){return new Date()} },
-    "updated_at":               { type: Type.Date,  props:  ["read-only"], initial: function(){return new Date()} },
-    "featured_at":              { type: Type.Date,  props:  ["read-only"], initial: function(){return new Date()} },
+    "id":                       { type: Type.Int,   props:  ["read-only","default"] },
+    "groupAvatar_id":           { type: Type.Int,   props:  ["read-only"] },
+    "name":                     { type: Type.Str,   props:  ["default", "required"] },
+    "category":                 { type: Type.Group.Category,props:["default"] },
+    "description":              { type: Type.Str,   props:  [] },
+    "slug":                     { type: Type.Str,   props:  ["default", "required"] },
+    "featured":                 { type: Type.Bool,  props:  ["default"], initial: false },
+    "isPublic":                 { type: Type.Bool,  props:  [], initial: true },
+    "created_at":               { type: Type.Date,  props:  ["read-only"], initial: function(){return new Date()} },
+    "updated_at":               { type: Type.Date,  props:  ["read-only","no-filter"], initial: function(){return new Date()} },
+    "featured_at":              { type: Type.Date,  props:  ["read-only","no-filter"], initial: function(){return new Date()} },
 
-    "entrySetRegistration_id":  { type: Type.Registry,props:["read-only","filterable"], mappedBy:"id" },
-    "owner_id":                 { type: Type.User,  props:  ["read-only","filterable"], mappedBy:"id" },
-    "parentGroup_id":           { type: Type.Group,         props:  ["parent_id", "read-only","filterable"], mappedBy:"id"},
+    "entrySetRegistration_id":  { type: Type.Registry,props:["read-only"], mappedBy:"id" },
+    "owner_id":                 { type: Type.User,  props:  ["read-only"], mappedBy:"id" },
+    "parentGroup_id":           { type: Type.Group,         props:  ["parent_id", "read-only"], mappedBy:"id"},
 };
 
 var resource = new Resource( {

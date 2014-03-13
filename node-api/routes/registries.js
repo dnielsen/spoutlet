@@ -3,9 +3,9 @@ var Type      = require('../type'),
     
 
 var schema = {
-    "id":          { type: Type.Int, props: ["default", "filterable", "read-only"]},
-    "scope":       { type: Type.Str, props: ["default", "filterable", "required"]},
-    "containerId": { type: Type.Int, props: ["default", "filterable", "required"]},
+    "id":          { type: Type.Int, props: ["default", "read-only"]},
+    "scope":       { type: Type.Str, props: ["default", "required"]},
+    "containerId": { type: Type.Int, props: ["default", "required"]},
 };
     
 var resource = new Resource( {

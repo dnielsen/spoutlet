@@ -8,7 +8,7 @@ var restify = require('restify'),
 // default : on GET this field will display unless 'filters' or 'verbose' queries are used
 // read-only: this field can not be modified with a POST, PUT, or PATCH
 // required: this field must be included in a PUT or POST
-// filterable: this field can be searched for with a query parameter matching its name (or an alias)
+// no-filter: this field can be searched for with a query parameter matching its name (or an alias)
 
 //Constructor
 var Resource = function (spec) {
@@ -50,6 +50,8 @@ Type.Vote = new Resource.ResourceType();
 
 
 ResourceType.prototype.init = function(resource, val, def_op, prefix_ops) {
+
+    //treat as an integer
     var validator =         val         || Type.Int.validate;
     var default_operator =  def_op      || Type.Int.default_filter;
     var prefix_operators =  prefix_ops  || Type.Int.prefix_filters;
@@ -120,7 +122,7 @@ Resource.prototype.apply_filters = function(req, query) {
         var field           = all_fields[i];
         var field_def       = this.schema[field];
 
-        var is_filterable   = field_def.hasOwnProperty("props") && field_def.props.indexOf("filterable") !== -1;
+        var is_filterable   = field_def.hasOwnProperty("props") && field_def.props.indexOf("no-filter") === -1;
         
         var label           = field_def.hasOwnProperty("alias") ? field_def.alias : field;
         var was_provided    = req.query.hasOwnProperty(label);

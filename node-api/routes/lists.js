@@ -12,16 +12,16 @@ Type.List.Type.init(
     {});
 
 var schema = {
-    "id":                      { type: Type.Int,     props: ["default","read_only","filterable"] },
-    "name":                    { type: Type.Str,     props: ["default","required","filterable"] },
-    "type":                    { type: Type.List.Type,    props: ["default","filterable"] },
-    "isVotingActive":          { type: Type.Bool,    props: ["filterable"] },
-    "isSubmissionActive":      { type: Type.Bool,    props: ["filterable"] },
-    "allowedVoters":           { type: Type.Str,     props: ["default","filterable"] },
-    "description":             { type: Type.Str,     props: ["default", "required","filterable"] },
+    "id":                      { type: Type.Int,     props: ["default","read_only"] },
+    "name":                    { type: Type.Str,     props: ["default","required"] },
+    "type":                    { type: Type.List.Type,    props: ["default"] },
+    "isVotingActive":          { type: Type.Bool,    props: [] },
+    "isSubmissionActive":      { type: Type.Bool,    props: [] },
+    "allowedVoters":           { type: Type.Str,     props: ["default"] },
+    "description":             { type: Type.Str,     props: ["default", "required"] },
 
-    "entrySetRegistration_id": { type: Type.Registry,props: ["default","required","filterable"], mappedBy:"id" },
-    "creator_id":              { type: Type.User,    props: ["read_only","filterable"], mappedBy:"id" },
+    "entrySetRegistration_id": { type: Type.Registry,props: ["default","required"], mappedBy:"id" },
+    "creator_id":              { type: Type.User,    props: ["read_only"], mappedBy:"id" },
 };
     
 var resource = new Resource( {

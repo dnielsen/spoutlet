@@ -3,8 +3,8 @@ var Type      = require('../type'),
     
     
 var schema = {
-    "user": { type: Type.User,  props: ["default","read-only","filterable"], mappedBy:"username" },
-    "idea": { type: Type.Entry, props: ["default","required","filterable"], mappedBy:'id' },
+    "user": { type: Type.User,  props: ["default","read-only"], mappedBy:"username" },
+    "idea": { type: Type.Entry, props: ["default","required"], mappedBy:'id' },
 };
     
 var resource = new Resource( {
