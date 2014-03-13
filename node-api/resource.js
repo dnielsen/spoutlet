@@ -49,11 +49,10 @@ Type.Vote = new Resource.ResourceType();
 
 
 
-ResourceType.prototype.init = function(resource) {
-    //assume the id is a number
-    var validator = function() { return !isNaN(val); };
-    var default_operator = function(column, query, value) { query.where(column, value); };
-    var prefix_operators = {};
+ResourceType.prototype.init = function(resource, val, def_op, prefix_ops) {
+    var validator =         val         || Type.Int.validate;
+    var default_operator =  def_op      || Type.Int.default_filter;
+    var prefix_operators =  prefix_ops  || Type.Int.prefix_filters;
 
     //Call the parent initializer 
     Type.prototype.init.call(this, validator, default_operator, prefix_operators);

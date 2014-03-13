@@ -13,14 +13,15 @@ Type.List.Type.init(
 
 var schema = {
     "id":                      { type: Type.Int,     props: ["default","read_only","filterable"] },
-    "entrySetRegistration_id": { type: Type.Registry,props: ["default","required","filterable"], mappedBy:"id" },
     "name":                    { type: Type.Str,     props: ["default","required","filterable"] },
     "type":                    { type: Type.List.Type,    props: ["default","filterable"] },
     "isVotingActive":          { type: Type.Bool,    props: ["filterable"] },
     "isSubmissionActive":      { type: Type.Bool,    props: ["filterable"] },
     "allowedVoters":           { type: Type.Str,     props: ["default","filterable"] },
-    "creator_id":              { type: Type.User,    props: ["read_only","filterable"], mappedBy:"id" },
     "description":             { type: Type.Str,     props: ["default", "required","filterable"] },
+
+    "entrySetRegistration_id": { type: Type.Registry,props: ["default","required","filterable"], mappedBy:"id" },
+    "creator_id":              { type: Type.User,    props: ["read_only","filterable"], mappedBy:"id" },
 };
     
 var resource = new Resource( {
