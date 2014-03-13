@@ -29,7 +29,7 @@ module.exports = Resource
 //Define a constructor for Resource Types that is a special form of Type
 var ResourceType = function( resource ) {
     var validator = function() { return true; };
-    var default_operator = function() {};
+    var default_operator = function(column, query, value) { query.where(column, value); };
     var prefix_operators = {};
 
     //Call the parent constructor 
