@@ -16,16 +16,18 @@ var spec = {
     primary_key:'id',
     user_mapping: ['id','creator_id'],
     schema: {
-        "id":                      { type: Type.Int,     props: ["default","read_only"] },
-        "name":                    { type: Type.Str,     props: ["default","required"] },
-        "type":                    { type: Type.List.Type,    props: ["default"] },
-        "isVotingActive":          { type: Type.Bool,    props: [] },
-        "isSubmissionActive":      { type: Type.Bool,    props: [] },
-        "allowedVoters":           { type: Type.Str,     props: ["default"] },
-        "description":             { type: Type.Str,     props: ["default", "required"] },
+        "id":                      { type: Type.Int,    props: ["default","read_only"] },
+        "name":                    { type: Type.Str,    props: ["default","required"] },
+        "type":                    { type: Type.List.Type,props: ["default"] },
+        "isVotingActive":          { type: Type.Bool,   props: [] },
+        "isSubmissionActive":      { type: Type.Bool,   props: [] },
+        "allowedVoters":           { type: Type.Str,    props: ["default"] },
+        "description":             { type: Type.Str,    props: ["default", "required"] },
+        "entrySetRegistration_id": { type: Type.Int,    props: ["default","required"] },
+        "creator_id":              { type: Type.Int,    props: ["read_only"] },
 
-        "entrySetRegistration_id": { type: Type.Registry,props: ["default","required"], mappedBy:"id" },
-        "creator_id":              { type: Type.User,    props: ["read_only"], mappedBy:"id" },
+        "entrySetRegistration": { type: Type.Registry,rel: "belongs_to", mapping:"entrySetRegistration_id" },
+        "creator":              { type: Type.User,    rel: "belongs_to", mapping:"creator_id" },
     }
 };
     

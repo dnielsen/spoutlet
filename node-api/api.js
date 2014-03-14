@@ -7,12 +7,12 @@ var restify  = require('restify'),
     groups   = require('./routes/groups'),
     votes    = require('./routes/votes'),
     registries=require('./routes/registries'),
-    users	 = require('./routes/users');
+    users    = require('./routes/users');
 
 var fail_auth = function(res, relm, message) {
 	res.header("WWW-Authenticate","Basic realm=\""+common.security_relm_token+"\"");
 	res.send(401, message);
-}
+};
 
 var get_api_token = function(req, res, next) {
 	if(!req.authorization.hasOwnProperty("basic")) {
@@ -26,7 +26,7 @@ var get_api_token = function(req, res, next) {
 	var return_error = function(err) { return next(new restify.RestError(err)); };
 
 	var validate_user = function(db_user_data_array) { 
-		if(db_user_data_array.length === 0) {
+	    if(db_user_data_array.length === 0) {
 			fail_auth(res, common.security_relm_login, "Bad user name");
 			return; // no furthar processing, don't call next()
 		}
@@ -60,19 +60,19 @@ var api_token_checker = function(req, res, next) {
 	}
 
 	var return_error = function(err) { return next(new restify.RestError(err)); };
-	var save_user = function(user_data) { 
+	var save_user = function(user_data) {
 		if(user_data.length === 0) {
 			fail_auth(res, common.security_relm_token, "API key was not recognized");
 			return;
 		}
 
 		//Credentials check out, save the user and continue processing the request
-		req.user = user_data[0]; 
-		next(); 
+		req.user = user_data[0];
+		next();
 	};
 
 	var user_data = common.knex("fos_user").where("uuid",uuid).then( save_user, return_error );
-}
+};
 
 var server = restify.createServer({name: common.baseHost});
 

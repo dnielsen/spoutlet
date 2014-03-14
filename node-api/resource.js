@@ -1,5 +1,4 @@
 var restify = require('restify'),
-    util    = require('./util'),
     common  = require('./common'),
     knex    = common.knex,
     Type    = require('./type');
@@ -13,17 +12,30 @@ var restify = require('restify'),
 //Constructor
 var Resource = function (spec) {
     this.tableName =    spec.tableName;
-    this.schema =       spec.schema;
     this.primary_key =  spec.primary_key;
     this.user_mapping = spec.user_mapping;
     this.deleted_col =  spec.deleted_col || false;
-}
-module.exports = Resource
+
+    for(var key in spec.schema) {
+        var field_def = spec.schema[key];
+
+        var relationship = field_def.rel;
+        if(relationship === undefined)
+            relationship = 'owns';
+
+        delete field_def.rel;
+        if(this[relationship] === undefined)
+            this[relationship] = {};
+        this[relationship][key] = field_def;
+    }
+
+};
+module.exports = Resource;
 
 
 //Define a constructor for Resource Types that is a special form of Type
-var ResourceType = function() {}
-Resource.ResourceType = ResourceType
+var ResourceType = function() {};
+Resource.ResourceType = ResourceType;
 
 
 //Attach the parent constructor as the prototype of this constructor
@@ -47,8 +59,6 @@ Type.Vote = new Resource.ResourceType();
 
 //--------------------------------------------------------
 
-
-
 ResourceType.prototype.init = function(resource, val, def_op, prefix_ops) {
 
     //treat as an integer
@@ -60,7 +70,7 @@ ResourceType.prototype.init = function(resource, val, def_op, prefix_ops) {
     Type.prototype.init.call(this, validator, default_operator, prefix_operators);
 
     this.resource = resource;
-}
+};
 
 //-------------------------------------------------
 
@@ -77,50 +87,13 @@ Resource.prototype.assemble_url = function(path, queries) {
         }
     }
     return common.baseUrl + path + query_string;
-}
-
-Resource.prototype._get_fields_for_property = function(prop) {
-    var matches = [];
-    
-    var schema = this.schema;
-    for(var field in schema) {
-        var info = schema[field];
-        if( info.props && info.props.indexOf(prop) !== -1 )
-            matches.push(field);
-    }
-    return matches;
-}
-
-
-// quiet (default false) determines if bad requests return exceptions
-Resource.prototype.get_requested_fields = function(req, quiet) {
-    var use_fields = req.query.hasOwnProperty('fields');
-    var use_verbose = req.query.hasOwnProperty('verbose');
-    
-    if(!use_fields && !use_verbose)
-        return this._get_fields_for_property("default");
-    
-    var all_keys = Object.keys(this.schema);
-    if(use_verbose)
-        return all_keys;
-       
-    var fields = [];
-    var requested_fields = req.query.fields.split(',');
-    for(var i in requested_fields) {
-        var request = requested_fields[i];
-        if(all_keys.indexOf(request) !== -1)
-            fields.push(request);
-        else if(!quiet)
-            throw new restify.InvalidArgumentError(request);
-    }
-    return fields;
-}
+};
 
 Resource.prototype.apply_filters = function(req, query) {
-    var all_fields = Object.keys(this.schema);
+    var all_fields = Object.keys(this.owns);
     for(var i in all_fields) {
         var field           = all_fields[i];
-        var field_def       = this.schema[field];
+        var field_def       = this.owns[field];
 
         var is_filterable   = field_def.hasOwnProperty("props") && field_def.props.indexOf("no-filter") === -1;
         
@@ -134,7 +107,7 @@ Resource.prototype.apply_filters = function(req, query) {
 
         field_type.apply_filter(this.tableName + '.' + field, query, value);
     }
-}
+};
 
 
 // Format: sort_by=[-]<field>[,[-]<field>] including '-' will reverse sort the field
@@ -154,20 +127,20 @@ Resource.prototype.apply_sorting = function(req, query, quiet) {
             desc = true;
         }
         
-        if(this.schema.hasOwnProperty(field)) {
+        if(this.owns.hasOwnProperty(field)) {
             query.orderBy(field, desc ? 'desc' : 'asc' );
         } else if(!quiet)
             throw new restify.InvalidArgumentError("sort_by field '"+field+"' not recognized");
     }
-}
+};
 
 Resource.prototype.assemble_insert = function(post_data) {
     var insert_data = {};
 
-    var all_fields = Object.keys(this.schema);
+    var all_fields = Object.keys(this.owns);
     for(var i in all_fields) {
         var field           = all_fields[i];
-        var field_def       = this.schema[field];
+        var field_def       = this.owns[field];
         var was_posted      = post_data.hasOwnProperty(field);
         
         var is_required     = field_def.hasOwnProperty("props") && field_def.props.indexOf("required") !== -1;
@@ -193,7 +166,7 @@ Resource.prototype.assemble_insert = function(post_data) {
     }
     
     return insert_data;
-}
+};
 
 Resource.prototype.assemble_paging_links = function(req, max) {
     var that = this;
@@ -207,24 +180,25 @@ Resource.prototype.assemble_paging_links = function(req, max) {
     if( limit > max) limit = max;
     if( limit < 0) limit = 1;
     if(offset === '' || isNaN(offset) || offset < 0) offset = 0;
-    if(offset > max) offset = max
+    if(offset > max) offset = max;
 
     var current_page = Math.floor( offset / limit );
     var total_pages = Math.floor( max / limit );
-    if(max % limit == 0)
+    if(max % limit === 0) {
         total_pages = total_pages - 1;
+    }
 
     var path = req.path();
 
     var get_paging_link = function(limit, offset) {
         var queries = JSON.parse(JSON.stringify(req.query));
-        queries.limit = limit
+        queries.limit = limit;
 
-        if(offset == 0) 
+        if(offset === 0) {
             delete queries.offset;
-        else 
+        } else {
             queries.offset = offset;
-
+        }
         return that.assemble_url(path, queries);
     };
 
@@ -235,7 +209,7 @@ Resource.prototype.assemble_paging_links = function(req, max) {
         prev: get_paging_link(limit, (current_page > 0 ? current_page - 1 : current_page) * limit),
     };
     return return_value;
-}
+};
 
 //Allows user agent to request a view of the total data by size and starting count.
 //Format: limit=<size of result set>[,offset=<num to skip over>]
@@ -259,7 +233,7 @@ Resource.prototype.apply_paging = function(req, query, quiet) {
         throw new restify.InvalidArgumentError("offset value " + offset);
     }
     query.offset(offset);
-}
+};
 
 //Where this resource is owned by me
 Resource.prototype.where_is_mine = function(req, query) {
@@ -271,102 +245,124 @@ Resource.prototype.where_is_mine = function(req, query) {
     var user_id = req.user[user_mapping[0]];
     var resource_field = user_mapping[1];
     query.where(resource_field, user_id);
-}
+};
 
-Resource.prototype.apply_envelopes = function(expansions, result_set) {
-    
-    //if original field name endeds with '_id' then remove it
-    //otherwise use <original name>_details
-    var get_envelope_name = function(temp_name) {
-        if(temp_name.indexOf('expand_') === -1) {
-            console.log("can't understand temp attribut name: "+temp_name);
-            return;
-        }
+Resource.prototype.apply_envelopes = function(result_set) {
+    var envelope_names = [];
+    if(this.belongs_to !== undefined) 
+        envelope_names = envelope_names.concat(Object.keys(this.belongs_to));
+    if(this.has_many !== undefined) 
+        envelope_names = envelope_names.concat(Object.keys(this.has_many));
 
-        var expand_index_str = key.substring('expand_'.length);
-        var expand_index = parseInt(expand_index_str);
-        var original_field_name = expansions[expand_index];
-        
-        //strip off '_id' if present
-        if(/_id$/.test(original_field_name))
-            return original_field_name.replace(/(.+)_id$/,'$1');
-        else
-            return original_field_name+'_details';
-    }
+    var enveloped_result_set = {};
+    for(var label in result_set) {
+        var value = result_set[label];
 
-    //processed elements list
-    var new_result_set = {};
-    var keys = Object.keys(result_set);
-    for(var i in keys) {
-        var key = keys[i];
-        var split_key = key.split(':',2);
-    
-        //is envelope processing is not necessary?
-        if(split_key.length == 1) {
-            new_result_set[key] = result_set[key];
-            continue;
-        }
+        var found = false;
+        for(var i in envelope_names) {
+            var envelope_name = envelope_names[i];
 
-        //save the parts of the composit name seperatly 
-        var envelope_name = get_envelope_name(split_key[0]);
-        var prop_name = split_key[1];
-
-        //add element to envelope, creating it if necessary 
-        var envelope = new_result_set[envelope_name] || {};
-        if(!new_result_set.hasOwnProperty(envelope_name)) {
-            new_result_set[envelope_name] = envelope;
-        } 
-        envelope[prop_name] = result_set[key];
-    }
-    return new_result_set;
-}
-
-Resource.prototype.apply_expand = function(req, query) {
-    if(!req.query.hasOwnProperty("expand"))
-        return;
-
-    var expansions = req.query.expand.split(",");
-    
-    //Inspect each field of the schema to determine what joins to add to the query
-    var all_fields = Object.keys(this.schema);
-    for(var i in all_fields) {
-        var field = all_fields[i];
-        var field_def = this.schema[field];
-
-        var type = field_def.type;
-    
-        var is_resource_type = type instanceof ResourceType;
-        if(!is_resource_type)
-            continue;
-
-        var request_index = expansions.indexOf(field);
-        if( request_index < 0)
-            continue;
-
-        var resource = type.resource;
-        var mapped_by = field_def.mappedBy;
-        var alias = 'expand_' + request_index;
-
-        //join the table renamed to expand_#
-        query.join(resource.tableName + ' as ' + alias
-            , this.tableName + '.' + field
-            , '='
-            , alias + '.' + mapped_by, "left");
-
-        //select 'default' columns from joined table 
-        var resource_keys = Object.keys(resource.schema);
-        for(var j in resource_keys) {
-            var expanded_field = resource_keys[j];
-            var expanded_field_def = resource.schema[expanded_field];
-
-            if(expanded_field_def.props.indexOf('default') < 0)
+            //if no match continue
+            if(label.indexOf(envelope_name) === -1)
                 continue;
 
-            //name the new column 'expand_<#>:<field>'
-            query.column( alias + '.' + expanded_field + ' as ' + alias + ':' + expanded_field);
+            //create the envelope if it isn't already there
+            if(enveloped_result_set[envelope_name] === undefined)
+                enveloped_result_set[envelope_name] = {};
+
+            //trim off the envelope name
+            var short_label = label.substring(envelope_name.length + 1);
+
+            //insert value into the envelope
+            enveloped_result_set[envelope_name][short_label] = value;
+            found = true;
+        }
+
+        //no envelope, add it to the top level
+        if(!found)
+            enveloped_result_set[label] = value;
+    }
+
+    return enveloped_result_set;
+};
+
+Resource.prototype.apply_columns_helper = function(req, requested_columns, label) {
+    var that = this;
+    var rv = [];
+    
+    var push_col = function(col_name) {
+        if(label)
+            rv.push( label + '.' + col_name + " as " + label + '_' + col_name );
+        else
+            rv.push( that.tableName + '.' + col_name );
+    };
+
+    var all_fields = this.owns;
+    
+    //return all columns
+    if(req.query.hasOwnProperty('verbose')) {
+        for(var col_name in all_fields)
+            push_col(col_name);
+    }
+    
+    //return designated columns if they are prefixed by the label
+    else if(req.query.hasOwnProperty('fields')) {
+        for(var i in requested_columns) {
+            var requested_col = requested_columns[i];
+            
+            //require the label match if provided
+            if(label) {
+                if(requested_col.indexOf(label) === 0)
+                    requested_col = requested_col.substring(label.length+1);
+                else continue;
+            }
+            
+            //validate the request
+            if(all_fields[requested_col] !== undefined)
+                push_col(requested_col);
+        }
+        
+    }
+    
+    //return the default columns
+    else {
+        for(var field_name in all_fields) {
+            var field_def = all_fields[field_name];
+            if(field_def.props && field_def.props.indexOf('default') !== -1)
+                push_col(field_name);
         }
     }
-}
+
+    return rv;
+};
+
+Resource.prototype.apply_columns = function(req, query) {
+    var requested_columns = req.query.fields ? req.query.fields.split(',') : undefined;
+    var columns = this.apply_columns_helper(req, requested_columns);
+    
+    //process fields for belongs-to relationships
+    var belongs_to = this.belongs_to;
+    for(var label in belongs_to) {
+        var resource = belongs_to[label].type.resource;
+        
+        //get columns prepended with this belongs-to relations label
+        var more_columns = resource.apply_columns_helper(req, requested_columns, label);
+        if(more_columns.length === 0)
+            continue;
+
+        //add them to our list
+        columns = columns.concat(more_columns);
+        
+        //add the correct join statement to our query if columns were found
+        var table_name = resource.tableName + " as " + label;
+        var lhs = this.tableName + "." + belongs_to[label].mapping;
+        var rhs = label + '.' + this.primary_key;
+        query.join(table_name, lhs, '=', rhs, 'left'); // left join allows other tbls to be null.
+    }
+
+    query.column(columns);
+    //console.log(query.toString()); //print the sql for diagnostic purposes
+};
 
 // Basic resource type's allow for customization of the fields returned
 // providing no query parameters (qp) returns just the default fields
@@ -374,20 +370,15 @@ Resource.prototype.apply_expand = function(req, query) {
 // fields qp returns only the specified fields
 // fields=name[,name] | verbose | (none)
 Resource.prototype.processBasicQueryParams = function(req, query) {
-    var fields = this.get_requested_fields(req,false);
-    for(var i in fields)
-        fields[i] = this.tableName + '.' + fields[i]; 
-
-    this.apply_expand(req,query);
-    query.column(fields);
-}
+    this.apply_columns(req, query);
+};
 
 Resource.prototype.processCollectionQueryParams = function(req, query) {
     this.processBasicQueryParams(req, query);
     this.apply_paging(req, query, false);
     this.apply_sorting(req, query, false);
     this.apply_filters(req, query);
-}
+};
 
 
 //--------------------------------------------------------
@@ -403,14 +394,14 @@ Resource.prototype.find_all = function(req, resp, next) {
     try {
         this.processCollectionQueryParams(req, query);
     } catch(err) {
-        return next(err); 
+        return next(err);
     }
     
     var result_set;
     
     var return_error = function(err) {
         return next(new restify.RestError(err));
-    }
+    };
     
     var send_response = function(count_result) {
         var count = count_result[0]["count(*)"];
@@ -426,20 +417,15 @@ Resource.prototype.find_all = function(req, resp, next) {
             resp.header('X-Prev', paging_links.prev);
         }
 
-        var final_result_set = result_set;
-        if(req.query.hasOwnProperty("expand")) {
-            var expansions = req.query.expand.split(",");
-
-            final_result_set = [];
-            for(var i=0; i < result_set.length; i++) {
-                final_result_set[i] = that.apply_envelopes(expansions, result_set[i]);
-            }
+        var enveloped_result_set = result_set;
+        for(var i=0; i < result_set.length; i++) {
+            enveloped_result_set[i] = that.apply_envelopes(result_set[i]);
         }
 
-        resp.send(final_result_set); 
-        next(); 
+        resp.send(enveloped_result_set);
+        next();
         return;
-    }
+    };
     
     var ask_how_many = function(results) {
         result_set = results;
@@ -449,8 +435,8 @@ Resource.prototype.find_all = function(req, resp, next) {
             query.where(that.deleted_col,0);
         
         that.apply_filters(req, query);
-        query.then(send_response, return_error); 
-    }
+        query.then(send_response, return_error);
+    };
     
     query.then(ask_how_many, return_error);
 };
@@ -464,8 +450,8 @@ Resource.prototype.find_by_primary_key = function(req, resp, next) {
     var primary_key_field = this.primary_key;
     var primary_key = req.params[primary_key_field];
     
-    var field_def = this.schema[primary_key_field];
-    var fails_validation = !field_def.type.validate(primary_key)
+    var field_def = this.owns[primary_key_field];
+    var fails_validation = !field_def.type.validate(primary_key);
     if(fails_validation)
         throw new restify.InvalidArgumentError("'" + primary_key + "' invalid for " + primary_key_field);
 
@@ -476,26 +462,21 @@ Resource.prototype.find_by_primary_key = function(req, resp, next) {
     try {
         this.processBasicQueryParams(req, query);
     } catch(err) {
-        return next(err); 
+        return next(err);
     }
     
     var send_response = function(result_set) {
-        if (result_set === undefined || result_set.length == 0)
+        if (result_set === undefined || result_set.length === 0)
             return next(new restify.ResourceNotFoundError(primary_key));
 
-        var final_result_set = result_set[0];
-        if(req.query.hasOwnProperty("expand")) {
-            var expansions = req.query.expand.split(",");
-            final_result_set =  that.apply_envelopes(expansions, final_result_set);
-        }
-
-        resp.send(final_result_set);
+        var enveloped_result_set =  that.apply_envelopes(result_set[0]);
+        resp.send(enveloped_result_set);
         next();
-    }
+    };
     
     query.then(send_response, function(err) {
         return next(new restify.RestError(err));
-    });    
+    });
 };
 
 Resource.prototype.create = function(req, resp, next) {
@@ -521,7 +502,7 @@ Resource.prototype.create = function(req, resp, next) {
         }
 
         insert_data = this.assemble_insert(req.body);
-    } catch(e) { 
+    } catch(e) {
         return next(e);
     }
 
@@ -575,7 +556,7 @@ Resource.prototype.delete_by_primary_key = function(req, resp, next) {
     var primary_key_field = this.primary_key;
     var primary_key = req.params[primary_key_field];
     
-    var field_def = this.schema[primary_key_field];
+    var field_def = this.owns[primary_key_field];
     var fails_validation = !field_def.type.validate(primary_key)
     if(fails_validation)
         throw new restify.InvalidArgumentError("'" + primary_key + "' invalid for " + primary_key_field);

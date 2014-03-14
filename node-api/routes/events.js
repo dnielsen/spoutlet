@@ -27,10 +27,13 @@ var spec = {
         "created_at":              { type: Type.Date,    props: ["read-only"] },
         "updated_at":              { type: Type.Date,    props: ["read-only"] },
         "currentRound":            { type: Type.Int,     props: ["read-only","no-filter"] },
+        "group_id":                { type: Type.Int,     props: ["default","required"] },
+        "user_id":                 { type: Type.Int,     props: ["read-only"] },
+        "entrySetRegistration_id": { type: Type.Int,     props: [] },
 
-        "group_id":                { type: Type.Group,     props: ["default","required"], mappedBy:'id' },
-        "user_id":                 { type: Type.User,     props: ["read-only"], mappedBy:'id' },
-        "entrySetRegistration_id": { type: Type.Registry,     props: [], mappedBy:"id" }
+        "group":                { type: Type.Group, rel: "belongs_to", mapping:'group_id' },
+        "user":                 { type: Type.User,  rel: "belongs_to", mapping:'user_id' },
+        "entrySetRegistration": { type: Type.Registry, rel: "belongs_to", mapping:"entrySetRegistration_id" }
     }
  };
     

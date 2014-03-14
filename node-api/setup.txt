@@ -105,28 +105,10 @@ talks (lightning)
 demos
 spin-off meetups
 
-
-mobile group/event creation/update
-
-
-
-
-// has-many
-// - group: subgroups (topic/location)
-// - event: events
-
-// belongs-to-many
-// - list: lists via registry
-
-//has-many / belongs-to-many (collection associations)
-var collections = {
-    "subgroups": { type: Type.Group, inversedBy:"parentGroup_id", "limit":10, "sort_by":"name" },
-}
-
 //-----------------------------------------------------
 
-
-
+_id parameters are missing in output
+vote: non-pk mapping parameter needed
 
 -----------------------
     type relations
@@ -215,7 +197,7 @@ belongs-to
 - group: topic_group
 
 belongs-to-many
-- list: lists via registry
+- list: lists via registry ( where group.entrySetRegistration_id == registry.containerId return list where list. entrySetRegistration_id == registry.id)
 
 
 -----------------------

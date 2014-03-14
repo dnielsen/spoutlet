@@ -15,13 +15,15 @@ var spec = {
         "members":     { type: Type.Str, props: ["default"] },
         "highestRound":{ type: Type.Int, props: ["read_only"] },
         "isPrivate":   { type: Type.Bool, props: ["default","no-filter"] },
+        "entrySet_id": { type: Type.Int, props: ["required"] },
+        "creator_id":  { type: Type.Int, props: ["default","read_only"] },
 
-        "entrySet_id": { type: Type.List, props: ["required"], mappedBy:'id' },
-        "creator_id":  { type: Type.User, props: ["default","read_only"], mappedBy:'id' },
+        "entrySet": { type: Type.List, rel: "belongs_to", mapping:'id' },
+        "creator":  { type: Type.User, rel: "belongs_to", mapping:'id' },
 
         // "voters":      { type: Type.User,    
         //                   rel: "belongs-to-many",
-        //                   via: Type.Vote, mapping:{ "user":Type.User, "idea":Type.Idea},      
+        //                   via: Type.Vote, mapping:{ "user":Type.User, "idea":Type.Entry},      
         //                   limit:10, sort_by:"name" },
     }
 };
