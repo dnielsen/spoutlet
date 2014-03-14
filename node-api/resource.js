@@ -248,7 +248,7 @@ Resource.prototype.where_is_mine = function(req, query) {
 };
 
 Resource.prototype.apply_envelopes = function(result_set) {
-    var envelope_names = [];
+    var envelope_names = [this.tableName];
     if(this.belongs_to !== undefined) 
         envelope_names = envelope_names.concat(Object.keys(this.belongs_to));
     if(this.has_many !== undefined) 
@@ -258,29 +258,29 @@ Resource.prototype.apply_envelopes = function(result_set) {
     for(var label in result_set) {
         var value = result_set[label];
 
-        var found = false;
         for(var i in envelope_names) {
             var envelope_name = envelope_names[i];
 
             //if no match continue
-            if(label.indexOf(envelope_name) === -1)
+            if(label.indexOf(envelope_name) !== 0)
                 continue;
-
-            //create the envelope if it isn't already there
-            if(enveloped_result_set[envelope_name] === undefined)
-                enveloped_result_set[envelope_name] = {};
 
             //trim off the envelope name
             var short_label = label.substring(envelope_name.length + 1);
 
             //insert value into the envelope
-            enveloped_result_set[envelope_name][short_label] = value;
-            found = true;
-        }
+            //special handling for envelope (this.tableName), it's our local values so no envelope
+            if(envelope_name === this.tableName)
+                enveloped_result_set[short_label] = value;
+            else {
+                //create the envelope if it isn't already there
+                if(enveloped_result_set[envelope_name] === undefined)
+                    enveloped_result_set[envelope_name] = {};
 
-        //no envelope, add it to the top level
-        if(!found)
-            enveloped_result_set[label] = value;
+                enveloped_result_set[envelope_name][short_label] = value;
+            }
+            break;
+        }
     }
 
     return enveloped_result_set;
@@ -291,10 +291,8 @@ Resource.prototype.apply_columns_helper = function(req, requested_columns, label
     var rv = [];
     
     var push_col = function(col_name) {
-        if(label)
-            rv.push( label + '.' + col_name + " as " + label + '_' + col_name );
-        else
-            rv.push( that.tableName + '.' + col_name );
+        var prefix = ( label || that.tableName);
+        rv.push( prefix + '.' + col_name + " as " + prefix + '_' + col_name );
     };
 
     var all_fields = this.owns;
@@ -585,7 +583,3 @@ Resource.prototype.delete_by_primary_key = function(req, resp, next) {
         query.del().then(send_response, report_error);
     }
 }
-
-
-
-
