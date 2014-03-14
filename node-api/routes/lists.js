@@ -56,7 +56,7 @@ exports.find_popular = function(req, resp, next) {
         .join('entry_set', 'entry_set.id', '=', 'idea.entrySet_id')
         .select('entry_set.id', 'entry_set.name')
         .count('idea.id AS popularity')
-        .groupBy('entry_Set.id')
+        .groupBy('entry_set.id')
         .orderBy('popularity', 'DESC')
         .then(function(results){
             resp.send(results);
