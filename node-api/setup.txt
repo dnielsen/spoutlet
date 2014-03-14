@@ -107,8 +107,8 @@ spin-off meetups
 
 //-----------------------------------------------------
 
-_id parameters are missing in output
-vote: non-pk mapping parameter needed
+default parameter for belongs to
+filters broken
 
 -----------------------
     type relations

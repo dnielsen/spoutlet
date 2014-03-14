@@ -32,7 +32,7 @@ var spec = {
         "owner_id":               { type: Type.Int,  props:  ["read-only"]},
         "parentGroup_id":         { type: Type.Int,  props:  ["read-only"] },
 
-        "entrySetRegistration":   { type: Type.Registry,rel: "belongs_to", mapping:"entrySetRegistration_id" },
+        "entrySetRegistration":   { type: Type.Registry,rel: "belongs_to", props:["default"], mapping:"entrySetRegistration_id" },
         "owner":                  { type: Type.User,    rel: "belongs_to", mapping:"owner_id" },
         "parentGroup":            { type: Type.Group,   rel: "belongs_to", mapping:"parentGroup_id" },
 

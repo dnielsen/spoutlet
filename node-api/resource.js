@@ -286,7 +286,7 @@ Resource.prototype.apply_envelopes = function(result_set) {
     return enveloped_result_set;
 };
 
-Resource.prototype.apply_columns_helper = function(req, requested_columns, label) {
+Resource.prototype.apply_columns_helper = function(has_verbose, requested_columns, label) {
     var that = this;
     var rv = [];
     
@@ -298,13 +298,13 @@ Resource.prototype.apply_columns_helper = function(req, requested_columns, label
     var all_fields = this.owns;
     
     //return all columns
-    if(req.query.hasOwnProperty('verbose')) {
+    if(has_verbose) {
         for(var col_name in all_fields)
             push_col(col_name);
     }
     
     //return designated columns if they are prefixed by the label
-    else if(req.query.hasOwnProperty('fields')) {
+    else if(requested_columns !== undefined) {
         for(var i in requested_columns) {
             var requested_col = requested_columns[i];
             
@@ -335,16 +335,49 @@ Resource.prototype.apply_columns_helper = function(req, requested_columns, label
 };
 
 Resource.prototype.apply_columns = function(req, query) {
+    var has_verbose = req.query.hasOwnProperty('verbose');
     var requested_columns = req.query.fields ? req.query.fields.split(',') : undefined;
-    var columns = this.apply_columns_helper(req, requested_columns);
+
+    var columns = this.apply_columns_helper(has_verbose, requested_columns);
     
     //process fields for belongs-to relationships
-    var belongs_to = this.belongs_to;
-    for(var label in belongs_to) {
-        var resource = belongs_to[label].type.resource;
+    var all_belongs_to = this.belongs_to;
+    var selected_belongs_to = [];
+    
+    for(var label in all_belongs_to) {
+        var belongs_to = all_belongs_to[label];
+        var resource = belongs_to.type.resource;
+        
+        if(has_verbose) {
+            selected_belongs_to.push(label);
+        }
+
+        else if(requested_columns !== undefined) {
+            for(var i in requested_columns) {
+                var requested_col = requested_columns[i];
+
+                //require the label match if provided
+                if(requested_col.indexOf(label) === 0) {
+                    requested_col = requested_col.substring(0,label.length);
+                    selected_belongs_to.push(requested_col);
+                    break;
+                }
+            }
+        }
+
+        //include if relation is 'default'-ed
+        else if(belongs_to.props && belongs_to.props.indexOf('default') === 0) {
+            selected_belongs_to.push(label);
+        }
+        
+    }
+
+    for(var i in selected_belongs_to) {
+        var label = selected_belongs_to[i];
+        var resource = all_belongs_to[label].type.resource;
         
         //get columns prepended with this belongs-to relations label
-        var more_columns = resource.apply_columns_helper(req, requested_columns, label);
+        var more_columns = resource.apply_columns_helper(has_verbose, requested_columns, label);
         if(more_columns.length === 0)
             continue;
 
@@ -353,7 +386,7 @@ Resource.prototype.apply_columns = function(req, query) {
         
         //add the correct join statement to our query if columns were found
         var table_name = resource.tableName + " as " + label;
-        var lhs = this.tableName + "." + belongs_to[label].mapping;
+        var lhs = this.tableName + "." + all_belongs_to[label].mapping;
         var rhs = label + '.' + resource.primary_key;
         query.join(table_name, lhs, '=', rhs, 'left'); // left join allows other tbls to be null.
     }
