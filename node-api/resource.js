@@ -354,7 +354,7 @@ Resource.prototype.apply_columns = function(req, query) {
         //add the correct join statement to our query if columns were found
         var table_name = resource.tableName + " as " + label;
         var lhs = this.tableName + "." + belongs_to[label].mapping;
-        var rhs = label + '.' + this.primary_key;
+        var rhs = label + '.' + resource.primary_key;
         query.join(table_name, lhs, '=', rhs, 'left'); // left join allows other tbls to be null.
     }
 
