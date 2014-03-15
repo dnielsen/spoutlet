@@ -26,7 +26,7 @@ var spec = {
         "entrySetRegistration_id": { type: Type.Int,    props: ["default","required"] },
         "creator_id":              { type: Type.Int,    props: ["read_only"] },
 
-        "entrySetRegistration": { type: Type.Registry,rel: "belongs_to", mapping:"entrySetRegistration_id" },
+        "entrySetRegistration": { type: Type.Registry,rel: "belongs_to", mapping:"entrySetRegistration_id", props: ["default"] },
         "creator":              { type: Type.User,    rel: "belongs_to", mapping:"creator_id" },
     }
 };
@@ -59,6 +59,23 @@ exports.find_popular = function(req, resp, next) {
         .groupBy('entry_set.id')
         .orderBy('popularity', 'DESC')
         .then(function(results){
+            resp.send(results);
+            next();
+            return;
+        });
+};
+
+exports.get_sorted_entries = function(req, resp, next) {
+
+    var query = knex('follow_mappings')
+        .join('idea', 'idea.id', '=', 'follow_mappings.idea')
+        .select('idea.id', 'idea.name', 'idea.entrySet_id')
+        .count('follow_mappings.idea AS popularity')
+        .groupBy('follow_mappings.idea')
+        .orderBy('popularity', 'DESC')
+        .where('idea.entrySet_id', req.params['id']);
+
+        query.then(function(results){
             resp.send(results);
             next();
             return;
