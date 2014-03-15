@@ -112,6 +112,7 @@ server.get('/entries/:id', entries.find_by_primary_key);
 
 server.get('/lists', lists.find_all);
 server.get('/lists/popular', lists.find_popular);
+server.get('/lists/:id/sorted', lists.get_sorted_entries);
 server.get('/lists/:id', lists.find_by_primary_key);
 
 server.get('/sessions', sessions.find_all);
