@@ -286,113 +286,89 @@ Resource.prototype.apply_envelopes = function(result_set) {
     return enveloped_result_set;
 };
 
-Resource.prototype.apply_columns_helper = function(has_verbose, requested_columns, label) {
-    var that = this;
-    var rv = [];
-    
-    var push_col = function(col_name) {
-        var prefix = ( label || that.tableName);
-        rv.push( prefix + '.' + col_name + " as " + prefix + '_' + col_name );
+
+Resource.prototype.apply_columns_helper = function(choose_stmts, query, defaults_only) {
+    //return all columns
+    choose_stmts(this);
+
+    var all_belongs_to = this.belongs_to;
+    for(var belongs_to_label in all_belongs_to) {
+        var belongs_to = all_belongs_to[belongs_to_label];
+        
+        if(defaults_only && (!belongs_to.props || belongs_to.props.indexOf('default') === -1))
+                continue;
+
+        var resource = belongs_to.type.resource;
+        var resource_used = choose_stmts(resource, belongs_to_label);
+        if(!resource_used)
+            continue;
+
+        //add the correct join statement to our query if columns were found
+        var table_name = resource.tableName + " as " + belongs_to_label;
+        var lhs = this.tableName + "." + all_belongs_to[belongs_to_label].mapping;
+        var rhs = belongs_to_label + '.' + resource.primary_key;
+        query.join(table_name, lhs, '=', rhs, 'left'); // left join allows other tbls to be null.
+    }
+};
+
+
+Resource.prototype.apply_columns = function(req, query) {
+    var add_column = function(column_name, resource, label) {
+        var prefix = ( label || resource.tableName);
+        query.column( prefix + '.' + column_name + " as " + prefix + '_' + column_name );
     };
 
-    var all_fields = this.owns;
-    
-    //return all columns
-    if(has_verbose) {
-        for(var col_name in all_fields)
-            push_col(col_name);
-    }
-    
-    //return designated columns if they are prefixed by the label
-    else if(requested_columns !== undefined) {
+    var get_all_column_stmts = function(resource, label) {
+        for(var column_name in resource.owns) {
+            add_column(column_name, resource, label);
+        }
+        return true;
+    };
+
+    var get_default_column_stmts = function(resource, label) {
+        var resource_used = false;
+        
+        for(var column_name in resource.owns) {
+            var column_def = resource.owns[column_name];
+            if(!column_def.props || column_def.props.indexOf('default') === -1)
+                continue;
+
+            add_column(column_name, resource, label);
+            resource_used = true;
+        }
+
+        return resource_used;
+    };
+
+    var requested_columns = req.query.fields ? req.query.fields.split(',') : undefined;
+    var get_requested_column_stmts = function(resource, label) {
+        var all_fields = resource.owns;
+        
+        var resource_used = false;
         for(var i in requested_columns) {
             var requested_col = requested_columns[i];
-            
+
             //require the label match if provided
             if(label) {
                 if(requested_col.indexOf(label) === 0)
                     requested_col = requested_col.substring(label.length+1);
-                else continue;
-            }
+                else continue; }
             
             //validate the request
-            if(all_fields[requested_col] !== undefined)
-                push_col(requested_col);
+            if(all_fields[requested_col] !== undefined) {
+                add_column(requested_col, resource, label);
+                resource_used = true; }
         }
-        
+        return resource_used;
+    };
+
+    if(req.query.hasOwnProperty('verbose')) {
+        this.apply_columns_helper(get_all_column_stmts, query);
+    } else if(!req.query.hasOwnProperty('fields')) {
+        this.apply_columns_helper(get_default_column_stmts, query, true);
+    } else {
+        this.apply_columns_helper(get_requested_column_stmts, query);
     }
-    
-    //return the default columns
-    else {
-        for(var field_name in all_fields) {
-            var field_def = all_fields[field_name];
-            if(field_def.props && field_def.props.indexOf('default') !== -1)
-                push_col(field_name);
-        }
-    }
-
-    return rv;
-};
-
-Resource.prototype.apply_columns = function(req, query) {
-    var has_verbose = req.query.hasOwnProperty('verbose');
-    var requested_columns = req.query.fields ? req.query.fields.split(',') : undefined;
-
-    var columns = this.apply_columns_helper(has_verbose, requested_columns);
-    
-    //process fields for belongs-to relationships
-    var all_belongs_to = this.belongs_to;
-    var selected_belongs_to = [];
-    
-    for(var label in all_belongs_to) {
-        var belongs_to = all_belongs_to[label];
-        var resource = belongs_to.type.resource;
-        
-        if(has_verbose) {
-            selected_belongs_to.push(label);
-        }
-
-        else if(requested_columns !== undefined) {
-            for(var i in requested_columns) {
-                var requested_col = requested_columns[i];
-
-                //require the label match if provided
-                if(requested_col.indexOf(label) === 0) {
-                    requested_col = requested_col.substring(0,label.length);
-                    selected_belongs_to.push(requested_col);
-                    break;
-                }
-            }
-        }
-
-        //include if relation is 'default'-ed
-        else if(belongs_to.props && belongs_to.props.indexOf('default') === 0) {
-            selected_belongs_to.push(label);
-        }
-        
-    }
-
-    for(var i in selected_belongs_to) {
-        var label = selected_belongs_to[i];
-        var resource = all_belongs_to[label].type.resource;
-        
-        //get columns prepended with this belongs-to relations label
-        var more_columns = resource.apply_columns_helper(has_verbose, requested_columns, label);
-        if(more_columns.length === 0)
-            continue;
-
-        //add them to our list
-        columns = columns.concat(more_columns);
-        
-        //add the correct join statement to our query if columns were found
-        var table_name = resource.tableName + " as " + label;
-        var lhs = this.tableName + "." + all_belongs_to[label].mapping;
-        var rhs = label + '.' + resource.primary_key;
-        query.join(table_name, lhs, '=', rhs, 'left'); // left join allows other tbls to be null.
-    }
-
-    query.column(columns);
-    //console.log(query.toString()); //print the sql for diagnostic purposes
 };
 
 // Basic resource type's allow for customization of the fields returned
