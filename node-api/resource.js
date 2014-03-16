@@ -34,12 +34,12 @@ module.exports = Resource;
 
 
 //Define a constructor for Resource Types that is a special form of Type
-var ResourceType = function () {};
+var ResourceType = function () { return; };
 Resource.ResourceType = ResourceType;
 
 
 //Attach the parent constructor as the prototype of this constructor
-ResourceType.prototype = new Type;
+ResourceType.prototype = new Type();
 
 
 
@@ -77,8 +77,12 @@ ResourceType.prototype.init = function (resource, val, def_op, prefix_ops) {
 Resource.prototype.assemble_url = function (path, queries) {
     var query_string = "";
     var is_first = true;
-    for (var query in queries) {
-        var value = queries[query];
+
+    var query, value;
+    for (query in queries) {
+        if (!queries.hasOwnProperty(query)) { continue; }
+
+        value = queries[query];
         if (is_first) {
             is_first = false;
             query_string += "?" + query + "=" + value;
@@ -114,8 +118,9 @@ Resource.prototype.apply_filters = function (req, query) {
 // e.g. /groups?fields=id,category,featured&sort_by=-category,-featured
 // On quiet refrain from throwing exceptions for invalid fields
 Resource.prototype.apply_sorting = function (req, query, quiet) {
-    if (!req.query.hasOwnProperty('sort_by'))
+    if (!req.query.hasOwnProperty('sort_by')) {
         return;
+    }
 
     var fields = req.query.sort_by.split(',');
     for (var i in fields) {
