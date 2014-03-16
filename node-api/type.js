@@ -32,6 +32,7 @@ Type.prototype.apply_filter = function (column, query, value) {
     //check for filtered prefix
     var prefix_filters = this.prefix_filters;
     var prefix, index;
+    /*jslint forin: true*/
     for (prefix in prefix_filters) {
         if (!prefix_filters.hasOwnProperty(prefix)) { continue; }
 

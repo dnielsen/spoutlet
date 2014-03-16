@@ -42,15 +42,17 @@ var Resource = function (spec) {
         }
     };
 
-    //split out field definitions by the type of relation
-    //also save a list of filterable fields
+    /*jslint forin: true*/
     var key, field_def;
     for (key in spec.schema) {
         if (!spec.schema.hasOwnProperty(key)) { continue; }
 
         field_def = spec.schema[key];
 
+        //split out field definitions by the type of relation
         parse_relation(key, field_def);
+
+        //save a list of filterable fields
         parse_props(key, field_def);
     }
 
@@ -103,6 +105,7 @@ Resource.prototype.assemble_url = function (path, queries) {
     var query_string = "";
     var is_first = true;
 
+    /*jslint forin: true*/
     var query, value;
     for (query in queries) {
         if (!queries.hasOwnProperty(query)) { continue; }
@@ -118,32 +121,37 @@ Resource.prototype.assemble_url = function (path, queries) {
     return common.baseUrl + path + query_string;
 };
 
-Resource.prototype.apply_filters = function (req, query, label) {
+Resource.prototype.apply_filters = function (requests, query, label) {
     var that = this;
     var filters = this.filters;
-    filters.forEach(function (filter_name) {
+    __.each(filters, function (filter_name) {
         //if not requested, continue looking
-        if (!req.query.hasOwnProperty(filter_name)) { return; }
+        if (!requests.hasOwnProperty(filter_name)) { return; }
 
         var type = that.schema[filter_name].type;
         if (type instanceof ResourceType) {
-            var value = req.query[filter_name];
+            if (label !== undefined) {
+                throw new restify.InvalidArgumentError("filters may only be nested to 1 level");
+            }
 
-            //strip quotes
+            var value = requests[filter_name];
+
+            /*jslint regexp: true*/
+            //strip quotes, validation done by apply_filter
             value = value.replace(/['|"]([^'"]*)['|"]/, '$1');
 
             //parse nested qp's
-            var subqueries = {};
+            var subrequests = {};
             value.split(',').forEach(function (kv) {
                 var split = kv.split('=');
-                if (split.length === 2) { subqueries[split[0]] = split[1]; }
+                subrequests[split.shift()] = split.join('=');
             });
 
             //call apply_filters on the type's resource
-            type.resource.apply_filters({ query : subqueries }, query, filter_name);
+            type.resource.apply_filters(subrequests, query, filter_name);
             that.join_table(type.resource, filter_name, query);
         } else {
-            type.apply_filter((label || that.tableName) + '.' + filter_name, query, req.query[filter_name]);
+            type.apply_filter((label || that.tableName) + '.' + filter_name, query, requests[filter_name]);
         }
     });
 };
@@ -152,33 +160,51 @@ Resource.prototype.apply_filters = function (req, query, label) {
 // Format : sort_by=[-]<field>[,[-]<field>] including '-' will reverse sort the field
 // e.g. /groups?fields=id,category,featured&sort_by=-category,-featured
 // On quiet refrain from throwing exceptions for invalid fields
-Resource.prototype.apply_sorting = function (req, query, quiet) {
-    if (!req.query.hasOwnProperty('sort_by')) {
+Resource.prototype.apply_sorting = function (requests, query, quiet) {
+    var that = this;
+    if (!requests.hasOwnProperty('sort_by')) {
         return;
     }
 
-    var fields = req.query.sort_by.split(',');
-    for (var i in fields) {
-        var field = fields[i];
-
-        var desc = false;
+    var fields = requests.sort_by.split(',');
+    __.each(fields, function (field) {
+        var orentation = 'asc';
         if (field.indexOf('-') === 0) {
             field = field.substr(1);
-            desc = true;
+            orentation = 'desc';
         }
 
-        if (this.owns.hasOwnProperty(field)) {
-            query.orderBy(field, desc ? 'desc' : 'asc');
-        } else if (!quiet)
-            throw new restify.InvalidArgumentError("sort_by field '" + field + "' not recognized");
-    }
+        if (that.owns.hasOwnProperty(field)) {
+            query.orderBy(that.tableName + '.' + field, orentation);
+            return;
+        }
+
+        //allow for subfield sorting
+        var parts = field.split('.');
+        if (parts.length === 2) {
+            var label = parts[0];
+            var subfield = parts[1];
+            if (that.belongs_to && that.belongs_to[label]) {
+                var type = that.belongs_to[label].type;
+                if (type.resource.owns.hasOwnProperty(subfield)) {
+                    query.orderBy(label + '.' + subfield, orentation);
+                    that.join_table(type.resource, label, query);
+                    return;
+                }
+            }
+        }
+
+        if (quiet) { return; }
+        throw new restify.InvalidArgumentError("sort_by field '" + field + "' not recognized");
+    });
 };
 
 Resource.prototype.assemble_insert = function (post_data) {
     var insert_data = {};
 
     var all_fields = Object.keys(this.owns);
-    for (var i in all_fields) {
+    var i;
+    for (i in all_fields) {
         var field = all_fields[i];
         var field_def = this.owns[field];
         var was_posted = post_data.hasOwnProperty(field);
@@ -436,8 +462,8 @@ Resource.prototype.processBasicQueryParams = function (req, query) {
 Resource.prototype.processCollectionQueryParams = function (req, query) {
     this.processBasicQueryParams(req, query);
     this.apply_paging(req, query, false);
-    this.apply_sorting(req, query, false);
-    this.apply_filters(req, query);
+    this.apply_sorting(req.query, query, false);
+    this.apply_filters(req.query, query);
 };
 
 
