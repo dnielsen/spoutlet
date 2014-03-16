@@ -1,7 +1,8 @@
 var restify = require('restify'),
     common = require('./common'),
     knex = common.knex,
-    Type = require('./type');
+    Type = require('./type'),
+    __ = require("underscore");
 
 //Schema properties : 
 // default : on GET this field will display unless 'filters' or 'verbose' queries are used
@@ -11,22 +12,46 @@ var restify = require('restify'),
 
 //Constructor
 var Resource = function (spec) {
+    var that = this;
+
     this.tableName = spec.tableName;
     this.primary_key = spec.primary_key;
     this.user_mapping = spec.user_mapping;
     this.deleted_col = spec.deleted_col || false;
+    this.schema = spec.schema;
+    this.filters = [];
 
-    for (var key in spec.schema) {
-        var field_def = spec.schema[key];
-
+    var parse_relation = function (label, field_def) {
         var relationship = field_def.rel;
-        if (relationship === undefined)
+        if (relationship === undefined) {
             relationship = 'owns';
+        }
 
         delete field_def.rel;
-        if (this[relationship] === undefined)
-            this[relationship] = {};
-        this[relationship][key] = field_def;
+        if (that[relationship] === undefined) {
+            that[relationship] = {};
+        }
+        that[relationship][label] = field_def;
+    };
+
+    var parse_props = function (label, field_def) {
+        var props = field_def.props;
+
+        if (props === undefined || !__.contains(props, 'no-filter')) {
+            that.filters.push(label);
+        }
+    };
+
+    //split out field definitions by the type of relation
+    //also save a list of filterable fields
+    var key, field_def;
+    for (key in spec.schema) {
+        if (!spec.schema.hasOwnProperty(key)) { continue; }
+
+        field_def = spec.schema[key];
+
+        parse_relation(key, field_def);
+        parse_props(key, field_def);
     }
 
 };
@@ -93,24 +118,34 @@ Resource.prototype.assemble_url = function (path, queries) {
     return common.baseUrl + path + query_string;
 };
 
-Resource.prototype.apply_filters = function (req, query) {
-    var all_fields = Object.keys(this.owns);
-    for (var i in all_fields) {
-        var field = all_fields[i];
-        var field_def = this.owns[field];
+Resource.prototype.apply_filters = function (req, query, label) {
+    var that = this;
+    var filters = this.filters;
+    filters.forEach(function (filter_name) {
+        //if not requested, continue looking
+        if (!req.query.hasOwnProperty(filter_name)) { return; }
 
-        var is_filterable = field_def.hasOwnProperty("props") && field_def.props.indexOf("no-filter") === -1;
+        var type = that.schema[filter_name].type;
+        if (type instanceof ResourceType) {
+            var value = req.query[filter_name];
 
-        var label = field_def.hasOwnProperty("alias") ? field_def.alias : field;
-        var was_provided = req.query.hasOwnProperty(label);
-        if (!is_filterable || !was_provided)
-            continue;
+            //strip quotes
+            value = value.replace(/['|"]([^'"]*)['|"]/, '$1');
 
-        var value = req.query[label];
-        var field_type = field_def["type"];
+            //parse nested qp's
+            var subqueries = {};
+            value.split(',').forEach(function (kv) {
+                var split = kv.split('=');
+                if (split.length === 2) { subqueries[split[0]] = split[1]; }
+            });
 
-        field_type.apply_filter(this.tableName + '.' + field, query, value);
-    }
+            //call apply_filters on the type's resource
+            type.resource.apply_filters({ query : subqueries }, query, filter_name);
+            that.join_table(type.resource, filter_name, query);
+        } else {
+            type.apply_filter((label || that.tableName) + '.' + filter_name, query, req.query[filter_name]);
+        }
+    });
 };
 
 
@@ -291,6 +326,21 @@ Resource.prototype.apply_envelopes = function (result_set) {
 };
 
 
+Resource.prototype.join_table = function (resource, label, query) {
+    if(__.contains(query.joined,label))
+        return;
+
+    var table_name = resource.tableName + " as " + label;
+    var lhs = this.tableName + "." + this.belongs_to[label].mapping;
+    var rhs = label + '.' + resource.primary_key;
+    query.join(table_name, lhs, '=', rhs, 'left'); // left join allows other tbls to be null.
+
+    if(query.joined === undefined)
+        query.joined = [];
+    query.joined.push(label);
+};
+
+
 Resource.prototype.apply_columns_helper = function (choose_stmts, query, defaults_only) {
     //return all columns
     choose_stmts(this);
@@ -308,10 +358,7 @@ Resource.prototype.apply_columns_helper = function (choose_stmts, query, default
             continue;
 
         //add the correct join statement to our query if columns were found
-        var table_name = resource.tableName + " as " + belongs_to_label;
-        var lhs = this.tableName + "." + all_belongs_to[belongs_to_label].mapping;
-        var rhs = belongs_to_label + '.' + resource.primary_key;
-        query.join(table_name, lhs, '=', rhs, 'left'); // left join allows other tbls to be null.
+        this.join_table(resource,belongs_to_label,query);
     }
 };
 
@@ -445,7 +492,7 @@ Resource.prototype.find_all = function (req, resp, next) {
 
         var query = knex(that.tableName).count('*');
         if (that.deleted_col)
-            query.where(that.deleted_col, 0);
+            query.where(that.tableName + '.' + that.deleted_col, 0);
 
         that.apply_filters(req, query);
         query.then(send_response, return_error);
