@@ -10,7 +10,7 @@ var restify = require('restify'),
     users = require('./routes/users');
 
 var fail_auth = function (res, relm, message) {
-    res.header("WWW-Authenticate", "Basic realm=\"" + common.security_relm_token + "\"");
+    res.header("WWW-Authenticate", "Basic realm=\"" + relm + "\"");
     res.send(401, message);
 };
 
@@ -46,7 +46,7 @@ var get_api_token = function (req, res, next) {
         res.send(200, db_user_data.uuid);
     };
 
-    common.knex("fos_user").where("username", req.username).then(validate_user, return_error);
+    common.knex("fos_user").where("username", req_username).then(validate_user, return_error);
 };
 
 var api_token_checker = function (req, res, next) {
@@ -75,7 +75,7 @@ var api_token_checker = function (req, res, next) {
         next();
     };
 
-    var user_data = common.knex("fos_user").where("uuid", uuid).then(save_user, return_error);
+    common.knex("fos_user").where("uuid", uuid).then(save_user, return_error);
 };
 
 var server = restify.createServer({

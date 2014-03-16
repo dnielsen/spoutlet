@@ -4,12 +4,12 @@ var Type = require('../type'),
 var spec = {
     tableName : 'follow_mappings',
     primary_key : 'idea',
-    user_mapping : ['username','user'],
+    user_mapping : ['username', 'user'],
     schema : {
-        "user" : { type : Type.Int,  props : ["default","read-only"]},
-        "idea" : { type : Type.Int, props : ["default","required"]},
+        "user" : { type : Type.Str, props : ["default"]},
+        "idea" : { type : Type.Int, props : ["default", "required"]},
         "user_details" : { type : Type.User, rel : "belongs_to", mapping : "user" },
-        "idea_details" : { type : Type.Entry,rel : "belongs_to", mapping : 'idea' }
+        "idea_details" : { type : Type.Entry, rel : "belongs_to", mapping : 'idea' }
     }
 };
 

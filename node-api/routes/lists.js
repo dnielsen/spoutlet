@@ -13,25 +13,26 @@ Type.List.Type.init(
         query.where(column, value);
     },
     //prefix operator
-    {});
+    {}
+);
 
-var spec = { 
+var spec = {
     tableName : 'entry_set',
     primary_key : 'id',
-    user_mapping : ['id','creator_id'],
+    user_mapping : ['id', 'creator_id'],
     schema : {
-        "id" : { type : Type.Int,    props : ["default","read_only"] },
-        "name" : { type : Type.Str,    props : ["default","required"] },
-        "type" : { type : Type.List.Type,props : ["default"] },
-        "isVotingActive" : { type : Type.Bool,   props : [] },
-        "isSubmissionActive" : { type : Type.Bool,   props : [] },
-        "allowedVoters" : { type : Type.Str,    props : ["default"] },
-        "description" : { type : Type.Str,    props : ["default", "required"] },
-        "entrySetRegistration_id" : { type : Type.Int,    props : ["default","required"] },
-        "creator_id" : { type : Type.Int,    props : ["read_only"] },
+        "id" : { type : Type.Int, props : ["default", "read_only"] },
+        "name" : { type : Type.Str, props : ["default", "required"] },
+        "type" : { type : Type.List.Type, props : ["default"] },
+        "isVotingActive" : { type : Type.Bool, props : [] },
+        "isSubmissionActive" : { type : Type.Bool, props : [] },
+        "allowedVoters" : { type : Type.Str, props : ["default"] },
+        "description" : { type : Type.Str, props : ["default", "required"] },
+        "entrySetRegistration_id" : { type : Type.Int, props : ["default", "required"] },
+        "creator_id" : { type : Type.Int, props : ["read_only"] },
 
-        "entrySetRegistration" : { type : Type.Registry,rel : "belongs_to", mapping : "entrySetRegistration_id", props : ["default"] },
-        "creator" : { type : Type.User,    rel : "belongs_to", mapping : "creator_id" },
+        "entrySetRegistration" : { type : Type.Registry, rel : "belongs_to", mapping : "entrySetRegistration_id", props : ["default"] },
+        "creator" : { type : Type.User, rel : "belongs_to", mapping : "creator_id" },
     }
 };
 
@@ -55,8 +56,7 @@ exports.delete_by_primary_key = function (req, resp, next) {
 };
 
 exports.find_popular = function (req, resp, next) {
-
-    var query = knex('idea')
+    knex('idea')
         .join('entry_set', 'entry_set.id', '=', 'idea.entrySet_id')
         .select('entry_set.id', 'entry_set.name')
         .count('idea.id AS popularity')
@@ -77,7 +77,7 @@ exports.get_sorted_entries = function (req, resp, next) {
         .count('follow_mappings.idea AS popularity')
         .groupBy('follow_mappings.idea')
         .orderBy('popularity', 'DESC')
-        .where('idea.entrySet_id', req.params['id']);
+        .where('idea.entrySet_id', req.params.id);
 
     query.then(function (results) {
         resp.send(results);
