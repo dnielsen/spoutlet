@@ -99,271 +99,120 @@ ResourceType.prototype.init = function (resource, val, def_op, prefix_ops) {
     this.resource = resource;
 };
 
-//-------------------------------------------------
 
-Resource.prototype.assemble_url = function (path, queries) {
-    var query_string = "";
-    var is_first = true;
+//------------------------- GET Functions ------------------------
 
-    /*jslint forin: true*/
-    var query, value;
-    for (query in queries) {
-        if (!queries.hasOwnProperty(query)) { continue; }
 
-        value = queries[query];
-        if (is_first) {
-            is_first = false;
-            query_string += "?" + query + "=" + value;
-        } else {
-            query_string += "&" + query + "=" + value;
-        }
-    }
-    return common.baseUrl + path + query_string;
+// Basic resource type's allow for customization of the fields returned
+// providing no query parameters (qp) returns just the default fields
+// verbose qp will return all available fields,
+// fields qp returns only the specified fields
+// fields=name[,name] | verbose | (none)
+Resource.prototype.processBasicQueryParams = function (req, query) {
+    this.apply_columns(req, query);
 };
 
-Resource.prototype.apply_filters = function (requests, query, label) {
+Resource.prototype.processCollectionQueryParams = function (req, query) {
+    this.processBasicQueryParams(req, query);
+    this.apply_paging(req, query, false);
+    this.apply_sorting(req.query, query, false);
+    this.apply_filters(req.query, query);
+};
+
+
+Resource.prototype.find_by_primary_key = function (req, resp, next) {
     var that = this;
-    var filters = this.filters;
-    __.each(filters, function (filter_name) {
-        //if not requested, continue looking
-        if (!requests.hasOwnProperty(filter_name)) { return; }
 
-        var type = that.schema[filter_name].type;
-        if (type instanceof ResourceType) {
-            if (label !== undefined) {
-                throw new restify.InvalidArgumentError("filters may only be nested to 1 level");
-            }
+    if (!this.primary_key)
+        return next(new restify.InvalidArgumentError('no primary key for this resource'));
 
-            var value = requests[filter_name];
+    var primary_key_field = this.primary_key;
+    var primary_key = req.params[primary_key_field];
 
-            /*jslint regexp: true*/
-            //strip quotes, validation done by apply_filter
-            value = value.replace(/['|"]([^'"]*)['|"]/, '$1');
+    var field_def = this.owns[primary_key_field];
+    var fails_validation = !field_def.type.validate(primary_key);
+    if (fails_validation)
+        throw new restify.InvalidArgumentError("'" + primary_key + "' invalid for " + primary_key_field);
 
-            //parse nested qp's
-            var subrequests = {};
-            value.split(',').forEach(function (kv) {
-                var split = kv.split('=');
-                subrequests[split.shift()] = split.join('=');
-            });
+    var query = knex(this.tableName).where(this.tableName + '.' + primary_key_field, primary_key);
+    if (this.deleted_col)
+        query.andWhere(this.tableName + '.' + this.deleted_col, 0);
 
-            //call apply_filters on the type's resource
-            type.resource.apply_filters(subrequests, query, filter_name);
-            that.join_table(type.resource, filter_name, query);
-        } else {
-            type.apply_filter((label || that.tableName) + '.' + filter_name, query, requests[filter_name]);
-        }
+    try {
+        this.processBasicQueryParams(req, query);
+    } catch (err) {
+        return next(err);
+    }
+
+    var send_response = function (result_set) {
+        if (result_set === undefined || result_set.length === 0)
+            return next(new restify.ResourceNotFoundError(primary_key));
+
+        var enveloped_result_set = that.apply_envelopes(result_set[0]);
+        resp.send(enveloped_result_set);
+        next();
+    };
+
+    query.then(send_response, function (err) {
+        return next(new restify.RestError(err));
     });
 };
 
-
-// Format : sort_by=[-]<field>[,[-]<field>] including '-' will reverse sort the field
-// e.g. /groups?fields=id,category,featured&sort_by=-category,-featured
-// On quiet refrain from throwing exceptions for invalid fields
-Resource.prototype.apply_sorting = function (requests, query, quiet) {
-    var that = this;
-    if (!requests.hasOwnProperty('sort_by')) {
-        return;
-    }
-
-    var fields = requests.sort_by.split(',');
-    __.each(fields, function (field) {
-        var orentation = 'asc';
-        if (field.indexOf('-') === 0) {
-            field = field.substr(1);
-            orentation = 'desc';
-        }
-
-        if (that.owns.hasOwnProperty(field)) {
-            query.orderBy(that.tableName + '.' + field, orentation);
-            return;
-        }
-
-        //allow for subfield sorting
-        var parts = field.split('.');
-        if (parts.length === 2) {
-            var label = parts[0];
-            var subfield = parts[1];
-            if (that.belongs_to && that.belongs_to[label]) {
-                var type = that.belongs_to[label].type;
-                if (type.resource.owns.hasOwnProperty(subfield)) {
-                    query.orderBy(label + '.' + subfield, orentation);
-                    that.join_table(type.resource, label, query);
-                    return;
-                }
-            }
-        }
-
-        if (quiet) { return; }
-        throw new restify.InvalidArgumentError("sort_by field '" + field + "' not recognized");
-    });
-};
-
-Resource.prototype.assemble_insert = function (post_data) {
-    var insert_data = {};
-
-    var all_fields = Object.keys(this.owns);
-    var i;
-    for (i in all_fields) {
-        var field = all_fields[i];
-        var field_def = this.owns[field];
-        var was_posted = post_data.hasOwnProperty(field);
-
-        var is_required = field_def.hasOwnProperty("props") && field_def.props.indexOf("required") !== -1;
-        if (is_required && !was_posted)
-            throw new restify.MissingParameterError('must provide ' + field);
-
-        var is_read_only = field_def.hasOwnProperty("props") && field_def.props.indexOf("read-only") !== -1;
-        if (is_read_only && was_posted)
-            throw new restify.InvalidArgumentError('cannot set field ' + field);
-
-        var has_default = field_def.hasOwnProperty('initial');
-        if (!was_posted && !has_default)
-            continue;
-
-        var value = was_posted ? post_data[field] : (typeof field_def.initial === "function" ? field_def.initial() : field_def.initial);
-
-        var fails_validation = !field_def.type.validate(value);
-        if (fails_validation)
-            throw new restify.InvalidArgumentError("'" + value + "' invalid for " + field);
-
-        insert_data[field] = value;
-    }
-
-    return insert_data;
-};
-
-Resource.prototype.assemble_paging_links = function (req, max) {
+Resource.prototype.find_all = function (req, resp, next) {
     var that = this;
 
-    var limit = req.query.limit;
-    var offset = req.query.offset;
-    if (max === '' || isNaN(max) || limit === '' || isNaN(limit))
-        return;
+    var query = knex(this.tableName);
+    if (this.deleted_col)
+        query.where(this.tableName + '.' + this.deleted_col, 0);
 
-    //sanatize limit and offset
-    if (limit > max) limit = max;
-    if (limit < 0) limit = 1;
-    if (offset === '' || isNaN(offset) || offset < 0) offset = 0;
-    if (offset > max) offset = max;
-
-    var current_page = Math.floor(offset / limit);
-    var total_pages = Math.floor(max / limit);
-    if (max % limit === 0) {
-        total_pages = total_pages - 1;
+    try {
+        this.processCollectionQueryParams(req, query);
+    } catch (err) {
+        return next(err);
     }
 
-    var path = req.path();
+    var result_set;
 
-    var get_paging_link = function (limit, offset) {
-        var queries = JSON.parse(JSON.stringify(req.query));
-        queries.limit = limit;
-
-        if (offset === 0) {
-            delete queries.offset;
-        } else {
-            queries.offset = offset;
-        }
-        return that.assemble_url(path, queries);
+    var return_error = function (err) {
+        return next(new restify.RestError(err));
     };
 
-    var return_value = {
-        first : get_paging_link(limit, 0),
-        last : get_paging_link(limit, total_pages * limit),
-        next : get_paging_link(limit, (current_page < total_pages ? current_page + 1 : current_page) * limit),
-        prev : get_paging_link(limit, (current_page > 0 ? current_page - 1 : current_page) * limit),
-    };
-    return return_value;
-};
+    var send_response = function (count_result) {
+        var count = count_result[0]["count(*)"];
 
-//Allows user agent to request a view of the total data by size and starting count.
-//Format : limit=<size of result set>[,offset=<num to skip over>]
-Resource.prototype.apply_paging = function (req, query, quiet) {
-    if (!req.query.hasOwnProperty('limit'))
-        return;
+        resp.header('X-Length', result_set.length);
+        resp.header('X-Total-Length', count);
 
-    var limit = req.query.limit;
-    if (limit === '' || isNaN(limit) || limit < 0) {
-        if (quiet) return;
-        throw new restify.InvalidArgumentError("limit value " + limit);
-    }
-    query.limit(limit);
-
-    if (!req.query.hasOwnProperty('offset'))
-        return;
-
-    var offset = req.query.offset;
-    if (offset === '' || isNaN(offset)) {
-        if (quiet) return;
-        throw new restify.InvalidArgumentError("offset value " + offset);
-    }
-    query.offset(offset);
-};
-
-//Where this resource is owned by me
-Resource.prototype.where_is_mine = function (req, query) {
-    if (!this.hasOwnProperty("user_mapping"))
-        return;
-
-    var user_mapping = this["user_mapping"];
-
-    var user_id = req.user[user_mapping[0]];
-    var resource_field = user_mapping[1];
-    query.where(resource_field, user_id);
-};
-
-Resource.prototype.apply_envelopes = function (result_set) {
-    var envelope_names = [this.tableName];
-    if (this.belongs_to !== undefined)
-        envelope_names = envelope_names.concat(Object.keys(this.belongs_to));
-    if (this.has_many !== undefined)
-        envelope_names = envelope_names.concat(Object.keys(this.has_many));
-
-    var enveloped_result_set = {};
-    for (var label in result_set) {
-        var value = result_set[label];
-
-        for (var i in envelope_names) {
-            var envelope_name = envelope_names[i];
-
-            //if no match continue
-            if (label.indexOf(envelope_name) !== 0)
-                continue;
-
-            //trim off the envelope name
-            var short_label = label.substring(envelope_name.length + 1);
-
-            //insert value into the envelope
-            //special handling for envelope (this.tableName), it's our local values so no envelope
-            if (envelope_name === this.tableName)
-                enveloped_result_set[short_label] = value;
-            else {
-                //create the envelope if it isn't already there
-                if (enveloped_result_set[envelope_name] === undefined)
-                    enveloped_result_set[envelope_name] = {};
-
-                enveloped_result_set[envelope_name][short_label] = value;
-            }
-            break;
+        var paging_links = that.assemble_paging_links(req, count);
+        if (paging_links) {
+            resp.header('X-First', paging_links.first);
+            resp.header('X-Last', paging_links.last);
+            resp.header('X-Next', paging_links.next);
+            resp.header('X-Prev', paging_links.prev);
         }
-    }
 
-    return enveloped_result_set;
-};
+        var enveloped_result_set = result_set;
+        for (var i = 0; i < result_set.length; i++) {
+            enveloped_result_set[i] = that.apply_envelopes(result_set[i]);
+        }
 
-
-Resource.prototype.join_table = function (resource, label, query) {
-    if(__.contains(query.joined,label))
+        resp.send(enveloped_result_set);
+        next();
         return;
+    };
 
-    var table_name = resource.tableName + " as " + label;
-    var lhs = this.tableName + "." + this.belongs_to[label].mapping;
-    var rhs = label + '.' + resource.primary_key;
-    query.join(table_name, lhs, '=', rhs, 'left'); // left join allows other tbls to be null.
+    var ask_how_many = function (results) {
+        result_set = results;
 
-    if(query.joined === undefined)
-        query.joined = [];
-    query.joined.push(label);
+        var query = knex(that.tableName).count('*');
+        if (that.deleted_col)
+            query.where(that.tableName + '.' + that.deleted_col, 0);
+
+        that.apply_filters(req, query);
+        query.then(send_response, return_error);
+    };
+
+    query.then(ask_how_many, return_error);
 };
 
 
@@ -450,119 +299,228 @@ Resource.prototype.apply_columns = function (req, query) {
     }
 };
 
-// Basic resource type's allow for customization of the fields returned
-// providing no query parameters (qp) returns just the default fields
-// verbose qp will return all available fields,
-// fields qp returns only the specified fields
-// fields=name[,name] | verbose | (none)
-Resource.prototype.processBasicQueryParams = function (req, query) {
-    this.apply_columns(req, query);
-};
 
-Resource.prototype.processCollectionQueryParams = function (req, query) {
-    this.processBasicQueryParams(req, query);
-    this.apply_paging(req, query, false);
-    this.apply_sorting(req.query, query, false);
-    this.apply_filters(req.query, query);
-};
+Resource.prototype.apply_envelopes = function (result_set) {
+    var envelope_names = [this.tableName];
+    if (this.belongs_to !== undefined)
+        envelope_names = envelope_names.concat(Object.keys(this.belongs_to));
+    if (this.has_many !== undefined)
+        envelope_names = envelope_names.concat(Object.keys(this.has_many));
 
+    var enveloped_result_set = {};
+    for (var label in result_set) {
+        var value = result_set[label];
 
-//--------------------------------------------------------
+        for (var i in envelope_names) {
+            var envelope_name = envelope_names[i];
 
+            //if no match continue
+            if (label.indexOf(envelope_name) !== 0)
+                continue;
 
-Resource.prototype.find_all = function (req, resp, next) {
-    var that = this;
+            //trim off the envelope name
+            var short_label = label.substring(envelope_name.length + 1);
 
-    var query = knex(this.tableName);
-    if (this.deleted_col)
-        query.where(this.tableName + '.' + this.deleted_col, 0);
+            //insert value into the envelope
+            //special handling for envelope (this.tableName), it's our local values so no envelope
+            if (envelope_name === this.tableName)
+                enveloped_result_set[short_label] = value;
+            else {
+                //create the envelope if it isn't already there
+                if (enveloped_result_set[envelope_name] === undefined)
+                    enveloped_result_set[envelope_name] = {};
 
-    try {
-        this.processCollectionQueryParams(req, query);
-    } catch (err) {
-        return next(err);
+                enveloped_result_set[envelope_name][short_label] = value;
+            }
+            break;
+        }
     }
 
-    var result_set;
-
-    var return_error = function (err) {
-        return next(new restify.RestError(err));
-    };
-
-    var send_response = function (count_result) {
-        var count = count_result[0]["count(*)"];
-
-        resp.header('X-Length', result_set.length);
-        resp.header('X-Total-Length', count);
-
-        var paging_links = that.assemble_paging_links(req, count);
-        if (paging_links) {
-            resp.header('X-First', paging_links.first);
-            resp.header('X-Last', paging_links.last);
-            resp.header('X-Next', paging_links.next);
-            resp.header('X-Prev', paging_links.prev);
-        }
-
-        var enveloped_result_set = result_set;
-        for (var i = 0; i < result_set.length; i++) {
-            enveloped_result_set[i] = that.apply_envelopes(result_set[i]);
-        }
-
-        resp.send(enveloped_result_set);
-        next();
-        return;
-    };
-
-    var ask_how_many = function (results) {
-        result_set = results;
-
-        var query = knex(that.tableName).count('*');
-        if (that.deleted_col)
-            query.where(that.tableName + '.' + that.deleted_col, 0);
-
-        that.apply_filters(req, query);
-        query.then(send_response, return_error);
-    };
-
-    query.then(ask_how_many, return_error);
+    return enveloped_result_set;
 };
 
-Resource.prototype.find_by_primary_key = function (req, resp, next) {
+
+Resource.prototype.apply_filters = function (requests, query, label) {
     var that = this;
+    var filters = this.filters;
+    __.each(filters, function (filter_name) {
+        //if not requested, continue looking
+        if (!requests.hasOwnProperty(filter_name)) { return; }
 
-    if (!this.primary_key)
-        return next(new restify.InvalidArgumentError('no primary key for this resource'));
+        var type = that.schema[filter_name].type;
+        if (type instanceof ResourceType) {
+            if (label !== undefined) {
+                throw new restify.InvalidArgumentError("filters may only be nested to 1 level");
+            }
 
-    var primary_key_field = this.primary_key;
-    var primary_key = req.params[primary_key_field];
+            var value = requests[filter_name];
 
-    var field_def = this.owns[primary_key_field];
-    var fails_validation = !field_def.type.validate(primary_key);
-    if (fails_validation)
-        throw new restify.InvalidArgumentError("'" + primary_key + "' invalid for " + primary_key_field);
+            /*jslint regexp: true*/
+            //strip quotes, validation done by apply_filter
+            value = value.replace(/['|"]([^'"]*)['|"]/, '$1');
 
-    var query = knex(this.tableName).where(this.tableName + '.' + primary_key_field, primary_key);
-    if (this.deleted_col)
-        query.andWhere(this.tableName + '.' + this.deleted_col, 0);
+            //parse nested qp's
+            var subrequests = {};
+            value.split(',').forEach(function (kv) {
+                var split = kv.split('=');
+                subrequests[split.shift()] = split.join('=');
+            });
 
-    try {
-        this.processBasicQueryParams(req, query);
-    } catch (err) {
-        return next(err);
-    }
-
-    var send_response = function (result_set) {
-        if (result_set === undefined || result_set.length === 0)
-            return next(new restify.ResourceNotFoundError(primary_key));
-
-        var enveloped_result_set = that.apply_envelopes(result_set[0]);
-        resp.send(enveloped_result_set);
-        next();
-    };
-
-    query.then(send_response, function (err) {
-        return next(new restify.RestError(err));
+            //call apply_filters on the type's resource
+            type.resource.apply_filters(subrequests, query, filter_name);
+            that.join_table(type.resource, filter_name, query);
+        } else {
+            type.apply_filter((label || that.tableName) + '.' + filter_name, query, requests[filter_name]);
+        }
     });
+};
+
+
+// Format : sort_by=[-]<field>[,[-]<field>] including '-' will reverse sort the field
+// e.g. /groups?fields=id,category,featured&sort_by=-category,-featured
+// On quiet refrain from throwing exceptions for invalid fields
+Resource.prototype.apply_sorting = function (requests, query, quiet) {
+    var that = this;
+    if (!requests.hasOwnProperty('sort_by')) {
+        return;
+    }
+
+    var fields = requests.sort_by.split(',');
+    __.each(fields, function (field) {
+        var orentation = 'asc';
+        if (field.indexOf('-') === 0) {
+            field = field.substr(1);
+            orentation = 'desc';
+        }
+
+        if (that.owns.hasOwnProperty(field)) {
+            query.orderBy(that.tableName + '.' + field, orentation);
+            return;
+        }
+
+        //allow for subfield sorting
+        var parts = field.split('.');
+        if (parts.length === 2) {
+            var label = parts[0];
+            var subfield = parts[1];
+            if (that.belongs_to && that.belongs_to[label]) {
+                var type = that.belongs_to[label].type;
+                if (type.resource.owns.hasOwnProperty(subfield)) {
+                    query.orderBy(label + '.' + subfield, orentation);
+                    that.join_table(type.resource, label, query);
+                    return;
+                }
+            }
+        }
+
+        if (quiet) { return; }
+        throw new restify.InvalidArgumentError("sort_by field '" + field + "' not recognized");
+    });
+};
+
+Resource.prototype.assemble_paging_links = function (req, max) {
+    var that = this;
+
+    var limit = req.query.limit;
+    var offset = req.query.offset;
+    if (max === '' || isNaN(max) || limit === '' || isNaN(limit))
+        return;
+
+    //sanatize limit and offset
+    if (limit > max) limit = max;
+    if (limit < 0) limit = 1;
+    if (offset === '' || isNaN(offset) || offset < 0) offset = 0;
+    if (offset > max) offset = max;
+
+    var current_page = Math.floor(offset / limit);
+    var total_pages = Math.floor(max / limit);
+    if (max % limit === 0) {
+        total_pages = total_pages - 1;
+    }
+
+    var path = req.path();
+
+    var get_paging_link = function (limit, offset) {
+        var queries = JSON.parse(JSON.stringify(req.query));
+        queries.limit = limit;
+
+        if (offset === 0) {
+            delete queries.offset;
+        } else {
+            queries.offset = offset;
+        }
+        return that.assemble_url(path, queries);
+    };
+
+    var return_value = {
+        first : get_paging_link(limit, 0),
+        last : get_paging_link(limit, total_pages * limit),
+        next : get_paging_link(limit, (current_page < total_pages ? current_page + 1 : current_page) * limit),
+        prev : get_paging_link(limit, (current_page > 0 ? current_page - 1 : current_page) * limit),
+    };
+    return return_value;
+};
+
+//Allows user agent to request a view of the total data by size and starting count.
+//Format : limit=<size of result set>[,offset=<num to skip over>]
+Resource.prototype.apply_paging = function (req, query, quiet) {
+    if (!req.query.hasOwnProperty('limit'))
+        return;
+
+    var limit = req.query.limit;
+    if (limit === '' || isNaN(limit) || limit < 0) {
+        if (quiet) return;
+        throw new restify.InvalidArgumentError("limit value " + limit);
+    }
+    query.limit(limit);
+
+    if (!req.query.hasOwnProperty('offset'))
+        return;
+
+    var offset = req.query.offset;
+    if (offset === '' || isNaN(offset)) {
+        if (quiet) return;
+        throw new restify.InvalidArgumentError("offset value " + offset);
+    }
+    query.offset(offset);
+};
+
+
+//-----------------------Create / Update / Delete---------------------------------
+
+
+Resource.prototype.assemble_insert = function (post_data) {
+    var insert_data = {};
+
+    var all_fields = Object.keys(this.owns);
+    var i;
+    for (i in all_fields) {
+        var field = all_fields[i];
+        var field_def = this.owns[field];
+        var was_posted = post_data.hasOwnProperty(field);
+
+        var is_required = field_def.hasOwnProperty("props") && field_def.props.indexOf("required") !== -1;
+        if (is_required && !was_posted)
+            throw new restify.MissingParameterError('must provide ' + field);
+
+        var is_read_only = field_def.hasOwnProperty("props") && field_def.props.indexOf("read-only") !== -1;
+        if (is_read_only && was_posted)
+            throw new restify.InvalidArgumentError('cannot set field ' + field);
+
+        var has_default = field_def.hasOwnProperty('initial');
+        if (!was_posted && !has_default)
+            continue;
+
+        var value = was_posted ? post_data[field] : (typeof field_def.initial === "function" ? field_def.initial() : field_def.initial);
+
+        var fails_validation = !field_def.type.validate(value);
+        if (fails_validation)
+            throw new restify.InvalidArgumentError("'" + value + "' invalid for " + field);
+
+        insert_data[field] = value;
+    }
+
+    return insert_data;
 };
 
 Resource.prototype.create = function (req, resp, next) {
@@ -670,4 +628,54 @@ Resource.prototype.delete_by_primary_key = function (req, resp, next) {
     } else {
         query.del().then(send_response, report_error);
     }
+};
+
+
+//------------------ Utility Functions ----------------
+
+
+Resource.prototype.assemble_url = function (path, queries) {
+    var query_string = "";
+    var is_first = true;
+
+    /*jslint forin: true*/
+    var query, value;
+    for (query in queries) {
+        if (!queries.hasOwnProperty(query)) { continue; }
+
+        value = queries[query];
+        if (is_first) {
+            is_first = false;
+            query_string += "?" + query + "=" + value;
+        } else {
+            query_string += "&" + query + "=" + value;
+        }
+    }
+    return common.baseUrl + path + query_string;
+};
+
+Resource.prototype.join_table = function (resource, label, query) {
+    if (__.contains(query.joined, label))
+        return;
+
+    var table_name = resource.tableName + " as " + label;
+    var lhs = this.tableName + "." + this.belongs_to[label].mapping;
+    var rhs = label + '.' + resource.primary_key;
+    query.join(table_name, lhs, '=', rhs, 'left'); // left join allows other tbls to be null.
+
+    if(query.joined === undefined)
+        query.joined = [];
+    query.joined.push(label);
+};
+
+//Where this resource is owned by me
+Resource.prototype.where_is_mine = function (req, query) {
+    if (!this.hasOwnProperty("user_mapping"))
+        return;
+
+    var user_mapping = this["user_mapping"];
+
+    var user_id = req.user[user_mapping[0]];
+    var resource_field = user_mapping[1];
+    query.where(resource_field, user_id);
 };
