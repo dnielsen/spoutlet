@@ -425,14 +425,15 @@ Resource.prototype.assemble_paging_links = function (req, max) {
 
     var limit = req.query.limit;
     var offset = req.query.offset;
-    if (max === '' || isNaN(max) || limit === '' || isNaN(limit))
+    if (max === '' || isNaN(max) || limit === '' || isNaN(limit)) {
         return;
+    }
 
     //sanatize limit and offset
-    if (limit > max) limit = max;
-    if (limit < 0) limit = 1;
-    if (offset === '' || isNaN(offset) || offset < 0) offset = 0;
-    if (offset > max) offset = max;
+    if (limit > max) { limit = max; }
+    if (limit < 0) { limit = 1; }
+    if (offset === '' || isNaN(offset) || offset < 0) { offset = 0; }
+    if (offset > max) { offset = max; }
 
     var current_page = Math.floor(offset / limit);
     var total_pages = Math.floor(max / limit);
@@ -466,22 +467,24 @@ Resource.prototype.assemble_paging_links = function (req, max) {
 //Allows user agent to request a view of the total data by size and starting count.
 //Format : limit=<size of result set>[,offset=<num to skip over>]
 Resource.prototype.apply_paging = function (req, query, quiet) {
-    if (!req.query.hasOwnProperty('limit'))
+    if (!req.query.hasOwnProperty('limit')) {
         return;
+    }
 
     var limit = req.query.limit;
     if (limit === '' || isNaN(limit) || limit < 0) {
-        if (quiet) return;
+        if (quiet) { return; }
         throw new restify.InvalidArgumentError("limit value " + limit);
     }
     query.limit(limit);
 
-    if (!req.query.hasOwnProperty('offset'))
+    if (!req.query.hasOwnProperty('offset')) {
         return;
+    }
 
     var offset = req.query.offset;
     if (offset === '' || isNaN(offset)) {
-        if (quiet) return;
+        if (quiet) { return; }
         throw new restify.InvalidArgumentError("offset value " + offset);
     }
     query.offset(offset);
