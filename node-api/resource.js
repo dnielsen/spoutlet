@@ -123,20 +123,23 @@ Resource.prototype.processCollectionQueryParams = function (req, query) {
 Resource.prototype.find_by_primary_key = function (req, resp, next) {
     var that = this;
 
-    if (!this.primary_key)
+    if (!this.primary_key) {
         return next(new restify.InvalidArgumentError('no primary key for this resource'));
+    }
 
     var primary_key_field = this.primary_key;
     var primary_key = req.params[primary_key_field];
 
     var field_def = this.owns[primary_key_field];
     var fails_validation = !field_def.type.validate(primary_key);
-    if (fails_validation)
+    if (fails_validation) {
         throw new restify.InvalidArgumentError("'" + primary_key + "' invalid for " + primary_key_field);
+    }
 
     var query = knex(this.tableName).where(this.tableName + '.' + primary_key_field, primary_key);
-    if (this.deleted_col)
+    if (this.deleted_col) {
         query.andWhere(this.tableName + '.' + this.deleted_col, 0);
+    }
 
     try {
         this.processBasicQueryParams(req, query);
@@ -145,8 +148,9 @@ Resource.prototype.find_by_primary_key = function (req, resp, next) {
     }
 
     var send_response = function (result_set) {
-        if (result_set === undefined || result_set.length === 0)
+        if (result_set === undefined || result_set.length === 0) {
             return next(new restify.ResourceNotFoundError(primary_key));
+        }
 
         var enveloped_result_set = that.apply_envelopes(result_set[0]);
         resp.send(enveloped_result_set);
@@ -162,8 +166,9 @@ Resource.prototype.find_all = function (req, resp, next) {
     var that = this;
 
     var query = knex(this.tableName);
-    if (this.deleted_col)
+    if (this.deleted_col) {
         query.where(this.tableName + '.' + this.deleted_col, 0);
+    }
 
     try {
         this.processCollectionQueryParams(req, query);
@@ -191,10 +196,10 @@ Resource.prototype.find_all = function (req, resp, next) {
             resp.header('X-Prev', paging_links.prev);
         }
 
-        var enveloped_result_set = result_set;
-        for (var i = 0; i < result_set.length; i++) {
-            enveloped_result_set[i] = that.apply_envelopes(result_set[i]);
-        }
+        var enveloped_result_set = [];
+        __.each(result_set, function (result) {
+            enveloped_result_set.push(that.apply_envelopes(result));
+        });
 
         resp.send(enveloped_result_set);
         next();
@@ -204,12 +209,12 @@ Resource.prototype.find_all = function (req, resp, next) {
     var ask_how_many = function (results) {
         result_set = results;
 
-        var query = knex(that.tableName).count('*');
-        if (that.deleted_col)
-            query.where(that.tableName + '.' + that.deleted_col, 0);
-
-        that.apply_filters(req, query);
-        query.then(send_response, return_error);
+        var count_query = knex(that.tableName).count('*');
+        if (that.deleted_col) {
+            count_query.where(that.tableName + '.' + that.deleted_col, 0);
+        }
+        that.apply_filters(req, count_query);
+        count_query.then(send_response, return_error);
     };
 
     query.then(ask_how_many, return_error);
@@ -217,24 +222,25 @@ Resource.prototype.find_all = function (req, resp, next) {
 
 
 Resource.prototype.apply_columns_helper = function (choose_stmts, query, defaults_only) {
+    var that = this;
+
     //return all columns
     choose_stmts(this);
 
-    var all_belongs_to = this.belongs_to;
-    for (var belongs_to_label in all_belongs_to) {
-        var belongs_to = all_belongs_to[belongs_to_label];
-
-        if (defaults_only && (!belongs_to.props || belongs_to.props.indexOf('default') === -1))
-            continue;
+    __.each(this.belongs_to, function (belongs_to, belongs_to_label) {
+        if (defaults_only && (!belongs_to.props || belongs_to.props.indexOf('default') === -1)) {
+            return;
+        }
 
         var resource = belongs_to.type.resource;
         var resource_used = choose_stmts(resource, belongs_to_label);
-        if (!resource_used)
-            continue;
+        if (!resource_used) {
+            return;
+        }
 
         //add the correct join statement to our query if columns were found
-        this.join_table(resource,belongs_to_label,query);
-    }
+        that.join_table(resource, belongs_to_label, query);
+    });
 };
 
 
@@ -245,48 +251,40 @@ Resource.prototype.apply_columns = function (req, query) {
     };
 
     var get_all_column_stmts = function (resource, label) {
-        for (var column_name in resource.owns) {
+        __.each(resource.owns, function (column, column_name) {
             add_column(column_name, resource, label);
-        }
+        });
         return true;
     };
 
     var get_default_column_stmts = function (resource, label) {
         var resource_used = false;
-
-        for (var column_name in resource.owns) {
-            var column_def = resource.owns[column_name];
-            if (!column_def.props || column_def.props.indexOf('default') === -1)
-                continue;
-
-            add_column(column_name, resource, label);
-            resource_used = true;
-        }
-
+        __.each(resource.owns, function (column_def, column_name) {
+            if (__.has(column_def, 'props') && __.contains(column_def.props, 'default')) {
+                add_column(column_name, resource, label);
+                resource_used = true;
+            }
+        });
         return resource_used;
     };
 
     var requested_columns = req.query.fields ? req.query.fields.split(',') : undefined;
     var get_requested_column_stmts = function (resource, label) {
-        var all_fields = resource.owns;
-
         var resource_used = false;
-        for (var i in requested_columns) {
-            var requested_col = requested_columns[i];
 
+        __.each(requested_columns, function (requested_col) {
             //require the label match if provided
             if (label) {
-                if (requested_col.indexOf(label) === 0)
-                    requested_col = requested_col.substring(label.length + 1);
-                else continue;
+                if (requested_col.substring(0, label.length) !== label) { return; }
+                requested_col = requested_col.substring(label.length + 1);
             }
 
             //validate the request
-            if (all_fields[requested_col] !== undefined) {
+            if (__.has(resource.owns, requested_col)) {
                 add_column(requested_col, resource, label);
                 resource_used = true;
             }
-        }
+        });
         return resource_used;
     };
 
@@ -301,40 +299,40 @@ Resource.prototype.apply_columns = function (req, query) {
 
 
 Resource.prototype.apply_envelopes = function (result_set) {
+    var that = this;
     var envelope_names = [this.tableName];
-    if (this.belongs_to !== undefined)
-        envelope_names = envelope_names.concat(Object.keys(this.belongs_to));
-    if (this.has_many !== undefined)
-        envelope_names = envelope_names.concat(Object.keys(this.has_many));
+    if (__.has(this, 'belongs_to')) {
+        envelope_names = envelope_names.concat(__.keys(this.belongs_to));
+    }
+    if (__.has(this, 'has_many')) {
+        envelope_names = envelope_names.concat(__.keys(this.has_many));
+    }
 
     var enveloped_result_set = {};
-    for (var label in result_set) {
-        var value = result_set[label];
-
-        for (var i in envelope_names) {
-            var envelope_name = envelope_names[i];
-
+    __.each(result_set, function (value, label) {
+        __.find(envelope_names, function (envelope_name) {
             //if no match continue
-            if (label.indexOf(envelope_name) !== 0)
-                continue;
+            if (label.substring(0, envelope_name.length) !== envelope_name) {
+                return false;
+            }
 
             //trim off the envelope name
             var short_label = label.substring(envelope_name.length + 1);
 
             //insert value into the envelope
             //special handling for envelope (this.tableName), it's our local values so no envelope
-            if (envelope_name === this.tableName)
+            if (envelope_name === that.tableName) {
                 enveloped_result_set[short_label] = value;
-            else {
+            } else {
                 //create the envelope if it isn't already there
-                if (enveloped_result_set[envelope_name] === undefined)
+                if (!__.has(enveloped_result_set, envelope_name)) {
                     enveloped_result_set[envelope_name] = {};
-
+                }
                 enveloped_result_set[envelope_name][short_label] = value;
             }
-            break;
-        }
-    }
+            return true;
+        });
+    });
 
     return enveloped_result_set;
 };
@@ -348,30 +346,34 @@ Resource.prototype.apply_filters = function (requests, query, label) {
         if (!requests.hasOwnProperty(filter_name)) { return; }
 
         var type = that.schema[filter_name].type;
-        if (type instanceof ResourceType) {
-            if (label !== undefined) {
-                throw new restify.InvalidArgumentError("filters may only be nested to 1 level");
-            }
 
-            var value = requests[filter_name];
-
-            /*jslint regexp: true*/
-            //strip quotes, validation done by apply_filter
-            value = value.replace(/['|"]([^'"]*)['|"]/, '$1');
-
-            //parse nested qp's
-            var subrequests = {};
-            value.split(',').forEach(function (kv) {
-                var split = kv.split('=');
-                subrequests[split.shift()] = split.join('=');
-            });
-
-            //call apply_filters on the type's resource
-            type.resource.apply_filters(subrequests, query, filter_name);
-            that.join_table(type.resource, filter_name, query);
-        } else {
+        //handle direct relation first
+        if (!(type instanceof ResourceType)) {
             type.apply_filter((label || that.tableName) + '.' + filter_name, query, requests[filter_name]);
+            return;
         }
+
+        //label is the handle for an associated resource from a previous call
+        if (label !== undefined) {
+            throw new restify.InvalidArgumentError("filters may only be nested to 1 level");
+        }
+
+        var value = requests[filter_name];
+
+        /*jslint regexp: true*/
+        //strip quotes, validation done by apply_filter
+        value = value.replace(/['|"]([^'"]*)['|"]/, '$1');
+
+        //parse nested qp's
+        var subrequests = {};
+        __.each(value.split(','), function (kv) {
+            var split = kv.split('=');
+            subrequests[split.shift()] = split.join('=');
+        });
+
+        //call apply_filters on the type's resource
+        type.resource.apply_filters(subrequests, query, filter_name);
+        that.join_table(type.resource, filter_name, query);
     });
 };
 
@@ -663,7 +665,7 @@ Resource.prototype.join_table = function (resource, label, query) {
     var rhs = label + '.' + resource.primary_key;
     query.join(table_name, lhs, '=', rhs, 'left'); // left join allows other tbls to be null.
 
-    if(query.joined === undefined)
+    if (query.joined === undefined)
         query.joined = [];
     query.joined.push(label);
 };
