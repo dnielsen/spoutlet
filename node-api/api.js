@@ -42,8 +42,10 @@ var get_api_token = function (req, res, next) {
             return; // no furthar processing, don't call next()
         }
 
+        var rv = { id : db_user_data.id, username : db_user_data.username, api_key : db_user_data.uuid };
+
         //Credentials check out, return API key
-        res.send(200, db_user_data.uuid);
+        res.send(200, rv);
     };
 
     common.knex("fos_user").where("username", req_username).then(validate_user, return_error);
