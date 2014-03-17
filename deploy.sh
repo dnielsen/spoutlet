@@ -73,8 +73,14 @@ elif [ $ENV == 'prod' ]; then
 fi
 
 echo '============================='
+echo 'Updating Node dependencies'
+npm install
+echo
+
+echo '============================='
 echo 'Restarting Node API Service'
 forever restartall
+echo
 
 echo '============================='
 echo 'Restarting Apache (gracefully)'
