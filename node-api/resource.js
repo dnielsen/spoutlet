@@ -221,22 +221,23 @@ Resource.prototype.find_all = function (req, resp, next) {
 };
 
 
-Resource.prototype.apply_columns_helper = function (choose_stmts, query, defaults_only) {
+Resource.prototype.apply_columns_helper = function (choose_strategy, query) {
     var that = this;
 
-    //return all columns
-    choose_stmts(this);
+    //choose the owned columns first
+    choose_strategy(this);
 
+    //apply chooser to each belongs_to relation seperatly
     __.each(this.belongs_to, function (belongs_to, belongs_to_label) {
-        if (defaults_only && (!belongs_to.props || belongs_to.props.indexOf('default') === -1)) {
-            return;
+        if (choose_strategy.label === 'default') {
+            if (!__.has(belongs_to, 'props') || !__.contains(belongs_to.props, 'default')) {
+                return;
+            }
         }
 
         var resource = belongs_to.type.resource;
-        var resource_used = choose_stmts(resource, belongs_to_label);
-        if (!resource_used) {
-            return;
-        }
+        var resource_used = choose_strategy(resource, belongs_to_label);
+        if (!resource_used) { return; }
 
         //add the correct join statement to our query if columns were found
         that.join_table(resource, belongs_to_label, query);
@@ -245,19 +246,24 @@ Resource.prototype.apply_columns_helper = function (choose_stmts, query, default
 
 
 Resource.prototype.apply_columns = function (req, query) {
+    //common function to add select stmt to the query using correct table name alias
     var add_column = function (column_name, resource, label) {
         var prefix = (label || resource.tableName);
         query.column(prefix + '.' + column_name + " as " + prefix + '_' + column_name);
     };
 
-    var get_all_column_stmts = function (resource, label) {
+    //adds select stmts for verbose selection
+    var all_columns_strategy = function (resource, label) {
+        /*jslint unparam:true*/
         __.each(resource.owns, function (column, column_name) {
             add_column(column_name, resource, label);
         });
         return true;
     };
+    all_columns_strategy.label = 'all';
 
-    var get_default_column_stmts = function (resource, label) {
+    //adds select stmts for default selection
+    var default_columns_strategy = function (resource, label) {
         var resource_used = false;
         __.each(resource.owns, function (column_def, column_name) {
             if (__.has(column_def, 'props') && __.contains(column_def.props, 'default')) {
@@ -267,9 +273,11 @@ Resource.prototype.apply_columns = function (req, query) {
         });
         return resource_used;
     };
+    default_columns_strategy.label = 'default';
 
+    //adds select stmts for custom columns selection
     var requested_columns = req.query.fields ? req.query.fields.split(',') : undefined;
-    var get_requested_column_stmts = function (resource, label) {
+    var requested_columns_strategy = function (resource, label) {
         var resource_used = false;
 
         __.each(requested_columns, function (requested_col) {
@@ -283,17 +291,21 @@ Resource.prototype.apply_columns = function (req, query) {
             if (__.has(resource.owns, requested_col)) {
                 add_column(requested_col, resource, label);
                 resource_used = true;
+            } else if (requested_col === "") {
+                resource_used = default_columns_strategy(resource, label);
             }
         });
         return resource_used;
     };
+    requested_columns_strategy.label = 'requested';
 
+    //decide selection method
     if (req.query.hasOwnProperty('verbose')) {
-        this.apply_columns_helper(get_all_column_stmts, query);
+        this.apply_columns_helper(all_columns_strategy, query);
     } else if (!req.query.hasOwnProperty('fields')) {
-        this.apply_columns_helper(get_default_column_stmts, query, true);
+        this.apply_columns_helper(default_columns_strategy, query);
     } else {
-        this.apply_columns_helper(get_requested_column_stmts, query);
+        this.apply_columns_helper(requested_columns_strategy, query);
     }
 };
 
