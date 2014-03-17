@@ -21,10 +21,10 @@ var basePort = 3000;
 module.exports.basePort = basePort;
 
 var baseProtocol = 'http';
-module.exports.baseProtocol = basePort;
+module.exports.baseProtocol = baseProtocol;
 
 var baseUrl = baseProtocol + '://' + baseHost + ':' + basePort;
-module.exports.baseUrl = baseProtocol;
+module.exports.baseUrl = baseUrl;
 
 module.exports.uuid_regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 module.exports.security_relm_login = "www.campsite.org";

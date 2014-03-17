@@ -19,7 +19,7 @@ Type.List.Type.init(
 var spec = {
     tableName : 'entry_set',
     primary_key : 'id',
-    user_mapping : ['id', 'creator_id'],
+    user_mapping : { user:'id', me:'creator_id'},
     schema : {
         "id" : { type : Type.Int, props : ["default", "read_only"] },
         "name" : { type : Type.Str, props : ["default", "required"] },

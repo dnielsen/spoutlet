@@ -509,33 +509,43 @@ Resource.prototype.apply_paging = function (req, query, quiet) {
 Resource.prototype.assemble_insert = function (post_data) {
     var insert_data = {};
 
-    var all_fields = Object.keys(this.owns);
-    var i;
-    for (i in all_fields) {
-        var field = all_fields[i];
-        var field_def = this.owns[field];
-        var was_posted = post_data.hasOwnProperty(field);
+    __.each(this.owns, function (field_def, field) {
+        var was_posted = __.has(post_data, field);
 
-        var is_required = field_def.hasOwnProperty("props") && field_def.props.indexOf("required") !== -1;
-        if (is_required && !was_posted)
-            throw new restify.MissingParameterError('must provide ' + field);
+        var is_required = false;
+        var is_read_only = false;
+        if (__.has(field_def, "props")) {
+            is_required = __.contains(field_def.props, "required");
+            if (is_required && !was_posted) {
+                throw new restify.MissingParameterError('must provide ' + field);
+            }
 
-        var is_read_only = field_def.hasOwnProperty("props") && field_def.props.indexOf("read-only") !== -1;
-        if (is_read_only && was_posted)
-            throw new restify.InvalidArgumentError('cannot set field ' + field);
+            is_read_only = __.contains(field_def.props, "read-only");
+            if (is_read_only && was_posted) {
+                throw new restify.InvalidArgumentError('cannot set field ' + field);
+            }
+        }
 
-        var has_default = field_def.hasOwnProperty('initial');
-        if (!was_posted && !has_default)
-            continue;
+        //Do not include this field if it was not provided and it has no default value
+        var has_default = __.has(field_def, 'initial');
+        if (!was_posted && !has_default) {
+            return;
+        }
 
-        var value = was_posted ? post_data[field] : (typeof field_def.initial === "function" ? field_def.initial() : field_def.initial);
+        var value;
+        if (!was_posted) {
+            value = (typeof field_def.initial === "function") ? field_def.initial() : field_def.initial;
+        } else {
+            value = post_data[field];
+        }
 
         var fails_validation = !field_def.type.validate(value);
-        if (fails_validation)
+        if (fails_validation) {
             throw new restify.InvalidArgumentError("'" + value + "' invalid for " + field);
+        }
 
         insert_data[field] = value;
-    }
+    });
 
     return insert_data;
 };
@@ -545,20 +555,23 @@ Resource.prototype.create = function (req, resp, next) {
 
     //Process POST query parameters
     var expand_result = false;
-    if (req.query.hasOwnProperty('expand'))
+    if (req.query.hasOwnProperty('expand')) {
         expand_result = true;
+    }
 
     var insert_data;
     try {
-        var has_user_mapping = this.hasOwnProperty("user_mapping");
-        var my_field, user_field;
-        if (has_user_mapping) {
-            my_user_field = this.user_mapping[1];
-            assoc_user_field = this.user_mapping[0];
+        // If the requested resource has an owner/creator association
+        if (__.has(this, "user_mapping")) {
+            var my_user_field = this.user_mapping.me;
+            var assoc_user_field = this.user_mapping.user;
 
-            if (req.body.hasOwnProperty(my_user_field) && req.body[my_user_field] != req.user[assoc_user_field]) {
+            // make sure the requesting user isn't trying to set that field
+            if (__.has(req.body, my_user_field) && req.body[my_user_field] !== req.user[assoc_user_field]) {
                 throw new restify.InvalidArgumentError('Cannot assign different user.');
             }
+
+            // then set the field to the current user
             req.body[my_user_field] = req.user[assoc_user_field];
         }
 
@@ -571,60 +584,65 @@ Resource.prototype.create = function (req, resp, next) {
         var response = "Internal Error";
 
         var orig_message = err.message;
-        if (orig_message.indexOf("ER_NO_REFERENCED_ROW_ : ") !== -1)
+        if (orig_message.indexOf("ER_NO_REFERENCED_ROW_ : ") !== -1) {
             response = "Referenced object could not be found";
-        else if (orig_message.indexOf("ER_DUP_ENTRY") !== -1)
+        } else if (orig_message.indexOf("ER_DUP_ENTRY") !== -1) {
             response = "Duplicate entry";
-        else if (orig_message.indexOf("ER_BAD_FIELD_ERROR : ") !== -1)
+        } else if (orig_message.indexOf("ER_BAD_FIELD_ERROR : ") !== -1) {
             response = "A field was not recognized";
-
+        }
         resp.send(new restify.RestError(new Error(response)));
         next();
     };
 
     var send_response = function (result) {
-        if (typeof result === 'object')
-            resp.send(201, result[0]);
-        else
+        if (typeof result === 'object') {
+            var enveloped_result = that.apply_envelopes(result[0]);
+            resp.send(201, enveloped_result);
+        } else {
             resp.send(201, result);
+        }
         return next();
     };
 
     var get_resource = function (resource_id) {
         resp.header('Link', common.baseUrl + req.path() + "/" + resource_id);
 
-        if (!expand_result)
+        if (!expand_result) {
             return send_response();
+        }
 
-        var default_fields = that._get_fields_for_property('default');
+        var query = knex(that.tableName);
 
-        knex(that.tableName)
-            .select(default_fields)
-            .where(insert_data)
-            .then(send_response, return_error);
+        //simulate a request for the 'default' columns
+        that.apply_columns({"query": insert_data}, query);
+        query.then(send_response, return_error);
     };
 
     //Assemble 
-    var sql_expr = knex(this.tableName)
+    knex(this.tableName)
         .insert(insert_data)
         .then(get_resource, return_error);
 };
 
 Resource.prototype.delete_by_primary_key = function (req, resp, next) {
-    if (!this.primary_key)
+    if (!this.primary_key) {
         return next(new restify.InvalidArgumentError('no primary key for this resource'));
+    }
 
     var primary_key_field = this.primary_key;
     var primary_key = req.params[primary_key_field];
 
     var field_def = this.owns[primary_key_field];
     var fails_validation = !field_def.type.validate(primary_key);
-    if (fails_validation)
+    if (fails_validation) {
         throw new restify.InvalidArgumentError("'" + primary_key + "' invalid for " + primary_key_field);
+    }
 
     var send_response = function (results) {
-        if (results === undefined || results === 0 || results.length === 0)
+        if (results === undefined || results === 0 || results.length === 0) {
             return next(new restify.ResourceNotFoundError(primary_key));
+        }
 
         resp.send(200, "Deleted : " + (results.length === 1 ? results[0] : results));
         next();
@@ -654,45 +672,36 @@ Resource.prototype.delete_by_primary_key = function (req, resp, next) {
 Resource.prototype.assemble_url = function (path, queries) {
     var query_string = "";
     var is_first = true;
-
-    /*jslint forin: true*/
-    var query, value;
-    for (query in queries) {
-        if (!queries.hasOwnProperty(query)) { continue; }
-
-        value = queries[query];
-        if (is_first) {
-            is_first = false;
-            query_string += "?" + query + "=" + value;
-        } else {
-            query_string += "&" + query + "=" + value;
-        }
-    }
+    __.each(queries, function (value, query) {
+        query_string += (is_first ? '?' : '&') + query + "=" + value;
+        is_first = false;
+    });
     return common.baseUrl + path + query_string;
 };
 
 Resource.prototype.join_table = function (resource, label, query) {
-    if (__.contains(query.joined, label))
-        return;
+    //check if this table has already been joined to the query
+    if (__.contains(query.joined, label)) { return; }
 
     var table_name = resource.tableName + " as " + label;
     var lhs = this.tableName + "." + this.belongs_to[label].mapping;
     var rhs = label + '.' + resource.primary_key;
-    query.join(table_name, lhs, '=', rhs, 'left'); // left join allows other tbls to be null.
 
-    if (query.joined === undefined)
-        query.joined = [];
+    // left join includes values when right side is null
+    query.join(table_name, lhs, '=', rhs, 'left');
+
+    //create the joined list if it doesn't exist
+    if (!__.has(query, 'joined')) { query.joined = []; }
+
+    //remember so we don't try to join multiple times
     query.joined.push(label);
 };
 
 //Where this resource is owned by me
 Resource.prototype.where_is_mine = function (req, query) {
-    if (!this.hasOwnProperty("user_mapping"))
-        return;
+    if (!__.has(this, "user_mapping")) { return; }
 
-    var user_mapping = this["user_mapping"];
-
-    var user_id = req.user[user_mapping[0]];
-    var resource_field = user_mapping[1];
-    query.where(resource_field, user_id);
+    var user_column = req.user[this.user_mapping.user];
+    var my_column = this.user_mapping.me;
+    query.where(my_column, user_column);
 };

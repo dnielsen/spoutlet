@@ -21,7 +21,7 @@ var get_now = function () {
 var spec = {
     tableName : 'pd_groups',
     primary_key : 'id',
-    user_mapping : ['id', 'owner_id'],
+    user_mapping : { user : 'id', me : 'owner_id' },
     deleted_col : 'deleted',
     schema : {
         "id" : { type : Type.Int, props : ["read-only", "default"] },

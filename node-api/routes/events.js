@@ -4,7 +4,7 @@ var Type = require('../type'),
 var spec = {
     tableName : 'group_event',
     primary_key : 'id',
-    user_mapping : ['id', 'user_id'],
+    user_mapping : { user : 'id', me : 'user_id' },
     deleted_col : 'deleted',
     schema : {
         "id" : { type : Type.Int, props : ["default", "read-only"] },

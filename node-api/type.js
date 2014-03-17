@@ -1,8 +1,7 @@
-var Type = function () {
-    return;
-};
-module.exports = Type;
+var __ = require('underscore');
 
+var Type = function () { return; };
+module.exports = Type;
 
 
 //---------------------------------------------
@@ -18,9 +17,7 @@ Type.Date = new Type();
 
 
 Type.prototype.init = function (validator, default_filter, prefix_filters) {
-    this.validate = validator || function () {
-        return;
-    };
+    this.validate = validator || function () { return; };
     this.default_filter = default_filter;
     this.prefix_filters = prefix_filters;
 };
@@ -29,25 +26,19 @@ Type.prototype.apply_filter = function (column, query, value) {
     var filter = this.default_filter;
     var raw_value = value;
 
-    //check for filtered prefix
-    var prefix_filters = this.prefix_filters;
-    var prefix, index;
-    /*jslint forin: true*/
-    for (prefix in prefix_filters) {
-        if (!prefix_filters.hasOwnProperty(prefix)) { continue; }
-
-        index = value.indexOf(prefix);
-        if (index !== -1) {
-            filter = prefix_filters[prefix];
+    __.find(this.prefix_filters, function (pf, prefix) {
+        if (value.indexOf(prefix) === 0) {
+            filter = pf;
             raw_value = value.substring(prefix.length);
-            break;
+            return true;
         }
-    }
+        return false;
+    });
 
-    if (!this.validate(raw_value)) {
-        throw new Error("'" + raw_value + "' invalid");
-    }
+    //validate or die
+    if (!this.validate(raw_value)) { throw new Error("'" + raw_value + "' invalid"); }
 
+    //apply filter
     filter(column, query, raw_value);
 };
 

@@ -4,7 +4,7 @@ var Type = require('../type'),
 var spec = {
     tableName : 'idea',
     primary_key : 'id',
-    user_mapping : ['id', 'creator_id'],
+    user_mapping : { user : 'id', me : 'creator_id' },
     schema : {
         "id" : { type : Type.Int, props : ["default", "read_only"] },
         "image_id" : { type : Type.Int, props : ["no-filter"] },
