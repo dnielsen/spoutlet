@@ -9,7 +9,7 @@ var spec = {
     schema : {
         "id" : { type : Type.Int, props : ["default", "read-only"] },
         "attendeeCount" : { type : Type.Int, props : ["default"] },
-        "private" : { type : Type.Bool, props : ["no-filter"] },
+        "private" : { type : Type.Bool, props : [] },
         "name" : { type : Type.Str, props : ["required", "default"] },
         "slug" : { type : Type.Str, props : ["default"] },
         "content" : { type : Type.Str, props : ["default", "required"] },
