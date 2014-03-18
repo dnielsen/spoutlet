@@ -120,7 +120,7 @@ Resource.prototype.processCollectionQueryParams = function (req, query) {
 };
 
 
-Resource.prototype.find_by_primary_key = function (req, resp, next) {
+Resource.prototype.find_by_primary_key = function (req, resp, next, custom_handler) {
     var that = this;
 
     if (!this.primary_key) {
@@ -141,12 +141,16 @@ Resource.prototype.find_by_primary_key = function (req, resp, next) {
         query.andWhere(this.tableName + '.' + this.deleted_col, 0);
     }
 
+    if (!__.isUndefined(custom_handler)) {
+        custom_handler(req, query);
+    }
+
     try {
         this.processBasicQueryParams(req, query);
     } catch (err) {
         return next(err);
     }
-
+console.log(query.toString());
     var send_response = function (result_set) {
         if (result_set === undefined || result_set.length === 0) {
             return next(new restify.ResourceNotFoundError(primary_key));
@@ -162,12 +166,16 @@ Resource.prototype.find_by_primary_key = function (req, resp, next) {
     });
 };
 
-Resource.prototype.find_all = function (req, resp, next) {
+Resource.prototype.find_all = function (req, resp, next, custom_handler) {
     var that = this;
 
     var query = knex(this.tableName);
     if (this.deleted_col) {
         query.where(this.tableName + '.' + this.deleted_col, 0);
+    }
+
+    if (!__.isUndefined(custom_handler)) {
+        custom_handler(req, query);
     }
 
     try {
@@ -322,7 +330,9 @@ Resource.prototype.apply_envelopes = function (result_set) {
 
     var enveloped_result_set = {};
     __.each(result_set, function (value, label) {
-        __.find(envelope_names, function (envelope_name) {
+
+        //find the envelope and stick it in
+        var envelope = __.find(envelope_names, function (envelope_name) {
             //if no match continue
             if (label.substring(0, envelope_name.length) !== envelope_name) {
                 return false;
@@ -344,6 +354,10 @@ Resource.prototype.apply_envelopes = function (result_set) {
             }
             return true;
         });
+
+        if (!envelope) {
+            enveloped_result_set[label] = value;
+        }
     });
 
     return enveloped_result_set;
