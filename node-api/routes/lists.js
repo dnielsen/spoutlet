@@ -110,6 +110,20 @@ exports.find_all = function (req, resp, next) {
     } else { scope_block_filter = "'scope=!~site'"; }
     req.query.entrySetRegistration = scope_block_filter;
 
+    if (__.has(req.query, 'fields')) {
+        var fields = req.query.fields.split(',');
+        // var i_g = array.indexOf('group_parent');
+        // var i_e = array.indexOf('group_event');
+        var i_p = fields.indexOf('parent');
+        if(i_p > -1) {
+            fields.splice(i_p, 1);
+            fields.push("entrySetRegistration");
+            fields.push("group_parent");
+            fields.push("event_parent");
+            req.query.fields = fields.join(',');
+        }
+    }
+
     return resource.find_all(req, resp, next, group_handler);
 };
 
