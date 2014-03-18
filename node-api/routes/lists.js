@@ -17,6 +17,17 @@ Type.List.Type.init(
     {}
 );
 
+var list_size_spec = {
+    tableName : "( SELECT entrySet_id, count(entrySet_id) as size FROM campsite.idea GROUP BY entrySet_id )",
+    primary_key : 'entrySet_id',
+    schema : {
+        //"id" : { type : Type.Int, props : [] },
+        "size" : { type : Type.Int, props : ["default"] },
+    }
+};
+Type.List.Size.init(new Resource(list_size_spec));
+
+
 var spec = {
     tableName : 'entry_set',
     primary_key : 'id',
@@ -34,42 +45,27 @@ var spec = {
 
         "entrySetRegistration" : { type : Type.Registry, rel : "belongs_to", mapping : "entrySetRegistration_id", props : ["default"] },
         "creator" : { type : Type.User, rel : "belongs_to", mapping : "creator_id" },
+        "list_size" : { type : Type.List.Size, rel : "belongs_to", mapping : 'id' }
     }
 };
 
 var resource = new Resource(spec);
 Type.List.init(resource);
 
-var attach_size = function (req, query) {
-    var subtable = "SELECT entrySet_id, count(entrySet_id) as size FROM campsite.idea GROUP BY entrySet_id";
-    var table_name = "(" + subtable + ") as list_size";
-    var lhs = "list_size.entrySet_id";
-    var rhs = resource.tableName + '.' + resource.primary_key;
-
-    query.join(knex.raw(table_name), lhs, '=', rhs, 'left').column("list_size.size");
-
-    //use size as default sort, overridden by user provided sort
-    if(!__.has(req.query, 'sort_by'))
-        query.orderBy('size', 'DESC');
-};
-
 exports.find_all = function (req, resp, next) {
-    
-    var scope_block_filter;
     //strip out the quotes, add new param, then add quotes back
+    var scope_block_filter;
     if (__.has(req.query, 'entrySetRegistration')) {
         /*jslint regexp: true*/
         scope_block_filter = req.query.entrySetRegistration.replace(/['|"]([^'"]*)['|"]/, "'$1,scope=!~site'");
-    } else {
-        scope_block_filter = "'scope=!~site'";
-    }
+    } else { scope_block_filter = "'scope=!~site'"; }
     req.query.entrySetRegistration = scope_block_filter;
 
-    return resource.find_all(req, resp, next, attach_size);
+    return resource.find_all(req, resp, next);
 };
 
 exports.find_by_primary_key = function (req, resp, next) {
-    return resource.find_by_primary_key(req, resp, next, attach_size);
+    return resource.find_by_primary_key(req, resp, next);
 };
 
 exports.create = function (req, resp, next) {

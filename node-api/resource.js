@@ -79,6 +79,7 @@ Type.Event = new Resource.ResourceType();
 Type.Session = new Resource.ResourceType();
 Type.List = new Resource.ResourceType();
 Type.List.Type = new Type();
+Type.List.Size = new Resource.ResourceType();
 Type.Registry = new Resource.ResourceType();
 Type.Entry = new Resource.ResourceType();
 Type.User = new Resource.ResourceType();
@@ -150,7 +151,7 @@ Resource.prototype.find_by_primary_key = function (req, resp, next, custom_handl
     } catch (err) {
         return next(err);
     }
-console.log(query.toString());
+
     var send_response = function (result_set) {
         if (result_set === undefined || result_set.length === 0) {
             return next(new restify.ResourceNotFoundError(primary_key));
@@ -702,7 +703,7 @@ Resource.prototype.join_table = function (resource, label, query) {
     var rhs = label + '.' + resource.primary_key;
 
     // left join includes values when right side is null
-    query.join(table_name, lhs, '=', rhs, 'left');
+    query.join(knex.raw(table_name), lhs, '=', rhs, 'left');
 
     //create the joined list if it doesn't exist
     if (!__.has(query, 'joined')) { query.joined = []; }
