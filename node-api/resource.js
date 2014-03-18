@@ -229,6 +229,7 @@ Resource.prototype.find_all = function (req, resp, next, custom_handler) {
         count_query.then(send_response, return_error);
     };
 
+    //console.log(query.toString()); //diagnostic
     query.then(ask_how_many, return_error);
 };
 
@@ -312,9 +313,9 @@ Resource.prototype.apply_columns = function (req, query) {
     requested_columns_strategy.label = 'requested';
 
     //decide selection method
-    if (req.query.hasOwnProperty('verbose')) {
+    if (__.has(req.query, 'verbose')) {
         this.apply_columns_helper(all_columns_strategy, query);
-    } else if (!req.query.hasOwnProperty('fields')) {
+    } else if (!__.has(req.query, 'fields')) {
         this.apply_columns_helper(default_columns_strategy, query);
     } else {
         this.apply_columns_helper(requested_columns_strategy, query);
@@ -336,31 +337,29 @@ Resource.prototype.apply_envelopes = function (result_set) {
     __.each(result_set, function (value, label) {
 
         //find the envelope and stick it in
-        var envelope = __.find(envelope_names, function (envelope_name) {
-            //if no match continue
-            if (label.substring(0, envelope_name.length) !== envelope_name) {
-                return false;
-            }
-
-            //trim off the envelope name
-            var short_label = label.substring(envelope_name.length + 1);
-
-            //insert value into the envelope
-            //special handling for envelope (this.tableName), it's our local values so no envelope
-            if (envelope_name === that.tableName) {
-                enveloped_result_set[short_label] = value;
-            } else {
-                //create the envelope if it isn't already there
-                if (!__.has(enveloped_result_set, envelope_name)) {
-                    enveloped_result_set[envelope_name] = {};
-                }
-                enveloped_result_set[envelope_name][short_label] = value;
-            }
-            return true;
+        var envelope_name = __.find(envelope_names, function (envelope_name) {
+            if (label.substring(0, envelope_name.length) !== envelope_name) { return; }
+            return envelope_name;
         });
 
-        if (!envelope) {
+        if (__.isUndefined(envelope_name)) {
             enveloped_result_set[label] = value;
+            return;
+        }
+
+        //trim off the envelope name
+        var short_label = label.substring(envelope_name.length + 1);
+
+        //insert value into the envelope
+        //special handling for envelope (this.tableName), it's our local values so no envelope
+        if (envelope_name === that.tableName) {
+            enveloped_result_set[short_label] = value;
+        } else {
+            //create the envelope if it isn't already there
+            if (!__.has(enveloped_result_set, envelope_name)) {
+                enveloped_result_set[envelope_name] = {};
+            }
+            enveloped_result_set[envelope_name][short_label] = value;
         }
     });
 
@@ -413,9 +412,7 @@ Resource.prototype.apply_filters = function (requests, query, label) {
 // On quiet refrain from throwing exceptions for invalid fields
 Resource.prototype.apply_sorting = function (requests, query, quiet) {
     var that = this;
-    if (!requests.hasOwnProperty('sort_by')) {
-        return;
-    }
+    if (!__.has(requests, 'sort_by')) { return; }
 
     var fields = requests.sort_by.split(',');
     __.each(fields, function (field) {
@@ -425,28 +422,38 @@ Resource.prototype.apply_sorting = function (requests, query, quiet) {
             orentation = 'desc';
         }
 
-        if (that.owns.hasOwnProperty(field)) {
+        //if it validates use it
+        if (__.has(that.owns, field)) {
             query.orderBy(that.tableName + '.' + field, orentation);
             return;
         }
 
+        var excepition = new restify.InvalidArgumentError("sort_by field '" + field + "' not recognized");
+
         //allow for subfield sorting
+
+        //allow sorting of depth 1 only
         var parts = field.split('.');
-        if (parts.length === 2) {
-            var label = parts[0];
-            var subfield = parts[1];
-            if (that.belongs_to && that.belongs_to[label]) {
-                var type = that.belongs_to[label].type;
-                if (type.resource.owns.hasOwnProperty(subfield)) {
-                    query.orderBy(label + '.' + subfield, orentation);
-                    that.join_table(type.resource, label, query);
-                    return;
-                }
-            }
+        if (parts.length !== 2) {
+            if (!quiet) { throw excepition; } else { return; }
         }
 
-        if (quiet) { return; }
-        throw new restify.InvalidArgumentError("sort_by field '" + field + "' not recognized");
+        //validate the first dotted specifier in the belongs_to relations
+        var label = parts[0];
+        var subfield = parts[1];
+        if(__.isUndefined(that.belongs_to) || !__.has(that.belongs_to, label) ) {
+            if (!quiet) { throw excepition; } else { return; }
+        }
+
+        //validate the provided subfield in the resource type of the first part
+        var type = that.belongs_to[label].type;
+        if (!__.has(type.resource.owns, subfield)) {
+            if (!quiet) { throw excepition; } else { return; }
+        }
+
+        query.orderBy(label + '.' + subfield, orentation);
+        that.join_table(type.resource, label, query);
+        return;
     });
 };
 
@@ -530,6 +537,7 @@ Resource.prototype.assemble_insert = function (post_data) {
     __.each(this.owns, function (field_def, field) {
         var was_posted = __.has(post_data, field);
 
+        //validate required props and banned props
         var is_required = false;
         var is_read_only = false;
         if (__.has(field_def, "props")) {
@@ -550,6 +558,7 @@ Resource.prototype.assemble_insert = function (post_data) {
             return;
         }
 
+        //assign values if provided or, failing that, default values (or functions) 
         var value;
         if (!was_posted) {
             value = (typeof field_def.initial === "function") ? field_def.initial() : field_def.initial;
@@ -557,6 +566,7 @@ Resource.prototype.assemble_insert = function (post_data) {
             value = post_data[field];
         }
 
+        //ask the field type to validate the assigned value
         var fails_validation = !field_def.type.validate(value);
         if (fails_validation) {
             throw new restify.InvalidArgumentError("'" + value + "' invalid for " + field);
