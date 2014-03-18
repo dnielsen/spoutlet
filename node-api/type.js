@@ -42,7 +42,8 @@ Type.prototype.apply_filter = function (column, query, value) {
     filter(column, query, raw_value);
 };
 
-
+// NOTE: The order in which you define your prefix filters is important. 
+// Ensure that 
 //--------------------------- Primitive Types --------------------------------
 
 Type.Int.init(
@@ -109,8 +110,14 @@ Type.Str.init(
 
     //prefix filters
     {
+        '!~': function (column, query, value) {
+            query.where(column, 'NOT LIKE', "%" + value + "%");
+        },
         '~': function (column, query, value) {
             query.where(column, 'LIKE', "%" + value + "%");
+        },
+        '!': function (column, query, value) {
+            query.where(column, '<>', value);
         }
     }
 );
