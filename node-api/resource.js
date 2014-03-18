@@ -80,6 +80,8 @@ Type.Session = new Resource.ResourceType();
 Type.List = new Resource.ResourceType();
 Type.List.Type = new Type();
 Type.List.Size = new Resource.ResourceType();
+Type.List.GroupParent = new Resource.ResourceType();
+Type.List.EventParent = new Resource.ResourceType();
 Type.Registry = new Resource.ResourceType();
 Type.Entry = new Resource.ResourceType();
 Type.User = new Resource.ResourceType();
@@ -142,10 +144,6 @@ Resource.prototype.find_by_primary_key = function (req, resp, next, custom_handl
         query.andWhere(this.tableName + '.' + this.deleted_col, 0);
     }
 
-    if (!__.isUndefined(custom_handler)) {
-        custom_handler(req, query);
-    }
-
     try {
         this.processBasicQueryParams(req, query);
     } catch (err) {
@@ -158,6 +156,11 @@ Resource.prototype.find_by_primary_key = function (req, resp, next, custom_handl
         }
 
         var enveloped_result_set = that.apply_envelopes(result_set[0]);
+
+        if (!__.isUndefined(custom_handler)) {
+            enveloped_result_set = custom_handler(enveloped_result_set);
+        }
+
         resp.send(enveloped_result_set);
         next();
     };
@@ -173,10 +176,6 @@ Resource.prototype.find_all = function (req, resp, next, custom_handler) {
     var query = knex(this.tableName);
     if (this.deleted_col) {
         query.where(this.tableName + '.' + this.deleted_col, 0);
-    }
-
-    if (!__.isUndefined(custom_handler)) {
-        custom_handler(req, query);
     }
 
     try {
@@ -209,6 +208,10 @@ Resource.prototype.find_all = function (req, resp, next, custom_handler) {
         __.each(result_set, function (result) {
             enveloped_result_set.push(that.apply_envelopes(result));
         });
+
+        if (!__.isUndefined(custom_handler)) {
+            enveloped_result_set = custom_handler(enveloped_result_set);
+        }
 
         resp.send(enveloped_result_set);
         next();

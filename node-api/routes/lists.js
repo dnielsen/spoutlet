@@ -18,7 +18,7 @@ Type.List.Type.init(
 );
 
 var list_size_spec = {
-    tableName : "( SELECT entrySet_id, count(entrySet_id) as size FROM campsite.idea GROUP BY entrySet_id )",
+    tableName : "(SELECT entrySet_id, count(entrySet_id) as size FROM campsite.idea GROUP BY entrySet_id)",
     primary_key : 'entrySet_id',
     schema : {
         //"id" : { type : Type.Int, props : [] },
@@ -26,6 +26,27 @@ var list_size_spec = {
     }
 };
 Type.List.Size.init(new Resource(list_size_spec));
+
+
+var group_parent_spec = {
+    tableName : "(SELECT groups.*, reg.id as reg_id FROM campsite.pd_groups as groups JOIN campsite.entry_set_registry as reg ON groups.id = reg.containerId)",
+    primary_key : 'reg_id',
+    schema : {
+        //"id" : { type : Type.Int, props : [] },
+        "name" : { type : Type.Str, props : ["default"] },
+    }
+};
+Type.List.GroupParent.init(new Resource(group_parent_spec));
+
+var event_parent_spec = {
+    tableName : "(SELECT events.*, reg.id as reg_id FROM campsite.group_event as events JOIN campsite.entry_set_registry as reg ON events.id = reg.containerId)",
+    primary_key : 'reg_id',
+    schema : {
+        //"id" : { type : Type.Int, props : [] },
+        "name" : { type : Type.Str, props : ["default"] },
+    }
+};
+Type.List.EventParent.init(new Resource(event_parent_spec));
 
 
 var spec = {
@@ -43,14 +64,42 @@ var spec = {
         "entrySetRegistration_id" : { type : Type.Int, props : ["default", "required"] },
         "creator_id" : { type : Type.Int, props : ["read_only"] },
 
-        "entrySetRegistration" : { type : Type.Registry, rel : "belongs_to", mapping : "entrySetRegistration_id", props : ["default"] },
         "creator" : { type : Type.User, rel : "belongs_to", mapping : "creator_id" },
-        "list_size" : { type : Type.List.Size, rel : "belongs_to", mapping : 'id' }
+        "list_size" : { type : Type.List.Size, rel : "belongs_to", mapping : 'id' },
+        "entrySetRegistration" : { type : Type.Registry, rel : "belongs_to", mapping : "entrySetRegistration_id", props : ["default"] },
+        "group_parent" : { type : Type.List.GroupParent, rel : "belongs_to", mapping : "entrySetRegistration_id", props : ["default"] },
+        "event_parent" : { type : Type.List.EventParent, rel : "belongs_to", mapping : "entrySetRegistration_id", props : ["default"] }
     }
 };
 
 var resource = new Resource(spec);
 Type.List.init(resource);
+
+var single_handler = function (result) {
+    if (__.has(result, "entrySetRegistration") &&
+            __.has(result.entrySetRegistration, "scope") &&
+            __.has(result, "group_parent") &&
+            __.has(result, "event_parent")) {
+
+        var scope = result.entrySetRegistration.scope;
+        if (scope === 'GroupBundle:Group') {
+            result.parent = result.group_parent;
+            result.parent.type = "Group";
+        } else if (scope === 'EventBundle:GroupEvent') {
+            result.parent = result.event_parent;
+            result.parent.type = "Event";
+        }
+        delete result.event_parent;
+        delete result.group_parent;
+        delete result.entrySetRegistration;
+    }
+    return result;
+};
+
+var group_handler = function (result_set) {
+    __.each(result_set, single_handler);
+    return result_set;
+};
 
 exports.find_all = function (req, resp, next) {
     //strip out the quotes, add new param, then add quotes back
@@ -61,11 +110,11 @@ exports.find_all = function (req, resp, next) {
     } else { scope_block_filter = "'scope=!~site'"; }
     req.query.entrySetRegistration = scope_block_filter;
 
-    return resource.find_all(req, resp, next);
+    return resource.find_all(req, resp, next, group_handler);
 };
 
 exports.find_by_primary_key = function (req, resp, next) {
-    return resource.find_by_primary_key(req, resp, next);
+    return resource.find_by_primary_key(req, resp, next, single_handler);
 };
 
 exports.create = function (req, resp, next) {
