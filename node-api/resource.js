@@ -416,10 +416,10 @@ Resource.prototype.apply_sorting = function (requests, query, quiet) {
 
     var fields = requests.sort_by.split(',');
     __.each(fields, function (field) {
-        var orentation = 'asc';
+        var orentation = 'desc';
         if (field.indexOf('-') === 0) {
             field = field.substr(1);
-            orentation = 'desc';
+            orentation = 'asc';
         }
 
         //if it validates use it

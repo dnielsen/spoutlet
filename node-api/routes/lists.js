@@ -66,9 +66,9 @@ var spec = {
 
         "creator" : { type : Type.User, rel : "belongs_to", mapping : "creator_id" },
         "list_size" : { type : Type.List.Size, rel : "belongs_to", mapping : 'id' },
-        "entrySetRegistration" : { type : Type.Registry, rel : "belongs_to", mapping : "entrySetRegistration_id", props : ["default"] },
-        "group_parent" : { type : Type.List.GroupParent, rel : "belongs_to", mapping : "entrySetRegistration_id", props : ["default"] },
-        "event_parent" : { type : Type.List.EventParent, rel : "belongs_to", mapping : "entrySetRegistration_id", props : ["default"] }
+        "entrySetRegistration" : { type : Type.Registry, rel : "belongs_to", mapping : "entrySetRegistration_id" },
+        "group_parent" : { type : Type.List.GroupParent, rel : "belongs_to", mapping : "entrySetRegistration_id" },
+        "event_parent" : { type : Type.List.EventParent, rel : "belongs_to", mapping : "entrySetRegistration_id" }
     }
 };
 
@@ -93,6 +93,12 @@ var single_handler = function (result) {
         delete result.event_parent;
         delete result.group_parent;
         delete result.entrySetRegistration;
+    }
+
+    if(__.has(result, "list_size")) {
+        var size = result.list_size.size;
+        delete result.list_size;
+        result.list_size = size;
     }
     return result;
 };
@@ -125,6 +131,15 @@ exports.find_all = function (req, resp, next) {
         }
     }
 
+    if (__.has(req.query, 'sort_by')) {
+        var sort_by = req.query.sort_by.split(',');
+        var i = sort_by.indexOf('list_size');
+        if (i > -1) {
+            sort_by.splice(i, 1);
+            sort_by.push("list_size.size");
+            req.query.sort_by = sort_by.join(',');
+        }
+    }
     return resource.find_all(req, resp, next, group_handler);
 };
 
