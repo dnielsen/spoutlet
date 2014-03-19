@@ -75,6 +75,22 @@ var spec = {
 var resource = new Resource(spec);
 Type.List.init(resource);
 
+var pre_single_handler = function (req) {
+    if (__.has(req.query, 'fields')) {
+        var fields = req.query.fields.split(',');
+        // var i_g = array.indexOf('group_parent');
+        // var i_e = array.indexOf('group_event');
+        var i_p = fields.indexOf('parent');
+        if (i_p > -1) {
+            fields.splice(i_p, 1);
+            fields.push("entrySetRegistration");
+            fields.push("group_parent");
+            fields.push("event_parent");
+            req.query.fields = fields.join(',');
+        }
+    }
+};
+
 var single_handler = function (result) {
     if (__.has(result, "entrySetRegistration") &&
             __.has(result.entrySetRegistration, "scope") &&
@@ -95,20 +111,15 @@ var single_handler = function (result) {
         delete result.entrySetRegistration;
     }
 
-    if(__.has(result, "list_size")) {
+    if (__.has(result, "list_size")) {
         var size = result.list_size.size;
         delete result.list_size;
-        result.list_size = size;
+        result.list_size = (size === null) ? 0 : size;
     }
     return result;
 };
 
-var group_handler = function (result_set) {
-    __.each(result_set, single_handler);
-    return result_set;
-};
-
-exports.find_all = function (req, resp, next) {
+var pre_group_handler = function (req) {
     //strip out the quotes, add new param, then add quotes back
     var scope_block_filter;
     if (__.has(req.query, 'entrySetRegistration')) {
@@ -117,19 +128,7 @@ exports.find_all = function (req, resp, next) {
     } else { scope_block_filter = "'scope=!~site'"; }
     req.query.entrySetRegistration = scope_block_filter;
 
-    if (__.has(req.query, 'fields')) {
-        var fields = req.query.fields.split(',');
-        // var i_g = array.indexOf('group_parent');
-        // var i_e = array.indexOf('group_event');
-        var i_p = fields.indexOf('parent');
-        if (i_p > -1) {
-            fields.splice(i_p, 1);
-            fields.push("entrySetRegistration");
-            fields.push("group_parent");
-            fields.push("event_parent");
-            req.query.fields = fields.join(',');
-        }
-    }
+    pre_single_handler(req);
 
     if (__.has(req.query, 'sort_by')) {
         var sort_by = req.query.sort_by.split(',');
@@ -140,10 +139,20 @@ exports.find_all = function (req, resp, next) {
             req.query.sort_by = sort_by.join(',');
         }
     }
+};
+
+var group_handler = function (result_set) {
+    __.each(result_set, single_handler);
+    return result_set;
+};
+
+exports.find_all = function (req, resp, next) {
+    pre_group_handler(req);
     return resource.find_all(req, resp, next, group_handler);
 };
 
 exports.find_by_primary_key = function (req, resp, next) {
+    pre_single_handler(req);
     return resource.find_by_primary_key(req, resp, next, single_handler);
 };
 
