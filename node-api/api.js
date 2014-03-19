@@ -106,6 +106,11 @@ server.use(restify.authorizationParser());
 //Respond to jsonp requests with Content-Type : application/javascript
 server.use(restify.jsonp());
 
+server.use(restify.CORS({
+    origins: ['m.campsite.org', 'www.campsite.org', 'campsite.org'],   // defaults to ['*']
+    credentials: true                  // defaults to false
+}));
+
 //-------------------------  Anonymous calls here  ---------------------------------
 
 server.get('/api_key', get_api_token);
