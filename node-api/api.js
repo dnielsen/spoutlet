@@ -7,16 +7,17 @@ var restify = require('restify'),
     groups = require('./routes/groups'),
     votes = require('./routes/votes'),
     registries = require('./routes/registries'),
-    users = require('./routes/users');
+    users = require('./routes/users'),
+    __ = require('underscore');
 
-var fail_auth = function (res, relm, message) {
-    res.header("WWW-Authenticate", "Basic realm=\"" + relm + "\"");
+var fail_auth = function (res, relm, message, use_basic_auth) {
+    if (use_basic_auth) { res.header("WWW-Authenticate", "Basic realm=\"" + relm + "\""); }
     res.send(401, message);
 };
 
 var get_api_token = function (req, res, next) {
     if (!req.authorization.hasOwnProperty("basic")) {
-        fail_auth(res, common.security_relm_login, "No credentials provided");
+        fail_auth(res, common.security_relm_login, "No credentials provided", true);
         return; // no furthar processing, don't call next()
     }
 
@@ -52,11 +53,11 @@ var get_api_token = function (req, res, next) {
 };
 
 var api_token_checker = function (req, res, next) {
-    if (!req.authorization.hasOwnProperty("basic")) {
+    if (!__.has(req.headers, "x-api-key")) {
         fail_auth(res, common.security_relm_token, "No API key provided");
         return; // no furthar processing, don't call next()
     }
-    var uuid = req.authorization.basic.username;
+    var uuid = req.headers['x-api-key'];
 
     if (!common.uuid_regex.test(uuid)) {
         fail_auth(res, common.security_relm_token, "API key is invalid");
@@ -107,8 +108,9 @@ server.use(restify.authorizationParser());
 server.use(restify.jsonp());
 
 server.use(restify.CORS({
-    origins: ['m.campsite.org', 'www.campsite.org', 'campsite.org'],   // defaults to ['*']
-    credentials: true                  // defaults to false
+    origins: ['http://m.campsite.org'],   // defaults to ['*']
+    credentials: true,                  // defaults to false
+    headers: ['x-api-key']
 }));
 
 //-------------------------  Anonymous calls here  ---------------------------------
