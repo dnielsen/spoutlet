@@ -105,16 +105,16 @@ Type.Str.init(
 
     //default filter
     function (column, query, value) {
-        query.where(column, 'LIKE', value);
+        query.where(column, 'like', value);
     },
 
     //prefix filters
     {
         '!~': function (column, query, value) {
-            query.where(column, 'NOT LIKE', "%" + value + "%");
+            query.where(column, 'not like', "%" + value + "%");
         },
         '~': function (column, query, value) {
-            query.where(column, 'LIKE', "%" + value + "%");
+            query.where(column, 'like', "%" + value + "%");
         },
         '!': function (column, query, value) {
             query.where(column, '<>', value);
