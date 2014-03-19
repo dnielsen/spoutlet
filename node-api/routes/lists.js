@@ -89,6 +89,7 @@ var single_handler = function (result) {
             result.parent = result.event_parent;
             result.parent.type = "Event";
         }
+        result.parent.id = result.entrySetRegistration.containerId;
         delete result.event_parent;
         delete result.group_parent;
         delete result.entrySetRegistration;
@@ -115,7 +116,7 @@ exports.find_all = function (req, resp, next) {
         // var i_g = array.indexOf('group_parent');
         // var i_e = array.indexOf('group_event');
         var i_p = fields.indexOf('parent');
-        if(i_p > -1) {
+        if (i_p > -1) {
             fields.splice(i_p, 1);
             fields.push("entrySetRegistration");
             fields.push("group_parent");
