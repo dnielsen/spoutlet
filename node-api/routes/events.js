@@ -30,7 +30,7 @@ var spec = {
         "user_id" : { type : Type.Int, props : ["read-only"] },
         "entrySetRegistration_id" : { type : Type.Int, props : [] },
 
-        "group" : { type : Type.Group, rel : "belongs_to", mapping : 'group_id' },
+        "parent_group" : { type : Type.Group, rel : "belongs_to", mapping : 'group_id' },
         "user" : { type : Type.User, rel : "belongs_to", mapping : 'user_id' },
         "entrySetRegistration" : { type : Type.Registry, rel : "belongs_to", mapping : "entrySetRegistration_id" }
     }
