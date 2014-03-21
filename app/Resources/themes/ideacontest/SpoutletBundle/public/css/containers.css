@@ -263,7 +263,21 @@
     }
 
 /*********** SUBPAGE CONTAINERs ***********/
-		
+	
+    .col_third,.col_two_thirds,.col_half {
+        margin: 0 0.5% 0 0.5%;
+        display:inline-block;
+    }
+    .col_third {
+        width: 32%;
+    }
+    .col_two_thirds {
+        width: 65%;
+    }
+    .col_half {
+        width: 48.5%;
+    }
+
 	.col1 {
 		float: left;
 		width: 698px;
