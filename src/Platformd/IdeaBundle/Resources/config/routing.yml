@@ -63,6 +63,10 @@ event_session_schedule:
 
 # Admin Routes
 
+idea_admin_feedback:
+    pattern:    /feedback
+    defaults:   { _controller: IdeaBundle:Admin:feedback }
+    
 idea_admin_event:
     pattern:    /{groupSlug}/event/{eventId}/admin/configure
     defaults:   { _controller: IdeaBundle:Admin:event, eventId:newEvent}

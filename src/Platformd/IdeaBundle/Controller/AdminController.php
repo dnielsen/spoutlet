@@ -806,6 +806,31 @@ class AdminController extends Controller
         )));
     }
 
+    public function feedbackAction() {
+
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException();
+        }
+
+        $siteId = $this->getCurrentSite()->getId();
+        $siteRegistry = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry')->findOneBy(array('scope'=>'SpoutletBundle:Site','containerId'=>$siteId));
+
+        $feedbackLists = $siteRegistry->getEntrySets();
+
+        $processedLists = array();
+        foreach ($feedbackLists as $list) {
+            if ($list->getNumEntries() > 0) {
+                $processedLists[] = $list;
+            }
+        }
+
+        usort($processedLists, function ($a, $b) {
+            return ($b->getNumEntries() - $a->getNumEntries());
+        });
+        
+        return $this->render('IdeaBundle:Admin:feedback.html.twig', array('feedbackLists' => $processedLists));
+    }
+
 
     //------------------------ Helper Functions -----------------------------------
     public function isAdmin()
