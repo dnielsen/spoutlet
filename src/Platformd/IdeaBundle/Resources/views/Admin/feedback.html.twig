@@ -2,11 +2,11 @@
 
 {% block content %}
 
-    <div class="col_two_thirds">
+    <div class="col_half">
         <table class="tblStyle">
             <tr>
                 <th>Feedback Page</th>
-                <th>Number of Entries</th>
+                <th># Entries</th>
             </tr>
             {% for list in feedbackLists %}
             <tr>
@@ -16,5 +16,17 @@
             {% endfor %}
         </table>
     </div>
+    <div class="col_half">
+        <h2>Recent Feedback</h2>
+        <div class="entry_set_list">
+        {% for entry in recentFeedback %}
+            <div class="card spcr-b2">
+                <a href="{{ path('idea_show', {'entrySetId': entry.entrySet.id, 'entryId': entry.id}) }}" class="blu">{{ entry.name }}</a><br/>
+                <em>{{ entry.entrySet.name }}</em>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+
 
 {% endblock %}

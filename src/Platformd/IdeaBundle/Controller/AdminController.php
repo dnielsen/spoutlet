@@ -818,17 +818,26 @@ class AdminController extends Controller
         $feedbackLists = $siteRegistry->getEntrySets();
 
         $processedLists = array();
+        $feedbackEntries = array();
+
         foreach ($feedbackLists as $list) {
             if ($list->getNumEntries() > 0) {
                 $processedLists[] = $list;
+                foreach ($list->getEntries() as $entry) {
+                    $feedbackEntries[] = $entry;
+                }
             }
         }
-
         usort($processedLists, function ($a, $b) {
             return ($b->getNumEntries() - $a->getNumEntries());
         });
+        usort($feedbackEntries, function ($a, $b) {
+            return ($b->getCreatedAt()->getTimeStamp() - $a->getCreatedAt()->getTimeStamp());
+        });
+
+        $recentFeedback = array_slice($feedbackEntries, 0, 6);
         
-        return $this->render('IdeaBundle:Admin:feedback.html.twig', array('feedbackLists' => $processedLists));
+        return $this->render('IdeaBundle:Admin:feedback.html.twig', array('feedbackLists' => $processedLists, 'recentFeedback' => $recentFeedback));
     }
 
 
