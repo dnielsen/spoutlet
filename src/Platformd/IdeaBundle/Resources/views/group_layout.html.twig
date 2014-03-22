@@ -37,5 +37,35 @@
 
 {%  endblock %}
 
+{% block content %}
+
+    {# Public Group #}
+    {% if group.isPublic %}
+        {% set show = true %}
+
+    {# Private Group - Logged In #}
+    {% elseif app.user|default %}
+
+        {# Group Owner and Admin can view #}
+        {% if (group.owner == app.user) or is_granted('ROLE_ADMIN') %}
+            {% set show = true %}
+        {% else %}
+            {% set show = false %}
+        {% endif %}
+
+    {# Private Group - Not Logged In #}
+    {% else %}
+        {% set show = false %}
+    {% endif %}
+
+    {% if show == true %}
+        {% block group_content %}
+        {% endblock %}
+    {% else %}
+        This group is private. Click <a href="{{ path('groups') }}" class="blu">here</a> to browse more groups.
+    {% endif %}
+
+{% endblock %}
+
 
 

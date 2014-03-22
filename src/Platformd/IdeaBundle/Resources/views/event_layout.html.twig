@@ -1,6 +1,6 @@
 {% extends 'IdeaBundle::group_layout.html.twig' %}
 
-{% block content %}
+{% block group_content %}
 
     {% if event.private and not (isAdmin or event.user==app.user) %}
         {% if app.user is null %}

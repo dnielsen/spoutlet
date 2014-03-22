@@ -227,9 +227,9 @@ ul.inline li {
 		behavior: url("PIE.htc");
         font-weight: bold;
 		font-size: 12px;
-        box-shadow: #97CDFF 3px 3px 3px;
-        -webkit-box-shadow: #97CDFF 3px 3px 3px;
-        -moz-box-shadow: #97CDFF 3px 3px 3px;
+        box-shadow: #97CDFF 2px 2px 1px;
+        -webkit-box-shadow: #97CDFF 2px 2px 1px;
+        -moz-box-shadow: #97CDFF 2px 2px 1px;
 	}
 	.kWords ul li a:hover, .kWords a:hover {
 		border: 1px solid #2faad9;

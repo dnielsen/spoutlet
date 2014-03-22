@@ -315,6 +315,11 @@
 	.kWords p {
 		padding-top: 0;
 	}
+    .entry_set_list {
+        background: #f5f5f5;
+        padding: 10px;
+        border: 1px solid #eee;
+    }
     .card {
         border: 1px solid #ccc;
         padding: 10px;

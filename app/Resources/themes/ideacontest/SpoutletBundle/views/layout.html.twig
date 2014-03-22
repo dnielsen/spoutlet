@@ -66,21 +66,8 @@
 
                 {% include 'IdeaBundle:Idea:breadcrumbs.html.twig' %}
 
-                {% if sidebar|default %}
-                    <div id="contentLft{% if _isFrontPage %}MP{% endif %}">
-                {% endif %}
-
                 {% block content %}
                 {% endblock %}
-
-                {% if sidebar|default %}
-                    </div>
-                    <div id="contentRt{% if _isFrontPage %}MP{% endif %}">
-                    {% block sidebar %}
-                        {% include 'IdeaBundle::sidebar.html.twig' %}
-                    {% endblock %}
-                    </div>
-                {% endif %}
 
                 <br class="clr">
 

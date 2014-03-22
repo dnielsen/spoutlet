@@ -122,7 +122,6 @@ class IdeaController extends Controller
             'breadCrumbs'       => $this->getBreadCrumbsString($idea),
             'canEdit' 			=> $this->canEditIdea($entrySet, $idea),
 			'canRemoveComments' => $this->canRemoveComment($idea),
-            'sidebar' 			=> true,
             'attendance' 		=> $attendance,
             'isAdmin'       	=> $isAdmin,
         );

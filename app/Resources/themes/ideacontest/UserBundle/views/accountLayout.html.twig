@@ -1,5 +1,5 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
-{% set sidebar = false %}
+
 {% block title %}{% if user == app.user %}My Profile{% else %}{{ user.name }}{% endif %}{% endblock %}
 
 {% block content %}
