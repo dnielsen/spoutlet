@@ -529,7 +529,7 @@ class IdeaController extends Controller
                         'flickr'    =>  'Flickr',
                         'twitter'   =>  'Twitter',
                         'slideshare'=>  'SlideShare',
-                        'other'     =>  'Other'
+                        'other'     =>  'URL'
                     )
                 ))
             ->getForm()
