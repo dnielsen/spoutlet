@@ -26,8 +26,8 @@
 .widget-100 .widget-item { -moz-border-radius: 5px; -webkit-border-radius: 5px; margin: 3px; padding: 2px 2px 2px 5px; min-height: 20px; padding: 4px 0 0 5px; }
 .widget-100 .widget-item-subtext { color: #b3b3b3; }
 
-.widget-100 th { color: #616161; text-align:left; padding-bottom:4px; }
-.widget-100 td { color: #727272; padding: 4px 2px; }
+.widget-100 th { color: #616161; text-align:left; padding-bottom:4px; font-size: 1.2em; }
+.widget-100 td { color: #727272; padding: 4px 2px; line-height: 30px; }
 
 #featured-content { overflow: hidden; }
 #featured-content .widget-content { overflow: auto; }
