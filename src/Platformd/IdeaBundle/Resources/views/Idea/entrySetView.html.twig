@@ -165,7 +165,10 @@
                     <div class="clr"></div>
                 </div>
             {% else %}
-                <div class="left">There are no {{ entrySet.type }}s yet.</div>
+                <div class="left">
+                    There are no {{ entrySet.type }}s yet. 
+                    <a href="{{ path('idea_create_form', {'entrySetId': entrySet.id}) }}" class="blu">Propose one now!</a>
+                </div> 
                 <br/><br/><hr/>
             {% endfor %}
         </div>
