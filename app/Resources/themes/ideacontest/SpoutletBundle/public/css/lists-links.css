@@ -168,7 +168,9 @@ ul.dflt, .row ul {
 	}
 	
 #group-by-topic ul li {
-	margin-bottom: 5px;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+    text-shadow: 1px 1px 1px #ccc;
 }
 
 ul.inline li {
