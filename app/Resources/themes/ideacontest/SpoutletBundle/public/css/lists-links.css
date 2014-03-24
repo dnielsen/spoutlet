@@ -173,6 +173,12 @@ ul.dflt, .row ul {
     text-shadow: 1px 1px 1px #ccc;
 }
 
+#create-group-btn {
+    font-size: 1.2em; 
+    padding: 10px; 
+    display: inline-block;
+}
+
 ul.inline li {
 	display: inline;
 }
