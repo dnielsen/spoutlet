@@ -353,7 +353,8 @@ class AdminController extends Controller
             ->add('name',               'text',     array('attr'    => array('style' => 'width:60%')))
             ->add('type',               'choice',   array('choices' => array(EntrySet::TYPE_IDEA      => 'Ideas',
                                                                              EntrySet::TYPE_SESSION   => 'Sessions',
-                                                                             EntrySet::TYPE_THREAD    => 'Threads',)))
+                                                                             EntrySet::TYPE_THREAD    => 'Threads',
+                                                                             EntrySet::TYPE_TASK      => 'Tasks',)))
             ->add('description',        'textarea', array('attr'    => array('style' => 'width:60%')))
             ->add('isSubmissionActive', 'choice',   array('choices' => array('1' => 'Yes', '0' => 'No')))
             ->add('isVotingActive',     'choice',   array('choices' => array('0' => 'No', '1' => 'Yes')))
