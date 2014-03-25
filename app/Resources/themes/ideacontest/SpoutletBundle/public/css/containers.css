@@ -140,13 +140,16 @@
 	padding: 10px 20px;
     overflow-y: auto;
 }
-	.group-list {
-		float: left;
-		padding-left: 15px;
-		border-left: 1px solid #ccc;
-		margin-right: 25px;
-		margin-bottom: 15px;
-	}
+    .group-list {
+        width: 47%;
+        display: inline-block;
+        vertical-align: top;
+        padding-right: 10px;
+    }
+    #groups-col2 {
+        padding-left: 10px;
+        border-left: 1px solid #ccc;
+    }
 
 #map {
 	padding: 10px 0;
