@@ -25,7 +25,7 @@ class EntrySet implements LinkableInterface {
     const TYPE_SESSION  = 'session';
     const TYPE_IDEA     = 'idea';
     const TYPE_THREAD   = 'thread';
-    const TYPE_COMMENT  = 'comment';
+    const TYPE_TASK     = 'task';
 
     /**
      * @var integer $id
