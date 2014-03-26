@@ -66,7 +66,7 @@ event_session_schedule:
 idea_admin_feedback:
     pattern:    /feedback
     defaults:   { _controller: IdeaBundle:Admin:feedback }
-    
+
 idea_admin_event:
     pattern:    /{groupSlug}/event/{eventId}/admin/configure
     defaults:   { _controller: IdeaBundle:Admin:event, eventId:newEvent}
@@ -235,6 +235,10 @@ idea_comment:
     defaults:   { _controller: IdeaBundle:Idea:comment }
     requirements:
      _method:   POST
+
+idea_complete:
+    pattern:    /list/{entrySetId}/entry/{entryId}/complete
+    defaults:   { _controller: IdeaBundle:Idea:toggleCompleted }
 
 idea_comment_delete:
     pattern:    /list/{entrySetId}/entry/{entryId}/commentDelete

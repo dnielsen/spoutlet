@@ -16,7 +16,7 @@
         <div class="left spcr-t5">
 
             {% if (entrySet.entries|length > 0) %}
-            <form action = "{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}" id='filterForm' method="get" class="left">
+            <form action="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'viewPrivate': viewPrivate, 'sortBy': sortBy, 'showAllRounds': showAllRounds, 'viewCompleted': viewCompleted}) }}" id='filterForm' method="get" class="left">
                 <table>
                     <tr>
                         <td><input type="text" name="tag" tabindex="1" placeholder="Filter by tag" value="{{tag}}" /></td>
@@ -41,7 +41,7 @@
         {% if (entrySet.entries|length > 0) %} {# No entries in entrySet #}
             {% if app.user %}
                 {% if viewPrivate %}
-                    <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'viewPrivate': false, 'sortBy': sortBy, 'showAllRounds': showAllRounds}) }}" class="blue">Public {{ entrySet.type | capitalize }}s</a>
+                    <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'viewPrivate': false, 'sortBy': sortBy, 'showAllRounds': showAllRounds, 'viewCompleted': viewCompleted}) }}" class="blue">Public {{ entrySet.type | capitalize }}s</a>
                     &nbsp;&nbsp;|&nbsp;&nbsp;
                     <strong>
                         {% if isAdmin %}
@@ -55,8 +55,8 @@
 
                 {% else %}
                     <strong>Public {{ entrySet.type | capitalize }}s</strong>
-                    &nbsp;&nbsp;|&nbsp;&nbsp;
-                <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'viewPrivate': true, 'sortBy': sortBy, 'showAllRounds': showAllRounds}) }}" class="blue">
+                    &nbsp;|&nbsp;
+                <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'viewPrivate': true, 'sortBy': sortBy, 'showAllRounds': showAllRounds, 'viewCompleted': viewCompleted}) }}" class="blue">
                     {% if isAdmin %}
                         Private {{ entrySet.type | capitalize }}s</a>
                     {% elseif isJudge %}
@@ -64,29 +64,35 @@
                     {% else %}
                         My {{ entrySet.type | capitalize }}s</a>
                     {% endif %}
-
                 {% endif %}
-
-                &nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;
             {% endif %}
 
+            {% if entrySet.type == constant('\\Platformd\\IdeaBundle\\Entity\\EntrySet::TYPE_TASK') %}
+                {% if viewCompleted|default == false %}
+                    <strong>View Incomplete</strong>
+                    &nbsp;|&nbsp;
+                    <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'viewPrivate': viewPrivate, 'sortBy': sortBy, 'showAllRounds': showAllRounds, 'viewCompleted': true}) }}" class="blue">View Completed</a>
+                {% else %}
+                    <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'viewPrivate': viewPrivate, 'sortBy': sortBy, 'showAllRounds': showAllRounds, 'viewCompleted': false}) }}" class="blue">View Incomplete</a>
+                    &nbsp;|&nbsp;
+                    <strong>View Completed</strong>
+                {% endif %}
+                &nbsp;&nbsp;
+            {% endif %}
 
             {% if sortBy == 'vote' %}
                 <strong>Sort By Votes</strong>
-
             {% else %}
-                <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': 'vote', 'viewPrivate': viewPrivate, 'showAllRounds': showAllRounds}) }}" class="blue">Sort By Votes</a>
-
+                <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': 'vote', 'viewPrivate': viewPrivate, 'showAllRounds': showAllRounds, 'viewCompleted': viewCompleted}) }}" class="blue">Sort By Votes</a>
             {% endif %}
 
             &nbsp;&nbsp;|&nbsp;&nbsp;
 
             {% if sortBy == 'createdAt' %}
                 <strong>Sort By Newest</strong>
-
             {% else %}
-                <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': 'createdAt', 'viewPrivate': viewPrivate, 'showAllRounds': showAllRounds}) }}" class="blue">Sort By Newest</a>
-
+                <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'sortBy': 'createdAt', 'viewPrivate': viewPrivate, 'showAllRounds': showAllRounds, 'viewCompleted': viewCompleted}) }}" class="blue">Sort By Newest</a>
             {% endif %}
 
             &nbsp;&nbsp;&nbsp;&nbsp;
@@ -114,56 +120,78 @@
 
         <div class="entry_set_list">
             {% for idea in ideas %}
-                <div class="card spcr-b3">
-                    <div class="idea_left_column">
-                        <div class="voteBx">
-                            <p>
-                                <strong class="lrgtxt">{{ idea.numFollowers }}</strong><br>
-                                <span class="tnytxt gry">vote{% if idea.numFollowers != 1 %}s{% endif %}</span>
-                            </p>
-                            <form action = "{{ path('idea_follow', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="POST">
-                                <input type="hidden" name="id" value="{{idea.id}}">
-                                <input type="hidden" name="source" value="list">
-                                <input type="hidden" name="tag" value="{{ tag }}">
-                                <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnVote" value="Vote"{% else %}class="btnVote redButton" value="Remove Vote"{% endif %}{% else %}class="btnVote" value="Vote"{% endif %}>
-                            </form>
-                        </div>
-                        <div class="clr"></div>
 
-                        {# If this is a session list that belongs to an event, and we are an admin, and this has not already been turned into a session #}
-                        {% if entrySet.type == constant('\\Platformd\\IdeaBundle\\Entity\\EntrySet::TYPE_SESSION') and event|default and isAdmin and not idea.evtSession %}
-                            <form action="{{ path('event_session_create', {'groupSlug': group.slug, 'eventId': event.id, 'ideaId': idea.id}) }}" method="POST">
-                                <a href="javascript:void(0);" class="btnTny spcr-t" onClick="$(this).closest('form').submit();">Create Session</a>
-                            </form>
-                        {% endif %}
-                    </div>
+                {% set show_idea = false %}
+                {% if viewCompleted is not defined %}
+                    {% set show_idea = true %}
+                {% elseif viewCompleted == idea.completed %}
+                    {% set show_idea = true %}
+                {% endif %}
 
-                    <div class="session">
-                        <a href="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}">
-                            <h3>{{ idea.name }}</h3>
-                        </a>
-                        <em class="tnytxt">{{ idea.dateTimeString }}</em><br/>
-                        {{ idea.description|truncate(300) }}
+                {% if show_idea == true %}
 
-                        {% if idea.tags|length > 0 %}
-                            <br/>
-                            <div class="kWords left">
-                                <ul>
-                                    <li>Tags</li>
-                                    {% for tag in idea.tags %}
-                                        <li><a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'tag': tag.tagName}) }}">{{ tag.tagName }}</a></li>
-                                    {% endfor %}
-                                </ul>
+                    <div class="card spcr-b3">
+
+                        {% if entrySet.type == constant('\\Platformd\\IdeaBundle\\Entity\\EntrySet::TYPE_TASK') %}
+                            <div class="idea_left_column">
+                                {% if not idea.completed %}
+                                    <a href="{{ path('idea_complete', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="btnTny" style="padding:0;">Mark Complete</a>
+                                {% else %}
+                                    <a href="{{ path('idea_complete', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="btnTny" style="padding:0;">Mark Incomplete</a>
+                                {% endif %}
                             </div>
                         {% endif %}
 
-                        <span class="right tnytxt spcr-t">
-                            Proposed by: <strong><a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blue">{{idea.creator.name}}</a></strong>{% if idea.members %}, {{idea.members}}{% endif %}
-                        </span>
+                        <div class="idea_left_column">
+                            <div class="voteBx">
+                                <p>
+                                    <strong class="lrgtxt">{{ idea.numFollowers }}</strong><br>
+                                    <span class="tnytxt gry">vote{% if idea.numFollowers != 1 %}s{% endif %}</span>
+                                </p>
+                                <form action = "{{ path('idea_follow', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="POST">
+                                    <input type="hidden" name="id" value="{{idea.id}}">
+                                    <input type="hidden" name="source" value="list">
+                                    <input type="hidden" name="tag" value="{{ tag }}">
+                                    <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnVote" value="Vote"{% else %}class="btnVote redButton" value="Remove Vote"{% endif %}{% else %}class="btnVote" value="Vote"{% endif %}>
+                                </form>
+                            </div>
+                            <div class="clr"></div>
 
+                            {# If this is a session list that belongs to an event, and we are an admin, and this has not already been turned into a session #}
+                            {% if entrySet.type == constant('\\Platformd\\IdeaBundle\\Entity\\EntrySet::TYPE_SESSION') and event|default and isAdmin and not idea.evtSession %}
+                                <form action="{{ path('event_session_create', {'groupSlug': group.slug, 'eventId': event.id, 'ideaId': idea.id}) }}" method="POST">
+                                    <a href="javascript:void(0);" class="btnTny spcr-t" onClick="$(this).closest('form').submit();">Create Session</a>
+                                </form>
+                            {% endif %}
+                        </div>
+
+                        <div class="session">
+                            <a href="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}">
+                                <h3>{{ idea.name }}</h3>
+                            </a>
+                            <em class="tnytxt">{{ idea.dateTimeString }}</em><br/>
+                            {{ idea.description|truncate(300) }}
+
+                            {% if idea.tags|length > 0 %}
+                                <br/>
+                                <div class="kWords left">
+                                    <ul>
+                                        <li>Tags</li>
+                                        {% for tag in idea.tags %}
+                                            <li><a href="{{ path('entry_set_view', {'entrySetId': entrySet.id, 'tag': tag.tagName}) }}">{{ tag.tagName }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+
+                            <span class="right tnytxt spcr-t">
+                                Proposed by: <strong><a href="{{ path('profile', {'userId': idea.creator.id}) }}" class="blue">{{idea.creator.name}}</a></strong>{% if idea.members %}, {{idea.members}}{% endif %}
+                            </span>
+
+                        </div>
+                        <div class="clr"></div>
                     </div>
-                    <div class="clr"></div>
-                </div>
+                {% endif %}
             {% else %}
                 <div class="left">
                     There are no {{ entrySet.type }}s yet. 
