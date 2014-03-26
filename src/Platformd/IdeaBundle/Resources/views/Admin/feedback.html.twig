@@ -6,12 +6,12 @@
         <table class="tblStyle">
             <tr>
                 <th>Feedback Page</th>
-                <th># Entries</th>
+                <th># Tasks</th>
             </tr>
             {% for list in feedbackLists %}
             <tr>
                 <td><a href="{{ path('entry_set_view', {'entrySetId': list.id}) }}"><h3 class="blu">{{ list.name }}</h3></a></td>
-                <td>{{ list.numEntries }}</td>
+                <td>{{ list.numIncompleteEntries }}</td>
             </tr>
             {% endfor %}
         </table>

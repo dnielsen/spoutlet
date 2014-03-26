@@ -822,15 +822,18 @@ class AdminController extends Controller
         $feedbackEntries = array();
 
         foreach ($feedbackLists as $list) {
-            if ($list->getNumEntries() > 0) {
+            $incompleteEntries = $list->getIncompleteEntries();
+
+            if (count($incompleteEntries) > 0) {
                 $processedLists[] = $list;
-                foreach ($list->getEntries() as $entry) {
+                foreach ($incompleteEntries as $entry) {
                     $feedbackEntries[] = $entry;
                 }
             }
         }
+
         usort($processedLists, function ($a, $b) {
-            return ($b->getNumEntries() - $a->getNumEntries());
+            return ($b->getNumIncompleteEntries() - $a->getNumIncompleteEntries());
         });
         usort($feedbackEntries, function ($a, $b) {
             return ($b->getCreatedAt()->getTimeStamp() - $a->getCreatedAt()->getTimeStamp());
