@@ -16,6 +16,24 @@
                 </form>
             </div>
             <div class="clr"></div>
+
+            {# If this is a session list that belongs to an event, and we are an admin/event owner #}
+            {% if entrySet.type == constant('\\Platformd\\IdeaBundle\\Entity\\EntrySet::TYPE_SESSION') and event|default and isAdmin %}
+                {% if not idea.evtSession %}
+                    <form action="{{ path('event_session_create', {'groupSlug': group.slug, 'eventId': event.id, 'ideaId': idea.id}) }}" method="POST">
+                        <a href="javascript:void(0);" class="btnTny spcr-t7" onClick="$(this).closest('form').submit();">Create Session</a>
+                    </form>
+                {% else %}
+                    <a href="javascript:void(0);" class="btnTny greyButton spcr-t7">Session Scheduled</a>
+                {% endif %}
+            {# If this is a Task List and we are an admin/list owner/idea creator #}
+            {% elseif entrySet.type == constant('\\Platformd\\IdeaBundle\\Entity\\EntrySet::TYPE_TASK') and (isAdmin or idea.creator==app.user) %}
+                {% if not idea.completed %}
+                    <a href="{{ path('idea_complete', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="btnTny spcr-t7" style="padding:0;">Mark Complete</a>
+                {% else %}
+                    <a href="{{ path('idea_complete', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="btnTny redButton spcr-t7" style="padding:0;">Mark Incomplete</a>
+                {% endif %}
+            {% endif %}
         </div>
 
         <div class="session">
