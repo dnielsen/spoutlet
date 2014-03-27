@@ -101,7 +101,7 @@
                     <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="blue">{{ nextEvent.name }}</a>
                 </h2>
                 {% if not (nextEvent.isUserAttending(app.user)) %}
-                    <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btnTny right">{% if nextEvent.externalUrl %}Join Discussion{% else %}Attend{% endif %}</a>
+                    <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btn right">{% if nextEvent.externalUrl %}Join Discussion{% else %}Attend{% endif %}</a>
                 {% endif %}
                 <div class="clr"></div>
 

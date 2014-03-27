@@ -116,7 +116,6 @@
             {% endif %}
 
         {% endif %} {# No entries in entrySet #}
-        <div class="spcr-b3"></div>
 
         <div class="entry_set_list">
             {% for idea in ideas %}
@@ -131,20 +130,14 @@
                 {% if show_idea == true %}
 
                     <div class="card spcr-b3">
-
-                        
-
                         <div class="idea_left_column">
                             <div class="voteBx">
-                                <p>
-                                    <strong class="lrgtxt">{{ idea.numFollowers }}</strong><br>
-                                    <span class="tnytxt gry">vote{% if idea.numFollowers != 1 %}s{% endif %}</span>
-                                </p>
+                                <p><strong class="lrgtxt">{{ idea.numFollowers }}</strong></p>
                                 <form action = "{{ path('idea_follow', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" method="POST">
                                     <input type="hidden" name="id" value="{{idea.id}}">
                                     <input type="hidden" name="source" value="list">
                                     <input type="hidden" name="tag" value="{{ tag }}">
-                                    <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnVote" value="Vote"{% else %}class="btnVote redButton" value="Remove Vote"{% endif %}{% else %}class="btnVote" value="Vote"{% endif %}>
+                                    <input type="submit" {% if app.user %}{% if not idea.isUserFollowing(app.user.username) %}class="btnTny fillWidth spcr-t7" value="Vote"{% else %}class="btnTinyer redButton fillWidth spcr-t7" value="Remove Vote"{% endif %}{% else %}class="btnTny fillWidth spcr-t7" value="Vote"{% endif %}>
                                 </form>
                             </div>
                             <div class="clr"></div>
@@ -163,7 +156,7 @@
                                 {% if not idea.completed %}
                                     <a href="{{ path('idea_complete', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="btnTny spcr-t7" style="padding:0;">Mark Complete</a>
                                 {% else %}
-                                    <a href="{{ path('idea_complete', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="btnTny redButton spcr-t7" style="padding:0;">Mark Incomplete</a>
+                                    <a href="{{ path('idea_complete', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="btnTinyer redButton spcr-t7">Mark Incomplete</a>
                                 {% endif %}
                             {% endif %}
                         </div>
