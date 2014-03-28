@@ -21,6 +21,18 @@
         <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}" class="btnLg2">Session Schedule</a>
     {% endif %}
 
+    {% if event.sponsors|length > 0 %}
+        <h2 class="widgetHeader">Sponsors</h2>
+        <ul class="spcr-b3">
+            {% for sponsor in event.sponsors %}
+                <div class="sponsorImageBox">
+                    <a href="{{ sponsor.url }}"><img src="{{ media_path(sponsor.image) }}"></a>
+                </div>
+            {% endfor %}
+        </ul>
+        <div class="clr"></div>
+    {% endif %}
+
     <h2 class="widgetHeader">Event Details</h2>
     <table id="eventDetails" class="tblStyle spcr-b3">
         {% if event.startsAt %}
@@ -62,18 +74,6 @@
         </ul>
     {% endif %}
 
-    {% if event.sponsors|length > 0 %}
-        <h2 class="widgetHeader">Sponsors</h2>
-        <ul class="spcr-b3">
-            {% for sponsor in event.sponsors %}
-                <div class="sponsorImageBox">
-                    <a href="{{ sponsor.url }}"><img src="{{ media_path(sponsor.image) }}"></a>
-                </div>
-            {% endfor %}
-        </ul>
-        <div class="clr"></div>
-    {% endif %}
-
 {% elseif group|default %}
 
     {% if not group.isMember(user) %}
@@ -82,6 +82,17 @@
         </div>
     {% endif %}
 
+    {% if group.sponsors|length > 0 %}
+        <h2 class="widgetHeader">Sponsors</h2>
+        <ul class="spcr-b3">
+            {% for sponsor in group.sponsors %}
+                <div class="sponsorImageBox">
+                    <a href="{{ sponsor.url }}"><img src="{{ media_path(sponsor.image) }}"></a>
+                </div>
+            {% endfor %}
+        </ul>
+        <div class="clr"></div>
+    {% endif %}
 
     <h2 class="widgetHeader">Group Description</h2>
     <div class="scrollableWidgetLarge spcr-b3">
@@ -101,18 +112,6 @@
                 {% endif %}
             {% endfor %}
         </ul>
-    {% endif %}
-
-    {% if group.sponsors|length > 0 %}
-        <h2 class="widgetHeader">Sponsors</h2>
-        <ul class="spcr-b3">
-            {% for sponsor in group.sponsors %}
-                <div class="sponsorImageBox">
-                    <a href="{{ sponsor.url }}"><img src="{{ media_path(sponsor.image) }}"></a>
-                </div>
-            {% endfor %}
-        </ul>
-        <div class="clr"></div>
     {% endif %}
 
 {% endif %}
