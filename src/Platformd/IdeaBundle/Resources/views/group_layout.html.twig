@@ -39,30 +39,31 @@
 
 {% block content %}
 
-    {# Public Group #}
-    {% if group.isPublic %}
-        {% set show = true %}
+    {# Deleted Group #}
+    {% if group.deleted %}
+        {% set show = false %}
+        This group has been deleted. Click <a href="{{ path('groups') }}" class="blu">here</a> to browse more groups.
 
-    {# Private Group - Logged In #}
-    {% elseif app.user|default %}
+    {# Active Private Group #}
+    {% elseif not group.isPublic %}
 
         {# Group Owner and Admin can view #}
         {% if (group.owner == app.user) or is_granted('ROLE_ADMIN') %}
             {% set show = true %}
         {% else %}
             {% set show = false %}
+            This group is private. Click <a href="{{ path('groups') }}" class="blu">here</a> to browse more groups.
         {% endif %}
 
-    {# Private Group - Not Logged In #}
+    {# Active Public Group #}
     {% else %}
-        {% set show = false %}
+        {% set show = true %}
+
     {% endif %}
 
     {% if show == true %}
         {% block group_content %}
         {% endblock %}
-    {% else %}
-        This group is private. Click <a href="{{ path('groups') }}" class="blu">here</a> to browse more groups.
     {% endif %}
 
 {% endblock %}
