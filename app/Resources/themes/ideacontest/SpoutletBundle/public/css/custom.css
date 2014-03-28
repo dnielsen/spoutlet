@@ -221,14 +221,14 @@ a.profile-cancelBtn {
     margin: 5px;
 }
 .sponsorImageBox {
-    width: 140px;
-    height: 140px;
-    margin: 2px;
+    width: 94px;
+    height: 60px;
+    margin: 1px;
     float: left;
 }
 .sponsorImageBox img {
-    max-width: 140px;
-    max-height: 140px;
+    max-width: 94px;
+    max-height: 60px;
 }
 
 #eventSummary {
