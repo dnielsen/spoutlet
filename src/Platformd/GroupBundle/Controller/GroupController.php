@@ -1686,15 +1686,15 @@ Alienware Arena Team
         ));
     }
 
-    private function collectLocations($thisGroup, &$locationGroups) {
-        foreach($thisGroup->getChildren() as $child) {
-            if($thisGroup->getCategory() == 'topic') {
-                array_merge($locationGroups, $this->collectLocations($child, $locationGroups));
-            }
+    private function collectLocations($group) {
 
-            $data = $this->getGroupManager()->getGroupIndexData($child);
-            if ($data) {
-                $locationGroups[] = $data;
+        $locationGroups = array();
+        foreach($group->getChildren() as $child) {
+            if ($child->getCategory() == Group::CAT_LOCATION) {
+                $data = $this->getGroupManager()->getGroupIndexData($child);
+                if ($data) {
+                    $locationGroups[] = $data;
+                }
             }
         }
         return $locationGroups;
@@ -1780,6 +1780,11 @@ Alienware Arena Team
             $group->setDescription('Welcome to my group! <br /><br />This is the place to share your thoughts with like-minded folks on this topic. <br /><br />Feel free to start a discussion on this topic.');
         }
 
+        // Coming from 'Create Sub Group' link
+        if ($parentId = $request->query->get('parentGroupId')) {
+            $group->setParent($this->getGroup($parentId));
+        }
+
         $form = $this->createForm(new GroupType($this->getUser(), $group, $tagManager, false, $this->getCurrentSite()), $group);
 
         if($previous = $this->getReturnUrl($request)) {
@@ -1835,12 +1840,21 @@ Alienware Arena Team
     public function editAction($slug, Request $request)
     {
         $group  = $this->getGroupBySlug($slug);
+
+        // Save the group's old children when requesting the edit form, we'll get it when processing the form
+        if ($request->getMethod() == 'GET') {
+            $oldChildren = array();
+            foreach ($group->getChildren() as $child) {
+                $oldChildren[] = $child->getId();
+            }
+            $request->getSession()->set('oldChildrenIds', $oldChildren);
+        }
         $this->ensureAllowed($group, 'EditGroup');
 
         $this->addGroupsBreadcrumb()->addChild('Edit Group');
         $tagManager = $this->getTagManager();
         $tagManager->loadTagging($group);
-
+        
         $editForm = $this->createForm(new GroupType($this->getUser(), $group, $tagManager, false, $this->getCurrentSite()), $group);
 
         if ($this->processForm($editForm, $request)) {
@@ -2078,16 +2092,16 @@ Alienware Arena Team
 
                 $group = $form->getData();
 
-                $parent = $group->getParent();
-                $children = $group->getChildren();
-                if($group->getCategory() == 'topic') {
-                    $group->setParent(null);
-                    foreach($children as $child) {
-                        $child->setParent($group);
+                // Clear out the group's old children before adding the new ones
+                if ($oldChildrenIds = $request->getSession()->get('oldChildrenIds')) {
+                    foreach ($oldChildrenIds as $childId) {
+                        $this->getGroup($childId)->setParent(null);
                     }
-                } else {
-                    $group->setParent($parent);
-                    $children->clear();
+                    $request->getSession()->remove('oldChildrenIds');
+                }
+
+                foreach ($group->getChildren() as $child) {
+                    $child->setParent($group);
                 }
 
                 $userIsAdmin  = $this->getUser()->hasRole('ROLE_SUPER_ADMIN');

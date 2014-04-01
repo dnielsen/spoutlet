@@ -92,13 +92,13 @@
             };
 
             $.getJSON(url, null,
-                    function(data) {
-                        //Initially populate with all groups
-                        GROUPS = data.groups;
-                        if(GROUPS) {
-                            updateSearchResults(featuredTopicsComparator);
-                        }
-                    });
+                function(data) {
+                    //Initially populate with all groups
+                    GROUPS = data.groups;
+                    if(GROUPS) {
+                        updateSearchResults(featuredTopicsComparator);
+                    }
+                });
 
             //Register search callback
             var globalTimeout = null;
@@ -120,6 +120,7 @@
     <div id="allgroups-contentLft">
         {% if featuredGroups|length > 0 %}
             <h2>{{ 'platformd.groups.index.featured_groups' | pd_trans }}</h2>
+            <a href="/app_dev.php/groups/new/" target="_blank" class="btn right" id="create-group-btn">Create Group</a>
             <div id="featured-groups">
                 {% for group in featuredGroups %}
                     <div class="card group-list-item">
@@ -168,10 +169,12 @@
     <div id="allgroups-contentRt">
         <h2>{{ 'platformd.groups.index.welcome_new' | pd_trans }}</h2>
 
-        <table class="tblStyle">
+        <table class="tblStyle card">
             <tbody>
+            {% set i=0 %}
             {% for recentGroup in recentGroups %}
-                <tr class="fill">
+                {% set i=i+1 %}
+                <tr {% if i%2 %}class="fill"{% endif %}>
                     <td><a href="{{ path('group_show', { 'slug': recentGroup.slug }) }}">{{ recentGroup.name }}</a></td>
                 </tr>
             {% else %}
@@ -180,17 +183,16 @@
 
             </tbody>
         </table>
-
-        <p><a href="{{ path('group_new') }}" target="_blank" class="btn right smtxt spcr-b">{{ 'platformd.groups.index.create_group' | pd_trans }} </a></p>
-
         <hr class="clr">
 
         <h2>{{ 'platformd.groups.index.most_popular' | pd_trans }}</h2>
 
-        <table class="tblStyle">
+        <table class="tblStyle card">
             <tbody>
+            {% set i=0 %}
             {% for popularGroup in popularGroups %}
-                <tr class="fill">
+                {% set i=i+1 %}
+                <tr {% if i%2 %}class="fill"{% endif %}>
                     <td><a href="{{ path('group_show', { 'slug': popularGroup['slug'] }) }}">{{ popularGroup['group_name'] }}</a></td>
                 </tr>
             {% else %}

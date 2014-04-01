@@ -128,6 +128,11 @@ class Idea implements LinkableInterface
      */
     protected $evtSession;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $completed;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -137,6 +142,7 @@ class Idea implements LinkableInterface
         $this->links = new ArrayCollection();
         $this->judges = new ArrayCollection();
         $this->isPrivate = false;
+        $this->completed = false;
         $this->createdAt = new \DateTime();
     }
 
@@ -806,5 +812,24 @@ class Idea implements LinkableInterface
         return $this->evtSession;
     }
 
+    /**
+     * Gets the value of completed.
+     * @return mixed
+     */
+    public function getCompleted()
+    {
+        return $this->completed;
+    }
 
+    /**
+     * Sets the value of completed.
+     * @param mixed $completed the completed
+     * @return self
+     */
+    public function setCompleted($completed)
+    {
+        $this->completed = $completed;
+
+        return $this;
+    }
 }

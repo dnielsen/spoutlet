@@ -100,49 +100,62 @@ class GroupType extends AbstractType
                     'label' => 'Discussions',
                     'help'  => 'Enable discussions for this group.',
                 ));
-
-                if ($this->currentSite){
-                    $formAttributes = array('class'=>"formRowWidth", 'size' => 6);
-
-                    $builder->add('parent', 'entity', array(
-                        'class' => 'Platformd\GroupBundle\Entity\Group',
-                        'property' => 'name',
-                        'empty_value' => '<None>',
-                        'label' => 'Related Topic Group',
-                        'attr' => $formAttributes,
-                        'query_builder' => function(EntityRepository $er) {
-                                return $er->createQueryBuilder('g')
-                                    ->leftJoin('g.sites', 's')
-                                    ->where('g.category = :category')
-                                    ->andWhere('(s = :site OR g.allLocales = true)')
-                                    ->andWhere('g.deleted = false')
-                                    ->setParameter('category', 'topic')
-                                    ->setParameter('site', $this->currentSite);
-                            },
-
-
-                    ));
-
-                    $builder->add('children', 'entity', array(
-                        'class' => 'Platformd\GroupBundle\Entity\Group',
-                        'property' => 'name',
-                        'label' => 'Related Location Groups (ctrl+click to select multiple)',
-                        'multiple' => true,
-                        'attr' => $formAttributes,
-                        'query_builder' => function(EntityRepository $er) {
-                                return $er->createQueryBuilder('g')
-                                    ->leftJoin('g.sites', 's')
-                                    ->where('g.category = :category')
-                                    ->andWhere('(s = :site OR g.allLocales = true)')
-                                    ->andWhere('g.deleted = false')
-                                    ->setParameter('category', 'location')
-                                    ->setParameter('site', $this->currentSite);
-                            },
-
-
-                    ));
-                }
             }
+
+            $formAttributes = array('class'=>"formRowWidth", 'size' => 6);
+
+            $builder->add('parent', 'entity', array(
+                'class' => 'Platformd\GroupBundle\Entity\Group',
+                'property' => 'name',
+                'empty_value' => '<None>',
+                'label' => 'Parent Group',
+                'attr' => $formAttributes,
+                'query_builder' => function(EntityRepository $er) {
+                    $qb = $er->createQueryBuilder('g')
+                        ->leftJoin('g.sites', 's')
+                        ->andWhere('(s = :site OR g.allLocales = true)')
+                        ->andWhere('g.deleted = false')
+                        ->setParameter('site', $this->currentSite);
+                    if ($groupId = $this->group->getId()) {
+                            // Where the group is not the current group
+                        $qb ->andWhere('g.id != :thisGroupId')
+                            // Where the current group is not the parent of the group
+                            ->andWhere('g.parentGroup is NULL or g.parentGroup != :thisGroupId')
+                            ->setParameter('thisGroupId', $groupId);
+                    }
+                    return $qb;
+                },
+            ));
+
+            $builder->add('children', 'entity', array(
+                'class' => 'Platformd\GroupBundle\Entity\Group',
+                'property' => 'name',
+                'label' => 'Sub Groups (Ctrl + Click to select more than one)',
+                'multiple' => true,
+                'attr' => $formAttributes,
+                'query_builder' => function(EntityRepository $er) {
+                    $qb = $er->createQueryBuilder('g')
+                        ->leftJoin('g.sites', 's')
+                        ->andWhere('(s = :site OR g.allLocales = true)')
+                        ->andWhere('g.deleted = false')
+                        ->setParameter('site', $this->currentSite);
+
+                    if ($groupId = $this->group->getId()) {
+                        // Where the group is not already parented by another group
+                        $qb ->andWhere('g.parentGroup is NULL or g.parentGroup = :thisGroupId')
+                            // Where the group is not the current group
+                            ->andWhere('g.id != :thisGroupId')
+                            ->setParameter('thisGroupId', $groupId);
+
+                        if ($parent = $this->group->getParent()) {
+                            // Where the group is not our own parent
+                            $qb ->andWhere('g.id != :thisGroupsParentId')
+                                ->setParameter('thisGroupsParentId', $parent->getId());
+                        }
+                    }
+                    return $qb;
+                },
+            ));
 
             $builder->add('tags', 'text', array(
                 'label' => 'tags.forms.tags',

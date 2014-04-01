@@ -82,6 +82,7 @@
                                     <li><a href="{{ path('group_applications', { 'slug': _key }) }}">Member Approvals</a></li>
                                 {% endif %}
                             {% endif %}
+                            <li><a href="{{ path('group_new', {'parentGroupId': group.id}) }}">Create Sub Group</a></li>
                             {% if (not group.isOwner(user)) and (group.isMember(user)) %}
                                 <li><a href="{{ path('group_leave', {'slug': group.slug}) }}" onclick="return confirm('Are you sure you want to leave this group?');">Leave Group</a></li>
                             {% endif %}

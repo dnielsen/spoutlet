@@ -25,9 +25,6 @@
                     <ul>
                         <li><a href="{{ path('accounts_settings') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
                         <li><a href="{{ path('profile', {'userId': app.user.id}) }}">Profile</li>
-                        {% if is_granted("ROLE_SUPER_ADMIN") %}
-                            <li><a href="{{ path('admin_index') }}">Site Admin</a></li>
-                        {% endif %}
                         <li><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a></li>
                     </ul>
                 </li>
@@ -47,6 +44,15 @@
                         <li><a href="{{ path('group_new') }}">Create Group</a></li>
                     </ul>
                 </li>
+
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <li><a>Administration</a>
+                        <ul>
+                            <li><a href="{{ path('admin_index') }}">Admin Panel</a></li>
+                            <li><a href="{{ path('idea_admin_feedback') }}">View Feedback</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
 
             {% endif %}
 

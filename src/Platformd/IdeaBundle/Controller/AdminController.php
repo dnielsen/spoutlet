@@ -353,7 +353,8 @@ class AdminController extends Controller
             ->add('name',               'text',     array('attr'    => array('style' => 'width:60%')))
             ->add('type',               'choice',   array('choices' => array(EntrySet::TYPE_IDEA      => 'Ideas',
                                                                              EntrySet::TYPE_SESSION   => 'Sessions',
-                                                                             EntrySet::TYPE_THREAD    => 'Threads',)))
+                                                                             EntrySet::TYPE_THREAD    => 'Threads',
+                                                                             EntrySet::TYPE_TASK      => 'Tasks',)))
             ->add('description',        'textarea', array('attr'    => array('style' => 'width:60%')))
             ->add('isSubmissionActive', 'choice',   array('choices' => array('1' => 'Yes', '0' => 'No')))
             ->add('isVotingActive',     'choice',   array('choices' => array('0' => 'No', '1' => 'Yes')))
@@ -804,6 +805,43 @@ class AdminController extends Controller
             'groupSlug' => $groupSlug,
             'eventId' => $eventId,
         )));
+    }
+
+    public function feedbackAction() {
+
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException();
+        }
+
+        $siteId = $this->getCurrentSite()->getId();
+        $siteRegistry = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry')->findOneBy(array('scope'=>'SpoutletBundle:Site','containerId'=>$siteId));
+
+        $feedbackLists = $siteRegistry->getEntrySets();
+
+        $processedLists = array();
+        $feedbackEntries = array();
+
+        foreach ($feedbackLists as $list) {
+            $incompleteEntries = $list->getIncompleteEntries();
+
+            if (count($incompleteEntries) > 0) {
+                $processedLists[] = $list;
+                foreach ($incompleteEntries as $entry) {
+                    $feedbackEntries[] = $entry;
+                }
+            }
+        }
+
+        usort($processedLists, function ($a, $b) {
+            return ($b->getNumIncompleteEntries() - $a->getNumIncompleteEntries());
+        });
+        usort($feedbackEntries, function ($a, $b) {
+            return ($b->getCreatedAt()->getTimeStamp() - $a->getCreatedAt()->getTimeStamp());
+        });
+
+        $recentFeedback = array_slice($feedbackEntries, 0, 6);
+        
+        return $this->render('IdeaBundle:Admin:feedback.html.twig', array('feedbackLists' => $processedLists, 'recentFeedback' => $recentFeedback));
     }
 
 

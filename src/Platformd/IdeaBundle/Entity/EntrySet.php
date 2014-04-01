@@ -25,7 +25,7 @@ class EntrySet implements LinkableInterface {
     const TYPE_SESSION  = 'session';
     const TYPE_IDEA     = 'idea';
     const TYPE_THREAD   = 'thread';
-    const TYPE_COMMENT  = 'comment';
+    const TYPE_TASK     = 'task';
 
     /**
      * @var integer $id
@@ -166,6 +166,16 @@ class EntrySet implements LinkableInterface {
         $this->entries = $entries;
     }
 
+    public function getIncompleteEntries() {
+        $incompleteEntries = array();
+        foreach ($this->entries as $entry) {
+            if ($entry->getCompleted() == false) {
+                $incompleteEntries[] = $entry;
+            }
+        }
+        return $incompleteEntries;
+    }
+
     public function getPopularEntries($limit = 6)
     {
         $entries = $this->entries->toArray();
@@ -192,8 +202,12 @@ class EntrySet implements LinkableInterface {
         return $topEntries;
     }
 
-    public function getNumEntries(){
+
+    public function getNumEntries() {
         return $this->entries->count();
+    }
+    public function getNumIncompleteEntries() {
+        return count($this->getIncompleteEntries());
     }
 
     public function setType($type)

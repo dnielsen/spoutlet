@@ -133,7 +133,20 @@
 
         <div class="clr"></div>
 
+        {% if event.sponsors|length > 0 %}
+            <h2 class="widgetHeader">Sponsors</h2>
+            <ul class="spcr-b3">
+                {% for sponsor in event.sponsors %}
+                    <div class="sponsorImageBox">
+                        <a href="{{ sponsor.url }}"><img src="{{ media_path(sponsor.image) }}"></a>
+                    </div>
+                {% endfor %}
+            </ul>
+            <div class="clr"></div>
+        {% endif %}
+
         <h2 class="widgetHeader">Event Details</h2>
+
         <table id="eventDetails" class="tblStyle spcr-b3">
             {% if event.startsAt %}
                 <tr>
@@ -168,18 +181,6 @@
                     </li>
                 {% endfor %}
             </ul>
-        {% endif %}
-
-        {% if event.sponsors|length > 0 %}
-            <h2 class="widgetHeader">Sponsors</h2>
-            <ul class="spcr-b3">
-                {% for sponsor in event.sponsors %}
-                    <div class="sponsorImageBox">
-                        <a href="{{ sponsor.url }}"><img src="{{ media_path(sponsor.image) }}"></a>
-                    </div>
-                {% endfor %}
-            </ul>
-            <div class="clr"></div>
         {% endif %}
         
         {% if not (event.isUserAttending(app.user)) %}

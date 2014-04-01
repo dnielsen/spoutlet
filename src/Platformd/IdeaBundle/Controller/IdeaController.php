@@ -42,6 +42,7 @@ class IdeaController extends Controller
         $viewPrivate 	= $request->query->get('viewPrivate', false);
         $sortBy      	= $request->query->get('sortBy', 'vote');
         $showAllRounds  = $request->query->get('showAllRounds', 'false');
+        $viewCompleted  = $request->query->get('viewCompleted', false);
 
         //filter the idea list using the query parameters
         $userParam  = $viewPrivate ? $this->getCurrentUser() : null;
@@ -96,6 +97,7 @@ class IdeaController extends Controller
             'sidebar'       => true,
             'attendance'    => $attendance,
             'viewPrivate'   => $viewPrivate,
+            'viewCompleted' => $viewCompleted,
             'sortBy'        => $sortBy,
             'isAdmin'       => $isAdmin,
             'isJudge'       => $this->isJudge($entrySet),
@@ -122,7 +124,6 @@ class IdeaController extends Controller
             'breadCrumbs'       => $this->getBreadCrumbsString($idea),
             'canEdit' 			=> $this->canEditIdea($entrySet, $idea),
 			'canRemoveComments' => $this->canRemoveComment($idea),
-            'sidebar' 			=> true,
             'attendance' 		=> $attendance,
             'isAdmin'       	=> $isAdmin,
         );
@@ -414,6 +415,23 @@ class IdeaController extends Controller
         return new RedirectResponse($ideaUrl);
     }
 
+    public function toggleCompletedAction($entrySetId, $entryId) {
+        $user = $this->getCurrentUser();
+
+        $entrySet = $this->getEntrySet($entrySetId);
+        $entry = $this->getEntry($entryId);
+
+        if (!$this->canEditEntrySet($entrySet)) {
+            throw new AccessDeniedException();
+        }
+
+        $entry->setCompleted(!$entry->getCompleted());
+
+        $this->getDoctrine()->getEntityManager()->flush();
+
+        return $this->redirect($this->generateUrl('entry_set_view', array('entrySetId' => $entrySetId)));
+    }
+
     public function joinIdeaScope(Idea $idea) {
         $user = $this->get('security.context')->getToken()->getUser();
 
@@ -530,7 +548,7 @@ class IdeaController extends Controller
                         'flickr'    =>  'Flickr',
                         'twitter'   =>  'Twitter',
                         'slideshare'=>  'SlideShare',
-                        'other'     =>  'Other'
+                        'other'     =>  'URL'
                     )
                 ))
             ->getForm()
@@ -1395,13 +1413,16 @@ class IdeaController extends Controller
 
     public function canEditEntrySet($entrySet)
     {
-        $parent = $this->getParentByEntrySet($entrySet);
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
 
+        $parent = $this->getParentByEntrySet($entrySet);
         if ($parent instanceof GroupEvent){
             return $this->canEditEvent($parent);
         }
         elseif ($parent instanceof Group){
-            return ($this->isAdmin() || $parent->isOwner($this->getCurrentUser()) );
+            return $parent->isOwner($this->getCurrentUser());
         }
 
         return false;

@@ -92,50 +92,53 @@
     </script>
 {% endblock %}
 
-{% set sidebar = true %}
 
 {% block content %}
 
-    <div id="socialWidget" class="card nopad">
-        <h3 class="blu midpad" id="showSocialPanel">Share</h3>
-    </div>
+    <div id="contentLftMP">
 
-    <div id="socialPanel" class="card nopad hidden">
-        <div class="smallpad">
-            <div class="fb-like left spcr-r3" data-href="{{ path('default_index') }}" data-layout="box_count" data-action="like" data-show-faces="false" data-share="true"></div>
-            <a href="https://twitter.com/share" class="twitter-share-button right" data-hashtags="campsite" data-count="vertical">Tweet</a>
-            <div class="clr"></div>
-        </div>
-    </div>
-
-    <div id="group-by-topic">
-        <h2 class="spcr-b2">Find a Group by Topic</h2>
-
-        <input id="groups-by-topic-search" type="text" size="80" placeholder="Enter Topic" autocomplete="off">
-
-        <div class="group-list">
-            <ul id="groups-col1">
-            </ul>
+        <div id="socialWidget" class="card nopad">
+            <h3 class="blu midpad" id="showSocialPanel">Share</h3>
         </div>
 
-        <div class="group-list">
-            <ul id="groups-col2">
-            </ul>
+        <div id="socialPanel" class="card nopad hidden">
+            <div class="smallpad">
+                <div class="fb-like left spcr-r3" data-href="{{ path('default_index') }}" data-layout="box_count" data-action="like" data-show-faces="false" data-share="true"></div>
+                <a href="https://twitter.com/share" class="twitter-share-button right" data-hashtags="campsite" data-count="vertical">Tweet</a>
+                <div class="clr"></div>
+            </div>
         </div>
+
+        <div id="group-by-topic">
+            <h2 class="spcr-b2">Find a Group by Topic</h2>
+
+            <input id="groups-by-topic-search" type="text" size="80" placeholder="Enter Topic" autocomplete="off">
+
+            <div class="group-list">
+                <ul id="groups-col1">
+                </ul>
+            </div>
+
+            <div class="group-list">
+                <ul id="groups-col2">
+                </ul>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2 class="left">Popular Groups</h2>
+
+        <a href="{{ path('group_new') }}" class="right spcr-l2 btn bld bgBtn">Create Group &rsaquo;</a>
+        {% render url('_popular_groups') %}
+
+        <br class="clr"/>
     </div>
 
-    <hr>
+    <div id="contentRtMP">
+        {% render "SpoutletBundle:Default:groupsMap" %}
+        <hr class="clr">
+        {% render 'SpoutletBundle:Default:groupEvents' %}
+    </div>
 
-    <h2 class="left">Popular Groups</h2>
-
-    <a href="{{ path('group_new') }}" class="right spcr-l2 btn bld bgBtn">Create Group &rsaquo;</a>
-    {% render url('_popular_groups') %}
-
-    <br class="clr"/>
-{% endblock %}
-
-{% block sidebar %}
-    {% render "SpoutletBundle:Default:groupsMap" %}
-    <hr class="clr">
-    {% render 'SpoutletBundle:Default:groupEvents' %}
 {% endblock %}
