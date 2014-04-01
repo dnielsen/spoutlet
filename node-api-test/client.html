@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(function() {
+                $('#get-groups-button').click(function () {
+                    $.getJSON('http://localhost:3000/groups', null, function(groupsData) {
+                        var groupsHtml = '';
+                        for (group_idx in groupsData) {
+                            groupsHtml += groupsData[group_idx].name + '<br/>';
+                        }
+                        $('#content').html(groupsHtml);
+                    });
+                });
+                $('#get-a-group').click(function () {
+                    var group_id = $('#group-id').val();
+                    $.getJSON('http://localhost:3000/groups/'+group_id, null, function(groupData) {
+                        $('#content').html('<h2>'+groupData.name + '</h2><p>' + groupData.description +'</p>');
+                    });
+                });
+                $('#post-a-group').click(function() {
+                    var body = {'name': $('#group-name').val(), 'description': $('#group-desc').val()};
+                    var response = $.ajax({
+                        type: 'POST',
+                        contentType: 'application/json',
+                        url: 'http://localhost:3000/groups',
+                        data: JSON.stringify(body),
+                    })
+                    .done(function(data) {
+                        $('#content').html(data);
+                    })
+                    .fail(function(response) {
+                        $('#content').html(response.text);
+                    });
+                });
+            });
+        </script>
+    </head>
+
+    <body>
+        <button id="get-groups-button">List Groups</button>
+        <br/><br/>
+        Group ID:<input id="group-id" type="int"/>
+        <button id="get-a-group">Show Details</button>
+
+        <br/><br/>
+        Group Name:<input id="group-name" type="string">
+        <br/>
+        Group Description:<input id="group-desc" type="string"></input>
+        <button id="post-a-group">Add a Group</button>
+
+        <h1>Group Info</h1>
+        <div id="content">
+            Click a button above to get some data from the API.
+        </div>
+    </body>
+
+</html>

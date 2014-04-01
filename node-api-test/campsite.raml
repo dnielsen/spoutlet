@@ -1,0 +1,55 @@
+#%RAML 0.8
+
+title: Campsite
+version: v1
+baseUri: http://api.campsite.org:80
+protocols: [ HTTP ]
+schemas:
+  - Group: !include group.json
+/groups:
+  description: Collection of Groups 
+  get:
+    description: Retrieve all groups
+    responses:
+        200:
+          body:
+            application/json:
+              example: |
+                [{ "name" : "RESTafarians", "description" : "Meetup group for all things REST" },
+                { "name" : "Crash Test Dummies", "description" : "Meetup group for modern software test methodologies." }]
+  post:
+    description: Create new group
+    body:
+      application/json:
+        schema: Group
+  /{id}:
+    description: Individual Group
+    get:
+      description: Retrieve by id
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                { "name" : "RESTafarians", "description" : "Meetup group for all things REST" }
+/events:
+  description: Collection of Events
+  get:
+    description: Create new event
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              [{ "name" : "RAML Meetup", "location" : "Moscone Center, San Francisco", "date" : "3/27/2014" },
+              { "name" : "TDD Meetup", "location" : "Moscone Center, San Francisco", "date" : "3/28/2014" }]
+  /{id}:
+    description: Individual Event
+    get:
+      description: Create new event
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                { "name" : "RAML Meetup", "location" : "Moscone Center, San Francisco", "date" : "3/27/2014" }
