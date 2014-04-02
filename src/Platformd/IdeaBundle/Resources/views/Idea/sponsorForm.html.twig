@@ -16,9 +16,7 @@
         {{ form_row(form.url) }}
         {% if id != 'new' %}
             <h3>Current Logo:</h3>
-            <div class="sponsorImageBox">
-                <img src="{{ media_path(sponsor.image) }}"/>
-            </div>
+            <img class="left sponsorLogo" src="{{ media_path(sponsor.image) }}"/>
             <div class="left spcr-l3">
                 {{ form_row(form.image) }}
             </div>

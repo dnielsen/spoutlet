@@ -27,7 +27,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class IdeaController extends Controller
 {
 
-  	const SIDEBAR_NONE  = 0;
+    const SIDEBAR_NONE  = 0;
     const SIDEBAR_JUDGE = 1;
     const SIDEBAR_ADMIN = 2;
 
@@ -57,7 +57,7 @@ class IdeaController extends Controller
             $canSubmit  = $canSubmit && ($event->isUserAttending($this->getCurrentUser()) || $isAdmin);
         } else {
             $roundParam = null;
-            if ($group){
+            if ($group) {
                 $isAdmin    = $isAdmin || ( $group->isOwner($this->getCurrentUser()) );
                 $canSubmit  = $canSubmit && ($group->isMember($this->getCurrentUser()) || $isAdmin);
             }
@@ -797,17 +797,20 @@ class IdeaController extends Controller
         $sponsorRepo = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor');
 
         $attachedSponsors = null;
+        $returnLink = null;
 
-        if ($scope) {
+        if ($scope && $containerId) {
             $attachedSponsors = $sponsorRepo->findAttachedSponsors($scope, $containerId);
             $sponsors         = $sponsorRepo->findUnattachedSponsors($scope, $containerId);
-        }
-        else {
+            $container        = $this->getIdeaService()->getContainer($scope, $containerId);
+            $returnLink       = $this->generateUrl($container->getLinkableRouteName(), $container->getLinkableRouteParameters());
+        } else {
             $sponsors         = $sponsorRepo->findAll();
         }
 
         return $this->render('IdeaBundle:Idea:sponsors.html.twig', array(
             'attachedSponsors'  => $attachedSponsors,
+            'returnLink'        => $returnLink,
             'sponsors'          => $sponsors,
             'scope'             => $scope,
             'containerId'       => $containerId,
@@ -916,19 +919,17 @@ class IdeaController extends Controller
             $group = $this->getDoctrine()->getRepository('GroupBundle:Group')->find($containerId);
             $containerOwner = $group->getOwner();
             $sponsorRegistry = new SponsorRegistry($group, null, $sponsor, null);
-        }
-
-        elseif ($scope == 'event') {
+        } elseif ($scope == 'event') {
             $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($containerId);
             $containerOwner = $event->getUser();
             $sponsorRegistry = new SponsorRegistry(null, $event, $sponsor, null);
         }
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'sponsor_add', $sponsorRegistry)
-            ->add('level', 'choice', array('choices' => array(SponsorRegistry::SPONSORSHIP_LEVEL_BRONZE   => 'Bronze',
-                                                              SponsorRegistry::SPONSORSHIP_LEVEL_SILVER   => 'Silver',
-                                                              SponsorRegistry::SPONSORSHIP_LEVEL_GOLD     => 'Gold',
-                                                              SponsorRegistry::SPONSORSHIP_LEVEL_PLATINUM => 'Platinum',)))
+            ->add('level', 'choice', array('choices' => array(SponsorRegistry::BRONZE   => 'Bronze',
+                                                              SponsorRegistry::SILVER   => 'Silver',
+                                                              SponsorRegistry::GOLD     => 'Gold',
+                                                              SponsorRegistry::PLATINUM => 'Platinum',)))
             ->getForm();
 
 
@@ -977,8 +978,7 @@ class IdeaController extends Controller
         if ($scope == 'group') {
             $group = $this->getDoctrine()->getRepository('GroupBundle:Group')->find($containerId);
             $containerOwner = $group->getOwner();
-        }
-        elseif ($scope == 'event') {
+        } elseif ($scope == 'event') {
             $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($containerId);
             $containerOwner = $event->getUser();
         }
@@ -989,8 +989,7 @@ class IdeaController extends Controller
             $em->flush();
 
             $this->setFlash('success', $sponsor->getName().' was successfully removed.');
-        }
-        else {
+        } else {
             $this->setFlash('error', 'You are not authorized to remove this sponsor!');
         }
 
@@ -1006,15 +1005,13 @@ class IdeaController extends Controller
 
         $sponsor     = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor')->find($id);
 
-        if ($this->getCurrentUser() == $sponsor->getCreator() || $this->isGranted('ROLE_ADMIN'))
-        {
+        if ($this->getCurrentUser() == $sponsor->getCreator() || $this->isGranted('ROLE_ADMIN')) {
             $em = $this->getDoctrine()->getEntityManager();
             $em->remove($sponsor);
             $em->flush();
 
             $this->setFlash('success', $sponsor->getName().' was successfully deleted.');
-        }
-        else {
+        } else {
             $this->setFlash('error', 'You are not authorized to delete this sponsor!');
         }
 
@@ -1026,10 +1023,9 @@ class IdeaController extends Controller
     {
         $currentUser = $this->getCurrentUser();
 
-        if ($userId == null){
+        if ($userId == null) {
             $user = $currentUser;
-        }
-        else{
+        } else {
             $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
             $user     = $userRepo->findOneBy(array('id' => $userId));
         }

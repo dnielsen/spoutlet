@@ -2,30 +2,49 @@
 
 {% block content %}
 
-    <a href="{{ path('sponsor_form', {'id': 'new', 'scope': scope, 'containerId': containerId}) }}">Create a new Sponsor</a>
-    <hr/>
+    {% if returnLink|default %}<a href="{{ returnLink }}" class="btnLg right spcr-l3">Back to {{ scope }}</a>{% endif %}
 
     {% if attachedSponsors %}
 
-        <h1>Remove Current Sponsors</h1>
+        {% set plat   = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::PLATINUM') %}
+        {% set gold   = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::GOLD') %}
+        {% set silver = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::SILVER') %}
+        {% set bronze = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::BRONZE') %}
+
+        <h1 class="left">Remove Current Sponsors</h1>
+
+        <div class="clear"></div>
 
         <div id="sponsorWrapper">
 
         {% for sponsor in attachedSponsors %}
-            <div class="sponsorBx">
+        <div class="sponsorBxLg">
+            {% if sponsor.getLevel(scope, containerId) == plat %}
+                <div class="platBdr">
+                {% set sponsorText = '<div class="platText">PLATINUM</div>' %}
+            {% elseif sponsor.getLevel(scope, containerId) == gold %}
+                <div class="goldBdr">
+                {% set sponsorText = '<div class="goldText">GOLD</div>' %}
+            {% elseif sponsor.getLevel(scope, containerId) == silver %}
+                <div class="silverBdr">
+                {% set sponsorText = '<div class="silverText">SILVER</div>' %}
+            {% elseif sponsor.getLevel(scope, containerId) == bronze %}
+                <div class="bronzeBdr">
+                {% set sponsorText = '<div class="bronzeText">BRONZE</div>' %}
+            {% endif %}
 
-                <a href="{{ path('sponsor_remove', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}"  onclick="return confirm('Are you sure you want to remove this sponsor?');">
-                    <div class="sponsorImageBox">
-                        <img src="{{ media_path(sponsor.image) }}">
-                    </div>
-                </a>
+            <a href="{{ path('sponsor_remove', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" onclick="return confirm('Are you sure you want to remove this sponsor from your {{ scope }}?');">
+                <div class="sponsorImageBox"><img src="{{ media_path(sponsor.image) }}"></div>
+                {{ sponsorText |raw }}
+                </div>
+            </a>
 
-                {% if sponsor.creator == app.user or is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('sponsor_form', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}">Edit</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                    <a href="{{ path('sponsor_delete', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" onclick="return confirm('Are you sure you want to delete this sponsor?');">Delete</a>
-                {% endif %}
+            {% if sponsor.creator == app.user or is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('sponsor_form', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" class="btnTny spcr-t8">Edit</a>
+                <a href="{{ path('sponsor_delete', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" class="btnTny spcr-t8" onclick="return confirm('Are you sure you want to delete this sponsor from Campsite? There are {{sponsor.sponsorRegistrations|length}} groups and events associated to this sponsor.');">Delete</a>
+            {% endif %}
 
-            </div>
+        </div>
         {% endfor %}
 
         </div>
@@ -35,15 +54,19 @@
     {% endif %}
 
     {% if scope %}
-        <h1>Add a New Sponsor to Your {{ scope | capitalize }}</h1>
+        <h1 class="left">Add a New Sponsor to Your {{ scope | capitalize }}</h1>
     {% else %}
-        <h1>All Sponsors</h1>
+        <h1 class="left">All Sponsors</h1>
     {% endif %}
+
+    <a href="{{ path('sponsor_form', {'id': 'new', 'scope': scope, 'containerId': containerId}) }}" class="btnLg right">Create a new Sponsor</a>
+
+    <div class="clear"></div>
 
     <div id="sponsorWrapper">
 
         {% for sponsor in sponsors %}
-            <div class="sponsorBx">
+            <div class="sponsorBxLg">
 
                 {% if scope %}
                     {% set sponsorLink = path('sponsor_add_form', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) %}
@@ -58,8 +81,8 @@
                 </a>
 
                 {% if sponsor.creator == app.user or is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('sponsor_form', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}">Edit</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                    <a href="{{ path('sponsor_delete', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" onclick="return confirm('Are you sure you want to delete this sponsor?');">Delete</a>
+                    <a href="{{ path('sponsor_form', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" class="btnTny spcr-t8">Edit</a>
+                    <a href="{{ path('sponsor_delete', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" class="btnTny spcr-t8" onclick="return confirm('Are you sure you want to delete this sponsor from Campsite? There are {{sponsor.sponsorRegistrations|length}} groups and events associated to this sponsor.');">Delete</a>
                 {% endif %}
             </div>
         {% endfor %}

@@ -200,15 +200,7 @@
         <div class="clr"></div>
 
         {% if renderSponsors %}
-            <h2 class="widgetHeader">Sponsors</h2>
-            <ul class="spcr-b3">
-                {% for sponsor in group.sponsors %}
-                    <div class="sponsorImageBox">
-                        <a href="{{ sponsor.url }}"><img src="{{ media_path(sponsor.image) }}"></a>
-                    </div>
-                {% endfor %}
-            </ul>
-            <div class="clr"></div>
+            {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
         {% endif %}
 
         {% if renderMoreEvents %}

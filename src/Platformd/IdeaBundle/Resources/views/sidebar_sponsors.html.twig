@@ -1,0 +1,38 @@
+<h2 class="widgetHeader">Sponsors</h2>
+<ul class="spcr-b3">
+    {% set plat   = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::PLATINUM') %}
+    {% set gold   = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::GOLD') %}
+    {% set silver = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::SILVER') %}
+    {% set bronze = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::BRONZE') %}
+    {% if event|default %}
+        {% set sponsors = event.sponsors %}
+        {% set scope = 'event' %}
+        {% set containerId = event.id %}
+    {% elseif group | default %}
+        {% set sponsors = group.sponsors %}
+        {% set scope = 'group' %}
+        {% set containerId = group.id %}
+    {% endif %}
+
+    {% for sponsor in sponsors %}
+        {% if sponsor.getLevel(scope, containerId) == plat %}
+            <div class="sponsorBx platBdr">
+            {% set sponsorText = '<div class="platText">PLATINUM</div>' %}
+        {% elseif sponsor.getLevel(scope, containerId) == gold %}
+            <div class="sponsorBx goldBdr">
+            {% set sponsorText = '<div class="goldText">GOLD</div>' %}
+        {% elseif sponsor.getLevel(scope, containerId) == silver %}
+            <div class="sponsorBx silverBdr">
+            {% set sponsorText = '<div class="silverText">SILVER</div>' %}
+        {% elseif sponsor.getLevel(scope, containerId) == bronze %}
+            <div class="sponsorBx bronzeBdr">
+            {% set sponsorText = '<div class="bronzeText">BRONZE</div>' %}
+        {% endif %}
+        <a href="{{ sponsor.url }}">
+            <div class="sponsorImageBox"><img src="{{ media_path(sponsor.image) }}"></a></div>
+            {{ sponsorText |raw }}
+        </a>
+    </div>
+    {% endfor %}
+</ul>
+<div class="clr"></div>
