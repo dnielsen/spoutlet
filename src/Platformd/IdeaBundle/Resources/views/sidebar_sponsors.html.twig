@@ -29,7 +29,7 @@
             {% set sponsorText = '<div class="sponsorLevelText bronzeText">BRONZE</div>' %}
         {% endif %}
         <a href="{{ path('sponsor_view', {'id': sponsor.id}) }}">
-            <div class="sponsorImageBox"><img src="{{ media_path(sponsor.image) }}"></a></div>
+            <div class="sponsorImageBox"><img src="{{ media_path(sponsor.image) }}"></div>
             {{ sponsorText |raw }}
         </a>
     </div>
