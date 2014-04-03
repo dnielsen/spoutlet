@@ -1466,19 +1466,5 @@ class IdeaController extends Controller
 
         return $attendance;
     }
-
-    public function getSponsorContainer($scope, $containerId)
-    {
-        $container = null;
-        if ($scope == 'group') {
-            $container = $this->getDoctrine()->getRepository('GroupBundle:Group')->find($containerId);
-        }
-        elseif ($scope == 'event') {
-            $container = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($containerId);
-        }
-        return $container;
-    }
-
-
 }
 ?>
