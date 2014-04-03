@@ -18,7 +18,7 @@
         <div id="sponsorWrapper">
 
         {% for sponsor in attachedSponsors %}
-        <div class="sponsorBxLg">
+        <div class="sponsorBxLg card">
             {% if sponsor.getLevel(scope, containerId) == plat %}
                 <div class="platBdr">
                 {% set sponsorText = '<div class="sponsorLevelText platText">PLATINUM</div>' %}
@@ -38,11 +38,6 @@
                 {{ sponsorText |raw }}
                 </div>
             </a>
-
-            {% if sponsor.creator == app.user or is_granted('ROLE_ADMIN') %}
-                <a href="{{ path('sponsor_form', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" class="btnTny spcr-t8">Edit</a>
-                <a href="{{ path('sponsor_delete', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" class="btnTny spcr-t8" onclick="return confirm('WARNING: This will delete the sponsor from Campsite permanently. There are {{sponsor.sponsorRegistrations|length}} groups or events associated to this sponsor. Are you sure you wish to delete it?');">Delete</a>
-            {% endif %}
 
         </div>
         {% endfor %}
@@ -66,7 +61,7 @@
     <div id="sponsorWrapper">
 
         {% for sponsor in sponsors %}
-            <div class="sponsorBxLg">
+            <div class="sponsorBxLg card">
 
                 {% if scope %}
                     {% set sponsorLink = path('sponsor_add_form', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) %}
@@ -78,9 +73,10 @@
                     <div class="sponsorImageBox">
                         <img src="{{ media_path(sponsor.image) }}">
                     </div>
+                    <h3 class="ctr">{{ sponsor.name }}</h3>
                 </a>
 
-                {% if sponsor.creator == app.user or is_granted('ROLE_ADMIN') %}
+                {% if not scope and (sponsor.creator == app.user or is_granted('ROLE_ADMIN')) %}
                     <a href="{{ path('sponsor_form', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" class="btnTny spcr-t8">Edit</a>
                     <a href="{{ path('sponsor_delete', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" class="btnTny spcr-t8" onclick="return confirm('WARNING: This will delete the sponsor from Campsite permanently. There are {{sponsor.sponsorRegistrations|length}} groups or events associated to this sponsor. Are you sure you wish to delete it?');">Delete</a>
                 {% endif %}

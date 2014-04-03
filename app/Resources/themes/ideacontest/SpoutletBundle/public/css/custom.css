@@ -220,9 +220,10 @@ a.profile-cancelBtn {
     margin: 1px 1px 0 0;
 }
 .sponsorBxLg {
-    width:90px;
+    max-width: 100px;
     display: inline-block;
     margin: 0 10px 10px 0;
+    vertical-align: top;
 }
 .sponsorImageBox {
     width: 100%;

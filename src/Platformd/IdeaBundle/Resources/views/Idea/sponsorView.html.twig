@@ -10,7 +10,13 @@
     <div class="col_third">
         <img class="sponsorLogo" src="{{ media_path(sponsor.image) }}"/>
         <h2>{{ sponsor.name }}</h2>
-        <a href="{{ sponsor.url }}" class="blu">{{ sponsor.url }}</a>
+        <a href="{{ sponsor.url }}" class="blu">{{ sponsor.url }}</a><br/>
+        {% if sponsor.creator == app.user or is_granted('ROLE_ADMIN') %}
+        <div class="spcr-t">
+            <a href="{{ path('sponsor_form', {'id': sponsor.id}) }}" class="btn">Edit</a>
+            <a href="{{ path('sponsor_delete', {'id': sponsor.id}) }}" class="btn" onclick="return confirm('WARNING: This will delete the sponsor from Campsite permanently. There are {{sponsor.sponsorRegistrations|length}} groups or events associated to this sponsor. Are you sure you wish to delete it?');">Delete</a>
+        </div>
+        {% endif %}
     </div>
 
     <div class="col_third">
