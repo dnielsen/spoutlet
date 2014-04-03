@@ -19,6 +19,7 @@
         {% endif %}
     </div>
 
+    {% if groups|length > 0 %}
     <div class="col_third">
         <h2 class="ctr">Sponsored Groups</h2>
         {% for level,level_groups in groups %}
@@ -36,7 +37,9 @@
             {% endfor %}
         {% endfor %}
     </div>
+    {% endif %}
 
+    {% if events|length > 0 %}
     <div class="col_third">
         <h2 class="ctr">Sponsored Events</h2>
         {% for level,level_events in events %}
@@ -54,5 +57,6 @@
             {% endfor %}
         {% endfor %}
     </div>
+    {% endif %}
 
 {% endblock %}
