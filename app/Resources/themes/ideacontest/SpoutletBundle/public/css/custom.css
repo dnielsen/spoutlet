@@ -245,7 +245,7 @@ a.profile-cancelBtn {
 .goldBdr     { border: 1px solid gold; }
 .silverBdr   { border: 1px solid silver; }
 .bronzeBdr   { border: 1px solid chocolate; }
-.platText, .goldText, .silverText, .bronzeText {
+.sponsorLevelText {
     height: 20px;
     width: 100%;
     text-align: center;

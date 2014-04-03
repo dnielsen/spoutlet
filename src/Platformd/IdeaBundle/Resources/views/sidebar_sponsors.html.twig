@@ -17,18 +17,18 @@
     {% for sponsor in sponsors %}
         {% if sponsor.getLevel(scope, containerId) == plat %}
             <div class="sponsorBx platBdr">
-            {% set sponsorText = '<div class="platText">PLATINUM</div>' %}
+            {% set sponsorText = '<div class="sponsorLevelText platText">PLATINUM</div>' %}
         {% elseif sponsor.getLevel(scope, containerId) == gold %}
             <div class="sponsorBx goldBdr">
-            {% set sponsorText = '<div class="goldText">GOLD</div>' %}
+            {% set sponsorText = '<div class="sponsorLevelText goldText">GOLD</div>' %}
         {% elseif sponsor.getLevel(scope, containerId) == silver %}
             <div class="sponsorBx silverBdr">
-            {% set sponsorText = '<div class="silverText">SILVER</div>' %}
+            {% set sponsorText = '<div class="sponsorLevelText silverText">SILVER</div>' %}
         {% elseif sponsor.getLevel(scope, containerId) == bronze %}
             <div class="sponsorBx bronzeBdr">
-            {% set sponsorText = '<div class="bronzeText">BRONZE</div>' %}
+            {% set sponsorText = '<div class="sponsorLevelText bronzeText">BRONZE</div>' %}
         {% endif %}
-        <a href="{{ sponsor.url }}">
+        <a href="{{ path('sponsor_view', {'id': sponsor.id}) }}">
             <div class="sponsorImageBox"><img src="{{ media_path(sponsor.image) }}"></a></div>
             {{ sponsorText |raw }}
         </a>

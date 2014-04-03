@@ -5,8 +5,12 @@ sponsors:
     pattern:    /sponsors
     defaults:   { _controller: IdeaBundle:Idea:sponsors }
 
-sponsor_form:
+sponsor_view:
     pattern:    /sponsors/{id}
+    defaults:   { _controller: IdeaBundle:Idea:sponsorView }
+
+sponsor_form:
+    pattern:    /sponsors/{id}/edit
     defaults:   { _controller: IdeaBundle:Idea:sponsorForm }
 
 sponsor_add_form:

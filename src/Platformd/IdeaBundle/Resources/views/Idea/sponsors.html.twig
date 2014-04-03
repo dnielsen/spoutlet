@@ -21,16 +21,16 @@
         <div class="sponsorBxLg">
             {% if sponsor.getLevel(scope, containerId) == plat %}
                 <div class="platBdr">
-                {% set sponsorText = '<div class="platText">PLATINUM</div>' %}
+                {% set sponsorText = '<div class="sponsorLevelText platText">PLATINUM</div>' %}
             {% elseif sponsor.getLevel(scope, containerId) == gold %}
                 <div class="goldBdr">
-                {% set sponsorText = '<div class="goldText">GOLD</div>' %}
+                {% set sponsorText = '<div class="sponsorLevelText goldText">GOLD</div>' %}
             {% elseif sponsor.getLevel(scope, containerId) == silver %}
                 <div class="silverBdr">
-                {% set sponsorText = '<div class="silverText">SILVER</div>' %}
+                {% set sponsorText = '<div class="sponsorLevelText silverText">SILVER</div>' %}
             {% elseif sponsor.getLevel(scope, containerId) == bronze %}
                 <div class="bronzeBdr">
-                {% set sponsorText = '<div class="bronzeText">BRONZE</div>' %}
+                {% set sponsorText = '<div class="sponsorLevelText bronzeText">BRONZE</div>' %}
             {% endif %}
 
             <a href="{{ path('sponsor_remove', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" onclick="return confirm('Are you sure you want to remove this sponsor from your {{ scope }}?');">
@@ -71,7 +71,7 @@
                 {% if scope %}
                     {% set sponsorLink = path('sponsor_add_form', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) %}
                 {% else %}
-                    {% set sponsorLink = sponsor.url %}
+                    {% set sponsorLink = path('sponsor_view', {'id': sponsor.id}) %}
                 {% endif %}
 
                 <a href="{{ sponsorLink }}">

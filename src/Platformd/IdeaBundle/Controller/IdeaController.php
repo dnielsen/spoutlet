@@ -817,6 +817,38 @@ class IdeaController extends Controller
         ));
     }
 
+    public function sponsorViewAction(Request $request, $id)
+    {
+        $sponsor = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor')->find($id);
+
+        if (!$sponsor) {
+            throw new NotFoundHttpException();
+        }
+
+        $sponsorRegistrations = $sponsor->getSponsorRegistrations()->toArray();
+
+        usort($sponsorRegistrations, function ($a, $b) {
+            return ($a->getLevel() - $b->getLevel());
+        });
+
+        $groups = array();
+        $events = array();
+
+        foreach ($sponsorRegistrations as $reg) {
+            if ($group = $reg->getGroup()) {
+                $groups[$reg->getLevel()][] = $group;
+            } elseif ($event = $reg->getEvent()) {
+                $events[$reg->getLevel()][] = $event;
+            }
+        }
+
+        return $this->render('IdeaBundle:Idea:sponsorView.html.twig', array(
+            'sponsor' => $sponsor,
+            'groups'  => $groups,
+            'events'  => $events,
+        ));
+    }
+
     public function sponsorFormAction(Request $request, $id)
     {
         $this->enforceUserSecurity();
