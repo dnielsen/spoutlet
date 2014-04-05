@@ -210,14 +210,12 @@
 		.cBxLft {
 			float: left;
 			width: 350px;
-			height: 250px;
 			padding-top: 8px;
 			padding-right: 10px;
 		}
 		.cBxRt {
 			float: right;
 			width: 364px;
-			height: 250px;
 			padding-left: 10px;
 			border-left: 1px solid #ccc;
 		}
