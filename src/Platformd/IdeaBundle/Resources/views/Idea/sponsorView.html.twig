@@ -8,7 +8,7 @@
     {% set bronze = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::BRONZE') %}
 
     <div class="col_third">
-        <img class="sponsorLogo" src="{{ media_path(sponsor.image) }}"/>
+        <img class="sponsorLogoFill" src="{{ media_path(sponsor.image) }}"/>
         <h2>{{ sponsor.name }}</h2>
         <a href="{{ sponsor.url }}" class="blu">{{ sponsor.url }}</a><br/>
         {% if sponsor.creator == app.user or is_granted('ROLE_ADMIN') %}
