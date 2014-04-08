@@ -147,8 +147,27 @@
 
         {% if event.sessions | length > 0 %}
             <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}" class="btnLg2">Session Schedule</a>
+
+            {# If there are sessions, then we showed the session schedule on the center panel and need to show any lists here #}
+            {% if event.entrySets | length > 0 %} 
+                {% set render_entrySets = true %}
+            {% endif %}
+
+        {# If there are no sessions, then we showed the first list on the center panel, and only need to show lists here if there are multiple #}
+        {% elseif event.entrySets | length > 1 %}
+            {% set render_entrySets = true %}
         {% endif %}
 
+        {% if render_entrySets | default %}
+            <h2 class="widgetHeader">Collaboration Lists</h2>
+            <ul class="scrollableWidget spcr-b3">
+                {% for entrySet in event.entrySets %}
+                    <li class="spcr-t7 spcr-l3">
+                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 
         {% if event.sponsors|length > 0 %}
             {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
@@ -157,17 +176,6 @@
         {% if event.location|default %}
             <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
             <div id="event-location-map" class="spcr-t">{{ vichgeo_map_for('location', event) }}</div>
-        {% endif %}
-
-        {% if event.entrySets | length > 0 %}
-             <h2 class="widgetHeader">Collaboration Lists</h2>
-             <ul class="scrollableWidget spcr-b3">
-                {% for entrySet in event.entrySets %}
-                    <li class="spcr-t7 spcr-l3">
-                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
-                    </li>
-                {% endfor %}
-            </ul>
         {% endif %}
         
         {% if not (event.isUserAttending(app.user)) %}
