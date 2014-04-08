@@ -72,42 +72,60 @@ exports.delete_by_primary_key = function (req, resp, next) {
     return resource.delete_by_primary_key(req, resp, next);
 };
 
-
-
 exports.find_descendants = function (req, resp, next) {
     var primary_key = parseInt(req.params.id, 10);
     if (!primary_key) {
         throw new restify.InvalidArgumentError("'" + primary_key + "' invalid");
     }
 
-    var rv = [ parseInt(primary_key, 10) ];
+    var groups = [ parseInt(primary_key, 10) ];
 
     var send_error = function (e) {
         console.log("Error:" + e);
         return next(new restify.InternalError(e));
     };
 
+    var get_events = function () {
+        var query = knex('group_event')
+        .column('id').column('name').column('group_id')
+        .column('starts_at').column('ends_at').column('location');
+        
+        
+        for(var i=0; i<groups.length; i++) {
+            var gid = groups[i];
+
+            query.orWhere('group_id', groups[i]);
+        }
+
+        query.andWhere(resource.deleted_col, 0);
+        query.then( function(result) {
+            resp.send(200, result);
+            return next();
+        }).catch(send_error);
+    };
+
     var get_descendants_helper = function (responses) {
         var recurse = false;
-        var query = knex('pd_groups').column('id').column('name').column('parentGroup_id');
+        var query = knex('pd_groups').column('id').column('parentGroup_id');
         for(var i=0; i<responses.length; i++) {
             var response = responses[i];
 
-            if(__.contains(rv, response.id)) {
-                console.log("Cycle detected: " + response.name);
+            if(__.contains(groups, response.id)) {
+                console.log("Cycle detected: " + response.id);
                 continue;
             }
 
-            rv.push(response.id);
+            groups.push(response.id);
             query.orWhere('parentGroup_id', response.id);
             recurse=true;
         }
 
+        query.andWhere(resource.deleted_col, 0);
+
         if(recurse) {
             query.then(get_descendants_helper).catch(send_error);
         } else {
-            resp.send(200, rv);
-            return next();
+            get_events();
         }
     };
 
