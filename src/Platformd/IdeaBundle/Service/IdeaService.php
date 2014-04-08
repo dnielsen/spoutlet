@@ -24,31 +24,26 @@ class IdeaService
 
         $allTagsString = trim(strtolower($allTagsString));
 
-        if(empty($allTagsString)){
+        if (empty($allTagsString)) {
             return $newTags;
         }
 
         $tagStrings = preg_split("/[\s,]+/", $allTagsString);
         $allTagNames = $this->getAllTagNames();
 
-        foreach ($tagStrings as $tagString)
-        {
+        foreach ($tagStrings as $tagString) {
             $tagString = trim($tagString);
-            if (empty($tagString)){
+            if (empty($tagString)) {
                 continue;
             }
 
-            if (!in_array($tagString, $allTagNames))
-            {
+            if (!in_array($tagString, $allTagNames)) {
                 $newTag = new Tag($tagString);
-                if(!in_array($newTag, $newTags))
-                {
+                if (!in_array($newTag, $newTags)) {
                     $newTags[] = $newTag;
                     $this->em->persist($newTag);
                 }
-            }
-            else
-            {
+            } else {
                 $newTags[] = $this->em->getRepository('IdeaBundle:Tag')->find($tagString);
             }
         }
@@ -60,11 +55,23 @@ class IdeaService
     {
         $tagNames = array();
         $allTags = $this->em->getRepository('IdeaBundle:Tag')->findAll();
-        foreach ($allTags as $tag)
-        {
+        foreach ($allTags as $tag) {
             $tagNames[] = $tag->getTagName();
         }
         return $tagNames;
+    }
+
+    public function getContainer($scope, $containerId)
+    {
+        if ($scope == 'group') {
+            $repo = 'GroupBundle:Group';
+        } elseif ($scope == 'event') {
+            $repo = 'EventBundle:GroupEvent';
+        } else {
+            return null;
+        }
+
+        return $this->em->getRepository($repo)->find($containerId);
     }
 
     public function getParentByEntrySet($entrySet)
@@ -74,5 +81,4 @@ class IdeaService
 
         return $esRegRepo->getContainer($parentRegistration);
     }
-
 }

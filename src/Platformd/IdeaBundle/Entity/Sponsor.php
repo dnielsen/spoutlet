@@ -96,6 +96,21 @@ class Sponsor {
         return $groups;
     }
 
+    public function getLevel($scope, $containerId) {
+        foreach ($this->sponsorRegistrations as $reg) {
+            if ($scope == 'group' && $group = $reg->getGroup()) {
+                if ($group->getId() == $containerId) {
+                    return $reg->getLevel();
+                }
+            } elseif ($scope == 'event' && $event = $reg->getEvent()) {
+                if ($event->getId() == $containerId) {
+                    return $reg->getLevel();
+                }
+            }
+        }
+        return null;
+    }
+
     public function getEvents()
     {
         $sponsorRegistrations = $this->sponsorRegistrations;

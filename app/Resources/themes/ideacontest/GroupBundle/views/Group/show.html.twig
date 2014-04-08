@@ -87,7 +87,7 @@
         </div>
         <hr/>
 
-        {% if locationGroups|default %}
+        {% if group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_TOPIC') and locationGroups|default %}
         <div id="map">
             <h2>Find a Group Near You</h2>
             <input id="map-location-search" type="text" size="50" placeholder="Enter your location" autocomplete="off">
@@ -200,15 +200,7 @@
         <div class="clr"></div>
 
         {% if renderSponsors %}
-            <h2 class="widgetHeader">Sponsors</h2>
-            <ul class="spcr-b3">
-                {% for sponsor in group.sponsors %}
-                    <div class="sponsorImageBox">
-                        <a href="{{ sponsor.url }}"><img src="{{ media_path(sponsor.image) }}"></a>
-                    </div>
-                {% endfor %}
-            </ul>
-            <div class="clr"></div>
+            {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
         {% endif %}
 
         {% if renderMoreEvents %}
@@ -247,7 +239,7 @@
         {% endif %}
 
         {% if renderChildrenGroups %}
-            <h2 class="widgetHeader">Regional Groups</h2>
+            <h2 class="widgetHeader">Sub Groups</h2>
             <ul class="scrollableWidget spcr-b3">
                 {% for child in group.children %}
                     <li class="spcr-t7 spcr-l3">

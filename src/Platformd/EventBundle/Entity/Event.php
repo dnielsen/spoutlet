@@ -1090,13 +1090,16 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
     public function getSponsors()
     {
-        $sponsorRegistrations = $this->sponsorRegistrations;
+        $sponsorRegistrations = $this->sponsorRegistrations->toArray();
+
+        usort($sponsorRegistrations, function ($a, $b) {
+            return ($a->getLevel() - $b->getLevel());
+        });
 
         $sponsors = array();
-        foreach ($sponsorRegistrations as $reg){
+        foreach ($sponsorRegistrations as $reg) {
             $sponsors[] = $reg->getSponsor();
         }
-
         return $sponsors;
     }
 

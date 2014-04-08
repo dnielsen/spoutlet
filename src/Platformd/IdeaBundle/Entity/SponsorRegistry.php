@@ -4,16 +4,16 @@ namespace Platformd\IdeaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
  * @ORM\Table(name="sponsor_registry")
  * @ORM\Entity()
  */
-class SponsorRegistry {
-    const SPONSORSHIP_LEVEL_PLATINUM = "platinum";
-    const SPONSORSHIP_LEVEL_GOLD     = "gold";
-    const SPONSORSHIP_LEVEL_SILVER   = "silver";
-    const SPONSORSHIP_LEVEL_BRONZE   = "bronze";
+class SponsorRegistry
+{
+    const PLATINUM = 1;
+    const GOLD     = 2;
+    const SILVER   = 3;
+    const BRONZE   = 4;
 
     /**
      * @ORM\Id
@@ -38,7 +38,7 @@ class SponsorRegistry {
     protected $sponsor;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="smallint")
      */
     protected $level;
 

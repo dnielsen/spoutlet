@@ -4,7 +4,7 @@
 
     <h1>Add {{ sponsor.name }} to Your {{ scope | capitalize }} as a Sponsor</h1>
 
-    <a href="{{ sponsor.url }}"><img src="{{ media_path(sponsor.image) }}"></a>
+    <a href="{{ sponsor.url }}"><img class="sponsorLogo" src="{{ media_path(sponsor.image) }}"></a>
 
     <form action="{{ path('sponsor_add_form', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" method="post" {{ form_enctype(form) }}>
 

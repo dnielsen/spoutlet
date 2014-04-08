@@ -1,0 +1,43 @@
+<ul class="spcr-t">
+    {% set plat   = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::PLATINUM') %}
+    {% set gold   = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::GOLD') %}
+    {% set silver = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::SILVER') %}
+    {% set bronze = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::BRONZE') %}
+
+    {% if event|default %}
+        {% set sponsors = event.sponsors %}
+        {% set scope = 'event' %}
+        {% set containerId = event.id %}
+    {% elseif group | default %}
+        {% set sponsors = group.sponsors %}
+        {% set scope = 'group' %}
+        {% set containerId = group.id %}
+    {% endif %}
+
+    {% set lastLevel = '' %}
+    {% for sponsor in sponsors %}
+
+        {% set currentLevel = sponsor.getLevel(scope, containerId) %}
+
+        {% if currentLevel != lastLevel %}
+            {% if currentLevel == plat %}
+                <div class="sponsorLevelText platText spcr-t">Platinum Sponsors</div>
+            {% elseif currentLevel == gold %}
+                <div class="sponsorLevelText goldText spcr-t">Gold Sponsors</div>
+            {% elseif currentLevel == silver %}
+                <div class="sponsorLevelText silverText spcr-t">Silver Sponsors</div>
+            {% elseif currentLevel == bronze %}
+                <div class="sponsorLevelText bronzeText spcr-t">Bronze Sponsors</div>
+            {% endif %}
+        {% endif %}
+
+        <div class="sponsorBx">
+            <a href="{{ path('sponsor_view', {'id': sponsor.id}) }}">
+                <div class="sponsorImageBox"><img src="{{ media_path(sponsor.image) }}"></div>
+            </a>
+        </div>
+
+        {% set lastLevel = currentLevel %}
+
+    {% endfor %}
+</ul>
