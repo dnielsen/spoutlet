@@ -1,9 +1,9 @@
-<h2 class="widgetHeader">Sponsors</h2>
-<ul class="spcr-b3">
+<ul class="spcr-t">
     {% set plat   = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::PLATINUM') %}
     {% set gold   = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::GOLD') %}
     {% set silver = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::SILVER') %}
     {% set bronze = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::BRONZE') %}
+
     {% if event|default %}
         {% set sponsors = event.sponsors %}
         {% set scope = 'event' %}
@@ -14,25 +14,30 @@
         {% set containerId = group.id %}
     {% endif %}
 
+    {% set lastLevel = '' %}
     {% for sponsor in sponsors %}
-        {% if sponsor.getLevel(scope, containerId) == plat %}
-            <div class="sponsorBx platBdr">
-            {% set sponsorText = '<div class="sponsorLevelText platText">PLATINUM</div>' %}
-        {% elseif sponsor.getLevel(scope, containerId) == gold %}
-            <div class="sponsorBx goldBdr">
-            {% set sponsorText = '<div class="sponsorLevelText goldText">GOLD</div>' %}
-        {% elseif sponsor.getLevel(scope, containerId) == silver %}
-            <div class="sponsorBx silverBdr">
-            {% set sponsorText = '<div class="sponsorLevelText silverText">SILVER</div>' %}
-        {% elseif sponsor.getLevel(scope, containerId) == bronze %}
-            <div class="sponsorBx bronzeBdr">
-            {% set sponsorText = '<div class="sponsorLevelText bronzeText">BRONZE</div>' %}
+
+        {% set currentLevel = sponsor.getLevel(scope, containerId) %}
+
+        {% if currentLevel != lastLevel %}
+            {% if currentLevel == plat %}
+                <div class="sponsorLevelText platText spcr-t">Platinum Sponsors</div>
+            {% elseif currentLevel == gold %}
+                <div class="sponsorLevelText goldText spcr-t">Gold Sponsors</div>
+            {% elseif currentLevel == silver %}
+                <div class="sponsorLevelText silverText spcr-t">Silver Sponsors</div>
+            {% elseif currentLevel == bronze %}
+                <div class="sponsorLevelText bronzeText spcr-t">Bronze Sponsors</div>
+            {% endif %}
         {% endif %}
-        <a href="{{ path('sponsor_view', {'id': sponsor.id}) }}">
-            <div class="sponsorImageBox"><img src="{{ media_path(sponsor.image) }}"></div>
-            {{ sponsorText |raw }}
-        </a>
-    </div>
+
+        <div class="sponsorBx">
+            <a href="{{ path('sponsor_view', {'id': sponsor.id}) }}">
+                <div class="sponsorImageBox"><img src="{{ media_path(sponsor.image) }}"></div>
+            </a>
+        </div>
+
+        {% set lastLevel = currentLevel %}
+
     {% endfor %}
 </ul>
-<div class="clr"></div>

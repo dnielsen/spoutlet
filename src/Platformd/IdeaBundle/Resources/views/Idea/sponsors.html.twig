@@ -18,18 +18,14 @@
         <div id="sponsorWrapper">
 
         {% for sponsor in attachedSponsors %}
-        <div class="sponsorBxLg card">
+        <div class="sponsorBx card">
             {% if sponsor.getLevel(scope, containerId) == plat %}
-                <div class="platBdr">
                 {% set sponsorText = '<div class="sponsorLevelText platText">PLATINUM</div>' %}
             {% elseif sponsor.getLevel(scope, containerId) == gold %}
-                <div class="goldBdr">
                 {% set sponsorText = '<div class="sponsorLevelText goldText">GOLD</div>' %}
             {% elseif sponsor.getLevel(scope, containerId) == silver %}
-                <div class="silverBdr">
                 {% set sponsorText = '<div class="sponsorLevelText silverText">SILVER</div>' %}
             {% elseif sponsor.getLevel(scope, containerId) == bronze %}
-                <div class="bronzeBdr">
                 {% set sponsorText = '<div class="sponsorLevelText bronzeText">BRONZE</div>' %}
             {% endif %}
 
@@ -39,7 +35,6 @@
                 </div>
             </a>
 
-        </div>
         {% endfor %}
 
         </div>
@@ -61,7 +56,7 @@
     <div id="sponsorWrapper">
 
         {% for sponsor in sponsors %}
-            <div class="sponsorBxLg card">
+            <div class="sponsorBx card">
 
                 {% if scope %}
                     {% set sponsorLink = path('sponsor_add_form', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) %}
