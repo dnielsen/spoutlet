@@ -87,9 +87,12 @@ exports.find_descendants = function (req, resp, next) {
 
     var get_events = function () {
         var query = knex('group_event')
-        .column('id').column('name').column('group_id')
-        .column('starts_at').column('ends_at').column('location');
-        
+        .column('id')
+        .column('name')
+        .column('group_id')
+        .column('starts_at')
+        .column('ends_at')
+        .column('location');
         
         for(var i=0; i<groups.length; i++) {
             var gid = groups[i];
@@ -97,7 +100,10 @@ exports.find_descendants = function (req, resp, next) {
             query.orWhere('group_id', groups[i]);
         }
 
-        query.andWhere(resource.deleted_col, 0);
+        query
+        .andWhere(resource.deleted_col, 0)
+        .andWhere('private',0)
+        .orderBy('starts_at', 'desc');
         query.then( function(result) {
             resp.send(200, result);
             return next();
