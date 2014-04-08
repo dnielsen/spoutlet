@@ -3,7 +3,8 @@
 {% block event_content %}
 
     <div id="contentLft">
-        <h1 class="ctr">{{ event.name }}</h1>
+        <h1 class="ctr spcr-b3">{{ event.name }}</h1>
+
         <div id="eventSummary">
 
             {% set numImages = event.rotatorImages|length %}
@@ -43,6 +44,23 @@
                     });
                 </script>
             {% endif %}
+
+            <div class="event-details">
+                {% if event.startsAt %}
+                    <div class="col_half">
+                        <h2>When:</h2>
+                        {{ event.DateAndTime|raw }}
+                    </div>
+                {% endif %}
+
+                {% if event.location %}
+                    <div class="col_half">
+                        <h2>Where:</h2>
+                        {{ event.location }}<br/>
+                        <a href="http://maps.google.com/?q={{ event.address1 }}, {{ event.address2 }}">{{ event.address1 }}<br/>{{ event.address2 }}</a>
+                    </div> 
+                {% endif %}
+            </div>
 
             {{ event.content | raw }}
         </div>
@@ -105,6 +123,11 @@
         {% set userNoun = 'attendee' %}
         {% set userVerb = 'attending' %}
 
+        <div class="fb-like left" data-href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
+        <a href="https://twitter.com/share" class="twitter-share-button left spcr-l3 spcr-t8" data-hashtags="{{ group.hashtag }},{{ event.hashtag }}">Tweet</a>
+        
+        <div class="spcr-t2 clr"></div>
+
         {% if event.externalUrl|default or not event.isUserAttending(user) %}
             <div id="registrationBanner">
                 {% if event.externalUrl|default %}
@@ -124,55 +147,35 @@
 
         {% if event.sessions | length > 0 %}
             <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}" class="btnLg2">Session Schedule</a>
+
+            {# If there are sessions, then we showed the session schedule on the center panel and need to show any lists here #}
+            {% if event.entrySets | length > 0 %} 
+                {% set render_entrySets = true %}
+            {% endif %}
+
+        {# If there are no sessions, then we showed the first list on the center panel, and only need to show lists here if there are multiple #}
+        {% elseif event.entrySets | length > 1 %}
+            {% set render_entrySets = true %}
         {% endif %}
 
-        <div class="spcr-t spcr-b2">
-            <div class="fb-like left" data-href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
-            <a href="https://twitter.com/share" class="twitter-share-button left spcr-l3 spcr-t8" data-hashtags="{{ group.hashtag }},{{ event.hashtag }}">Tweet</a>
-        </div>
-
-        <div class="clr"></div>
-
-        {% if event.sponsors|length > 0 %}
-            {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
-        {% endif %}
-
-        <h2 class="widgetHeader">Event Details</h2>
-
-        <table id="eventDetails" class="tblStyle spcr-b3">
-            {% if event.startsAt %}
-                <tr>
-                    <td width="25%"><strong>When:</strong></td>
-                    <td width="75%">{{ event.DateAndTime|raw }}</td>
-                </tr>
-            {% endif %}
-            {% if event.location %}
-                <tr>
-                    <td width="25%"><strong>Where:</strong></td>
-                    <td width="75%">{{ event.location }}</td>
-                </tr>
-                <tr>
-                    <td width="25%"><strong>Address:</strong></td>
-                    <td><a href="http://maps.google.com/?q={{ event.address1 }}, {{ event.address2 }}">{{ event.address1 }}<br/>{{ event.address2 }}</a></td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
-                        <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
-                    </td>
-                </tr>
-            {% endif %}
-        </table>
-
-        {% if event.entrySets | length > 0 %}
-             <h2 class="widgetHeader">Collaboration Lists</h2>
-             <ul class="scrollableWidget spcr-b3">
+        {% if render_entrySets | default %}
+            <h2 class="widgetHeader">Collaboration Lists</h2>
+            <ul class="scrollableWidget spcr-b3">
                 {% for entrySet in event.entrySets %}
                     <li class="spcr-t7 spcr-l3">
                         <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
                     </li>
                 {% endfor %}
             </ul>
+        {% endif %}
+
+        {% if event.sponsors|length > 0 %}
+            {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
+        {% endif %}
+
+        {% if event.location|default %}
+            <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
+            <div id="event-location-map" class="spcr-t">{{ vichgeo_map_for('location', event) }}</div>
         {% endif %}
         
         {% if not (event.isUserAttending(app.user)) %}
