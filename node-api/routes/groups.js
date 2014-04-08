@@ -1,5 +1,9 @@
 var Type = require('../type'),
-    Resource = require('../resource');
+    Resource = require('../resource'),
+    restify = require('restify'),
+    common = require('../common'),
+    knex = common.knex,
+    __ = require('underscore');
 
 Type.Group.Category.init(
     //validator
@@ -36,7 +40,7 @@ var spec = {
         "updated_at" : { type : Type.Date, props : ["read-only", "no-filter"], initial : get_now },
         "featured_at" : { type : Type.Date, props : ["read-only", "no-filter"], initial : get_now },
         "entrySetRegistration_id" : { type : Type.Int, props : ["read-only"]},
-        "owner_id" : { type : Type.Int, props : ["read-only"]},
+        "owner_id" : { type : Type.Int, props : []},
         "parentGroup_id" : { type : Type.Int, props : ["read-only"] },
 
         "entrySetRegistration" : { type : Type.Registry, rel : "belongs_to", props : ["default"], mapping : "entrySetRegistration_id" },
@@ -66,4 +70,49 @@ exports.create = function (req, resp, next) {
 
 exports.delete_by_primary_key = function (req, resp, next) {
     return resource.delete_by_primary_key(req, resp, next);
+};
+
+
+
+exports.find_descendants = function (req, resp, next) {
+    var primary_key = parseInt(req.params.id, 10);
+    if (!primary_key) {
+        throw new restify.InvalidArgumentError("'" + primary_key + "' invalid");
+    }
+
+    var rv = [ parseInt(primary_key, 10) ];
+
+    var send_error = function (e) {
+        console.log("Error:" + e);
+        return next(new restify.InternalError(e));
+    };
+
+    var get_descendants_helper = function (responses) {
+        var recurse = false;
+        var query = knex('pd_groups').column('id').column('name').column('parentGroup_id');
+        for(var i=0; i<responses.length; i++) {
+            var response = responses[i];
+
+            if(__.contains(rv, response.id)) {
+                console.log("Cycle detected: " + response.name);
+                continue;
+            }
+
+            rv.push(response.id);
+            query.orWhere('parentGroup_id', response.id);
+            recurse=true;
+        }
+
+        if(recurse) {
+            query.then(get_descendants_helper).catch(send_error);
+        } else {
+            resp.send(200, rv);
+            return next();
+        }
+    };
+
+    var query = knex('pd_groups').column('id').column('name').column('parentGroup_id')
+        .where('parentGroup_id', primary_key);
+    query.then(get_descendants_helper).catch(send_error);
+
 };

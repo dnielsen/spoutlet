@@ -141,6 +141,7 @@ server.get('/events/:id', events.find_by_primary_key);
 server.get('/groups', groups.find_all);
 server.get('/groups/:id', groups.find_by_primary_key);
 
+server.get('/groups/:id/descendants', groups.find_descendants);
 //---------------------------------------------------------------------------------------------------
 // Token checker will fail any request, with 401 Unauthorized, which does not provide a valid API-Key
 // Therefore all request handlers defined below this call are secured calls. 
