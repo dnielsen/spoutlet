@@ -92,13 +92,14 @@ exports.find_descendants = function (req, resp, next) {
         .column('group_id')
         .column('starts_at')
         .column('ends_at')
-        .column('location');
-        
-        for(var i=0; i<groups.length; i++) {
-            var gid = groups[i];
+        .column('location')
+        .where(function() {
+            for(var i=0; i<groups.length; i++) {
+                var gid = groups[i];
 
-            query.orWhere('group_id', groups[i]);
-        }
+                this.orWhere('group_id', groups[i]);
+            }
+        });
 
         query
         .andWhere(resource.deleted_col, 0)
@@ -112,19 +113,23 @@ exports.find_descendants = function (req, resp, next) {
 
     var get_descendants_helper = function (responses) {
         var recurse = false;
-        var query = knex('pd_groups').column('id').column('parentGroup_id');
-        for(var i=0; i<responses.length; i++) {
-            var response = responses[i];
+        var query = knex('pd_groups')
+        .column('id')
+        .column('parentGroup_id')
+        .where(function() {
+            for(var i=0; i<responses.length; i++) {
+                var response = responses[i];
 
-            if(__.contains(groups, response.id)) {
-                console.log("Cycle detected: " + response.id);
-                continue;
+                if(__.contains(groups, response.id)) {
+                    console.log("Cycle detected: " + response.id);
+                    continue;
+                }
+
+                groups.push(response.id);
+                this.orWhere('parentGroup_id', response.id);
+                recurse=true;
             }
-
-            groups.push(response.id);
-            query.orWhere('parentGroup_id', response.id);
-            recurse=true;
-        }
+        });
 
         query.andWhere(resource.deleted_col, 0);
 
