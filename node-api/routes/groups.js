@@ -72,43 +72,42 @@ exports.delete_by_primary_key = function (req, resp, next) {
     return resource.delete_by_primary_key(req, resp, next);
 };
 
-exports.find_descendants = function (req, resp, next) {
+var get_events = function (groups, resp, next) {
+    var query = knex('group_event')
+    .column('id')
+    .column('name')
+    .column('group_id')
+    .column('starts_at')
+    .column('ends_at')
+    .column('location')
+    .orderBy('starts_at', 'desc')
+    .where(resource.deleted_col, 0)
+    .andWhere('private',0)
+    .andWhere(function() {
+        for(var i=0; i<groups.length; i++) {
+            this.orWhere('group_id', groups[i]);
+        }
+    });
+
+    query.then( function(result) {
+        resp.send(200, result);
+        next();
+    }).catch(function (e) {
+        console.log("Error:" + e);
+        return next(new restify.InternalError(e));
+    });
+};
+
+exports.find_descendants = function (req, resp, next, visitor) {
     var primary_key = parseInt(req.params.id, 10);
     if (!primary_key) {
         throw new restify.InvalidArgumentError("'" + primary_key + "' invalid");
     }
 
     var groups = [ parseInt(primary_key, 10) ];
-
     var send_error = function (e) {
         console.log("Error:" + e);
         return next(new restify.InternalError(e));
-    };
-
-    var get_events = function () {
-        var query = knex('group_event')
-        .column('id')
-        .column('name')
-        .column('group_id')
-        .column('starts_at')
-        .column('ends_at')
-        .column('location')
-        .where(function() {
-            for(var i=0; i<groups.length; i++) {
-                var gid = groups[i];
-
-                this.orWhere('group_id', groups[i]);
-            }
-        });
-
-        query
-        .andWhere(resource.deleted_col, 0)
-        .andWhere('private',0)
-        .orderBy('starts_at', 'desc');
-        query.then( function(result) {
-            resp.send(200, result);
-            return next();
-        }).catch(send_error);
     };
 
     var get_descendants_helper = function (responses) {
@@ -116,10 +115,10 @@ exports.find_descendants = function (req, resp, next) {
         var query = knex('pd_groups')
         .column('id')
         .column('parentGroup_id')
-        .where(function() {
+        .where(resource.deleted_col, 0)
+        .andWhere(function() {
             for(var i=0; i<responses.length; i++) {
                 var response = responses[i];
-
                 if(__.contains(groups, response.id)) {
                     console.log("Cycle detected: " + response.id);
                     continue;
@@ -131,17 +130,18 @@ exports.find_descendants = function (req, resp, next) {
             }
         });
 
-        query.andWhere(resource.deleted_col, 0);
-
         if(recurse) {
             query.then(get_descendants_helper).catch(send_error);
         } else {
-            get_events();
+            visitor(groups, resp, next);
         }
     };
 
     var query = knex('pd_groups').column('id').column('name').column('parentGroup_id')
         .where('parentGroup_id', primary_key);
     query.then(get_descendants_helper).catch(send_error);
+};
 
+exports.all_events = function (req, resp, next) {
+    return exports.find_descendants(req, resp, next, get_events);
 };
