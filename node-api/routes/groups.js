@@ -98,37 +98,13 @@ var get_events = function (groups, resp, next) {
     });
 };
 
-var get_slugs = function (groups, resp, next) {
-    var query = knex('pd_groups')
-    .column('id')
-    .column('slug')
-    .where(resource.deleted_col, 0)
-    .andWhere(function() {
-        for(var i=0; i<groups.length; i++) {
-            this.orWhere('id', groups[i]);
-        }
-    });
-
-    query.then( function(results) {
-        var rv = {};
-        __.each(results, function(group) {
-            rv[group.slug] = group.id;
-        });
-        resp.send(200, rv);
-        next();
-    }).catch(function (e) {
-        console.log("Error:" + e);
-        return next(new restify.InternalError(e));
-    });
-};
-
 exports.find_descendants = function (req, resp, next, visitor) {
     var primary_key = parseInt(req.params.id, 10);
     if (!primary_key) {
         throw new restify.InvalidArgumentError("'" + primary_key + "' invalid");
     }
 
-    var groups = [ parseInt(primary_key, 10) ];
+    var groups = [ primary_key ];
     var send_error = function (e) {
         console.log("Error:" + e);
         return next(new restify.InternalError(e));
@@ -171,5 +147,44 @@ exports.all_events = function (req, resp, next) {
 };
 
 exports.all_slugs = function (req, resp, next) {
-    return exports.find_descendants(req, resp, next, get_slugs);
+    var query = knex('pd_groups').column('id').where('slug', req.params.slug);
+
+    query.then(function(results) {
+        if(results.length < 1) {
+            resp.send(400, "No groups found for slug " + req.params.slug);
+            return next();
+        }
+
+        var id = results[0].id;
+        req.params.id = id;
+
+        var get_slugs = function (groups, resp, next) {
+            var query = knex('pd_groups')
+            .column('id')
+            .column('slug')
+            .where(resource.deleted_col, 0)
+            .andWhere(function() {
+                for(var i=0; i<groups.length; i++) {
+                    this.orWhere('id', groups[i]);
+                }
+            });
+
+            query.then( function(results) {
+                var rv = { "community_id" : id, "slugs" : {} };
+                __.each(results, function(group) {
+                    rv.slugs[group.slug] = group.id;
+                });
+                resp.send(200, rv);
+                next();
+            }).catch(function (e) {
+                console.log("Error:" + e);
+                return next(new restify.InternalError(e));
+            });
+        };
+
+        exports.find_descendants(req, resp, next, get_slugs);
+    }).catch(function (e) {
+        console.log("Error:" + e);
+        return next(new restify.InternalError(e));
+    });
 };
