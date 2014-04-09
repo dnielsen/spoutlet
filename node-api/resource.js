@@ -76,6 +76,7 @@ ResourceType.prototype = new Type();
 Type.Group = new Resource.ResourceType();
 Type.Group.Category = new Type();
 Type.Event = new Resource.ResourceType();
+Type.Event.RegOpt = new Type();
 Type.Session = new Resource.ResourceType();
 Type.List = new Resource.ResourceType();
 Type.List.Type = new Type();
@@ -428,27 +429,30 @@ Resource.prototype.apply_sorting = function (requests, query, quiet) {
             return;
         }
 
-        var excepition = new restify.InvalidArgumentError("sort_by field '" + field + "' not recognized");
+        var exception = new restify.InvalidArgumentError("sort_by field '" + field + "' not recognized");
 
         //allow for subfield sorting
 
         //allow sorting of depth 1 only
         var parts = field.split('.');
         if (parts.length !== 2) {
-            if (!quiet) { throw excepition; } else { return; }
+            if (!quiet) { throw exception; }
+            return;
         }
 
         //validate the first dotted specifier in the belongs_to relations
         var label = parts[0];
         var subfield = parts[1];
-        if(__.isUndefined(that.belongs_to) || !__.has(that.belongs_to, label) ) {
-            if (!quiet) { throw excepition; } else { return; }
+        if (__.isUndefined(that.belongs_to) || !__.has(that.belongs_to, label)) {
+            if (!quiet) { throw exception; }
+            return;
         }
 
         //validate the provided subfield in the resource type of the first part
         var type = that.belongs_to[label].type;
         if (!__.has(type.resource.owns, subfield)) {
-            if (!quiet) { throw excepition; } else { return; }
+            if (!quiet) { throw exception; }
+            return;
         }
 
         query.orderBy(label + '.' + subfield, orentation);
@@ -578,7 +582,7 @@ Resource.prototype.assemble_insert = function (post_data) {
     return insert_data;
 };
 
-Resource.prototype.create = function (req, resp, next) {
+Resource.prototype.create = function (req, resp, next, post_process_handler) {
     var that = this;
 
     //Process POST query parameters
