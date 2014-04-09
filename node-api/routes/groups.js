@@ -98,6 +98,30 @@ var get_events = function (groups, resp, next) {
     });
 };
 
+var get_slugs = function (groups, resp, next) {
+    var query = knex('pd_groups')
+    .column('id')
+    .column('slug')
+    .where(resource.deleted_col, 0)
+    .andWhere(function() {
+        for(var i=0; i<groups.length; i++) {
+            this.orWhere('id', groups[i]);
+        }
+    });
+
+    query.then( function(results) {
+        var rv = {};
+        __.each(results, function(group) {
+            rv[group.slug] = group.id;
+        });
+        resp.send(200, rv);
+        next();
+    }).catch(function (e) {
+        console.log("Error:" + e);
+        return next(new restify.InternalError(e));
+    });
+};
+
 exports.find_descendants = function (req, resp, next, visitor) {
     var primary_key = parseInt(req.params.id, 10);
     if (!primary_key) {
@@ -144,4 +168,8 @@ exports.find_descendants = function (req, resp, next, visitor) {
 
 exports.all_events = function (req, resp, next) {
     return exports.find_descendants(req, resp, next, get_events);
+};
+
+exports.all_slugs = function (req, resp, next) {
+    return exports.find_descendants(req, resp, next, get_slugs);
 };
