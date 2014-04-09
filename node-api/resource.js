@@ -87,6 +87,7 @@ Type.Registry = new Resource.ResourceType();
 Type.Entry = new Resource.ResourceType();
 Type.User = new Resource.ResourceType();
 Type.Media = new Resource.ResourceType();
+Type.Sponsor = new Resource.ResourceType();
 Type.Vote = new Resource.ResourceType();
 
 //--------------------------------------------------------

@@ -1,31 +1,29 @@
 var Type = require('../type'),
-    Resource = require('../resource'),
+    Resource = require('../resource');
     common = require('../common'),
     __ = require("underscore");
 
 var spec = {
-    tableName : 'pd_media',
+    tableName : 'sponsor',
     primary_key : 'id',
-    deleted_col : 'removed',
     schema : {
         "id" : { type : Type.Int, props : ["default", "read_only"]},
-        "owner_id" : { type : Type.Int, props : ["default"]},
+        "creator_id" : { type : Type.Int, props : ["default"]},
+        "image_id" : { type : Type.Int, props : ["default"]},
         "name" : { type : Type.Str, props : ["default"]},
-        "description" : { type : Type.Str, props : ["default"]},
-        "mimeType" : { type : Type.Str, props : ["default"]},
-        "filename" : { type : Type.Str, props : ["default"]},
-        "size" : { type : Type.Int, props : ["default"]},
-        "createdAt" : { type : Type.Date, props : ["read_only"]},
-        "updatedAt" : { type : Type.Date, props : ["read_only"]}
+        "url" : { type : Type.Str, props : ["default"]},
+
+        "image" : { type : Type.Media, rel : "belongs_to", props : ["default"], mapping : "image_id" },
+        "creator" : { type : Type.User, rel : "belongs_to", mapping : "creator_id" },
     }
 };
 
 var resource = new Resource(spec);
-Type.Media.init(resource);
+Type.Sponsor.init(resource);
 
 var single_handler = function (result) {
-    if (__.has(result, "filename") ) {
-        result.uri = common.media_base_uri + result.filename;
+    if (__.has(result, "image") && __.has(result.image, "filename")) {
+        result.image.uri = common.media_base_uri + result.filename;
     }
     return result;
 };
