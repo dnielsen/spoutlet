@@ -40,6 +40,14 @@ var collection_handler = function (result_set, resp, next) {
         __.each(result_set, function (result) {
             var id = result.sponsor.image_id;
             query.orWhere('id', id);
+
+            if( __.has(result,'event') && __.has(result.event,'id') && __.isNull(result.event.id)) {
+                delete result.event;
+            }
+
+            if( __.has(result,'grp') && __.has(result.grp,'id') && __.isNull(result.grp.id)) {
+                delete result.grp;
+            }
         });
 
         query.then(function (results) {
