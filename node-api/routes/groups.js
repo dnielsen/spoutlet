@@ -58,9 +58,14 @@ var resource = new Resource(spec);
 Type.Group.init(resource);
 
 var single_handler = function (result) {
-    if (__.has(result, "groupAvatar") && __.has(result.groupAvatar, "filename")) {
-        result.groupAvatar.uri = common.media_base_uri + result.groupAvatar.filename;
+    if (__.has(result, "groupAvatar")) {
+        if(__.isNull(result.groupAvatar.id)) {
+            delete result.groupAvatar;
+        } else if (__.has(result.groupAvatar, "filename") && !__.isNull(result.groupAvatar.filename)) {
+            result.groupAvatar.uri = common.media_base_uri + result.groupAvatar.filename;
+        }
     }
+    
     return result;
 };
 
