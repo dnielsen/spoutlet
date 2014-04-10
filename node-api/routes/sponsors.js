@@ -1,5 +1,5 @@
 var Type = require('../type'),
-    Resource = require('../resource');
+    Resource = require('../resource'),
     common = require('../common'),
     __ = require("underscore");
 
@@ -23,7 +23,7 @@ Type.Sponsor.init(resource);
 
 var single_handler = function (result) {
     if (__.has(result, "image") && __.has(result.image, "filename")) {
-        result.image.uri = common.media_base_uri + result.filename;
+        result.image.uri = common.media_base_uri + result.image.filename;
     }
     return result;
 };
