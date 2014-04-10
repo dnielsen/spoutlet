@@ -46,7 +46,8 @@ var spec = {
         "entrySetRegistration" : { type : Type.Registry, rel : "belongs_to", props : ["default"], mapping : "entrySetRegistration_id" },
         "owner" : { type : Type.User, rel : "belongs_to", mapping : "owner_id" },
         "parentGroup" : { type : Type.Group, rel : "belongs_to", mapping : "parentGroup_id" },
-
+        "groupAvatar" : { type : Type.Media, rel : "belongs_to", mapping : "groupAvatar_id" },
+        
         "subgroups" : { type : Type.Group, rel : "has_many", mapping : "parentGroup_id", limit : 10, sort_by : "name" },
         "events" : { type : Type.Event, rel : "has_many", mapping : "group_id", limit : 10, sort_by : "name" },
     }
@@ -56,12 +57,24 @@ var resource = new Resource(spec);
 
 Type.Group.init(resource);
 
+var single_handler = function (result) {
+    if (__.has(result, "groupAvatar") && __.has(result.groupAvatar, "filename")) {
+        result.groupAvatar.uri = common.media_base_uri + result.groupAvatar.filename;
+    }
+    return result;
+};
+
+var collection_handler = function (result_set) {
+    __.each(result_set, single_handler);
+    return result_set;
+};
+
 exports.find_all = function (req, resp, next) {
-    return resource.find_all(req, resp, next);
+    return resource.find_all(req, resp, next, collection_handler);
 };
 
 exports.find_by_primary_key = function (req, resp, next) {
-    return resource.find_by_primary_key(req, resp, next);
+    return resource.find_by_primary_key(req, resp, next, single_handler);
 };
 
 exports.create = function (req, resp, next) {
