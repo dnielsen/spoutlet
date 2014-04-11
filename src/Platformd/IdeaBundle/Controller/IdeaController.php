@@ -544,11 +544,11 @@ class IdeaController extends Controller
             ->add('url','text', array('attr' => array('size' => '60%', 'value' => 'http://')))
             ->add('type', 'choice', array(
                     'choices' => array (
+                        'other'     =>  'URL',
                         'youtube'   =>  'YouTube',
-                        'flickr'    =>  'Flickr',
                         'twitter'   =>  'Twitter',
-                        'slideshare'=>  'SlideShare',
-                        'other'     =>  'URL'
+                        'flickr'    =>  'Flickr',
+                        'slideshare'=>  'SlideShare'
                     )
                 ))
             ->getForm()
