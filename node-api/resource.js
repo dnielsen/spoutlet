@@ -86,6 +86,9 @@ Type.List.EventParent = new Resource.ResourceType();
 Type.Registry = new Resource.ResourceType();
 Type.Entry = new Resource.ResourceType();
 Type.User = new Resource.ResourceType();
+Type.Media = new Resource.ResourceType();
+Type.Sponsor = new Resource.ResourceType();
+Type.Sponsorship = new Resource.ResourceType();
 Type.Vote = new Resource.ResourceType();
 
 //--------------------------------------------------------
@@ -159,11 +162,14 @@ Resource.prototype.find_by_primary_key = function (req, resp, next, custom_handl
         var enveloped_result_set = that.apply_envelopes(result_set[0]);
 
         if (!__.isUndefined(custom_handler)) {
-            enveloped_result_set = custom_handler(enveloped_result_set);
+            enveloped_result_set = custom_handler(enveloped_result_set, resp, next);
         }
 
-        resp.send(enveloped_result_set);
-        next();
+        //if custom handler returns false, assume it handles the response itself
+        if(enveloped_result_set) {
+            resp.send(enveloped_result_set);
+            next();
+        }
     };
 
     query.then(send_response, function (err) {
@@ -211,11 +217,14 @@ Resource.prototype.find_all = function (req, resp, next, custom_handler) {
         });
 
         if (!__.isUndefined(custom_handler)) {
-            enveloped_result_set = custom_handler(enveloped_result_set);
+            enveloped_result_set = custom_handler(enveloped_result_set, resp, next);
         }
 
-        resp.send(enveloped_result_set);
-        next();
+        //if custom handler returns false, assume it handles the response itself
+        if(enveloped_result_set) {
+            resp.send(enveloped_result_set);
+            next();
+        }
         return;
     };
 

@@ -6,6 +6,9 @@ var restify = require('restify'),
     events = require('./routes/events'),
     groups = require('./routes/groups'),
     votes = require('./routes/votes'),
+    media = require('./routes/media'),
+    sponsors = require('./routes/sponsors'),
+    sponsorships = require('./routes/sponsorships'),
     registries = require('./routes/registries'),
     users = require('./routes/users'),
     __ = require('underscore');
@@ -140,10 +143,18 @@ server.get('/events/:id', events.find_by_primary_key);
 
 server.get('/groups', groups.find_all);
 server.get('/groups/:id', groups.find_by_primary_key);
-
 server.get('/groups/:id/events', groups.all_events);
-
 server.get('/group_props/:slug', groups.all_slugs);
+
+server.get('/media', media.find_all);
+server.get('/media/:id', media.find_by_primary_key);
+
+server.get('/sponsors', sponsors.find_all);
+server.get('/sponsors/:id', sponsors.find_by_primary_key);
+
+server.get('/sponsorships', sponsorships.find_all);
+// server.get('/sponsorships/:id', sponsors.find_by_primary_key);
+
 //---------------------------------------------------------------------------------------------------
 // Token checker will fail any request, with 401 Unauthorized, which does not provide a valid API-Key
 // Therefore all request handlers defined below this call are secured calls. 

@@ -12,29 +12,31 @@ var knexInstance = knex.initialize({
     }
 });
 
-module.exports.knex = knexInstance;
+exports.knex = knexInstance;
 
 var baseHost = 'localhost';
-module.exports.baseHost = baseHost;
+exports.baseHost = baseHost;
 
 var basePort = 3000;
-module.exports.basePort = basePort;
+exports.basePort = basePort;
 
 var baseProtocol = 'http';
-module.exports.baseProtocol = baseProtocol;
+exports.baseProtocol = baseProtocol;
 
 var baseUrl = baseProtocol + '://' + baseHost + ':' + basePort;
-module.exports.baseUrl = baseUrl;
+exports.baseUrl = baseUrl;
 
-module.exports.uuid_regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-module.exports.security_relm_login = "www.campsite.org";
-module.exports.security_relm_token = "api.campsite.org, user:<api-key>, pass:<none>";
+exports.uuid_regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+exports.security_relm_login = "www.campsite.org";
+exports.security_relm_token = "api.campsite.org, user:<api-key>, pass:<none>";
+
+exports.media_base_uri = 'http://platformd-public.s3.amazonaws.com/media/';
 
 var password_algorithm = 'sha512';
 var password_iterations = 1;
 var password_encoding = 'hex';
 
-module.exports.hash_password = function (password, salt) {
+exports.hash_password = function (password, salt) {
     var merged_pass = password + "{" + salt + "}";
 
     var digest = crypto.createHash(password_algorithm)
