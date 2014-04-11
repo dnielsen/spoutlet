@@ -175,7 +175,7 @@
 
         {% if event.location|default %}
             <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
-            <div id="event-location-map" class="spcr-t">{{ vichgeo_map_for('location', event) }}</div>
+            <div id="event-location-map" class="spcr-t spcr-b">{{ vichgeo_map_for('location', event) }}</div>
         {% endif %}
         
         {% if not (event.isUserAttending(app.user)) %}
