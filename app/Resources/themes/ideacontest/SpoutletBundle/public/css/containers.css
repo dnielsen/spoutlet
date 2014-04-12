@@ -402,13 +402,6 @@
     overflow-y: auto;
     display:none;
 }
-
-table.sessions {
-    border: 1px solid #ccc;
-    box-shadow: #ccc 5px 5px 5px;
-    -webkit-box-shadow: #ccc 5px 5px 5px;
-    -moz-box-shadow: #ccc 5px 5px 5px;
-}
 tr.date {
     background: #2faad9;
 }
@@ -416,43 +409,36 @@ tr.date td {
     color: white;
     text-align: center;
 }
+table.tblStyle {
+    border: 1px solid #ccc;
+    box-shadow: #ccc 2px 2px 2px;
+    -webkit-box-shadow: #ccc 2px 2px 2px;
+    -moz-box-shadow: #ccc 2px 2px 2px;
+    font-size: 1.1em;
+}
+table.tblStyle td {
+    padding: 10px;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 1.0em;
+}
+table.tblStyle th {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid #e5e5e5;
+}
 table.sessions td:first-child {
     width: 25%;
     font-weight: bold;
 }
-table.sessions td {
-    padding: 10px;
-    border-bottom: 1px solid #e5e5e5;
-    line-height: 18px;
-}
-table.sessions th {
-    text-align: left;
-    padding: 10px;
-    border-bottom: 1px solid #e5e5e5;
-}
 
-table.tblStyle {
-    width: 100%;
-}
-.tblStyle td {
-    padding: 10px 5px;
-    border-bottom: 1px solid #e5e5e5;
-    line-height: 20px;
-    font-size: 1.2em;
-}
 .tblStyle.profile td:first-child {
     font-weight: bold;
 }
-.tblStyle th {
-    padding: 5px;
-    border-bottom: 1px solid #e5e5e5;
-    text-align: left;
+.tblPW td {
+	padding: 0 10px;
+	border: 0 none;
+	font-size: 13px;
 }
-	.tblPW td {
-		padding: 0 10px;
-		border: 0 none;
-		font-size: 13px;
-	}
 
 table.tblStyle2 {
 	width: 100%;
