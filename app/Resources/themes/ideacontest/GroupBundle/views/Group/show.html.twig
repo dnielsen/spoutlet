@@ -242,9 +242,11 @@
             <h2 class="widgetHeader">Sub Groups</h2>
             <ul class="scrollableWidget spcr-b3">
                 {% for child in group.children %}
-                    <li class="spcr-t7 spcr-l3">
-                        <a href="{{ child | pd_link }}"><h3 class="blu">{{ child.name }}</h3></a>
-                    </li>
+                    {% if not child.deleted %}
+                        <li class="spcr-t7 spcr-l3">
+                            <a href="{{ child | pd_link }}"><h3 class="blu">{{ child.name }}</h3></a>
+                        </li>
+                    {% endif %}
                 {% endfor %}
             </ul>
         {% endif %}
