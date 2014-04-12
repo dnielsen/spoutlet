@@ -104,7 +104,11 @@ var single_handler = function (result) {
         } else if (scope === 'EventBundle:GroupEvent') {
             result.parent = result.event_parent;
             result.parent.type = "Event";
+        } else {
+            result.parent = {};
+            result.parent.type = scope.split(":")[1];
         }
+
         result.parent.id = result.entrySetRegistration.containerId;
         delete result.event_parent;
         delete result.group_parent;
