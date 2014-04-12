@@ -69,7 +69,7 @@
         {% if event.sessions | length > 0 %}
             <h2 class="left">Session Schedule</h2><a href="{{ path('event_session_schedule', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="blue right">View All</a>
 
-            <table class="clr sessions fillWidth">
+            <table class="clr tblStyle sessions fillWidth">
                 {% for date,sessions in event.sessionsByDate %}
                     <tr class="date">
                         <td colspan="2">
@@ -88,8 +88,8 @@
             </table>
         {% elseif event.entrySets | length > 0 %}
         {% set entrySet = event.entrySets[0] %}
-            <h2 class="left">{{ entrySet.name }}</h2><a href="{{ entrySet | pd_link }}" class="right btn">View All {{ entrySet.type | capitalize }}s</a>
-            <table class="tblStyle">
+            <h2 class="left">{{ entrySet.name }}</h2><a href="{{ entrySet | pd_link }}" class="right btn spcr-b3">View All {{ entrySet.type | capitalize }}s</a>
+            <table class="tblStyle fillWidth">
 
                 <thead>
                     <tr>
