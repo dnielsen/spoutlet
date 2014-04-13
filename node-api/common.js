@@ -1,16 +1,8 @@
 var knex = require('knex'),
-    crypto = require('crypto');
+    crypto = require('crypto'),
+    config = require('./config_data.json');
 
-var knexInstance = knex.initialize({
-    client : 'mysql',
-    connection : {
-        host : 'localhost',
-        user : 'root',
-        password : 'sqladmin',
-        database : 'campsite',
-        charset : 'utf8'
-    }
-});
+var knexInstance = knex.initialize( config.db_config );
 
 exports.knex = knexInstance;
 
