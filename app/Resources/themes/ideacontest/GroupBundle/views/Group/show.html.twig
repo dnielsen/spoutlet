@@ -102,30 +102,32 @@
                         <tr>
                             <td colspan="2">
                                 <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="blue left">{{ nextEvent.name }}</a>
-                                {% if not (nextEvent.isUserAttending(app.user)) %}
-                                    <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btn right">{% if nextEvent.externalUrl %}Join Discussion{% else %}Attend{% endif %}</a>
-                                {% endif %}
                             </td>
                         </tr>
                     </thead>
                     <tbody>
+                    <tr>
+                        <td colspan="2">
+                            {{ nextEvent.attendeeCount }} attendee{% if nextEvent.attendeeCount != 1 %}s{% endif %}
+                            {% if not (nextEvent.isUserAttending(app.user)) %}
+                                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btn right">{% if nextEvent.externalUrl %}Join Discussion{% else %}Attend{% endif %}</a></td>
+                            {% endif %}
+                        </td>
+                    </tr>
                     <tr>
                         <td width="20%"><strong>When:</strong></td>
                         <td width="80%">{{ nextEvent.DateAndTime|raw }}</td>
                     </tr>
                     {% if not nextEvent.getOnline %}
                         <tr>
-                            <td><strong>Where:</strong></td>
-                            <td>{{ nextEvent.location }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Address:</strong></td>
-                            <td><a href="http://maps.google.com/?q={{ nextEvent.address1 }}, {{ nextEvent.address2 }}">{{ nextEvent.address1 }}<br/>{{ nextEvent.address2 }}</a></td>
+                            <td><strong>Where:</strong>
+                            <td>
+                                {{ nextEvent.location }}<br/>
+                                <a href="http://maps.google.com/?q={{ nextEvent.address1 }}, {{ nextEvent.address2 }}">{{ nextEvent.address1 }}<br/>
+                                {{ nextEvent.address2 }}</a>
+                            </td>
                         </tr>
                     {% endif %}
-                    <tr>
-                        <td colspan="2">{{ nextEvent.attendeeCount }} attendee{% if nextEvent.attendeeCount != 1 %}s{% endif %}</td>
-                    </tr>
                     </tbody>
                 </table>
             </div>
