@@ -67,7 +67,7 @@ Type.prototype.list_filter = function (column, query, value, op, value_transform
     if(value_parts.length <= 0) {
         return;
     } else if(value_parts.length === 1) {
-        query.where(column, op, value);
+        query.where(column, op, value_transformer(value));
     } else {
         query.where(function() {
             var that = this;
