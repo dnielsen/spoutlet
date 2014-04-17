@@ -8,6 +8,7 @@ use Platformd\IdeaBundle\Entity\Comment;
 use Platformd\IdeaBundle\Entity\Document;
 use Platformd\IdeaBundle\Entity\EntrySet;
 use Platformd\IdeaBundle\Entity\FollowMapping;
+use Platformd\IdeaBundle\Entity\HtmlPage;
 use Platformd\IdeaBundle\Entity\Idea;
 use Platformd\IdeaBundle\Entity\Link;
 use Platformd\IdeaBundle\Entity\SponsorRegistry;
@@ -788,6 +789,28 @@ class IdeaController extends Controller
             ));
         return new RedirectResponse($ideaListUrl);
     }
+
+    public function HtmlPageViewAction(Request $request, $id)
+    {
+        $htmlPage = $this->getDoctrine()->getRepository('IdeaBundle:HtmlPage')->find($id);
+        if (!$htmlPage) {
+            throw new NotFoundHttpException();
+        }
+
+        $container = null;
+        if (!$container = $htmlPage->getGroup()) {
+            $container = $htmlPage->getEvent();
+        }
+
+        $returnLink = $this->generateUrl($container->getLinkableRouteName(), $container->getLinkableRouteParameters());
+
+        return $this->render('IdeaBundle:Idea:htmlPageView.html.twig', array(
+            'htmlPage'      => $htmlPage,
+            'returnLink'    => $returnLink,
+        ));
+    }
+
+
 
     public function sponsorsAction(Request $request)
     {

@@ -296,6 +296,11 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     protected $sessions;
 
     /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\HtmlPage", mappedBy="event")
+     */
+    protected $htmlPages;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -303,6 +308,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         $this->attendees            = new ArrayCollection();
         $this->sponsorRegistrations = new ArrayCollection();
         $this->registrationFields   = new ArrayCollection();
+        $this->htmlPages            = new ArrayCollection();
         $this->createdAt            = new DateTime();
         $this->startsAt             = new \DateTime('now');
         $this->endsAt               = new \DateTime('now');
@@ -1182,6 +1188,19 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         });
 
         return $sessions;
+    }
+    
+    public function addHtmlPage($htmlPage)
+    {
+        $this->htmlPages[] = $htmlPage;
+    }
+    public function removeHtmlPage($htmlPage)
+    {
+        $this->htmlPages->removeElement($htmlPage);
+    }
+    public function getHtmlPages()
+    {
+        return $this->htmlPages;
     }
 
     public function getHashTag() {

@@ -506,6 +506,11 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\RegistrationAnswer", mappedBy="user", cascade={"remove", "persist"})
      */
     protected $answers;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\HtmlPage", mappedBy="creator")
+     */
+    protected $htmlPages;
    
     /**
      * The id for facematching
@@ -557,6 +562,7 @@ class User extends BaseUser
         $this->ideas                    = new ArrayCollection();
         $this->comments                 = new ArrayCollection();
         $this->answers                  = new ArrayCollection();
+        $this->htmlPages                = new ArrayCollection();
     }
 
     public function __toString() {
@@ -1552,6 +1558,18 @@ class User extends BaseUser
 
         return $eventAnswers;
     }
+    public function addHtmlPage($htmlPage)
+    {
+        $this->htmlPages[] = $htmlPage;
+    }
+    public function removeHtmlPage($htmlPage)
+    {
+        $this->htmlPages->removeElement($htmlPage);
+    }
+    public function getHtmlPages()
+    {
+        return $this->htmlPages;
+    }
 
    /**
      * @return string
@@ -1619,5 +1637,4 @@ class User extends BaseUser
     public function setMailingAddress($value) {
         $this->mailingAddress = $value;
     }
-
 }

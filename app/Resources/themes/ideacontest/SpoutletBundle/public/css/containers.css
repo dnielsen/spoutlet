@@ -385,6 +385,10 @@
         width: 740px;
         height: 341px;
     }
+    .custom-html-page {
+        width: 100%;
+        overflow-x: auto;
+    }
 
     .socialWrapper {
         padding:9px;

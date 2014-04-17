@@ -7,6 +7,14 @@
 
         <div id="eventSummary">
 
+            {% if event.htmlPages|length > 0 %}
+            <div class="rowBx card ctr spcr-b2 midtxt">
+                {% for page in event.htmlPages %}
+                    {% if not loop.first %}&nbsp;|&nbsp;{% endif %}<a href="{{ path('page_view', {'id': page.id}) }}" class="blu">{{ page.title }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+
             {% set numImages = event.rotatorImages|length %}
 
             {% if numImages > 0 %}

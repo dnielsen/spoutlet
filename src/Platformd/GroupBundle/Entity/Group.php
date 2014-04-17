@@ -327,6 +327,11 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
      */
     protected $childGroups;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\HtmlPage", mappedBy="group")
+     */
+    protected $htmlPages;
+
 
     public function __construct()
     {
@@ -341,6 +346,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         $this->sponsorRegistrations     = new ArrayCollection();
         $this->registrationFields       = new ArrayCollection();
         $this->childGroups              = new ArrayCollection();
+        $this->htmlPages                = new ArrayCollection();
     }
 
     public function __toString() {
@@ -1174,6 +1180,18 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
 
     public function getChildren() {
         return $this->childGroups;
+    }
+    public function addHtmlPage($htmlPage)
+    {
+        $this->htmlPages[] = $htmlPage;
+    }
+    public function removeHtmlPage($htmlPage)
+    {
+        $this->htmlPages->removeElement($htmlPage);
+    }
+    public function getHtmlPages()
+    {
+        return $this->htmlPages;
     }
 
     public function getHashTag() {

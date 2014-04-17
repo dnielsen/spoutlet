@@ -9,6 +9,7 @@ use Platformd\EventBundle\Entity\EventSession;
 use Platformd\EventBundle\Entity\GroupEvent;
 use Platformd\EventBundle\Entity\GroupEventRsvpAction;
 use Platformd\GroupBundle\Entity\Group;
+use Platformd\IdeaBundle\Entity\HtmlPage;
 use Platformd\IdeaBundle\Entity\EntrySet;
 use Platformd\IdeaBundle\Entity\VoteCriteria;
 use Platformd\IdeaBundle\Form\Type\RegistrationFieldFormType;
@@ -324,6 +325,74 @@ class AdminController extends Controller
                 'event'     => $event,
                 'isAdmin'   => $isAdmin,
             ));
+    }
+
+    public function htmlPageFormAction(Request $request, $id = null)
+    {
+        $this->enforceUserSecurity();
+
+        if ($id) {
+            $htmlPage = $this->getDoctrine()->getRepository('IdeaBundle:HtmlPage')->find($id);
+            if (!$htmlPage) {
+                throw new NotFoundHttpException();
+            }
+        } else {
+            $htmlPage = new HtmlPage();
+        }
+
+        $scope       = $request->get('scope');
+        $containerId = $request->get('containerId');
+
+        $group = null;
+        $event = null;
+        $owner = null;
+
+        if ($scope == 'group') {
+            $group = $this->getGroupManager()->find($containerId);
+            $owner = $group->getOwner();
+        } elseif ($scope == 'event') {
+            $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($containerId);
+            $owner = $event->getUser();
+        } else {
+            throw new NotFoundHttpException('A page must be submitted within the context of a group or event.');
+        }
+
+        if ($this->getCurrentUser() !== $owner and !$this->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedException;
+        }
+
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'htmlPage', $htmlPage)
+            ->add('title',   'text',             array('attr'    => array('size' => '60%')))
+            ->add('content', 'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
+        ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+            if ($form->isValid()) {
+
+                $htmlPage->setCreator($this->getCurrentUser());
+
+                if ($group) {
+                    $htmlPage->setGroup($group);
+                } elseif ($event) {
+                    $htmlPage->setEvent($event);
+                }
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($htmlPage);
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('page_view', array('id' => $htmlPage->getId())));
+            }
+        }
+
+        return $this->render('IdeaBundle:Admin:htmlPageForm.html.twig', array(
+            'id'            => $id,
+            'scope'         => $scope,
+            'containerId'   => $containerId,
+            'htmlPage'      => $htmlPage,
+            'form'          => $form->createView(),
+        ));
     }
 
     public function entrySetAction(Request $request, $entrySetId)
@@ -874,20 +943,9 @@ class AdminController extends Controller
 
     public function getEvent($groupSlug, $eventId)
     {
-        $group = $this->getGroup($groupSlug);
+        $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($eventId);
         
-        if (!$group){
-            return false;
-        }
-
-        $eventEm = $this->getDoctrine()->getRepository('EventBundle:GroupEvent');
-        $event = $eventEm->findOneBy(
-            array(
-                'group' => $group->getId(),
-                'id' => $eventId,
-            )
-        );
-        if ($event == null){
+        if ($event == null) {
             return false;
         }
         return $event;

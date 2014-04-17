@@ -132,3 +132,6 @@ evtSession_description: Description
 evtSession_date: Day of Event
 evtSession_startsAt: Start Time
 evtSession_endsAt: End Time
+
+htmlPage_title: Page Title
+htmlPage_content: Content

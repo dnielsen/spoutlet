@@ -1,4 +1,22 @@
 
+# Page Routes
+
+page_new:
+    pattern:    /pages/new
+    defaults:   { _controller: IdeaBundle:Admin:htmlPageForm }
+
+page_view:
+    pattern:    /pages/{id}
+    defaults:   { _controller: IdeaBundle:Idea:htmlPageView }
+
+page_edit:
+    pattern:    /pages/{id}/edit
+    defaults:   { _controller: IdeaBundle:Admin:htmlPageForm }
+
+page_delete:
+    pattern:    /pages/{id}/delete
+    defaults:   { _controller: IdeaBundle:Admin:htmlPageDelete }
+
 # Sponsor Routes
 
 sponsors:

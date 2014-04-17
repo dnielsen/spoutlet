@@ -1,0 +1,25 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+
+    {% if htmlPage.group|default %}
+        {% set scope = 'group' %}
+        {% set containerId = htmlPage.group.id %}
+    {% elseif htmlPage.event|default %}
+        {% set scope = 'event' %}
+        {% set containerId = htmlPage.event.id %}
+    {% endif %}
+
+    {% if returnLink|default %}<a href="{{ returnLink }}" class="btnLg right spcr-l3">Back to {{ scope }}</a>{% endif %}
+    
+    {% if htmlPage.creator == app.user or is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('page_edit', {'id': htmlPage.id, 'scope': scope, 'containerId': containerId }) }}" class="btnLg right spcr-l3">Edit Page</a>
+    {% endif %}
+
+    <h1 class="ctr">{{ htmlPage.title }}</h1>
+    <div class="custom-html-page">
+        {{ htmlPage.content | raw }}
+    </div>
+
+{% endblock %}
+

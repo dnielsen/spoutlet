@@ -74,6 +74,7 @@
                             {% if _isOwner %}
                                 <li><a href="{{ path('group_edit', {'slug': _key}) }}">Edit Group Details</a></li>
                                 <li><a href="{{ path('idea_admin_event', {'groupSlug': _key}) }}">Create Event</a></li>
+                                <li><a href="{{ path('page_new', {'scope': 'group', 'containerId': group.id}) }}">Create Page</a></li>
                                 {% if _regId|default %}
                                     <li><a href="{{ path('entry_set_new', {'registrationId': _regId, 'entrySetId': 'new'}) }}">Create List</a></li>
                                     <li><a href="{{ path('sponsors', {'scope': 'group', 'containerId': group.id}) }}">Manage Sponsors</a></li>
@@ -92,6 +93,7 @@
                         {% elseif menu_scope == 'event' %}
                             {% if _isOwner %}
                                 <li><a href="{{ path('idea_admin_event', {'eventId': _key, 'groupSlug': _key2}) }}">Edit Event Details</a></li>
+                                <li><a href="{{ path('page_new', {'scope': 'event', 'containerId': event.id}) }}">Create Page</a></li>
                                 {% if _regId|default %}
                                     <li><a href = "{{ path('entry_set_new', {'registrationId': _regId, 'entrySetId': 'new'}) }}">Create List</a></li>
                                     <li><a href="{{ path('event_session_create', {'eventId': _key, 'groupSlug': _key2}) }}">Create Session</a></li>

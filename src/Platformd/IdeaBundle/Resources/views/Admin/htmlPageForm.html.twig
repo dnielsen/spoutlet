@@ -1,0 +1,32 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+
+    {% if id is null %}
+        {% set verb = 'Create' %}
+        {% set formAction = path('page_new', {'scope': scope, 'containerId': containerId} ) %}
+    {% else %}
+        {% set verb = 'Modify' %}
+        {% set formAction = path('page_edit', {'id': id, 'scope': scope, 'containerId': containerId}) %}
+    {% endif %}
+
+    <h1>{{ verb }} Your Page</h1>
+
+    <form action="{{ formAction }}" method="post" {{ form_enctype(form) }} novalidate>
+        {{ form_row(form.title) }}
+        {{ form_row(form.content) }}
+
+        {{ form_rest(form) }}
+
+        <br class="clr"/>
+        <input type="submit" value="Submit" id="submit"/>
+        <input type="submit" value="Cancel" onclick="history.go(-1);" />
+
+        {% if id is not null %}
+            <a href="{{ path("page_delete", {"id": id}) }}">
+                <input type="button" class="spcr-l redButton" value="Delete" onclick="return confirm('Are you sure you want to delete this page?');">
+            </a>
+        {% endif %}
+
+    </form>
+{% endblock %}
