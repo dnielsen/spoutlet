@@ -18,6 +18,10 @@ accounts_entries:
     pattern: /profile/entries
     defaults: { _controller: IdeaBundle:Idea:userEntries }
 
+accounts_pages:
+    pattern: /profile/pages
+    defaults: { _controller: IdeaBundle:Idea:userPages }
+
 accounts_giveaways:
     pattern: /profile/giveaways
     defaults: { _controller: SpoutletBundle:Account:giveaways }

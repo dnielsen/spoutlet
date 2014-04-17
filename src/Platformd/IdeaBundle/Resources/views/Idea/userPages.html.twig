@@ -1,0 +1,36 @@
+{% extends 'UserBundle::accountLayout.html.twig' %}
+
+{% block title %}My Pages | Campsite{% endblock %}
+
+{% block profile_content %}
+
+    {% if userPages | length > 0 %}
+        <h2>My Pages</h2>
+        <table class="tblStyle">
+            <thead>
+                <tr>
+                    <th><strong>Page</strong></th>
+                    <th><strong>Group/Event</strong></th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for page in userPages %}
+                {% set parent = parents[page.title] %}
+                <tr>
+                    <td>
+                        <a href="{{ path('page_view', {'id': page.id}) }}">{{ page.title }}</a>
+                    </td>
+                    <td>
+                        <a href="{{ path(parent.getLinkableRouteName(), parent.getLinkableRouteParameters()) }}">{{ parent.getName }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+    {% else %}
+        You have not created any pages yet.
+    {% endif %}
+
+{% endblock %}
