@@ -332,10 +332,9 @@
         -moz-box-shadow: #ccc 0 2px 2px;
     }
     .card:hover {
-        border: 1px solid #2faad9;
-        box-shadow: #97CDFF 0 0 2px 2px;
-        -webkit-box-shadow: #97CDFF 0 0 2px 2px;
-        -moz-box-shadow: #97CDFF 0 0 2px 2px;
+        box-shadow: #ccc 0 6px 6px;
+        -webkit-box-shadow: #ccc 0 6px 6px;
+        -moz-box-shadow: #ccc 0 6px 6px;
     }
     .idea_left_column {
         float: left;
