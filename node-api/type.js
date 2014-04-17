@@ -17,9 +17,9 @@ Type.Date = new Type();
 
 
 Type.prototype.init = function (validator, default_filter, prefix_filters) {
-    this.validate = validator || function () { return; };
-    this.default_filter = default_filter;
-    this.prefix_filters = prefix_filters;
+  this.validate = validator || function () { return; };
+  this.default_filter = default_filter;
+  this.prefix_filters = prefix_filters;
 };
 
 Type.prototype.apply_filter = function (column, query, value) {
@@ -61,6 +61,9 @@ Type.prototype.list_validate = function (value, single_validate) {
 Type.prototype.list_filter = function (column, query, value, op, value_transformer) {
     if(__.isUndefined(op))
         op = '=';
+
+    if(__.isUndefined(value_transformer))
+        value_transformer = function(value) { return value; };
 
     var value_parts = value.split(',');
     
