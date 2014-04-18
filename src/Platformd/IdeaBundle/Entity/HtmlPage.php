@@ -95,4 +95,13 @@ class HtmlPage
     {
         return $this->group;
     }
+
+    public function getParent()
+    {
+        $parent = null;
+        if (!$parent = $this->group) {
+            $parent = $this->event;
+        }
+        return $parent;
+    }
 }
