@@ -1169,20 +1169,8 @@ class IdeaController extends Controller
 
     public function userPagesAction()
     {
-        $userPages = $this->getCurrentUser()->getHtmlPages();
-
-        $parents = array();
-        foreach ($userPages as $page) {
-            if ($group = $page->getGroup()) {
-                $parents[$page->getTitle()] = $group;
-            } elseif ($event = $page->getEvent()) {
-                $parents[$page->getTitle()] = $event;
-            }
-        }
-
         return $this->render('IdeaBundle:Idea:userPages.html.twig', array(
-            'userPages' => $userPages,
-            'parents'   => $parents,
+            'userPages' => $this->getCurrentUser()->getHtmlPages(),
         ));
     }
 
