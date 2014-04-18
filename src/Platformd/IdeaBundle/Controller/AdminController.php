@@ -395,6 +395,27 @@ class AdminController extends Controller
         ));
     }
 
+    public function htmlPageDeleteAction(Request $request, $id) {
+
+        $htmlPage = $this->getDoctrine()->getRepository('IdeaBundle:HtmlPage')->find($id);
+
+        if (!$htmlPage) {
+            throw new NotFoundHttpException('Page not found.');
+        }
+
+        $this->validateAuthorization($htmlPage);
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->remove($htmlPage);
+        $em->flush();
+
+        $this->setFlash('success', 'Page \''.$htmlPage->getTitle().'\' has been deleted.');
+
+        $parent = $htmlPage->getParent();
+
+        return $this->redirect($this->generateUrl($parent->getLinkableRouteName(), $parent->getLinkableRouteParameters()));
+    }
+
     public function entrySetAction(Request $request, $entrySetId)
     {
         $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
