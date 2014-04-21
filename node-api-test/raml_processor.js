@@ -1,6 +1,5 @@
 // Load the http module to create an http server.
 var http = require('http'),
-    restify = require('restify'),
     raml = require('raml-parser'),
     _ = require('underscore');
 
