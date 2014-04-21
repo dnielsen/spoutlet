@@ -71,12 +71,12 @@ class RegistrationController extends BaseRegistrationController
                 $route      = 'fos_user_registration_confirmed';
             }
 
-            //$this->container->get('platformd.util.flash_util')->setFlash('fos_user_success', 'platformd.user.register.success');
             $url        = $this->container->get('router')->generate($route);
             $response   = new RedirectResponse($url);
 
             if ($authUser) {
                 $this->authenticateUser($user, $response);
+                $this->setFlash('success', $this->trans('platformd.user.register.success'));
             }
 
             return $response;
@@ -114,7 +114,7 @@ class RegistrationController extends BaseRegistrationController
     {
         $ageManager = $this->container->get('platformd.age.age_manager');
 
-        if($ageManager->getUsersAge()) {
+        if ($ageManager->getUsersAge()) {
             if ($ageManager->getUsersAge() < $this->getCurrentSite()->getSiteConfig()->getMinAgeRequirement()) {
                 throw new InsufficientAgeException();
             }
@@ -135,13 +135,10 @@ class RegistrationController extends BaseRegistrationController
 
         $this->container->get('fos_user.user_manager')->updateUser($user);
 
-        $request = $this->container->get('request');
-        $session = $request->getSession();
+        $response = new RedirectResponse($this->container->get('router')->generate('groups'));
+        $this->authenticateUser($user, $response);
 
-        $session->setFlash('success', $this->trans('platformd.user.register.confirmed_success'));
-
-        $response = new RedirectResponse($this->container->get('router')->generate('fos_user_security_login', array('f' => 'reg')));
-        //$this->authenticateUser($user, $response);
+        $this->setFlash('success', 'Welcome to Campsite!');
 
         return $response;
     }
