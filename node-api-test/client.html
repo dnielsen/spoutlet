@@ -2,30 +2,73 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
         <script type="text/javascript">
             $(function() {
-                $('#get-groups-button').click(function () {
-                    $.getJSON('http://localhost:3000/groups', null, function(groupsData) {
+                var endpoint = "http://mocksvc.mulesoft.com/mocks/ff3f7f1f-c232-4a52-857f-3a846444ab31";
+                
+                $.ajax({
+                    type: "GET",
+                    url: endpoint + '/groups?callback=?',
+                    dataType: "jsonp",
+                    cache: false,
+                    success: function (data) {
+                        alert("Success!");
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert("jqXHR: " + jqXHR.status + "\ntextStatus: " + textStatus + "\nerrorThrown: " + errorThrown);
+                    },
+                    complete: function (xhr, status) {
+                      if (status === 'error' || !xhr.responseText) {
+                          console.log(status);
+                          alert(status);
+                      }
+                      else {
+                       console.log('It Works!');
+                      }
+                    }
+                });
+                
+                $('#get-groups-button').click(function () {    
+                    $.getJSON(endpoint + '/groups?callback=?', null, function(groupsData) {
                         var groupsHtml = '';
                         for (group_idx in groupsData) {
-                            groupsHtml += groupsData[group_idx].name + '<br/>';
+                            groupsHtml += groupsData[group_idx].id + ": " + groupsData[group_idx].name + '<br/>';
                         }
                         $('#content').html(groupsHtml);
                     });
                 });
+                $('#get-events-button').click(function () {
+                    $.getJSON(endpoint + '/events', null, function(eventsData) {
+                        var eventsHtml = '';
+                        for (event_idx in eventsData) {
+                            eventsHtml += eventsData[event_idx].id + ": " + eventsData[event_idx].name + '<br/>';
+                        }
+                        $('#content').html(eventsHtml);
+                    });
+                });
                 $('#get-a-group').click(function () {
                     var group_id = $('#group-id').val();
-                    $.getJSON('http://localhost:3000/groups/'+group_id, null, function(groupData) {
-                        $('#content').html('<h2>'+groupData.name + '</h2><p>' + groupData.description +'</p>');
+                    $.getJSON(endpoont + '/groups/'+group_id, null, function(groupData) {
+                        $('#content').html('<h2>'+groupData.name 
+                        + '</h2><p>ID:' + groupData.id 
+                        + '</p><p>Category:' + groupData.category +'</p><p>'
+                        + '</p><p>Slug:' + groupData.slug +'</p><p>'
+                        + '</p><p>Parent:' + groupData.parentGroup_id +'</p>'
+                        );
                     });
                 });
                 $('#post-a-group').click(function() {
-                    var body = {'name': $('#group-name').val(), 'description': $('#group-desc').val()};
+                    var body = {
+                        'name': $('#g-name').val(), 
+                        'category': $('#g-category').val(),
+                        'id': parseInt($('#g-id').val()),
+                        'parentGroup_id': parseInt($('#g-parent-id').val())
+                    };
                     var response = $.ajax({
                         type: 'POST',
                         contentType: 'application/json',
-                        url: 'http://localhost:3000/groups',
+                        url: endpoint + '/groups',
                         data: JSON.stringify(body),
                     })
                     .done(function(data) {
@@ -41,17 +84,26 @@
 
     <body>
         <button id="get-groups-button">List Groups</button>
+        <button id="get-events-button">List Events</button>
         <br/><br/>
         Group ID:<input id="group-id" type="int"/>
         <button id="get-a-group">Show Details</button>
 
+
         <br/><br/>
-        Group Name:<input id="group-name" type="string">
+        Group Name:<input id="g-name" type="string">
         <br/>
-        Group Description:<input id="group-desc" type="string"></input>
+        Group Category:<input id="g-category" type="string"></input>
+        <br/>
+        Group Id:<input id="g-id" type="integer"></input>
+        <br/>
+        Group Parent Id:<input id="g-parent-id" type="integer"></input>
         <button id="post-a-group">Add a Group</button>
 
-        <h1>Group Info</h1>
+        <br/><br/>
+        
+
+        <h1>Info</h1>
         <div id="content">
             Click a button above to get some data from the API.
         </div>
