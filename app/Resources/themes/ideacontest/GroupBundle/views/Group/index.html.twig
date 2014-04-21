@@ -119,8 +119,9 @@
 {% block content %}
     <div id="allgroups-contentLft">
         {% if featuredGroups|length > 0 %}
-            <h2>{{ 'platformd.groups.index.featured_groups' | pd_trans }}</h2>
-            <a href="/app_dev.php/groups/new/" target="_blank" class="btn right" id="create-group-btn">Create Group</a>
+            <h2 class="left">{{ 'platformd.groups.index.featured_groups' | pd_trans }}</h2>
+            <a href="/app_dev.php/groups/new/" target="_blank" class="btn right spcr-b2" id="create-group-btn">Create Group</a>
+            <div class="clr"></div>
             <div id="featured-groups">
                 {% for group in featuredGroups %}
                     <div class="card group-list-item">
