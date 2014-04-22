@@ -89,11 +89,13 @@
         </div>
         {% endif %}
 
-        <div class="rowBx">
-            {{ group.description | raw }}
-            <div class="clr"></div>
-        </div>
-        <hr/>
+        {% if group.description | default %}
+            <div class="rowBx">
+                {{ group.description | raw }}
+                <div class="clr"></div>
+            </div>
+            <hr/>
+        {% endif %}
 
         {% if group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_TOPIC') and locationGroups|default %}
         <div id="map">
