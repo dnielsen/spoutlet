@@ -21,14 +21,14 @@
     {{ form_row(form.name) }}
 
     {{ form_label(form.email) }}
-    <div class="form_error">
-        {{ email_error }}
-    </div>
+    {% if email_error|length > 0 %}
+        <div class="form_error">{{ email_error }}</div>
+    {% endif %}
     {{ form_widget(form.email) }}
 
-    <div class="form_error">
-        {{ password_error }}
-    </div>
+    {% if password_error|length > 0 %}
+        <div class="form_error">{{ password_error }}</div>
+    {% endif %}
     {{ form_row(form.plainPassword.first) }}
     {{ form_row(form.plainPassword.second) }}
 
