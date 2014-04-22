@@ -173,6 +173,7 @@ parameters:
         idea_add_link_form: %idea_add_link_form%
         fos_user_security_login: %fos_user_security_login% # login
         fos_user_resetting_request: %fos_user_resetting_request% # forgot password
+        fos_user_registration_check_email: %fos_user_registration_check_email% # Post Registration Check Email
 
     services_queue_util_class: Platformd\SpoutletBundle\Util\QueueUtil
 
