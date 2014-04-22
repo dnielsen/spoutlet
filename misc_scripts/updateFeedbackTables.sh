@@ -50,6 +50,7 @@ values=(\
 'idea_add_link_form' 'Feedback for Entry Add Link page' \
 'fos_user_security_login' 'Feedback for Login page' \
 'fos_user_resetting_request' 'Feedback for Forgot Password' \
+'fos_user_registration_check_email' 'Feedback for Email Check' \
 );
 
 size=${#values[@]};
@@ -94,7 +95,7 @@ END_TEXT`
     # Create Feedback list 
     mysql -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names <<END_TEXT
 INSERT INTO entry_set (entrySetRegistration_id,name,type,isVotingActive,isSubmissionActive,allowedVoters) 
-VALUES ($esr,"${values[$i+1]}",'idea',0,1,'');
+VALUES ($esr,"${values[$i+1]}",'task',0,1,'');
 END_TEXT
     
     # Get the id of the new entry set
