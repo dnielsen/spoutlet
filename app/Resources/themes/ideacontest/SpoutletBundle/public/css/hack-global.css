@@ -152,6 +152,14 @@ h5 {
 .grn { color: #abe224; }
 .gry { color: #929292; }
 
+.form_error {
+    background: red;
+    color: white;
+    display: inline;
+    padding: 4px;
+    font-weight: bold;
+}
+
 .bld { font-weight: bold; }
 .nrml { font-weight: normal; }
 
