@@ -839,9 +839,14 @@ class GroupEventController extends Controller
         return $response;
     }
 
-    public function registerAction($groupSlug, $eventId)
+    public function registerAction(Request $request, $groupSlug, $eventId)
     {
+        $session = $request->getSession();
+        $session->set('group_slug', $groupSlug);
+        $session->set('event_id', $eventId);
         $this->basicSecurityCheck('ROLE_USER');
+        $session->remove('group_slug');
+        $session->remove('event_id');
 
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
         $user  = $this->getUser();

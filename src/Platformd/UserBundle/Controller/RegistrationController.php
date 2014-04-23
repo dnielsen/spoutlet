@@ -135,10 +135,26 @@ class RegistrationController extends BaseRegistrationController
 
         $this->container->get('fos_user.user_manager')->updateUser($user);
 
-        $response = new RedirectResponse($this->container->get('router')->generate('groups'));
-        $this->authenticateUser($user, $response);
+        // Check if user was trying to attend an event or join a group before registering
+        $session = $this->container->get('request')->getSession();
+        if ($group_slug = $session->get('group_slug')) {
+            if ($event_id = $session->get('event_id')) {
+                $session->remove('event_id');
+                $path = 'group_event_register_and_join';
+                $params = array('groupSlug' => $group_slug, 'eventId' => $event_id);
+            } else {
+                $path = 'group_join';
+                $params = array('slug' => $group_slug);
+            }
+            $session->remove('group_slug');
+        } else {
+            $path = 'groups';
+            $params = array();
+            $this->setFlash('success', 'Welcome to Campsite!');
+        }
 
-        $this->setFlash('success', 'Welcome to Campsite!');
+        $response = new RedirectResponse($this->container->get('router')->generate($path, $params));
+        $this->authenticateUser($user, $response);
 
         return $response;
     }

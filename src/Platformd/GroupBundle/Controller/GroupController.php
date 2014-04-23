@@ -451,11 +451,14 @@ Alienware Arena Team
         return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
     }
 
-    public function joinAction($slug)
+    public function joinAction(Request $request, $slug)
     {
-        $this->basicSecurityCheck(array('ROLE_USER'));
+        $session = $request->getSession();
+        $session->set('group_slug', $slug);
+        $this->basicSecurityCheck('ROLE_USER');
+        $session->remove('group_slug');
 
-        $group  = $this->getGroupBySlug($slug);
+        $group = $this->getGroupBySlug($slug);
 
         $this->ensureGroupExists($group);
 
