@@ -52,7 +52,7 @@
     <div id="login_form">
         <h1>Please sign in:</h1>
         
-        <form action="/app_dev.php/login_check" method="post">
+        <form action="{{ login_check_path() }}" method="post">
             <label for="username">Email Address:</label>
             <input type="text" id="username" name="_username" value="" class="auth" tabindex="1"/>
 
