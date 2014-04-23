@@ -15,7 +15,7 @@
         <ul class="sf-menu sf-list">
 
             {% if app.user is null %}
-                <li><a href="{{ path('fos_user_security_login', {'directLink': true}) }}">{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}</a></li>
+                <li><a href="{{ path('login', {'directLink': true}) }}">{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}</a></li>
                 <li><a href="{{ path('fos_user_registration_register') }}">Join Now</a></li>
                 <li><a href="{{ path('global_events_index') }}">Events</a></li>
                 <li><a href="{{ path('groups') }}">Groups</a></li>

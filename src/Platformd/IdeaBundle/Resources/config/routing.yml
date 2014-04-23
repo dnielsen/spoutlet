@@ -282,7 +282,7 @@ profile_edit:
 
 login:
     pattern:   /login
-    defaults:  { _controller: FOSUserBundle:Security:login }
+    defaults:  { _controller: FOSUserBundle:Registration:register }
     requirements:
         _scheme: https
 

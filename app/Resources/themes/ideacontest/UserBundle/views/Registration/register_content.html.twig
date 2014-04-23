@@ -19,12 +19,14 @@
             $('#login_content').show();
             $('#username').val($('#fos_user_registration_form_email').val());
             $('#password').val($('#fos_user_registration_form_plainPassword_first').val());
+            window.history.pushState(null, null, '/login');
         }
         function showRegister() {
             $('#register_content').show();
             $('#login_content').hide();
             $('#fos_user_registration_form_email').val($('#username').val());
             $('#fos_user_registration_form_plainPassword_first').val($('#password').val());
+            window.history.pushState(null, null, '/register');
         }
     </script>
 {% endblock %}
