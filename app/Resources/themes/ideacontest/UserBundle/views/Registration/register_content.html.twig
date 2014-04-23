@@ -12,29 +12,68 @@
     {% endif %}
 {% endfor %}
 
-<h1 class="spcr-b2">Create Your Campsite Account</h1>
+{% block javascripts %}
+    <script>
+        function showLogin() {
+            $('#register_content').hide();
+            $('#login_content').show();
+            $('#username').val($('#fos_user_registration_form_email').val());
+            $('#password').val($('#fos_user_registration_form_plainPassword_first').val());
+        }
+        function showRegister() {
+            $('#register_content').show();
+            $('#login_content').hide();
+            $('#fos_user_registration_form_email').val($('#username').val());
+            $('#fos_user_registration_form_plainPassword_first').val($('#password').val());
+        }
+    </script>
+{% endblock %}
 
-<p>Already have an account? <a href="{{ path('fos_user_security_login') }}" class="blue">Sign In</a></p>
+<div id="register_content">
+    <h1 class="spcr-b2">Create Your Campsite Account</h1>
+    <p>Already have an account? <a href="javascript:void(0);" class="blue" id="sign_in" onclick="showLogin();">Sign In</a></p>
+    <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register form form-horizontal">
+        {{ form_row(form.name) }}
+        {{ form_label(form.email) }}
+        {% if email_error|length > 0 %}<div class="form_error">{{ email_error }}</div>{% endif %}
+        {{ form_widget(form.email) }}
+        {% if password_error|length > 0 %}<div class="form_error">{{ password_error }}</div>{% endif %}
+        {{ form_row(form.plainPassword.first) }}
+        {{ form_row(form.plainPassword.second) }}
+        <div>
+            <div style="display:none;">{{ form_rest(form) }}</div>
+            <input type="submit" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" formnovalidate />
+        </div>
+    </form>
+</div>
 
-<form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register form form-horizontal">
 
-    {{ form_row(form.name) }}
+<div id="login_content" style="display:none;">
+    <div id="login_form">
+        <h1>Please sign in:</h1>
+        
+        <form action="/app_dev.php/login_check" method="post">
+            <label for="username">Email Address:</label>
+            <input type="text" id="username" name="_username" value="" class="auth" tabindex="1"/>
 
-    {{ form_label(form.email) }}
-    {% if email_error|length > 0 %}
-        <div class="form_error">{{ email_error }}</div>
-    {% endif %}
-    {{ form_widget(form.email) }}
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="_password" class="auth" tabindex="2"/>
 
-    {% if password_error|length > 0 %}
-        <div class="form_error">{{ password_error }}</div>
-    {% endif %}
-    {{ form_row(form.plainPassword.first) }}
-    {{ form_row(form.plainPassword.second) }}
+            <label for="remember_me">Remember me</label>
+            <input type="checkbox" id="remember_me" name="_remember_me" value="on" tabindex="3"/>
+            <br/><br/>
+
+            <input type="submit" id="_submit" name="_submit" value="Login" class='btnMdm left'/>
+            <input type="button" class="btnMdm left marginlft" id="join_now" value="Join Now" onclick="showRegister();"/>
+        </form>
+    </div>
+    <br/><br/>
 
     <div>
-        <div style="display:none;">{{ form_rest(form) }}</div>
-        <input type="submit" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" formnovalidate />
+        <div style="width: 60%">
+            <a href="/app_dev.php/account/reset-password/request">Forgot Password?</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="/app_dev.php/contact">Need Help?</a>
+            <p>Your password is case sensitive. Please make sure CAPS-LOCK is off. If you've forgotten your password you can have it reset. If you can't remember which email address you used <a href="/app_dev.php/contact">please contact support</a>.</p>
+        </div>
     </div>
-
-</form>
+</div>

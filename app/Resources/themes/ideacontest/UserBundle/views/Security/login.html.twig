@@ -1,38 +1,59 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block content %}
-    <div>
-        {% if error %}
-            <div class="form_error">Invalid credentials, please try again.</div><br>
-        {% else %}
-            <h1>Please sign in:</h1>
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        {% if not error|default %}
+            if (getParameterByName('directLink') != true) {
+                redirectToRegister();
+            }
         {% endif %}
 
-        <form action="{{ path("_fos_user_security_check") }}" method="post">
+        function redirectToRegister() {
+            window.location = '{{ path('fos_user_registration_register') }}';
+        }
 
-            <label for="username">Email Address:</label>
-            <input type="text" id="username" name="_username" value="{{ last_username }}" class="auth" tabindex="1"/>
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+    </script>
+{% endblock %}
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="_password" class="auth" tabindex="2"/>
+{% block content %}
 
-            <label for="remember_me">{{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}</label>
-            <input type="checkbox" id="remember_me" name="_remember_me" value="on" tabindex="3"/>
+    <div id="login_content">
+        <div id="login_form">
+            {% if error %}
+                <div class="form_error">Invalid credentials, please try again.</div><br>
+            {% else %}
+                <h1>Please sign in:</h1>
+            {% endif %}
 
-            <br><br>
-            <input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" class='btnMdm left'/>
-            <a href="{{ path('fos_user_registration_register') }}"><input type="button" class="btnMdm left marginlft" value="Join Now"</a>
+            <form action="{{ path("_fos_user_security_check") }}" method="post">
+                <label for="username">Email Address:</label>
+                <input type="text" id="username" name="_username" value="{{ last_username }}" class="auth" tabindex="1"/>
 
-        </form>
-    </div><br/><br/>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="_password" class="auth" tabindex="2"/>
 
-    <div>
-        <div style="width: 60%">
-            <a href="{{ path('fos_user_resetting_request') }}">{{ 'platformd.user.login.forgot_password' | pd_trans }}</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-            <a href="{{ path('contact') }}">{{ 'platformd.user.login.need_help' | pd_trans }}</a>
-            <p>
-                {{ 'platformd.user.login.password_message' | pd_trans | format(path('contact')) | raw }}
-            </p>
+                <label for="remember_me">{{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}</label>
+                <input type="checkbox" id="remember_me" name="_remember_me" value="on" tabindex="3"/>
+                <br/><br/>
+
+                <input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans({}, 'FOSUserBundle') }}" class='btnMdm left'/>
+                <input type="button" class="btnMdm left marginlft" id="join_now" value="Join Now" onclick="redirectToRegister();"/>
+            </form>
+        </div>
+        <br/><br/>
+        <div>
+            <div style="width: 60%">
+                <a href="{{ path('fos_user_resetting_request') }}">{{ 'platformd.user.login.forgot_password' | pd_trans }}</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                <a href="{{ path('contact') }}">{{ 'platformd.user.login.need_help' | pd_trans }}</a>
+                <p>{{ 'platformd.user.login.password_message' | pd_trans | format(path('contact')) | raw }}</p>
+            </div>
         </div>
     </div>
 
