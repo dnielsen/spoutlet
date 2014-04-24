@@ -1079,15 +1079,17 @@ class IdeaController extends Controller
         $currentUser = $this->getCurrentUser();
 
         if ($userId == null) {
+            $this->enforceUserSecurity();
             $user = $currentUser;
         } else {
-            $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
-            $user     = $userRepo->findOneBy(array('id' => $userId));
+            $user = $this->getDoctrine()->getRepository('UserBundle:User')->find($userId);
+            if (!$user) {
+                throw new NotFoundHttpException;
+            }
         }
 
         $ownProfile = ($currentUser == $user);
         $isAdmin = $this->isGranted('ROLE_ADMIN');
-
 
         return $this->render('IdeaBundle:Idea:profile.html.twig', array(
                 'user'       => $user,
@@ -1104,6 +1106,7 @@ class IdeaController extends Controller
                 'userId' => $userId,
             )));
         }
+        $this->enforceUserSecurity();
 
         $currentUser = $this->getCurrentUser();
 
@@ -1153,6 +1156,7 @@ class IdeaController extends Controller
 
     public function userEntriesAction()
     {
+        $this->enforceUserSecurity();
         $userEntries = $this->getCurrentUser()->getIdeas();
 
         $parents = array();
@@ -1169,6 +1173,7 @@ class IdeaController extends Controller
 
     public function userPagesAction()
     {
+        $this->enforceUserSecurity();
         return $this->render('IdeaBundle:Idea:userPages.html.twig', array(
             'userPages' => $this->getCurrentUser()->getHtmlPages(),
         ));
@@ -1176,6 +1181,7 @@ class IdeaController extends Controller
 
     public function userEntrySetsAction()
     {
+        $this->enforceUserSecurity();
         $userEntrySets = $this->getCurrentUser()->getEntrySets();
 
         $parents = array();
