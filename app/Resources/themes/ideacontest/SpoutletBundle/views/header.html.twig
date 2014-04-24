@@ -17,45 +17,40 @@
             {% if app.user is null %}
                 <li><a href="{{ path('login', {'directLink': true}) }}">{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}</a></li>
                 <li><a href="{{ path('fos_user_registration_register') }}">Join Now</a></li>
-                <li><a href="{{ path('global_events_index') }}">Events</a></li>
-                <li><a href="{{ path('groups') }}">Groups</a></li>
-
             {% else %}
                 <li><a>{{ app.user.name }}</a>
                     <ul>
                         <li><a href="{{ path('accounts_settings') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
-                        <li><a href="{{ path('profile', {'userId': app.user.id}) }}">Profile</li>
+                        <li><a href="{{ path('profile') }}">Profile</li>
                         <li><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a></li>
                     </ul>
                 </li>
-
-                <li><a>Events</a>
-                    <ul>
-                        <li><a href="{{ path('global_events_index') }}">All Events</a></li>
-                        <li><a href="{{ path('accounts_events') }}">My Events</a></li>
-                        <li><a href="{{ path('accounts_groups', {'then': 'campsite_event'}) }}">Create Event</a></li>
-                    </ul>
-                </li>
-
-                <li><a>Groups</a>
-                    <ul>
-                        <li><a href="{{ path('groups') }}">All Groups</a></li>
-                        <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
-                        <li><a href="{{ path('group_new') }}">Create Group</a></li>
-                    </ul>
-                </li>
-
-                {% if is_granted('ROLE_SUPER_ADMIN') %}
-                    <li><a>Administration</a>
-                        <ul>
-                            <li><a href="{{ path('admin_index') }}">Admin Panel</a></li>
-                            <li><a href="{{ path('idea_admin_feedback') }}">View Feedback</a></li>
-                        </ul>
-                    </li>
-                {% endif %}
-
             {% endif %}
 
+            <li><a>Events</a>
+                <ul>
+                    <li><a href="{{ path('global_events_index') }}">All Events</a></li>
+                    <li><a href="{{ path('accounts_events') }}">My Events</a></li>
+                    <li><a href="{{ path('accounts_groups', {'then': 'campsite_event'}) }}">Create Event</a></li>
+                </ul>
+            </li>
+
+            <li><a>Groups</a>
+                <ul>
+                    <li><a href="{{ path('groups') }}">All Groups</a></li>
+                    <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
+                    <li><a href="{{ path('group_new') }}">Create Group</a></li>
+                </ul>
+            </li>
+
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <li><a>Administration</a>
+                    <ul>
+                        <li><a href="{{ path('admin_index') }}">Admin Panel</a></li>
+                        <li><a href="{{ path('idea_admin_feedback') }}">View Feedback</a></li>
+                    </ul>
+                </li>
+            {% endif %}
         </ul>
     </div>
 </div>
