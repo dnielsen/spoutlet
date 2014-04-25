@@ -418,6 +418,7 @@ class AdminController extends Controller
 
     public function entrySetAction(Request $request, $entrySetId)
     {
+        $this->enforceUserSecurity();
         $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
 
         if( $entrySetId == 'new' )
