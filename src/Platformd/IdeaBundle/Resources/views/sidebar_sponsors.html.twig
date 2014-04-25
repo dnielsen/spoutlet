@@ -31,10 +31,8 @@
             {% endif %}
         {% endif %}
 
-        <div class="sponsorBx">
-            <a href="{{ path('sponsor_view', {'id': sponsor.id}) }}">
-                <div class="sponsorImageBox"><img src="{{ media_path(sponsor.image) }}"></div>
-            </a>
+        <div class="sidebar_sponsorBx">
+            <a href="{{ path('sponsor_view', {'id': sponsor.id}) }}"><img src="{{ media_path(sponsor.image) }}"></a>
         </div>
 
         {% set lastLevel = currentLevel %}

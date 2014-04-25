@@ -25,10 +25,9 @@
 } */
 
 #header-campsite, #header-group {
-	position: relative;
+    position: relative;
 	width: 1050px;
 	margin: 0 auto;
-    height: 120px;
 }
 #topNav {
     position: fixed;
@@ -39,9 +38,6 @@
     height: 40px;
     font-size: 14px;
     border-bottom: 1px solid #ccc;
-    box-shadow: #BBBBBB 0px 3px 10px;
-    -webkit-box-shadow: #BBBBBB 0px 3px 10px;
-    -moz-box-shadow: #BBBBBB 0px 3px 10px;
 }
 #topNav-content {
     width: 100%;
@@ -62,13 +58,6 @@
 #topNav li a {
     display: inline;
 }
-#brand-campsite, #brand-group {
-    margin: 4px 0px;
-}
-#brand-campsite {
-    width: 305px;
-    height: 72px;
-}
 
 #brand-small {
     position: absolute;
@@ -77,10 +66,10 @@
     max-width: 200px;
 }
 #brand-group { /* see hack-global for #brand-group-txt styling */
-    position: absolute;
-    bottom: 0px;
-    max-height: 72px;
-    max-width: 830px;
+    max-height: 100px;
+    max-width: 1050px;
+    margin: 45px auto 4px;
+    display: block;
 }
 #tagline {
     position: absolute;
@@ -219,6 +208,18 @@
 			padding-left: 10px;
 			border-left: 1px solid #ccc;
 		}
+        .borderRt {
+            border-right: 1px solid #ccc;
+        }
+        .borderLft {
+            border-left: 1px solid #ccc;
+        }
+        .borderTop {
+            border-top: 1px solid #ccc;
+        }
+        .borderBtm {
+            border-bottom: 1px solid #ccc;
+        }
 
 #contentRt { /* see lists-links.css for button positioning */
 	float: right;
@@ -264,11 +265,18 @@
     }
 
 /*********** SUBPAGE CONTAINERs ***********/
-	
-    .col_third,.col_two_thirds,.col_half {
+
+    .col_third,.col_two_thirds,.col_half, .col_fifth, .col_three_fifths {
         margin: 0 0.5% 0 0.5%;
         display:inline-block;
         vertical-align: top;
+        overflow: hidden;
+    }
+    .col_fifth {
+        width: 19%;
+    }
+    .col_three_fifths {
+        width: 58%;
     }
     .col_third {
         width: 32%;
@@ -371,7 +379,6 @@
 	.session {
 		overflow:hidden;
 	}
-
 	.sponsorLogo {
         max-width: 600px;
         max-height: 400px;
@@ -379,6 +386,50 @@
     .sponsorLogoFill {
         max-width: 100%;
         max-height: 400px;
+    }
+    .sponsorBx, .sidebar_sponsorBx {
+        display: inline-block;
+        margin: 2px 2px 0 0;
+        vertical-align: top;
+    }
+    .sponsorBx {
+        width: 140px;
+    }
+    .sponsorImageBox {
+        width: 100%;
+        height: 100px;
+    }
+    .sponsorImageBox img, .sidebar_sponsorBx img {
+        max-width: 100%;
+        max-height: 100px;
+        display: block;
+        margin: auto;
+    }
+    .sponsorBx:hover,.sponsorBxLg:hover {
+        box-shadow: #2faad9 0 0 8px;
+    }
+    .sponsorBx a:hover, .sponsorBxLg a:hover {
+        text-decoration: none;
+        color: inherit; 
+    }
+    .sponsorLevelText {
+        width: 100%;
+        padding: 6px 0;
+        text-align: center;
+        font-size: 1.5em;
+    }
+    .platText   { 
+        background: linear-gradient(grey, silver);
+        color: white;
+    }
+    .goldText     { 
+        background: linear-gradient(gold, white);
+    }
+    .silverText   { 
+        background: linear-gradient(silver, white);
+    }
+    .bronzeText   { 
+        background: linear-gradient(chocolate, white);
     }
 
     .sliderImage {

@@ -1668,22 +1668,15 @@ Alienware Arena Team
     {
         $group = $this->getGroupBySlug($slug);
 
-        $pastEvents     = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group, 6);
-        $ongoingEvents  = $this->getGroupEventService()->findOngoingEventsForGroup($group, 6);
-        $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group, 6);
-
-        $nextEvent = reset($upcomingEvents);
-        $moreEvents = array_slice($upcomingEvents, 1);
-
-        $groupEvents = array_merge($ongoingEvents, $moreEvents);
+        $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group);
+        $pastEvents     = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group);
 
         $locationGroups = array();
         $locationGroups = $this->collectLocations($group, $locationGroups);
 
         return $this->render('GroupBundle:Group:show.html.twig', array(
             'group'          => $group,
-            'nextEvent'      => $nextEvent,
-            'groupEvents'    => $groupEvents,
+            'upcomingEvents' => $upcomingEvents,
             'pastEvents'     => $pastEvents,
             'locationGroups' => $locationGroups,
         ));

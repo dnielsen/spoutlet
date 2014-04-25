@@ -142,7 +142,7 @@
 
                     <a href="{{ event.externalUrl }}" class="btnLg2" target="_blank">Register to Attend</a>
                     {% if not event.isUserAttending(user) %}
-                        <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Join Discussion</a>
+                        <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Participate Online</a>
                     {% endif %}
                     {% set userNoun = 'contributor' %}
                     {% set userVerb = 'contributing' %}

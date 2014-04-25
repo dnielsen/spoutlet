@@ -1,7 +1,7 @@
 {% extends 'IdeaBundle::group_layout.html.twig' %}
 
 {% block title %}
-    {{ group.name }}
+    {{ group.name }} | Campsite
 {% endblock %}
 
 {% block javascripts %}
@@ -33,6 +33,7 @@
             });
         </script>
     {% endif %}
+
     <script id="addJS">
         jQuery(document).ready(function($) {
             // Please note that autoHeight option has some conflicts with options like imageScaleMode, imageAlignCenter and autoScaleSlider
@@ -62,148 +63,174 @@
 
 {% block group_content %}
 
-    <div id="contentLft">
-        {% if group.slides | default | length > 0 %}
-            <div class="content-slider-bg">
-                <div id="content-slider-1" class="royalSlider contentSlider rsDefault">
-                    {% for slide in group.slides %}
+    <div class="col_fifth">
 
-                        <div>
-                            <a href="{{ slide.url }}" target="_blank"><img class="sliderImage" src="{{ media_path(slide.image) }}"></a>
-                            <span class="rsTmb">
-                                {{ slide.text }}
-                            </span>
-                        </div>
+        <a href="{{ path('entry_set_new', {'registrationId': group.entrySetRegistration.id, 'entrySetId': 'new'}) }}" class="btnLg2">Create New List</a>
 
-                    {% endfor %}
-                </div>
-            </div>
-            <hr/>
+        {% if group.entrySets|length > 0 %}
+            <h2 class="widgetHeader">Lists</h2>
+            <ul class="scrollableWidget">
+                {% for entrySet in group.entrySets %}
+                    <li class="spcr-t7 spcr-l3 borderBtm">
+                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
+                    </li>
+                {% endfor %}
+            </ul>
         {% endif %}
 
         {% if group.htmlPages|length > 0 %}
-        <div class="rowBx card ctr spcr-b2 midtxt">
-            {% for page in group.htmlPages %}
-                {% if not loop.first %}&nbsp;|&nbsp;{% endif %}<a href="{{ path('page_view', {'id': page.id}) }}" class="blu">{{ page.title }}</a>
-            {% endfor %}
-        </div>
+            <div class="rowBx card ctr spcr-b2 spcr-t midtxt">
+                <h2 class="ctr">Documents</h2>
+                {% for page in group.htmlPages %}
+                    <hr class="small-margin"/>
+                    <a href="{{ path('page_view', {'id': page.id}) }}" class="blu">{{ page.title }}</a><br/>
+                {% endfor %}
+            </div>
         {% endif %}
+
+        {% if group.sponsors|length > 0 %}
+            {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
+        {% endif %}
+
+    </div>
+
+    <div class="col_three_fifths">
 
         {% if group.description | default %}
             <div class="rowBx">
                 {{ group.description | raw }}
                 <div class="clr"></div>
             </div>
-            <hr/>
         {% endif %}
 
-        {% if group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_TOPIC') and locationGroups|default %}
-        <div id="map">
-            <h2>Find a {{ group.name }} Near You</h2>
-            <input id="map-location-search" type="text" size="50" placeholder="Enter your location" autocomplete="off">
-            <div id="map-canvas" style="width:730px;height:320px"></div>
+        {% if upcomingEvents|length > 0 or pastEvents|length > 0 %}
+            <div class="entry_set_list">
+
+            {% for event in upcomingEvents %}
+                <div class="card spcr-b3">
+                    <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}"><h2 class="ctr blu spcr-b2">{{ event.name }}</h2></a>
+                    <hr class="small-margin"/>
+                    <div class="col_third borderRt">
+                        {% if not (event.isUserAttending(app.user)) %}
+                            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg spcr-t">{% if event.externalUrl %}Participate Online{% else %}Attend Event{% endif %}</a>
+                        {% endif %}
+                        <p>
+                            <h2>When</h2>
+                            {{ event.DateAndTime|raw }}
+                        </p>
+                        <hr class="small-margin"/>
+                        {% if not event.getOnline %}
+                            <p>
+                                <h2>Where</h2>
+                                {{ event.location }}<br/>
+                                <a href="http://maps.google.com/?q={{ event.address1 }}, {{ event.address2 }}">{{ event.address1 }}<br/>
+                                {{ event.address2 }}</a>
+                            </p>
+                            <hr class="small-margin"/>
+                        {% endif %}
+
+                        {% if event.sessions|length > 0 %}
+                            <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}"><h3 class="blu">Session Schedule</h3></a>
+                            <hr class="small-margin"/>
+                        {% endif %}
+
+                        {% if event.entrySets|length > 0 %}
+                            <h2 class="spcr-t">Lists</h2>
+                            <ul>
+                                {% for entrySet in event.entrySets %}
+                                    <li class="spcr-t7">
+                                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <hr class="small-margin"/>
+                        {% endif %}
+                    </div>
+
+                    <div class="col_two_thirds">
+                        {{ event.content|raw }}
+                    </div>
+
+                </div>
+            {% endfor %}
+
+            {% for event in pastEvents %}
+                <div class="card spcr-b3">
+                    <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}"><h2 class="ctr blu spcr-b2">{{ event.name }}</h2></a>
+                    <hr class="small-margin"/>
+                    <div class="col_third borderRt">
+                        <p>
+                            <h2>When</h2>
+                            {{ event.DateAndTime|raw }}
+                        </p>
+                        <hr class="small-margin"/>
+                        {% if not event.getOnline %}
+                            <p>
+                                <h2>Where</h2>
+                                {{ event.location }}<br/>
+                                <a href="http://maps.google.com/?q={{ event.address1 }}, {{ event.address2 }}">{{ event.address1 }}<br/>
+                                {{ event.address2 }}</a>
+                            </p>
+                            <hr class="small-margin"/>
+                        {% endif %}
+
+                        {% if event.sessions|length > 0 %}
+                            <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}"><h3 class="blu">Session Schedule</h3></a>
+                            <hr class="small-margin"/>
+                        {% endif %}
+
+                        {% if event.entrySets|length > 0 %}
+                            <h2 class="spcr-t">Lists</h2>
+                            <ul>
+                                {% for entrySet in event.entrySets %}
+                                    <li class="spcr-t7">
+                                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <hr class="small-margin"/>
+                        {% endif %}
+                    </div>
+
+                    <div class="col_two_thirds">
+                        {{ event.content|raw }}
+                    </div>
+
+                </div>
+            {% endfor %}
+            
         </div>
         {% endif %}
 
-        {% if nextEvent %}
-            <div class="cBxLft">
-                <table class="tblStyle">
-                    <thead>
-                        <tr>
-                            <td colspan="2">
-                                <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="blue left">{{ nextEvent.name }}</a>
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td colspan="2">
-                            {{ nextEvent.attendeeCount }} attendee{% if nextEvent.attendeeCount != 1 %}s{% endif %}
-                            {% if not (nextEvent.isUserAttending(app.user)) %}
-                                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': nextEvent.id}) }}" class="btn right">{% if nextEvent.externalUrl %}Join Discussion{% else %}Attend{% endif %}</a></td>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td width="20%"><strong>When:</strong></td>
-                        <td width="80%">{{ nextEvent.DateAndTime|raw }}</td>
-                    </tr>
-                    {% if not nextEvent.getOnline %}
-                        <tr>
-                            <td><strong>Where:</strong>
-                            <td>
-                                {{ nextEvent.location }}<br/>
-                                <a href="http://maps.google.com/?q={{ nextEvent.address1 }}, {{ nextEvent.address2 }}">{{ nextEvent.address1 }}<br/>
-                                {{ nextEvent.address2 }}</a>
-                            </td>
-                        </tr>
-                    {% endif %}
-                    </tbody>
-                </table>
-            </div>
-            <div class="cBxRt">
-                {% if not nextEvent.getOnline %}
-                    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
-                    <div id="event-location-map">{{ vichgeo_map_for('large_location', nextEvent) }}</div>
-                {% elseif groupEvents %}
-                    <h2 class="widgetHeader">More Upcoming Events</h2>
-                    <ul class="scrollableWidget">
-                        {% for event in groupEvents %}
-                            <li class="spcr-t7 spcr-l3">
-                                <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu">{{ event.name }}</h3></a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blue right">All Events</a>
-                {% elseif group.entrySets|length > 0 %}
-                    <h2 class="widgetHeader">Lists</h2>
-                    <ul class="scrollableWidget">
-                        {% for entrySet in group.entrySets %}
-                            <li class="spcr-t7 spcr-l3">
-                                <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                {% elseif pastEvents|length > 0 %}
-                    <h2 class="widgetHeader">Past Events</h2>
-                    <ul class="scrollableWidget">
-                        {% for event in pastEvents %}
-                            <li class="spcr-t7 spcr-l3">
-                                <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu">{{ event.name }}</h3></a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    <a href="{{ path('group_events', {'slug': group.slug}) }}#past" class="blue right">See All</a>
-                {% endif %}
-
+        {% if group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_TOPIC') and locationGroups|default %}
+            <div id="map">
+                <h2>Find a {{ group.name }} Near You</h2>
+                <input id="map-location-search" type="text" size="50" placeholder="Enter your location" autocomplete="off">
+                <div id="map-canvas"></div>
             </div>
         {% endif %}
+
     </div>
-    <div id="contentRt">
+
+    <div class="col_fifth">
 
         {% if not group.isMember(user) %}
-            <div id="registrationBanner">
-                <a href="{{ path('group_join', {'slug': group.slug}) }}" class="btnLg2">Join This Group</a>
-            </div>
+            <a href="{{ path('group_join', {'slug': group.slug}) }}" class="btnLg2">Join This Group</a>
+        {% elseif group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_TOPIC')%}
+            <a href="{{ path('group_new', {'parentGroupId': group.id}) }}" class="btnLg2">Create Local Group</a>
         {% endif %}
 
-        {% if groupEvents %}{% set renderMoreEvents = true %}{% else %}{% set renderMoreEvents = false %}{% endif %}
-        {% if group.entrySets|length > 0 %}{% set renderEntrySets = true %}{% else %}{% set renderEntrySets = false %}{% endif %}
-        {% if pastEvents|length > 0 %}{% set renderPastEvents = true %}{% else %}{% set renderPastEvents = false %}{% endif %}
-        {% if group.sponsors|length > 0 %}{% set renderSponsors = true %}{% else %}{% set renderSponsors = false %}{% endif %}
-        {% if group.children|length > 0 %}{% set renderChildrenGroups = true %}{% else %}{% set renderChildrenGroups = false %}{% endif %}
-        {% if group.parent|default %}{% set renderParentGroup = true %}{% else %}{% set renderParentGroup = false %}{% endif %}
-
-        {% if nextEvent %}
-            {% if nextEvent.getOnline %}
-                {% if groupEvents %}
-                    {% set renderMoreEvents = false %}
-                {% elseif group.entrySets|length > 0 %}
-                    {% set renderEntrySets = false %}
-                {% elseif pastEvents|length > 0 %}
-                    {% set renderPastEvents = false %}
-                {% endif %}
-            {% endif %}
+        {% if group.children|length > 0 %}
+            <h2 class="widgetHeader">Local Groups</h2>
+            <ul class="scrollableWidget spcr-b3">
+                {% for child in group.children %}
+                    {% if not child.deleted %}
+                        <li class="spcr-t7 spcr-l3 borderBtm">
+                            <a href="{{ child | pd_link }}"><h3 class="blu">{{ child.name }}</h3></a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
         {% endif %}
 
         <div class="spcr-t spcr-b2">
@@ -213,78 +240,30 @@
 
         <div class="clr"></div>
 
-        {% if renderSponsors %}
-            {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
-        {% endif %}
-
-        {% if renderMoreEvents %}
-            <h2 class="widgetHeader">More Upcoming Events</h2>
-            <ul class="scrollableWidget spcr-b3">
-                {% for event in groupEvents %}
-                    <li class="spcr-t7 spcr-l3">
-                        <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu">{{ event.name }}</h3></a>
-                    </li>
-                {% endfor %}
-            </ul>
-            <a href="{{ path('group_events', {'slug': group.slug}) }}" class="blue right">All Events</a>
-        {% endif %}
-
-        {% if renderPastEvents %}
-            <h2 class="widgetHeader">Past Events</h2>
-            <ul class="scrollableWidget spcr-b3">
-                {% for event in pastEvents %}
-                    <li class="spcr-t7 spcr-l3">
-                        <a href="{{ path('group_event_view', { 'groupSlug': group.slug, 'eventId': event.id }) }}" class="midtxt"><h3 class="blu">{{ event.name }}</h3></a>
-                    </li>
-                {% endfor %}
-            </ul>
-            <a href="{{ path('group_events', {'slug': group.slug}) }}#past" class="blue right">See All</a>
-        {% endif %}
-
-        {% if renderEntrySets %}
-            <h2 class="widgetHeader">Lists</h2>
-            <ul class="scrollableWidget spcr-b3">
-                {% for entrySet in group.entrySets %}
-                    <li class="spcr-t7 spcr-l3">
-                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-
-        {% if renderChildrenGroups %}
-            <h2 class="widgetHeader">Sub Groups</h2>
-            <ul class="scrollableWidget spcr-b3">
-                {% for child in group.children %}
-                    {% if not child.deleted %}
-                        <li class="spcr-t7 spcr-l3">
-                            <a href="{{ child | pd_link }}"><h3 class="blu">{{ child.name }}</h3></a>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        {% endif %}
-
-        {% if renderParentGroup %}
+        {% if group.parent|default %}
             <h2 class="widgetHeader">Parent Group</h2>
             <div class="spcr-b3 spcr-l3">
                 <a href="{{ group.parent | pd_link }}" ><h3 class="blu">{{ group.parent.name }}</h3></a>
             </div>
         {% endif %}
 
-        <h2 class="widgetHeader">{{ group.members|length }} Member{% if group.members|length > 1 %}s{% endif %}</h2>
-        <a href="{{ path('profile', {userId: group.owner.id}) }}"><h3 class="blu spcr-t spcr-l3 midtxt">{{ group.owner.name }} (Organizer)</h3></a>
-        <ul class="spcr-b3">
-            {% for member in group.members %}
-                {% if member.id != group.owner.id %}
-                    <li class="spcr-t7 spcr-l3">
-                        <a href="{{ path('profile', {'userId': member.id}) }}"><h3 class="blu">{{ member.name }}</h3></a>
-                    </li>
-                {% endif %}
-            {% else %}
-                There are no members of this group yet.
-            {% endfor %}
-        </ul>
+
+        {% if group.members|default %}
+            <h2 class="widgetHeader">{{ group.members|length }} Member{% if group.members|length > 1 %}s{% endif %}</h2>
+            <a href="{{ path('profile', {userId: group.owner.id}) }}"><h3 class="blu spcr-t spcr-l3 midtxt">{{ group.owner.name }} (Organizer)</h3></a>
+            <ul class="spcr-b3">
+                {% for member in group.members %}
+                    {% if member.id != group.owner.id %}
+                        <li class="spcr-t7 spcr-l3">
+                            <a href="{{ path('profile', {'userId': member.id}) }}"><h3 class="blu">{{ member.name }}</h3></a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% else %}
+            There are no members of this group yet.
+        {% endif %}
+
     </div>
 
 {% endblock %}
