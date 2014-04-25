@@ -405,6 +405,12 @@
         display: block;
         margin: auto;
     }
+    .sponsorImageBox img {
+        max-width: 100%;
+    }
+    .sidebar_sponsorBx img {
+        max-width: 98%;
+    }
     .sponsorBx:hover,.sponsorBxLg:hover {
         box-shadow: #2faad9 0 0 8px;
     }
@@ -414,9 +420,9 @@
     }
     .sponsorLevelText {
         width: 100%;
-        padding: 6px 0;
+        padding: 10px 0;
         text-align: center;
-        font-size: 1.5em;
+        font-size: 1.3em;
     }
     .platText   { 
         background: linear-gradient(grey, silver);
