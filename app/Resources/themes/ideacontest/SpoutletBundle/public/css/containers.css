@@ -330,6 +330,7 @@
         box-shadow: #ccc 0 2px 2px;
         -webkit-box-shadow: #ccc 0 2px 2px;
         -moz-box-shadow: #ccc 0 2px 2px;
+        overflow: hidden;
     }
     .card:hover {
         box-shadow: #ccc 0 6px 6px;
