@@ -376,6 +376,11 @@
         -webkit-box-shadow: #ccc 0 2px 2px;
         -moz-box-shadow: #ccc 0 2px 2px;
     }
+    .event-summary {
+        max-height: 500px;
+        overflow: hidden;
+        -webkit-mask-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 1) 480px, rgba(0, 0, 0, 0) 500px);
+    }
 	.session {
 		overflow:hidden;
 	}

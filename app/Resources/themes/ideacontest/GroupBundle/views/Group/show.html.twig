@@ -93,95 +93,106 @@
             <div class="card_list">
 
             {% for event in upcomingEvents %}
-                <div class="card spcr-b3">
-                    <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}"><h2 class="ctr blu spcr-b2">{{ event.name }}</h2></a>
-                    <hr class="small-margin"/>
-                    <div class="col_third borderRt">
-                        {% if not (event.isUserAttending(app.user)) %}
-                            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg spcr-t">{% if event.externalUrl %}Participate Online{% else %}Attend Event{% endif %}</a>
-                        {% endif %}
-                        <p>
-                            <h2>When</h2>
-                            {{ event.DateAndTime|raw }}
-                        </p>
+                <div class="card spcr-b2">
+                    <div class="event-summary">
+                        <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}"><h2 class="ctr blu spcr-b2">{{ event.name }}</h2></a>
                         <hr class="small-margin"/>
-                        {% if not event.getOnline %}
+                        <div class="col_third borderRt">
+                            {% if not (event.isUserAttending(app.user)) %}
+                                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg spcr-t">{% if event.externalUrl %}Participate Online{% else %}Attend Event{% endif %}</a>
+                            {% endif %}
                             <p>
-                                <h2>Where</h2>
-                                {{ event.location }}<br/>
-                                <a href="http://maps.google.com/?q={{ event.address1 }}, {{ event.address2 }}">{{ event.address1 }}<br/>
-                                {{ event.address2 }}</a>
+                                <h2>When</h2>
+                                {{ event.DateAndTime|raw }}
                             </p>
                             <hr class="small-margin"/>
-                        {% endif %}
+                            {% if not event.getOnline %}
+                                <p>
+                                    <h2>Where</h2>
+                                    {{ event.location }}<br/>
+                                    <a href="http://maps.google.com/?q={{ event.address1 }}, {{ event.address2 }}">{{ event.address1 }}<br/>
+                                    {{ event.address2 }}</a>
+                                </p>
+                                <hr class="small-margin"/>
+                            {% endif %}
 
-                        {% if event.sessions|length > 0 %}
-                            <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}"><h3 class="blu">Session Schedule</h3></a>
-                            <hr class="small-margin"/>
-                        {% endif %}
+                            {% if event.sessions|length > 0 %}
+                                <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}"><h3 class="blu">Session Schedule</h3></a>
+                                <hr class="small-margin"/>
+                            {% endif %}
 
-                        {% if event.entrySets|length > 0 %}
-                            <h2 class="spcr-t">Lists</h2>
-                            <ul>
-                                {% for entrySet in event.entrySets %}
-                                    <li class="spcr-t7">
-                                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                            <hr class="small-margin"/>
-                        {% endif %}
+                            {% if event.entrySets|length > 0 %}
+                                <h2 class="spcr-t">Lists</h2>
+                                <ul>
+                                    {% for entrySet in event.entrySets %}
+                                        <li class="spcr-t7">
+                                            <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <hr class="small-margin"/>
+                            {% endif %}
+                        </div>
+
+                        <div class="col_two_thirds">
+                            {{ event.content|raw }}
+                        </div>
                     </div>
 
-                    <div class="col_two_thirds">
-                        {{ event.content|raw }}
+                    <div class="event-see-more">
+                        <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}"><h3 class="blu ctr">See More</h3></a>
                     </div>
-
                 </div>
+
             {% endfor %}
 
             {% for event in pastEvents %}
-                <div class="card spcr-b3">
-                    <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}"><h2 class="ctr blu spcr-b2">{{ event.name }}</h2></a>
-                    <hr class="small-margin"/>
-                    <div class="col_third borderRt">
-                        <p>
-                            <h2>When</h2>
-                            {{ event.DateAndTime|raw }}
-                        </p>
+                <div class="card spcr-b2">
+                    <div class="event-summary">
+                        <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}"><h2 class="ctr blu spcr-b2">{{ event.name }}</h2></a>
                         <hr class="small-margin"/>
-                        {% if not event.getOnline %}
+                        <div class="col_third borderRt">
                             <p>
-                                <h2>Where</h2>
-                                {{ event.location }}<br/>
-                                <a href="http://maps.google.com/?q={{ event.address1 }}, {{ event.address2 }}">{{ event.address1 }}<br/>
-                                {{ event.address2 }}</a>
+                                <h2>When</h2>
+                                {{ event.DateAndTime|raw }}
                             </p>
                             <hr class="small-margin"/>
-                        {% endif %}
+                            {% if not event.getOnline %}
+                                <p>
+                                    <h2>Where</h2>
+                                    {{ event.location }}<br/>
+                                    <a href="http://maps.google.com/?q={{ event.address1 }}, {{ event.address2 }}">{{ event.address1 }}<br/>
+                                    {{ event.address2 }}</a>
+                                </p>
+                                <hr class="small-margin"/>
+                            {% endif %}
 
-                        {% if event.sessions|length > 0 %}
-                            <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}"><h3 class="blu">Session Schedule</h3></a>
-                            <hr class="small-margin"/>
-                        {% endif %}
+                            {% if event.sessions|length > 0 %}
+                                <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}"><h3 class="blu">Session Schedule</h3></a>
+                                <hr class="small-margin"/>
+                            {% endif %}
 
-                        {% if event.entrySets|length > 0 %}
-                            <h2 class="spcr-t">Lists</h2>
-                            <ul>
-                                {% for entrySet in event.entrySets %}
-                                    <li class="spcr-t7">
-                                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                            <hr class="small-margin"/>
-                        {% endif %}
+                            {% if event.entrySets|length > 0 %}
+                                <h2 class="spcr-t">Lists</h2>
+                                <ul>
+                                    {% for entrySet in event.entrySets %}
+                                        <li class="spcr-t7">
+                                            <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                                <hr class="small-margin"/>
+                            {% endif %}
+                        </div>
+
+                        <div class="col_two_thirds">
+                            {{ event.content|raw }}
+                        </div>
                     </div>
 
-                    <div class="col_two_thirds">
-                        {{ event.content|raw }}
+                    <div class="event-see-more">
+                        <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}"><h3 class="blu ctr">See More</h3></a>
                     </div>
-
                 </div>
             {% endfor %}
             
