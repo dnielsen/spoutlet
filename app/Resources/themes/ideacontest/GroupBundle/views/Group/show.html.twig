@@ -45,7 +45,7 @@
             <h2 class="widgetHeader">Lists</h2>
             <ul class="scrollableWidget">
                 {% for entrySet in group.entrySets %}
-                    <li class="spcr-t7 spcr-l3 borderBtm">
+                    <li class="padtop padbtm spcr-l3 borderBtm">
                         <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
                     </li>
                 {% endfor %}
@@ -62,8 +62,20 @@
             </div>
         {% endif %}
 
-        {% if group.sponsors|length > 0 %}
-            {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
+        {% if group.members|default %}
+            <h2 class="widgetHeader">{{ group.members|length }} Member{% if group.members|length > 1 %}s{% endif %}</h2>
+            <a href="{{ path('profile', {userId: group.owner.id}) }}"><h3 class="blu spcr-t spcr-l3 midtxt">{{ group.owner.name }} (Organizer)</h3></a>
+            <ul class="spcr-b3">
+                {% for member in group.members %}
+                    {% if member.id != group.owner.id %}
+                        <li class="spcr-t7 spcr-l3">
+                            <a href="{{ path('profile', {'userId': member.id}) }}"><h3 class="blu">{{ member.name }}</h3></a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% else %}
+            There are no members of this group yet.
         {% endif %}
 
     </div>
@@ -199,7 +211,7 @@
             <ul class="scrollableWidget spcr-b3">
                 {% for child in group.children %}
                     {% if not child.deleted %}
-                        <li class="spcr-t7 spcr-l3 borderBtm">
+                        <li class="padtop padbtm spcr-l3 borderBtm">
                             <a href="{{ child | pd_link }}"><h3 class="blu">{{ child.name }}</h3></a>
                         </li>
                     {% endif %}
@@ -216,26 +228,13 @@
 
         {% if group.parent|default %}
             <h2 class="widgetHeader">Parent Group</h2>
-            <div class="spcr-b3 spcr-l3">
+            <div class="padtop padbtm spcr-l3">
                 <a href="{{ group.parent | pd_link }}" ><h3 class="blu">{{ group.parent.name }}</h3></a>
             </div>
         {% endif %}
-
-
-        {% if group.members|default %}
-            <h2 class="widgetHeader">{{ group.members|length }} Member{% if group.members|length > 1 %}s{% endif %}</h2>
-            <a href="{{ path('profile', {userId: group.owner.id}) }}"><h3 class="blu spcr-t spcr-l3 midtxt">{{ group.owner.name }} (Organizer)</h3></a>
-            <ul class="spcr-b3">
-                {% for member in group.members %}
-                    {% if member.id != group.owner.id %}
-                        <li class="spcr-t7 spcr-l3">
-                            <a href="{{ path('profile', {'userId': member.id}) }}"><h3 class="blu">{{ member.name }}</h3></a>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        {% else %}
-            There are no members of this group yet.
+        
+        {% if group.sponsors|length > 0 %}
+            {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
         {% endif %}
 
     </div>
