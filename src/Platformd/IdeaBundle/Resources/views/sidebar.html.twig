@@ -1,55 +1,39 @@
 {% if event|default %}
 
     {# Always display registration link if it's external, only show it if you're not attending if it's internal #}
-    {% if event.externalUrl|default or not event.isUserAttending(user) %}
-        <div id="registrationBanner">
-            {% if event.externalUrl|default %}
-
-                <a href="{{ event.externalUrl }}" class="btnLg2" target="_blank">Register to Attend</a>
-                {% if not event.isUserAttending(user) %}
-                    <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Join Discussion</a>
-                {% endif %}
-
-            {% elseif not event.isUserAttending(user) %}
-                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Attend Event</a>
+    <div class="spcr-b">
+        {% if event.externalUrl|default %}
+            <a href="{{ event.externalUrl }}" class="btnLg2" target="_blank">Register to Attend</a>
+            {% if not event.isUserAttending(user) %}
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Participate Online</a>
             {% endif %}
-        </div>
-    {% endif %}
+        {% elseif not event.isUserAttending(user) %}
+            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Register to Attend</a>
+        {% endif %}
+    </div>
 
     {# If there are sessions scheduled, and we're not already looking at the schedule page #}
     {% if event.sessions | length > 0 and not eventSessions|default %}
         <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}" class="btnLg2">Session Schedule</a>
     {% endif %}
 
-    {% if event.sponsors|length > 0 %}
-        {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
-    {% endif %}
+    <div class="event-details ctr">
+        <h2>{{ event.name }}</h2>
+        <hr class="small-margin"/>
+        {% if event.startsAt|default %}
+            <h2>When:</h2>
+            {{ event.DateAndTime|raw }}
+            {% if event.location|default %}
+                <hr class="small-margin"/>
+            {% endif %}
+        {% endif %}
 
-    <table id="eventDetails" class="tblStyle fillWidth spcr-b3">
-        <th colspan="2">Event Details</th>
-        {% if event.startsAt %}
-            <tr>
-                <td width="25%"><strong>When:</strong></td>
-                <td width="75%">{{ event.DateAndTime|raw }}</td>
-            </tr>
+        {% if event.location|default %}
+            <h2>Where:</h2>
+            {{ event.location }}<br/>
+            <a href="http://maps.google.com/?q={{ event.address1 }}, {{ event.address2 }}" target="_blank" class="blu">{{ event.address1 }}<br/>{{ event.address2 }}</a>
         {% endif %}
-        {% if event.location %}
-            <tr>
-                <td width="25%"><strong>Where:</strong></td>
-                <td width="75%">{{ event.location }}</td>
-            </tr>
-            <tr>
-                <td width="25%"><strong>Address:</strong></td>
-                <td><a href="http://maps.google.com/?q={{ event.address1 }}, {{ event.address2 }}">{{ event.address1 }}<br/>{{ event.address2 }}</a></td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
-                    <div id="event-location-map">{{ vichgeo_map_for('location', event) }}</div>
-                </td>
-            </tr>
-        {% endif %}
-    </table>
+    </div>
 
     {% set minEntrySetNumber = 0 %} {% if entrySet|default %} {% set minEntrySetNumber = 1 %} {% endif %}
 
@@ -66,22 +50,15 @@
         </ul>
     {% endif %}
 
-{% elseif group|default %}
-
-    {% if not group.isMember(user) %}
-        <div id="registrationBanner">
-            <a href="{{ path('group_join', {'slug': group.slug}) }}" class="btnLg2">Join This Group</a>
-        </div>
-    {% endif %}
-
-    {% if group.sponsors|length > 0 %}
+    {% if event.sponsors|length > 0 %}
         {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
     {% endif %}
 
-    <h2 class="widgetHeader">Group Description</h2>
-    <div class="scrollableWidgetLarge spcr-b3">
-        {{ group.description | raw }}
-    </div>
+{% elseif group|default %}
+
+    {% if not group.isMember(user) %}
+        <a href="{{ path('group_join', {'slug': group.slug}) }}" class="btnLg2">Join This Group</a>
+    {% endif %}
 
     {% set minEntrySetNumber = 0 %} {% if entrySet|default %} {% set minEntrySetNumber = 1 %} {% endif %}
 
@@ -96,6 +73,10 @@
                 {% endif %}
             {% endfor %}
         </ul>
+    {% endif %}
+
+    {% if group.sponsors|length > 0 %}
+        {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
     {% endif %}
 
 {% endif %}

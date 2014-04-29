@@ -2,209 +2,195 @@
 
 {% block event_content %}
 
-    <div id="contentLft">
-        <h1 class="ctr spcr-b3">{{ event.name }}</h1>
+<div class="col_fifth">
+    <a href="{{ path('entry_set_new', {'registrationId': event.entrySetRegistration.id, 'entrySetId': 'new'}) }}" class="btnLg2">Create New List</a>
 
-        <div id="eventSummary">
+    {% if event.entrySets|length > 0 %}
+        <h2 class="widgetHeader">Lists</h2>
+        <ul class="scrollableWidget">
+            {% for entrySet in event.entrySets %}
+                <li class="spcr-l3 padtop padbtm borderBtm">
+                    <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
-            {% if event.htmlPages|length > 0 %}
-            <div class="rowBx card ctr spcr-b2 midtxt">
-                {% for page in event.htmlPages %}
-                    {% if not loop.first %}&nbsp;|&nbsp;{% endif %}<a href="{{ path('page_view', {'id': page.id}) }}" class="blu">{{ page.title }}</a>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            {% set numImages = event.rotatorImages|length %}
-
-            {% if numImages > 0 %}
-                <div class="intro">
-                    <div id="slideshow" class="pics">
-
-                        {% for image in event.rotatorImages %}
-
-                        <div class="unicusSlides">
-                            <a href="#">
-                                <img src="{{  media_path(image) }}" width="644" height="340"/>
-                            </a>
-                        </div>
-
-                        {% endfor %}
-
-                    </div>
-                    {% if numImages > 1 %}
-                        <ul id="bullets"></ul> <!-- nav bullets -->
-                    {% endif %}
-                 </div>
-
-                <script type="text/javascript">
-                    $(function() {
-                        $('#slideshow').cycle({
-                            fx:     'scrollHorz',
-                            speed:  400,
-                            timeout: 6000,
-                            cleartypeNoBg: true,
-                            pager:  '#bullets',
-                            pagerAnchorBuilder: function paginate(idx, el) {
-                                return '<a class="service' + idx + '" href="#" >&bull;</a>';
-                            }
-                        });
-                    });
-                </script>
-            {% endif %}
-
-            <div class="event-details">
-                {% if event.startsAt %}
-                    <div class="col_half">
-                        <h2>When:</h2>
-                        {{ event.DateAndTime|raw }}
-                    </div>
-                {% endif %}
-
-                {% if event.location %}
-                    <div class="col_half">
-                        <h2>Where:</h2>
-                        {{ event.location }}<br/>
-                        <a href="http://maps.google.com/?q={{ event.address1 }}, {{ event.address2 }}" target="_blank">{{ event.address1 }}<br/>{{ event.address2 }}</a>
-                    </div> 
-                {% endif %}
-            </div>
-
-            {{ event.content | raw }}
+    {% if event.htmlPages|length > 0 %}
+        <div class="rowBx card ctr spcr-b2 spcr-t midtxt">
+            <h2 class="ctr">Documents</h2>
+            {% for page in event.htmlPages %}
+                <hr class="small-margin"/>
+                <a href="{{ path('page_view', {'id': page.id}) }}" class="blu">{{ page.title }}</a><br/>
+            {% endfor %}
         </div>
+    {% endif %}
 
-        {# For now -- get first entrySet -- need to implement list chooser #}
-        {% if event.sessions | length > 0 %}
-            <h2 class="left">Session Schedule</h2><a href="{{ path('event_session_schedule', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="blue right">View All</a>
-
-            <table class="clr tblStyle sessions fillWidth">
-                {% for date,sessions in event.sessionsByDate %}
-                    <tr class="date">
-                        <td colspan="2">
-                            {{ date }}
-                        </td>
-                    </tr>
-                    {% set i=0 %}
-                    {% for evtSession in sessions %}
-                        {% set i=i+1 %}
-                        <tr{% if i%2 %} class="fill"{% endif %}>
-                            <td>{% if evtSession.startsAt|default %}{{ evtSession.timeRangeString }}{% endif %}</td>
-                            <td><a href="{{ path('event_session', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': evtSession.id}) }}">{{ evtSession.name }}</a></td>
-                        </tr>
-                    {% endfor %}
-                {% endfor %}
-            </table>
-        {% elseif event.entrySets | length > 0 %}
-        {% set entrySet = event.entrySets[0] %}
-            <h2 class="left">{{ entrySet.name }}</h2><a href="{{ entrySet | pd_link }}" class="right btn spcr-b3">View All {{ entrySet.type | capitalize }}s</a>
-            <table class="tblStyle fillWidth">
-
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Votes</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% set i=0 %}
-                    {% for entry in entrySet.popularEntries %}
-                        {% set i=i+1 %}
-                        <tr{% if i%2 %} class="fill"{% endif %}>
-                            <td><a href="{{ entry | pd_link }}">{{ entry.name }}</a></td>
-                            <td>{{ entry.numVotes }}</td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="2">There are no {{ entrySet.type }}s yet</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-
-            </table>
-        {% endif %}
-
-    </div>
-
-    <div id="contentRt">
-
+    {% if event.externalUrl|default or event.online|default %}
+        {% set userNoun = 'participant' %}
+        {% set userVerb = 'participating' %}
+    {% else %}
         {% set userNoun = 'attendee' %}
         {% set userVerb = 'attending' %}
+    {% endif %}
 
+    {% if not (event.isUserAttending(app.user)) %}
+        <h2 class="widgetHeader">{{ event.attendees|length }} {{ userNoun }}{% if event.attendees|length != 1 %}s{% endif %}</h2>
+    {% else %}
+        <h3 class="left">You and {{ event.attendees|length - 1 }} other {% if event.attendees|length == 2 %}person{% else %}people{% endif %} are {{ userVerb }}</h3>
+        <hr class="small-margin clr">
+    {% endif %}
+
+    <ul class="spcr-b3">
+        <li class="spcr-t7 spcr-l3">
+            <a href="{{ path('profile', {'userId': event.user.id}) }}"><h3 class="blu midtxt">{{ event.user.name }} (Organizer)</h3></a>
+        </li>
+        {% for member in event.attendees %}
+            {% if member.id != event.user.id %}
+                <li class="spcr-t7 spcr-l3"><a href="{{ path('profile', {'userId': member.id}) }}"><h3 class="blu">{{ member.name }}</h3></a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+</div>
+
+<div class="col_three_fifths">
+
+    {% set numImages = event.rotatorImages|length %}
+
+    {% if numImages > 0 %}
+        <div class="intro">
+            <div id="slideshow" class="pics">
+
+                {% for image in event.rotatorImages %}
+
+                <div class="unicusSlides">
+                    <img src="{{  media_path(image) }}" width="644" height="340"/>
+                </div>
+
+                {% endfor %}
+
+            </div>
+            {% if numImages > 1 %}
+                <ul id="bullets"></ul> <!-- nav bullets -->
+            {% endif %}
+         </div>
+
+        <script type="text/javascript">
+            $(function() {
+                $('#slideshow').cycle({
+                    fx:     'scrollHorz',
+                    speed:  400,
+                    timeout: 6000,
+                    cleartypeNoBg: true,
+                    pager:  '#bullets',
+                    pagerAnchorBuilder: function paginate(idx, el) {
+                        return '<a class="service' + idx + '" href="#" >&bull;</a>';
+                    }
+                });
+            });
+        </script>
+    {% endif %}
+
+    {% if event.content|default %}
+        {{ event.content|raw }}
+    {% endif %}
+
+    {# For now -- get session schedule or first entrySet -- need to implement list chooser #}
+    {% if event.sessions | length > 0 %}
+        <h2 class="left">Session Schedule</h2><a href="{{ path('event_session_schedule', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="blue right">View All</a>
+
+        <table class="clr tblStyle sessions spcr-b fillWidth">
+            {% for date,sessions in event.sessionsByDate %}
+                <tr class="date">
+                    <td colspan="2">
+                        {{ date }}
+                    </td>
+                </tr>
+                {% set i=0 %}
+                {% for evtSession in sessions %}
+                    {% set i=i+1 %}
+                    <tr{% if i%2 %} class="fill"{% endif %}>
+                        <td>{% if evtSession.startsAt|default %}{{ evtSession.timeRangeString }}{% endif %}</td>
+                        <td><a href="{{ path('event_session', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': evtSession.id}) }}">{{ evtSession.name }}</a></td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </table>
+    {% elseif event.entrySets | length > 0 %}
+        {% set entrySet = event.entrySets[0] %}
+        <h2 class="left">{{ entrySet.name }}</h2><a href="{{ entrySet | pd_link }}" class="right btn spcr-b3">View All {{ entrySet.type | capitalize }}s</a>
+        <table class="tblStyle spcr-b fillWidth">
+
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Votes</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% set i=0 %}
+                {% for entry in entrySet.popularEntries %}
+                    {% set i=i+1 %}
+                    <tr{% if i%2 %} class="fill"{% endif %}>
+                        <td><a href="{{ entry | pd_link }}">{{ entry.name }}</a></td>
+                        <td>{{ entry.numVotes }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="2">There are no {{ entrySet.type }}s yet</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+</div>
+
+<div class="col_fifth">
+
+    {% if event.externalUrl|default %}
+        <a href="{{ event.externalUrl }}" class="btnLg2" target="_blank">Register to Attend</a>
+        {% if not event.isUserAttending(user) %}
+            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Participate Online</a>
+        {% endif %}
+    {% elseif not event.isUserAttending(user) %}
+        <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Register to Attend</a>
+    {% endif %}
+
+    {% if event.sessions | length > 0 %}
+        <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}" class="btnLg2">Session Schedule</a>
+    {% endif %}
+
+    <div style="display:inline-block;">
         <div class="fb-like left" data-href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
         <a href="https://twitter.com/share" class="twitter-share-button left spcr-l3 spcr-t8" data-hashtags="{{ group.hashtag }},{{ event.hashtag }}">Tweet</a>
-        
-        <div class="spcr-t2 clr"></div>
+    </div>
+    <div class="clear"></div>
 
-        {% if event.externalUrl|default or not event.isUserAttending(user) %}
-            <div id="registrationBanner">
-                {% if event.externalUrl|default %}
-
-                    <a href="{{ event.externalUrl }}" class="btnLg2" target="_blank">Register to Attend</a>
-                    {% if not event.isUserAttending(user) %}
-                        <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Participate Online</a>
-                    {% endif %}
-                    {% set userNoun = 'contributor' %}
-                    {% set userVerb = 'contributing' %}
-
-                {% elseif not event.isUserAttending(user) %}
-                    <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Attend Event</a>
-                {% endif %}
-            </div>
-        {% endif %}
-
-        {% if event.sessions | length > 0 %}
-            <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}" class="btnLg2">Session Schedule</a>
-
-            {# If there are sessions, then we showed the session schedule on the center panel and need to show any lists here #}
-            {% if event.entrySets | length > 0 %} 
-                {% set render_entrySets = true %}
+    <div class="event-details ctr">
+        <h2>{{ event.name }}</h2>
+        <hr class="small-margin"/>
+        {% if event.startsAt|default %}
+            <h2>When:</h2>
+            {{ event.DateAndTime|raw }}
+            {% if event.location|default %}
+                <hr class="small-margin"/>
             {% endif %}
-
-        {# If there are no sessions, then we showed the first list on the center panel, and only need to show lists here if there are multiple #}
-        {% elseif event.entrySets | length > 1 %}
-            {% set render_entrySets = true %}
-        {% endif %}
-
-        {% if render_entrySets | default %}
-            <h2 class="widgetHeader">Collaboration Lists</h2>
-            <ul class="scrollableWidget spcr-b3">
-                {% for entrySet in event.entrySets %}
-                    <li class="spcr-t7 spcr-l3">
-                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-
-        {% if event.sponsors|length > 0 %}
-            {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
         {% endif %}
 
         {% if event.location|default %}
-            <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
-            <div id="event-location-map" class="spcr-t spcr-b">{{ vichgeo_map_for('location', event) }}</div>
+            <h2>Where:</h2>
+            {{ event.location }}<br/>
+            <a href="http://maps.google.com/?q={{ event.address1 }}, {{ event.address2 }}" target="_blank" class="blu">{{ event.address1 }}<br/>{{ event.address2 }}</a>
         {% endif %}
-        
-        {% if not (event.isUserAttending(app.user)) %}
-            <h2 class="widgetHeader">{{ event.attendees|length }} {{ userNoun }}{% if event.attendees|length != 1 %}s{% endif %}</h2>
-        {% else %}
-            <h3 class="left">You and {{ event.attendees|length - 1 }} other {% if event.attendees|length == 2 %}person{% else %}people{% endif %} are {{ userVerb }}</h3>
-            <hr class="small-margin clr">
-        {% endif %}
-        <ul class="spcr-b3">
-            <li class="spcr-t7 spcr-l3">
-                <a href="{{ path('profile', {'userId': event.user.id}) }}"><h3 class="blu midtxt">{{ event.user.name }} (Organizer)</h3></a>
-            </li>
-        {% for member in event.attendees %}
-            {% if member.id != event.user.id %}
-                <li class="spcr-t7 spcr-l3">
-                    <a href="{{ path('profile', {'userId': member.id}) }}"><h3 class="blu">{{ member.name }}</h3></a>
-                </li>
-            {% endif %}
-        {% endfor %}
-        </ul>
-
     </div>
+
+    {% if event.sponsors|length > 0 %}
+        {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
+    {% endif %}
+
+</div>
 
 {% endblock %}
