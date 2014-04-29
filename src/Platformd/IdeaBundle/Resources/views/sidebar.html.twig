@@ -35,17 +35,19 @@
         {% endif %}
     </div>
 
+    {# if we're on an entrySet page, we only need to list entrySets if there are more than one #}
     {% set minEntrySetNumber = 0 %} {% if entrySet|default %} {% set minEntrySetNumber = 1 %} {% endif %}
 
-    {% if event.entrySets | length > minEntrySetNumber %}
+    {% if event.entrySets|length > minEntrySetNumber %}
         <h2 class="widgetHeader">Collaboration Lists</h2>
         <ul class="scrollableWidget spcr-b3">
             {% for es in event.entrySets %}
                 {% if entrySet is not defined or (entrySet.id != es.id) %}
-                <li class="spcr-t7 spcr-l3">
-                    <a href="{{ path('entry_set_view', {'entrySetId': es.id}) }}"><h3 class="blu">{{ es.name }}</h3></a>
-                </li>
+                    <li class="spcr-t7 spcr-l3"><a href="{{ path('entry_set_view', {'entrySetId': es.id}) }}"><h3 class="blu">{{ es.name }}</h3></a></li>
+                {% elseif entrySet is defined %}
+                    <li class="spcr-t7 spcr-l3"><h3>> {{ es.name }}</h3></li>
                 {% endif %}
+                <hr class="small-margin"/>
             {% endfor %}
         </ul>
     {% endif %}
@@ -62,15 +64,16 @@
 
     {% set minEntrySetNumber = 0 %} {% if entrySet|default %} {% set minEntrySetNumber = 1 %} {% endif %}
 
-    {% if group.entrySets | length > minEntrySetNumber %}
+    {% if group.entrySets|length > minEntrySetNumber %}
         <h2 class="widgetHeader">Collaboration Lists</h2>
         <ul class="scrollableWidget spcr-b3">
             {% for es in group.entrySets %}
                 {% if entrySet is not defined or (entrySet.id != es.id) %}
-                    <li class="spcr-t7 spcr-l3">
-                        <a href="{{ path('entry_set_view', {'entrySetId': es.id}) }}"><h3 class="blu">{{ es.name }}</h3></a>
-                    </li>
+                    <li class="spcr-t7 spcr-l3"><a href="{{ path('entry_set_view', {'entrySetId': es.id}) }}"><h3 class="blu">{{ es.name }}</h3></a></li>
+                {% elseif entrySet is defined %}
+                    <li class="spcr-t7 spcr-l3"><h3>> {{ es.name }}</h3></li>
                 {% endif %}
+                <hr class="small-margin"/>
             {% endfor %}
         </ul>
     {% endif %}
