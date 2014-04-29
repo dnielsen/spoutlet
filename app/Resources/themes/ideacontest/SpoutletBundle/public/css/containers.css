@@ -388,12 +388,15 @@
         max-height: 400px;
     }
     .sponsorBx, .sidebar_sponsorBx {
-        display: inline-block;
-        margin: 2px 2px 0 0;
         vertical-align: top;
     }
     .sponsorBx {
+        display: inline-block;
+        margin: 2px 2px 0 0;
         width: 140px;
+    }
+    .sidebar_sponsorBx {
+        margin: 2px auto;
     }
     .sponsorImageBox {
         width: 100%;
