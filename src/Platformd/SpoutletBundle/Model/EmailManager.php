@@ -50,7 +50,6 @@ class EmailManager
         $params = $this->setupEmail($to, $subject, $body, $emailType, $site, $fromName, $fromEmail);
         $finalEmail = array('Subject'  => array('Data' => $params['subject'], 'Charset' => 'UTF-8'), 'Body' => array('Text' => array('Data' => $params['body'], 'Charset' => 'UTF-8')));
         ($this->email_service == 'SendGrid') ? $this->mailObj->setText($params['body']) : '';
-
         $this->processEmail($params, $finalEmail, $andFlush);
     }
 
@@ -108,37 +107,38 @@ class EmailManager
     {
         $sentEmail = new SentEmail();
         $messageId = '';
-    
+
         try {
 
-            if($this->email_service == 'SendGrid') {
-              
-              $this->mailObj->addTo($params['to']);
-              $this->mailObj->setFrom($params['from1']);
-              $this->mailObj->setSubject($params['subject']);
-                         
-              $response = $this->sendGridObj->smtp->send($this->mailObj);
-              $messageId = '1';
-              $sentEmail->setSendStatusCode(200);
-              $sentEmail->setSendStatusOk($response);
-     
+            if ($this->email_service == 'SendGrid') {
+
+                $this->mailObj->addTo($params['to']);
+                $this->mailObj->setFrom($params['from1']);
+                $this->mailObj->setSubject($params['subject']);
+                 
+                $messageId = '1';
+                $status = $this->sendGridObj->smtp->send($this->mailObj);
+                $sentEmail->setSendStatusOk($status);
+                $sentEmail->setSendStatusCode(200);
+
             } else {
 
                 $response  = $this->ses->send_email($params['from'], $params['finalTo'], $finalEmail);
                 $messageId = $response->body->SendEmailResult->MessageId;
                 $status    = $response->isOk();
-                     
-            if (!$status) {
-                $sentEmail->setErrorMessage($response->body->Error->Message);
-            }
+             
+                if (!$status) {
+                    $sentEmail->setErrorMessage($response->body->Error->Message);
+                }
 
-            $sentEmail->setSendStatusCode((int)$response->status);
-            $sentEmail->setSendStatusOk($status);
-         }
+                $sentEmail->setSendStatusCode((int)$response->status);
+                $sentEmail->setSendStatusOk($status);
+            }
 
         } catch (\Exception $e) {
             $sentEmail->setSendStatusCode(-500); // Likely a curl exception
             $sentEmail->setSendStatusOk(false);
+            $sentEmail->setErrorMessage($e);
         }
 
         $sentEmail->setRecipient($params['to']);
