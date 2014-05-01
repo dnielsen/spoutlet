@@ -104,6 +104,20 @@ registration.email: |
     <p>
         Campsite Team
     </p>
+registration.welcome: |
+    Welcome to Campsite!
+    <p>Dear %name%,</p>
+    <p>
+        Welcome to Campsite! 
+        <br /><br />
+        Your account has been successfully confirmed. 
+        <br />
+        Click <a href="%profileUrl%">here</a> to fill out your profile.
+        <br /><br />
+        Regards,
+        <br />
+        The Campsite Team
+    </p>
 
 # Password resetting
 resetting.password_already_requested: The password for this user has already been requested within the last 24 hours.

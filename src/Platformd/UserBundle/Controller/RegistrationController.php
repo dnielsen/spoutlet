@@ -153,6 +153,8 @@ class RegistrationController extends BaseRegistrationController
             $this->setFlash('success', 'Welcome to Campsite!');
         }
 
+        $this->container->get('platformd_user.mailer')->sendWelcomeEmail($user);
+        
         $response = new RedirectResponse($this->container->get('router')->generate($path, $params));
         $this->authenticateUser($user, $response);
 

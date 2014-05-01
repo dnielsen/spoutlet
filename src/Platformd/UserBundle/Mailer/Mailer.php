@@ -70,6 +70,18 @@ class Mailer implements MailerInterface
         $this->sendEmailMessage($rendered, $user->getEmail(), 'Registration Email');
     }
 
+    public function sendWelcomeEmail(UserInterface $user)
+    {
+        $template = 'UserBundle:Registration:email_welcome.txt.twig';
+
+        $rendered = $this->templating->render($template, array(
+            'user'       => $user,
+            'profileUrl' => $this->router->generate('profile_edit', array('userId'=>$user->getId()), true),
+        ));
+
+        $this->sendEmailMessage($rendered, $user->getEmail(), 'Welcome');
+    }
+
     public function sendTradeshowConfirmationEmailMessage(UserInterface $user, $site)
     {
         $template = 'UserBundle:Registration:email_api.txt.twig';
