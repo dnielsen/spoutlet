@@ -493,7 +493,7 @@ Alienware Arena Team
 
         //$this->setFlash('success', 'You will receive an email if you are admitted into this group.');
 
-        if($group->getIsPublic()) {
+        if ($group->getIsPublic()) {
             try {
                 $response = $this->getCEVOApiManager()->GiveUserXp('joingroup', $user->getCevoUserId());
             } catch (ApiException $e) {
@@ -501,11 +501,26 @@ Alienware Arena Team
             }
         }
 
+        $groupName       = $group->getName();
+        $groupUrl        = $this->generateUrl('group_show', array('slug' => $group->getSlug()), true);
+        $groupOwnerEmail = $group->getOwner()->getEmail();
+
+        $subject         = $this->trans('platformd.group.email.welcome.title', array('%groupName%' => $groupName));
+        $messageTemplate = $this->trans('platformd.group.email.welcome.message', array(
+                                        '%groupName%' => $groupName,
+                                        '%groupUrl%'  => $groupUrl,
+                                        '%groupOwner%'=> $groupOwnerEmail,
+                                        ));
+
+        $message = nl2br($messageTemplate);
+
+        $this->getEmailManager()->sendEmail($user->getEmail(), $subject, $message, "Group Welcome", $this->getCurrentSite()->getDefaultLocale());
+
         $this->setFlash('success', 'You have successfully joined this group!');
         $this->varnishBan($this->generateUrl('_group_show_content', array('slug' => $slug)));
         $this->varnishBan($this->generateUrl('_group_member_check', array('groupId' => $group->getId())), array('userId' => $user->getId()));
 
-        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+        return $this->redirect($groupUrl);
     }
 
     public function applyToGroupWithEventAction($slug, $eventId, Request $request)
