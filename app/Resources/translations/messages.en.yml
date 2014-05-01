@@ -559,6 +559,8 @@ platformd:
             welcome:
                 title: Welcome to %groupName%!
                 message: |
+                    Dear %userName%,
+                    
                     Welcome to <a href="%groupUrl%">%groupName%</a>!
 
                     Help your group succeed! Contact %groupOwner% to volunteer or become a sponsor!

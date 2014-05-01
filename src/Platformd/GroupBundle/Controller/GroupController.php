@@ -507,6 +507,7 @@ Alienware Arena Team
 
         $subject         = $this->trans('platformd.group.email.welcome.title', array('%groupName%' => $groupName));
         $messageTemplate = $this->trans('platformd.group.email.welcome.message', array(
+                                        '%userName%'  => $user->getName(),
                                         '%groupName%' => $groupName,
                                         '%groupUrl%'  => $groupUrl,
                                         '%groupOwner%'=> $groupOwnerEmail,
