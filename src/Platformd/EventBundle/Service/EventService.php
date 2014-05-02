@@ -287,11 +287,43 @@ class EventService
         $rsvpAction->setUser($user);
         $rsvpAction->setEvent($event);
 
-        if ($event->getPrivate() && ($event->getUser() != $user) ) {
+        if ($event->getPrivate() && ($event->getUser() != $user)) {
             $rsvpAction->setAttendance(EventRsvpAction::ATTENDING_PENDING);
-        }
-        else {
+        } else {
             $rsvpAction->setAttendance(EventRsvpAction::ATTENDING_YES);
+
+            $locale     = $user->getLocale() ?: 'en';
+            $eventName  = $event->getName();
+            $eventOwner = $event->getUser()->getEmail();
+            $eventUrl   = $this->router->generate('group_event_view', array(
+                                                  'groupSlug' =>$event->getGroup()->getSlug(),
+                                                  'eventId'   =>$event->getId()), true);
+
+            if ($externalUrl = $event->getExternalUrl()) {
+                $subjectTemplate = 'platformd.event.email.welcome.external_title';
+                $messageTemplate = 'platformd.event.email.welcome.external_message';
+                $messageParams   = array(
+                                     '%eventName%'   => $eventName,
+                                     '%eventOwner%'  => $eventOwner,
+                                     '%eventUrl%'    => $eventUrl,
+                                     '%userName%'    => $user->getName(),
+                                     '%externalUrl%' => $externalUrl,
+                                 );
+            } else {
+                $subjectTemplate = 'platformd.event.email.welcome.title';
+                $messageTemplate = 'platformd.event.email.welcome.message';
+                $messageParams   = array(
+                                     '%eventName%'   => $eventName,
+                                     '%eventOwner%'  => $eventOwner,
+                                     '%eventUrl%'    => $eventUrl,
+                                     '%userName%'    => $user->getName(),
+                                 );
+            }
+
+            $subject = $this->translator->trans($subjectTemplate, array('%eventName%' => $event->getName()), 'messages', $locale);
+            $message = nl2br($this->translator->trans($messageTemplate, $messageParams, 'messages', $locale));
+
+            $this->emailManager->sendHtmlEmail($user->getEmail(), $subject, $message, 'Event Welcome', $event->getSites()->first()->getFullDomain());
         }
 
         $rsvpAction->setRsvpAt(new DateTime('now'));

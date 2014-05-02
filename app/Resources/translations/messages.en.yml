@@ -735,6 +735,29 @@ platformd:
 
                     Sent from Alienware Arena on behalf of %groupOwnerName%.
 
+            welcome:
+                title: You are now attending %eventName%
+                message: |
+                    Dear %userName%,
+                    
+                    You have successfully registered to attend <a href="%eventUrl%">%eventName%</a>!
+
+                    Help your event succeed! Contact %eventOwner% to volunteer or become a sponsor!
+
+                    Regards,
+                    The Campsite Team
+                external_title: You are now participating in %eventName%
+                external_message: |
+                    Dear %userName%,
+                    
+                    You have successfully registered to participate in <a href="%eventUrl%">%eventName%</a>!
+
+                    If you will be attending the event in person, make sure to register <a href="%externalUrl%">here</a>
+
+                    Help your event succeed! Contact %eventOwner% to volunteer or become a sponsor!
+
+                    Regards,
+                    The Campsite Team
             event_reminder:
                 title: Upcoming Event Reminder for %eventName%
                 message: |
