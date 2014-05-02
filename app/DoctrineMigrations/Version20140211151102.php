@@ -16,9 +16,9 @@ class Version20140211151102 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != "mysql");
         
         $this->addSql("rename table followMappings to follow_mappings");
-        $this->addSql("rename table backgroundad to background_ad");
-        $this->addSql("rename table backgroundadsite to background_ad_site");
-        $this->addSql("rename table giveawaytranslation to giveaway_translation");
+        $this->addSql("rename table BackgroundAd to background_ad");
+        $this->addSql("rename table BackgroundAdSite to background_ad_site");
+        $this->addSql("rename table GiveawayTranslation to giveaway_translation");
 
     }
 
