@@ -515,7 +515,7 @@ Alienware Arena Team
 
         $message = nl2br($messageTemplate);
 
-        $this->getEmailManager()->sendEmail($user->getEmail(), $subject, $message, "Group Welcome", $this->getCurrentSite()->getDefaultLocale());
+        $this->getEmailManager()->sendEmail($user->getEmail(), $subject, $message, "Group Welcome", $this->getCurrentSite()->getFullDomain());
 
         $this->setFlash('success', 'You have successfully joined this group!');
         $this->varnishBan($this->generateUrl('_group_show_content', array('slug' => $slug)));
