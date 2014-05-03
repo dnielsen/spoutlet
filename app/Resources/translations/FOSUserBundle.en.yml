@@ -92,7 +92,7 @@ registration.flash.user_created: The user has been created successfully
 # the first line is the subject of the email
 registration.email: |
     Activate Your Campsite Account
-    <p>Dear %username%!</p>
+    <p>Dear %name%!</p>
 
     <p>
         Thank you for registering for a Campsite account. Please activate your account by clicking on the link below<br />
