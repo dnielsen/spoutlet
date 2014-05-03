@@ -133,7 +133,7 @@ resetting.flash.error: There was a problem submitting your request. Please try a
 # the first line is the subject of the email
 resetting.email: |
     Campsite - Reset Password
-    <h3>Hello %username%!</h3>
+    <h3>Hello %name%!</h3>
 
     <p>We have received a password change request for your Campsite account.</p>
 
@@ -151,7 +151,7 @@ resetting.email: |
 # Password resetted by admin
 resetted.email: |
     Campsite - Reset Password
-    <h3>Hello %username%!</h3>
+    <h3>Hello %name%!</h3>
 
     <p>We have received a password change request for your Campsite account.</p>
 
