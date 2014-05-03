@@ -31,7 +31,7 @@ INSTALLATION
 
 * Add the following entry to that file and save
 
-    `127.0.0.1       campsite.local <community1>.campsite.local <community2>.campsite.local`
+    `127.0.0.1       campsite.local www.campsite.local <community1>.campsite.local <community2>.campsite.local`
 
 * Create a virtual host and point it at the `web/` directory of your
     project. For example, suppose I clone the project to `/home/<user>/sites/campsite`.
@@ -124,46 +124,22 @@ INSTALLATION
         site_host_map  
         platformd_sites  
 
-* Run the following command and just leave it running while you're working.
-    This compiles all of the CSS and JS assets. If you don't run this, you
-    may not see any styles, or they may be outdated:
-
-     $ php app/console assetic:dump --watch --force
-
 
 * Head to the site (in dev mode)!
 
-   http://campsite.local
+   http://campsite.local/app_dev.php
 
 UPDATING
 --------
 
-* First, update your code. Assuming you're using the master branch, you'd
-    do the following:
+* Run the update scripts to grab the latest code
 
-    git fetch origin  
-    git merge origin/master  
-
-* Update the vendors:
-
-    php bin/vendors install
-
-* Update the database schema
-
-    php app/console doc:mig:mig
-    
-* Run the refresh scripts to dump assets, install assets, and install themes
-
-    $ ./refreshDev.sh - Dumps assets, installs assets, installs themes  
-    $ ./refresh.sh - Does all the above and clears cache for production (takes several minutes to clear cache)  
-
-* Run your asset compiler if not already:
-
-    ./app/console assetic:dump --watch --force
+    $ ./updateThemes.sh [dev|prod] - Dumps and installs assets and themes  
+    $ ./deploy.sh [dev|prod] - Pulls the latest code from git, runs db migrations, updates vendors, dumps and installs assets and themes, clears cache (takes several minutes to clear cache)  
 
 * Head to the site (in dev mode)!
 
-   http://campsite.local
+   http://www.campsite.local/app_dev.php
 
 EMAIL FEATURE
 -------------
@@ -201,24 +177,6 @@ EMAIL FEATURE
     
 
 
-INSTALLATION CHALLENGES
------------------------
-
-* php bin/vendors install : fails 
-    The following error is because of certificate verification:
-
-      error: SSL certificate problem, verify that the CA cert is OK. Details:
-      error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed while accessing https://github.com/Behat/BehatBundle.git/info/refs
-
-    Replace https:// with git:// in <deps> file. Here is a quick fix: 
-
-       $ cd spoutlet
-       $ vi deps
-
-	  Execute vi command
-	  :.,$s@https://@git://@
-
-
 USING MULTIPLE THEMES
 -----------------------
 
@@ -234,9 +192,9 @@ USING MULTIPLE THEMES
 
 * You will place all assets and templates inside this unique theme directory
 
-* To install your assets, run the ./refresh.sh script:
+* To install your assets, run the ./updateThemes.sh script:
 
-    $ ./refresh.sh
+    $ ./updateThemes.sh [dev|prod]
 
     This will place your theme assets and assets inclusion template in the proper location and clear the cache
 
