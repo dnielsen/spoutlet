@@ -42,9 +42,14 @@
                 </tr>
             {% endif %}
             {% if user.twitterUsername %}
+                {% if user.twitterUsername|slice(0,1) != '@' %}
+                    {% set twitterName = '@' ~ user.twitterUsername %}
+                {% else %}
+                    {% set twitterName = user.twitterUsername %}
+                {% endif %}
                 <tr>
                   <td>Twitter</td>
-                  <td><a href="http://twitter.com/{{ user.twitterUsername }}" class="blu" target="_blank">{{ user.twitterUsername }}</a></td>
+                  <td><a href="http://twitter.com/{{ twitterName }}" class="blu" target="_blank">{{ twitterName }}</a></td>
                 </tr>
             {% endif %}
             {% if user.website %}
