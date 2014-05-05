@@ -98,7 +98,8 @@ class EmailManager
         $params['emailType'] = $emailType;
         $params['from'] = $fromName.' <'.$fromEmail.'>';
         $params['finalTo'] = array('ToAddresses'  => array($to));
-        $params['from1'] = $fromEmail;
+        $params['from_name'] = $fromName;
+        $params['from_email'] = $fromEmail;
         return $params;
 
     }
@@ -113,7 +114,8 @@ class EmailManager
             if ($this->email_service == 'SendGrid') {
 
                 $this->mailObj->addTo($params['to']);
-                $this->mailObj->setFrom($params['from1']);
+                $this->mailObj->setFromName($params['from_name']);
+                $this->mailObj->setFrom($params['from_email']);
                 $this->mailObj->setSubject($params['subject']);
                  
                 $messageId = '1';
