@@ -266,7 +266,7 @@
 
 /*********** SUBPAGE CONTAINERs ***********/
 
-    .col_third,.col_two_thirds,.col_half, .col_fifth, .col_three_fifths {
+    .col_third,.col_two_thirds,.col_half, .col_fifth, .col_three_fifths, .col_four_fifths {
         margin: 0 0.5% 0 0.5%;
         display:inline-block;
         vertical-align: top;
@@ -277,6 +277,9 @@
     }
     .col_three_fifths {
         width: 58%;
+    }
+    .col_four_fifths {
+        width: 78%;
     }
     .col_third {
         width: 32%;
@@ -541,17 +544,20 @@ table.tblStyle2 {
 }
 
 
-.profileTable {
+.profileTable, .myStuffTable {
     margin-top: 10px;
     width: 100%;
     text-align: left;
 }
-.profileTable td {
-    border-bottom: 1px solid #e5e5e5;
+.profileTable td, .myStuffTable td {
+    border-top: 1px solid #e5e5e5;
 }
 .profileTable td:first-child {
     padding-right: 50px;
     width: 50%;
+}
+.myStuffTable {
+    border-bottom: 1px solid #e5e5e5;
 }
 
 

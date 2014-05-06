@@ -5,8 +5,8 @@
 {% block content %}
 
     {% if user == app.user %}
-    <div class="profile-leftcol">
-        <ul>
+    <div class="col_fifth">
+        <ul class="card">
             <li><a href="{{ path('accounts_settings') }}">Settings</a></li>
             <li><a href="{{ path('profile', {'userId': user.id}) }}">Profile</a></li>
             <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
@@ -19,7 +19,7 @@
     </div>
     {% endif %}
 
-    <div class="profile-rightcol bdrLft">
+    <div class="col_four_fifths">
 
     {% block profile_content %}
     {% endblock %}

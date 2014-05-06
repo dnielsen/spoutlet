@@ -7,38 +7,37 @@
     {% endif %}
 
     <h1>{{ user.name }}</h1>
-    <hr>
-    <div class="left">
-       <table summary="Personal Information" class="tblStyle">
+
+    <table class="profileTable">
         <tbody>
-            <tr>
-              <td width="185">Title</td>
-              {% if user.title %}
-                <td width="483"> {{ user.title }} </td>
-              {% endif %}
-            </tr>
+            {% if user.title %}
                 <tr>
-                  <td>Organization</td>
-                  {% if user.organization %}
-                    <td> {{ user.organization }}</td>
-                  {% endif %}
+                    <td>Title</td>
+                    <td>{{ user.title }}</td>
                 </tr>
+            {% endif %}
+            {% if user.organization %}
+                <tr>
+                    <td>Organization</td>
+                    <td>{{ user.organization }}</td>
+                </tr>
+            {% endif %}
             {% if user.industry %}
                 <tr>
-                  <td>Industry</td>
-                  <td> {{ user.industry }}</td>
+                    <td>Industry</td>
+                    <td>{{ user.industry }}</td>
                 </tr>
             {% endif %}
             {% if user.aboutMe %}
                 <tr>
-                  <td>About</td>
-                  <td> {{ user.aboutMe }}</td>
+                    <td>About</td>
+                    <td>{{ user.aboutMe }}</td>
                 </tr>
             {% endif %}
             {% if user.linkedIn %}
                 <tr>
-                  <td>LinkedIn</td>
-                  <td><a href="{{ user.linkedIn }}" class="blu" target="_blank">{{ user.linkedIn }}</a></td>
+                    <td>LinkedIn</td>
+                    <td><a href="{{ user.linkedIn }}" class="blu" target="_blank">{{ user.linkedIn }}</a></td>
                 </tr>
             {% endif %}
             {% if user.twitterUsername %}
@@ -48,14 +47,14 @@
                     {% set twitterName = user.twitterUsername %}
                 {% endif %}
                 <tr>
-                  <td>Twitter</td>
-                  <td><a href="http://twitter.com/{{ twitterName }}" class="blu" target="_blank">{{ twitterName }}</a></td>
+                    <td>Twitter</td>
+                    <td><a href="http://twitter.com/{{ twitterName }}" class="blu" target="_blank">{{ twitterName }}</a></td>
                 </tr>
             {% endif %}
             {% if user.website %}
                 <tr>
-                  <td>Website</td>
-                  <td><a href="{{ user.website }}" class="blu" target="_blank">{{ user.website }}</a></td>
+                    <td>Website</td>
+                    <td><a href="{{ user.website }}" class="blu" target="_blank">{{ user.website }}</a></td>
                 </tr>
             {% endif %}
             {% if ownProfile or isAdmin %}
@@ -65,19 +64,17 @@
                 </tr>
                 {% if user.professionalEmail %}
                     <tr>
-                      <td>Professional Email</td>
-                      <td> {{ user.professionalEmail }} </td>
+                        <td>Professional Email</td>
+                        <td>{{ user.professionalEmail }}</td>
                     </tr>
                 {% endif %}
                 {% if user.mailingAddress %}
                     <tr>
-                      <td>Mailing Address</td>
-                      <td> {{ user.mailingAddress }} </td>
+                        <td>Mailing Address</td>
+                        <td>{{ user.mailingAddress }}</td>
                     </tr>
                 {% endif %}
             {% endif %}
         </tbody>
-       </table>
-    </div>
-    <div class="clr spcr-b"></div>
+    </table>
 {% endblock %}
