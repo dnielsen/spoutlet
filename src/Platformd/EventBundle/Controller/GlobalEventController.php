@@ -94,16 +94,16 @@ class GlobalEventController extends Controller
         $site = $this->getCurrentSite();
         $hasGroups = $site->getSiteFeatures()->getHasGroups();
 
-        $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site, 0);
-        $pastGlobalEvents     = $this->getGlobalEventService()->findPastEventsForSite($site, 0);
+        // $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site, 0);
+        // $pastGlobalEvents     = $this->getGlobalEventService()->findPastEventsForSite($site, 0);
         $upcomingGroupEvents  = $hasGroups ? $this->getGroupEventService()->findUpcomingEventsForSite($site, 0) : array();
         $pastGroupEvents      = $hasGroups ? $this->getGroupEventService()->findPastEventsForSite($site, 0) : array();
 
         $currentSweepstakes   = $this->getSweepstakesRepo()->getCurrentSweepstakes($site);
         $pastSweepstakes      = $this->getSweepstakesRepo()->getPastSweepstakes($site);
 
-        $upcomingEvents       = array_merge($upcomingGlobalEvents, $upcomingGroupEvents, $currentSweepstakes);
-        $pastEvents           = array_merge($pastGroupEvents, $pastGlobalEvents, $pastSweepstakes);
+        $upcomingEvents       = $upcomingGroupEvents; //array_merge($upcomingGlobalEvents, $upcomingGroupEvents, $currentSweepstakes);
+        $pastEvents           = $pastGroupEvents; //array_merge($pastGroupEvents, $pastGlobalEvents, $pastSweepstakes);
 
         uasort($upcomingEvents, array($this, 'eventCompare'));
         uasort($pastEvents, array($this, 'eventCompare'));

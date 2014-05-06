@@ -137,7 +137,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      * @ORM\Column(name="online", type="boolean")
      * //@Assert\NotNull(message="Required")
      */
-    protected $online;
+    protected $online = true;
 
     /**
      * Event starts at

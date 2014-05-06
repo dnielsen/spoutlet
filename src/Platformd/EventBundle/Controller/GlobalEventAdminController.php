@@ -91,24 +91,33 @@ class GlobalEventAdminController extends Controller
 
             if($form->isValid())
             {
+                $em = $this->getDoctrine()->getEntityManager();
+
                 $event = $form->getData();
-                $event->setUser($this->getUser());
-
-                if ($event->getSites()->count() < 1) {
-                    $event->addSite($this->getCurrentSite());
-                }
-
-                $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
+                    
+                $event->setUser($this->getCurrentUser());
+                $event->setTimezone('UTC');
+                $event->setActive(true);
+                $event->setApproved(true);
+                $event->setPublished(true);
+                $event->setRegistrationOption('REGISTRATION_3RDPARTY');
+                
+                $event->addSite($this->getCurrentSite());
+                
+                //$tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($form['tags']->getData()));
 
                 $this->getGlobalEventService()->createEvent($event);
 
-                $tagManager->addTags($tags, $event);
+                //$tagManager->addTags($tags, $event);
+                //$tagManager->saveTagging($event);
 
-                $tagManager->saveTagging($event);
+                // Registration needs to be created after event is persisted, relies on generated event ID
+                $esReg = $event->createEntrySetRegistration();
+                $em->persist($esReg);
 
                 $this->setFlash('success', 'New event posted successfully!');
 
-                return $this->redirect($this->generateUrl('admin_events_edit', array('id' => $event->getId())));
+                return $this->redirect($this->generateUrl('global_events_index'));
             }
         }
 
