@@ -42,8 +42,6 @@
                                         <br>
                                         {% if event.EntrySets|length == 0 %}
                                             <a onclick="return confirm('Are you sure you want to delete this event?');" href="{{ deleteUrl }}" >{{ 'platformd.events.event_show.delete_event' | pd_trans }}</a>
-                                        {% else %}
-                                            <span title="Remove the {{ event.EntrySets|length }} list(s) attached to this Event to enable the delete option.">Delete Disabled</span>
                                         {% endif %}
                                     </div>
                                 {% else %}
@@ -83,8 +81,6 @@
                             {% if (event.user == app.user) or (is_granted('ROLE_ADMIN')) %}
                                 {% if event.EntrySets|length == 0 %}
                                     <a onclick="return confirm('Are you sure you want to delete this event?');" href="{{ deleteUrl }}" >{{ 'platformd.events.event_show.delete_event' | pd_trans }}</a>
-                                {% else %}
-                                    <span title="Remove the {{ event.EntrySets|length }} list(s) attached to this Event to enable the delete option.">Delete Disabled</span>
                                 {% endif %}
                             {% endif %}
                         </td>
