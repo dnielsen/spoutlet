@@ -26,12 +26,12 @@ class QueueUtil implements QueueUtilInterface
         $this->hpcloud_messaging_url = $hpcloud_messaging_url;      
         $this->queue_service = $queue_service;
         
-        if($queue_service == 'RabbitMQ') {
-          $this->rabbitMQObj = new RabbitMq($rabbitmq_host,$rabbitmq_port,$rabbitmq_username,$rabbitmq_password);         
-        } 
-        if($queue_service == 'HPCloud') {
-          $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey,$hpcloud_secreatkey,$hpcloud_tenantid);
-        } 
+        // if($queue_service == 'RabbitMQ') {
+        //   $this->rabbitMQObj = new RabbitMq($rabbitmq_host,$rabbitmq_port,$rabbitmq_username,$rabbitmq_password);         
+        // } 
+        // if($queue_service == 'HPCloud') {
+        //   $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey,$hpcloud_secreatkey,$hpcloud_tenantid);
+        // } 
         $this->logger->debug(self::LOG_MESSAGE_PREFIX.'queue prefix is "'.$queueUrlPrefix.'"');
     }
 
