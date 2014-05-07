@@ -32,8 +32,10 @@
                     <li><a href="{{ path('global_events_index') }}">All Events</a></li>
                     <li><a href="{{ path('accounts_events') }}">My Events</a></li>
                     <li><a href="{{ path('accounts_groups', {'then': 'campsite_event'}) }}">Create Event</a></li>
-                    <li><a href="{{ path('admin_events_new') }}">Add Your Event</a></li>
-                    <li><a href="{{ path('global_events_index', {'useExternal': 'true'}) }}">External Events</a></li>
+                    {% if is_granted('ROLE_SUPER_ADMIN') %}
+                        <li><a href="{{ path('admin_events_new') }}">Add Your Event</a></li>
+                        <li><a href="{{ path('global_events_index', {'useExternal': 'true'}) }}">External Events</a></li>
+                    {% endif %}
                 </ul>
             </li>
 
