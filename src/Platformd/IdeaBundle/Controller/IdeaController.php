@@ -1154,6 +1154,18 @@ class IdeaController extends Controller
 
     }
 
+    public function contactUserAction(Request $request, $userId) {
+
+        $this->enforceUserSecurity();
+
+        $toUser = $this->getUserManager()->findUserBy(array('id' => $userId));
+
+        return $this->render('IdeaBundle:Idea:contactForm.html.twig', array(
+            //'form'      => $form->createView(),
+            'toUser'    => $toUser,
+        ));
+    }
+
     public function userEntriesAction()
     {
         $this->enforceUserSecurity();
@@ -1330,7 +1342,7 @@ class IdeaController extends Controller
     }
 
 
-    //TODO: Move this to a model file?
+    //TODO: Move this to Idea Service
     /******************************************************
      ****************    MODEL STUFF HERE    ***************
      *******************************************************/
