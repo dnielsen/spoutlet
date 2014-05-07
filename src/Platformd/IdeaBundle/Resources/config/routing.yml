@@ -280,6 +280,10 @@ profile_edit:
     pattern:    /profile/{userId}/edit
     defaults:   { _controller: IdeaBundle:Idea:profileEdit }
 
+contact_user:
+    pattern:    /profile/{userId}/contact
+    defaults:   { _controller: IdeaBundle:Idea:contactUser }
+
 login:
     pattern:   /login
     defaults:  { _controller: FOSUserBundle:Registration:register }
