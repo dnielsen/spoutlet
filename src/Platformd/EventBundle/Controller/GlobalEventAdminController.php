@@ -100,7 +100,7 @@ class GlobalEventAdminController extends Controller
                 $event->setActive(true);
                 $event->setApproved(true);
                 $event->setPublished(true);
-                $event->setRegistrationOption('REGISTRATION_3RDPARTY');
+                $event->setRegistrationOption('REGISTRATION_DISABLED');
                 
                 $event->addSite($this->getCurrentSite());
                 

@@ -125,7 +125,7 @@ class EventService
             $event->setApproved(true);
 
             if ($event->getExternalUrl()) {
-                $event->setRegistrationOption(GroupEvent::REGISTRATION_3RD_PARTY);
+                //$event->setRegistrationOption(GroupEvent::REGISTRATION_3RD_PARTY);
             } else {
                 $event->setRegistrationOption(GroupEvent::REGISTRATION_ENABLED);
             }
