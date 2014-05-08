@@ -2,15 +2,8 @@
 
 {% block content %}
 
-    Writing an email:
-    <hr/>
-    from: {{ app.user.email }}
-    <hr/>
-    to: {{ toUser.email }}
-    <hr/>
-    body:
-    <hr/>
-
-
+    <h2 class="spcr-b">Contact User</h2>
+    <strong>To:</strong> {{ toUser.name }}<br/>
+    <textarea name="body" rows="6" class="inPt">{% if bodyText|default %}{{ bodyText }}{% endif %}</textarea>
 
 {% endblock %}
