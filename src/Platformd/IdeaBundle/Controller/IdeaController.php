@@ -1157,11 +1157,20 @@ class IdeaController extends Controller
     public function contactUserAction(Request $request, $userId) {
 
         $this->enforceUserSecurity();
-
+        
         $toUser = $this->getUserManager()->findUserBy(array('id' => $userId));
 
+        if ($request->getMethod() === 'POST') {
+
+            $subject = "New message from ".$this->getCurrentUser()->getName();
+            $body = $request->request->get('body');
+            $this->getEmailManager()->sendEmail($toUser->getEmail(), $subject, $body, "User Message", $this->getCurrentSite()->getDefaultLocale());
+            $this->setFlash('success', 'Your message was sent to '.$toUser->getName().'.');
+
+            return $this->redirect($this->generateUrl('profile', array('userId' => $userId)));
+        }
+
         return $this->render('IdeaBundle:Idea:contactForm.html.twig', array(
-            //'form'      => $form->createView(),
             'toUser'    => $toUser,
         ));
     }
