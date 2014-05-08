@@ -5,6 +5,7 @@ namespace Platformd\EventBundle\Controller;
 use Platformd\SpoutletBundle\Controller\Controller,
     Platformd\EventBundle\Service\GlobalEventService,
     Platformd\EventBundle\Entity\GlobalEvent,
+    Platformd\EventBundle\Entity\Event,
     Platformd\EventBundle\Entity\GlobalEventEmail,
     Platformd\EventBundle\Form\Type\GlobalEventType,
     Platformd\EventBundle\Entity\GlobalEventTranslation
@@ -83,6 +84,16 @@ class GlobalEventController extends Controller
         return $response;
     }
 
+    private function filter_internal_external_events($events, &$internal, &$external) {
+        for($i = 0; $i < count($events); ++$i) {
+            $evt = $events[$i];
+            if($evt->getRegistrationOption() === Event::REGISTRATION_3RD_PARTY)
+                $external[] = $evt;
+            else
+                $internal[] = $evt;
+        }
+    }
+
     /**
      * Lists all events, upcoming and past
      *
@@ -90,27 +101,37 @@ class GlobalEventController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $useExternal = $request->query->get('useExternal') === 'true'? true: false;
+        
         $page = $request->query->get('page', 1);
         $site = $this->getCurrentSite();
         $hasGroups = $site->getSiteFeatures()->getHasGroups();
 
-        // $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site, 0);
-        // $pastGlobalEvents     = $this->getGlobalEventService()->findPastEventsForSite($site, 0);
+        $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site, 0);
+        $pastGlobalEvents     = $this->getGlobalEventService()->findPastEventsForSite($site, 0);
         $upcomingGroupEvents  = $hasGroups ? $this->getGroupEventService()->findUpcomingEventsForSite($site, 0) : array();
         $pastGroupEvents      = $hasGroups ? $this->getGroupEventService()->findPastEventsForSite($site, 0) : array();
 
         $currentSweepstakes   = $this->getSweepstakesRepo()->getCurrentSweepstakes($site);
         $pastSweepstakes      = $this->getSweepstakesRepo()->getPastSweepstakes($site);
 
-        $upcomingEvents       = $upcomingGroupEvents; //array_merge($upcomingGlobalEvents, $upcomingGroupEvents, $currentSweepstakes);
-        $pastEvents           = $pastGroupEvents; //array_merge($pastGroupEvents, $pastGlobalEvents, $pastSweepstakes);
+        $upcomingEvents       = array_merge($upcomingGlobalEvents, $upcomingGroupEvents, $currentSweepstakes);
+        $pastEvents           = array_merge($pastGroupEvents, $pastGlobalEvents, $pastSweepstakes);
+
+        $upcomingInternalEvents = array();
+        $upcomingExternalEvents = array();
+        $this->filter_internal_external_events($upcomingEvents, $upcomingInternalEvents, $upcomingExternalEvents);
+        
+        $pastInternalEvents = array();
+        $pastExternalEvents = array();
+        $this->filter_internal_external_events($pastEvents, $pastInternalEvents, $pastExternalEvents);
 
         uasort($upcomingEvents, array($this, 'eventCompare'));
         uasort($pastEvents, array($this, 'eventCompare'));
 
         return $this->render('EventBundle:GlobalEvent:list.html.twig', array(
-            'upcomingEvents' => $upcomingEvents,
-            'pastEvents'     => $pastEvents,
+            'upcomingEvents' => $useExternal ? $upcomingExternalEvents : $upcomingInternalEvents,
+            'pastEvents'     => $useExternal ? $pastExternalEvents : $pastInternalEvents,
         ));
     }
 
