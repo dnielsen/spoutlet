@@ -2,12 +2,12 @@
 
 {% block content %}
 
-    <h2 class="spcr-b">Contact User</h2>
+    <h2 class="spcr-b">{% if formTitle|default %}{{ formTitle }}{% else %}Send Message{% endif %}</h2>
     <strong>To:</strong> {{ toUser.name }}<br/>
 
     <div class="col_two_thirds midpad">
-        <form action="{{ path('contact_user', {'userId': toUser.id}) }}" method="POST">
-            <textarea name="body" rows="6" style="width: 96%;" required>{% if bodyText|default %}{{ bodyText }}{% endif %}</textarea>
+        <form action="{{ path('contact_user', {'userId': toUser.id, 'type': type|default, 'scope': scope|default, 'containerId': containerId|default}) }}" method="POST">
+            <textarea name="body" rows="8" style="width: 96%;" required>{% if bodyText|default %}{{ bodyText }}{% endif %}</textarea>
             <input type="submit" value="Submit" class="right">
             <a href="{{ path('profile', {'userId': toUser.id}) }}"><input type="button" class="right spcr-r" value="Cancel" onclick="return confirm('Are you sure you wish to cancel? Any unsaved changes will be lost');"/></a>
         </form>
