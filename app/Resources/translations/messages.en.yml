@@ -787,6 +787,19 @@ platformd:
                     If you believe this to be an error, please send contact the event organizer.
 
                     Alienware Arena Team
+    email:
+        request: |
+            Hello %to_name%,
+
+            I would like to %action% <a href="%url%">%name%</a>.
+
+            Please contact me with information at %from_email%.
+
+            Thanks,
+            %from_name%
+
+
+
 
 "Bad credentials": "Incorrect username/email or password"
 "The presented password is invalid.": "Incorrect username/email or password"
