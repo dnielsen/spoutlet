@@ -83,6 +83,12 @@ event_session_schedule:
     pattern:    /{groupSlug}/event/{eventId}/sessions
     defaults:   { _controller: IdeaBundle:Idea:eventSessions }
 
+# Watching Routes
+
+watch_event:
+    pattern:    /watch/{eventId}
+    defaults:   { _controller: IdeaBundle:Idea:watch }
+
 # Admin Routes
 
 idea_admin_feedback:
