@@ -2,10 +2,10 @@
     <thead>
         <tr>
             <th>{{ 'platformd.events.event_listings.start_date' | pd_trans }}</th>
-            <th style="width:8px;"></th>
-            <th style="width:29%;">{{ 'platformd.events.event_listings.event' | pd_trans }}</th>
-            <th style="width:29%;">{{ 'platformd.events.event_listings.hosted_by' | pd_trans }}</th>
-            <th style="width:29%;">{{ 'platformd.events.event_listings.location' | pd_trans }}</th>
+            <th style="width:15px;"></th>
+            <th style="width:28%;">{{ 'platformd.events.event_listings.event' | pd_trans }}</th>
+            <th style="width:28%;">{{ 'platformd.events.event_listings.hosted_by' | pd_trans }}</th>
+            <th style="width:25%;">{{ 'platformd.events.event_listings.location' | pd_trans }}</th>
         </tr>
     </thead>
     <tbody>
@@ -31,6 +31,10 @@
             {# todo - refactor this next line somewhere else #}
             <td style="vertical-align:top">
                 <img id="{% if isGroupEvent %}group{% else %}global{% endif %}-event-attending-{{ event.id }}" src="{{ asset('/bundles/spoutlet/images/form-ic-success-small.png') }}" alt="Attending" style="display:none;" />
+                {% if useExternal %}
+                    <a href="{{ path('watch_event', {'eventId': event.id, 'eventType': 'global'}) }}" class="btnTny spcr-t">Share</a>
+                    <a href="{{ path('profile_edit', {'eventId': event.id, 'eventType': 'global'}) }}" class="btnTny spcr-t">Watch</a>
+                {% endif %}
             </td>
             <td style="vertical-align:top" class="event-link">
 

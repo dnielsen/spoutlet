@@ -132,6 +132,7 @@ class GlobalEventController extends Controller
         return $this->render('EventBundle:GlobalEvent:list.html.twig', array(
             'upcomingEvents' => $useExternal ? $upcomingExternalEvents : $upcomingInternalEvents,
             'pastEvents'     => $useExternal ? $pastExternalEvents : $pastInternalEvents,
+            'useExternal'    => $useExternal,
         ));
     }
 

@@ -721,6 +721,63 @@ class IdeaController extends Controller
         return new RedirectResponse($ideaUrl);
     }
 
+    public function watchAction(Request $request, $globalEventId, $groupEventId) {
+
+        $this->enforceUserSecurity();
+
+        // $params   = $request->request->all();
+        // $source   = $params['source'];
+
+        var_dump("test"); exit;
+
+        // $event = null;
+        // if($globalEventId > 0) {
+        //     $event = $this->getDoctrine()->getRepository('EventBundle:GlobalEvent')->find($globalEventId);
+        // } else if($groupEventId > 0) {
+        //     $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($groupEventId);
+        // }
+
+
+        // $watchEventEntry = new WatchedEventMapping($this->getCurrentUser(), $event);
+
+        // $em = $this->getDoctrine()->getEntityManager();
+        // $em->persist($watchEventEntry);
+
+
+
+
+        // $followMapping = $idea->getFollowMapping($userName);
+
+        // if(!$followMapping)
+        // {
+        //     $followMapping = new FollowMapping($userName, $idea);
+        //     $idea->addFollowMapping($followMapping);
+        //     $em->persist($followMapping);
+        // }
+        // else
+        // {
+        //     $idea->removeFollowMapping($followMapping);
+        //     $em->remove($followMapping);
+        // }
+
+        // $em->flush();
+
+        // if ($source == 'detail') {
+        //     $url = $this->generateUrl('idea_show', array(
+        //             'entrySetId'=> $entrySetId,
+        //             'entryId'   => $entryId,
+        //         ));
+        // }
+        // elseif ($source == 'list') {
+        //     $url = $this->generateUrl('entry_set_view', array(
+        //             'entrySetId'=> $entrySetId,
+        //             'tag'       => $params['tag'],
+        //         ));
+        // }
+
+        return new RedirectResponse($this->generateUrl('global_events_index'));
+    }
+
     public function followAction(Request $request, $entrySetId, $entryId) {
 
         $this->enforceUserSecurity();
