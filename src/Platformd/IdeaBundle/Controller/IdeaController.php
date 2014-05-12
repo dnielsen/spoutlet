@@ -1211,6 +1211,82 @@ class IdeaController extends Controller
 
     }
 
+    public function contactUserAction(Request $request, $userId) {
+
+        $this->enforceUserSecurity();
+
+        $fromUser = $this->getCurrentUser();
+        $toUser   = $this->getUserManager()->findUserBy(array('id' => $userId));
+
+        $subject     = null;
+        $bodyText    = null;
+        $emailType   = null;
+        $formTitle   = null;
+        $scope       = null;
+        $containerId = null;
+
+        if ($type = $request->query->get('type')) {
+
+            if ($type == 'sponsor') {
+                $action = 'sponsor';
+                $formTitle = 'Sponsor Form';
+                $emailType = 'Sponsor Request';
+            } elseif ($type == 'volunteer') {
+                $action = 'volunteer for';
+                $formTitle = 'Volunteer Form';
+                $emailType = 'Volunteer Request';
+            } elseif ($type == 'speak') {
+                $action = 'speak at';
+                $formTitle = 'Speaker Form';
+                $emailType = 'Speaker Request';
+            }
+
+            $scope         = $request->query->get('scope');
+            $containerId   = $request->query->get('containerId');
+
+            $container     = $this->getIdeaService()->getContainer($scope, $containerId);
+            $containerName = $container->getName();
+            $containerUrl  = $this->generateUrl($container->getLinkableRouteName(), $container->getLinkableRouteParameters(), true);
+
+            $subject = $fromUser->getName().' would like to '.$action.' '.$containerName;
+
+            $bodyText = $this->trans('platformd.email.request', array(
+                '%to_name%'     => $toUser->getName(),
+                '%action%'      => $action,
+                '%url%'         => $containerUrl,
+                '%name%'        => $container->getName(),
+                '%from_name%'   => $fromUser->getName(),
+                '%from_email%'  => $fromUser->getEmail(),
+            ));
+        }
+
+        if ($request->getMethod() === 'POST') {
+
+            if (!$subject) {
+                $subject = 'New message from '.$fromUser->getName();
+            }
+            if (!$emailType) {
+                $emailType = 'User Message';
+            }
+
+            $body = nl2br($request->request->get('body'));
+
+            $this->getEmailManager()->sendHtmlEmail($toUser->getEmail(), $subject, $body, $emailType, $this->getCurrentSite()->getDefaultLocale());
+            $this->setFlash('success', 'Your message was sent to '.$toUser->getName().'.');
+
+            return $this->redirect($this->generateUrl('profile', array('userId' => $userId)));
+        }
+
+        return $this->render('IdeaBundle:Idea:contactForm.html.twig', array(
+            'toUser'      => $toUser,
+            'type'        => $type,
+            'formTitle'   => $formTitle,
+            'bodyText'    => $bodyText,
+            'scope'       => $scope,
+            'containerId' => $containerId,
+        ));
+    }
+
     public function userEntriesAction()
     {
         $this->enforceUserSecurity();
@@ -1387,7 +1463,7 @@ class IdeaController extends Controller
     }
 
 
-    //TODO: Move this to a model file?
+    //TODO: Move this to Idea Service
     /******************************************************
      ****************    MODEL STUFF HERE    ***************
      *******************************************************/
