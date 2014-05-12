@@ -1178,7 +1178,7 @@ class IdeaController extends Controller
                 $action = 'volunteer for';
                 $formTitle = 'Volunteer Form';
                 $emailType = 'Volunteer Request';
-            } elseif ($type = 'speak') {
+            } elseif ($type == 'speak') {
                 $action = 'speak at';
                 $formTitle = 'Speaker Form';
                 $emailType = 'Speaker Request';
