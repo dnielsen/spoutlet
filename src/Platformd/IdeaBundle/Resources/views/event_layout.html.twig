@@ -1,5 +1,44 @@
 {% extends 'IdeaBundle::group_layout.html.twig' %}
 
+{% block header %}
+
+
+    {% embed 'SpoutletBundle::header.html.twig' %}
+
+        {% block extra_user_controls %}
+        {% endblock %}
+
+        {% block banner %}
+            <div id="header-group">
+                {% if group.groupAvatar is not null %}
+                    {% set bannerContent = '<img src="' ~ media_path(group.groupAvatar) ~ '" alt="Group Logo" id="brand-group">' %}
+                {% else %}
+                    {% set bannerContent = '<span id="groupHeader">' ~ group.name ~ '</span>' %}
+                {% endif %}
+
+                <a href="{{ path('group_show', {'slug': group.slug}) }}">{{ bannerContent | raw }}</a>
+            </div>
+
+        {% endblock %}
+        
+    {% endembed %}
+
+    {% embed 'SpoutletBundle::navigation.html.twig' %}
+
+        {% block menu_items %}
+
+            <li><a href="{{ path('contact_user', {'userId': event.user.id, 'type': 'sponsor', 'scope': 'event', 'containerId': event.id }) }}">Sponsor</a></li>
+            <li><a href="{{ path('contact_user', {'userId': event.user.id, 'type': 'speak', 'scope': 'event', 'containerId': event.id }) }}">Speak</a></li>
+            <li><a href="{{ path('contact_user', {'userId': event.user.id, 'type': 'volunteer', 'scope': 'event', 'containerId': event.id }) }}">Volunteer</a></li>
+            <li><a href="{{ path('contact_user', {'userId': event.user.id}) }}">Contact Us</a></li>
+
+        {% endblock %}
+
+    {% endembed %}
+
+{% endblock %}
+
+
 {% block group_content %}
 
     {% if event.private and not (isAdmin or event.user==app.user) %}

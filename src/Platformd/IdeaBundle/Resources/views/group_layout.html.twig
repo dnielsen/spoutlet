@@ -26,8 +26,10 @@
 
         {% block menu_items %}
 
-            <li><a href="{{ path('info_page', {'groupSlug': group.slug, 'page': 'speak'}) }}">Speak</a></li>
-            <li><a href="{{ path('info_page', {'groupSlug': group.slug, 'page': 'volunteer'}) }}">Volunteer</a></li>
+            <li><a href="{{ path('contact_user', {'userId': group.owner.id, 'type': 'sponsor', 'scope': 'group', 'containerId': group.id }) }}">Sponsor</a></li>
+            <li><a href="{{ path('contact_user', {'userId': group.owner.id, 'type': 'speak', 'scope': 'group', 'containerId': group.id }) }}">Speak</a></li>
+            <li><a href="{{ path('contact_user', {'userId': group.owner.id, 'type': 'volunteer', 'scope': 'group', 'containerId': group.id }) }}">Volunteer</a></li>
+            <li><a href="{{ path('contact_user', {'userId': group.owner.id}) }}">Contact Us</a></li>
 
         {% endblock %}
 
