@@ -27,16 +27,21 @@ class WatchedEventMapping
     protected $user;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
+     */
+    protected $referredBy;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GlobalEvent")
      * @ORM\JoinColumn(name="global_event", referencedColumnName="id")
      */
-    protected $global_event;
+    protected $global_event = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GroupEvent")
      * @ORM\JoinColumn(name="group_event", referencedColumnName="id")
      */
-    protected $group_event;
+    protected $group_event = null;
 
     /**
      * @ORM\Column(type="datetime")
