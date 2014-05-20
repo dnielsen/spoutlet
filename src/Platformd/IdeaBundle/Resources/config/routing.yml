@@ -89,6 +89,10 @@ watch_event:
     pattern:    /watch/{eventId}
     defaults:   { _controller: IdeaBundle:Idea:watch }
 
+invite_user:
+    pattern:    /inviteUser
+    defaults:   { _controller: IdeaBundle:Idea:inviteUser }
+
 # Admin Routes
 
 idea_admin_feedback:
