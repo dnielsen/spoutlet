@@ -798,7 +798,13 @@ platformd:
             Thanks,
             %from_name%
 
+        invite: |
+            Hello %to_name%,
 
+            I would like to invite you to <a href="%url%">%name%</a>.
+
+            Sincerely,
+            %from_name%
 
 
 "Bad credentials": "Incorrect username/email or password"
