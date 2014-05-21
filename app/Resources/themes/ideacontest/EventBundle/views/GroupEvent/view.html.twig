@@ -186,6 +186,15 @@
             <a href="http://maps.google.com/?q={{ event.address1 }}, {{ event.address2 }}" target="_blank" class="blu">{{ event.address1 }}<br/>{{ event.address2 }}</a>
         {% endif %}
     </div>
+    
+    <form action="{{ path('invite_user') }}" method="post">
+        <h3>Invite a friend!</h3>
+        <input type="text" placeholder="Enter email address..." name="userEmail" style="width:70%" class="left"/>
+        <input type="hidden" name="scope" value="event"/>
+        <input type="hidden" name="containerId" value="{{ event.id }}"/>
+        <input type="submit" value=">" class="left" style="padding:8px;"/>
+        <div class="clr"></div>
+    </form>
 
     {% if event.sponsors|length > 0 %}
         {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}

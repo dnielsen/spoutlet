@@ -243,7 +243,16 @@
                 <a href="{{ group.parent | pd_link }}" ><h3 class="blu">{{ group.parent.name }}</h3></a>
             </div>
         {% endif %}
-        
+
+        <form action="{{ path('invite_user') }}" method="post">
+            <h3>Invite a friend!</h3>
+            <input type="text" placeholder="Enter email address..." name="userEmail" style="width:70%" class="left"/>
+            <input type="hidden" name="scope" value="group"/>
+            <input type="hidden" name="containerId" value="{{ group.id }}"/>
+            <input type="submit" value=">" class="left" style="padding:8px;"/>
+            <div class="clr"></div>
+        </form>
+
         {% if group.sponsors|length > 0 %}
             {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
         {% endif %}

@@ -1211,53 +1211,99 @@ class IdeaController extends Controller
 
     }
 
+    public function inviteUserAction(Request $request) {
+        
+        $this->enforceUserSecurity();
+
+        $toEmail     = $request->get('userEmail');
+        $scope       = $request->get('scope');
+        $containerId = $request->get('containerId');
+
+        $params = array(
+           'scope'       => $scope,
+           'containerId' => $containerId,
+           'type'        => 'invite',
+        );
+
+        if ($toUser = $this->getUserManager()->findUserBy(array('email' => $toEmail))) {
+            // Add to recommendations table and set flash message
+            $params['userId'] = $toUser->getId();
+        } else {
+            $params['userId'] = 'external';
+            $params['userEmail'] = $toEmail;
+        }
+
+        return $this->redirect($this->generateUrl('contact_user', $params));
+    }
+
+
     public function contactUserAction(Request $request, $userId) {
 
         $this->enforceUserSecurity();
 
         $fromUser = $this->getCurrentUser();
-        $toUser   = $this->getUserManager()->findUserBy(array('id' => $userId));
 
-        $subject     = null;
-        $bodyText    = null;
-        $emailType   = null;
-        $formTitle   = null;
-        $scope       = null;
-        $containerId = null;
+        if ($userId !== 'external') {
+            $toUser  = $this->getUserManager()->findUserBy(array('id' => $userId));
+            $toEmail = $toUser->getEmail();
+            $toName  = $toUser->getName();
+        } else {
+            $toEmail = $request->query->get('userEmail');
+            $toName  = $toEmail;
+        }
+
+        $subject      = null;
+        $bodyText     = null;
+        $emailType    = null;
+        $formTitle    = null;
+        $scope        = null;
+        $containerId  = null;
+        $containerUrl = null;
 
         if ($type = $request->query->get('type')) {
+
+            $scope       = $request->query->get('scope');
+            $containerId = $request->query->get('containerId');
+
+            if ($scope && $containerId) {
+                $container     = $this->getIdeaService()->getContainer($scope, $containerId);
+                $containerName = $container->getName();
+                $containerUrl  = $this->generateUrl($container->getLinkableRouteName(), $container->getLinkableRouteParameters(), true);
+            }
 
             if ($type == 'sponsor') {
                 $action = 'sponsor';
                 $formTitle = 'Sponsor Form';
                 $emailType = 'Sponsor Request';
+                $bodyTemplate = 'platformd.email.request';
             } elseif ($type == 'volunteer') {
                 $action = 'volunteer for';
                 $formTitle = 'Volunteer Form';
                 $emailType = 'Volunteer Request';
+                $bodyTemplate = 'platformd.email.request';
             } elseif ($type == 'speak') {
                 $action = 'speak at';
                 $formTitle = 'Speaker Form';
                 $emailType = 'Speaker Request';
+                $bodyTemplate = 'platformd.email.request';
+            } elseif ($type == 'invite') {
+                $action = 'invite you to';
+                $formTitle = 'Invite Form';
+                $emailType = 'Invite';
+                $bodyTemplate = 'platformd.email.invite';
             }
 
-            $scope         = $request->query->get('scope');
-            $containerId   = $request->query->get('containerId');
-
-            $container     = $this->getIdeaService()->getContainer($scope, $containerId);
-            $containerName = $container->getName();
-            $containerUrl  = $this->generateUrl($container->getLinkableRouteName(), $container->getLinkableRouteParameters(), true);
-
-            $subject = $fromUser->getName().' would like to '.$action.' '.$containerName;
-
-            $bodyText = $this->trans('platformd.email.request', array(
-                '%to_name%'     => $toUser->getName(),
+            $params = array(
+                '%to_name%'     => $toName,
                 '%action%'      => $action,
                 '%url%'         => $containerUrl,
                 '%name%'        => $container->getName(),
                 '%from_name%'   => $fromUser->getName(),
                 '%from_email%'  => $fromUser->getEmail(),
-            ));
+            );
+
+            $subject = $fromUser->getName().' would like to '.$action.' '.$containerName;
+            $bodyText = $this->trans($bodyTemplate, $params);
         }
 
         if ($request->getMethod() === 'POST') {
@@ -1271,20 +1317,22 @@ class IdeaController extends Controller
 
             $body = nl2br($request->request->get('body'));
 
-            $this->getEmailManager()->sendHtmlEmail($toUser->getEmail(), $subject, $body, $emailType, $this->getCurrentSite()->getDefaultLocale());
-            $this->setFlash('success', 'Your message was sent to '.$toUser->getName().'.');
+            $this->getEmailManager()->sendHtmlEmail($toEmail, $subject, $body, $emailType, $this->getCurrentSite()->getDefaultLocale());
+            $this->setFlash('success', 'Your message was sent to '.$toName.'.');
 
             if ($containerUrl) {
                 $redirectUrl = $containerUrl;
             } else {
                 $redirectUrl = $this->generateUrl('profile', array('userId' => $userId));
             }
-            
+
             return $this->redirect($redirectUrl);
         }
 
         return $this->render('IdeaBundle:Idea:contactForm.html.twig', array(
-            'toUser'      => $toUser,
+            'toName'      => $toName,
+            'toEmail'     => $toEmail,
+            'userId'      => $userId,
             'type'        => $type,
             'formTitle'   => $formTitle,
             'bodyText'    => $bodyText,
