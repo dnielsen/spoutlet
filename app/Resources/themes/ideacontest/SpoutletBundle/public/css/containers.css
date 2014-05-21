@@ -419,7 +419,7 @@
         max-width: 100%;
     }
     .sidebar_sponsorBx img {
-        max-width: 98%;
+        max-width: 85%;
     }
     .sponsorBx:hover,.sponsorBxLg:hover {
         box-shadow: #2faad9 0 0 8px;
