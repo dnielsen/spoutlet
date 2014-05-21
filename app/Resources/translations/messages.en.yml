@@ -806,6 +806,14 @@ platformd:
             Sincerely,
             %from_name%
 
+        add: |
+            Hello %to_name%,
+
+            I have added you to <a href="%url%">%name%</a>.
+
+            Sincerely,
+            %from_name%
+
 
 "Bad credentials": "Incorrect username/email or password"
 "The presented password is invalid.": "Incorrect username/email or password"
