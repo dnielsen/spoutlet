@@ -1215,9 +1215,12 @@ class IdeaController extends Controller
         
         $this->enforceUserSecurity();
 
-        $toEmail     = $request->get('userEmail');
-        $scope       = $request->get('scope');
-        $containerId = $request->get('containerId');
+        $toEmail      = $request->get('userEmail');
+        $scope        = $request->get('scope');
+        $containerId  = $request->get('containerId');
+        $forceAdd     = $request->get('force');
+        $flashResult  = 'success';
+        $flashMessage = null;
 
         $params = array(
            'scope'       => $scope,
@@ -1226,11 +1229,38 @@ class IdeaController extends Controller
         );
 
         if ($toUser = $this->getUserManager()->findUserBy(array('email' => $toEmail))) {
-            // Add to recommendations table and set flash message
+
             $params['userId'] = $toUser->getId();
+
+            if ($forceAdd && $this->isGranted('ROLE_ADMIN')) {
+                $params['type'] = 'add';
+                if ($scope == 'group') {
+                    $gm = $this->getGroupManager();
+                    $gm->autoJoinGroup($gm->find($containerId), $toUser);
+                } elseif ($scope == 'event') {
+                    // Add user to event
+                }
+
+                $flashMessage = 'You have successfully added '.$toUser->getName().' to this '.$scope.'. Write a message and let them know.';
+                
+            } else {
+                //TODO: Add to recommendations table
+                $flashMessage = 'This '.$scope.' has been recommended to '.$toUser->getName().'.<br/>Write a custom message to let them know.';
+            }
+            
+
         } else {
+            // Create an account for the user and send them a confirmation link?
+            if ($forceAdd) {
+                $flashResult = 'info';
+                $flashMessage = $toEmail.' does not yet have a Campsite account. Send them an invite!';
+            }
             $params['userId'] = 'external';
             $params['userEmail'] = $toEmail;
+        }
+
+        if ($flashMessage) {
+            $this->setFlash($flashResult, $flashMessage);
         }
 
         return $this->redirect($this->generateUrl('contact_user', $params));
@@ -1291,6 +1321,11 @@ class IdeaController extends Controller
                 $formTitle = 'Invite Form';
                 $emailType = 'Invite';
                 $bodyTemplate = 'platformd.email.invite';
+            } elseif ($type == 'add') {
+                $action = 'add you to';
+                $formTitle = 'Add User Form';
+                $emailType = 'Add';
+                $bodyTemplate = 'platformd.email.add';
             }
 
             $params = array(
