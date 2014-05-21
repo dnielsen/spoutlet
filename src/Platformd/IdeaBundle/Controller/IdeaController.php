@@ -1274,7 +1274,13 @@ class IdeaController extends Controller
             $this->getEmailManager()->sendHtmlEmail($toUser->getEmail(), $subject, $body, $emailType, $this->getCurrentSite()->getDefaultLocale());
             $this->setFlash('success', 'Your message was sent to '.$toUser->getName().'.');
 
-            return $this->redirect($this->generateUrl('profile', array('userId' => $userId)));
+            if ($containerUrl) {
+                $redirectUrl = $containerUrl;
+            } else {
+                $redirectUrl = $this->generateUrl('profile', array('userId' => $userId));
+            }
+            
+            return $this->redirect($redirectUrl);
         }
 
         return $this->render('IdeaBundle:Idea:contactForm.html.twig', array(
