@@ -9,14 +9,8 @@
 }
 .xnotices .notice {
     margin-bottom:6px;
-    border-radius: 10px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    background: linear-gradient(white, #eee);
+    background: white;
     border: 1px solid #bbb;
-    box-shadow: #bbb 5px 5px 10px;
-    -moz-box-shadow: #bbb 5px 5px 10px;
-    -webkit-box-shadow: #bbb 5px 5px 10px;
 }
 .xnotices h3 {
     font-size:18px;
