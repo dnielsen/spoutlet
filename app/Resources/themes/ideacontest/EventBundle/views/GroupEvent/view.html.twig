@@ -196,6 +196,19 @@
         <div class="clr"></div>
     </form>
 
+    {% if is_granted('ROLE_ADMIN') %}
+    
+        <form action="{{ path('invite_user', {'force': 1}) }}" method="post">
+            <h3>Add a User</h3>
+            <input type="text" placeholder="Enter email address..." name="userEmail" style="width:70%" class="left"/>
+            <input type="hidden" name="scope" value="group"/>
+            <input type="hidden" name="containerId" value="{{ group.id }}"/>
+            <input type="submit" value=">" class="left redButton" style="padding:8px;"/>
+            <div class="clr"></div>
+        </form>
+
+    {% endif %}
+
     {% if event.sponsors|length > 0 %}
         {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
     {% endif %}

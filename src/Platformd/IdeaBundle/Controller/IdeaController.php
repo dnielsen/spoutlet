@@ -1238,7 +1238,8 @@ class IdeaController extends Controller
                     $gm = $this->getGroupManager();
                     $gm->autoJoinGroup($gm->find($containerId), $toUser);
                 } elseif ($scope == 'event') {
-                    // Add user to event
+                    $es = $this->getGroupEventService();
+                    $es->register($es->find($containerId), $toUser);
                 }
 
                 $flashMessage = 'You have successfully added '.$toUser->getName().' to this '.$scope.'. Write a message and let them know.';
