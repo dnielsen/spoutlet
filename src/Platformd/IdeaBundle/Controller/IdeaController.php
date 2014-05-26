@@ -1219,50 +1219,78 @@ class IdeaController extends Controller
         $scope        = $request->get('scope');
         $containerId  = $request->get('containerId');
         $forceAdd     = $request->get('force');
+        $type         = null;
         $flashResult  = 'success';
-        $flashMessage = null;
+        $flashMessage = '';
 
         $params = array(
            'scope'       => $scope,
            'containerId' => $containerId,
-           'type'        => 'invite',
+           'userEmail'   => $toEmail,
         );
 
         if ($toUser = $this->getUserManager()->findUserBy(array('email' => $toEmail))) {
-
             $params['userId'] = $toUser->getId();
-
-            if ($forceAdd && $this->isGranted('ROLE_ADMIN')) {
-                $params['type'] = 'add';
-                if ($scope == 'group') {
-                    $gm = $this->getGroupManager();
-                    $gm->autoJoinGroup($gm->find($containerId), $toUser);
-                } elseif ($scope == 'event') {
-                    $es = $this->getGroupEventService();
-                    $es->register($es->find($containerId), $toUser);
-                }
-
-                $flashMessage = 'You have successfully added '.$toUser->getName().' to this '.$scope.'. Write a message and let them know.';
-                
-            } else {
-                //TODO: Add to recommendations table
-                $flashMessage = 'This '.$scope.' has been recommended to '.$toUser->getName().'.<br/>Write a custom message to let them know.';
-            }
-            
-
         } else {
-            // Create an account for the user and send them a confirmation link?
-            if ($forceAdd) {
+
+            // if an admin is trying to add a new user to a container
+            if ($forceAdd && $this->isGranted('ROLE_ADMIN')) {
+                $password = mt_rand(100000, 999999);
+                $um = $this->getUserManager();
+                $toUser = $um->createUser();
+                $toUser->setEmail($toEmail);
+                $toUser->setUsername($toEmail);
+                $toUser->setName($toEmail);
+                $toUser->setPlainPassword($password);
+                $toUser->generateConfirmationToken();
+                $toUser->setEnabled(true);
+                $um->updateUser($toUser);
+
+                $flashMessage = 'Account created for '.$toEmail.'. ';
+                $params['userId']   = $toUser->getId();
+                $params['password'] = $password;
+                $type = 'create';
+            } else {
                 $flashResult = 'info';
-                $flashMessage = $toEmail.' does not yet have a Campsite account. Send them an invite!';
+                $flashMessage = $toEmail.' does not yet have a Campsite account. ';
+                $params['userId'] = 'external';
             }
-            $params['userId'] = 'external';
-            $params['userEmail'] = $toEmail;
+        }
+
+        if ($toUser) {
+            $toName = $toUser->getName();
+        } else {
+            $toName = $toEmail;
+        }
+        
+        if ($forceAdd && $this->isGranted('ROLE_ADMIN')) {
+            if ($scope == 'group') {
+                $gm = $this->getGroupManager();
+                $gm->autoJoinGroup($gm->find($containerId), $toUser);
+            } elseif ($scope == 'event') {
+                $es = $this->getGroupEventService();
+                $es->register($es->find($containerId), $toUser);
+            }
+
+            if (!$type) {
+                $type = 'add';
+            }
+
+            $flashMessage .= 'You have successfully added '.$toName.' to this '.$scope.'. ';
+            
+        } elseif ($toUser) {
+            $flashMessage .= 'This '.$scope.' has been recommended to '.$toName.'. ';
         }
 
         if ($flashMessage) {
-            $this->setFlash($flashResult, $flashMessage);
+            $this->setFlash($flashResult, $flashMessage.'Write a custom message to let them know.');
         }
+
+        if (!$type) {
+            $type = 'invite';
+        }
+
+        $params['type'] = $type;
 
         return $this->redirect($this->generateUrl('contact_user', $params));
     }
@@ -1295,50 +1323,58 @@ class IdeaController extends Controller
 
             $scope       = $request->query->get('scope');
             $containerId = $request->query->get('containerId');
+            $action      = '';
 
             if ($scope && $containerId) {
                 $container     = $this->getIdeaService()->getContainer($scope, $containerId);
                 $containerName = $container->getName();
                 $containerUrl  = $this->generateUrl($container->getLinkableRouteName(), $container->getLinkableRouteParameters(), true);
             }
-
-            if ($type == 'sponsor') {
-                $action = 'sponsor';
-                $formTitle = 'Sponsor Form';
-                $emailType = 'Sponsor Request';
-                $bodyTemplate = 'platformd.email.request';
-            } elseif ($type == 'volunteer') {
-                $action = 'volunteer for';
-                $formTitle = 'Volunteer Form';
-                $emailType = 'Volunteer Request';
-                $bodyTemplate = 'platformd.email.request';
-            } elseif ($type == 'speak') {
-                $action = 'speak at';
-                $formTitle = 'Speaker Form';
-                $emailType = 'Speaker Request';
-                $bodyTemplate = 'platformd.email.request';
-            } elseif ($type == 'invite') {
-                $action = 'invite you to';
-                $formTitle = 'Invite Form';
-                $emailType = 'Invite';
-                $bodyTemplate = 'platformd.email.invite';
-            } elseif ($type == 'add') {
-                $action = 'add you to';
-                $formTitle = 'Add User Form';
-                $emailType = 'Add';
-                $bodyTemplate = 'platformd.email.add';
-            }
-
             $params = array(
-                '%to_name%'     => $toName,
-                '%action%'      => $action,
-                '%url%'         => $containerUrl,
-                '%name%'        => $container->getName(),
                 '%from_name%'   => $fromUser->getName(),
                 '%from_email%'  => $fromUser->getEmail(),
+                '%to_name%'     => $toName,
+                '%url%'         => $containerUrl,
+                '%name%'        => $containerName,
             );
 
-            $subject = $fromUser->getName().' would like to '.$action.' '.$containerName;
+            if ($type == 'sponsor') {
+                $bodyTemplate = 'platformd.email.request';
+                $subject = $fromUser->getName().' would like to sponsor '.$containerName;
+                $formTitle = 'Sponsor Form';
+                $emailType = 'Sponsor Request';
+                $params['%action%'] = 'sponsor';
+            } elseif ($type == 'volunteer') {
+                $bodyTemplate = 'platformd.email.request';
+                $subject = $fromUser->getName().' would like to volunteer for '.$containerName;
+                $formTitle = 'Volunteer Form';
+                $emailType = 'Volunteer Request';
+                $params['%action%'] = 'volunteer for';
+            } elseif ($type == 'speak') {
+                $bodyTemplate = 'platformd.email.request';
+                $subject = $fromUser->getName().' would like to speak at '.$containerName;
+                $formTitle = 'Speaker Form';
+                $emailType = 'Speaker Request';
+                $params['%action%'] = 'speak at';
+            } elseif ($type == 'invite') {
+                $bodyTemplate = 'platformd.email.invite';
+                $subject = $fromUser->getName().' would like to invite you to '.$containerName;
+                $formTitle = 'Invite Form';
+                $emailType = 'Invite';
+            } elseif ($type == 'add') {
+                $bodyTemplate = 'platformd.email.add';
+                $subject = $fromUser->getName().' has added you to '.$containerName;
+                $formTitle = 'Add User Form';
+                $emailType = 'Add';
+            } elseif ($type == 'create') {
+                $bodyTemplate = 'platformd.email.create';
+                $subject = $fromUser->getName().' has added you to '.$containerName.' on Campsite';
+                $formTitle = 'Create User Form';
+                $emailType = 'Create';
+                $params['%password%'] = $request->query->get('password');
+                $params['%password_reset_url%'] = $this->generateUrl('fos_user_resetting_reset', array('token' => $toUser->getConfirmationToken()), true);
+            }
+
             $bodyText = $this->trans($bodyTemplate, $params);
         }
 
