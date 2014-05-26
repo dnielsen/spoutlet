@@ -813,6 +813,19 @@ platformd:
 
             Sincerely,
             %from_name%
+            
+        create: |
+            Hello %to_name%,
+
+            I have added you to <a href="%url%">%name%</a>.
+
+            You can log in with this password:
+            %password%
+
+            Click <a href="%password_reset_url%">here</a> to change your password.
+
+            Sincerely,
+            %from_name%
 
 
 "Bad credentials": "Incorrect username/email or password"
