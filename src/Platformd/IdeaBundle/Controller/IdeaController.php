@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use DateTime;
 
 class IdeaController extends Controller
 {
@@ -1243,6 +1244,7 @@ class IdeaController extends Controller
                 $toUser->setName($toEmail);
                 $toUser->setPlainPassword($password);
                 $toUser->generateConfirmationToken();
+                $toUser->setPasswordRequestedAt(new DateTime());
                 $toUser->setEnabled(true);
                 $um->updateUser($toUser);
 
