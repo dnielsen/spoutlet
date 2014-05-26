@@ -8,11 +8,11 @@ use Platformd\EventBundle\Entity\GlobalEvent;
 use Platformd\EventBundle\Entity\GroupEvent;
 
 /**
- * WatchedEventMapping
- * @ORM\Table(name="watched_events")
+ * EventRecommendation
+ * @ORM\Table(name="event_recommendation")
  * @ORM\Entity
  */
-class WatchedEventMapping
+class EventRecommendation
 {
     /**
      * @ORM\Id
@@ -39,6 +39,11 @@ class WatchedEventMapping
     protected $group_event = null;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
+     */
+    protected $referredBy;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     protected $createdAt;
@@ -57,7 +62,7 @@ class WatchedEventMapping
 
         $this->createdAt = new \DateTime();
     }
-    
+
     /**
      * Get id
      *
@@ -148,4 +153,23 @@ class WatchedEventMapping
         return $this->group_event;
     }
 
+    /**
+     * Set referredBy
+     *
+     * @param Platformd\UserBundle\Entity\User $referredBy
+     */
+    public function setReferredBy(\Platformd\UserBundle\Entity\User $referredBy)
+    {
+        $this->referredBy = $referredBy;
+    }
+
+    /**
+     * Get referredBy
+     *
+     * @return Platformd\UserBundle\Entity\User 
+     */
+    public function getReferredBy()
+    {
+        return $this->referredBy;
+    }
 }
