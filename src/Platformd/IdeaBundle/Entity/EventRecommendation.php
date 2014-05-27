@@ -169,6 +169,17 @@ class EventRecommendation
         return $this->group_event;
     }
 
+    public function getEvent()
+    {
+        if ($this->group_event) {
+            return $this->group_event;
+        }
+        if ($this->global_event) {
+            return $this->global_event;
+        }
+        return null;
+    }
+
     /**
      * Set referredBy
      *
