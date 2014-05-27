@@ -117,43 +117,23 @@ class GroupRecommendation
     }
 
     /**
-     * Set global_event
+     * Set group
      *
-     * @param Platformd\EventBundle\Entity\GlobalEvent $globalEvent
+     * @param Platformd\GroupBundle\Entity\Group $group
      */
-    public function setGlobalEvent(\Platformd\EventBundle\Entity\GlobalEvent $globalEvent)
+    public function setGroup(\Platformd\GroupBundle\Entity\Group $group)
     {
-        $this->global_event = $globalEvent;
+        $this->group = $group;
     }
 
     /**
-     * Get global_event
+     * Get group
      *
-     * @return Platformd\EventBundle\Entity\GlobalEvent 
+     * @return Platformd\GroupBundle\Entity\Group 
      */
-    public function getGlobalEvent()
+    public function getGroup()
     {
-        return $this->global_event;
-    }
-
-    /**
-     * Set group_event
-     *
-     * @param Platformd\EventBundle\Entity\GroupEvent $groupEvent
-     */
-    public function setGroupEvent(\Platformd\EventBundle\Entity\GroupEvent $groupEvent)
-    {
-        $this->group_event = $groupEvent;
-    }
-
-    /**
-     * Get group_event
-     *
-     * @return Platformd\EventBundle\Entity\GroupEvent 
-     */
-    public function getGroupEvent()
-    {
-        return $this->group_event;
+        return $this->group;
     }
 
     /**
