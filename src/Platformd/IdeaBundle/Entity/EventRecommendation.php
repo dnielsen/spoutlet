@@ -14,6 +14,12 @@ use Platformd\EventBundle\Entity\GroupEvent;
  */
 class EventRecommendation
 {
+
+    const TYPE_ATTEND    = 'attend';
+    const TYPE_SPONSOR   = 'sponsor';
+    const TYPE_SPEAK     = 'speak';
+    const TYPE_VOLUNTEER = 'volunteer';
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -49,16 +55,26 @@ class EventRecommendation
     protected $createdAt;
 
     /**
+    * @ORM\Column(type="string")
+    */
+    protected $type;
+
+
+    /**
      * Constructor
      */
-    public function __construct($user, $event)
+    public function __construct($user, $event, $referredBy, $type=self::TYPE_ATTEND)
     {
-        $this->$user = $user;
+        $this->user = $user;
+        $this->referredBy = $referredBy;
 
-        if($event instanceof GlobalEvent)
-            $this->$global_event = $event;
-        else if($event instanceof GroupEvent)
-            $this->$group_event = $event;
+        if ($event instanceof GlobalEvent) {
+            $this->global_event = $event;
+        } elseif ($event instanceof GroupEvent) {
+            $this->group_event = $event;
+        }
+
+        $this->type = $type;
 
         $this->createdAt = new \DateTime();
     }
@@ -171,5 +187,21 @@ class EventRecommendation
     public function getReferredBy()
     {
         return $this->referredBy;
+    }
+
+    /**
+     * Set type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * Get type
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

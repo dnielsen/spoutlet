@@ -48,16 +48,17 @@ class WatchedEventMapping
      */
     public function __construct($user, $event)
     {
-        $this->$user = $user;
+        $this->user = $user;
 
-        if($event instanceof GlobalEvent)
-            $this->$global_event = $event;
-        else if($event instanceof GroupEvent)
-            $this->$group_event = $event;
+        if ($event instanceof GlobalEvent) {
+            $this->global_event = $event;
+        } elseif ($event instanceof GroupEvent) {
+            $this->group_event = $event;
+        }
 
         $this->createdAt = new \DateTime();
     }
-    
+
     /**
      * Get id
      *
