@@ -1,0 +1,35 @@
+{% extends 'UserBundle::accountLayout.html.twig' %}
+
+{% block title %}Recommended for You{% endblock %}
+
+{% block profile_content %}
+
+    <h2>Recommended For You</h2>
+    {% if recommendations | length > 0 %}
+        <table class="myStuffTable">
+            <tr>
+                <td><strong>Recommended</strong></td>
+                <td><strong>Referred By</strong></td>
+            </tr>
+
+            {% for rec in recommendations %}
+                {% if rec.event|default %}
+                    {% set recommended = rec.event %}
+                {% elseif rec.group|default %}
+                    {% set recommended = rec.group %}
+                {% endif %}
+                {% set referredBy = rec.user %}
+                <tr>
+                    <td>
+                        <a href="{{ recommended | pd_link }}">{{ recommended.name }}</a>
+                    </td>
+                    <td>
+                        <a href="{{ path('profile', {'userId': referredBy.id}) }}">{{ referredBy.name }}</a>
+                    </td>
+                </tr>
+            {% endfor %}
+
+        </table>
+    {% endif %}
+
+{% endblock %}

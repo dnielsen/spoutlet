@@ -1429,6 +1429,38 @@ class IdeaController extends Controller
         ));
     }
 
+    public function userEventRecommendationsAction()
+    {
+        $this->enforceUserSecurity();
+        $recommendations = $this->getDoctrine()->getRepository('IdeaBundle:EventRecommendation')->findBy(array('user'=>$this->getCurrentUser()->getId()));
+
+        foreach ($recommendations as $key => $rec) {
+            if ($rec->getEvent()->isUserAttending($this->getCurrentUser())) {
+                unset($recommendations[$key]);
+            }
+        }
+
+        return $this->render('IdeaBundle:Idea:userRecommendations.html.twig', array(
+            'recommendations'   => $recommendations,
+        ));
+    }
+
+    public function userGroupRecommendationsAction()
+    {
+        $this->enforceUserSecurity();
+        $recommendations = $this->getDoctrine()->getRepository('IdeaBundle:GroupRecommendation')->findBy(array('user'=>$this->getCurrentUser()->getId()));
+
+        foreach ($recommendations as $key => $rec) {
+            if ($rec->getGroup()->isMember($this->getCurrentUser())) {
+                unset($recommendations[$key]);
+            }
+        }
+
+        return $this->render('IdeaBundle:Idea:userRecommendations.html.twig', array(
+            'recommendations'   => $recommendations,
+        ));
+    }
+
     public function userEntriesAction()
     {
         $this->enforceUserSecurity();

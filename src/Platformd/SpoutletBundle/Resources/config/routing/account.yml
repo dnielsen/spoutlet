@@ -22,6 +22,14 @@ accounts_pages:
     pattern: /profile/pages
     defaults: { _controller: IdeaBundle:Idea:userPages }
 
+accounts_event_recommendations:
+    pattern: /profile/eventRecommendations
+    defaults: { _controller: IdeaBundle:Idea:userEventRecommendations }
+
+accounts_group_recommendations:
+    pattern: /profile/groupRecommendations
+    defaults: { _controller: IdeaBundle:Idea:userGroupRecommendations }
+
 accounts_giveaways:
     pattern: /profile/giveaways
     defaults: { _controller: SpoutletBundle:Account:giveaways }
