@@ -16,6 +16,8 @@ use Platformd\IdeaBundle\Entity\Tag;
 use Platformd\IdeaBundle\Entity\Vote;
 use Platformd\IdeaBundle\Entity\Sponsor;
 use Platformd\IdeaBundle\Entity\RegistrationAnswer;
+use Platformd\IdeaBundle\Entity\EventRecommendation;
+use Platformd\IdeaBundle\Entity\GroupRecommendation;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
@@ -1224,6 +1226,12 @@ class IdeaController extends Controller
         $flashResult  = 'success';
         $flashMessage = '';
 
+        if ($scope == 'group') {
+            $container = $this->getGroupManager()->find($containerId);
+        } elseif ($scope == 'event') {
+            $container = $this->getGroupEventService()->find($containerId);
+        }
+
         $params = array(
            'scope'       => $scope,
            'containerId' => $containerId,
@@ -1267,11 +1275,9 @@ class IdeaController extends Controller
         
         if ($forceAdd && $this->isGranted('ROLE_ADMIN')) {
             if ($scope == 'group') {
-                $gm = $this->getGroupManager();
-                $gm->autoJoinGroup($gm->find($containerId), $toUser);
+                $this->getGroupManager()->autoJoinGroup($container, $toUser);
             } elseif ($scope == 'event') {
-                $es = $this->getGroupEventService();
-                $es->register($es->find($containerId), $toUser);
+                $this->getGroupEventService()->register($container, $toUser);
             }
 
             if (!$type) {
@@ -1281,6 +1287,14 @@ class IdeaController extends Controller
             $flashMessage .= 'You have successfully added '.$toName.' to this '.$scope.'. ';
             
         } elseif ($toUser) {
+            if ($scope == 'group') {
+                $recommendation = new GroupRecommendation($toUser, $container, $this->getCurrentUser());
+            } elseif ($scope == 'event') {
+                $recommendation = new EventRecommendation($toUser, $container, $this->getCurrentUser());
+            }
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($recommendation);
+            $em->flush();
             $flashMessage .= 'This '.$scope.' has been recommended to '.$toName.'. ';
         }
 
