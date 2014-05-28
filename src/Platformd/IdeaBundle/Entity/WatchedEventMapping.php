@@ -28,13 +28,11 @@ class WatchedEventMapping
 
     /**
      * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GlobalEvent")
-     * @ORM\JoinColumn(name="global_event", referencedColumnName="id")
      */
     protected $global_event = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GroupEvent")
-     * @ORM\JoinColumn(name="group_event", referencedColumnName="id")
      */
     protected $group_event = null;
 
@@ -147,6 +145,17 @@ class WatchedEventMapping
     public function getGroupEvent()
     {
         return $this->group_event;
+    }
+
+    public function getEvent()
+    {
+        if ($this->group_event) {
+            return $this->group_event;
+        }
+        if ($this->global_event) {
+            return $this->global_event;
+        }
+        return null;
     }
 
 }
