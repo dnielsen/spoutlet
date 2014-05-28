@@ -1,4 +1,5 @@
 <ul class="spcr-t spcr-b">
+    {% set venue  = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::VENUE') %}
     {% set plat   = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::PLATINUM') %}
     {% set gold   = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::GOLD') %}
     {% set silver = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::SILVER') %}
@@ -14,13 +15,15 @@
         {% set containerId = group.id %}
     {% endif %}
 
-    {% set lastLevel = '' %}
+    {% set lastLevel = -1 %}
     {% for sponsor in sponsors %}
 
         {% set currentLevel = sponsor.getLevel(scope, containerId) %}
 
         {% if currentLevel != lastLevel %}
-            {% if currentLevel == plat %}
+            {% if currentLevel == venue %}
+                <div class="sponsorLevelText venueText spcr-t">Venue Sponsors</div>
+            {% elseif currentLevel == plat %}
                 <div class="sponsorLevelText platText spcr-t">Platinum Sponsors</div>
             {% elseif currentLevel == gold %}
                 <div class="sponsorLevelText goldText spcr-t">Gold Sponsors</div>

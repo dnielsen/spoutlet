@@ -2,11 +2,6 @@
 
 {% block content %}
 
-    {% set plat   = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::PLATINUM') %}
-    {% set gold   = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::GOLD') %}
-    {% set silver = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::SILVER') %}
-    {% set bronze = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::BRONZE') %}
-
     <div class="col_third">
         <img class="sponsorLogoFill" src="{{ media_path(sponsor.image) }}"/>
         <h2>{{ sponsor.name }}</h2>
@@ -20,40 +15,22 @@
     </div>
 
     {% if groups|length > 0 %}
-    <div class="col_third">
-        <h2 class="ctr">Sponsored Groups</h2>
+    <div class="col_third ctr">
+        <h2>Sponsored Groups</h2>
         {% for level,level_groups in groups %}
-            {% if level == plat %}
-                <h2 class="platText midpad spcr-t">Platinum Level</h3>
-            {% elseif level == gold %}
-                <h2 class="goldText midpad spcr-t">Gold Level</h3>
-            {% elseif level == silver %}
-                <h2 class="silverText midpad spcr-t">Silver Level</h3>
-            {% elseif level == bronze %}
-                <h2 class="bronzeText midpad spcr-t">Bronze Level</h3>
-            {% endif %}
             {% for group in level_groups %}
-                <a href="{{ path('group_show', {'slug': group.slug}) }}"><h3 class="blu spcr-t7 spcr-l3">{{ group.name }}</h3></a>
+                <a href="{{ path('group_show', {'slug': group.slug}) }}"><h3 class="blu midpad borderBtm">{{ group.name }}</h3></a>
             {% endfor %}
         {% endfor %}
     </div>
     {% endif %}
 
     {% if events|length > 0 %}
-    <div class="col_third">
-        <h2 class="ctr">Sponsored Events</h2>
+    <div class="col_third ctr">
+        <h2>Sponsored Events</h2>
         {% for level,level_events in events %}
-            {% if level == plat %}
-                <h2 class="platText midpad spcr-t">Platinum Level</h3>
-            {% elseif level == gold %}
-                <h2 class="goldText midpad spcr-t">Gold Level</h3>
-            {% elseif level == silver %}
-                <h2 class="silverText midpad spcr-t">Silver Level</h3>
-            {% elseif level == bronze %}
-                <h2 class="bronzeText midpad spcr-t">Bronze Level</h3>
-            {% endif %}
             {% for event in level_events %}
-                <a href="{{ path('group_event_view', {'groupSlug': event.group.slug, 'eventId': event.id}) }}"><h3 class="blu spcr-t7 spcr-l3">{{ event.name }}</h3></a>
+                <a href="{{ path('group_event_view', {'groupSlug': event.group.slug, 'eventId': event.id}) }}"><h3 class="blu midpad borderBtm">{{ event.name }}</h3></a>
             {% endfor %}
         {% endfor %}
     </div>

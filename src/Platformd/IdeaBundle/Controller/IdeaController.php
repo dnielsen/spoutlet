@@ -1015,7 +1015,8 @@ class IdeaController extends Controller
             ->add('level', 'choice', array('choices' => array(SponsorRegistry::BRONZE   => 'Bronze',
                                                               SponsorRegistry::SILVER   => 'Silver',
                                                               SponsorRegistry::GOLD     => 'Gold',
-                                                              SponsorRegistry::PLATINUM => 'Platinum',)))
+                                                              SponsorRegistry::PLATINUM => 'Platinum',
+                                                              SponsorRegistry::VENUE    => 'Venue',)))
             ->getForm();
 
 

@@ -6,6 +6,7 @@
 
     {% if attachedSponsors %}
 
+        {% set venue  = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::VENUE') %}
         {% set plat   = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::PLATINUM') %}
         {% set gold   = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::GOLD') %}
         {% set silver = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::SILVER') %}
@@ -19,7 +20,9 @@
 
         {% for sponsor in attachedSponsors %}
         <div class="sponsorBx card">
-            {% if sponsor.getLevel(scope, containerId) == plat %}
+            {% if sponsor.getLevel(scope, containerId) == venue %}
+                {% set sponsorText = '<div class="sponsorLevelText venueText">VENUE</div>' %}
+            {% elseif sponsor.getLevel(scope, containerId) == plat %}
                 {% set sponsorText = '<div class="sponsorLevelText platText">PLATINUM</div>' %}
             {% elseif sponsor.getLevel(scope, containerId) == gold %}
                 {% set sponsorText = '<div class="sponsorLevelText goldText">GOLD</div>' %}

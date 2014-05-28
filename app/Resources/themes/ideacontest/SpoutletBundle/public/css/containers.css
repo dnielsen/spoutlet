@@ -434,6 +434,10 @@
         text-align: center;
         font-size: 1.3em;
     }
+    .venueText   { 
+        background: linear-gradient(#2FAAD9, #008DB3);
+        color: white;
+    }
     .platText   { 
         background: linear-gradient(grey, silver);
         color: white;

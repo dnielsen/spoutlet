@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SponsorRegistry
 {
+    const VENUE    = 0;
     const PLATINUM = 1;
     const GOLD     = 2;
     const SILVER   = 3;
