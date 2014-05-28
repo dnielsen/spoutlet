@@ -24,6 +24,7 @@ use Platformd\MediaBundle\Form\Type\MediaType;
 use Symfony\Component\Form\Exception\NotValidException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use DateTime;
@@ -724,14 +725,15 @@ class IdeaController extends Controller
         return new RedirectResponse($ideaUrl);
     }
 
-    public function watchAction(Request $request, $globalEventId, $groupEventId) {
+    public function watchAction(Request $request, $eventId) {
 
         $this->enforceUserSecurity();
 
-        // $params   = $request->request->all();
-        // $source   = $params['source'];
+        $params = $request->query->all();
+        $eventType = $params['eventType'];
 
-        var_dump("test"); exit;
+        echo 'Feature in progress';
+        return new Response();
 
         // $event = null;
         // if($globalEventId > 0) {
@@ -745,38 +747,7 @@ class IdeaController extends Controller
 
         // $em = $this->getDoctrine()->getEntityManager();
         // $em->persist($watchEventEntry);
-
-
-
-
-        // $followMapping = $idea->getFollowMapping($userName);
-
-        // if(!$followMapping)
-        // {
-        //     $followMapping = new FollowMapping($userName, $idea);
-        //     $idea->addFollowMapping($followMapping);
-        //     $em->persist($followMapping);
-        // }
-        // else
-        // {
-        //     $idea->removeFollowMapping($followMapping);
-        //     $em->remove($followMapping);
-        // }
-
         // $em->flush();
-
-        // if ($source == 'detail') {
-        //     $url = $this->generateUrl('idea_show', array(
-        //             'entrySetId'=> $entrySetId,
-        //             'entryId'   => $entryId,
-        //         ));
-        // }
-        // elseif ($source == 'list') {
-        //     $url = $this->generateUrl('entry_set_view', array(
-        //             'entrySetId'=> $entrySetId,
-        //             'tag'       => $params['tag'],
-        //         ));
-        // }
 
         return new RedirectResponse($this->generateUrl('global_events_index'));
     }

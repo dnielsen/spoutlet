@@ -1,11 +1,12 @@
 <table class="tblStyle tablesorter" id="events-table">
     <thead>
         <tr>
-            <th>{{ 'platformd.events.event_listings.start_date' | pd_trans }}</th>
             <th style="width:15px;"></th>
+            <th style="width:15%;">{{ 'platformd.events.event_listings.start_date' | pd_trans }}</th>
             <th style="width:28%;">{{ 'platformd.events.event_listings.event' | pd_trans }}</th>
             <th style="width:28%;">{{ 'platformd.events.event_listings.hosted_by' | pd_trans }}</th>
             <th style="width:25%;">{{ 'platformd.events.event_listings.location' | pd_trans }}</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -25,18 +26,14 @@
         {% for event in events %}
         {% set isGroupEvent = event.group is defined %}
         <tr class="eventListGroup_online">
-            <td style="vertical-align:top" data-starts="{{ event.startsAt | date('U') }}">
+            <td>
+                <img id="{% if isGroupEvent %}group{% else %}global{% endif %}-event-attending-{{ event.id }}" src="{{ asset('/bundles/spoutlet/images/form-ic-success-small.png') }}" alt="Attending" style="display:none;" />
+            </td>
+            <td data-starts="{{ event.startsAt | date('U') }}">
                 {{ event.startsAt | date_translate }}
             </td>
             {# todo - refactor this next line somewhere else #}
-            <td style="vertical-align:top">
-                <img id="{% if isGroupEvent %}group{% else %}global{% endif %}-event-attending-{{ event.id }}" src="{{ asset('/bundles/spoutlet/images/form-ic-success-small.png') }}" alt="Attending" style="display:none;" />
-                {% if useExternal %}
-                    <a href="{{ path('watch_event', {'eventId': event.id, 'eventType': 'global'}) }}" class="btnTny spcr-t">Share</a>
-                    <a href="{{ path('profile_edit', {'eventId': event.id, 'eventType': 'global'}) }}" class="btnTny spcr-t">Watch</a>
-                {% endif %}
-            </td>
-            <td style="vertical-align:top" class="event-link">
+            <td class="event-link">
 
                 {% if isGroupEvent %}
                     {{ event | pd_link_full(event.name ) }} 
@@ -46,7 +43,7 @@
                 {% endif %}
 
             </td>
-            <td style="vertical-align:top" class="event-organizer">
+            <td class="event-organizer">
                 {% if event.hostedBy|default(null) %}
                     {{ event.hostedBy }}
                 {% else %}
@@ -57,7 +54,7 @@
                     {% endif %}
                 {% endif %}
             </td>
-            <td style="vertical-align:top">
+            <td>
                 {% if event.online == true %}
                     {{ 'platformd.events.event_listings.online' | pd_trans }}
                 {% else %}
@@ -68,6 +65,12 @@
                     {% else %}
                         {{ 'na'|pd_trans }}
                     {% endif %}
+                {% endif %}
+            </td>
+            <td>
+                {% if useExternal %}
+                    <a href="{{ path('watch_event', {'eventType': 'global', 'eventId': event.id, }) }}" class="btnTny spcr-t">Recommend</a>
+                    <a href="{{ path('watch_event', {'eventType': 'global', 'eventId': event.id, }) }}" class="btnTny spcr-t">Watch</a>
                 {% endif %}
             </td>
         </tr>
