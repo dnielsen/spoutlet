@@ -112,6 +112,11 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     protected $source_idea;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
+     */
+    protected $speaker;
+
+    /**
      * Constructor
      */
     public function __construct(GroupEvent $event) {
@@ -307,6 +312,14 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     public function setEndsAt($endsAt)
     {
         $this->endsAt = $endsAt;
+    }
+    public function getSpeaker()
+    {
+        return $this->speaker;
+    }
+    public function setSpeaker($value)
+    {
+        $this->speaker = $value;
     }
 
 //    public function addTag(Tag $tag)
