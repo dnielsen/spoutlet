@@ -21,8 +21,10 @@
         {#<div class="clr"></div>#}
     {#{% endif %}#}
 
-
     <hr class="small-margin"/>
+    {% if eventSession.speaker %}
+        Speaker: <a href="{{ path('profile', {'userId': eventSession.speaker.id}) }}" class="blu">{{ eventSession.speaker.name }}</a><br/>
+    {% endif %}
     {{ eventSession.dateString }}<br/>
     {{ eventSession.timeRangeString }}
     <hr/>

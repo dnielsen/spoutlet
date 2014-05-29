@@ -90,6 +90,7 @@ class AdminController extends Controller
                     $evtSession->setSourceIdea($idea);
                     $evtSession->setName($idea->getName());
                     $evtSession->setDescription($idea->getDescription());
+                    $evtSession->setSpeaker($idea->getCreator());
 //                    $evtSession->addTags($idea->getTags());
 
                     $eventStart = $event->getStartsAt();
