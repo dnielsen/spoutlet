@@ -549,6 +549,11 @@ class User extends BaseUser
      */
     protected $mailingAddress;
 
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $tshirtSize;
+
     public function __construct()
     {
         parent::__construct();
@@ -1636,5 +1641,11 @@ class User extends BaseUser
     }
     public function setMailingAddress($value) {
         $this->mailingAddress = $value;
+    }
+    public function getTshirtSize() {
+        return $this->tshirtSize;
+    }
+    public function setTshirtSize($value) {
+        $this->tshirtSize = $value;
     }
 }
