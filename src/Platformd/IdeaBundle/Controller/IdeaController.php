@@ -327,6 +327,10 @@ class IdeaController extends Controller
 
         $this->joinIdeaScope($idea);
 
+        $profileUrl = $this->generateUrl('profile');
+
+        $this->setFlash('success', 'Your '.$entrySet->getType().' has been successfully proposed. Make sure your <a href="'.$profileUrl.'" class="blu">profile</a> is up to date.');
+
         $ideaUrl = $this->generateUrl('idea_show', array(
             'entrySetId'=> $entrySetId,
             'entryId'   => $idea->getId(),
