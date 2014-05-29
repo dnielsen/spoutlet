@@ -106,6 +106,7 @@ profile_twitterUsername: Twitter Username
 profile_website: Website URL
 profile_professionalEmail: Professional Email
 profile_mailingAddress: Mailing Address
+profile_tshirtSize: T-Shirt Size
 
 knp_media_fileObject: Image to Upload
 image_file: Image to Upload

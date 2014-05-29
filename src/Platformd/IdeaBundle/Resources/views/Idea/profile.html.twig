@@ -62,6 +62,15 @@
             {% endif %}
             {% if ownProfile or isAdmin %}
                 <tr>
+                    <td colspan="2" class="ctr bld">Private Information</td>
+                </tr>
+                {% if user.tshirtSize %}
+                    <tr>
+                        <td>T-Shirt Size:</td>
+                        <td>{{ user.tshirtSize }}</td>
+                    </tr>
+                {% endif %}
+                <tr>
                     <td>Email address:</td>
                     <td>{{ user.email }}</td>
                 </tr>

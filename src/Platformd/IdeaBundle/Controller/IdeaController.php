@@ -1158,6 +1158,7 @@ class IdeaController extends Controller
             ->add('professionalEmail')
             ->add('linkedIn', null, array('attr' => array('size' => '60%')))
             ->add('website', null, array('attr' => array('size' => '60%')))
+            ->add('tshirtSize', null, array('attr' => array('size' => '60%')))
             ->add('mailingAddress', null, array('attr' => array('size' => '60%')))
             ->getForm();
 

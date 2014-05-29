@@ -8,16 +8,20 @@
 
     {{ form_errors(form) }}
 
+    <h2>Public Information</h2>
     {{ form_row(form.name) }}
     {{ form_row(form.title) }}
     {{ form_row(form.organization) }}
     {{ form_row(form.industry) }}
     {{ form_row(form.aboutMe) }}
     {{ form_row(form.twitterUsername) }}
-    {{ form_row(form.professionalEmail) }}
     {{ form_row(form.linkedIn) }}
     {{ form_row(form.website) }}
+
+    <h2>Private Information</h2>
+    {{ form_row(form.professionalEmail) }}
     {{ form_row(form.mailingAddress) }}
+    {{ form_row(form.tshirtSize) }}
 
     {{ form_rest(form) }}
 
