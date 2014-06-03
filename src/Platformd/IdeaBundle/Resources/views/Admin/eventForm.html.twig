@@ -148,7 +148,7 @@
                 collectionHolder.data('index', index + 1);
 
                 var deleteLink = $(deleteFieldLink);
-                newForm = newForm.prepend(deleteLink);
+                newForm = newForm.prepend(deleteLink).append('<div class="clr"></div>');
 
                 addFieldLink.before(newForm);
 
@@ -181,7 +181,7 @@
 {% block _event_registrationFields_widget %}
     {% spaceless %}
         {% if prototype is defined %}
-            {% set data_prototype = "<div id=\"event_registrationFields_$$name$$\" class=\"form_row\"><input type=\"text\" id=\"event_registrationFields_$$name$$_question\" name=\"event[registrationFields][$$name$$][question]\" required=\"required\" size=\"60%\" class=\" form-txt\"></div>" %}
+            {% set data_prototype = "<div id=\"event_registrationFields_$$name$$\" class=\"form_row\"><select id=\"event_registrationFields_$$name$$_type\" name=\"event[registrationFields][$$name$$][type]\" required=\"required\" class=\"left\"><option value=\"text\">Text</option><option value=\"checkbox\">Checkbox</option></select><input type=\"text\" id=\"event_registrationFields_$$name$$_question\" name=\"event[registrationFields][$$name$$][question]\" required=\"required\" size=\"60%\" class=\"left form-txt\"></div>" %}
             {% set attr = attr|merge({'data-prototype': data_prototype}) %}
         {% endif %}
         {{ form_label(form) }}

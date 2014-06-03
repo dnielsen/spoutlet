@@ -11,6 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RegistrationField {
 
+    const TYPE_TEXT     = 'text';
+    const TYPE_CHECKBOX = 'checkbox';
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -27,6 +30,11 @@ class RegistrationField {
      * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GroupEvent", inversedBy="registrationFields")
      */
     protected $event;
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $type;
 
     /**
      * @ORM\Column(type="string")
@@ -95,6 +103,15 @@ class RegistrationField {
     public function getGroup()
     {
         return $this->group;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+    public function getType()
+    {
+        return $this->type;
     }
 
     /**
