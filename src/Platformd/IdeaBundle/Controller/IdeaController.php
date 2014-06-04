@@ -16,6 +16,7 @@ use Platformd\IdeaBundle\Entity\Tag;
 use Platformd\IdeaBundle\Entity\Vote;
 use Platformd\IdeaBundle\Entity\Sponsor;
 use Platformd\IdeaBundle\Entity\RegistrationAnswer;
+use Platformd\IdeaBundle\Entity\RegistrationField;
 use Platformd\IdeaBundle\Entity\EventRecommendation;
 use Platformd\IdeaBundle\Entity\GroupRecommendation;
 use Platformd\SpoutletBundle\Controller\Controller;
@@ -1527,8 +1528,17 @@ class IdeaController extends Controller
                 $answer = new RegistrationAnswer();
                 $answer->setField($field);
                 $answer->setUser($user);
-                $answer->setAnswer($request->request->get($field->getId()));
-
+                $fieldInput = $request->request->get($field->getId());
+                if ($field->getType() == RegistrationField::TYPE_CHECKBOX) {
+                    if ($fieldInput) {
+                        $answer->setAnswer('Y');
+                    } else {
+                        $answer->setAnswer('N');
+                    }
+                } else {
+                    $answer->setAnswer($request->request->get($field->getId()));
+                }
+                
                 $em->persist($answer);
             }
             $em->flush();

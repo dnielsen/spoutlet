@@ -9,11 +9,17 @@
     <form action = "{{ path('event_registration', {'groupSlug': group.slug, 'eventId': event.id}) }}" method="POST">
 
         {% for field in fields %}
-            <h3>{{ field.question }}</h3>
-            <textarea name="{{ field.id }}" style="width:60%;" required="required"></textarea>
+            {% if field.type == constant('\\Platformd\\IdeaBundle\\Entity\\RegistrationField::TYPE_CHECKBOX') %}
+                <input type="checkbox" name="{{ field.id }}" class="left spcr-r"/>
+                <h3 class="left">{{ field.question }}</h3>
+            {% elseif field.type == constant('\\Platformd\\IdeaBundle\\Entity\\RegistrationField::TYPE_TEXT') %}
+                <h3>{{ field.question }}</h3>
+                <textarea name="{{ field.id }}" style="width:60%;" required="required"></textarea>
+            {% endif %}
+            <div class="clr spcr-b2"></div>
         {% endfor %}
 
-        <input type="submit"/>
+        <input type="submit" value="Complete Registration"/>
         <input type="submit" value="Cancel" name="cancel" formnovalidate/>
 
     </form>
