@@ -47,9 +47,11 @@ class RegistrationField {
     protected $answers;
 
 
-    public function __construct()
+    public function __construct($question=null, $type=self::TYPE_TEXT)
     {
-        $this->answers = new ArrayCollection();
+        $this->type     = $type;
+        $this->question = $question;
+        $this->answers  = new ArrayCollection();
     }
 
     public function getId()

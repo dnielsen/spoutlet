@@ -12,6 +12,7 @@ use Platformd\GroupBundle\Entity\Group;
 use Platformd\IdeaBundle\Entity\HtmlPage;
 use Platformd\IdeaBundle\Entity\EntrySet;
 use Platformd\IdeaBundle\Entity\VoteCriteria;
+use Platformd\IdeaBundle\Entity\RegistrationField;
 use Platformd\IdeaBundle\Form\Type\RegistrationFieldFormType;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
@@ -200,6 +201,15 @@ class AdminController extends Controller
         if (!$event) {
             $isNew = true;
             $event = new GroupEvent($group);
+
+            $regQ1 = new RegistrationField('What questions do you have?');
+            $regQ2 = new RegistrationField('What topics are you interested in?');
+            $regQ3 = new RegistrationField('Do you want to receive information about our sponsors?', RegistrationField::TYPE_CHECKBOX);
+
+            $event->addRegistrationField($regQ1);
+            $event->addRegistrationField($regQ2);
+            $event->addRegistrationField($regQ3);
+
         }
         else {
             $this->validateAuthorization($event);
