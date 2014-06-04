@@ -123,6 +123,8 @@
                 $(this).prepend(deleteFieldLink);
             });
 
+            collectionHolder.append('<div class="clr"></div>')
+
             // Add the 'Add question' link to bottom of form
             collectionHolder.append(addFieldLink);
 
@@ -189,7 +191,7 @@
             {% block field_rows %}
                 {{ form_errors(form) }}
                 {% for child in form %}
-                    {{ form_widget(child) }}
+                    {{ form_widget(child, {'attr': {'class': 'left'} }) }}
                 {% endfor %}
             {% endblock %}
             {{ form_rest(form) }}
