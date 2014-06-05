@@ -89,6 +89,10 @@ watch_event:
     pattern:    /watch/{eventId}
     defaults:   { _controller: IdeaBundle:Idea:watch }
 
+unwatch_event:
+    pattern:    /unwatch/{eventId}
+    defaults:   { _controller: IdeaBundle:Idea:unwatch }
+
 invite_user:
     pattern:    /inviteUser
     defaults:   { _controller: IdeaBundle:Idea:inviteUser }

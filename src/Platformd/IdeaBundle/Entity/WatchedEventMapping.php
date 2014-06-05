@@ -22,7 +22,7 @@ class WatchedEventMapping
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", inversedBy="watchedEvents")
      */
     protected $user;
 

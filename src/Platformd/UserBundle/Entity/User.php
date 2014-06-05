@@ -511,6 +511,11 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\HtmlPage", mappedBy="creator")
      */
     protected $htmlPages;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\WatchedEventMapping", mappedBy="user")
+     */
+    protected $watchedEvents;
    
     /**
      * The id for facematching
@@ -568,6 +573,7 @@ class User extends BaseUser
         $this->comments                 = new ArrayCollection();
         $this->answers                  = new ArrayCollection();
         $this->htmlPages                = new ArrayCollection();
+        $this->watchedEvents            = new ArrayCollection();
     }
 
     public function __toString() {
@@ -1574,6 +1580,18 @@ class User extends BaseUser
     public function getHtmlPages()
     {
         return $this->htmlPages;
+    }
+    public function addWatchedEvent($value)
+    {
+        $this->watchedEvents[] = $value;
+    }
+    public function removeWatchedEvent($value)
+    {
+        $this->watchedEvents->removeElement($value);
+    }
+    public function getWatchedEvents()
+    {
+        return $this->watchedEvents;
     }
 
    /**

@@ -909,7 +909,25 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         }
 
         foreach ($this->attendees as $attendee) {
-            if($attendee->getId() == $user->getId()) {
+            if ($attendee->getId() == $user->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function isUserWatching($user)
+    {
+        if (!$user){
+            return false;
+        }
+
+        foreach ($user->getWatchedEvents() as $watchedEvent) {
+            if ( !($event = $watchedEvent->getGlobalEvent()) ) {
+                $event = $watchedEvent->getGroupEvent();
+            }
+            if ($event->getId() == $this->getId()) {
                 return true;
             }
         }

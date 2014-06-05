@@ -19,6 +19,7 @@ use Platformd\IdeaBundle\Entity\RegistrationAnswer;
 use Platformd\IdeaBundle\Entity\RegistrationField;
 use Platformd\IdeaBundle\Entity\EventRecommendation;
 use Platformd\IdeaBundle\Entity\GroupRecommendation;
+use Platformd\IdeaBundle\Entity\WatchedEventMapping;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
@@ -734,26 +735,81 @@ class IdeaController extends Controller
 
         $this->enforceUserSecurity();
 
-        $params = $request->query->all();
-        $eventType = $params['eventType'];
+        $eventType = $request->query->get('eventType');
 
-        echo 'Feature in progress';
-        return new Response();
+        $event = null;
 
-        // $event = null;
-        // if($globalEventId > 0) {
-        //     $event = $this->getDoctrine()->getRepository('EventBundle:GlobalEvent')->find($globalEventId);
-        // } else if($groupEventId > 0) {
-        //     $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($groupEventId);
-        // }
+        if ($eventType == 'global'){
+            $event = $this->getDoctrine()->getRepository('EventBundle:GlobalEvent')->find($eventId);
+        } else {
+            $eventType = 'group';
+            $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($eventId);
+        }
 
+        if (!$event) {
+            throw new NotFoundHttpException('Event not found!');
+        }
+        
+        $user = $this->getCurrentUser();
+        $watchCriteria = array('user'=>$user->getId(), $eventType.'_event'=>$event->getId());
+        $watchEventEntry = $this->getDoctrine()->getRepository('IdeaBundle:WatchedEventMapping')->findOneBy($watchCriteria);
+        
+        if (!$watchEventEntry) {
+            $watchEventEntry = new WatchedEventMapping($user, $event);
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($watchEventEntry);
+            $em->flush();
+            $this->setFlash('success', 'You are now watching '.$event->getName());
+        } else {
+            $this->setFlash('info', 'You are already watching '.$event->getName().'!');
+        }
 
-        // $watchEventEntry = new WatchedEventMapping($this->getCurrentUser(), $event);
+        if ($eventType == 'group') {
+            return new RedirectResponse($this->generateUrl('group_event_view', 
+                                        array('groupSlug'=>$event->getGroup()->getSlug(), 
+                                              'eventId'=>$event->getId())));
+        }
 
-        // $em = $this->getDoctrine()->getEntityManager();
-        // $em->persist($watchEventEntry);
-        // $em->flush();
+        return new RedirectResponse($this->generateUrl('global_events_index'));
+    }
 
+    public function unwatchAction(Request $request, $eventId) {
+
+        $this->enforceUserSecurity();
+
+        $eventType = $request->query->get('eventType');
+
+        $event = null;
+
+        if ($eventType == 'global'){
+            $event = $this->getDoctrine()->getRepository('EventBundle:GlobalEvent')->find($eventId);
+        } else {
+            $eventType = 'group';
+            $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($eventId);
+        }
+
+        if (!$event) {
+            throw new NotFoundHttpException('Event not found!');
+        }
+
+        $watchCriteria = array('user'=>$this->getCurrentUser()->getId(), $eventType.'_event'=>$event->getId());
+        $watchEventEntry = $this->getDoctrine()->getRepository('IdeaBundle:WatchedEventMapping')->findOneBy($watchCriteria);
+
+        if ($watchEventEntry) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->remove($watchEventEntry);
+            $em->flush();
+            $this->setFlash('success', 'You have successfully stopped watching '.$event->getName());
+        } else {
+            $this->setFlash('info', 'You are not watching this event.');
+        }
+        
+        if ($eventType == 'group') {
+            return new RedirectResponse($this->generateUrl('group_event_view', 
+                                        array('groupSlug'=>$event->getGroup()->getSlug(), 
+                                              'eventId'=>$event->getId())));
+        }
+        
         return new RedirectResponse($this->generateUrl('global_events_index'));
     }
 

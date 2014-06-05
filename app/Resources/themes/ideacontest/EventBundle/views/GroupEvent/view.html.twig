@@ -150,6 +150,9 @@
 
 <div class="col_fifth">
 
+    {% if (not event.isUserAttending(user)) and (not event.isUserWatching(user)) %}
+        <a href="{{ path('watch_event', {'eventId': event.id, 'eventType': 'group'}) }}" class="btnLg2">Watch Event</a>
+    {% endif %}
     {% if event.externalUrl|default %}
         <a href="{{ event.externalUrl }}" class="btnLg2" target="_blank">Register to Attend</a>
         {% if not event.isUserAttending(user) %}
