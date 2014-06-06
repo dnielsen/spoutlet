@@ -1322,9 +1322,17 @@ class IdeaController extends Controller
             
         } elseif ($toUser) {
             if ($scope == 'group') {
-                $recommendation = new GroupRecommendation($toUser, $container, $this->getCurrentUser());
+                $recCriteria = array('referredBy'=>$this->getCurrentUser()->getId(),'user'=>$toUser->getId(),'group'=>$containerId);
+                $recommendation = $this->getDoctrine()->getRepository('IdeaBundle:GroupRecommendation')->findOneBy($recCriteria);
+                if (!$recommendation) {
+                    $recommendation = new GroupRecommendation($toUser, $container, $this->getCurrentUser());
+                }
             } elseif ($scope == 'event') {
-                $recommendation = new EventRecommendation($toUser, $container, $this->getCurrentUser());
+                $recCriteria = array('referredBy'=>$this->getCurrentUser()->getId(),'user'=>$toUser->getId(),'group_event'=>$containerId);
+                $recommendation = $this->getDoctrine()->getRepository('IdeaBundle:EventRecommendation')->findOneBy($recCriteria);
+                if (!$recommendation) {
+                    $recommendation = new EventRecommendation($toUser, $container, $this->getCurrentUser());
+                }
             }
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($recommendation);
@@ -1416,7 +1424,7 @@ class IdeaController extends Controller
                 $subject = $fromUser->getName().' has added you to '.$containerName;
                 $formTitle = 'Add User Form';
                 $emailType = 'Add';
-            } elseif ($type == 'create') {
+            } elseif ($type == 'create') { 
                 $bodyTemplate = 'platformd.email.create';
                 $subject = $fromUser->getName().' has added you to '.$containerName.' on Campsite';
                 $formTitle = 'Create User Form';
@@ -1429,6 +1437,43 @@ class IdeaController extends Controller
         }
 
         if ($request->getMethod() === 'POST') {
+
+            if ($recType = $request->request->get('recommendType')) {
+                if ($scope == 'group') {
+                    $recommendation = $this->getDoctrine()->getRepository('IdeaBundle:GroupRecommendation')->findOneBy(
+                                                                        array('referredBy' => $this->getCurrentUser()->getId(),
+                                                                              'user'       => $toUser->getId(),
+                                                                              'group'      => $containerId));
+                    $speakRec     = GroupRecommendation::TYPE_SPEAK;
+                    $sponsorRec   = GroupRecommendation::TYPE_SPONSOR;
+                    $volunteerRec = GroupRecommendation::TYPE_VOLUNTEER;
+                    $defaultRec   = GroupRecommendation::TYPE_JOIN;
+
+                } elseif ($scope == 'event') {
+                    $recommendation = $this->getDoctrine()->getRepository('IdeaBundle:EventRecommendation')->findOneBy(
+                                                                        array('referredBy'  => $this->getCurrentUser()->getId(),
+                                                                              'user'        => $toUser->getId(),
+                                                                              'group_event' => $containerId));
+                    $speakRec     = EventRecommendation::TYPE_SPEAK;
+                    $sponsorRec   = EventRecommendation::TYPE_SPONSOR;
+                    $volunteerRec = EventRecommendation::TYPE_VOLUNTEER;
+                    $defaultRec   = EventRecommendation::TYPE_ATTEND;
+                }
+
+                if ($recType == 'speak') {
+                    $subject = $fromUser->getName().' has recommended you to speak at '.$containerName;
+                    $recommendation->setType($speakRec);
+                } elseif ($recType == 'sponsor') {
+                    $subject = $fromUser->getName().' has recommended you to sponsor '.$containerName;
+                    $recommendation->setType($sponsorRec);
+                } elseif ($recType == 'volunteer') {
+                    $subject = $fromUser->getName().' has recommended you to volunteer for '.$containerName;
+                    $recommendation->setType($volunteerRec);
+                }  else {
+                    $recommendation->setType($defaultRec);
+                }
+                $this->getDoctrine()->getEntityManager()->flush();
+            }
 
             if (!$subject) {
                 $subject = 'New message from '.$fromUser->getName();

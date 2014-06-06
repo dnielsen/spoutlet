@@ -15,11 +15,28 @@
 
 {% block content %}
 
-    <h2 class="spcr-b">{% if formTitle|default %}{{ formTitle }}{% else %}Send Message{% endif %}</h2>
-    <strong>To:</strong> {{ toName }}<br/>
-
     <div class="col_two_thirds midpad">
+
+        <h2 class="spcr-b2">{% if formTitle|default %}{{ formTitle }}{% else %}Send Message{% endif %}</h2>
+        <strong>To:</strong> {{ toName }}
+
         <form action="{{ path('contact_user', {'userId': userId, 'type': type|default, 'scope': scope|default, 'containerId': containerId|default, 'userEmail': toEmail|default}) }}" method="POST">
+
+            {% if type == 'invite' and userId != 'external' %}
+                <div class="right">
+                    Recommend to: 
+                    {% if scope == 'event' %}
+                        <input type="radio" name="recommendType" value="attend" class="spcr-l" checked> Attend</input>
+                    {% elseif scope == 'group' %}
+                        <input type="radio" name="recommendType" value="join" class="spcr-l" checked> Join</input>
+                    {% endif %}
+                    <input type="radio" name="recommendType" value="speak"> Speak</input>
+                    <input type="radio" name="recommendType" value="sponsor"> Sponsor</input>
+                    <input type="radio" name="recommendType" value="volunteer"> Volunteer</input>
+                </div>
+                <div class="clr"></div>
+            {% endif %}
+
             <textarea name="body" rows="8" style="width: 96%;" required>{% if bodyText|default %}{{ bodyText }}{% endif %}</textarea>
             <input type="submit" value="Submit" class="right">
             <a href="javascript:void(0);"><input type="button" class="right spcr-r" value="Cancel" onclick="goBack();"/></a>
