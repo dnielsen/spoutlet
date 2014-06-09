@@ -25,7 +25,7 @@
             {% if type == 'invite' and userId != 'external' %}
                 <div class="right">
                     Recommend to: 
-                    {% if scope == 'event' %}
+                    {% if scope == 'event' or scope == 'global_event' %}
                         <input type="radio" name="recommendType" value="attend" class="spcr-l" checked> Attend</input>
                     {% elseif scope == 'group' %}
                         <input type="radio" name="recommendType" value="join" class="spcr-l" checked> Join</input>

@@ -1264,6 +1264,8 @@ class IdeaController extends Controller
             $container = $this->getGroupManager()->find($containerId);
         } elseif ($scope == 'event') {
             $container = $this->getGroupEventService()->find($containerId);
+        } elseif ($scope == 'global_event') {
+            $container = $this->getGlobalEventService()->find($containerId);
         }
 
         $params = array(
@@ -1327,8 +1329,15 @@ class IdeaController extends Controller
                 if (!$recommendation) {
                     $recommendation = new GroupRecommendation($toUser, $container, $this->getCurrentUser());
                 }
-            } elseif ($scope == 'event') {
-                $recCriteria = array('referredBy'=>$this->getCurrentUser()->getId(),'user'=>$toUser->getId(),'group_event'=>$containerId);
+            } elseif ($scope == 'event' || $scope == 'global_event') {
+                $recCriteria = array('referredBy'=>$this->getCurrentUser()->getId(),'user'=>$toUser->getId());
+
+                if ($scope == 'event') {
+                    $recCriteria['group_event'] = $containerId;
+                } elseif ($scope == 'global_event') {
+                    $recCriteria['global_event'] = $containerId;
+                }
+
                 $recommendation = $this->getDoctrine()->getRepository('IdeaBundle:EventRecommendation')->findOneBy($recCriteria);
                 if (!$recommendation) {
                     $recommendation = new EventRecommendation($toUser, $container, $this->getCurrentUser());
@@ -1337,7 +1346,7 @@ class IdeaController extends Controller
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($recommendation);
             $em->flush();
-            $flashMessage .= 'This '.$scope.' has been recommended to '.$toName.'. ';
+            $flashMessage .= $container->getName().' has been recommended to '.$toName.'. ';
         }
 
         if ($flashMessage) {
@@ -1449,11 +1458,17 @@ class IdeaController extends Controller
                     $volunteerRec = GroupRecommendation::TYPE_VOLUNTEER;
                     $defaultRec   = GroupRecommendation::TYPE_JOIN;
 
-                } elseif ($scope == 'event') {
-                    $recommendation = $this->getDoctrine()->getRepository('IdeaBundle:EventRecommendation')->findOneBy(
-                                                                        array('referredBy'  => $this->getCurrentUser()->getId(),
-                                                                              'user'        => $toUser->getId(),
-                                                                              'group_event' => $containerId));
+                } elseif ($scope == 'event' || $scope == 'global_event') {
+                    if ($scope == 'event') {
+                        $recCriteria = array('referredBy' => $this->getCurrentUser()->getId(),
+                                             'user'        => $toUser->getId(),
+                                             'group_event' => $containerId);
+                    } else {
+                        $recCriteria = array('referredBy' => $this->getCurrentUser()->getId(),
+                                             'user'        => $toUser->getId(),
+                                             'global_event' => $containerId);
+                    }
+                    $recommendation = $this->getDoctrine()->getRepository('IdeaBundle:EventRecommendation')->findOneBy($recCriteria);
                     $speakRec     = EventRecommendation::TYPE_SPEAK;
                     $sponsorRec   = EventRecommendation::TYPE_SPONSOR;
                     $volunteerRec = EventRecommendation::TYPE_VOLUNTEER;
@@ -1488,7 +1503,11 @@ class IdeaController extends Controller
             $this->setFlash('success', 'Your message was sent to '.$toName.'.');
 
             if ($containerUrl) {
-                $redirectUrl = $containerUrl;
+                if ($container->getLinkableOverrideUrl()){
+                    $redirectUrl = $this->generateUrl('global_events_index', array('useExternal'=>'true'));
+                } else {
+                    $redirectUrl = $containerUrl;
+                }
             } else {
                 $redirectUrl = $this->generateUrl('profile', array('userId' => $userId));
             }

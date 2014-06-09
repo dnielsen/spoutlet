@@ -53,7 +53,7 @@ class GroupRecommendation
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $dismissed;
+    protected $dismissed = false;
 
 
     /**

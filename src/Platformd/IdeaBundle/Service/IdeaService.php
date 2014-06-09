@@ -67,6 +67,8 @@ class IdeaService
             $repo = 'GroupBundle:Group';
         } elseif ($scope == 'event') {
             $repo = 'EventBundle:GroupEvent';
+        } elseif ($scope == 'global_event') {
+            $repo = 'EventBundle:GlobalEvent';
         } else {
             return null;
         }

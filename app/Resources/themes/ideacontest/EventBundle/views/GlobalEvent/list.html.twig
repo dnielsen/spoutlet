@@ -25,7 +25,15 @@
     <div class="widget-100">
         <div class="widget-header">
             <div class="widget-title">
-                {{ 'platformd.events.event_listings.current_events' | pd_trans }}<a style="float:right;" href="{{ path('accounts_events') }}">{{ 'platformd.events.event_listings.my_events' | pd_trans }}</a>
+                {% if useExternal|default %}
+                    <a href="{{ path('global_events_index') }}" class="blu">Campsite Events</a>
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    External Events
+                {% else %}
+                    Campsite Events
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a href="{{ path('global_events_index', {'useExternal': 'true'}) }}" class="blu">External Events</a>
+                {% endif %}
             </div>
         </div>
         <div class="widget-content">
@@ -68,6 +76,7 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/admin/js/jquery.tablesorter.min.js') }}"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true"></script>
     <script type="text/javascript">
@@ -82,7 +91,12 @@
                 });
             });
             $('table.tablesorter').tablesorter();
+
         });
+        function showRecommendForm(eventId) {
+            $('#rec-btn-'+eventId).hide();
+            $('#recommend-'+eventId).show();
+        }
     </script>
 {% endblock %}
 

@@ -3,9 +3,9 @@
         <tr>
             <th style="width:15px;"></th>
             <th style="width:15%;">{{ 'platformd.events.event_listings.start_date' | pd_trans }}</th>
-            <th style="width:28%;">{{ 'platformd.events.event_listings.event' | pd_trans }}</th>
-            <th style="width:28%;">{{ 'platformd.events.event_listings.hosted_by' | pd_trans }}</th>
-            <th style="width:25%;">{{ 'platformd.events.event_listings.location' | pd_trans }}</th>
+            <th style="width:23%;">{{ 'platformd.events.event_listings.event' | pd_trans }}</th>
+            <th style="width:23%;">{{ 'platformd.events.event_listings.hosted_by' | pd_trans }}</th>
+            <th style="width:15%;">{{ 'platformd.events.event_listings.location' | pd_trans }}</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -69,8 +69,25 @@
             </td>
             <td>
                 {% if useExternal %}
-                    <a href="{{ path('watch_event', {'eventType': 'global', 'eventId': event.id, }) }}" class="btnTny spcr-t">Recommend</a>
-                    <a href="{{ path('watch_event', {'eventType': 'global', 'eventId': event.id, }) }}" class="btnTny spcr-t">Watch</a>
+                    <a href="javascript:void(0);" class="btnTny" id="rec-btn-{{ event.id }}" onclick="showRecommendForm({{ event.id }});">Recommend</a>
+                    <div style="display:none;" id="recommend-{{ event.id }}">
+                        <form action="{{ path('invite_user') }}" method="post">
+                            <input type="text" placeholder="Enter email address..." name="userEmail" style="width:70%" class="left"/>
+                            <input type="hidden" name="scope" value="global_event"/>
+                            <input type="hidden" name="containerId" value="{{ event.id }}"/>
+                            <input type="submit" value=">" class="left" style="padding:8px;"/>
+                            <div class="clr"></div>
+                        </form>
+                    </div>
+                {% elseif (not event.isUserAttending(user)) and event.group|default %}
+                    <a href="{{ path('group_event_register_and_join', {'groupSlug': event.group.slug, 'eventId': event.id}) }}" class="btnTny">Register</a>
+                {% endif %}
+                {% if (not event.isUserAttending(user)) and (not event.isUserWatching(user)) %}
+                    {% if event.group|default %}
+                        <a href="{{ path('watch_event', {'eventType': 'group', 'eventId': event.id, }) }}" class="btnTny spcr-t">Watch</a>
+                    {% else %}
+                        <a href="{{ path('watch_event', {'eventType': 'global', 'eventId': event.id, }) }}" class="btnTny spcr-t">Watch</a>
+                    {% endif %}
                 {% endif %}
             </td>
         </tr>
@@ -82,6 +99,7 @@
 {% render url('_user_event_list') with {}, {'standalone': true } %}
 
 <script type="text/javascript">
+
     $(function () {
 
         $.tablesorter.addParser({

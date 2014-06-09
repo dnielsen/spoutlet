@@ -62,7 +62,7 @@ class EventRecommendation
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $dismissed;
+    protected $dismissed = false;
 
 
     /**
