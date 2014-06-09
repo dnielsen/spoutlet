@@ -50,6 +50,11 @@ class GroupRecommendation
      */
     protected $type;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $dismissed;
+
 
     /**
      * Constructor
@@ -170,5 +175,14 @@ class GroupRecommendation
     public function getType()
     {
         return $this->type;
+    }
+
+    public function setDismissed($value)
+    {
+        $this->dismissed = $value;
+    }
+    public function isDismissed()
+    {
+        return $this->dismissed;
     }
 }
