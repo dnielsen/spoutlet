@@ -224,7 +224,8 @@ class AdminController extends Controller
             ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
             ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
             ->add('registrationOption', 'choice',           array('choices' => array(Event::REGISTRATION_ENABLED   => 'Campsite',
-                                                                                     Event::REGISTRATION_3RD_PARTY => 'External')))
+                                                                                     Event::REGISTRATION_3RD_PARTY => 'External',
+                                                                                     Event::REGISTRATION_DISABLED  => 'Disabled',)))
             ->add('registrationFields', 'collection',       array('type'            => new RegistrationFieldFormType(),
                                                                   'allow_add'       => true,
                                                                   'allow_delete'    => true,

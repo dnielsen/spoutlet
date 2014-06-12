@@ -94,14 +94,7 @@
 
             function toggleRegistrationControls() {
 
-                if($('#event_registrationOption').val() == '{{ constant("Platformd\\EventBundle\\Entity\\Event::REGISTRATION_ENABLED") }}') {
-
-                    // Using campsite registration
-                    $('#external-registration').slideUp();
-                    $('#event_externalUrl').val(null);
-                    $('#registration-controls').slideDown();
-                }
-                else {
+                if($('#event_registrationOption').val() == '{{ constant("Platformd\\EventBundle\\Entity\\Event::REGISTRATION_3RD_PARTY") }}') {
 
                     // Using external registration
                     $('#registration-controls').slideUp();
@@ -109,6 +102,13 @@
                     $('#event_registrationFields :input').each(function() {
                         $(this).parent().remove();
                     });
+                }
+                else {
+
+                    // Using campsite registration
+                    $('#external-registration').slideUp();
+                    $('#event_externalUrl').val(null);
+                    $('#registration-controls').slideDown();
                 }
 
             }

@@ -98,7 +98,7 @@
                         <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}"><h2 class="ctr blu spcr-b2">{{ event.name }}</h2></a>
                         <hr class="small-margin"/>
                         <div class="col_third borderRt">
-                            {% if not (event.isUserAttending(app.user)) %}
+                            {% if (not event.isUserAttending(app.user)) and (event.registrationOption != constant('\\Platformd\\EventBundle\\Entity\\Event::REGISTRATION_DISABLED')) %}
                                 <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg spcr-t">{% if event.externalUrl %}Participate Online{% else %}Attend Event{% endif %}</a>
                             {% endif %}
                             <p>
