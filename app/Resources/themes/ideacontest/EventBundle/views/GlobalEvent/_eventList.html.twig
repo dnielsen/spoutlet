@@ -80,7 +80,11 @@
                         </form>
                     </div>
                 {% elseif (not event.isUserAttending(user)) and event.group|default %}
-                    <a href="{{ path('group_event_register_and_join', {'groupSlug': event.group.slug, 'eventId': event.id}) }}" class="btnTny">Register</a>
+                    {% if event.registrationOption == constant('\\Platformd\\EventBundle\\Entity\\Event::REGISTRATION_ENABLED') %}
+                        <a href="{{ path('group_event_register_and_join', {'groupSlug': event.group.slug, 'eventId': event.id}) }}" class="btnTny">Register</a>
+                    {% else %}
+                        <h3 class="ctr spcr-b2">Registration Closed</h3>
+                    {% endif %}
                 {% endif %}
                 {% if (not event.isUserAttending(user)) and (not event.isUserWatching(user)) %}
                     {% if event.group|default %}
