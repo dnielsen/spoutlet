@@ -1,12 +1,14 @@
 #!/bin/bash
 
-# Default behavior runs assetic dump for dev environment
-# First parameter 'dev' or 'prod' overrides it
+# Default behavior runs assetic dump for dev environment without cache clear
+# First parameter 'dev' or 'prod' overrides it and also clears cache for the corresponding environment
 
 if [ $# -eq 0 ]; then
     ENV='dev'
+    CACHE=false
 elif [ $1 == 'dev' ] || [ $1 == 'prod' ]; then
     ENV=$1
+    CACHE=true
 else
     printf '\n\tUsage:\n\n\tupdateThemes.sh [dev|prod]\n\tdefault: dev\n\n'
     exit -1
@@ -27,10 +29,14 @@ echo 'Assetic Dump'
 echo
 if [ $ENV = 'dev' ]; then
     php app/console assetic:dump
+    if [ $CACHE = true ]; then
+        echo '============================='
+        sudo rm -rf app/cache/*
+        php app/console cache:clear
+    fi
 elif [ $ENV = 'prod' ]; then 
     php app/console assetic:dump -e prod --no-debug
     echo '============================='
-    echo 'Clearing Symfony cache'
     sudo rm -rf app/cache/*
     php app/console cache:clear -e prod --no-debug
 fi
