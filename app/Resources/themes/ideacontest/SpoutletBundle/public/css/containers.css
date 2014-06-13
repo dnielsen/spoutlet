@@ -482,7 +482,7 @@ tr.date {
 }
 tr.date td {
     color: white;
-    text-align: center;
+    font-weight: bold;
 }
 table.tblStyle {
     border: 1px solid #ccc;
@@ -502,8 +502,10 @@ table.tblStyle th {
     border-bottom: 1px solid #e5e5e5;
 }
 table.sessions td:first-child {
-    width: 175px;
-    font-weight: bold;
+    width: 165px;
+}
+table.sessions td:nth-child(2) {
+    width: 120px;
 }
 
 .tblStyle.profile td:first-child {

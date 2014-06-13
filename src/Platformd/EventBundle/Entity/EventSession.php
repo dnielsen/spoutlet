@@ -43,7 +43,6 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     /**
      * Session description
      *
-     * @var string $content
      * @Assert\NotBlank(message="Content Required")
      * @ORM\Column(name="content", type="text", nullable=true)
      */
@@ -115,6 +114,13 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
      * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
      */
     protected $speaker;
+
+    /**
+     * Session Room name/number
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $room;
 
     /**
      * Constructor
@@ -320,6 +326,14 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     public function setSpeaker($value)
     {
         $this->speaker = $value;
+    }
+    public function setRoom($room)
+    {
+        $this->room = $room;
+    }
+    public function getRoom()
+    {
+        return $this->room;
     }
 
 //    public function addTag(Tag $tag)

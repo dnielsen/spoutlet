@@ -10,9 +10,9 @@
         <table class="tblStyle sessions fillWidth">
             {% for date,sessions in eventSessions %}
                 <tr class="date">
-                    <td colspan="2">
-                        {{ date }}
-                    </td>
+                    <td>{{ date }}</td>
+                    <td>Room</td>
+                    <td>Session Name</td>
                 </tr>
                 {% set i=0 %}
                 {% for eventSession in sessions %}
@@ -22,7 +22,15 @@
                             {{ eventSession.timeRangeString }}
                         </td>
                         <td>
+                            {% if eventSession.room %}
+                                {{ eventSession.room }}
+                            {% endif %}
+                        </td>
+                        <td>
                             <a href="{{ eventSession | pd_link }}" class="blue">{{ eventSession.name }}</a><br/>
+                            {% if eventSession.speaker %}
+                                <em class="tnytxt">Speaker: {{ eventSession.speaker.name }}</em><br/>
+                            {% endif %}
                             {{ eventSession.description | truncate(300) | striptags }}
                             {#{% if eventSession.tags|length > 0 %}#}
                                 {#<div class="kWords">#}

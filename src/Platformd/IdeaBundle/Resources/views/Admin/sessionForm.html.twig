@@ -14,6 +14,7 @@
     <form action="{{ formAction }}" method="post" {{ form_enctype(form) }} id="evtSession" novalidate>
         {{ form_row(form.name) }}
         {{ form_row(form.description) }}
+        {{ form_row(form.room) }}
 
         {#<label>Tags</label>#}
         {#<textarea name="tags" placeholder="tag1, tag2, tag3, etc&#8230;" class="formRowWidth" rows="1">{% if not isNew %}{{ evtSession.implodedTagString }}{% endif %}</textarea>#}
@@ -29,13 +30,18 @@
             <div id="sessionsDialog">
                 <table class="tblStyle sessions fillWidth" >
                     {% for date,sessions in eventSessions %}
-                        <tr class="date"><td colspan="2">{{ date }}</td></tr>
+                        <tr class="date">
+                            <td>{{ date }}</td>
+                            <td>Room</td>
+                            <td>Session Name</td>
+                        </tr>
                         {% set i=0 %}
                         {% for eventSession in sessions %}
                             {% if eventSession.startsAt|default %}
                                 {% set i=i+1 %}
                                 <tr{% if i%2 %} class="fill"{% endif %}>
                                     <td>{{ eventSession.timeRangeString }}</td>
+                                    <td>{% if eventSession.room %}{{ eventSession.room }}{% endif %}</td>
                                     <td><a href="{{ eventSession | pd_link }}" target = "_blank" class="blue">{{ eventSession.name }}</a><br/></td>
                                 </tr>
                             {% endif %}

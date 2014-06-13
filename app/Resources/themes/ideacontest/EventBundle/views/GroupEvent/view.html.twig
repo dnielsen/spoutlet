@@ -103,15 +103,16 @@
         <table class="clr tblStyle sessions spcr-b fillWidth">
             {% for date,sessions in event.sessionsByDate %}
                 <tr class="date">
-                    <td colspan="2">
-                        {{ date }}
-                    </td>
+                    <td>{{ date }}</td>
+                    <td>Room</td>
+                    <td>Session Name</td>
                 </tr>
                 {% set i=0 %}
                 {% for evtSession in sessions %}
                     {% set i=i+1 %}
                     <tr{% if i%2 %} class="fill"{% endif %}>
                         <td>{% if evtSession.startsAt|default %}{{ evtSession.timeRangeString }}{% endif %}</td>
+                        <td>{% if evtSession.room %}{{ evtSession.room }}{% endif %}</td>
                         <td><a href="{{ path('event_session', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': evtSession.id}) }}">{{ evtSession.name }}</a></td>
                     </tr>
                 {% endfor %}

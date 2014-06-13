@@ -65,6 +65,7 @@ class AdminController extends Controller
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'evtSession', $evtSession)
             ->add('name',               'text',             array('attr'    => array('class' => 'formRowWidth')))
             ->add('description',        'textarea',         array('attr'    => array('class' => 'formRowWidth', 'rows' => '6')))
+            ->add('room',               'text',             array('attr'    => array('class' => 'formRowWidth')))
             ->add('date',               'date',             array('widget'  => 'single_text',
                                                                   'format'  => 'L/dd/yyyy',
                                                                   'required' => false))

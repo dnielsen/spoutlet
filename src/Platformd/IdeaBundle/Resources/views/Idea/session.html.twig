@@ -25,6 +25,9 @@
     {% if eventSession.speaker %}
         Speaker: <a href="{{ path('profile', {'userId': eventSession.speaker.id}) }}" class="blu">{{ eventSession.speaker.name }}</a><br/>
     {% endif %}
+    {% if eventSession.room %}
+        Room: {{ eventSession.room }}<br/>
+    {% endif %}
     {{ eventSession.dateString }}<br/>
     {{ eventSession.timeRangeString }}
     <hr/>
