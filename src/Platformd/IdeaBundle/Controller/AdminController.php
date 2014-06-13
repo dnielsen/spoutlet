@@ -71,6 +71,7 @@ class AdminController extends Controller
                                                                   'required' => false))
             ->add('startsAt',           'time',             array('widget'  => 'single_text', 'required' => false))
             ->add('endsAt',             'time',             array('widget'  => 'single_text', 'required' => false))
+            ->add('slidesLink',         'text',             array('attr'    => array('class' => 'formRowWidth', 'placeholder' => 'http://')))
             ->getForm();
 
         if ($request->getMethod() == 'POST')

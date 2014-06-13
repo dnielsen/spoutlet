@@ -123,6 +123,13 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     protected $room;
 
     /**
+     * Link to slides
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $slidesLink;
+
+    /**
      * Constructor
      */
     public function __construct(GroupEvent $event) {
@@ -334,6 +341,14 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     public function getRoom()
     {
         return $this->room;
+    }
+    public function setSlidesLink($slidesLink)
+    {
+        $this->slidesLink = $slidesLink;
+    }
+    public function getSlidesLink()
+    {
+        return $this->slidesLink;
     }
 
 //    public function addTag(Tag $tag)

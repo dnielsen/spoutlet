@@ -29,8 +29,11 @@
         Room: {{ eventSession.room }}<br/>
     {% endif %}
     {{ eventSession.dateString }}<br/>
-    {{ eventSession.timeRangeString }}
-    <hr/>
+    {{ eventSession.timeRangeString }}<br/>
+    {% if eventSession.slidesLink %}
+        <a href="{{ eventSession.slidesLink }}" class="blue" target="_blank">Slides Available Here</a><br/>
+    {% endif %}
+    <hr class="small-margin"/>
 
     {{ eventSession.description | raw }}
 

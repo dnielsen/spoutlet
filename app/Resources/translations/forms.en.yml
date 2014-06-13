@@ -131,6 +131,7 @@ email_message: Email Message
 evtSession_name: Name
 evtSession_description: Description
 evtSession_room: Room Name/Number
+evtSession_slidesLink: Link to Slides
 evtSession_date: Day of Event
 evtSession_startsAt: Start Time
 evtSession_endsAt: End Time
