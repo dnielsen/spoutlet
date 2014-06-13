@@ -8,7 +8,11 @@
                 <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Participate Online</a>
             {% endif %}
         {% elseif not event.isUserAttending(user) %}
-            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Register to Attend</a>
+            {% if event.registrationOption == constant('\\Platformd\\EventBundle\\Entity\\Event::REGISTRATION_ENABLED') %}
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Register to Attend</a>
+            {% else %}
+                <h2 class="ctr spcr-b2">Registration Closed</h2>
+            {% endif %}
         {% endif %}
     </div>
 
