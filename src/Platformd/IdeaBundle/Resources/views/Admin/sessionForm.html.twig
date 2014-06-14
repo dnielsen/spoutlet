@@ -14,6 +14,7 @@
     <form action="{{ formAction }}" method="post" {{ form_enctype(form) }} id="evtSession" novalidate>
         {{ form_row(form.name) }}
         {{ form_row(form.description) }}
+        {{ form_row(form.speaker) }}
         {{ form_row(form.room) }}
         {{ form_row(form.slidesLink) }}
 

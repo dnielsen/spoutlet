@@ -17,6 +17,7 @@ use Platformd\IdeaBundle\Form\Type\RegistrationFieldFormType;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SpoutletBundle\Controller\Controller;
+use Platformd\UserBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -65,6 +66,8 @@ class AdminController extends Controller
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'evtSession', $evtSession)
             ->add('name',               'text',             array('attr'    => array('class' => 'formRowWidth')))
             ->add('description',        'textarea',         array('attr'    => array('class' => 'formRowWidth', 'rows' => '6')))
+            ->add('speaker',            'entity',           array('class'   => 'UserBundle:User',
+                                                                  'choices' => $event->getAttendeesAlphabetical(), 'required' => false))
             ->add('room',               'text',             array('attr'    => array('class' => 'formRowWidth'), 'required' => false))
             ->add('date',               'date',             array('widget'  => 'single_text',
                                                                   'format'  => 'L/dd/yyyy',

@@ -43,7 +43,7 @@ class User extends BaseUser
     protected $id;
 
     /**
-     * //Assert\NotBlank(message="fos_user.username.blank", groups={"Registration", "Default", "AdminEdit"});
+     * //Assert\NotBlank(message="fos_user.username.blank", groups={"Registration", "AdminEdit"});
      * @ORM\Column(type="string", length="255", nullable=true)
      */
     protected $username;
@@ -54,7 +54,7 @@ class User extends BaseUser
     protected $usernameCanonical;
 
     /**
-     * @Assert\NotBlank(message="fos_user.email.blank", groups={"Registration", "Default", "AdminEdit"});
+     * @Assert\NotBlank(message="fos_user.email.blank", groups={"Registration", "AdminEdit"});
      * @ORM\Column(type="string", length="255")
      */
     protected $email;
@@ -81,8 +81,8 @@ class User extends BaseUser
 
     /**
      * Plain password. Used for model validation. Must not be persisted.
-     * @Assert\MinLength(limit="5", groups={"Registration", "Default"}, message="password_too_short")
-     * @Assert\NotBlank(message="fos_user.password.blank", groups={"Registration", "Default"})
+     * @Assert\MinLength(limit="5", groups={"Registration"}, message="password_too_short")
+     * @Assert\NotBlank(message="fos_user.password.blank", groups={"Registration"})
      */
     protected $plainPassword;
 
@@ -136,7 +136,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * //@Assert\NotBlank(groups={"Registration", "IncompleteUser", "Default", "AdminEdit"}, message="first_name_not_blank")
+     * //@Assert\NotBlank(groups={"Registration", "IncompleteUser", "AdminEdit"}, message="first_name_not_blank")
      * //@Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser", "AdminEdit"})
      * //@Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser", "AdminEdit"})
      */
@@ -147,7 +147,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * //@Assert\NotBlank(groups={"Registration", "IncompleteUser", "Default", "AdminEdit"}, message="last_name_not_blank")
+     * //@Assert\NotBlank(groups={"Registration", "IncompleteUser", "AdminEdit"}, message="last_name_not_blank")
      * //@Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser", "AdminEdit"})
      * //@Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser", "AdminEdit"})
      */
@@ -158,7 +158,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="date", nullable=true)
      *
-     * //@Assert\Date(groups={"Registration", "IncompleteUser", "Default", "AdminEdit"})
+     * //@Assert\Date(groups={"Registration", "IncompleteUser", AdminEdit"})
      */
     protected $birthdate;
 
@@ -174,7 +174,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", length="255", nullable=true)
      *
-     * //@Assert\NotBlank(groups={"Registration", "Default", "AdminEdit"}, message="country_not_blank")
+     * //@Assert\NotBlank(groups={"Registration", "AdminEdit"}, message="country_not_blank")
      */
     protected $country;
 
@@ -183,7 +183,7 @@ class User extends BaseUser
      *
      * @ORM\Column(type="string", nullable=true)
      *
-     * //@Assert\NotBlank(groups={"Registration", "Default", "AdminEdit"}, message="state_not_blank")
+     * //@Assert\NotBlank(groups={"Registration", "AdminEdit"}, message="state_not_blank")
      */
     protected $state;
 
@@ -222,7 +222,7 @@ class User extends BaseUser
     /**
      * @var Boolean $terms_accepted
      *
-     * //Assert\True(message="You must accept the terms and conditions and the privacy policy", groups={"Registration", "IncompleteUser", "Default"})
+     * //Assert\True(message="You must accept the terms and conditions and the privacy policy", groups={"Registration", "IncompleteUser"})
      */
     protected $termsAccepted;
 
@@ -576,8 +576,11 @@ class User extends BaseUser
         $this->watchedEvents            = new ArrayCollection();
     }
 
+    // public function __toString() {
+    //     return 'User => { Id = '.$this->getId().', Name = "'.$this->getUsername().'", Age = '.$this->getAge().', IsSuperAdmin = '.($this->getIsSuperAdmin() ? 'True' : 'False').' }';
+    // }
     public function __toString() {
-        return 'User => { Id = '.$this->getId().', Name = "'.$this->getUsername().'", Age = '.$this->getAge().', IsSuperAdmin = '.($this->getIsSuperAdmin() ? 'True' : 'False').' }';
+        return $this->name;
     }
 
     /**
