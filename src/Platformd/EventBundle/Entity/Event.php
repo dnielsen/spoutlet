@@ -655,6 +655,17 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         return $this->attendees;
     }
 
+    public function getAttendeesAlphabetical()
+    {
+        $attendees = $this->attendees->toArray();
+
+        usort($attendees, function ($a, $b) {
+            return ($a->getName() > $b->getName());
+        });
+
+        return $attendees;
+    }
+
     /**
      * @param \Platformd\UserBundle\Entity\User $user
      */
