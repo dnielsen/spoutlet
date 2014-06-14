@@ -65,13 +65,14 @@ class AdminController extends Controller
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'evtSession', $evtSession)
             ->add('name',               'text',             array('attr'    => array('class' => 'formRowWidth')))
             ->add('description',        'textarea',         array('attr'    => array('class' => 'formRowWidth', 'rows' => '6')))
-            ->add('room',               'text',             array('attr'    => array('class' => 'formRowWidth')))
+            ->add('room',               'text',             array('attr'    => array('class' => 'formRowWidth'), 'required' => false))
             ->add('date',               'date',             array('widget'  => 'single_text',
                                                                   'format'  => 'L/dd/yyyy',
                                                                   'required' => false))
             ->add('startsAt',           'time',             array('widget'  => 'single_text', 'required' => false))
             ->add('endsAt',             'time',             array('widget'  => 'single_text', 'required' => false))
-            ->add('slidesLink',         'text',             array('attr'    => array('class' => 'formRowWidth', 'placeholder' => 'http://')))
+            ->add('slidesLink',         'text',             array('attr'    => array('class' => 'formRowWidth', 'placeholder' => 'http://'),
+                                                                  'required' => false))
             ->getForm();
 
         if ($request->getMethod() == 'POST')
