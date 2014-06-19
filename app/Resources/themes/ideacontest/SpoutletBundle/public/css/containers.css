@@ -553,18 +553,16 @@ table.tblStyle2 {
     margin-top: 10px;
     width: 100%;
     text-align: left;
+    border: 1px solid #F5F5F5;
 }
-.profileTable td, .myStuffTable td {
-    border-top: 1px solid #e5e5e5;
+.profileTable td, .myStuffTable td, .profileTable th, .myStuffTable th {
+    line-height: 40px;
+    padding: 5px;
 }
 .profileTable td:first-child {
     padding-right: 50px;
     width: 50%;
 }
-.myStuffTable {
-    border-bottom: 1px solid #e5e5e5;
-}
-
 
 .paddedTable td {
 	padding: 5px 10px;

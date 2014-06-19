@@ -11,34 +11,41 @@
 
     <h1>{{ user.name }}</h1>
 
+    {% set i = 0 %}
+
     <table class="profileTable">
         <tbody>
             {% if user.title %}
-                <tr>
+                {% set i = i + 1 %}
+                <tr {% if i%2 %}class="fill"{% endif %}>
                     <td>Title</td>
                     <td>{{ user.title }}</td>
                 </tr>
             {% endif %}
             {% if user.organization %}
-                <tr>
+                {% set i = i + 1 %}
+                <tr {% if i%2 %}class="fill"{% endif %}>
                     <td>Organization</td>
                     <td>{{ user.organization }}</td>
                 </tr>
             {% endif %}
             {% if user.industry %}
-                <tr>
+                {% set i = i + 1 %}
+                <tr {% if i%2 %}class="fill"{% endif %}>
                     <td>Industry</td>
                     <td>{{ user.industry }}</td>
                 </tr>
             {% endif %}
             {% if user.aboutMe %}
-                <tr>
+                {% set i = i + 1 %}
+                <tr {% if i%2 %}class="fill"{% endif %}>
                     <td>About</td>
                     <td>{{ user.aboutMe }}</td>
                 </tr>
             {% endif %}
             {% if user.linkedIn %}
-                <tr>
+                {% set i = i + 1 %}
+                <tr {% if i%2 %}class="fill"{% endif %}>
                     <td>LinkedIn</td>
                     <td><a href="{{ user.linkedIn }}" class="blu" target="_blank">{{ user.linkedIn }}</a></td>
                 </tr>
@@ -49,39 +56,46 @@
                 {% else %}
                     {% set twitterName = user.twitterUsername %}
                 {% endif %}
-                <tr>
+                {% set i = i + 1 %}
+                <tr {% if i%2 %}class="fill"{% endif %}>
                     <td>Twitter</td>
                     <td><a href="http://twitter.com/{{ twitterName }}" class="blu" target="_blank">{{ twitterName }}</a></td>
                 </tr>
             {% endif %}
             {% if user.website %}
-                <tr>
+                {% set i = i + 1 %}
+                <tr {% if i%2 %}class="fill"{% endif %}>
                     <td>Website</td>
                     <td><a href="{{ user.website }}" class="blu" target="_blank">{{ user.website }}</a></td>
                 </tr>
             {% endif %}
             {% if ownProfile or isAdmin %}
-                <tr>
+                {% set i = i + 1 %}
+                <tr {% if i%2 %}class="fill"{% endif %}>
                     <td colspan="2" class="ctr bld">Private Information</td>
                 </tr>
                 {% if user.tshirtSize %}
-                    <tr>
+                    {% set i = i + 1 %}
+                    <tr {% if i%2 %}class="fill"{% endif %}>
                         <td>T-Shirt Size:</td>
                         <td>{{ user.tshirtSize }}</td>
                     </tr>
                 {% endif %}
-                <tr>
+                {% set i = i + 1 %}
+                <tr {% if i%2 %}class="fill"{% endif %}>
                     <td>Email address:</td>
                     <td>{{ user.email }}</td>
                 </tr>
                 {% if user.professionalEmail %}
-                    <tr>
+                    {% set i = i + 1 %}
+                    <tr {% if i%2 %}class="fill"{% endif %}>
                         <td>Professional Email</td>
                         <td>{{ user.professionalEmail }}</td>
                     </tr>
                 {% endif %}
                 {% if user.mailingAddress %}
-                    <tr>
+                    {% set i = i + 1 %}
+                    <tr {% if i%2 %}class="fill"{% endif %}>
                         <td>Mailing Address</td>
                         <td>{{ user.mailingAddress }}</td>
                     </tr>

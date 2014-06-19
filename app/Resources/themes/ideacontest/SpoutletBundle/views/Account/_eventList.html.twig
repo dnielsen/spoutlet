@@ -10,7 +10,9 @@
             </tr>
         </thead>
         <tbody>
+            {% set i=0 %}
             {% for event in events %}
+                {% set i=i+1 %}
                 {% if event.contentType == "GroupEvent" %}
                     {% set contactUrl = path("group_event_contact", event.getLinkableRouteParameters) %}
                     {% set editUrl = path("idea_admin", {"groupSlug": event.group.slug, "eventId": event.id }) %}
@@ -26,7 +28,7 @@
                     {% set deleteUrl = "#" %}
                 {% endif %}
 
-                <tr id="event-{{ event.contentType }}-{{ event.id }}" style="height: 40px;">
+                <tr id="event-{{ event.contentType }}-{{ event.id }}" {% if i%2 %}class="fill"{% endif %}>
                     <td>{{ event.startsAt | date_translate }}</td>
                     <td><a class="event-title-link" href="{{ event | pd_link }}">{{  event.name }}</a></td>
                     <td><a href="{{ path('profile', {'userId': event.user.id}) }}">{{ event.user.name }}</a></td>
@@ -65,14 +67,16 @@
             {% endfor %}
 
             {% if pastEvents|length > 0 %}
+                {% set i=0 %}
                 {% for event in pastEvents %}
+                    {% set i=i+1 %}
                     {% if loop.index == 1 %}
                         <tr class="past-{{ event.contentType }}" style="display:none;">
                             <td colspan="6"style="text-align:center;"><hr class="faded" /></td>
                         </tr>
                     {% endif %}
                     {% set deleteUrl = path("group_event_delete", {"groupSlug": event.group.slug, "eventId": event.id}) %}
-                    <tr id="event-{{ event.contentType }}-{{ event.id }}" class="past-{{ event.contentType }}" style="display:none;">
+                    <tr id="event-{{ event.contentType }}-{{ event.id }}" class="past-{{ event.contentType }}{% if i%2 %} fill{% endif %}" style="display:none;" >
                         <td>{{ event.startsAt | date('M j, Y') }}</td>
                         <td><a class="event-title-link" href="{{ event | pd_link }}">{{  event.name }}</a></td>
                         <td><a href="{{ account_link(event.user.username) }}">{{ event.user.name }}</a></td>

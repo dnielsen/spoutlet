@@ -11,10 +11,11 @@
                 <td><strong>List</strong></td>
                 <td><strong>Parent</strong></td>
             </tr>
-
+            {% set i = 0 %}
             {% for entrySet in entrySets %}
+                {% set i=i+1 %}
                 {% set parent = parents[entrySet.id] %}
-                <tr>
+                <tr {% if i%2 %}class="fill"{% endif %}>
                     <td>
                         <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}">{{ entrySet.name }}</a>
                     </td>

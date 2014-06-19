@@ -15,8 +15,10 @@
             </thead>
 
             <tbody>
+            {% set i = 0 %}
             {% for page in userPages %}
-                <tr>
+                {% set i = i+1 %}
+                <tr {% if i%2 %}class="fill"{% endif %}>
                     <td>
                         <a href="{{ path('page_view', {'id': page.id}) }}">{{ page.title }}</a>
                     </td>

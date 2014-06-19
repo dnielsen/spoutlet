@@ -12,10 +12,12 @@
                 <td><strong>List</strong></td>
             </tr>
 
+            {% set i = 0 %}
             {% for entry in entries %}
+                {% set i = i + 1 %}
                 {% set parent = parents[entry.name] %}
                 {% set entrySet = entry.entrySet %}
-                <tr>
+                <tr {% if i%2 %}class="fill"{% endif %}>
                     <td>
                         <a href="{{ path('idea_show', {'entrySetId': entrySet.id, 'entryId': entry.id}) }}">{{ entry.name }}</a>
                     </td>
