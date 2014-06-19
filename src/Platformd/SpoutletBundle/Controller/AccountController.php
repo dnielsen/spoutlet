@@ -15,6 +15,7 @@ use Platformd\UserBundle\Exception\ApiRequestException;
 use Platformd\UserBundle\Form\Type\UnsubscribeFormType;
 use Platformd\SpoutletBundle\Form\Type\TradeshowCompleteRegType;
 use Symfony\Component\Form as Form;
+use DateTime;
 
 class AccountController extends Controller
 {
@@ -114,6 +115,24 @@ class AccountController extends Controller
         $pastEvents         = array_merge($pastGroupEvents, $pastGlobalEvents);
         $pastOwnedEvents    = array_merge($pastOwnedGroupEvents, $pastOwnedGlobalEvents);
 
+        $recommendations = $this->getDoctrine()->getRepository('IdeaBundle:EventRecommendation')->findBy(array('user'=>$this->getCurrentUser()->getId(),
+                                                                                                               'dismissed'=>false));
+
+        $watchedEvents = $this->getCurrentUser()->getWatchedEvents()->toArray();
+
+        foreach ($watchedEvents as $watch) {
+            $event = $watch->getEvent();
+
+            // don't bother showing watched past events
+            if ($event->getStartsAt() < new DateTime()) {
+                continue;
+            }
+
+            if (!in_array($event, $upcomingEvents)) {
+                $upcomingEvents[] = $event;
+            }
+        }
+
         uasort($upcomingEvents, array($this, 'eventCompare'));
         uasort($ownedEvents, array($this, 'eventCompare'));
         uasort($pastEvents, array($this, 'eventCompare'));
@@ -124,6 +143,7 @@ class AccountController extends Controller
             'ownedEvents'       => $ownedEvents,
             'pastEvents'        => $pastEvents,
             'pastOwnedEvents'   => $pastOwnedEvents,
+            'recommendations'   => $recommendations,
         ));
     }
 
