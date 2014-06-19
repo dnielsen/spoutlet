@@ -97,6 +97,10 @@ invite_user:
     pattern:    /inviteUser
     defaults:   { _controller: IdeaBundle:Idea:inviteUser }
 
+dismiss_recommendation:
+    pattern:    /dismissRec/{recType}/{recId}
+    defaults:   { _controller: IdeaBundle:Idea:dismissRecommendation }
+
 # Admin Routes
 
 idea_admin_feedback:

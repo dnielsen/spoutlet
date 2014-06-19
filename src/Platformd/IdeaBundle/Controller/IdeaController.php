@@ -1527,6 +1527,29 @@ class IdeaController extends Controller
         ));
     }
 
+    public function dismissRecommendationAction(Request $request, $recType, $recId)
+    {
+        $this->enforceUserSecurity();
+
+        if ($recType == 'event') {
+            $recommendation = $this->getDoctrine()->getRepository('IdeaBundle:EventRecommendation')->find($recId);
+            $returnUrl = $this->generateUrl('accounts_events');
+        } else {
+            $recommendation = $this->getDoctrine()->getRepository('IdeaBundle:GroupRecommendation')->find($recId);
+            $returnUrl = $this->generateUrl('accounts_groups');
+        }
+
+        if (!$recommendation) {
+            throw new NotFoundHttpException();
+        }
+
+        $recommendation->setDismissed(true);
+        $this->getDoctrine()->getEntityManager()->flush();
+        $this->setFlash('success', 'This recommendation has been dismissed');
+
+        return $this->redirect($returnUrl);
+    }
+
     public function userEventRecommendationsAction()
     {
         $this->enforceUserSecurity();
