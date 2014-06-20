@@ -32,6 +32,8 @@
     display: inline-table;
     position: relative;
     margin: 4px;
+    text-align: center;
+    width: 28%;
 }
 
 .group-list-item .details {
