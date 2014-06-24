@@ -858,9 +858,6 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
     public function getLinkableOverrideUrl()
     {
-        if ($this->registrationOption == self::REGISTRATION_DISABLED) {
-            return $this->externalUrl ?: false;
-        }
         return false;
     }
 
