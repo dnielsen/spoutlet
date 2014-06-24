@@ -119,7 +119,7 @@ class GlobalEventController extends Controller
 
         $upcomingEvents       = array_merge($upcomingGlobalEvents, $upcomingGroupEvents, $currentSweepstakes);
         $pastEvents           = array_merge($pastGroupEvents, $pastGlobalEvents, $pastSweepstakes);
-
+        
         $upcomingInternalEvents = array();
         $upcomingExternalEvents = array();
         $this->filter_internal_external_events($upcomingEvents, $upcomingInternalEvents, $upcomingExternalEvents);
@@ -128,8 +128,10 @@ class GlobalEventController extends Controller
         $pastExternalEvents = array();
         $this->filter_internal_external_events($pastEvents, $pastInternalEvents, $pastExternalEvents);
 
-        uasort($upcomingEvents, array($this, 'eventCompare'));
-        uasort($pastEvents, array($this, 'eventCompare'));
+        uasort($upcomingInternalEvents, array($this, 'eventCompare'));
+        uasort($upcomingExternalEvents, array($this, 'eventCompare'));
+        uasort($pastInternalEvents, array($this, 'eventCompare'));
+        uasort($pastExternalEvents, array($this, 'eventCompare'));
 
         return $this->render('EventBundle:GlobalEvent:list.html.twig', array(
             'upcomingEvents' => $useExternal ? $upcomingExternalEvents : $upcomingInternalEvents,
@@ -561,8 +563,13 @@ class GlobalEventController extends Controller
         if ($a->getStartsAt() == $b->getStartsAt()) {
             return 0;
         }
-        return ($a->getStartsAt() < $b->getStartsAt()) ? 1 : -1;
-
+        if ($a->getStartsAt() == null) {
+            return 1;
+        }
+        if ($b->getStartsAt() == null) {
+            return -1;
+        }
+        return ($a->getStartsAt() < $b->getStartsAt()) ? -1 : 1;
     }
 
     private function getGamePageManager()
