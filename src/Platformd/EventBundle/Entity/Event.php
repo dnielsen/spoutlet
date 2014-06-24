@@ -301,6 +301,11 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     protected $htmlPages;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $external = false;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -1233,6 +1238,14 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     public function getHtmlPages()
     {
         return $this->htmlPages;
+    }
+    public function setExternal($value)
+    {
+        $this->external = $value;
+    }
+    public function isExternal()
+    {
+        return $this->external;
     }
 
     public function getHashTag() {
