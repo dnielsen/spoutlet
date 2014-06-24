@@ -87,10 +87,12 @@ class GlobalEventController extends Controller
     private function filter_internal_external_events($events, &$internal, &$external) {
         for($i = 0; $i < count($events); ++$i) {
             $evt = $events[$i];
-            if($evt->getRegistrationOption() === Event::REGISTRATION_DISABLED && $evt->getExternalUrl())
+
+            if ($evt->isExternal()) {
                 $external[] = $evt;
-            else
+            } else {
                 $internal[] = $evt;
+            }
         }
     }
 
