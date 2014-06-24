@@ -7,12 +7,13 @@
 <div class="control_panel">
     <div class="widget-100 fillWidth">
         <h2>
-            <span class="left">My Groups</span>
-                {% if action != null %}
-                    <span class="right"><a href="{{ path('group_new', {'then': action}) }}" class="blue">Create Group</a></span>
-                {% else %}
-                    <span class="right"><a href="{{ path('group_new') }}" class="blue">Create Group</a></span>
-                {% endif %}
+            {% if action != null %}
+                <span class="left">Please select a group for your event</span>
+                <span class="right"><a href="{{ path('group_new', {'then': action}) }}" class="blue">Create New Group</a></span>
+            {% else %}
+                <span class="left">My Groups</span>
+                <span class="right"><a href="{{ path('group_new') }}" class="blue">Create New Group</a></span>
+            {% endif %}
             <div class="clr"></div>
         </h2>
         <div class="widget-content">
