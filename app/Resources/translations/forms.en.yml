@@ -18,11 +18,12 @@ event_locale: "Site"
 event_generalImageFile: General Image
 event_timezone: Timezone
 
-event_registrationOption: "Where would you like registration handled? "
+event_registrationOption: "Registration Status "
 event_file: "Image to Upload"
 event_online: "Is this an online event? "
 event_private: "Is this a private event? "
-event_externalUrl: "Link to the external event: "
+event_externalUrl: "Registration Link (optional): "
+event_external: "Is this event hosted on another site? "
 
 event_registrationFields: "Require additional registration information from attendees (optional): "
 

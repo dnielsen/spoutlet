@@ -1,0 +1,106 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(function() {
+
+            toggleRegistrationControls();
+
+            $('#event_external').change(function() {
+                toggleRegistrationControls();
+            });
+
+            function toggleRegistrationControls() {
+
+                if($('#event_external').val() == '1') {
+
+                    // Using external registration
+                    $('#registration-option').slideUp();
+                    $('label[for="event_externalUrl"]').text('Link to Event: ');
+                    // TODO: Require external Url
+                }
+                else {
+
+                    // Using campsite registration
+                    $('#registration-option').slideDown();
+                    $('label[for="event_externalUrl"]').text('Registration Link (optional): ');
+                    // TODO: Remove requirement for external Url
+                }
+
+            }
+
+            var startDateInput = $('#event_startsAt_date');
+            var startTimeInput = $('#event_startsAt_time');
+            var endDateInput   = $('#event_endsAt_date');
+            var endTimeInput   = $('#event_endsAt_time');
+
+            startDateInput.datetimepicker({
+                timepicker: false,
+                format: 'n/d/Y',
+                onChangeDateTime:function(){
+                    startDateInput.change();
+                }
+            });
+            endDateInput.datetimepicker({
+                timepicker: false,
+                format: 'n/d/Y'
+            });
+            startTimeInput.datetimepicker({
+                datepicker:false,
+                format: 'H:i:s',
+                step: 15,
+                onChangeDateTime:function(){
+                    startTimeInput.change();
+                }
+            });
+            endTimeInput.datetimepicker({
+                datepicker:false,
+                format: 'H:i:s',
+                step: 15
+            });
+
+            {% if isNew %}
+                var now = new Date();
+                var date = (now.getMonth()+1)+'/'+(now.getDate())+'/'+now.getFullYear();
+                startDateInput.val(date);
+                endDateInput.val(date);
+                startTimeInput.val('08:00:00');
+                endTimeInput.val('18:00:00');
+
+                startDateInput.change(function() {
+                    endDateInput.val($(this).val());
+                });
+
+            {% endif %}
+
+        });
+    </script>
+
+{% endblock %}
+
+{% block content %}
+
+    <h1>Add Public Event</h1>
+
+    <form action="{{ path('idea_admin_global_event', {'global_eventId': 'new'}) }}" method="post" {{ form_enctype(form) }} id="event" novalidate>
+        {{ form_row(form.name) }}
+        {{ form_row(form.content) }}
+        {{ form_row(form.startsAt) }}
+        {{ form_row(form.endsAt) }}
+        {{ form_row(form.external) }}
+        {{ form_row(form.externalUrl) }}
+        <div id="registration-option">
+            {{ form_row(form.registrationOption) }}
+        </div>
+        {{ form_widget(form._token) }}
+
+        <br class="clr"/>
+
+        <input type="submit" value="Submit" id="submit"/>
+        <input type="submit" value="Cancel" name="cancel" formnovalidate/>
+
+    </form>
+
+{% endblock %}

@@ -6,6 +6,7 @@ use DateTime;
 use Platformd\EventBundle\Entity\Event;
 use Platformd\EventBundle\Entity\EventRsvpAction;
 use Platformd\EventBundle\Entity\EventSession;
+use Platformd\EventBundle\Entity\GlobalEvent;
 use Platformd\EventBundle\Entity\GroupEvent;
 use Platformd\EventBundle\Entity\GroupEventRsvpAction;
 use Platformd\GroupBundle\Entity\Group;
@@ -229,14 +230,6 @@ class AdminController extends Controller
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
             ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
             ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
-            ->add('registrationOption', 'choice',           array('choices' => array(Event::REGISTRATION_ENABLED   => 'Campsite',
-                                                                                     Event::REGISTRATION_3RD_PARTY => 'External',
-                                                                                     Event::REGISTRATION_DISABLED  => 'Disabled',)))
-            ->add('registrationFields', 'collection',       array('type'            => new RegistrationFieldFormType(),
-                                                                  'allow_add'       => true,
-                                                                  'allow_delete'    => true,
-                                                                  'by_reference'    => false))
-            ->add('externalUrl',        'text',             array('attr'    => array('size' => '60%', 'placeholder' => 'http://')))
             ->add('startsAt',           'datetime',         array('date_widget'  => 'single_text',
                                                                   'date_format'  => 'L/dd/yyyy',
                                                                   'time_widget'  => 'single_text',
@@ -245,6 +238,14 @@ class AdminController extends Controller
                                                                   'date_format'  => 'L/dd/yyyy',
                                                                   'time_widget'  => 'single_text',
                                                                   'required' => '0'))
+            ->add('external',           'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
+            ->add('registrationOption', 'choice',           array('choices' => array(Event::REGISTRATION_ENABLED   => 'Enabled',
+                                                                                     Event::REGISTRATION_DISABLED  => 'Disabled',)))
+            ->add('registrationFields', 'collection',       array('type'            => new RegistrationFieldFormType(),
+                                                                  'allow_add'       => true,
+                                                                  'allow_delete'    => true,
+                                                                  'by_reference'    => false))
+            ->add('externalUrl',        'text',             array('attr'    => array('size' => '60%', 'placeholder' => 'http://')))
             ->add('online',             'choice',           array('choices' => array('1' => 'Yes', '0' => 'No')))
             ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
@@ -327,6 +328,64 @@ class AdminController extends Controller
                 'event'     => $event,
                 'isAdmin'   => $this->isGranted('ROLE_ADMIN'),
             ));
+    }
+
+    public function globalEventAction(Request $request, $global_eventId) {
+
+        if ($global_eventId == 'new') {
+            $event = new GlobalEvent();
+            $isNew = true;
+        } else {
+            $event = $this->getGlobalEventService()->find($global_eventId);
+            $this->validateAuthorization($event);
+            $isNew = false;
+        }
+
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
+            ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
+            ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
+            ->add('externalUrl',        'text',             array('attr'    => array('size' => '60%', 'placeholder' => 'http://'), 'required' => true))
+            ->add('startsAt',           'datetime',         array('date_widget'  => 'single_text',
+                                                                  'date_format'  => 'L/dd/yyyy',
+                                                                  'time_widget'  => 'single_text',
+                                                                  'required' => '0'))
+            ->add('endsAt',             'datetime',         array('date_widget'  => 'single_text',
+                                                                  'date_format'  => 'L/dd/yyyy',
+                                                                  'time_widget'  => 'single_text',
+                                                                  'required' => '0'))
+            ->add('external',           'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
+            ->add('registrationOption', 'choice',           array('choices' => array(Event::REGISTRATION_ENABLED   => 'Enabled',
+                                                                                     Event::REGISTRATION_DISABLED  => 'Disabled',)))
+            ->add('externalUrl',        'text',             array('attr'    => array('size' => '60%', 'placeholder' => 'http://')))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+
+            if ($form->isValid()) {
+
+                $event->setUser($this->getCurrentUser());
+                $event->setTimezone('UTC');
+                $event->setActive(true);
+                $event->setApproved(true);
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($event);
+                $em->flush();
+
+                // Registration needs to be created after event is persisted, relies on generated event ID
+                $esReg = $event->createEntrySetRegistration();
+                $em->persist($esReg);
+
+                return $this->redirect($this->generateUrl('global_events_index', array('useExternal' => 'true')));
+            }
+        }
+
+        return $this->render('IdeaBundle:Admin:globalEventForm.html.twig', array(
+            'form'      => $form->createView(),
+            'event'     => $event,
+            'isNew'     => $isNew,
+        ));
     }
 
     public function adminAction(Request $request, $groupSlug, $eventId) {
@@ -1193,7 +1252,7 @@ class AdminController extends Controller
         // TODO: Add co-organizers to the scopes below as authorized users
         if ($securedObj instanceof Group) {
             $authorizedUsers[] = $securedObj->getOwner();
-        } elseif ($securedObj instanceof GroupEvent) {
+        } elseif ($securedObj instanceof GroupEvent or $securedObj instanceof GlobalEvent) {
             $authorizedUsers[] = $securedObj->getUser();
         } elseif ($securedObj instanceof EntrySet) {
             $authorizedUsers[] = $securedObj->getCreator();

@@ -15,7 +15,7 @@
                 toggleLocationControls();
             });
 
-            $('#event_registrationOption').change(function() {
+            $('#event_external').change(function() {
                 toggleRegistrationControls();
             });
 
@@ -94,21 +94,24 @@
 
             function toggleRegistrationControls() {
 
-                if($('#event_registrationOption').val() == '{{ constant("Platformd\\EventBundle\\Entity\\Event::REGISTRATION_3RD_PARTY") }}') {
+                if($('#event_external').val() == '1') {
 
                     // Using external registration
                     $('#registration-controls').slideUp();
-                    $('#external-registration').slideDown();
+                    $('#registration-option').slideUp();
                     $('#event_registrationFields :input').each(function() {
                         $(this).parent().remove();
                     });
+                    $('label[for="event_externalUrl"]').text('Link to Event: ');
+                    // TODO: Require external Url
                 }
                 else {
 
                     // Using campsite registration
-                    $('#external-registration').slideUp();
-                    $('#event_externalUrl').val(null);
                     $('#registration-controls').slideDown();
+                    $('#registration-option').slideDown();
+                    $('label[for="event_externalUrl"]').text('Registration Link (optional): ');
+                    // TODO: Remove requirement for external Url
                 }
 
             }
@@ -214,15 +217,16 @@
     <form action="{{ formpath }}" method="post" {{ form_enctype(form) }} id="event" novalidate>
         {{ form_row(form.name) }}
         {{ form_row(form.content) }}
-        {{ form_row(form.registrationOption) }}
-        <div id="external-registration">
-            {{ form_row(form.externalUrl) }}
+        {{ form_row(form.startsAt) }}
+        {{ form_row(form.endsAt) }}
+        {{ form_row(form.external) }}
+        <div id="registration-option">
+            {{ form_row(form.registrationOption) }}
         </div>
         <div id="registration-controls" class="spcr-b2">
             {{ form_widget(form.registrationFields) }}
         </div>
-        {{ form_row(form.startsAt) }}
-        {{ form_row(form.endsAt) }}
+        {{ form_row(form.externalUrl) }}
         {{ form_row(form.online) }}
         <div id="location-controls">
             {{ form_row(form.location) }}
