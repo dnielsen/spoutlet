@@ -111,6 +111,10 @@ idea_admin_event:
     pattern:    /{groupSlug}/event/{eventId}/admin/configure
     defaults:   { _controller: IdeaBundle:Admin:event, eventId:newEvent}
 
+idea_admin_global_event:
+    pattern:    /publicEvent/{global_eventId}
+    defaults:   { _controller: IdeaBundle:Admin:globalEvent, global_eventId:new}
+
 idea_admin:
     pattern:    /{groupSlug}/event/{eventId}/admin
     defaults:   { _controller: IdeaBundle:Admin:admin }
