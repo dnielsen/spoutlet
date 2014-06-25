@@ -368,6 +368,9 @@ class AdminController extends Controller
                 $event->setTimezone('UTC');
                 $event->setActive(true);
                 $event->setApproved(true);
+                $event->setPublished(true);
+
+                $event->addSite($this->getCurrentSite());
 
                 $em = $this->getDoctrine()->getEntityManager();
                 $em->persist($event);
