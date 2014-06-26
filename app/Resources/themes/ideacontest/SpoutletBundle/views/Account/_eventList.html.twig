@@ -15,14 +15,14 @@
                 {% set i=i+1 %}
                 {% if event.contentType == "GroupEvent" %}
                     {% set contactUrl = path("group_event_contact", event.getLinkableRouteParameters) %}
-                    {% set editUrl = path("idea_admin", {"groupSlug": event.group.slug, "eventId": event.id }) %}
+                    {% set editUrl = path("idea_admin_event", {"groupSlug": event.group.slug, "eventId": event.id }) %}
                     {% set rsvpUrl = path("group_event_rsvp") %}
                     {% set manageUrl = path("group_event_attendees", event.getLinkableRouteParameters) %}
                     {% set deleteUrl = path("group_event_delete", {"groupSlug": event.group.slug, "eventId": event.id}) %}
                     {% if event.approved == 0 %}{% set status = 'platformd.account_page.events.pending_approval' | pd_trans %}{% endif %}
                 {% elseif event.contentType == "GlobalEvent" %}
                     {% set contactUrl = path("global_event_contact", event.getLinkableRouteParameters) %}
-                    {% set editUrl = path("admin_events_edit", { 'id': event.id }) %}
+                    {% set editUrl = path("idea_admin_global_event", { 'global_eventId': event.id }) %}
                     {% set rsvpUrl = path("global_event_rsvp") %}
                     {% set manageUrl = path("global_event_attendees", event.getLinkableRouteParameters) %}
                     {% set deleteUrl = "#" %}
@@ -35,23 +35,14 @@
                     <td style=" text-align:center;">{{ event.attendeeCount }}</td>
                     <td>
                         {% if (event.user == app.user) or (is_granted('ROLE_ADMIN')) %}
-                            {% if event.registrationOption == "REGISTRATION_ENABLED" %}
-                                {% if event.contentType == "GlobalEvent" or (event.contentType == "GroupEvent" and event.approved) %}
-                                    <div class="styled-select">
-                                        <a href="{{ contactUrl }}">{{ 'platformd.events.event_show.contact_attendees' | pd_trans }}</a>
-                                        <br>
-                                        <a href="{{ manageUrl }}">{{ 'platformd.events.event_show.manage_attendees' | pd_trans }}</a>
-                                        <br>
-                                        {% if event.EntrySets|length == 0 %}
-                                            <a onclick="return confirm('Are you sure you want to delete this event?');" href="{{ deleteUrl }}" >{{ 'platformd.events.event_show.delete_event' | pd_trans }}</a>
-                                        {% endif %}
-                                    </div>
-                                {% else %}
-                                    <a href="{{ editUrl }}">{{ 'platformd.account_page.events.edit_event' | pd_trans }}</a>
+                            <div class="styled-select">
+                                <a href="{{ editUrl }}">{{ 'platformd.account_page.events.edit_event' | pd_trans }}</a><br/>
+                                <a href="{{ contactUrl }}">{{ 'platformd.events.event_show.contact_attendees' | pd_trans }}</a><br/>
+                                <a href="{{ manageUrl }}">{{ 'platformd.events.event_show.manage_attendees' | pd_trans }}</a><br/>
+                                {% if event.EntrySets|length == 0 %}
+                                    <a onclick="return confirm('Are you sure you want to delete this event?');" href="{{ deleteUrl }}" >{{ 'platformd.events.event_show.delete_event' | pd_trans }}</a>
                                 {% endif %}
-                            {% else %}
-                                <a href="{{ editUrl }}">{{ 'platformd.account_page.events.edit_event' | pd_trans }}</a>
-                            {% endif %}
+                            </div>
 
                         {% else %}
                             <a class="change-rsvp-link" href="javascript:void(0);" data-id="{{ event.id }}" data-route="{{ rsvpUrl }}" data-contenttype="{{ event.contentType }}">{{ 'platformd.events.event_listings.rsvp.change_rsvp' | pd_trans }}</a>
@@ -69,13 +60,17 @@
             {% if pastEvents|length > 0 %}
                 {% set i=0 %}
                 {% for event in pastEvents %}
+                    {% if event.contentType == 'GroupEvent' %}
+                        {% set deleteUrl = path("group_event_delete", {"groupSlug": event.group.slug, "eventId": event.id}) %}
+                    {% else %}
+                        {% set deleteUrl = '#' %}
+                    {% endif %}
                     {% set i=i+1 %}
                     {% if loop.index == 1 %}
                         <tr class="past-{{ event.contentType }}" style="display:none;">
                             <td colspan="6"style="text-align:center;"><hr class="faded" /></td>
                         </tr>
                     {% endif %}
-                    {% set deleteUrl = path("group_event_delete", {"groupSlug": event.group.slug, "eventId": event.id}) %}
                     <tr id="event-{{ event.contentType }}-{{ event.id }}" class="past-{{ event.contentType }}{% if i%2 %} fill{% endif %}" style="display:none;" >
                         <td>{{ event.startsAt | date('M j, Y') }}</td>
                         <td><a class="event-title-link" href="{{ event | pd_link }}">{{  event.name }}</a></td>
