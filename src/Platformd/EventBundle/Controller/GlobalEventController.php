@@ -156,7 +156,7 @@ class GlobalEventController extends Controller
         $event = $this->getGlobalEventService()->find($id);
 
         if (!$event) {
-            throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
+            throw $this->createNotFoundException(sprintf('No event for id "%s"', $id));
         }
 
         $isAttending = $this->isGranted('ROLE_USER') ? $this->getGlobalEventService()->isUserAttending($event, $this->getUser()) : false;
@@ -168,16 +168,16 @@ class GlobalEventController extends Controller
     }
 
     /**
-     * @param $slug
+     * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function attendeesAction($slug)
+    public function attendeesAction($id)
     {
-        $event = $this->getGlobalEventService()->findOneBySlugForSite($slug,$this->getCurrentSite());
+        $event = $this->getGlobalEventService()->find($id);
 
         if (!$event) {
-            throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
+            throw $this->createNotFoundException(sprintf('No event for id "%s"', $id));
         }
 
         $attendees = $this->getGlobalEventService()->getAttendeeList($event);
@@ -334,13 +334,11 @@ class GlobalEventController extends Controller
         return $response;
     }
 
-    public function contactAction($slug, Request $request)
+    public function contactAction($id, Request $request)
     {
         $this->basicSecurityCheck(array('ROLE_USER'));
 
-        $event = $this->getGlobalEventService()->findOneBy(array(
-            'slug' => $slug
-        ));
+        $event = $this->getGlobalEventService()->find($id);
 
         if (!$event) {
             throw new NotFoundHttpException('Event does not exist.');
@@ -549,7 +547,7 @@ class GlobalEventController extends Controller
 
         $this->setFlash('success', $this->trans('platformd.events.event_show.now_attending'));
         return $this->redirect($this->generateUrl('global_event_view', array(
-            'slug' => $event->getSlug(),
+            'id' => $event->getId(),
         )));
     }
 

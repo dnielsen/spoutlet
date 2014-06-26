@@ -11,11 +11,11 @@ _global_event_user_info:
     defaults: { _controller: EventBundle:GlobalEvent:_globalEventUserInfo }
 
 global_event_contact:
-    pattern: /events/contact/{slug}
+    pattern: /events/contact/{id}
     defaults: { _controller:"EventBundle:GlobalEvent:contact", site: ~ }
 
 global_event_attendees:
-    pattern: /events/attendees/{slug}
+    pattern: /events/attendees/{id}
     defaults: { _controller:"EventBundle:GlobalEvent:attendees", site: ~ }
 
 global_event_email_preview:
