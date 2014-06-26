@@ -257,6 +257,10 @@ class AdminController extends Controller
             $form->bindRequest($request);
             if($form->isValid()) {
 
+                if ($event->isExternal()) {
+                    $event->setRegistrationOption(Event::REGISTRATION_DISABLED);
+                }
+
                 $em = $this->getDoctrine()->getEntityManager();
 
                 if ($isNew) {
@@ -364,6 +368,10 @@ class AdminController extends Controller
 
             if ($form->isValid()) {
 
+                if ($event->isExternal()) {
+                    $event->setRegistrationOption(Event::REGISTRATION_DISABLED);
+                }
+
                 if ($isNew) {
                     $event->setUser($this->getCurrentUser());
                     $event->setTimezone('UTC');
@@ -378,7 +386,6 @@ class AdminController extends Controller
                     $esReg = $event->createEntrySetRegistration();
                     $em = $this->getDoctrine()->getEntityManager();
                     $em->persist($esReg);
-                    $em->flush();
                     
                     $flashMessage = 'New event posted successfully!';
 
@@ -386,6 +393,8 @@ class AdminController extends Controller
                     $this->getGlobalEventService()->updateEvent($event);
                     $flashMessage = 'Event successfully updated!';
                 }
+
+                $em->flush();
 
                 $this->setFlash('success', $flashMessage);
 
