@@ -364,24 +364,30 @@ class AdminController extends Controller
 
             if ($form->isValid()) {
 
-                $event->setUser($this->getCurrentUser());
-                $event->setTimezone('UTC');
-                $event->setActive(true);
-                $event->setApproved(true);
-                $event->setPublished(true);
+                if ($isNew) {
+                    $event->setUser($this->getCurrentUser());
+                    $event->setTimezone('UTC');
+                    $event->setActive(true);
+                    $event->setApproved(true);
+                    $event->setPublished(true);
+                    $event->addSite($this->getCurrentSite());
 
-                $event->addSite($this->getCurrentSite());
+                    $this->getGlobalEventService()->createEvent($event);
 
-                $this->getGlobalEventService()->createEvent($event);
+                    // Registration needs to be created after event is persisted, relies on generated event ID
+                    $esReg = $event->createEntrySetRegistration();
+                    $em = $this->getDoctrine()->getEntityManager();
+                    $em->persist($esReg);
+                    $em->flush();
+                    
+                    $flashMessage = 'New event posted successfully!';
 
-                // Registration needs to be created after event is persisted, relies on generated event ID
-                $esReg = $event->createEntrySetRegistration();
+                } else {
+                    $this->getGlobalEventService()->updateEvent($event);
+                    $flashMessage = 'Event successfully updated!';
+                }
 
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($esReg);
-                $em->flush();
-
-                $this->setFlash('success', 'New event posted successfully!');
+                $this->setFlash('success', $flashMessage);
 
                 if ($event->isExternal()) {
                     return $this->redirect($this->generateUrl('global_events_index', array('useExternal' => 'true')));

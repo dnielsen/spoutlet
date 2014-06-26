@@ -82,9 +82,17 @@
 
 {% block content %}
 
-    <h1>Add Public Event</h1>
+    {% if isNew %}
+        {% set verb = 'Add' %}
+        {% set formpath = path('idea_admin_global_event', {'global_eventId': 'new'}) %}
+    {% else %}
+        {% set verb = 'Edit' %}
+        {% set formpath = path('idea_admin_global_event', {'global_eventId': event.id}) %}
+    {% endif %}
+    
+    <h1>{{ verb }} Public Event</h1>
 
-    <form action="{{ path('idea_admin_global_event', {'global_eventId': 'new'}) }}" method="post" {{ form_enctype(form) }} id="event" novalidate>
+    <form action="{{ formpath }}" method="post" {{ form_enctype(form) }} id="event" novalidate>
         {{ form_row(form.name) }}
         {{ form_row(form.content) }}
         {{ form_row(form.startsAt) }}

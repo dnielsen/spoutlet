@@ -99,7 +99,7 @@ class EventService
     }
 
     /**
-     * Create and event
+     * Create an event
      *
      * @param \Platformd\EventBundle\Entity\Event $event
      */
@@ -107,20 +107,7 @@ class EventService
     {
         $this->handleMedia($event);
 
-        if ($event instanceof GroupEvent) {
-
-            try {
-                $response = $this->cevoApi->GiveUserXp('addcontent', $event->getUser()->getCevoUserId());
-            } catch (ApiException $e) {
-
-            }
-
-            $this->register($event, $event->getUser());
-
-            if ($event->getExternalUrl()) {
-                $event->setPrivate(false);
-            }
-        } 
+        $this->register($event, $event->getUser());
 
         $this->repository->saveEvent($event);
 
@@ -145,18 +132,6 @@ class EventService
     public function updateEvent(Event $event)
     {
         $this->handleMedia($event);
-
-        if ($event instanceof GroupEvent) {
-            if ($event->getExternalUrl()) {
-                $event->setPrivate(false);
-            }
-        } else {
-            if ($event->getExternalUrl()) {
-                $event->setRegistrationOption(GroupEvent::REGISTRATION_3RD_PARTY);
-            } else {
-                $event->setRegistrationOption(GroupEvent::REGISTRATION_ENABLED);
-            }
-        }
 
         $this->repository->saveEvent($event);
 
@@ -278,7 +253,7 @@ class EventService
         $rsvpAction->setUser($user);
         $rsvpAction->setEvent($event);
 
-        if ($event->getPrivate() && ($event->getUser() != $user)) {
+        if ($event instanceof GroupEvent && $event->getPrivate() && ($event->getUser() != $user)) {
             $rsvpAction->setAttendance(EventRsvpAction::ATTENDING_PENDING);
         } else {
             $rsvpAction->setAttendance(EventRsvpAction::ATTENDING_YES);
@@ -286,9 +261,7 @@ class EventService
             $locale     = $user->getLocale() ?: 'en';
             $eventName  = $event->getName();
             $eventOwner = $event->getUser()->getEmail();
-            $eventUrl   = $this->router->generate('group_event_view', array(
-                                                  'groupSlug' =>$event->getGroup()->getSlug(),
-                                                  'eventId'   =>$event->getId()), true);
+            $eventUrl   = $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true);
 
             if ($externalUrl = $event->getExternalUrl()) {
                 $subjectTemplate = 'platformd.event.email.welcome.external_title';
