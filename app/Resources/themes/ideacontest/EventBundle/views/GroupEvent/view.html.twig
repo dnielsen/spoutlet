@@ -154,17 +154,34 @@
     {% if (not event.isUserAttending(user)) and (not event.isUserWatching(user)) %}
         <a href="{{ path('watch_event', {'eventId': event.id, 'eventType': 'group'}) }}" class="btnLg2">Watch Event</a>
     {% endif %}
-    {% if event.externalUrl|default %}
-        <a href="{{ event.externalUrl }}" class="btnLg2" target="_blank">Register to Attend</a>
-        {% if not event.isUserAttending(user) %}
-            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Participate Online</a>
+
+    {% if not event.external %}
+        
+        {# Hybrid Event #}
+        {% if event.externalUrl|default %} 
+            <a href="{{ event.externalUrl }}" class="btnLg2" target="_blank">Register to Attend</a>
+            {% if not event.isUserAttending(user) %}
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Participate Online</a>
+            {% endif %}
+
+        {# Campsite Event #}
+        {% elseif not event.isUserAttending(user) %}
+            {% if event.registrationOption == constant('\\Platformd\\EventBundle\\Entity\\Event::REGISTRATION_ENABLED') %}
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Register to Attend</a>
+            {% else %}
+                <h2 class="ctr spcr-b2">Registration Closed</h2>
+            {% endif %}
         {% endif %}
-    {% elseif not event.isUserAttending(user) %}
-        {% if event.registrationOption == constant('\\Platformd\\EventBundle\\Entity\\Event::REGISTRATION_ENABLED') %}
-            <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Register to Attend</a>
+
+    {# External Event #}
+    {% else %}
+
+        {% if event.externalUrl|default %} 
+            <a href="{{ event.externalUrl }}" class="btnLg2" target="_blank">Go To Event</a>
         {% else %}
-            <h2 class="ctr spcr-b2">Registration Closed</h2>
+            The organizer has not yet added a link to the event. 
         {% endif %}
+
     {% endif %}
 
     {% if event.sessions | length > 0 %}
