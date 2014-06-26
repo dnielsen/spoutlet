@@ -198,6 +198,10 @@ add_entry_set_creators:
     pattern:    /admin/addEntrySetCreators
     defaults:   { _controller: IdeaBundle:Admin:addEntrySetCreators }
 
+add_entry_set_registrations:
+    pattern:    /admin/addEntrySetRegistrations
+    defaults:   { _controller: IdeaBundle:Admin:addEntrySetRegistrationsToAllEvents }
+
 # Entry Routes
 
 idea_create:

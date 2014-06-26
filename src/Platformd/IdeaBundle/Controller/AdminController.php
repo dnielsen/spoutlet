@@ -1262,6 +1262,36 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('default_index'));
     }
 
+    public function addEntrySetRegistrationsToAllEventsAction()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $groupEvents = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->findAll();
+        $globalEvents = $this->getDoctrine()->getRepository('EventBundle:GlobalEvent')->findAll();
+
+        $events = array_merge($groupEvents, $globalEvents);
+
+        $output = '';
+
+        foreach ($events as $event) {
+            if (!$event->getEntrySetRegistration()) {
+                $esReg = $event->createEntrySetRegistration();
+                $em->persist($esReg);
+                $output .= $event->getName().'<br/>';
+            }
+        }
+
+        if ($output) {
+            $em->flush();
+            $output = 'Creating EntrySet Registrations for: <br/>'.$output;
+        } else {
+            $output = 'No worries, your events are already valid.';
+        }
+
+        $this->setFlash('success', $output);
+        return $this->redirect($this->generateUrl('default_index'));
+    }
+
     public function validateAuthorization($securedObj)
     {
         if ($this->isAdmin()) {
