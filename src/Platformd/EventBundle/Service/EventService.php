@@ -120,16 +120,7 @@ class EventService
             if ($event->getExternalUrl()) {
                 $event->setPrivate(false);
             }
-
-        } else {
-            $event->setApproved(true);
-
-            if ($event->getExternalUrl()) {
-                //$event->setRegistrationOption(GroupEvent::REGISTRATION_3RD_PARTY);
-            } else {
-                $event->setRegistrationOption(GroupEvent::REGISTRATION_ENABLED);
-            }
-        }
+        } 
 
         $this->repository->saveEvent($event);
 
