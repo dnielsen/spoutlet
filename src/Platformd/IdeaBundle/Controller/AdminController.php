@@ -372,15 +372,23 @@ class AdminController extends Controller
 
                 $event->addSite($this->getCurrentSite());
 
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->persist($event);
-                $em->flush();
+                $this->getGlobalEventService()->createEvent($event);
 
                 // Registration needs to be created after event is persisted, relies on generated event ID
                 $esReg = $event->createEntrySetRegistration();
-                $em->persist($esReg);
 
-                return $this->redirect($this->generateUrl('global_events_index', array('useExternal' => 'true')));
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($esReg);
+                $em->flush();
+
+                $this->setFlash('success', 'New event posted successfully!');
+
+                if ($event->isExternal()) {
+                    return $this->redirect($this->generateUrl('global_events_index', array('useExternal' => 'true')));
+                } else {
+                    return $this->redirect($this->generateUrl('global_events_index'));
+                }
+
             }
         }
 
