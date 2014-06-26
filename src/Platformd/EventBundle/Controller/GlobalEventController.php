@@ -143,25 +143,20 @@ class GlobalEventController extends Controller
     /**
      * Unique event view page
      *
-     * @param $slug
+     * @param $id
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
-    public function viewAction($slug)
+    public function viewAction($id)
     {
         /*
          * Notice that this does *not* respect "published". This is on purpose,
          * because the client wants to be able to preview events to the client
          */
-        $event = $this->getGlobalEventService()->findOneBySlugForSite($slug,$this->getCurrentSite());
+        $event = $this->getGlobalEventService()->find($id);
 
         if (!$event) {
             throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
-        }
-
-        // if we have an external url, then we should never get to this page
-        if ($event->getExternalUrl()) {
-            return new RedirectResponse($event->getExternalUrl());
         }
 
         $isAttending = $this->isGranted('ROLE_USER') ? $this->getGlobalEventService()->isUserAttending($event, $this->getUser()) : false;

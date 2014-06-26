@@ -43,7 +43,7 @@ global_event_remove_attendee:
     defaults: { _controller: EventBundle:GlobalEvent:removeAttendee }
 
 global_event_view:
-    pattern: /public/{slug}
+    pattern: /public/{id}
     defaults: { _controller: EventBundle:GlobalEvent:view }
 
 admin_events_index:

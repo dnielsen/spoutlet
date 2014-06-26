@@ -306,7 +306,7 @@ class GlobalEvent extends Event implements LinkableInterface, IndexableInterface
     public function getLinkableRouteParameters()
     {
         return array(
-            'slug' => $this->slug,
+            'id' => $this->id,
         );
     }
 
