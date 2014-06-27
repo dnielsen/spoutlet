@@ -106,10 +106,8 @@ class EventService
     public function createEvent(Event $event)
     {
         $this->handleMedia($event);
-
-        $this->register($event, $event->getUser());
-
         $this->repository->saveEvent($event);
+        $this->register($event, $event->getUser());
 
         // ACLs
         $objectIdentity = ObjectIdentity::fromDomainObject($event);
