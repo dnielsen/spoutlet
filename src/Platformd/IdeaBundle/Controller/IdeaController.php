@@ -1262,7 +1262,8 @@ class IdeaController extends Controller
 
         if ($scope == 'group') {
             $container = $this->getGroupManager()->find($containerId);
-        } elseif ($scope == 'event') {
+        } elseif ($scope == 'event' or $scope == 'group_event') {
+            $scope = 'event';
             $container = $this->getGroupEventService()->find($containerId);
         } elseif ($scope == 'global_event') {
             $container = $this->getGlobalEventService()->find($containerId);
@@ -1314,6 +1315,8 @@ class IdeaController extends Controller
                 $this->getGroupManager()->autoJoinGroup($container, $toUser);
             } elseif ($scope == 'event') {
                 $this->getGroupEventService()->register($container, $toUser);
+            } elseif ($scope == 'global_event') {
+                $this->getGlobalEventService()->register($container, $toUser);
             }
 
             if (!$type) {
