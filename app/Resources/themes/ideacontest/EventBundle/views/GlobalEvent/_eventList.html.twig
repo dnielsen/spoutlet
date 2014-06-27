@@ -68,31 +68,48 @@
                 {% endif %}
             </td>
             <td>
-                {% if useExternal %}
-                    <a href="javascript:void(0);" class="btnTny" id="rec-btn-{{ event.id }}" onclick="showRecommendForm({{ event.id }});">Recommend</a>
-                    <div style="display:none;" id="recommend-{{ event.id }}">
-                        <form action="{{ path('invite_user') }}" method="post">
-                            <input type="text" placeholder="Enter email address..." name="userEmail" style="width:70%" class="left"/>
-                            <input type="hidden" name="scope" value="global_event"/>
-                            <input type="hidden" name="containerId" value="{{ event.id }}"/>
-                            <input type="submit" value=">" class="left" style="padding:8px;"/>
-                            <div class="clr"></div>
-                        </form>
-                    </div>
-                {% elseif (not event.isUserAttending(user)) and event.group|default %}
-                    {% if event.registrationOption == constant('\\Platformd\\EventBundle\\Entity\\Event::REGISTRATION_ENABLED') %}
-                        <a href="{{ path('group_event_register_and_join', {'groupSlug': event.group.slug, 'eventId': event.id}) }}" class="btnTny">Register</a>
+                {% if event.contentType == 'GlobalEvent' %}
+                    {% set rec_scope = 'global_event' %}
+                    {% set watch_url = path('watch_event', {'eventType': 'global', 'eventId': event.id}) %}
+                    {% set reg_url   = path('global_event_register', {'id': event.id}) %}
+                {% elseif event.contentType == 'GroupEvent' %}
+                    {% set rec_scope = 'group_event' %}
+                    {% set watch_url = path('watch_event', {'eventType': 'group', 'eventId': event.id}) %}
+                    {% set reg_url   = path('group_event_register_and_join', {'groupSlug': event.group.slug, 'eventId': event.id}) %}
+                {% endif %}
+
+                {% if (not event.isUserAttending(user)) and (not event.isUserWatching(user)) %}
+                    <a href="{{ watch_url }}" class="btnTny spcr-b2">Watch</a>
+                {% endif %}
+
+                {# internal or hybrid event #}
+                {% if not event.external %}
+
+                    {# hybrid event #}
+                    {% if event.externalUrl|default %}
+                        <a href="{{ event.externalUrl }}" class="btnTny spcr-b2" target="_blank">Register</a>
+
+                    {# internal event #}
+                    {% elseif event.registrationOption == constant('\\Platformd\\EventBundle\\Entity\\Event::REGISTRATION_ENABLED') %}
+                        {% if not event.isUserAttending(user) %}
+                            <a href="{{ reg_url }}" class="btnTny spcr-b2">Register</a>
+                        {% endif %}
                     {% else %}
                         <h3 class="ctr spcr-b2">Registration Closed</h3>
                     {% endif %}
+
                 {% endif %}
-                {% if (not event.isUserAttending(user)) and (not event.isUserWatching(user)) %}
-                    {% if event.group|default %}
-                        <a href="{{ path('watch_event', {'eventType': 'group', 'eventId': event.id, }) }}" class="btnTny spcr-t">Watch</a>
-                    {% else %}
-                        <a href="{{ path('watch_event', {'eventType': 'global', 'eventId': event.id, }) }}" class="btnTny spcr-t">Watch</a>
-                    {% endif %}
-                {% endif %}
+
+                <a href="javascript:void(0);" class="btnTny" id="rec-btn-{{ event.id }}" onclick="showRecommendForm({{ event.id }});">Recommend</a>
+                <div style="display:none;" id="recommend-{{ event.id }}">
+                    <form action="{{ path('invite_user') }}" method="post">
+                        <input type="text" placeholder="Enter email address..." name="userEmail" style="width:70%" class="left"/>
+                        <input type="hidden" name="scope" value="{{ rec_scope }}"/>
+                        <input type="hidden" name="containerId" value="{{ event.id }}"/>
+                        <input type="submit" value=">" class="left" style="padding:8px;"/>
+                        <div class="clr"></div>
+                    </form>
+                </div>
             </td>
         </tr>
         {% endfor %}
