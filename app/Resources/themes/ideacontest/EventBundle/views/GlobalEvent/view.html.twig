@@ -181,7 +181,7 @@
     <form action="{{ path('invite_user') }}" method="post">
         <h3>Recommend This Event</h3>
         <input type="text" placeholder="Enter email address..." name="userEmail" style="width:70%" class="left"/>
-        <input type="hidden" name="scope" value="event"/>
+        <input type="hidden" name="scope" value="global_event"/>
         <input type="hidden" name="containerId" value="{{ event.id }}"/>
         <input type="submit" value=">" class="left" style="padding:8px;"/>
         <div class="clr"></div>
