@@ -163,11 +163,25 @@ class User extends BaseUser
     protected $birthdate;
 
     /**
+     * @var String $gender
+     *
+     * @ORM\Column(type="string", length=10, nullable=true)
+     */
+    protected $gender;
+
+    /**
      * @var String $phone_number
      *
      * @ORM\Column(name="phone_number", type="string", length="255", nullable=true)
      */
     protected $phoneNumber;
+
+    /**
+     * @var String $work_phone_number
+     *
+     * @ORM\Column(name="work_phone_number", type="string", length="255", nullable=true)
+     */
+    protected $workPhoneNumber;
 
     /**
      * @var String $country
@@ -186,6 +200,24 @@ class User extends BaseUser
      * //@Assert\NotBlank(groups={"Registration", "AdminEdit"}, message="state_not_blank")
      */
     protected $state;
+
+    /**
+     * @var String $city
+     *
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * //@Assert\NotBlank(groups={"Registration", "AdminEdit"}, message="state_not_blank")
+     */
+    protected $city;
+
+    /**
+     * @var String $zip
+     *
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * //@Assert\NotBlank(groups={"Registration", "AdminEdit"}, message="state_not_blank")
+     */
+    protected $zip;
 
     /**
      * @var boolean $has_alienware_system
@@ -552,7 +584,17 @@ class User extends BaseUser
     /**
      * @ORM\Column(type="string", nullable=true)
      */
+    protected $blog;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
     protected $mailingAddress;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $mailingAddress2;
 
     /**
      * @ORM\Column(type="string", nullable=true)

@@ -55,6 +55,36 @@ abstract class EventRsvpAction
     protected $attendance;
 
     /**
+     * @ORM\Column(type="string")
+     *
+     */
+    protected $imported_from;
+    
+    /**
+     * @ORM\Column(type="integer")
+     *
+     */
+    protected $external_event_id;
+    
+    /**
+     * @ORM\Column(type="string")
+     *
+     */
+    protected $ticket_type;
+    
+    /**
+     * @ORM\Column(type="string")
+     *
+     */
+    protected $promo_code;
+    
+    /**
+     * @ORM\Column(type="decimal")
+     *
+     */
+    protected $amount_paid;
+
+    /**
      * @return Platformd\UserBundle\Entity\User
      */
     public function getUser()
