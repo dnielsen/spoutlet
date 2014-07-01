@@ -361,18 +361,28 @@ class AdminController extends Controller
             ->add('registrationOption', 'choice',           array('choices' => array(Event::REGISTRATION_ENABLED   => 'Enabled',
                                                                                      Event::REGISTRATION_DISABLED  => 'Disabled',)))
             ->add('externalUrl',        'text',             array('attr'    => array('size' => '60%', 'placeholder' => 'http://')))
+            ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
+            ->add('address2',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
             $form->bindRequest($request);
+            
+            if ($event->isExternal()) {
+                $event->setRegistrationOption(Event::REGISTRATION_DISABLED);
+            }
+
+            if ($event->getLocation() || $event->getAddress1() || $event->getAddress2()) {
+                $event->setOnline(false);
+            } else {
+                $event->setOnline(true);
+            }
 
             if ($form->isValid()) {
 
                 $em = $this->getDoctrine()->getEntityManager();
 
-                if ($event->isExternal()) {
-                    $event->setRegistrationOption(Event::REGISTRATION_DISABLED);
-                }
 
                 if ($isNew) {
                     $event->setUser($this->getCurrentUser());

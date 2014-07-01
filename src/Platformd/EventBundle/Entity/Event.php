@@ -34,7 +34,7 @@ use DateTime,
  *
  * @ORM\MappedSuperclass
  * @Vich\Geographical
- * @Assert\Callback(methods={"externalContentCheck", "validateDateRanges", "validateAddressField", "validateSlug"})
+ * @Assert\Callback(methods={"externalContentCheck", "validateDateRanges", "validateSlug"})
  * @ORM\HasLifecycleCallbacks()
  */
 abstract class Event implements LinkableInterface, IndexableInterface, TaggableInterface, EntrySetScopeable
