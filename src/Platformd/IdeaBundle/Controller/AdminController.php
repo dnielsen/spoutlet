@@ -368,6 +368,8 @@ class AdminController extends Controller
 
             if ($form->isValid()) {
 
+                $em = $this->getDoctrine()->getEntityManager();
+
                 if ($event->isExternal()) {
                     $event->setRegistrationOption(Event::REGISTRATION_DISABLED);
                 }
@@ -384,7 +386,6 @@ class AdminController extends Controller
 
                     // Registration needs to be created after event is persisted, relies on generated event ID
                     $esReg = $event->createEntrySetRegistration();
-                    $em = $this->getDoctrine()->getEntityManager();
                     $em->persist($esReg);
                     
                     $flashMessage = 'New event posted successfully!';
