@@ -55,31 +55,31 @@ abstract class EventRsvpAction
     protected $attendance;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      *
      */
     protected $imported_from;
     
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      *
      */
     protected $external_event_id;
     
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      *
      */
     protected $ticket_type;
     
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      *
      */
     protected $promo_code;
     
     /**
-     * @ORM\Column(type="decimal")
+     * @ORM\Column(type="decimal", nullable=true)
      *
      */
     protected $amount_paid;
