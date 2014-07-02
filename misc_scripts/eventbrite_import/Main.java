@@ -62,8 +62,8 @@ class Main {
     public static final String COL_CELL_PHONE = "Cell Phone";
     public static final String COL_GENDER = "Gender";
     public static final String COL_BIRTHDAY = "Age Birth Date";
-    public static final String COL_40 = "Please suggest a topic for an unconference session";
-    public static final String COL_41 = "Would you like to receive BigData-related emails from our event sponsors.";
+    public static final String COL_Q1 = "Please suggest a topic for an unconference session";
+    public static final String COL_Q2 = "Would you like to receive BigData-related emails from our event sponsors.";
     public static final String COL_SHIP_ADDR_1 = "Shipping Address 1";
     public static final String COL_SHIP_ADDR_2 = "Shipping Address 2";
     public static final String COL_SHIP_CITY = "Shipping City";
@@ -88,45 +88,37 @@ class Main {
     private static String USERS_FILE=""; //"full_data.csv";
     private static String OUTPUT_SQL_FILE=""; //"import_users.sql";
 
+
+    //Custom questions: prompt and type values
+    private static String Q_1_PROMPT = COL_Q1;
+    private static String Q_1_TYPE = "text";
+
+    private static String Q_2_PROMPT = COL_Q2;
+    private static String Q_2_TYPE = "checkbox";
+
+    // ---------------------- SQL TEMPATES ------------------------------------------------
+
     private static final String INSERT_TEMPLATE = "INSERT INTO `campsite`.`fos_user` (`username_canonical`,`email_canonical`) VALUES(\"%s\",\"%s\");\n";
     private static final String UPDATE_TEMPLATE = "UPDATE fos_user SET `%s` = IF(%s IS NULL OR %s = '', %s, %s) WHERE email_canonical = '%s';\n";
-    // "INSERT INTO fos_user (" + 
-    //     "`roles`," + 
-    //     "`name`," + 
-    //     "`username`," + "`username_canonical`," + "`email`," +  "`email_canonical`," + 
-    //     //"`industry`," + 
-    //     //"`professionalEmail`," + 
-    //     //"`linkedIn`," + 
-    //     "`mailingAddress`," + 
-    //     //"`title`," + 
-    //     "`organization`," + 
-    //     "`website`," + 
-    //     "`enabled`," + 
-    //     "`salt`," +
-    //     "`password`," +
-    //     "`created`," +
-    //     "`updated`," + 
-    //     "`uuid`" +
-    // ") VALUES (\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",now(),now(),\"%s\");\n";
-
+    
     private static final String ATTEND_TEMPLATE = 
-    "insert into group_events_attendees (" +
+    "INSERT INTO group_events_attendees (" +
         "groupevent_id, " +
         "user_id" + 
-    ") values ( " + 
+    ") VALUES ( " + 
         "%d, " +
-        "(select id from fos_user where email_canonical = \"%s\") " + 
+        "(SELECT id FROM fos_user WHERE email_canonical = \"%s\") " + 
     ");\n" +
 
-    "insert into pd_groups_members (" +
+    "INSERT INTO pd_groups_members (" +
         "group_id, " + 
         "user_id" + 
-    ") values ( " +
-        "(select group_id from group_event where id = \"%d\"), " +
-        "(select id from fos_user where email_canonical = \"%s\") " + 
+    ") VALUES ( " +
+        "(SELECT group_id FROM group_event WHERE id = \"%d\"), " +
+        "(SELECT id FROM fos_user WHERE email_canonical = \"%s\") " + 
     ");\n" +
 
-    "insert into group_event_rsvp_actions (" + 
+    "INSERT INTO group_event_rsvp_actions (" + 
         "event_id, " + 
         "user_id, " + 
         "rsvp_at, " + 
@@ -138,9 +130,9 @@ class Main {
         "ticket_type, " +
         "promo_code, " +
         "amount_paid" +
-    ") values ( " + 
+    ") VALUES ( " + 
         "%d, " + 
-        "(select id from fos_user where email_canonical = \"%s\"), " +
+        "(SELECT id FROM fos_user WHERE email_canonical = \"%s\"), " +
         "\"%s\", " + 
         "now(), " + 
         "now(), " + 
@@ -150,12 +142,29 @@ class Main {
         "\"%s\", " +
         "\"%s\", " +
         "%s" +
-    ");\n\n";
+    ");\n";
 
     private static final String UPDATE_ATTENDEES_TEMPLATE = 
-    "update group_event set attendeeCount = " + 
-        "(select count(groupevent_id) from group_events_attendees where groupevent_id = \"%d\") " + 
-    "where id = \"%d\";\n\n";
+    "UPDATE group_event SET attendeeCount = " + 
+        "(SELECT COUNT(groupevent_id) FROM group_events_attendees WHERE groupevent_id = \"%d\") " + 
+    "WHERE id = \"%d\";\n";
+
+    //%d=event_id, %s=question, %s=type
+    private static final String CUSTOM_QUESTION_TEMPLATE = 
+    "INSERT INTO `campsite`.`registration_field`(`event_id`,`question`,`type`) " + 
+    "VALUES(%d,\"%s\",'%s');\n";
+
+    // %d=event_id, %s=question, %s=email, %s=answer
+    private static final String CUSTOM_ANSWER_TEMPLATE =
+    "INSERT INTO `campsite`.`registration_answer` (`field_id`, `user_id`, `answer`) " +
+    "VALUES ( " +
+        "(SELECT id FROM registration_field " +
+            "WHERE event_id=%d AND question=\"%s\" LIMIT 1), " +
+        "(SELECT id FROM fos_user WHERE email_canonical = \"%s\"), " +
+        "\"%s\"" +
+    ");\n";
+
+    //---------------------------------- Helper Methods -----------------------------------------
 
     public static String getCell(String[] row_data, String column_name) {
         int column_index = INPUT_HEADERS.indexOf(column_name);
@@ -264,6 +273,9 @@ class Main {
 
         PrintWriter sql_bw = new PrintWriter(new BufferedWriter(new FileWriter(sqlFile.getAbsoluteFile())));
         sql_bw.println("use campsite;\n");
+        sql_bw.printf(CUSTOM_QUESTION_TEMPLATE, event_id, Q_1_PROMPT, Q_1_TYPE);
+        sql_bw.printf(CUSTOM_QUESTION_TEMPLATE, event_id, Q_2_PROMPT, Q_2_TYPE);
+        sql_bw.println();
 
         String [] nextLine = reader.readNext();
 
@@ -318,6 +330,9 @@ class Main {
             String ticket_type = getCell(nextLine, COL_TICKET_TYPE).trim();
             String promo_code = getCell(nextLine, COL_PROMO_CODE).trim();
             String amount_paid = getCell(nextLine, COL_TOTAL_PAID).trim();
+
+            String q1_answer = getCell(nextLine, COL_Q1).trim();
+            String q2_answer = getCell(nextLine, COL_Q2).trim();            
              
             sql_bw.printf(INSERT_TEMPLATE, email, email);
             user_update(sql_bw, email, "roles", "a:0:{}");
@@ -394,10 +409,15 @@ class Main {
                 amount_paid
             );
 
+            if(!q1_answer.equals(""))
+                sql_bw.printf(CUSTOM_ANSWER_TEMPLATE, event_id, Q_1_PROMPT, email, q1_answer);
+            if(!q2_answer.equals(""))
+                sql_bw.printf(CUSTOM_ANSWER_TEMPLATE, event_id, Q_2_PROMPT, email, q2_answer);
+
+            sql_bw.println();
         }
 
         sql_bw.printf(UPDATE_ATTENDEES_TEMPLATE, event_id, event_id);
-
 
         //Finally clean up
         sql_bw.close();
