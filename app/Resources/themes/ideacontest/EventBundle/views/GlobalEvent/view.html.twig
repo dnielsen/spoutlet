@@ -62,29 +62,8 @@
         {{ event.content|raw }}
     {% endif %}
 
-    {# For now -- get session schedule or first entrySet -- need to implement list chooser #}
-    {% if event.sessions | length > 0 %}
-        <h2 class="left">Session Schedule</h2><a href="{{ path('event_session_schedule', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="blue right">View All</a>
-
-        <table class="clr tblStyle sessions spcr-b fillWidth">
-            {% for date,sessions in event.sessionsByDate %}
-                <tr class="date">
-                    <td>{{ date }}</td>
-                    <td>Room</td>
-                    <td>Session Name</td>
-                </tr>
-                {% set i=0 %}
-                {% for evtSession in sessions %}
-                    {% set i=i+1 %}
-                    <tr{% if i%2 %} class="fill"{% endif %}>
-                        <td>{% if evtSession.startsAt|default %}{{ evtSession.timeRangeString }}{% endif %}</td>
-                        <td>{% if evtSession.room %}{{ evtSession.room }}{% endif %}</td>
-                        <td><a href="{{ path('event_session', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': evtSession.id}) }}">{{ evtSession.name }}</a></td>
-                    </tr>
-                {% endfor %}
-            {% endfor %}
-        </table>
-    {% elseif event.entrySets | length > 0 %}
+    
+    {% if event.entrySets | length > 0 %}
         {% set entrySet = event.entrySets[0] %}
         <h2 class="left">{{ entrySet.name }}</h2><a href="{{ entrySet | pd_link }}" class="right btn spcr-b3">View All {{ entrySet.type | capitalize }}s</a>
         <table class="tblStyle spcr-b fillWidth">
@@ -148,10 +127,6 @@
             The organizer has not yet added a link to the event. 
         {% endif %}
 
-    {% endif %}
-
-    {% if event.sessions | length > 0 %}
-        <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}" class="btnLg2">Session Schedule</a>
     {% endif %}
 
     <div style="display:inline-block;">
