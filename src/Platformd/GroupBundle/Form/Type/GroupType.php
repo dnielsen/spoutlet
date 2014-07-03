@@ -77,7 +77,7 @@ class GroupType extends AbstractType
                     1 => 'No',
                     0 => 'Yes'),
                   'label' => 'Would you like this group to be listed on Campsite?'
-            )
+            ))
             ->add('externalUrl', 'text', array(
                   'attr' => array(
                      'size' => '60%', 
