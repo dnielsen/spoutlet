@@ -61,9 +61,8 @@ class Main {
     public static final String COL_HOME_PHONE = "Home Phone";
     public static final String COL_CELL_PHONE = "Cell Phone";
     public static final String COL_GENDER = "Gender";
-    public static final String COL_BIRTHDAY = "Age Birth Date";
-    public static final String COL_Q1 = "Please suggest a topic for an unconference session";
-    public static final String COL_Q2 = "Would you like to receive BigData-related emails from our event sponsors.";
+    public static final String COL_AGE = "Age";
+    public static final String COL_BIRTHDAY = "Birth Date";
     public static final String COL_SHIP_ADDR_1 = "Shipping Address 1";
     public static final String COL_SHIP_ADDR_2 = "Shipping Address 2";
     public static final String COL_SHIP_CITY = "Shipping City";
@@ -83,17 +82,19 @@ class Main {
     public static final String COL_BLOG = "Blog";
     public static final String COL_NOTES = "Notes";
 
+    //Index of CSV table column names
     private static ArrayList<String> INPUT_HEADERS;
 
     private static String USERS_FILE=""; //"full_data.csv";
     private static String OUTPUT_SQL_FILE=""; //"import_users.sql";
 
+    //---------------------------------------------------------------------------------------
 
     //Custom questions: prompt and type values
-    private static String Q_1_PROMPT = COL_Q1;
+    private static String Q_1_PROMPT = "Please suggest a topic for an unconference session";
     private static String Q_1_TYPE = "text";
 
-    private static String Q_2_PROMPT = COL_Q2;
+    private static String Q_2_PROMPT = "Would you like to receive BigData-related emails from our event sponsors.";
     private static String Q_2_TYPE = "checkbox";
 
     // ---------------------- SQL TEMPATES ------------------------------------------------
@@ -101,6 +102,9 @@ class Main {
     private static final String INSERT_TEMPLATE = "INSERT INTO `campsite`.`fos_user` (`username_canonical`,`email_canonical`) VALUES(\"%s\",\"%s\");\n";
     private static final String UPDATE_TEMPLATE = "UPDATE fos_user SET `%s` = IF(%s IS NULL OR %s = '', %s, %s) WHERE email_canonical = '%s';\n";
     
+    //group_events_attendees: groupevent_id, email, 
+    //pd_groups_members: group_id, email,    
+    //group_event_rsvp_actions: event_id, email, rsvp_date, external_event_id, ticket_type, promo_code, amount_paid
     private static final String ATTEND_TEMPLATE = 
     "INSERT INTO group_events_attendees (" +
         "groupevent_id, " +
@@ -331,8 +335,8 @@ class Main {
             String promo_code = getCell(nextLine, COL_PROMO_CODE).trim();
             String amount_paid = getCell(nextLine, COL_TOTAL_PAID).trim();
 
-            String q1_answer = getCell(nextLine, COL_Q1).trim();
-            String q2_answer = getCell(nextLine, COL_Q2).trim();            
+            String q1_answer = getCell(nextLine, Q_1_PROMPT).trim();
+            String q2_answer = getCell(nextLine, Q_2_PROMPT).trim();
              
             sql_bw.printf(INSERT_TEMPLATE, email, email);
             user_update(sql_bw, email, "roles", "a:0:{}");
@@ -411,6 +415,7 @@ class Main {
 
             if(!q1_answer.equals(""))
                 sql_bw.printf(CUSTOM_ANSWER_TEMPLATE, event_id, Q_1_PROMPT, email, q1_answer);
+
             if(!q2_answer.equals(""))
                 sql_bw.printf(CUSTOM_ANSWER_TEMPLATE, event_id, Q_2_PROMPT, email, q2_answer);
 
