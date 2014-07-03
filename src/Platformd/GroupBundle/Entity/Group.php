@@ -180,8 +180,22 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
      * @var boolean $deleted
      * @ORM\Column(name="deleted", type="boolean")
      */
-
     private $deleted = false;
+
+    /**
+     * @var boolean $external
+     * @ORM\Column(type="boolean")
+     */
+    private $external = false;
+
+    /**
+     * Link to a separate website or URL for this group
+     *
+     * @var string
+     * @Assert\Url
+     * @ORM\Column(name="external_url", length="255", nullable=true)
+     */
+    protected $externalUrl;
 
     /**
      * The person who uploaded this media
@@ -1196,5 +1210,18 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
 
     public function getHashTag() {
         return str_replace('-', '', $this->slug);
+    }
+    
+    public function isExternal() {
+        return $this->external;    
+    }
+    public function setExternal($external) {
+        $this->external = $external;
+    }
+    public function getExternalUrl() {
+        return $this->externalUrl;    
+    }
+    public function setExternalUrl($externalUrl) {
+        $this->externalUrl = $externalUrl;
     }
 }

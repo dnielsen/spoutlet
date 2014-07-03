@@ -71,6 +71,18 @@ class GroupType extends AbstractType
             ))
             ->add('location', new LocationType(), array(
                 'label' => 'Location',
+            ))
+            ->add('external', 'choice', array(
+                  'choices' => array(
+                    1 => 'No',
+                    0 => 'Yes'),
+                  'label' => 'Would you like this group to be listed on Campsite?'
+            )
+            ->add('externalUrl', 'text', array(
+                  'attr' => array(
+                     'size' => '60%', 
+                     'placeholder' => 'http://'),
+                  'required' => 0,
             ));
 
             if ($this->user instanceof User && $this->user->hasRole('ROLE_SUPER_ADMIN')) {

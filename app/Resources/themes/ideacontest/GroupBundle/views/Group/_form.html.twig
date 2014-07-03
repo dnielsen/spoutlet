@@ -34,6 +34,9 @@
                 {{ form_row(form.children) }}
             </div>
 
+            {{ form_row(form.external) }}
+            {{ form_row(form.externalUrl) }}
+
             {% if is_granted('ROLE_ADMIN') %}
             <div id="admin-options" style="margin-top:15px;">
                 <h2 style="margin-bottom: 15px;">Admin Options</h2>
