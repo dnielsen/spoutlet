@@ -334,8 +334,8 @@ class Main {
             String promo_code = getCell(nextLine, COL_PROMO_CODE).trim();
             String amount_paid = getCell(nextLine, COL_TOTAL_PAID).trim();
 
-            String q1_answer = getCell(nextLine, Q_1_PROMPT).trim();
-            String q2_answer = getCell(nextLine, Q_2_PROMPT).trim();
+            String q1_answer = getCell(nextLine, Q_1_PROMPT).trim().replaceAll("\"","\'");
+            String q2_answer = getCell(nextLine, Q_2_PROMPT).trim().replaceAll("\"","\'");
              
             sql_bw.printf(INSERT_TEMPLATE, email, email);
             user_update(sql_bw, email, "roles", "a:0:{}");
