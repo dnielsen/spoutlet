@@ -102,8 +102,8 @@ class Main {
     private static final String INSERT_TEMPLATE = "INSERT INTO `campsite`.`fos_user` (`username_canonical`,`email_canonical`) VALUES(\"%s\",\"%s\");\n";
     private static final String UPDATE_TEMPLATE = "UPDATE fos_user SET `%s` = IF(%s IS NULL OR %s = '', %s, %s) WHERE email_canonical = '%s';\n";
     
-    //group_events_attendees: groupevent_id, email, 
-    //pd_groups_members: group_id, email,    
+    //group_events_attendees: groupevent_id, email,
+    //pd_groups_members: group_id, email,
     //group_event_rsvp_actions: event_id, email, rsvp_date, external_event_id, ticket_type, promo_code, amount_paid
     private static final String ATTEND_TEMPLATE = 
     "INSERT INTO group_events_attendees (" +
@@ -205,7 +205,8 @@ class Main {
     }
 
     public static String toTitleCase(String givenString) {
-        String[] arr = givenString.trim().split("\\s+"); //collapse multiple spaces
+        givenString = givenString.trim();
+        String[] arr = givenString.split("\\s+"); //collapse multiple spaces
 
         if(givenString.length() == 0 || arr.length == 0) //abort trivial strings
             return "";
@@ -324,8 +325,6 @@ class Main {
             //Output email to password mapping
             System.out.println(email + "\t" + pass);
 
-            //String now_datetime = getDateTime();
-
             String rsvp_date = getCell(nextLine, COL_ORDER_DATE).trim();
             if(!rsvp_date.equals(""))
                 rsvp_date = dateToString(dateFromString(rsvp_date));
@@ -341,9 +340,7 @@ class Main {
             sql_bw.printf(INSERT_TEMPLATE, email, email);
             user_update(sql_bw, email, "roles", "a:0:{}");
             user_update(sql_bw, email, "username", email);
-            //user_update(sql_bw, email, "username_canonical", email);
             user_update(sql_bw, email, "email", email);
-            //user_update(sql_bw, email, "email_canonical", email);
             user_update(sql_bw, email, "professionalEmail", email);
             user_update(sql_bw, email, "enabled", "1");
 
