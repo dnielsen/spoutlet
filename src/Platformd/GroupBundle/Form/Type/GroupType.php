@@ -82,6 +82,7 @@ class GroupType extends AbstractType
                   'attr' => array(
                      'size' => '60%', 
                      'placeholder' => 'http://'),
+                  'label'    => 'Link to Group Website',
                   'required' => 0,
             ));
 
