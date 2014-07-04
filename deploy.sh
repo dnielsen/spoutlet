@@ -74,7 +74,9 @@ fi
 
 echo '============================='
 echo 'Updating Node dependencies'
+cd node-api
 npm install
+cd ..
 echo
 
 echo '============================='
