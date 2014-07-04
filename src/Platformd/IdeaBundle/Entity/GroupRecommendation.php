@@ -177,6 +177,20 @@ class GroupRecommendation
         return $this->type;
     }
 
+    public function getAction()
+    {
+        switch ($this->type) {
+            case self::TYPE_JOIN:
+                return 'join';
+            case self::TYPE_VOLUNTEER:
+                return 'volunteer for';
+            case self::TYPE_SPEAK:
+                return 'speak at';
+            case self::TYPE_SPONSOR:
+                return 'sponsor';
+        }
+    }
+
     public function setDismissed($value)
     {
         $this->dismissed = $value;

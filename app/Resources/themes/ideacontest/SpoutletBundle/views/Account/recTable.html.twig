@@ -1,0 +1,33 @@
+{% if recommendations | length > 0 %}
+    <table class="myStuffTable spcr-b">
+        <thead>
+            <tr>
+                <th style="width: 80%;">Recommendation</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+
+        {% set i=0 %}
+        {% for rec in recommendations %}
+
+            {% if type == 'event' %}
+                {% set recommended = rec.event %}
+            {% elseif type == 'group' %}
+                {% set recommended = rec.group %}
+            {% endif %}
+
+            {% set i=i+1 %}
+
+            <tr {% if i%2 %}class="fill"{% endif %}>
+                <td>
+                    <a href="{{ path("profile", {"userId": rec.referredBy.id}) }}" class="blu">{{ rec.referredBy.name }}</a> has recommended you to {{ rec.action }} <a href="{{ recommended | pd_link }}" class="blu">{{ recommended.name }}</a>
+                </td>
+                <td>
+                    <a href="{{ path('dismiss_recommendation', {'recType': type, 'recId': rec.id}) }}" class="blu" onclick="return confirm('Are you sure you wish to dismiss this recommendation?');">Dismiss</a>
+                </td>
+            </tr>
+
+        {% endfor %}
+
+    </table>
+{% endif %}

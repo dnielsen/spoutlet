@@ -227,6 +227,9 @@ class AccountController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         $groups = $em->getRepository('GroupBundle:Group')->getAllGroupsForUserAndSite($this->getUser(), $this->getCurrentSite());
+        
+        $recommendations = $this->getDoctrine()->getRepository('IdeaBundle:GroupRecommendation')->findBy(array('user'=>$this->getCurrentUser()->getId(),
+                                                                                                               'dismissed'=>false));
 
         $action = null;
 
@@ -235,8 +238,9 @@ class AccountController extends Controller
         }
 
         return $this->render('SpoutletBundle:Account:groups.html.twig', array(
-            'groups' => $groups,
-            'action' => $action,
+            'groups'          => $groups,
+            'recommendations' => $recommendations,
+            'action'          => $action,
         ));
     }
 
