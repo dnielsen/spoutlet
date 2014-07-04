@@ -217,6 +217,10 @@
             <a href="{{ path('group_new', {'parentGroupId': group.id}) }}" class="btnLg2">Create Local Group</a>
         {% endif %}
 
+        {% if group.externalUrl %}
+            <a href="{{ group.externalUrl }}" class="btnLg2" target="_blank">View Group Website</a>
+        {% endif %}
+
         {% if group.children|length > 0 %}
             <h2 class="widgetHeader">Local Groups</h2>
             <ul class="scrollableWidget spcr-b3">
