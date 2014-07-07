@@ -38,7 +38,7 @@ class WatchedGroupMapping
     /**
      * Constructor
      */
-    public function __construct($user, $event)
+    public function __construct($user, $group)
     {
         $this->user = $user;
         $this->group = $group;
