@@ -548,6 +548,11 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\WatchedEventMapping", mappedBy="user")
      */
     protected $watchedEvents;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\WatchedGroupMapping", mappedBy="user")
+     */
+    protected $watchedGroups;
    
     /**
      * The id for facematching
@@ -1637,6 +1642,18 @@ class User extends BaseUser
     public function getWatchedEvents()
     {
         return $this->watchedEvents;
+    }
+    public function addWatchedGroup($value)
+    {
+        $this->watchedGroups[] = $value;
+    }
+    public function removeWatchedGroup($value)
+    {
+        $this->watchedGroups->removeElement($value);
+    }
+    public function getWatchedGroups()
+    {
+        return $this->watchedGroups;
     }
 
    /**
