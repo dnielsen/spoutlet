@@ -1046,6 +1046,21 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         return false;
     }
 
+    public function isUserWatching($user)
+    {
+        if (!$user) {
+            return false;
+        }
+
+        foreach ($user->getWatchedGroups() as $watchedGroup) {
+            if ($watchedGroup->getGroup()->getId() == $this->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function getReportThreshold()
     {
         return 3;
