@@ -62,20 +62,22 @@
             </div>
         {% endif %}
 
-        {% if group.members|default %}
-            <h2 class="widgetHeader">{{ group.members|length }} Member{% if group.members|length > 1 %}s{% endif %}</h2>
-            <a href="{{ path('profile', {userId: group.owner.id}) }}"><h3 class="blu spcr-t spcr-l3 midtxt">{{ group.owner.name }} (Organizer)</h3></a>
-            <ul class="spcr-b3">
-                {% for member in group.members %}
-                    {% if member.id != group.owner.id %}
-                        <li class="spcr-t7 spcr-l3">
-                            <a href="{{ path('profile', {'userId': member.id}) }}"><h3 class="blu">{{ member.name }}</h3></a>
-                        </li>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        {% else %}
-            There are no members of this group yet.
+        {% if not group.external %}
+            {% if group.members|default %}
+                <h2 class="widgetHeader">{{ group.members|length }} Member{% if group.members|length > 1 %}s{% endif %}</h2>
+                <a href="{{ path('profile', {userId: group.owner.id}) }}"><h3 class="blu spcr-t spcr-l3 midtxt">{{ group.owner.name }} (Organizer)</h3></a>
+                <ul class="spcr-b3">
+                    {% for member in group.members %}
+                        {% if member.id != group.owner.id %}
+                            <li class="spcr-t7 spcr-l3">
+                                <a href="{{ path('profile', {'userId': member.id}) }}"><h3 class="blu">{{ member.name }}</h3></a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% else %}
+                There are no members of this group yet.
+            {% endif %}
         {% endif %}
 
     </div>
@@ -211,10 +213,12 @@
 
     <div class="col_fifth">
 
-        {% if not group.isMember(user) %}
-            <a href="{{ path('group_join', {'slug': group.slug}) }}" class="btnLg2">Join This Group</a>
-        {% elseif group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_TOPIC')%}
-            <a href="{{ path('group_new', {'parentGroupId': group.id}) }}" class="btnLg2">Create Local Group</a>
+        {% if not group.external %}
+            {% if not group.isMember(user) %}
+                <a href="{{ path('group_join', {'slug': group.slug}) }}" class="btnLg2">Join This Group</a>
+            {% elseif group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_TOPIC')%}
+                <a href="{{ path('group_new', {'parentGroupId': group.id}) }}" class="btnLg2">Create Local Group</a>
+            {% endif %}
         {% endif %}
 
         {% if group.externalUrl %}
