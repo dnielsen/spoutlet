@@ -20,6 +20,7 @@ use Platformd\IdeaBundle\Entity\RegistrationField;
 use Platformd\IdeaBundle\Entity\EventRecommendation;
 use Platformd\IdeaBundle\Entity\GroupRecommendation;
 use Platformd\IdeaBundle\Entity\WatchedEventMapping;
+use Platformd\IdeaBundle\Entity\WatchedGroupMapping;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
@@ -811,6 +812,59 @@ class IdeaController extends Controller
         }
         
         return new RedirectResponse($this->generateUrl('global_events_index'));
+    }
+
+    public function watchGroupAction($groupId)
+    {
+        $this->enforceUserSecurity();
+
+        $group = $this->getDoctrine()->getRepository('GroupBundle:Group')->find($groupId);
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group not found!');
+        }
+
+        $user = $this->getCurrentUser();
+        $watchCriteria   = array('user' => $user->getId(), 'group' => $group->getId());
+        $watchGroupEntry = $this->getDoctrine()->getRepository('IdeaBundle:WatchedGroupMapping')->findOneBy($watchCriteria);
+        
+        if (!$watchGroupEntry) {
+            $watchGroupEntry = new WatchedGroupMapping($user, $group);
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($watchGroupEntry);
+            $em->flush();
+            $this->setFlash('success', 'You are now watching '.$group->getName());
+        } else {
+            $this->setFlash('info', 'You are already watching '.$group->getName().'!');
+        }
+
+        return new RedirectResponse($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+    }
+
+    public function unwatchGroupAction($groupId)
+    {
+        $this->enforceUserSecurity();
+
+        $group = $this->getDoctrine()->getRepository('GroupBundle:Group')->find($groupId);
+
+        if (!$group) {
+            throw new NotFoundHttpException('Group not found!');
+        }
+
+        $user = $this->getCurrentUser();
+        $watchCriteria   = array('user' => $user->getId(), 'group' => $group->getId());
+        $watchGroupEntry = $this->getDoctrine()->getRepository('IdeaBundle:WatchedGroupMapping')->findOneBy($watchCriteria);
+        
+        if ($watchGroupEntry) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->remove($watchGroupEntry);
+            $em->flush();
+            $this->setFlash('success', 'You have successfully stopped watching '.$group->getName());
+        } else {
+            $this->setFlash('info', 'You are not watching this group.');
+        }
+
+        return new RedirectResponse($this->generateUrl('group_show', array('slug' => $group->getSlug())));
     }
 
     public function followAction(Request $request, $entrySetId, $entryId) {

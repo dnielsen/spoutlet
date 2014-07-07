@@ -213,6 +213,10 @@
 
     <div class="col_fifth">
 
+        {% if (not group.isMember(user)) and (not group.isUserWatching(user)) %}
+            <a href="{{ path('watch_group', {'groupId': group.id}) }}" class="btnLg2">Watch Group</a>
+        {% endif %}
+
         {% if not group.external %}
             {% if not group.isMember(user) %}
                 <a href="{{ path('group_join', {'slug': group.slug}) }}" class="btnLg2">Join This Group</a>

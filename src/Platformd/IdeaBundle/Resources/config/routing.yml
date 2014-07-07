@@ -93,6 +93,14 @@ unwatch_event:
     pattern:    /unwatch/{eventId}
     defaults:   { _controller: IdeaBundle:Idea:unwatch }
 
+watch_group:
+    pattern:    /watchGroup/{groupId}
+    defaults:   { _controller: IdeaBundle:Idea:watchGroup }
+
+unwatch_group:
+    pattern:    /unwatchGroup/{groupId}
+    defaults:   { _controller: IdeaBundle:Idea:unwatchGroup }
+
 invite_user:
     pattern:    /inviteUser
     defaults:   { _controller: IdeaBundle:Idea:inviteUser }
