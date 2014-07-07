@@ -224,12 +224,13 @@ class AccountController extends Controller
     {
         $this->checkSecurity();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $doc = $this->getDoctrine();
 
-        $groups = $em->getRepository('GroupBundle:Group')->getAllGroupsForUserAndSite($this->getUser(), $this->getCurrentSite());
-        
-        $recommendations = $this->getDoctrine()->getRepository('IdeaBundle:GroupRecommendation')->findBy(array('user'=>$this->getCurrentUser()->getId(),
-                                                                                                               'dismissed'=>false));
+        $groupRepo = $doc->getRepository('GroupBundle:Group');
+        $recRepo   = $doc->getRepository('IdeaBundle:GroupRecommendation');
+
+        $groups          = $groupRepo->getAllGroupsForUserAndSite($this->getUser(), $this->getCurrentSite());
+        $recommendations = $recRepo->findBy(array('user'=>$this->getCurrentUser()->getId(), 'dismissed'=>false));
 
         $action = null;
 
