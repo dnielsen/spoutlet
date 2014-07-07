@@ -1053,7 +1053,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         }
 
         foreach ($user->getWatchedGroups() as $watchedGroup) {
-            if ($watchedGroup->getGroup()->getId() == $this->getId()) {
+            if ($watchedGroup->getId() == $this->getId()) {
                 return true;
             }
         }

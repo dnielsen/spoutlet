@@ -148,12 +148,14 @@ class AccountController extends Controller
     }
 
     private function eventCompare($a, $b) {
-
         if ($a->getStartsAt() == $b->getStartsAt()) {
             return 0;
         }
         return ($a->getStartsAt() < $b->getStartsAt()) ? -1 : 1;
+    }
 
+    private function groupCompare($a, $b) {
+        return strcmp($a->getName(), $b->getName());
     }
 
     /**
@@ -231,6 +233,10 @@ class AccountController extends Controller
 
         $groups          = $groupRepo->getAllGroupsForUserAndSite($this->getUser(), $this->getCurrentSite());
         $recommendations = $recRepo->findBy(array('user'=>$this->getCurrentUser()->getId(), 'dismissed'=>false));
+        $watchedGroups   = $this->getCurrentUser()->getWatchedGroups();
+
+        $groups = array_merge($groups, $watchedGroups);
+        usort($groups, array($this, 'groupCompare'));
 
         $action = null;
 

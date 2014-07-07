@@ -1653,7 +1653,14 @@ class User extends BaseUser
     }
     public function getWatchedGroups()
     {
-        return $this->watchedGroups;
+        $groups = array();
+        foreach ($this->watchedGroups as $watch) {
+            $group = $watch->getGroup();
+            if (!$group->getDeleted()) {
+                $groups[] = $group;
+            }
+        }
+        return $groups;
     }
 
    /**
