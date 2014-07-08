@@ -943,7 +943,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
             if ( !($event = $watchedEvent->getGlobalEvent()) ) {
                 $event = $watchedEvent->getGroupEvent();
             }
-            if ($event->getId() == $this->getId()) {
+            if ($event->getContentType() == $this->getContentType() && $event->getId() == $this->getId()) {
                 return true;
             }
         }
