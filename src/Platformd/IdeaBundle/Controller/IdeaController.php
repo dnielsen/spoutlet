@@ -742,9 +742,13 @@ class IdeaController extends Controller
 
         if ($eventType == 'global'){
             $event = $this->getDoctrine()->getRepository('EventBundle:GlobalEvent')->find($eventId);
+            $returnLink = $this->generateUrl('global_event_view', array('id' => $event->getId()));
         } else {
             $eventType = 'group';
             $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($eventId);
+            $returnLink = $this->generateUrl('group_event_view', array(
+                                             'groupSlug'=>$event->getGroup()->getSlug(), 
+                                             'eventId'=>$event->getId()));
         }
 
         if (!$event) {
@@ -765,13 +769,7 @@ class IdeaController extends Controller
             $this->setFlash('info', 'You are already watching '.$event->getName().'!');
         }
 
-        if ($eventType == 'group') {
-            return new RedirectResponse($this->generateUrl('group_event_view', 
-                                        array('groupSlug'=>$event->getGroup()->getSlug(), 
-                                              'eventId'=>$event->getId())));
-        }
-
-        return new RedirectResponse($this->generateUrl('global_events_index'));
+        return new RedirectResponse($returnLink);
     }
 
     public function unwatchAction(Request $request, $eventId) {
