@@ -256,6 +256,7 @@
             </div>
         {% endif %}
 
+        <hr class="small-margin"/>
         <form action="{{ path('invite_user') }}" method="post">
             <h3>Recommend This Group</h3>
             <input type="text" placeholder="Enter email address..." name="userEmail" style="width:70%" class="left"/>
@@ -277,6 +278,8 @@
             </form>
 
         {% endif %}
+        
+        <hr class="small-margin"/>
 
         {% if group.sponsors|length > 0 %}
             {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
