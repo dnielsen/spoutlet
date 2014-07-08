@@ -621,6 +621,7 @@ class User extends BaseUser
         $this->answers                  = new ArrayCollection();
         $this->htmlPages                = new ArrayCollection();
         $this->watchedEvents            = new ArrayCollection();
+        $this->watchedGroups            = new ArrayCollection();
     }
 
     // public function __toString() {
