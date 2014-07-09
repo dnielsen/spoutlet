@@ -231,12 +231,17 @@ class AccountController extends Controller
         $groupRepo = $doc->getRepository('GroupBundle:Group');
         $recRepo   = $doc->getRepository('IdeaBundle:GroupRecommendation');
 
-        $groups          = $groupRepo->getAllGroupsForUserAndSite($this->getUser(), $this->getCurrentSite());
-        $recommendations = $recRepo->findBy(array('user'=>$this->getCurrentUser()->getId(), 'dismissed'=>false));
         $watchedGroups   = $this->getCurrentUser()->getWatchedGroups();
+        $joinedGroups    = $groupRepo->getAllGroupsForUserAndSite($this->getUser(), $this->getCurrentSite());
+        $recommendations = $recRepo->findBy(array('user'=>$this->getCurrentUser()->getId(), 'dismissed'=>false));
 
-        $groups = array_merge($groups, $watchedGroups);
+        $groups = array_merge($joinedGroups, $watchedGroups);
         usort($groups, array($this, 'groupCompare'));
+
+        $groupsAndWatchedEvents = array();
+        foreach ($groups as $group) {
+            $groupsAndWatchedEvents[] = array($group, $group->getUpcomingWatchedEvents($this->getCurrentUser()));
+        }
 
         $action = null;
 
@@ -245,7 +250,7 @@ class AccountController extends Controller
         }
 
         return $this->render('SpoutletBundle:Account:groups.html.twig', array(
-            'groups'          => $groups,
+            'groupsAndEvents' => $groupsAndWatchedEvents,
             'recommendations' => $recommendations,
             'action'          => $action,
         ));
