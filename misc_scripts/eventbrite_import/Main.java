@@ -290,8 +290,8 @@ class Main {
 
         //----------------- Process Data -----------------------------
         while ((nextLine = reader.readNext()) != null) {
-            String firstname = toTitleCase( getCell(nextLine, COL_FIRST_NAME) );
-            String lastname = toTitleCase( getCell(nextLine, COL_LAST_NAME) );
+            String firstname = toTitleCase( getCell(nextLine, COL_FIRST_NAME).replaceAll("\"","\'") );
+            String lastname = toTitleCase( getCell(nextLine, COL_LAST_NAME).replaceAll("\"","\'") );
             String name = firstname + ' ' + lastname;
             String email = getCell(nextLine, COL_EMAIL).trim();
 
