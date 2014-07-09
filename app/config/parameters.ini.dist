@@ -4,19 +4,19 @@
 [parameters]
     database_driver         = pdo_mysql
     database_host           = localhost
-    database_port           =
-    database_name           = platformd
-    database_user           = root
-    database_password       =
+    database_port           = 3306
+    database_name           = campsite
+    database_user           = <db_user>
+    database_password       = <db_pass>
 
-    acl_database_name       = platformd_acl
+    acl_database_name       = campsite_acl
 
     allow_caching           = true
 
     mailer_transport        = smtp
     mailer_host             = localhost
-    mailer_user             =
-    mailer_password         =
+    mailer_user             = <mailer user>
+    mailer_password         = <mailer pass>
     mailer_encryption       = tls
     mailer_port             = 587
 
@@ -24,17 +24,18 @@
 
     secret                  = ThisTokenIsNotSoSecretChangeIt
 
-    recaptcha.public_key    =
-    recaptcha.private_key   =
+    recaptcha.public_key    = <recaptcha public key>
+    recaptcha.private_key   = <recaptcha private key>
 
     china_host_prefix = china
-    base_host         = site.com
+    base_host         = campsite.local
     host_suffix       =
 
-    s3.access_key           =
-    s3.secret_key           =
-    s3_bucket_name          = platformd-testing
-    s3_private_bucket_name  = platformd-private-testing
+    s3.access_key           = <s3 access key>
+    s3.secret_key           = <s3 secret key>
+    s3_bucket_name          = platformd-public
+    s3_private_bucket_name  = platformd-privates
+
 
     cloudsearch_domain_name = alienwarearena
     cloudsearch_domain_id   = biglongidfromawsconsole
@@ -49,7 +50,7 @@
     ; this is for the "alienware" staging
     facebook_app_id         = 468808186479620
 
-    mink_base_url           = http://your_app.dev/app_test.php
+    mink_base_url           = http://campsite.local/app_test.php
 
     google_api_key          = YourGoogleApiKey
 
@@ -60,39 +61,40 @@
 
     ; Here we must have at least default
     liip_enabled_themes[] = default
-    liip_enabled_themes[] = test_theme
+    liip_enabled_themes[] = ideacontest
 
-    secure_url_scheme     = https
+    secure_url_scheme     = http
 
     queue_prefix          = https://sqs.us-east-1.amazonaws.com/042124576429/PD_TESTING_
+
+    allow_caching         = true
 
     api_base_url          = https://api.alienwarearena.com/v1/
     api_access_key        = yourAccessKeyHere
     api_secret_key        = yourSecretKeyHere
 
-    varnish_server        = http://demo.alienwarearena.local:8080
+    varnish_server        = campsite.local:8080
     
     ; used for HP Cloud HpObjectStorage and for aws use AWSObjectStorage
     objectStorage        = HpObjectStorage
-    hpcloudAccesskey     = 
-    hpcloudSecreatkey    = 
-    hpcloudTenantid      = 
+    hpcloudAccesskey     = <hpcloud accesskey>
+    hpcloudSecreatkey    = <hpcloud secretkey>
+    hpcloudTenantid      = <hpcloud tenant id>
     hpcloudUrl           = https://region-a.geo-1.objects.hpcloudsvc.com:443/v1/10873218563681/
     hpcloudMessagingUrl  = https://region-a.geo-1.messaging.hpcloudsvc.com/v1.1/10873218563681
     hpcloudContainer     = platformd-public
-
     ; For use SendGrid Email service use SendGrid and for Aws use AWS_SES
     emailService         = SendGrid
-    sendgridUsername     = 
-    sendgridPassword     = 
+    sendgridUsername     = <sendgrid user>
+    sendgridPassword     = <sendgrid pass>
+
+    ; queue.service (1)RabbitMQ (2) AWS_SQS (3) HPCloud
+    queue.service        = RabbitMQ
+    rabbitmq.host        = localhost
+    rabbitmq.port        = 5672
+    rabbitmq.username    = <queue user>
+    rabbitmq.password    = <queue pass>
     
-    ; queue_service (1)RabbitMQ (2) AWS_SQS (3) HPCloud
-    queue_service        = RabbitMQ
-    rabbitmq_host        = 
-    rabbitmq_port        = 5672
-    rabbitmq_username    = 
-    rabbitmq_password    = 
-        
     ; only set to true if you have implemented the API authentication system and have configured it properly
     api_authentication    = false
 
@@ -114,7 +116,6 @@
     group_new                   = 
     group_edit                  = 
     entry_set_new               = 
-    idea_admin_event            = 
     idea_admin                  = 
     idea_admin_event            = 
     idea_admin_images           = 
@@ -130,4 +131,5 @@
     idea_add_link_form          = 
     fos_user_security_login     = 
     fos_user_resetting_request  = 
+    fos_user_registration_check_email =
 
