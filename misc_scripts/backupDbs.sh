@@ -1,3 +1,4 @@
+#!/bin/bash
 #TODO: Get db host, username, pass, schema from parameters.ini
 
 DB_HOST="localhost"

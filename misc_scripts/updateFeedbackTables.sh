@@ -1,3 +1,4 @@
+#!/bin/bash
 
 # This script installs the feedback lists for each page of campsite.
 
@@ -34,9 +35,8 @@ values=(\
 'group_new' 'Feedback for New Group page' \
 'group_edit' 'Feedback for Edit Group page' \
 'entry_set_new' 'Feedback for New List page' \
-'idea_admin_event' 'Feedback for New Event page' \
+'idea_admin_event' 'Feedback for New/Edit Event page' \
 'idea_admin' 'Feedback for Event Admin page' \
-'idea_admin_event' 'Feedback for Edit Event page' \
 'idea_admin_images' 'Feedback for Add Event Images page' \
 'idea_admin_member_approvals' 'Feedback for Approve Event Members page' \
 'idea_admin_criteria_all' 'Feedback for Show Event Criteria page' \
