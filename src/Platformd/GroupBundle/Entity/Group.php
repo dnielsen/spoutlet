@@ -1014,6 +1014,23 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     {
         return $this->events;
     }
+    public function getUpcomingWatchedEvents(User $user)
+    {
+        $upcomingWatchedEvents = array();
+        foreach ($this->events->toArray() as $event) {
+            if ($event->isUpcoming() && !$event->getDeleted() && ($event->isUserWatching($user) || $event->isUserAttending($user)) ) {
+                $upcomingWatchedEvents[] = $event;
+            }
+        }
+        usort($upcomingWatchedEvents, function($a, $b) {
+            if ($a->getStartsAt() == $b->getStartsAt()) {
+                return 0;
+            }
+            return ($a->getStartsAt() < $b->getStartsAt()) ? -1 : 1;
+        });
+        
+        return $upcomingWatchedEvents;
+    }
     public function getNumEvents() {
         $count = 0;
         foreach($this->events as $event)
