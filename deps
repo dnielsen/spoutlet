@@ -112,7 +112,7 @@
     version=origin/2.0
 
 [Gaufrette]
-    git=git@github.com:KnpLabs/Gaufrette.git
+    git=git://github.com/KnpLabs/Gaufrette.git
     target=/gaufrette
 
 [aws-sdk-for-php]
@@ -124,7 +124,7 @@
     target=/bundles/Cybernox/AmazonWebServicesBundle
 
 [KnpGaufretteBundle]
-    git=git@github.com:KnpLabs/KnpGaufretteBundle.git
+    git=git://github.com/KnpLabs/KnpGaufretteBundle.git
     target=/bundles/Knp/Bundle/GaufretteBundle
 
 [media-exposer]
