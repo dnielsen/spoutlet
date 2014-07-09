@@ -618,6 +618,11 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         return $this->startsAt;
     }
 
+    public function isUpcoming()
+    {
+        return $this->endsAt > new DateTime();
+    }
+
     /**
      * @param string $timezone
      */
