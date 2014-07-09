@@ -57,7 +57,9 @@ class SearchManager
         $this->objectStorage     = $objectStorage;
         $this->hpcloud_container = $hpcloud_container;
         $this->hpcloud_url       = $hpcloud_url;
-	    $this->hpCloudObj        = new HPCloudPHP($hpcloud_accesskey,$hpcloud_secreatkey,$hpcloud_tenantid);
+	    $this->hpcloud_accesskey = $hpcloud_accesskey;
+        $this->hpcloud_secreatkey= $hpcloud_secreatkey; 
+        $this->hpcloud_tenantid  = $hpcloud_tenantid;
     }
 
     public function search($criteria, $params = array(), $site, $category = null)
@@ -327,7 +329,8 @@ class SearchManager
             $filename = SearchIndexQueueMessage::SEARCH_INDEX_S3_PREFIX.'/'.md5($jsonData.time()).'.json';
             
            if($this->objectStorage == 'HpObjectStorage') {
-             $response = $this->hpCloudObj->create_object($bucket, $filename,array(
+             $hpCloudObj = new HPCloudPHP($this->hpcloud_accesskey,$this->hpcloud_secreatkey,$this->hpcloud_tenantid);
+             $response = $hpCloudObj->create_object($bucket, $filename,array(
                 'body'          => $jsonData,
                 'encryption'    => 'AES256',
                 'contentType'   => 'text/json',            

@@ -57,7 +57,9 @@ class AvatarManager
             $this->objectStorage = $objectStorage;
             $this->hpcloud_container =   $hpcloud_container;
             $this->hpcloud_url = $hpcloud_url;
-            $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secretkey, $hpcloud_tenantid);
+            $this->hpcloud_accesskey = $hpcloud_accesskey; 
+            $this->hpcloud_secretkey = $hpcloud_secretkey;
+            $this->hpcloud_tenantid = $hpcloud_tenantid;
         }
     }
 
@@ -126,10 +128,11 @@ class AvatarManager
         $filename = $user->getUuid();
         //$filename = $fileUuid;
         if($this->objectStorage == 'HpObjectStorage') {
-	    $this->hpCloudObj->SaveToObjectStorage($this->hpcloud_container,$filename,$file,AVATAR::AVATAR_DIRECTORY_PREFIX);
-	}
+            $this->hpCloudObj = new HPCloudPHP($this->hpcloud_accesskey, $this->hpcloud_secretkey, $this->hpcloud_tenantid);
+            $this->hpCloudObj->SaveToObjectStorage($this->hpcloud_container,$filename,$file,AVATAR::AVATAR_DIRECTORY_PREFIX);
+    	}
         else {
-          $data = $this->filesystem->write($filename, file_get_contents($file),$opts);
+            $data = $this->filesystem->write($filename, file_get_contents($file),$opts);
         }
         unlink($file);
 
