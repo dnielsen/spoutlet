@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Default behavior runs for production 
 # First parameter 'dev' or 'prod' overrides it
 

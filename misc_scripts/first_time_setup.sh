@@ -11,7 +11,7 @@ Also creates the initial user using the database credentials.
 
 Default values:
 initial_user = 'admin'
-initial_user_email = 'admin@examle.com'
+initial_user_email = 'admin@example.com'
 
 EOF
 }
