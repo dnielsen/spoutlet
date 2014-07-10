@@ -321,8 +321,6 @@ contact_user:
 login:
     pattern:   /login
     defaults:  { _controller: FOSUserBundle:Registration:register }
-    requirements:
-        _scheme: https
 
 logout:
     pattern:   /logout

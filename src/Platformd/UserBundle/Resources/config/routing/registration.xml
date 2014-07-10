@@ -6,7 +6,6 @@
 
     <route id="fos_user_registration_register" pattern="/account/register">
         <default key="_controller">FOSUserBundle:Registration:register</default>
-        <requirement key="_scheme">https</requirement>
     </route>
 
     <route id="fos_user_registration_check_email" pattern="/account/register/check-email">
