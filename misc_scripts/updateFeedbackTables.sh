@@ -8,13 +8,33 @@
 # PREREQUISITE
 # It requires that the site entity has a valid entry set registry id.
 
-# Get db username, pass, schema from parameters.ini
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+if [ ${SCRIPTPATH##*/} != "misc_scripts" ]; then
+    echo "Fatal error: This script must be placed in the misc_scripts directory of campsite";
+    exit 1
+fi
 
-DB_NAME="campsite"
-DB_USER="root"
-DB_PASS="sqladmin"
-DB_HOST="localhost"
+INI_FILE_PATH="${SCRIPTPATH}/../app/config/parameters.ini";
+if [ ! -e $INI_FILE_PATH ]; then
+    echo "Fatal error: app/config/parameters.ini file not found."
+    exit 1
+fi
+
+# Get db username, pass, schema from parameters.ini
+DB_USER=$( sed -n 's/^ *database_user *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
+DB_PASS=$( sed -n 's/^ *database_password *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
+DB_HOST=$( sed -n 's/^ *database_host *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
+DB_NAME=$( sed -n 's/^ *database_name *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
+DB_PORT=$( sed -n 's/^ *database_port *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
+
+if [ -z "$DB_USER" ] || [ -z "$DB_PASS" ] || [ -z "$DB_HOST" ] || [ -z "$DB_PORT" ] || [ -z "$DB_NAME" ]; then
+    echo "Fatal error: One of the following database properties in parameters.ini is empty:"
+    echo "   database_user, database_password, database_host, database_name, database_port";
+    exit 1
+fi
+
 SITE_NAME="Campsite"
+
 
 values=(\
 'accounts_groups' 'Feedback for My Group page' \
@@ -56,7 +76,7 @@ values=(\
 size=${#values[@]};
 
 # Get the site's registry id  -  or die trying
-esr=`mysql -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names << END_TEXT
+esr=`mysql -P$DB_PORT -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names << END_TEXT
 SELECT entrySetRegistration_id FROM pd_site WHERE name = "$SITE_NAME";
 END_TEXT`
 if [[ -z "$esr" ]]; then
@@ -69,7 +89,7 @@ for ((i=0; i<size; i+=2))
 do
 
     # Get the id of the new entry set
-    es_id=`mysql -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names <<END_TEXT
+    es_id=`mysql -P$DB_PORT -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names <<END_TEXT
 SELECT id FROM entry_set WHERE name = "${values[$i+1]}";
 END_TEXT`
     if [[ -n "$es_id" ]]; then
@@ -80,12 +100,12 @@ done
 
 echo
 
-echo "Add/Update the following entries in parameters.ini:"
+echo "The following entries have been updated in parameters.ini:"
 for ((i=0; i<size; i+=2))
 do
 
     # Get the id of the new entry set
-    es_id=`mysql -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names <<END_TEXT
+    es_id=`mysql -P$DB_PORT -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names <<END_TEXT
 SELECT id FROM entry_set WHERE name = "${values[$i+1]}";
 END_TEXT`
     if [[ -n "$es_id" ]]; then
@@ -93,16 +113,17 @@ END_TEXT`
     fi
     
     # Create Feedback list 
-    mysql -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names <<END_TEXT
+    mysql -P$DB_PORT -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names <<END_TEXT
 INSERT INTO entry_set (entrySetRegistration_id,name,type,isVotingActive,isSubmissionActive,allowedVoters) 
 VALUES ($esr,"${values[$i+1]}",'task',0,1,'');
 END_TEXT
     
     # Get the id of the new entry set
-    es_id=`mysql -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names <<END_TEXT
+    es_id=`mysql -P$DB_PORT -u$DB_USER -p$DB_PASS $DB_NAME -h$DB_HOST --skip-column-names <<END_TEXT
 SELECT id FROM entry_set WHERE name = "${values[$i+1]}";
 END_TEXT`
 
-    # Print parameter statement needed to access this entry set
-    echo "    ${values[$i]} = ${es_id}";
+    # Update parameter statement needed to access this entry set
+    echo "${values[$i]} = ${es_id}";
+    sed -i "s/^ *\(${values[$i]} *=\) */\1 ${es_id}/" $INI_FILE_PATH
 done
