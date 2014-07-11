@@ -1,5 +1,9 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
+{% block title %}
+    {{ group.name }}
+{% endblock %}
+
 {%  block header %}
 
     {% embed 'SpoutletBundle::header.html.twig' %}
