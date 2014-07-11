@@ -230,14 +230,9 @@ class AdminController extends Controller
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
             ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
             ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
-            ->add('startsAt',           'datetime',         array('date_widget'  => 'single_text',
-                                                                  'date_format'  => 'L/dd/yyyy',
-                                                                  'time_widget'  => 'single_text',
-                                                                  'required' => '0'))
-            ->add('endsAt',             'datetime',         array('date_widget'  => 'single_text',
-                                                                  'date_format'  => 'L/dd/yyyy',
-                                                                  'time_widget'  => 'single_text',
-                                                                  'required' => '0'))
+            ->add('noDate',             'checkbox',         array('attr'    => array('checked'   => 'checked'),'required'=> false))
+            ->add('startsAt',           'datetime',         array())
+            ->add('endsAt',             'datetime',         array())
             ->add('external',           'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
             ->add('registrationOption', 'choice',           array('choices' => array(Event::REGISTRATION_ENABLED   => 'Enabled',
                                                                                      Event::REGISTRATION_DISABLED  => 'Disabled',)))

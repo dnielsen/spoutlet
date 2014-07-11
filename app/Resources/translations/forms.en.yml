@@ -24,6 +24,7 @@ event_online: "Is this an online event? "
 event_private: "Is this a private event? "
 event_externalUrl: "Registration Link (optional): "
 event_external: "Is this event hosted on another site? "
+event_noDate: "The exact date is yet to be finalized"
 
 event_registrationFields: "Require additional registration information from attendees (optional): "
 

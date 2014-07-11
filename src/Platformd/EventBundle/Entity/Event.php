@@ -306,6 +306,11 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     protected $external = false;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $noDate = false;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -710,6 +715,10 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
     public function getDateRangeString()
     {
+        if ($this->getNoDate()) {
+            return $this->getStartsAt()->format('M Y');
+        }
+
         if ($this->getStartsAt() && $this->getEndsAt()) {
             $startsAtDate = $this->getStartsAt()->format('M d');
             $startsAtYear = $this->getStartsAt()->format('Y');
@@ -728,6 +737,10 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     }
     public function getDateAndTime()
     {
+        if ($this->getNoDate()) {
+            return $this->getStartsAt()->format('M Y');
+        }
+
         $dateAndTime = '';
 
         if ($this->getStartsAt() && $this->getEndsAt())
@@ -749,10 +762,20 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     }
 
     public function getStartDateString() {
+
+        if ($this->getNoDate()) {
+            return $this->getStartsAt()->format('M Y');
+        }
+
         return $this->getStartsAt()->format('n/d/Y');
     }
 
     public function getEndDateString() {
+
+        if ($this->getNoDate()) {
+            return $this->getStartsAt()->format('M Y');
+        }
+
         return $this->getEndsAt()->format('n/d/Y');
     }
 
@@ -1248,6 +1271,14 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     public function isExternal()
     {
         return $this->external;
+    }
+    public function setNoDate($value)
+    {
+        $this->noDate = $value;
+    }
+    public function getNoDate()
+    {
+        return $this->noDate;
     }
 
     public function getHashTag() {
