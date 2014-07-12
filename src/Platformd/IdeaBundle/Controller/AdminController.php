@@ -404,12 +404,9 @@ class AdminController extends Controller
 
                 $this->setFlash('success', $flashMessage);
 
-                if ($event->isExternal()) {
-                    return $this->redirect($this->generateUrl('global_events_index', array('useExternal' => 'true')));
-                } else {
-                    return $this->redirect($this->generateUrl('global_events_index'));
-                }
-
+                return $this->redirect($this->generateUrl('global_event_view', array(
+                        'id' => $event->getId(),
+                )));
             }
         }
 
