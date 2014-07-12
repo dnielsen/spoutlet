@@ -218,6 +218,12 @@
         {{ form_row(form.noDate) }}
         {{ form_row(form.startsAt) }}
         {{ form_row(form.endsAt) }}
+        {{ form_row(form.online) }}
+        <div id="location-controls">
+            {{ form_row(form.location) }}
+            {{ form_row(form.address1) }}
+            {{ form_row(form.address2) }}
+        </div>
         {{ form_row(form.external) }}
         <div id="registration-option">
             {{ form_row(form.registrationOption) }}
@@ -226,12 +232,6 @@
             {{ form_widget(form.registrationFields) }}
         </div>
         {{ form_row(form.externalUrl) }}
-        {{ form_row(form.online) }}
-        <div id="location-controls">
-            {{ form_row(form.location) }}
-            {{ form_row(form.address1) }}
-            {{ form_row(form.address2) }}
-        </div>
         {{ form_row(form.private) }}
         {{ form_rest(form) }}
 
