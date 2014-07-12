@@ -332,7 +332,14 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      */
     public function getFullAddress()
     {
-        return $this->address1.', '.$this->address2;
+        $addressString = '';
+        if ($this->address1) {
+            $addressString .= $this->address1;
+        }
+        if ($this->address2) {
+            $addressString .= ', '.$this->address2;
+        }
+        return $addressString;
     }
 
     /**
@@ -340,7 +347,14 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      */
     public function getHtmlFormattedAddress()
     {
-        return $this->address1.'<br />'.$this->address2;
+        if ($this->address1 && $this->address2) {
+            return $this->address1.'<br/>'.$this->address2;
+        } elseif ($this->address1) {
+            return $this->address1;
+        } elseif ($this->address2) {
+            return $this->address2;
+        }    
+        return null;
     }
 
     /**
