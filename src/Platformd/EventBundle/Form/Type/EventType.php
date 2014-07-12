@@ -51,8 +51,8 @@ class EventType extends AbstractType
             ))
             ->add('online', 'choice', array(
                 'choices'   => array(
-                    1 => 'platformd.event.form.choice.online_event',
                     0 => 'platformd.event.form.choice.physical_event'
+                    1 => 'platformd.event.form.choice.online_event',
                 ),
                 'expanded' => true,
                 'label' => 'platformd.event.form.event_type'

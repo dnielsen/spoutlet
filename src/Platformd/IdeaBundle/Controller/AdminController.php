@@ -241,11 +241,11 @@ class AdminController extends Controller
                                                                   'allow_delete'    => true,
                                                                   'by_reference'    => false))
             ->add('externalUrl',        'text',             array('attr'    => array('size' => '60%', 'placeholder' => 'http://')))
-            ->add('online',             'choice',           array('choices' => array('1' => 'Yes', '0' => 'No')))
             ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address2',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
-            ->add('private',            'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
+            ->add('online',             'checkbox',         array('required'=> false))
+            ->add('private',            'checkbox',         array('required'=> false))
             ->getForm();
 
         if($request->getMethod() == 'POST') {

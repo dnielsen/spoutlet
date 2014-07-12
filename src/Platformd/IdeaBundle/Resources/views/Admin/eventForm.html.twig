@@ -64,7 +64,7 @@
 
             function toggleLocationControls() {
 
-                if($('#event_online').val() == '1') {
+                if(onlineInput.attr('checked') == 'checked') {
                     $('#location-controls').slideUp();
                     $('#event_location').val(null);
                     $('#event_address1').val(null);
