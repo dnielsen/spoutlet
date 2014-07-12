@@ -233,7 +233,7 @@ class AdminController extends Controller
             ->add('noDate',             'checkbox',         array('attr'    => array('checked'   => 'checked'),'required'=> false))
             ->add('startsAt',           'datetime',         array())
             ->add('endsAt',             'datetime',         array())
-            ->add('external',           'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
+            ->add('external',           'choice',           array('choices' => array('1' => 'No', '0' => 'Yes')))
             ->add('registrationOption', 'choice',           array('choices' => array(Event::REGISTRATION_ENABLED   => 'Enabled',
                                                                                      Event::REGISTRATION_DISABLED  => 'Disabled',)))
             ->add('registrationFields', 'collection',       array('type'            => new RegistrationFieldFormType(),

@@ -303,7 +303,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $external = false;
+    protected $external = true;
 
     /**
      * @ORM\Column(type="boolean")
