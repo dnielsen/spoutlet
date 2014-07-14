@@ -18,12 +18,16 @@
                     {% else %}
                         {% set watchLink = path('watch_event', {'eventId': recommended.id}) %}
                     {% endif %}
+                {% else %}
+                    {% set watchLink = null %}
                 {% endif %}
 
             {% elseif type == 'group' %}
                 {% set recommended = rec.group %}
                 {% if (not recommended.isUserWatching(user)) and (not recommended.isMember(user)) %}
                     {% set watchLink = path('watch_group', {'groupId': recommended.id}) %}
+                {% else %}
+                    {% set watchLink = null %}
                 {% endif %}
 
             {% endif %}
