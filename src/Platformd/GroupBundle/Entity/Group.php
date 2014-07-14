@@ -666,6 +666,15 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         return $this->members;
     }
 
+    public function getMembersSortedTruncated($limit = 200)
+    {
+        $memberList = $this->members->toArray();
+        usort($memberList, function($a, $b) {
+            return strcmp($a->getName(), $b->getName());
+        });
+        return array_slice($memberList, 0, $limit);
+    }
+
      /**
      * @param \Doctrine\Common\Collections\ArrayCollection $members
      */
