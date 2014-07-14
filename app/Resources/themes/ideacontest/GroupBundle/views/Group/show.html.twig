@@ -63,11 +63,14 @@
         {% endif %}
 
         {% if not group.external %}
-            {% if group.members|default %}
-                <h2 class="widgetHeader">{{ group.members|length }} Member{% if group.members|length > 1 %}s{% endif %}</h2>
+            {% set limit = 200 %}
+            {% set totalMemberSize = group.members|length %}
+            {% set memberList = group.membersSorted(limit) %}
+            {% if memberList|default %}
+                <h2 class="widgetHeader">{{ totalMemberSize }} Member{% if totalMemberSize > 1 %}s{% endif %}</h2>
                 <a href="{{ path('profile', {userId: group.owner.id}) }}"><h3 class="blu spcr-t spcr-l3 midtxt">{{ group.owner.name }} (Organizer)</h3></a>
                 <ul class="spcr-b3">
-                    {% for member in group.membersSortedTruncated %}
+                    {% for member in memberList %}
                         {% if member.id != group.owner.id %}
                             <li class="spcr-t7 spcr-l3">
                                 <a href="{{ path('profile', {'userId': member.id}) }}"><h3 class="blu">{{ member.name }}</h3></a>
@@ -75,6 +78,9 @@
                         {% endif %}
                     {% endfor %}
                 </ul>
+                {% if totalMemberSize > limit %}
+                    <a href="{{ path('group_members', {'slug': group.slug}) }}" class="blue">View All Members</a>
+                {% endif %}
             {% else %}
                 There are no members of this group yet.
             {% endif %}
