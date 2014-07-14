@@ -12,7 +12,7 @@
 
     <div>
         <div class="widget-header">
-            <h1>Attendees</h2>
+            <h1>Attendees ({{ event.attendeeCount }})</h2>
             {% if isAdmin %}
                 <a href="{{ path('group_event_contact', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btn right">Contact Attendees</a>
             {% endif %}
