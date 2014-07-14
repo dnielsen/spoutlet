@@ -53,14 +53,13 @@ var collection_handler = function (result_set, resp, next) {
         query.then(function (results) {
             __.each(results, function (result){
                 var image_id = result.id;
-                var sponsorship = __.find(result_set, function (sponsorship) {
+                var sponsorships = __.filter(result_set, function (sponsorship) {
                     return sponsorship.sponsor.image_id === image_id;
                 });
 
-                if(__.isUndefined(sponsorship))
-                    return;
-
-                sponsorship.sponsor.image_uri = common.media_base_uri + result.filename;
+                __.each(sponsorships, function(sponsorship) {
+                    sponsorship.sponsor.image_uri = common.media_base_uri + result.filename;
+                });
             });
 
             resp.send(result_set);
