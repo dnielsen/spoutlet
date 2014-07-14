@@ -91,10 +91,10 @@ class Main {
     //---------------------------------------------------------------------------------------
 
     //Custom questions: prompt and type values
-    private static String Q_1_PROMPT = "Please suggest a topic for an unconference session";
+    private static String Q_1_PROMPT = "What topics are you interested in?";
     private static String Q_1_TYPE = "text";
 
-    private static String Q_2_PROMPT = "Would you like to receive BigData-related emails from our event sponsors.";
+    private static String Q_2_PROMPT = "Would you like to receive Ops-related information from our sponsors?";
     private static String Q_2_TYPE = "checkbox";
 
     // ---------------------- SQL TEMPATES ------------------------------------------------
@@ -175,7 +175,7 @@ class Main {
         if(column_index == -1)
             return "";
 
-        return row_data[column_index];
+        return row_data[column_index].replaceAll("\"","\'");
     }
 
     public static String hash(String s, String algo) {
@@ -290,8 +290,8 @@ class Main {
 
         //----------------- Process Data -----------------------------
         while ((nextLine = reader.readNext()) != null) {
-            String firstname = toTitleCase( getCell(nextLine, COL_FIRST_NAME).replaceAll("\"","\'") );
-            String lastname = toTitleCase( getCell(nextLine, COL_LAST_NAME).replaceAll("\"","\'") );
+            String firstname = toTitleCase( getCell(nextLine, COL_FIRST_NAME) );
+            String lastname = toTitleCase( getCell(nextLine, COL_LAST_NAME) );
             String name = firstname + ' ' + lastname;
             String email = getCell(nextLine, COL_EMAIL).trim();
 
@@ -334,8 +334,8 @@ class Main {
             String promo_code = getCell(nextLine, COL_PROMO_CODE).trim();
             String amount_paid = getCell(nextLine, COL_TOTAL_PAID).trim();
 
-            String q1_answer = getCell(nextLine, Q_1_PROMPT).trim().replaceAll("\"","\'");
-            String q2_answer = getCell(nextLine, Q_2_PROMPT).trim().replaceAll("\"","\'");
+            String q1_answer = getCell(nextLine, Q_1_PROMPT).trim();
+            String q2_answer = getCell(nextLine, Q_2_PROMPT).trim();
              
             sql_bw.printf(INSERT_TEMPLATE, email, email);
             user_update(sql_bw, email, "roles", "a:0:{}");
