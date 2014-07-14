@@ -6,15 +6,60 @@
     <script>
         $(function() {
 
-            toggleRegistrationControls();
+            var externalInput    = $('#event_external');
+            var noDateInput      = $('#event_noDate');
+            var startYearInput   = $('#event_startsAt_date_year');
+            var startMonthInput  = $('#event_startsAt_date_month');
+            var startDayInput    = $('#event_startsAt_date_day');
+            var startHourInput   = $('#event_startsAt_time_hour');
+            var startMinuteInput = $('#event_startsAt_time_minute');
+            var endYearInput     = $('#event_endsAt_date_year');
+            var endMonthInput    = $('#event_endsAt_date_month');
+            var endDayInput      = $('#event_endsAt_date_day');
+            var endHourInput     = $('#event_endsAt_time_hour');
+            var endMinuteInput   = $('#event_endsAt_time_minute');
 
-            $('#event_external').change(function() {
-                toggleRegistrationControls();
-            });
+            toggleRegistrationControls();
+            toggleDateControls();
+
+            externalInput.change(function() { toggleRegistrationControls(); });
+            noDateInput.change  (function() { toggleDateControls(); });
+
+            {% if isNew %}
+
+                startHourInput.val('8');
+                startMinuteInput.val('0');
+                endHourInput.val('17');
+                endMinuteInput.val('0');
+
+                startDayInput.change(function() {
+                    endDayInput.val($(this).val());
+                });
+
+            {% endif %}
+
+            function toggleDateControls() {
+                if (noDateInput.is(':checked')) {
+                    
+                    startDayInput.slideUp();
+                    $('#event_startsAt_time').slideUp();
+                    $('#event_startsAt').prev().text('Month of Event');
+                    $('#event_endsAt').slideUp();
+                    $('#event_endsAt').prev().slideUp();
+
+                } else {
+
+                    startDayInput.slideDown();
+                    $('#event_startsAt_time').slideDown();
+                    $('#event_startsAt').prev().text('Start Date');
+                    $('#event_endsAt').slideDown();
+                    $('#event_endsAt').prev().slideDown();
+                }
+            }
 
             function toggleRegistrationControls() {
 
-                if($('#event_external').val() == '1') {
+                if(externalInput.val() == '1') {
 
                     // Using external registration
                     $('#registration-option').slideUp();
@@ -31,49 +76,24 @@
 
             }
 
-            var startDateInput = $('#event_startsAt_date');
-            var startTimeInput = $('#event_startsAt_time');
-            var endDateInput   = $('#event_endsAt_date');
-            var endTimeInput   = $('#event_endsAt_time');
+            $('#event').submit(function() {
 
-            startDateInput.datetimepicker({
-                timepicker: false,
-                format: 'n/d/Y',
-                onChangeDateTime:function(){
-                    startDateInput.change();
+                // If noDate is checked, set day and time to defaults, and set End year and month equal to Start year and month
+                if (noDateInput.is(':checked')) {
+
+                    endYearInput.val(startYearInput.val());
+                    endMonthInput.val(startMonthInput.val());
+
+                    startDayInput.val('1');
+                    startHourInput.val('0');
+                    startMinuteInput.val('0');
+                    endDayInput.val('1');
+                    endHourInput.val('0');
+                    endMinuteInput.val('0');
                 }
-            });
-            endDateInput.datetimepicker({
-                timepicker: false,
-                format: 'n/d/Y'
-            });
-            startTimeInput.datetimepicker({
-                datepicker:false,
-                format: 'H:i:s',
-                step: 15,
-                onChangeDateTime:function(){
-                    startTimeInput.change();
-                }
-            });
-            endTimeInput.datetimepicker({
-                datepicker:false,
-                format: 'H:i:s',
-                step: 15
-            });
 
-            {% if isNew %}
-                var now = new Date();
-                var date = (now.getMonth()+1)+'/'+(now.getDate())+'/'+now.getFullYear();
-                startDateInput.val(date);
-                endDateInput.val(date);
-                startTimeInput.val('08:00:00');
-                endTimeInput.val('18:00:00');
-
-                startDateInput.change(function() {
-                    endDateInput.val($(this).val());
-                });
-
-            {% endif %}
+                return true;
+            });
 
         });
     </script>
@@ -95,16 +115,17 @@
     <form action="{{ formpath }}" method="post" {{ form_enctype(form) }} id="event" novalidate>
         {{ form_row(form.name) }}
         {{ form_row(form.content) }}
+        {{ form_row(form.noDate) }}
         {{ form_row(form.startsAt) }}
         {{ form_row(form.endsAt) }}
+        {{ form_row(form.location) }}
+        {{ form_row(form.address1) }}
+        {{ form_row(form.address2) }}
         {{ form_row(form.external) }}
         {{ form_row(form.externalUrl) }}
         <div id="registration-option">
             {{ form_row(form.registrationOption) }}
         </div>
-        {{ form_row(form.location) }}
-        {{ form_row(form.address1) }}
-        {{ form_row(form.address2) }}
         {{ form_widget(form._token) }}
 
         <br class="clr"/>

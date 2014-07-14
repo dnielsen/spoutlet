@@ -4,7 +4,6 @@
             <tr>
                 <th>{{ 'platformd.events.event_listings.date' | pd_trans }}</th>
                 <th>{{ 'platformd.events.event_listings.event' | pd_trans }}</th>
-                <th>{{ 'platformd.events.event_listings.organizer' | pd_trans }}</th>
                 <th>{{ 'platformd.events.event_listings.attendees' | pd_trans }}</th>
                 <th>{{ 'platformd.events.event_listings.actions' | pd_trans }}</th>
             </tr>
@@ -29,9 +28,8 @@
                 {% endif %}
 
                 <tr id="event-{{ event.contentType }}-{{ event.id }}" {% if i%2 %}class="fill"{% endif %}>
-                    <td>{{ event.startsAt | date_translate }}</td>
+                    <td>{{ event.startDateString }}</td>
                     <td><a class="event-title-link" href="{{ event | pd_link }}">{{  event.name }}</a></td>
-                    <td><a href="{{ path('profile', {'userId': event.user.id}) }}">{{ event.user.name }}</a></td>
                     <td style=" text-align:center;">{{ event.attendeeCount }}</td>
                     <td>
                         {% if (event.user == app.user) or (is_granted('ROLE_ADMIN')) %}

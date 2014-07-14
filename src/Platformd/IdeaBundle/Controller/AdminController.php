@@ -230,15 +230,10 @@ class AdminController extends Controller
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
             ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
             ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
-            ->add('startsAt',           'datetime',         array('date_widget'  => 'single_text',
-                                                                  'date_format'  => 'L/dd/yyyy',
-                                                                  'time_widget'  => 'single_text',
-                                                                  'required' => '0'))
-            ->add('endsAt',             'datetime',         array('date_widget'  => 'single_text',
-                                                                  'date_format'  => 'L/dd/yyyy',
-                                                                  'time_widget'  => 'single_text',
-                                                                  'required' => '0'))
-            ->add('external',           'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
+            ->add('noDate',             'checkbox',         array('attr'    => array('checked'   => 'checked'),'required'=> false))
+            ->add('startsAt',           'datetime',         array())
+            ->add('endsAt',             'datetime',         array())
+            ->add('external',           'choice',           array('choices' => array('1' => 'No', '0' => 'Yes')))
             ->add('registrationOption', 'choice',           array('choices' => array(Event::REGISTRATION_ENABLED   => 'Enabled',
                                                                                      Event::REGISTRATION_DISABLED  => 'Disabled',)))
             ->add('registrationFields', 'collection',       array('type'            => new RegistrationFieldFormType(),
@@ -246,11 +241,11 @@ class AdminController extends Controller
                                                                   'allow_delete'    => true,
                                                                   'by_reference'    => false))
             ->add('externalUrl',        'text',             array('attr'    => array('size' => '60%', 'placeholder' => 'http://')))
-            ->add('online',             'choice',           array('choices' => array('1' => 'Yes', '0' => 'No')))
             ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
             ->add('address2',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
-            ->add('private',            'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
+            ->add('online',             'checkbox',         array('required'=> false))
+            ->add('private',            'checkbox',         array('required'=> false))
             ->getForm();
 
         if($request->getMethod() == 'POST') {
@@ -348,16 +343,11 @@ class AdminController extends Controller
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
             ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
             ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
+            ->add('noDate',             'checkbox',         array('attr'    => array('checked'   => 'checked'),'required'=> false))
             ->add('externalUrl',        'text',             array('attr'    => array('size' => '60%', 'placeholder' => 'http://'), 'required' => true))
-            ->add('startsAt',           'datetime',         array('date_widget'  => 'single_text',
-                                                                  'date_format'  => 'L/dd/yyyy',
-                                                                  'time_widget'  => 'single_text',
-                                                                  'required' => '0'))
-            ->add('endsAt',             'datetime',         array('date_widget'  => 'single_text',
-                                                                  'date_format'  => 'L/dd/yyyy',
-                                                                  'time_widget'  => 'single_text',
-                                                                  'required' => '0'))
-            ->add('external',           'choice',           array('choices' => array('0' => 'No', '1' => 'Yes')))
+            ->add('startsAt',           'datetime',         array())
+            ->add('endsAt',             'datetime',         array())
+            ->add('external',           'choice',           array('choices' => array('1' => 'No', '0' => 'Yes')))
             ->add('registrationOption', 'choice',           array('choices' => array(Event::REGISTRATION_ENABLED   => 'Enabled',
                                                                                      Event::REGISTRATION_DISABLED  => 'Disabled',)))
             ->add('externalUrl',        'text',             array('attr'    => array('size' => '60%', 'placeholder' => 'http://')))
@@ -409,12 +399,9 @@ class AdminController extends Controller
 
                 $this->setFlash('success', $flashMessage);
 
-                if ($event->isExternal()) {
-                    return $this->redirect($this->generateUrl('global_events_index', array('useExternal' => 'true')));
-                } else {
-                    return $this->redirect($this->generateUrl('global_events_index'));
-                }
-
+                return $this->redirect($this->generateUrl('global_event_view', array(
+                        'id' => $event->getId(),
+                )));
             }
         }
 

@@ -32,10 +32,12 @@
             {% endif %}
         {% endif %}
 
-        {% if event.location|default %}
+        {% if event.location|default or event.fullAddress|default %}
             <h2>Where:</h2>
-            {{ event.location }}<br/>
-            <a href="http://maps.google.com/?q={{ event.address1 }}, {{ event.address2 }}" target="_blank" class="blu">{{ event.address1 }}<br/>{{ event.address2 }}</a>
+            {% if event.location|default %} {{ event.location }}<br/> {% endif %}
+            {% if event.fullAddress|default %}
+                <a href="http://maps.google.com/?q={{ event.fullAddress }}" target="_blank" class="blu">{{ event.htmlFormattedAddress|raw}}</a>
+            {% endif %}
         {% endif %}
     </div>
 

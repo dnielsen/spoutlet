@@ -58,7 +58,7 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
      * @ORM\Column(name="private", type="boolean")
      * @Assert\NotNull(message="Required")
      */
-    protected $private;
+    protected $private = false;
 
     /**
      * @ORM\OneToMany(targetEntity="Platformd\EventBundle\Entity\GroupEventTranslation", mappedBy="translatable", cascade={"all"})

@@ -6,87 +6,70 @@
     <script type="text/javascript">
         $(function() {
 
+            var onlineInput      = $('#event_online');
+            var externalInput    = $('#event_external');
+            var noDateInput      = $('#event_noDate');
+            var startYearInput   = $('#event_startsAt_date_year');
+            var startMonthInput  = $('#event_startsAt_date_month');
+            var startDayInput    = $('#event_startsAt_date_day');
+            var startHourInput   = $('#event_startsAt_time_hour');
+            var startMinuteInput = $('#event_startsAt_time_minute');
+            var endYearInput     = $('#event_endsAt_date_year');
+            var endMonthInput    = $('#event_endsAt_date_month');
+            var endDayInput      = $('#event_endsAt_date_day');
+            var endHourInput     = $('#event_endsAt_time_hour');
+            var endMinuteInput   = $('#event_endsAt_time_minute');
+
             // Initialize location controls state based on default online value
             toggleLocationControls();
             toggleRegistrationControls();
+            toggleDateControls();
 
-            // Toggle location controls on online update
-            $('#event_online').change(function() {
-                toggleLocationControls();
-            });
+            onlineInput.change  (function() { toggleLocationControls(); });
+            externalInput.change(function() { toggleRegistrationControls(); });
+            noDateInput.change  (function() { toggleDateControls(); });
 
-            $('#event_external').change(function() {
-                toggleRegistrationControls();
-            });
-
-            var startDateInput = $('#event_startsAt_date');
-            var startTimeInput = $('#event_startsAt_time');
-            var endDateInput   = $('#event_endsAt_date');
-            var endTimeInput   = $('#event_endsAt_time');
-
-            startDateInput.datetimepicker({
-                timepicker: false,
-                format: 'n/d/Y',
-                onChangeDateTime:function(){
-                    startDateInput.change();
-                }
-            });
-            endDateInput.datetimepicker({
-                timepicker: false,
-                format: 'n/d/Y'
-            });
-            startTimeInput.datetimepicker({
-                datepicker:false,
-                format: 'H:i:s',
-                step: 15,
-                onChangeDateTime:function(){
-                    startTimeInput.change();
-                }
-            });
-            endTimeInput.datetimepicker({
-                datepicker:false,
-                format: 'H:i:s',
-                step: 15
-            });
 
             {% if isNew %}
-                var now = new Date();
-                var date = (now.getMonth()+1)+'/'+(now.getDate())+'/'+now.getFullYear();
-                startDateInput.val(date);
-                endDateInput.val(date);
-                startTimeInput.val('18:30:00');
-                endTimeInput.val('21:00:00');
 
-                startDateInput.change(function() {
-                    endDateInput.val($(this).val());
-                });
+                startHourInput.val('8');
+                startMinuteInput.val('0');
+                endHourInput.val('17');
+                endMinuteInput.val('0');
 
-                startTimeInput.change(function() {
-                    var startTime = $(this).val();
-                    var startHour = parseInt(startTime.substring(0,2));
-                    var endTime;
-
-                    if (startHour >= 22) {
-                        endTime = '23:45:00';
-                    }
-                    else {
-                        var endHour = startHour + 2;
-                        if (endHour < 10) {
-                            endHour = '0' + endHour;
-                        }
-                        endTime = endHour + startTime.substring(2);
-                    }
-                    endTimeInput.val(endTime);
+                startDayInput.change(function() {
+                    endDayInput.val($(this).val());
                 });
 
             {% endif %}
 
+            function toggleDateControls() {
+                if (noDateInput.is(':checked')) {
+                    
+                    startDayInput.slideUp();
+                    $('#event_startsAt_time').slideUp();
+                    $('#event_startsAt').prev().text('Month of Event');
+                    $('#event_endsAt').slideUp();
+                    $('#event_endsAt').prev().slideUp();
+
+                } else {
+
+                    startDayInput.slideDown();
+                    $('#event_startsAt_time').slideDown();
+                    $('#event_startsAt').prev().text('Start Date');
+                    $('#event_endsAt').slideDown();
+                    $('#event_endsAt').prev().slideDown();
+                }
+            }
+
             function toggleLocationControls() {
-                if($('#event_online').val() == '1') {
+
+                if(onlineInput.attr('checked') == 'checked') {
                     $('#location-controls').slideUp();
                     $('#event_location').val(null);
                     $('#event_address1').val(null);
                     $('#event_address2').val(null);
+
                 } else {
                     $('#location-controls').slideDown();
                 }
@@ -172,6 +155,21 @@
                         $(this).parent().remove();
                     }
                 });
+
+                // If noDate is checked, set day and time to defaults, and set End year and month equal to Start year and month
+                if (noDateInput.is(':checked')) {
+
+                    endYearInput.val(startYearInput.val());
+                    endMonthInput.val(startMonthInput.val());
+
+                    startDayInput.val('1');
+                    startHourInput.val('0');
+                    startMinuteInput.val('0');
+                    endDayInput.val('1');
+                    endHourInput.val('0');
+                    endMinuteInput.val('0');
+                }
+
                 return true;
             });
 
@@ -217,8 +215,15 @@
     <form action="{{ formpath }}" method="post" {{ form_enctype(form) }} id="event" novalidate>
         {{ form_row(form.name) }}
         {{ form_row(form.content) }}
+        {{ form_row(form.noDate) }}
         {{ form_row(form.startsAt) }}
         {{ form_row(form.endsAt) }}
+        {{ form_row(form.online) }}
+        <div id="location-controls">
+            {{ form_row(form.location) }}
+            {{ form_row(form.address1) }}
+            {{ form_row(form.address2) }}
+        </div>
         {{ form_row(form.external) }}
         <div id="registration-option">
             {{ form_row(form.registrationOption) }}
@@ -227,12 +232,6 @@
             {{ form_widget(form.registrationFields) }}
         </div>
         {{ form_row(form.externalUrl) }}
-        {{ form_row(form.online) }}
-        <div id="location-controls">
-            {{ form_row(form.location) }}
-            {{ form_row(form.address1) }}
-            {{ form_row(form.address2) }}
-        </div>
         {{ form_row(form.private) }}
         {{ form_rest(form) }}
 

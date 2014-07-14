@@ -137,7 +137,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      * @ORM\Column(name="online", type="boolean")
      * //@Assert\NotNull(message="Required")
      */
-    protected $online = true;
+    protected $online = false;
 
     /**
      * Event starts at
@@ -303,7 +303,12 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $external = false;
+    protected $external = true;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $noDate = false;
 
     /**
      * Constructor
@@ -327,7 +332,14 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      */
     public function getFullAddress()
     {
-        return $this->address1.', '.$this->address2;
+        $addressString = '';
+        if ($this->address1) {
+            $addressString .= $this->address1;
+        }
+        if ($this->address2) {
+            $addressString .= ', '.$this->address2;
+        }
+        return $addressString;
     }
 
     /**
@@ -335,7 +347,14 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      */
     public function getHtmlFormattedAddress()
     {
-        return $this->address1.'<br />'.$this->address2;
+        if ($this->address1 && $this->address2) {
+            return $this->address1.'<br/>'.$this->address2;
+        } elseif ($this->address1) {
+            return $this->address1;
+        } elseif ($this->address2) {
+            return $this->address2;
+        }    
+        return null;
     }
 
     /**
@@ -710,6 +729,10 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
     public function getDateRangeString()
     {
+        if ($this->getNoDate()) {
+            return $this->getStartsAt()->format('M Y');
+        }
+
         if ($this->getStartsAt() && $this->getEndsAt()) {
             $startsAtDate = $this->getStartsAt()->format('M d');
             $startsAtYear = $this->getStartsAt()->format('Y');
@@ -728,6 +751,10 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     }
     public function getDateAndTime()
     {
+        if ($this->getNoDate()) {
+            return $this->getStartsAt()->format('M Y');
+        }
+
         $dateAndTime = '';
 
         if ($this->getStartsAt() && $this->getEndsAt())
@@ -749,10 +776,20 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     }
 
     public function getStartDateString() {
+
+        if ($this->getNoDate()) {
+            return $this->getStartsAt()->format('M Y');
+        }
+
         return $this->getStartsAt()->format('n/d/Y');
     }
 
     public function getEndDateString() {
+
+        if ($this->getNoDate()) {
+            return $this->getStartsAt()->format('M Y');
+        }
+
         return $this->getEndsAt()->format('n/d/Y');
     }
 
@@ -1248,6 +1285,14 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     public function isExternal()
     {
         return $this->external;
+    }
+    public function setNoDate($value)
+    {
+        $this->noDate = $value;
+    }
+    public function getNoDate()
+    {
+        return $this->noDate;
     }
 
     public function getHashTag() {
