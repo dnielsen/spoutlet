@@ -40,7 +40,7 @@
                 </td>
                 <td>
                     {% if watchLink|default %}
-                        <a href="{{ watchLink }}" class="blu">Watch</a><br/>
+                        <a href="{{ watchLink }}" class="blu">Follow</a><br/>
                     {% endif %}
                     <a href="{{ path('dismiss_recommendation', {'recType': type, 'recId': rec.id}) }}" class="blu" onclick="return confirm('Are you sure you wish to dismiss this recommendation?');">Dismiss</a>
                 </td>
