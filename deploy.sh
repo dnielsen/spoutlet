@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Default behavior runs for production 
 # First parameter 'dev' or 'prod' overrides it
