@@ -197,6 +197,11 @@ idea_admin_export_votes:
     requirements:
       _method: GET
 
+idea_admin_import_eventbrite_event:
+    pattern:    /{groupSlug}/eb_event_import/{ebEventId}
+    defaults:   { _controller: IdeaBundle:Admin:importEventbriteEvent }
+
+
 # Admin Scripts
 all_event_acl_fix:
     pattern:    /admin/fixEventACLs

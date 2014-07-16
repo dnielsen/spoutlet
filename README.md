@@ -212,3 +212,6 @@ USING MULTIPLE THEMES
     If you override the default layout: 'SpoutletBundle::layout.html.twig' - don't forget to add all the necessary blocks and to include the base assets
     When you want to override a template and create a new file in your theme directory, make sure to clear the cache or you won't see the new template
     Any time you add a new asset file (css or js) - make sure you clear the cache as well and re-dump the assets
+
+Eventbrite event import:
+http://www.campsite.local/app_dev.php/{campsite group slug}/eb_event_import/{eventbrite event id}

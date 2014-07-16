@@ -31,8 +31,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 class AdminController extends Controller
 {
-
-
     /**
      * @param Request $request
      * @param string $groupSlug
@@ -182,6 +180,100 @@ class AdminController extends Controller
         $this->setFlash('success', 'Session \''.$evtSession->getName().'\' has been deleted.');
 
         return $this->redirect($this->generateUrl('event_session_schedule', $event->getLinkableRouteParameters()));
+    }
+
+    public function importEventbriteEventAction(Request $request, $groupSlug, $ebEventId)
+    {
+        if (!$this->isAdmin()) {
+            throw new AccessDeniedException;
+        }
+
+        $event_data = null;
+        try {
+            $event_data = $this->getIdeaService()->getEventbriteEvent($ebEventId);
+        } catch (\Exception $e) {
+            echo 'Caught exception: ',  $e->getMessage(), "\n";
+            return new Response();
+        }
+
+        if( $event_data == null ) {
+            echo "Response does not contain an event, aborting";
+            return new Response();
+        }
+
+        $group = $this->getGroup($groupSlug);
+        $event = new GroupEvent($group);
+        $group->addEvent($event);
+
+        $user  = $this->getCurrentUser();
+        $event->setUser($user);
+        $event->setActive(true);
+        $event->setApproved(true);
+        $event->setExternal(0);
+        $event->setRegistrationOption(Event::REGISTRATION_DISABLED);
+
+        $title = $event_data['title'];
+        if(strlen($title) !== 0) $event->setName($title);
+
+        $start_date = $event_data['start_date'];
+        if(strlen($start_date) !== 0) $event->setStartsAt(new \DateTime($start_date));
+
+        $end_date = $event_data['end_date'];
+        if(strlen($end_date) !== 0) $event->setEndsAt(new \DateTime($end_date));
+
+        $timezone = $event_data['timezone'];
+        if(strlen($timezone) !== 0) $event->setTimezone($timezone);
+
+        $description = $event_data['description'];
+        if(strlen($description) !== 0) $event->setContent($description);
+
+        $tags = $event_data['tags'];
+        if(strlen($tags) !== 0) $event->setEBTags($tags);
+
+
+        $venue = $event_data['venue'];
+
+        $venue_name = $venue['name'];
+        if(strlen($venue_name) !== 0) $event->setLocation($venue_name);
+
+        $venue_address1 = $venue['address'];
+        if(strlen($venue_address1) !== 0) $event->setAddress1($venue_address1);
+
+        $venue_address2 = $venue['address_2'];
+        if(strlen($venue_address2) !== 0) $event->setAddress2($venue_address2);
+
+        $longitude = $venue['longitude'];
+        if(strlen($longitude) !== 0) $event->setLongitude(''.$longitude);
+
+        $latitude = $venue['latitude'];
+        if(strlen($latitude) !== 0) $event->setLatitude(''.$latitude);
+
+        $city = $venue['city'];
+        if(strlen($city) !== 0) $event->setCity($city);
+
+        $state = $venue['region'];
+        if(strlen($state) !== 0) $event->setState($state);
+
+        $country = $venue['country'];
+        if(strlen($country) !== 0) $event->setCountry($country);
+
+        $postal_code = $venue['postal_code'];
+        if(strlen($postal_code) !== 0) $event->setPostalCode($postal_code);
+
+        $this->getGroupEventService()->createEvent($event);
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->persist($event);
+        $em->flush();
+
+        // Registration needs to be created after event is persisted, relies on generated event ID
+        $esReg = $event->createEntrySetRegistration();
+        $em->persist($esReg);
+
+        $this->getGroupEventService()->register($event, $event->getUser());
+        $em->flush();
+
+        return $this->redirect($this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters()));
     }
 
     public function eventAction(Request $request, $groupSlug, $eventId)
