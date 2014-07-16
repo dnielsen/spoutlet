@@ -224,6 +224,44 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     protected $address2;
 
     /**
+     * Country 
+     *
+     * @var string $country
+     * @ORM\Column(name="country", type="string", length=255, nullable=true)
+     */
+    protected $country;
+
+    /**
+     * State / Region / Province 
+     *
+     * @var string $state
+     * @ORM\Column(name="state", type="string", length=255, nullable=true)
+     */
+    protected $state;
+
+    /**
+     * City name 
+     *
+     * @var string $city
+     * @ORM\Column(name="city", type="string", length=255, nullable=true)
+     */
+    protected $city;
+
+    /**
+     * Postal / ZIP code
+     * @var string $postal_code
+     * @ORM\Column(name="postal_code", type="string", length=255, nullable=true)
+     */
+    protected $postal_code;
+
+    /**
+     * comma-delimited list of tags
+     * @var string $tags
+     * @ORM\Column(name="eb_tags", type="string", length=255, nullable=true)
+     */
+    protected $eb_tags;
+
+    /**
      * This gets value from Google Location service
      *
      * @var float
@@ -387,6 +425,86 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     public function getAddress2()
     {
         return $this->address2;
+    }
+
+    /**
+     * @param string $city
+     */
+    public function setCity($city)
+    {
+        $this->city = $city;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * @param string $state
+     */
+    public function setState($state)
+    {
+        $this->state = $state;
+    }
+
+    /**
+     * @return string
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * @param string $country
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param string $postal_code
+     */
+    public function setPostalCode($postal_code)
+    {
+        $this->postal_code = $postal_code;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPostalCode()
+    {
+        return $this->postal_code;
+    }
+
+    /**
+     * @param string $postal_code
+     */
+    public function setEBTags($tags)
+    {
+        $this->eb_tags = $tags;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEBTags()
+    {
+        return $this->eb_tags;
     }
 
     /**
