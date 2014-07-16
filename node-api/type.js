@@ -43,6 +43,9 @@ Type.prototype.apply_filter = function (column, query, value) {
 };
 
 Type.prototype.list_validate = function (value, single_validate) {
+    if(typeof value !== "string")
+        return single_validate(value);
+
     var value_parts = value.split(',');
     
     if(value_parts.length <= 0) {

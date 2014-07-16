@@ -1,0 +1,12 @@
+{ 
+    "db_config" : {
+        "client" : "mysql",
+        "connection" : {
+            "host" : "localhost",
+            "user" : "root",
+            "password" : "sqladmin",
+            "database" : "campsite",
+            "charset" : "UTF8MB4_GENERAL_CI"
+        }
+    }
+}

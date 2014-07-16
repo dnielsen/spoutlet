@@ -1,3 +1,20 @@
+GETTING STARTED:
+
+Create config_data.json and set your database connection properties:
+{
+    "db_config" : {
+        "client" : "mysql",
+        "connection" : {
+            "host" : "localhost",
+            "user" : "<mysql username>",
+            "password" : "<mysql userpass>",
+            "database" : "campsite",
+            "charset" : "UTF8MB4_GENERAL_CI"
+        }
+    }
+}
+
+
 sudo apt-get install -y python-software-properties python g++ make
 sudo add-apt-repository ppa:chris-lea/node.js
 sudo apt-get update
@@ -96,136 +113,3 @@ TODO
 - default limit
 - route aliases: lets you write /groups/3/events/4/sessions/5 instead of this /sessions?sid=5&gid=3&eid=4
 
-
-----------------------------------------------------------
-
-maturity model of in-person meetings:
-breakout-sessions (birds of a feather)
-talks (lightning)
-demos
-spin-off meetups
-
-//-----------------------------------------------------
-
-default parameter for belongs to
-filters broken
-
------------------------
-    type relations
------------------------
-has-many        == inversed-by,one-to-many
-has-one         == one-to-one
-belongs-to      == mapped-by,many-to-one     <----- implimented
-belongs-to-many == many-to-many
-
-has 		--> can    create/update/delete
-belongs-to 	--> cannot create/update/delete
-
------------------------
-         user 
------------------------
-has-many
-- groups: my_groups
-- events: my_events
-- lists: my_lists
-- entry: my_entry
-- votes: my_votes
-
-belongs-to-many
-- ideas: entries_voted_on via votes
-
-
------------------------
-         votes
------------------------
-belongs-to
-- user: voter
-- entry: vote_for
-
-
------------------------
-         entry
------------------------
-has-many
-- sessions: seeded_sessions (doesn't make sense for us)
-- votes: votes_cast (doesn't make sense for us)
-
-belongs-to
-- user: creator
-- list: listed_on
-
-belongs-to-many
-- users: voters via votes
-
-
------------------------
-         list
------------------------
-has-many
-- entry: list_items
-
-belongs-to
-- user: creator
-- registry: registered-to
-
-belongs-to-many
-- group,event,session: container via registry
-
-
------------------------
-       registry
------------------------
-has-many
-- lists: lists
-
-has-one
-- group,event,session: registered-to
-
-
------------------------
-         group
------------------------
-has-many
-- group: subgroups (topic/location)
-- event: events
-
-has-one
-- registry: registration
-
-belongs-to
-- user: creator
-- group: topic_group
-
-belongs-to-many
-- list: lists via registry ( where group.entrySetRegistration_id == registry.containerId return list where list. entrySetRegistration_id == registry.id)
-
-
------------------------
-        event
------------------------
-has-many
-- session: sessions
-
-has-one
-- registry: registration
-
-belongs-to
-- user: creator
-- group: parent_group
-
-belongs-to-many
-- list: lists via registry
-
-
------------------------
-       session
------------------------
-has-one
-- registry: registration
-
-belongs-to
-- user: creator
-- event: parent_event
-
-belongs-to-many
-- list: lists via registry
