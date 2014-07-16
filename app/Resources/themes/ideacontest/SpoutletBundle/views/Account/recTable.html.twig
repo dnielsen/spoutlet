@@ -2,7 +2,7 @@
     <table class="myStuffTable spcr-b">
         <thead>
             <tr>
-                <th style="width: 80%;">Recommendation</th>
+                <th style="width: 65%;">Recommendations</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -10,21 +10,61 @@
         {% set i=0 %}
         {% for rec in recommendations %}
 
+            {% set showJoinLink = false %}
+            {% set showWatchLink = false %}
+            {% set replyLink = null %}
+            {% set contactLink = null %}
+
             {% if type == 'event' %}
+
                 {% set recommended = rec.event %}
-                {% if (not recommended.isUserWatching(user)) and (not recommended.isUserAttending(user)) %}
-                    {% if recommended.getContentType == 'GlobalEvent' %}
-                        {% set watchLink = path('watch_event', {'eventId': recommended.id, 'eventType': 'global'}) %}
-                    {% else %}
-                        {% set watchLink = path('watch_event', {'eventId': recommended.id}) %}
+                {% set recOwner    = recommended.user %}
+
+                {% if not recommended.isUserAttending(user) %}
+                    {% set showJoinLink = true %}
+
+                    {% if not recommended.isUserWatching(user) %}
+                        {% set showWatchLink = true %}
+
                     {% endif %}
                 {% endif %}
 
-            {% elseif type == 'group' %}
-                {% set recommended = rec.group %}
-                {% if (not recommended.isUserWatching(user)) and (not recommended.isMember(user)) %}
-                    {% set watchLink = path('watch_group', {'groupId': recommended.id}) %}
+                {% if recommended.getContentType == 'GlobalEvent' %}
+                    {% set watchLink = path('watch_event', {'eventId': recommended.id, 'eventType': 'global'}) %}
+                    {% set joinLink = path('global_event_register', {'id': recommended.id}) %}
+
+                {% else %}
+                    {% set watchLink = path('watch_event', {'eventId': recommended.id}) %}
+                    {% set joinLink = path('group_event_register_and_join', {'groupSlug': recommended.group.slug, 'eventId': recommended.id}) %}
+
                 {% endif %}
+                {% set joinVerb = 'Attend' %}
+
+            {% elseif type == 'group' %}
+
+                {% set recommended = rec.group %}
+                {% set recOwner    = recommended.owner %}
+
+                {% if not recommended.isMember(user) %}
+                    {% set showJoinLink = true %}
+
+                    {% if not recommended.isUserWatching(user) %}
+                        {% set showWatchLink = true %}
+
+                    {% endif %}
+                {% endif %}
+
+                {% set watchLink = path('watch_group', {'groupId': recommended.id}) %}
+                {% set joinLink = path('group_join', {'slug': recommended.slug}) %}
+                {% set joinVerb = 'Join' %}
+
+            {% endif %}
+
+            {% if rec.type == 'speak' or rec.type == 'sponsor' %}
+                {% set showWatchLink = false %}
+                {% set showJoinLink = false %}
+                {% set replyLink = path('contact_user', {'userId': rec.referredBy.id}) %}
+                {% set contactLink = path('contact_user', {'userId': recOwner.id, 'type': rec.type, 'scope': type, 'containerId': recommended.id }) %}
 
             {% endif %}
 
@@ -35,9 +75,19 @@
                     <a href="{{ path("profile", {"userId": rec.referredBy.id}) }}" class="blu">{{ rec.referredBy.name }}</a> has recommended you to {{ rec.action }} <a href="{{ recommended | pd_link }}" class="blu">{{ recommended.name }}</a>
                 </td>
                 <td>
-                    {% if watchLink|default %}
-                        <a href="{{ watchLink }}" class="blu">Watch</a><br/>
+                    {% if showWatchLink %}
+                        <a href="{{ watchLink }}" class="blu">Follow</a> &nbsp;|&nbsp;
                     {% endif %}
+                    {% if showJoinLink %}
+                        <a href="{{ joinLink }}" class="blu">{{ joinVerb }}</a> &nbsp;|&nbsp;
+                    {% endif %}
+                    {% if replyLink|default %}
+                        <a href="{{ replyLink }}" class="blu">Reply</a> &nbsp;|&nbsp;
+                    {% endif %}
+                    {% if contactLink|default %}
+                        <a href="{{ contactLink }}" class="blu">Contact Organizer</a> &nbsp;|&nbsp;
+                    {% endif %}
+                    
                     <a href="{{ path('dismiss_recommendation', {'recType': type, 'recId': rec.id}) }}" class="blu" onclick="return confirm('Are you sure you wish to dismiss this recommendation?');">Dismiss</a>
                 </td>
             </tr>

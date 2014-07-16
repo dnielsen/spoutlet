@@ -39,7 +39,7 @@ global_event_disable:
         _method: POST
 
 global_event_remove_attendee:
-    pattern: /events/{slug}/remove/{userId}
+    pattern: /events/{id}/remove/{userId}
     defaults: { _controller: EventBundle:GlobalEvent:removeAttendee }
 
 global_event_view:

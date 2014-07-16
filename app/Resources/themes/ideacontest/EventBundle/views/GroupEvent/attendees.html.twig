@@ -1,97 +1,91 @@
 {% extends 'IdeaBundle::event_layout.html.twig' %}
 
-{% set canRemove = (app.user == event.user) or (app.user is not null and app.user.adminLevel == "ROLE_SUPER_ADMIN") %}
+{% set isAdmin = (app.user == event.user) or is_granted('ROLE_ADMIN') %}
 
 {% block title 'Attendees - ' ~ event.name %}
 
 {% block content %}
 
-    {% if event.registrationFields|length > 0 %}
-        {% set hasRegFields = 1 %}
+    {% if event.registrationFields|length > 0 and isAdmin %}
+        {% set showRegFields = 1 %}
     {% endif %}
 
-
-    <div class="std_2col" style="margin-top: 10px;">
-        <div class="left">
-            <div class="widget-66">
-                <div class="widget-header">
-                    <div class="widget-title left">Attendees</div>
-                    <a href="{{ path('group_event_contact', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btn right">Contact Attendees</a>
-                    <div class="clr"></div>
-                </div>
-                <div class="widget-content">
-                    <table style="width: 100%;">
-                        <thead style="text-align:left;">
-                            <tr>
-                                <th style="padding:5px 0;">Name</th>
-                                <th style="padding:5px 0;">Contact</th>
-                                {% if hasRegFields|default %}
-                                    <th style="padding:5px 0;">Registration Information</th>
-                                {% endif %}
-                                {% if canRemove %}<th style="width: 125px; padding:5px 0;">{{ 'platformd.events.event_attendees.action' | pd_trans }}</th>{% endif %}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for attendee in attendees %}
-                                <tr>
-                                    <td style="padding:5px 0;"><a href="{{ path('profile', {'userId': attendee.id}) }}">{{ attendee.name }}</a></td>
-                                    <td style="padding:5px 0;"><a href="{{ path('group_event_contact', {'groupSlug': group.slug, 'eventId': event.id, 'recipient': attendee.username}) }}">Send Message</a></td>
-                                    {% if hasRegFields|default %}
-                                        <td style="padding:5px 0;">
-                                            {% set attendeeAnswers = attendee.answersForEvent(event) %}
-                                            {% if attendeeAnswers|default %}
-                                                <a href="#" class="viewAnswers" data-id="{{ attendee.id }}" data-name="{{ attendee.name }}">View Answers</a>
-                                                <div id="regAnswers{{ attendee.id }}" style="display:none">
-                                                    {% for answer in attendeeAnswers %}
-                                                        <strong>{{ answer.field.question }}</strong>: {{ answer.answer }}<br/>
-                                                    {% endfor %}
-                                                </div>
-                                            {% endif %}
-                                        </td>
-                                    {% endif %}
-                                    {% if canRemove %}
-                                        <td style="padding:5px 0;">
-                                            <a href="{{ path('group_event_remove_attendee', { 'groupSlug': group.slug, 'eventId': event.id, 'userId' : attendee.id }) }}" onclick="return confirm('Are you sure you want to remove \'{{ attendee.username }}\' from this event?');">Remove</a>
-                                        </td>
-                                    {% endif %}
-
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td colspan={% if canRemove %}"3"{% else %}"2"{% endif %}>
-                                        <em>{{ 'platformd.events.event_attendees.no_attendees' | pd_trans }}</em>
-                                    </td>
-                                </tr>
-                            {% endfor %}
-
-                            <script type="text/javascript">
-                                $(function() {
-                                    $('.viewAnswers').click(function(e) {
-                                        e.preventDefault();
-
-                                        var userId = $(this).attr('data-id');
-                                        var userName = $(this).attr('data-name');
-
-                                        $('#regAnswers' + userId).dialog({
-                                            show: 'fade',
-                                            hide: 'fade',
-                                            title: userName,
-                                            width: 400
-                                        });
-                                    });
-                                })
-                            </script>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="widget-footer">&nbsp;</div>
-            </div>
+    <div>
+        <div class="widget-header">
+            <h1>Attendees ({{ event.attendeeCount }})</h2>
+            {% if isAdmin %}
+                <a href="{{ path('group_event_contact', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btn right">Contact Attendees</a>
+            {% endif %}
+            <div class="clr"></div>
         </div>
-        <div class="right">
-            <div>
-                {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
-            </div>
+        <div class="widget-content">
+            {% set i=0 %}
+            <table class="myStuffTable">
+                <thead style="text-align:left;">
+                    <tr>
+                        <th>Name</th>
+                        <th>Contact</th>
+                        {% if showRegFields|default %}
+                            <th>Registration Information</th>
+                        {% endif %}
+                        {% if isAdmin %}<th>{{ 'platformd.events.event_attendees.action' | pd_trans }}</th>{% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attendee in attendees %}
+                        {% set i=i+1 %}
+                        <tr {% if i%2 %}class="fill"{% endif %}>
+                            <td><a href="{{ path('profile', {'userId': attendee.id}) }}" class="blue">{{ attendee.name }}</a></td>
+                            <td><a href="{{ path('group_event_contact', {'groupSlug': group.slug, 'eventId': event.id, 'recipient': attendee.username}) }}">Send Message</a></td>
+                            {% if showRegFields|default %}
+                                <td>
+                                    {% set attendeeAnswers = attendee.answersForEvent(event) %}
+                                    {% if attendeeAnswers|default %}
+                                        <a href="#" class="viewAnswers" data-id="{{ attendee.id }}" data-name="{{ attendee.name }}">View Answers</a>
+                                        <div id="regAnswers{{ attendee.id }}" style="display:none">
+                                            {% for answer in attendeeAnswers %}
+                                                <strong>{{ answer.field.question }}</strong>: {{ answer.answer }}<br/>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                            {% if isAdmin %}
+                                <td>
+                                    <a href="{{ path('group_event_remove_attendee', { 'groupSlug': group.slug, 'eventId': event.id, 'userId' : attendee.id }) }}" onclick="return confirm('Are you sure you want to remove \'{{ attendee.username }}\' from this event?');">Remove</a>
+                                </td>
+                            {% endif %}
+
+                        </tr>
+                    {% else %}
+                        <tr {% if i%2 %}class="fill"{% endif %}>
+                            <td colspan={% if isAdmin %}"3"{% else %}"2"{% endif %}>
+                                <em>{{ 'platformd.events.event_attendees.no_attendees' | pd_trans }}</em>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    <script type="text/javascript">
+                        $(function() {
+                            $('.viewAnswers').click(function(e) {
+                                e.preventDefault();
+
+                                var userId = $(this).attr('data-id');
+                                var userName = $(this).attr('data-name');
+
+                                $('#regAnswers' + userId).dialog({
+                                    show: 'fade',
+                                    hide: 'fade',
+                                    title: userName,
+                                    width: 400
+                                });
+                            });
+                        })
+                    </script>
+                </tbody>
+            </table>
         </div>
+        <div class="widget-footer">&nbsp;</div>
     </div>
 
 {% endblock %}

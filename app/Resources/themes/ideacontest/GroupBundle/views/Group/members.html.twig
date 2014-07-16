@@ -1,0 +1,18 @@
+{% extends 'IdeaBundle::group_layout.html.twig' %}
+
+{% block content %}
+
+    {% set memberList = group.membersSorted %}
+
+    <h1>Members ({{ memberList|length }})</h1>
+    {% set i=0 %}
+    <table class="myStuffTable">
+        {% for member in memberList %}
+            <tr {% if i%2 %}class="fill"{% endif %}>
+                <td><a href="{{ path('profile', {'userId': member.id}) }}" class="blu">{{ member.name }}</a></td>
+            </tr>
+            {% set i=i+1 %}
+        {% endfor %}
+    </table>
+
+{% endblock %}

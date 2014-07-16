@@ -60,7 +60,7 @@
                             {% if not group[0].external %}
                                 <a href="{{ path('group_join', {'slug': group[0].slug}) }}" class="blue">Join</a><br/>
                             {% endif %}
-                            <a href="{{ path('unwatch_group', {'groupId': group[0].id}) }}" class="blue">Unwatch</a><br/>
+                            <a href="{{ path('unwatch_group', {'groupId': group[0].id}) }}" class="blue">Unfollow</a><br/>
                         {% endif %}
 
                         {% if (group[0].owner == app.user) or (is_granted('ROLE_ADMIN')) %}

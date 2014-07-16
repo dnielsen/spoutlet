@@ -180,7 +180,7 @@ class GlobalEventController extends Controller
             throw $this->createNotFoundException(sprintf('No event for id "%s"', $id));
         }
 
-        $attendees = $this->getGlobalEventService()->getAttendeeList($event);
+        $attendees = $event->getAttendeesAlphabetical();
 
         return $this->render('EventBundle:GlobalEvent:attendees.html.twig', array(
             'event' => $event,

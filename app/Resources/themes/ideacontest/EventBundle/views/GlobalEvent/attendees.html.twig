@@ -1,0 +1,56 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% set isAdmin = (app.user == event.user) or is_granted('ROLE_ADMIN') %}
+
+{% block title 'Attendees - ' ~ event.name %}
+
+{% block content %}
+
+    <div>
+        <div class="widget-header">
+            <h1 class="left">Attendees ({{ event.attendees|length }})</h2>
+            {% if isAdmin %}
+                <a href="{{ path('global_event_contact', {'id': event.id}) }}" class="btn right">Contact Attendees</a>
+            {% endif %}
+            <div class="clr"></div>
+        </div>
+        <div class="widget-content">
+            {% set i=0 %}
+            <table class="myStuffTable">
+                <thead style="text-align:left;">
+                    <tr>
+                        <th>Name</th>
+                        {% if isAdmin %}<th>{{ 'platformd.events.event_attendees.action' | pd_trans }}</th>{% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attendee in attendees %}
+                        {% set i=i+1 %}
+                        <tr {% if i%2 %}class="fill"{% endif %}>
+                            <td><a href="{{ path('profile', {'userId': attendee.id}) }}" class="blue">{{ attendee.name }}</a></td>
+                            {% if isAdmin %}
+                                <td>
+                                    <a href="{{ path('global_event_remove_attendee', { 'id': event.id, 'userId' : attendee.id }) }}" onclick="return confirm('Are you sure you want to remove \'{{ attendee.username }}\' from this event?');">Remove</a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% else %}
+                        <tr {% if i%2 %}class="fill"{% endif %}>
+                            <td colspan={% if isAdmin %}"3"{% else %}"2"{% endif %}>
+                                <em>{{ 'platformd.events.event_attendees.no_attendees' | pd_trans }}</em>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        <div class="widget-footer">&nbsp;</div>
+    </div>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'EventBundle::_css_assets.html.twig' %}
+{% endblock %}
