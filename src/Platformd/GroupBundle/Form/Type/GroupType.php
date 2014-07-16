@@ -192,11 +192,28 @@ class GroupType extends AbstractType
      * @static
      * @return array
      */
-    private static function getCategoryChoices()
+    private function getCategoryChoices()
     {
         $values = Group::getValidCategories();
 
+        if ($parentGroup = $this->group->getParent()) {
+
+            $parentGroupCategory = $parentGroup->getCategory();
+
+            if ($parentGroupCategory == Group::CAT_TOPIC) {
+                return array(Group::CAT_LOCATION => Group::GROUP_CATEGORY_LABEL_PREFIX.Group::CAT_LOCATION);
+            }
+            elseif ($parentGroupCategory == Group::CAT_COMPANY) {
+                return array(Group::CAT_DEPARTMENT => Group::GROUP_CATEGORY_LABEL_PREFIX.Group::CAT_DEPARTMENT);
+            }
+            
+        }
+
+        // If we get here, this is not a subgroup form, don't want to show department
         foreach ($values as $value) {
+            if ($value == Group::CAT_DEPARTMENT) {
+                continue;
+            }
             $choices[$value]  = Group::GROUP_CATEGORY_LABEL_PREFIX.$value;
         }
 
