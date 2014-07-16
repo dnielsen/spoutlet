@@ -309,6 +309,8 @@ class AdminController extends Controller
             $event->addRegistrationField($regQ2);
             $event->addRegistrationField($regQ3);
 
+            $event->setNoDate(true);
+
         }
         else {
             $this->validateAuthorization($event);
@@ -322,7 +324,7 @@ class AdminController extends Controller
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
             ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
             ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
-            ->add('noDate',             'checkbox',         array('attr'    => array('checked'   => 'checked'),'required'=> false))
+            ->add('noDate',             'checkbox',         array('required' => false))
             ->add('startsAt',           'datetime',         array())
             ->add('endsAt',             'datetime',         array())
             ->add('external',           'choice',           array('choices' => array('1' => 'No', '0' => 'Yes')))
@@ -426,6 +428,7 @@ class AdminController extends Controller
         if ($global_eventId == 'new') {
             $event = new GlobalEvent();
             $isNew = true;
+            $event->setNoDate(true);
         } else {
             $event = $this->getGlobalEventService()->find($global_eventId);
             $this->validateAuthorization($event);
@@ -435,7 +438,7 @@ class AdminController extends Controller
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
             ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
             ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
-            ->add('noDate',             'checkbox',         array('attr'    => array('checked'   => 'checked'),'required'=> false))
+            ->add('noDate',             'checkbox',         array('required' => false))
             ->add('externalUrl',        'text',             array('attr'    => array('size' => '60%', 'placeholder' => 'http://'), 'required' => true))
             ->add('startsAt',           'datetime',         array())
             ->add('endsAt',             'datetime',         array())
