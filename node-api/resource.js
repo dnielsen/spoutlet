@@ -603,7 +603,7 @@ Resource.prototype.create = function (req, resp, next, post_process_handler) {
     var insert_data;
     try {
         // If the requested resource has an owner/creator association
-        if (__.has(this, "user_mapping")) {
+        if (!__.isUndefined(this.user_mapping)) {
             var my_user_field = this.user_mapping.me;
             var assoc_user_field = this.user_mapping.user;
 
