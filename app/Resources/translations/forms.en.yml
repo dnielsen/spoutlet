@@ -137,6 +137,7 @@ evtSession_slidesLink: Link to Slides
 evtSession_date: Day of Event
 evtSession_startsAt: Start Time
 evtSession_endsAt: End Time
+evtSession_speaker: Speaker
 
 htmlPage_title: Page Title
 htmlPage_content: Content
