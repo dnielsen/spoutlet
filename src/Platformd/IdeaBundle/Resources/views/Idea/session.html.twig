@@ -9,7 +9,7 @@
         <div class="clr"></div>
     </div>
 
-    <a href="http://onenote.heroku.com/takenotes?title={{ eventSession.name }}&url={{ eventSession | pd_link | absolute_url }}&snippet={{ eventSession.description }}&section=Campsite" class="left spcr-l" target="_blank"><img src="{{ asset('themes/ideacontest/spoutlet/img/takenote_button.png') }}"/></a>
+    <a href="http://onenote.heroku.com/takenotes?title={{ eventSession.name }}&url={{ eventSession | pd_link | absolute_url }}&snippet={{ eventSession.description }}&section={{ eventSession.event.name }}" class="left spcr-l" target="_blank"><img src="{{ asset('themes/ideacontest/spoutlet/img/takenote_button.png') }}"/></a>
     <div class="clr"></div>
 
     {#{% if eventSession.tags|length > 0 %}#}
