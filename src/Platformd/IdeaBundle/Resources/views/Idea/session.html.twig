@@ -1,44 +1,57 @@
 {% extends 'IdeaBundle::event_layout.html.twig' %}
 
 {% block content %}
-    <h1 class="idea-name">{{ eventSession.name }}</h1>
 
-    <div class="socialWrapper left">
+    <h1 class="idea-name left">{{ eventSession.name }}</h1>
+
+    <div class="right">
         <div class="fb-like left" data-href="{{ path('event_session', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': eventSession.id}) }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
         <a href="https://twitter.com/share" class="twitter-share-button left spcr-l3 spcr-t8" data-hashtags="{{ group.hashtag }},{{ event.hashtag }}">Tweet</a>
         <div class="clr"></div>
     </div>
+    <hr class="smallmargin clr"/>
 
-    <a href="http://onenote.heroku.com/takenotes?title={{ eventSession.name }}&url={{ eventSession | pd_link | absolute_url }}&snippet={{ eventSession.description }}&section={{ eventSession.event.name }}" class="left spcr-l" target="_blank"><img src="{{ asset('themes/ideacontest/spoutlet/img/takenote_button.png') }}"/></a>
-    <div class="clr"></div>
+    <div>
+        <div class="col_third">
 
-    {#{% if eventSession.tags|length > 0 %}#}
-        {#<div class="left kWords spcr-b2">#}
-            {#<ul>#}
-                {#<li>Tags</li>#}
-                {#{% for tag in eventSession.tags %}#}
-                    {#<li><a href="#">{{ tag.tagName }}</a></li>#}
-                {#{% endfor %}#}
-            {#</ul>#}
-        {#</div>#}
-        {#<div class="clr"></div>#}
-    {#{% endif %}#}
+            {% if eventSession.speaker %}
+                <a href="{{ path('profile', {'userId': eventSession.speaker.id}) }}"><h3 class="blu">{{ eventSession.speaker.name }}</h3></a>
+            {% endif %}
 
-    <hr class="small-margin"/>
-    {% if eventSession.speaker %}
-        Speaker: <a href="{{ path('profile', {'userId': eventSession.speaker.id}) }}" class="blu">{{ eventSession.speaker.name }}</a><br/>
-    {% endif %}
-    {% if eventSession.room %}
-        Room: {{ eventSession.room }}<br/>
-    {% endif %}
-    {{ eventSession.dateString }}<br/>
-    {{ eventSession.timeRangeString }}<br/>
-    {% if eventSession.slidesLink %}
-        <a href="{{ eventSession.slidesLink }}" class="blue" target="_blank">Slides Available Here</a><br/>
-    {% endif %}
-    <hr class="small-margin"/>
+            {% if eventSession.speakerBio|default %}
+                <div class="smallpad">
+                    {{ eventSession.speakerBio }}
+                </div>
+                <hr class="small-margin"/>
+            {% endif %}
 
-    {{ eventSession.description | raw }}
+            {% if eventSession.room %}
+                <strong>Room: {{ eventSession.room }}</strong><br/>
+            {% endif %}
+
+            {{ eventSession.dateString }}<br/>
+            {{ eventSession.timeRangeString }}<br/>
+
+        </div>
+
+        <div class="col_two_thirds borderLft" style="padding-left: 5px;">
+            <strong>Description: </strong>{{ eventSession.description | raw }}
+        </div>
+
+    </div>
+
+    <div class="spcr-t borderTop ctr">
+        <div class="spcr-t">
+            {% if eventSession.slidesLink|default %}
+                <a href="{{ eventSession.slidesLink }}" class="btn" target="_blank">View Slides</a>
+            {% endif %}
+            {% if eventSession.publicNotesLink|default %}
+                <a href="{{ eventSession.publicNotesLink }}" class="btn spcr-l" target="_blank">Public Notes</a>
+            {% endif %}
+            <a href="http://onenote.heroku.com/takenotes?title={{ eventSession.name }}&url={{ eventSession | pd_link | absolute_url }}&snippet={{ eventSession.description }}&section={{ eventSession.event.name }}" class="spcr-l" target="_blank"><img src="{{ asset('themes/ideacontest/spoutlet/img/takenote_button.png') }}"/></a>
+        </div>
+    </div>
+
 
 {% endblock %}
 

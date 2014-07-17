@@ -67,6 +67,7 @@ class AdminController extends Controller
             ->add('description',        'textarea',         array('attr'    => array('class' => 'formRowWidth', 'rows' => '6')))
             ->add('speaker',            'entity',           array('class'   => 'UserBundle:User',
                                                                   'choices' => $event->getAttendeesAlphabetical(), 'required' => false))
+            ->add('speakerBio',         'textarea',         array('attr'    => array('class' => 'formRowWidth', 'rows' => '6')))
             ->add('room',               'text',             array('attr'    => array('class' => 'formRowWidth'), 'required' => false))
             ->add('date',               'date',             array('widget'  => 'single_text',
                                                                   'format'  => 'L/dd/yyyy',
@@ -74,6 +75,8 @@ class AdminController extends Controller
             ->add('startsAt',           'time',             array('widget'  => 'single_text', 'required' => false))
             ->add('endsAt',             'time',             array('widget'  => 'single_text', 'required' => false))
             ->add('slidesLink',         'text',             array('attr'    => array('class' => 'formRowWidth', 'placeholder' => 'http://'),
+                                                                  'required' => false))
+            ->add('publicNotesLink',    'text',             array('attr'    => array('class' => 'formRowWidth', 'placeholder' => 'http://'),
                                                                   'required' => false))
             ->getForm();
 

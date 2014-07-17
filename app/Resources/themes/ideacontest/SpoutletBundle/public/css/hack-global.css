@@ -210,8 +210,15 @@ h5 {
 
 .marginlft { margin-left: 10px; }
 .marginrt { margin-right: 10px; }
+.margin-ctr { 
+	margin-left: auto;
+	margin-right: auto;
+}
 
 .mgnNeg { margin-top: -10px; }
+
+.inline-block { display: inline-block; }
+.block { display: block; }
 
 /* misc. borders */
 

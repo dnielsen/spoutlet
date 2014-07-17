@@ -134,10 +134,12 @@ evtSession_name: Name
 evtSession_description: Description
 evtSession_room: Room Name/Number
 evtSession_slidesLink: Link to Slides
+evtSession_publicNotesLink: Link to Public Notes
 evtSession_date: Day of Event
 evtSession_startsAt: Start Time
 evtSession_endsAt: End Time
 evtSession_speaker: Speaker
+evtSession_speakerBio: Speaker Bio
 
 htmlPage_title: Page Title
 htmlPage_content: Content

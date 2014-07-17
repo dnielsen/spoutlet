@@ -15,8 +15,10 @@
         {{ form_row(form.name) }}
         {{ form_row(form.description) }}
         {{ form_row(form.speaker) }}
+        {{ form_row(form.speakerBio) }}
         {{ form_row(form.room) }}
         {{ form_row(form.slidesLink) }}
+        {{ form_row(form.publicNotesLink) }}
 
         {#<label>Tags</label>#}
         {#<textarea name="tags" placeholder="tag1, tag2, tag3, etc&#8230;" class="formRowWidth" rows="1">{% if not isNew %}{{ evtSession.implodedTagString }}{% endif %}</textarea>#}
