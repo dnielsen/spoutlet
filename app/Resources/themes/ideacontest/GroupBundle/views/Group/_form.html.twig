@@ -24,14 +24,16 @@
                 {{ form_widget(form.location.state_province) }}
             </div>
 
-            <p><input type="checkbox" id="has-parent">This group belongs to a parent group</input></p>
-            <div id="group-parent-controls" style="display:none;">
-                {{ form_row(form.parent) }}
-            </div>
+            <div id="group-parent-children-controls" style="display:none;">
+                <p><input type="checkbox" id="has-parent">This group belongs to a parent group</input></p>
+                <div id="group-parent-controls" style="display:none;">
+                    {{ form_row(form.parent) }}
+                </div>
 
-            <p><input type="checkbox" id="has-children">This group has sub groups</input></p>
-            <div id="group-children-controls" style="display:none;">
-                {{ form_row(form.children) }}
+                <p><input type="checkbox" id="has-children">This group has sub groups</input></p>
+                <div id="group-children-controls" style="display:none;">
+                    {{ form_row(form.children) }}
+                </div>
             </div>
 
             {{ form_row(form.external) }}
@@ -68,46 +70,42 @@
 
         $('input#platformd_groupbundle_grouptype_name').css('width', '300px');
 
+        var categoryField = $('#platformd_groupbundle_grouptype_category');
         var parentField   = $('#platformd_groupbundle_grouptype_parent');
         var childrenField = $('#platformd_groupbundle_grouptype_children');
         var hasParent     = $('#has-parent');
         var hasChildren   = $('#has-children');
 
-        // If the group already has a parent set, prepare the form accordingly
         if (parentField.val() !== null) {
             hasParent.prop('checked', true);
-            setParentControls();
-        // Otherwise make sure the 'None' option is selected
-        } else {
-            parentField.children(':first-child').attr('selected','');
+            $('#category').slideUp();
         }
-        // If the group already has children set, prepare the form accordingly
+
         if (childrenField.val() !== null) {
             hasChildren.prop('checked', true);
-            setChildrenControls();
         }
-
-        if ($('.control-group.error').length > 0) {
-            $('html, body').animate({
-                scrollTop: ($('.control-group.error').first().offset().top) - 100
-            }, 400);
-        }
-
-        $('#cancel').delegate('','click change',function(){
-            window.location = $(this).attr('rel');
-            return false;
-        });
 
         setCategoryControls();
-        $('#platformd_groupbundle_grouptype_category').change(setCategoryControls);
+        categoryField.change(setCategoryControls);
+
+        setParentControls();
         hasParent.click(setParentControls);
+
+        setChildrenControls();
         hasChildren.click(setChildrenControls);
 
         function setCategoryControls() {
-            if($('#platformd_groupbundle_grouptype_category').val() == 'topic') {
-                $('#group-location-controls').slideUp();
-            } else {
+            // Only show location controls for Location Groups and Companies
+            if (categoryField.val() == 'location' || categoryField.val() == 'company') {
                 $('#group-location-controls').slideDown();
+            } else {
+                $('#group-location-controls').slideUp();
+            }
+            // Only show parent and children controls for Topic and Location groups
+            if (categoryField.val() == 'topic' || categoryField.val() == 'location') {
+                $('#group-parent-children-controls').slideDown();
+            } else {
+                $('#group-parent-children-controls').slideUp();
             }
         }
         function setParentControls() {
@@ -126,6 +124,18 @@
                 $('#platformd_groupbundle_grouptype_children').val('');
             }
         }
+
+        if ($('.control-group.error').length > 0) {
+            $('html, body').animate({
+                scrollTop: ($('.control-group.error').first().offset().top) - 100
+            }, 400);
+        }
+
+        $('#cancel').delegate('','click change',function(){
+            window.location = $(this).attr('rel');
+            return false;
+        });
+
     });
 
 </script>

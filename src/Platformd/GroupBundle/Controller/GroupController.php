@@ -1794,7 +1794,14 @@ Alienware Arena Team
 
         // Coming from 'Create Sub Group' link
         if ($parentId = $request->query->get('parentGroupId')) {
-            $group->setParent($this->getGroup($parentId));
+            $parentGroup = $this->getGroup($parentId);
+            $group->setParent($parentGroup);
+
+            if ($parentGroup->getCategory() == Group::CAT_TOPIC) {
+                $group->setCategory(Group::CAT_LOCATION);
+            } elseif ($parentGroup->getCategory() == Group::CAT_COMPANY) {
+                $group->setCategory(Group::CAT_DEPARTMENT);
+            }
         }
 
         $form = $this->createForm(new GroupType($this->getUser(), $group, $tagManager, false, $this->getCurrentSite()), $group);

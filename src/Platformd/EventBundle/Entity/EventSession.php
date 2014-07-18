@@ -116,6 +116,13 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     protected $speaker;
 
     /**
+     * Speaker Bio
+     *
+     * @ORM\Column(name="speaker_bio", type="text", nullable=true)
+     */
+    protected $speakerBio;
+
+    /**
      * Session Room name/number
      *
      * @ORM\Column(type="string", nullable=true)
@@ -128,6 +135,13 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
      * @ORM\Column(type="string", nullable=true)
      */
     protected $slidesLink;
+
+    /**
+     * Link to public notes page
+     *
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $publicNotesLink;
 
     /**
      * Constructor
@@ -334,6 +348,14 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     {
         $this->speaker = $value;
     }
+    public function getSpeakerBio()
+    {
+        return $this->speakerBio;
+    }
+    public function setSpeakerBio($value)
+    {
+        $this->speakerBio = $value;
+    }
     public function setRoom($room)
     {
         $this->room = $room;
@@ -349,6 +371,14 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     public function getSlidesLink()
     {
         return $this->slidesLink;
+    }
+    public function setPublicNotesLink($publicNotesLink)
+    {
+        $this->publicNotesLink = $publicNotesLink;
+    }
+    public function getPublicNotesLink()
+    {
+        return $this->publicNotesLink;
     }
 
 //    public function addTag(Tag $tag)
