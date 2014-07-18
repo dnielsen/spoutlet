@@ -501,13 +501,19 @@ table.tblStyle th {
     padding: 10px;
     border-bottom: 1px solid #e5e5e5;
 }
+table.sessions th {
+    color: white;
+}
 table.sessions td:first-child {
     width: 165px;
 }
 table.sessions td:nth-child(2) {
     width: 120px;
 }
-
+table.tablesorter th {
+    text-decoration: underline;
+}
+    
 .tblStyle.profile td:first-child {
     font-weight: bold;
 }
