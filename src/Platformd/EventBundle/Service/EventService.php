@@ -103,7 +103,7 @@ class EventService
      *
      * @param \Platformd\EventBundle\Entity\Event $event
      */
-    public function createEvent(Event $event)
+    public function createEvent(Event $event, $dispatchEvent=true)
     {
         $this->handleMedia($event);
         $this->repository->saveEvent($event);
@@ -118,8 +118,10 @@ class EventService
         $this->aclProvider->updateAcl($acl);
 
         // We dispatch an event for further tasks
-        $event = new EventEvent($event);
-        $this->dispatcher->dispatch(EventEvents::EVENT_CREATE, $event);
+        if($dispatchEvent) {
+            $event = new EventEvent($event);
+            $this->dispatcher->dispatch(EventEvents::EVENT_CREATE, $event);
+        }
     }
 
     /**

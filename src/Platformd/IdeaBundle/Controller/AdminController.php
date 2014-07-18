@@ -260,7 +260,7 @@ class AdminController extends Controller
         $postal_code = $venue['postal_code'];
         if(strlen($postal_code) !== 0) $event->setPostalCode($postal_code);
 
-        $this->getGroupEventService()->createEvent($event);
+        $this->getGroupEventService()->createEvent($event, false);
 
         $em = $this->getDoctrine()->getEntityManager();
         $em->persist($event);
