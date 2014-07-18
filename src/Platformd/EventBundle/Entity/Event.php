@@ -1350,7 +1350,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
         $sessionsByDate = array();
 
-        foreach ($this->getSortedSessions() as $session){
+        foreach ($this->getSortedSessionsByRoom() as $session){
             $sessionsByDate[$session->getDateString()][] = $session;
         }
         return $sessionsByDate;
@@ -1377,6 +1377,18 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
                 return 0;
             }
             return ($aStartTime > $bStartTime) ? +1 : -1;
+        });
+
+        return $sessions;
+    }
+
+    public function getSortedSessionsByRoom() {
+
+        $sessions = $this->sessions->toArray();
+
+        usort($sessions, function($a, $b)
+        {
+            return strcmp($a->getRoom(), $b->getRoom());
         });
 
         return $sessions;
