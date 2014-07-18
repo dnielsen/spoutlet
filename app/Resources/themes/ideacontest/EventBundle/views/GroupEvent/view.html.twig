@@ -110,24 +110,28 @@
     {% if event.sessions | length > 0 %}
         <h2 class="left">Session Schedule</h2><a href="{{ path('event_session_schedule', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="blue right">View All</a>
 
-        <table class="clr tblStyle sessions spcr-b fillWidth">
             {% for date,sessions in event.sessionsByDate %}
-                <tr class="date">
-                    <td>{{ date }}</td>
-                    <td>Room</td>
-                    <td>Session Name</td>
-                </tr>
-                {% set i=0 %}
-                {% for evtSession in sessions %}
-                    {% set i=i+1 %}
-                    <tr{% if i%2 %} class="fill"{% endif %}>
-                        <td>{% if evtSession.startsAt|default %}{{ evtSession.timeRangeString }}{% endif %}</td>
-                        <td>{% if evtSession.room %}{{ evtSession.room }}{% endif %}</td>
-                        <td><a href="{{ path('event_session', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': evtSession.id}) }}">{{ evtSession.name }}</a></td>
+            <table class="clr tblStyle sessions spcr-b fillWidth tablesorter">
+                <thead>
+                    <tr class="date">
+                        <th>{{ date }}</th>
+                        <th>Room</th>
+                        <th>Session Name</th>
                     </tr>
-                {% endfor %}
+                </thead>
+                {% set i=0 %}
+                <tbody>
+                    {% for evtSession in sessions %}
+                        {% set i=i+1 %}
+                        <tr{% if i%2 %} class="fill"{% endif %}>
+                            <td>{% if evtSession.startsAt|default %}{{ evtSession.timeRangeString }}{% endif %}</td>
+                            <td>{% if evtSession.room %}{{ evtSession.room }}{% endif %}</td>
+                            <td><a href="{{ path('event_session', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': evtSession.id}) }}">{{ evtSession.name }}</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             {% endfor %}
-        </table>
     {% elseif event.entrySets | length > 0 %}
         {% set entrySet = event.entrySets[0] %}
         <h2 class="left">{{ entrySet.name }}</h2><a href="{{ entrySet | pd_link }}" class="right btn spcr-b3">View All {{ entrySet.type | capitalize }}s</a>
@@ -252,4 +256,14 @@
 
 </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/admin/js/jquery.tablesorter.min.js') }}"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('table.tablesorter').tablesorter();
+        });
+    </script>
 {% endblock %}
