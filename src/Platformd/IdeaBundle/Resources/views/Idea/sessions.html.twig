@@ -7,14 +7,17 @@
 
     {% if eventSessions|length > 0 %}
 
-        <table class="tblStyle sessions fillWidth">
             {% for date,sessions in eventSessions %}
-                <tr class="date">
-                    <td>{{ date }}</td>
-                    <td>Room</td>
-                    <td>Session Name</td>
-                </tr>
+            <table class="tblStyle sessions fillWidth tablesorter">
+                <thead>
+                    <tr class="date">
+                        <th>{{ date }}</td>
+                        <th>Room</td>
+                        <th>Session Name</td>
+                    </tr>
+                </thead>
                 {% set i=0 %}
+                <tbody>
                 {% for eventSession in sessions %}
                     {% set i=i+1 %}
                     <tr{% if i%2 %} class="fill"{% endif %}>
@@ -45,11 +48,22 @@
                         </td>
                     </tr>
                 {% endfor %}
+                </tbody>
+            </table>
             {% endfor %}
-        </table>
     {% else %}
         <h3>There are no sessions yet.</h3>
     {% endif %}
 
 {% endblock %}
 
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/spoutlet/admin/js/jquery.tablesorter.min.js') }}"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('table.tablesorter').tablesorter();
+        });
+    </script>
+{% endblock %}
