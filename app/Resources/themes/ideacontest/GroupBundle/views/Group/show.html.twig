@@ -223,20 +223,29 @@
             <a href="{{ path('watch_group', {'groupId': group.id}) }}" class="btnLg2">Follow This Group</a>
         {% endif %}
 
-        {% if not group.external %}
-            {% if not group.isMember(user) %}
-                <a href="{{ path('group_join', {'slug': group.slug}) }}" class="btnLg2">Join This Group</a>
-            {% elseif group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_TOPIC')%}
-                <a href="{{ path('group_new', {'parentGroupId': group.id}) }}" class="btnLg2">Create Local Group</a>
-            {% endif %}
-        {% endif %}
-
         {% if group.externalUrl %}
             <a href="{{ group.externalUrl }}" class="btnLg2" target="_blank">View Group Website</a>
         {% endif %}
 
+        {% if group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_COMPANY') %}
+            {% set createSubButton = 'Add Department' %}
+            {% set subsLabel = 'Departments' %}
+        {% else %}
+            {% set createSubButton = 'Create Local Group' %}
+            {% set subsLabel = 'Local Groups' %}
+        {% endif %}
+
+        {% if not group.external %}
+            {% if not group.isMember(user) %}
+                <a href="{{ path('group_join', {'slug': group.slug}) }}" class="btnLg2">Join This Group</a>
+            {% elseif group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_TOPIC') or
+                      group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_COMPANY') %}
+                <a href="{{ path('group_new', {'parentGroupId': group.id}) }}" class="btnLg2">{{ createSubButton }}</a>
+            {% endif %}
+        {% endif %}
+
         {% if group.children|length > 0 %}
-            <h2 class="widgetHeader">Local Groups</h2>
+            <h2 class="widgetHeader">{{ subsLabel }}</h2>
             <ul class="scrollableWidget spcr-b3">
                 {% for child in group.children %}
                     {% if not child.deleted %}
@@ -256,10 +265,7 @@
         <div class="clr"></div>
 
         {% if group.parent|default %}
-            <h2 class="widgetHeader">Parent Group</h2>
-            <div class="padtop padbtm spcr-l3">
-                <a href="{{ group.parent | pd_link }}" ><h3 class="blu">{{ group.parent.name }}</h3></a>
-            </div>
+            <h3 class="spcr-t">Belongs to <a href="{{ group.parent | pd_link }}" class="blu">{{ group.parent.name }}</a></h3>
         {% endif %}
 
         <hr class="small-margin"/>
