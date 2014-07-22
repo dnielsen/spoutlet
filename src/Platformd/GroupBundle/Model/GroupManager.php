@@ -704,6 +704,11 @@ class GroupManager
         ));
     }
 
+    public function getAllDepartmentsForCurrentSite()
+    {
+        return $this->em->getRepository('GroupBundle:Group')->findAllDepartmentsForSite($this->getCurrentSite());
+    }
+
     public function getGroupIndexData($group)
     {
         if (!$group || !$group instanceof Group) {

@@ -135,7 +135,7 @@ class GroupRepository extends EntityRepository
         return $qb->getQuery()->execute();
     }
 
-    public function findAllGroupsByCategoryAndSite($category, $site)
+    public function findAllGroupsWithMemberCountsByCategoryAndSite($category, $site)
     {
         $qb = $this->createQueryBuilder('g')
             ->select('g, COUNT(DISTINCT m.id) memberCount')
@@ -148,6 +148,21 @@ class GroupRepository extends EntityRepository
             ->setParameter('site', $site)
             ->orderBy('memberCount', 'DESC')
             ->groupBy('g.id');
+
+        return $qb->getQuery()->execute();
+    }
+
+    public function findAllDepartmentsForSite($site)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->select('g')
+            ->leftJoin('g.sites', 's')
+            ->where('g.category = :category')
+            ->andWhere('(s = :site OR g.allLocales = true)')
+            ->andWhere('g.deleted = false')
+            ->setParameter('category', 'department')
+            ->setParameter('site', $site)
+            ->orderBy('g.name');
 
         return $qb->getQuery()->execute();
     }
