@@ -12,6 +12,7 @@ use Platformd\GroupBundle\Entity\GroupDiscussionPost;
 use Platformd\GroupBundle\Entity\GroupApplication;
 use Platformd\GroupBundle\Entity\GroupMembershipAction;
 use Platformd\GroupBundle\Entity\GroupMassEmail;
+use Platformd\IdeaBundle\Entity\Sponsor;
 use Platformd\GroupBundle\Event\GroupEvent;
 use Platformd\GroupBundle\Form\Type\GroupType;
 use Platformd\GroupBundle\GroupEvents;
@@ -2144,6 +2145,16 @@ Alienware Arena Team
 
                 if ($group->getFeatured()) {
                     $group->setFeaturedAt(new \DateTime('now'));
+                }
+
+                if ($group->getCategory() == Group::CAT_DEPARTMENT) {
+                    $sponsor = new Sponsor();
+                    $sponsor->setName($group->getName());
+                    $sponsor->setCreator($this->getCurrentUser());
+                    $sponsor->setDepartment($group);
+                    $sponsor->setUrl($group->getExternalUrl());
+                    $sponsor->setImage($group->getGroupAvatar());
+                    $group->setSponsor($sponsor);
                 }
 
                 $this->getGroupManager()->saveGroup($group);
