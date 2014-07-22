@@ -43,6 +43,14 @@ sponsor_delete:
     pattern:    /sponsors/{id}/delete
     defaults:   { _controller: IdeaBundle:Idea:sponsorDelete }
 
+recommend_sponsor_list:
+    pattern:    /recommendSponsor
+    defaults:   { _controller: IdeaBundle:Idea:recommendSponsorList }
+
+recommend_sponsor:
+    pattern:    /recommendSponsor/{department_id}
+    defaults:   { _controller: IdeaBundle:Idea:recommendSponsor }
+
 # EntrySet Routes
 
 entry_set_view:

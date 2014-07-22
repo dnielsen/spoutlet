@@ -1,0 +1,16 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+
+    <table class="tblStyle fillWidth">
+    <tr><th>Select a Department</th></tr>
+    {% set i=0 %}
+    {% for dept in departments %}
+        {% set i=i+1 %}
+        <tr{% if i%2 %} class="fill"{% endif %}>
+            <td>{{ dept.parent.name }}: <a href="{{ path('recommend_sponsor', {'department_id': dept.id, 'rec_type': eventType, 'rec_id': eventId} ) }}" class="blue">{{ dept.name }}</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+
+{% endblock %}
