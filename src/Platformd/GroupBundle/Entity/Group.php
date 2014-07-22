@@ -318,6 +318,11 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     private $tags;
 
     /**
+     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\Sponsor", inversedBy="department", cascade={"persist"})
+     */
+    protected $sponsor;
+
+    /**
      * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySetRegistry", cascade={"persist"})
      */
     protected $entrySetRegistration;
@@ -1159,6 +1164,13 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
 
     public function getEntrySets() {
         return $this->entrySetRegistration->getEntrySets();
+    }
+
+    public function getSponsor() {
+        return $this->sponsor;
+    }
+    public function setSponsor($sponsor) {
+        $this->sponsor = $sponsor;
     }
 
     public function addSponsorRegistration($sponsorRegistration)

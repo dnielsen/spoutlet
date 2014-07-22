@@ -44,6 +44,11 @@ class Sponsor {
     protected $creator;
 
     /**
+     * @ORM\OneToOne(targetEntity="Platformd\GroupBundle\Entity\Group", mappedBy="sponsor", cascade={"persist"})
+     */
+    protected $department;
+
+    /**
      * @ORM\OneToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove", "persist"})
      */
     protected $image;
@@ -62,6 +67,15 @@ class Sponsor {
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setDepartment($department)
+    {
+        $this->department = $department;
+    }
+    public function getDepartment()
+    {
+        return $this->department;
     }
 
     public function addSponsorRegistration($sponsorRegistration)
