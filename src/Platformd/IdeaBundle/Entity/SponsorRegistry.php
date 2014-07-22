@@ -16,6 +16,11 @@ class SponsorRegistry
     const SILVER   = 3;
     const BRONZE   = 4;
 
+    const STATUS_RECOMMENDED = 'recommended';
+    const STATUS_WATCHING    = 'watching';
+    const STATUS_CONSIDERING = 'considering';
+    const STATUS_SPONSORING  = 'sponsoring';
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -44,9 +49,15 @@ class SponsorRegistry
     protected $level;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    protected $status = self::STATUS_SPONSORING;
+
+
+    /**
      * Constructor
      */
-    public function __construct($group = null, $event = null, $sponsor = null, $level = null)
+    public function __construct($group = null, $event = null, $sponsor = null, $level = null, $status = null)
     {
         if ($group) {
             $this->group = $group;
@@ -54,12 +65,14 @@ class SponsorRegistry
         elseif ($event) {
             $this->event = $event;
         }
-
         if ($sponsor) {
             $this->sponsor = $sponsor;
         }
         if ($level) {
             $this->level = $level;
+        }
+        if ($status) {
+            $this->status = $status;
         }
     }
 
@@ -98,5 +111,13 @@ class SponsorRegistry
     public function getLevel()
     {
         return $this->level;
+    }
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+    public function getStatus()
+    {
+        return $this->status;
     }
 } 
