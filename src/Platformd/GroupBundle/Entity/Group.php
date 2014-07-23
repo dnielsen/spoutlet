@@ -318,7 +318,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     private $tags;
 
     /**
-     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\Sponsor", inversedBy="department", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\Sponsor", mappedBy="department", cascade={"persist"})
      */
     protected $sponsor;
 

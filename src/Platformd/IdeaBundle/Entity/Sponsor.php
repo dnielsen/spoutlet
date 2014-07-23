@@ -44,7 +44,7 @@ class Sponsor {
     protected $creator;
 
     /**
-     * @ORM\OneToOne(targetEntity="Platformd\GroupBundle\Entity\Group", mappedBy="sponsor", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="Platformd\GroupBundle\Entity\Group", inversedBy="sponsor", cascade={"persist"})
      */
     protected $department;
 
