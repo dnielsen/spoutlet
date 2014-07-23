@@ -16,7 +16,9 @@ class SponsorRepository extends EntityRepository
             ->select      ('s')
             ->leftJoin    ('s.sponsorRegistrations', 'r')
             ->where       ('r.'.$scope.' = :containerId')
+            ->andWhere    ('r.status = :sponsoring')
             ->setParameter('containerId', $containerId)
+            ->setParameter('sponsoring', SponsorRegistry::STATUS_SPONSORING)
             ->orderBy     ('r.level', 'ASC');
 
         return $qb->getQuery()->getResult();
