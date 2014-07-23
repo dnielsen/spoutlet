@@ -20,7 +20,9 @@
 
         {% for sponsor in attachedSponsors %}
         <div class="sponsorBx card">
-            {% if sponsor.getLevel(scope, containerId) == venue %}
+            {% if sponsor.getLevel(scope, containerId) == null %}
+                {% set sponsorText = '' %}
+            {% elseif sponsor.getLevel(scope, containerId) == venue %}
                 {% set sponsorText = '<div class="sponsorLevelText venueText">VENUE</div>' %}
             {% elseif sponsor.getLevel(scope, containerId) == plat %}
                 {% set sponsorText = '<div class="sponsorLevelText platText">PLATINUM</div>' %}
@@ -34,6 +36,7 @@
 
             <a href="{{ path('sponsor_remove', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" onclick="return confirm('Are you sure you want to remove this sponsor from your {{ scope }}?');">
                 <div class="sponsorImageBox"><img src="{{ media_path(sponsor.image) }}"></div>
+                <h3 class="ctr">{{ sponsor.name }}</h3>
                 {{ sponsorText |raw }}
                 </div>
             </a>
@@ -51,9 +54,7 @@
     {% else %}
         <h1 class="left">All Sponsors</h1>
     {% endif %}
-
-    <a href="{{ path('sponsor_form', {'id': 'new', 'scope': scope, 'containerId': containerId}) }}" class="btnLg right">Create a new Sponsor</a>
-
+    
     <div class="clear"></div>
 
     <div id="sponsorWrapper">
