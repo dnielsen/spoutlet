@@ -44,7 +44,7 @@ class SponsorRegistry
     protected $sponsor;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="smallint", nullable="true")
      */
     protected $level;
 
@@ -61,8 +61,7 @@ class SponsorRegistry
     {
         if ($group) {
             $this->group = $group;
-        }
-        elseif ($event) {
+        } elseif ($event) {
             $this->event = $event;
         }
         if ($sponsor) {
