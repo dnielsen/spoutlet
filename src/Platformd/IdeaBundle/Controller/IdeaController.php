@@ -954,8 +954,6 @@ class IdeaController extends Controller
         ));
     }
 
-
-
     public function sponsorsAction(Request $request)
     {
         $scope       = $request->get('scope');
@@ -1117,11 +1115,11 @@ class IdeaController extends Controller
         if ($scope == 'group') {
             $group = $this->getDoctrine()->getRepository('GroupBundle:Group')->find($containerId);
             $containerOwner = $group->getOwner();
-            $sponsorRegistry = new SponsorRegistry($group, null, $sponsor, null);
+            $sponsorRegistry = new SponsorRegistry($group, null, $sponsor);
         } elseif ($scope == 'event') {
             $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($containerId);
             $containerOwner = $event->getUser();
-            $sponsorRegistry = new SponsorRegistry(null, $event, $sponsor, null);
+            $sponsorRegistry = new SponsorRegistry(null, $event, $sponsor);
         }
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'sponsor_add', $sponsorRegistry)
@@ -1819,6 +1817,52 @@ class IdeaController extends Controller
         return $this->render('IdeaBundle::'.$page.'.html.twig', array(
             'group' => $group,
         ));
+    }
+
+    public function recommendSponsorListAction(Request $request)
+    {
+        $eventType = $request->query->get('rec_type');
+        $eventId   = $request->query->get('rec_id');
+
+        $departments = $this->getGroupManager()->getAllDepartmentsForCurrentSite();
+
+        return $this->render('IdeaBundle:Idea:department_list.html.twig', array(
+            'departments' => $departments,
+            'eventType'   => $eventType,
+            'eventId'     => $eventId,
+        ));
+    }
+
+    public function recommendSponsorAction(Request $request, $department_id)
+    {
+        $eventType = $request->query->get('rec_type');
+        $eventId   = $request->query->get('rec_id');
+
+        $dept = $this->getGroupManager()->find($department_id);
+
+        if ($eventType == 'group') {
+            $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($eventId);
+            $returnUrl = $this->generateUrl('group_event_view', array(
+                                            'groupSlug' => $event->getGroup()->getSlug(), 
+                                            'eventId' => $event->getId()));
+        } elseif ($eventType == 'global') {
+            $event = $this->getDoctrine()->getRepository('EventBundle:GlobalEvent')->find($eventId);
+            $returnUrl = $this->generateUrl('global_event_view', array('id' => $event->getId()));
+        }
+
+        if (!$dept || !$event) {
+            throw new NotFoundHttpException('Invalid sponsorship!');
+        }
+
+        $sponsorRegistry = new SponsorRegistry(null, $event, $dept->getSponsor(), null, SponsorRegistry::STATUS_RECOMMENDED);
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->persist($sponsorRegistry);
+        $em->flush();
+
+        $this->setFlash('success', $event->getName().' has been recommended to '.$dept->getName().'!');
+
+        return new RedirectResponse($returnUrl);
     }
 
 
