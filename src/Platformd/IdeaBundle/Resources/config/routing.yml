@@ -227,6 +227,10 @@ add_entry_set_registrations:
     pattern:    /admin/addEntrySetRegistrations
     defaults:   { _controller: IdeaBundle:Admin:addEntrySetRegistrationsToAllEvents }
 
+create_depts_for_sponsors:
+    pattern:    /admin/createDeptsForSponsors
+    defaults:   { _controller: IdeaBundle:Admin:createDepartmentsForAllExistingSponsors }
+
 # Entry Routes
 
 idea_create:
