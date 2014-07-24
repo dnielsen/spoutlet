@@ -205,7 +205,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
      * The person who uploaded this media
      *
      * @var \Platformd\UserBundle\Entity\User
-     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", inversedBy="ownedGroups")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $owner;
