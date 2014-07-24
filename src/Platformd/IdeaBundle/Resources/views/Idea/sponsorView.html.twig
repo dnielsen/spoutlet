@@ -4,8 +4,8 @@
 
     <div class="col_third">
         <img class="sponsorLogoFill" src="{{ media_path(sponsor.image) }}"/>
-        <h2>{{ sponsor.name }}</h2>
-        <a href="{{ sponsor.url }}" class="blu">{{ sponsor.url }}</a><br/>
+        <a href="{{ path('group_show', {'slug': sponsor.department.slug}) }}"><h2 class="blu">{{ sponsor.name }}</h2></a>
+        <strong>Website: </strong><a href="{{ sponsor.url }}" class="blu">{{ sponsor.url }}</a><br/>
         {% if sponsor.creator == app.user or is_granted('ROLE_ADMIN') %}
         <div class="spcr-t">
             <a href="{{ path('sponsor_form', {'id': sponsor.id}) }}" class="btn">Edit</a>

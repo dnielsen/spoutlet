@@ -21,7 +21,9 @@
         {% set currentLevel = sponsor.getLevel(scope, containerId) %}
 
         {% if currentLevel != lastLevel %}
-            {% if currentLevel == venue %}
+            {% if currentLevel == null %}
+                <div class="sponsorLevelText spcr-t">Other Sponsors</div>
+            {% elseif currentLevel == venue %}
                 <div class="sponsorLevelText venueText spcr-t">Venue Sponsors</div>
             {% elseif currentLevel == plat %}
                 <div class="sponsorLevelText platText spcr-t">Platinum Sponsors</div>
@@ -35,7 +37,12 @@
         {% endif %}
 
         <div class="sidebar_sponsorBx">
-            <a href="{{ path('sponsor_view', {'id': sponsor.id}) }}"><img src="{{ media_path(sponsor.image) }}"></a>
+            {% set img_path = media_path(sponsor.image) %}
+            {% if img_path %}
+                <a href="{{ path('sponsor_view', {'id': sponsor.id}) }}"><img src="{{ media_path(sponsor.image) }}"></a>
+            {% else %}
+                <a href="{{ path('sponsor_view', {'id': sponsor.id}) }}"><h3 class="blu">{{ sponsor.name }}</h3></a>
+            {% endif %}
         </div>
 
         {% set lastLevel = currentLevel %}
