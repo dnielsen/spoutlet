@@ -20,6 +20,7 @@ use Platformd\GameBundle\Entity\Game,
     Platformd\UserBundle\Entity\User,
     Platformd\IdeaBundle\Entity\EntrySetRegistry,
     Platformd\IdeaBundle\Entity\EntrySetScopeable,
+    Platformd\IdeaBundle\Entity\SponsorRegistry,
     Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil,
     Platformd\SearchBundle\Model\IndexableInterface,
     Platformd\TagBundle\Model\TaggableInterface
@@ -1291,12 +1292,21 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         $sponsorRegistrations = $this->sponsorRegistrations->toArray();
 
         usort($sponsorRegistrations, function ($a, $b) {
-            return ($a->getLevel() - $b->getLevel());
+            $aLevel = $a->getLevel();
+            $bLevel = $b->getLevel();
+            if ($aLevel && !$bLevel) {
+                return -1;
+            } elseif ($bLevel && !$aLevel) {
+                return 1;
+            }
+            return ($aLevel - $bLevel);
         });
 
         $sponsors = array();
         foreach ($sponsorRegistrations as $reg) {
-            $sponsors[] = $reg->getSponsor();
+            if ($reg->getStatus() == SponsorRegistry::STATUS_SPONSORING) {
+                $sponsors[] = $reg->getSponsor();
+            }
         }
         return $sponsors;
     }
