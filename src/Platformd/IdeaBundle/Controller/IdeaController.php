@@ -1000,6 +1000,9 @@ class IdeaController extends Controller
         $events = array();
 
         foreach ($sponsorRegistrations as $reg) {
+            if ($reg->getStatus() != SponsorRegistry::STATUS_SPONSORING) {
+                continue;
+            }
             if ($group = $reg->getGroup()) {
                 $groups[$reg->getLevel()][] = $group;
             } elseif ($event = $reg->getEvent()) {
