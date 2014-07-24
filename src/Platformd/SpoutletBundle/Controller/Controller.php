@@ -524,4 +524,42 @@ class Controller extends BaseController
             $eventSession,
         );
     }
+
+    public function validateAuthorization($securedObj)
+    {
+        if ($this->isGranted('ROLE_ADMIN')) {
+            return;
+        }
+
+        if ($securedObj instanceof HtmlPage) {
+            $this->validateAuthorization($securedObj->getParent());
+            return;
+        }
+
+        if ($securedObj instanceof Sponsor) {
+            $this->validateAuthorization($securedObj->getDepartment());
+            return;
+        }
+
+        $authorizedUsers = array();
+
+        // TODO: Add co-organizers to the scopes below as authorized users
+        if ($securedObj instanceof Group) {
+            $authorizedUsers[] = $securedObj->getOwner();
+        } elseif ($securedObj instanceof GroupEvent or $securedObj instanceof GlobalEvent) {
+            $authorizedUsers[] = $securedObj->getUser();
+        } elseif ($securedObj instanceof EntrySet) {
+            $authorizedUsers[] = $securedObj->getCreator();
+        } elseif ($securedObj instanceof Idea) {
+            $authorizedUsers[] = $securedObj->getCreator();
+        }
+
+        if (!in_array($this->getCurrentUser(), $authorizedUsers)) {
+            throw new AccessDeniedException();
+        }
+    }
+    
+    public function isAdmin() {
+        return $this->isGranted('ROLE_ADMIN');
+    }
 }

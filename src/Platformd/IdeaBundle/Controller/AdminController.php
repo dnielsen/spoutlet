@@ -1136,10 +1136,6 @@ class AdminController extends Controller
 
 
     //------------------------ Helper Functions -----------------------------------
-    public function isAdmin()
-    {
-        return $this->isGranted('ROLE_ADMIN');
-    }
 
     public function canEditEvent(Event $event)
     {
@@ -1388,33 +1384,5 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('default_index'));
     }
 
-    public function validateAuthorization($securedObj)
-    {
-        if ($this->isAdmin()) {
-            return;
-        }
-
-        if ($securedObj instanceof HtmlPage) {
-            $this->validateAuthorization($securedObj->getParent());
-            return;
-        }
-
-        $authorizedUsers = array();
-
-        // TODO: Add co-organizers to the scopes below as authorized users
-        if ($securedObj instanceof Group) {
-            $authorizedUsers[] = $securedObj->getOwner();
-        } elseif ($securedObj instanceof GroupEvent or $securedObj instanceof GlobalEvent) {
-            $authorizedUsers[] = $securedObj->getUser();
-        } elseif ($securedObj instanceof EntrySet) {
-            $authorizedUsers[] = $securedObj->getCreator();
-        } elseif ($securedObj instanceof Idea) {
-            $authorizedUsers[] = $securedObj->getCreator();
-        }
-
-        if (!in_array($this->getCurrentUser(), $authorizedUsers)) {
-            throw new AccessDeniedException();
-        }
-    }
 }
 
