@@ -11,6 +11,9 @@
             <li><a href="{{ path('profile', {'userId': user.id}) }}">Profile</a></li>
             <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
             <li><a href="{{ path('accounts_events') }}">My Events</a></li>
+            {% if user.ownedDepartments|length > 0 %}
+                <li><a href="{{ path('accounts_sponsorships') }}">My Sponsorships</a></li>
+            {% endif %}
             <li><a href="{{ path('accounts_pages') }}">My Pages</a></li>
             <li><a href="{{ path('accounts_entrySets') }}">My Lists</a></li>
             <li><a href="{{ path('accounts_entries') }}">My Entries</a></li>
