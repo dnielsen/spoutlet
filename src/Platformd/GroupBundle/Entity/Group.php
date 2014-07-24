@@ -1158,7 +1158,9 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     }
 
     public function createEntrySetRegistration() {
-        $this->entrySetRegistration = new EntrySetRegistry($this);
+        if (!$this->entrySetRegistration) {
+            $this->entrySetRegistration = new EntrySetRegistry($this);
+        }
         return $this->entrySetRegistration;
     }
 
