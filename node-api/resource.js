@@ -90,6 +90,7 @@ Type.Media = new Resource.ResourceType();
 Type.Sponsor = new Resource.ResourceType();
 Type.Sponsorship = new Resource.ResourceType();
 Type.Vote = new Resource.ResourceType();
+Type.PdLocation = new Resource.ResourceType();
 
 //--------------------------------------------------------
 

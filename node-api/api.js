@@ -11,6 +11,7 @@ var restify = require('restify'),
     sponsorships = require('./routes/sponsorships'),
     registries = require('./routes/registries'),
     users = require('./routes/users'),
+    locations = require('./routes/locations'),
     __ = require('underscore');
 
 var fail_auth = function (res, relm, message, use_basic_auth) {
@@ -154,6 +155,9 @@ server.get('/sponsors/:id', sponsors.find_by_primary_key);
 
 server.get('/sponsorships', sponsorships.find_all);
 // server.get('/sponsorships/:id', sponsors.find_by_primary_key);
+
+server.get('/locations', locations.find_all);
+server.get('/locations/:id', locations.find_by_primary_key);
 
 //---------------------------------------------------------------------------------------------------
 // Token checker will fail any request, with 401 Unauthorized, which does not provide a valid API-Key
