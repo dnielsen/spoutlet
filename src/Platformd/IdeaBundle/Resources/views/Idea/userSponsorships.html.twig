@@ -18,7 +18,15 @@
             <tbody>
             {% set i = 0 %}
             {% for sponsorship in sponsorships %}
-                {% set event = sponsorship.event %}
+                {% if sponsorship.event|default %}
+                    {% set sponsored      = sponsorship.event %}
+                    {% set sponsoredScope = 'event' %}
+                    {% set sponsoredOwner = sponsored.user %}
+                {% elseif sponsorship.group|default %}
+                    {% set sponsored      = sponsorship.group %}
+                    {% set sponsoredScope = 'group' %}
+                    {% set sponsoredOwner = sponsored.owner %}
+                {% endif %}
                 {% set status = sponsorship.status %}
 
                 {% if status == 'recommended' %}     {% set sponsorshipStatusLevel = 0 %}
@@ -30,7 +38,7 @@
                 {% set i = i+1 %}
                 <tr {% if i%2 %}class="fill"{% endif %}>
                     <td>
-                        <a href="{{ event | pd_link }}" class="blu">{{ event.name }}</a>
+                        <a href="{{ sponsored | pd_link }}" class="blu">{{ sponsored.name }}</a>
                     </td>
                     <td>
                         {{ sponsorship.status | capitalize }}
@@ -46,7 +54,7 @@
                             <a href="{{ path('update_sponsorship_status', {'sponsorship_id': sponsorship.id, 'status': 'sponsoring'}) }}" class="blu">Sponsor</a>
                         {% endif %}
                         {% if sponsorshipStatusLevel == 3 %}
-                            <a href="{{ path('contact_user', {'userId': event.user.id, 'type': 'sponsor', 'scope': 'event', 'containerId': event.id }) }}" class="blu">Contact Organizer</a>
+                            <a href="{{ path('contact_user', {'userId': sponsoredOwner.id, 'type': 'sponsor', 'scope': sponsoredScope, 'containerId': sponsored.id }) }}" class="blu">Contact Organizer</a>
                         {% endif %}
                     </td>
                 </tr>
