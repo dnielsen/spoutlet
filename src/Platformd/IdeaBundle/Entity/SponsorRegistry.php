@@ -109,6 +109,38 @@ class SponsorRegistry
             return $this->global_event;
         }
     }
+    public function getSponsoredObj()
+    {
+        if ($this->group) {
+            return $this->group;
+        } elseif ($this->event) {
+            return $this->event;
+        } elseif ($this->global_event) {
+            return $this->global_event;
+        }
+    }
+    public function getSponsoredObjOwner()
+    {
+        if ($this->group) {
+            return $this->group->getOwner();
+        } elseif ($this->event) {
+            return $this->event->getUser();
+        } elseif ($this->global_event) {
+            return $this->global_event->getUser();
+        }
+    }
+
+    public function getScope()
+    {
+        if ($this->group) {
+            return 'group';
+        } elseif ($this->event) {
+            return 'event';
+        } elseif ($this->global_event) {
+            return 'global_event';
+        }
+    }
+
     public function setGroup($group)
     {
         $this->group = $group;
