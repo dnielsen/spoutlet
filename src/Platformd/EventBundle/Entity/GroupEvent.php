@@ -134,6 +134,11 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
     protected $rotatorImages;
 
     /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\SponsorRegistry", mappedBy="event", cascade={"persist", "remove"})
+     */
+    protected $sponsorRegistrations;
+
+    /**
      * Constructor
      */
     public function __construct(Group $group)
@@ -144,6 +149,7 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
         $this->contentReports   = new ArrayCollection();
         $this->rsvpActions      = new ArrayCollection();
         $this->rotatorImages    = new ArrayCollection();
+        $this->sponsorRegistrations = new ArrayCollection();
 
         foreach ($this->getGroup()->getSites() as $site) {
             $this->sites->add($site);

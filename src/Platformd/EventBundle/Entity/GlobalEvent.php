@@ -68,6 +68,11 @@ class GlobalEvent extends Event implements LinkableInterface, IndexableInterface
     protected $rsvpActions;
 
     /**
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\SponsorRegistry", mappedBy="global_event", cascade={"persist", "remove"})
+     */
+    protected $sponsorRegistrations;
+
+    /**
      * @var string hosted_by
      *
      * @ORM\Column(name="hosted_by", type="string", length=255, nullable=true)
@@ -86,6 +91,7 @@ class GlobalEvent extends Event implements LinkableInterface, IndexableInterface
         $this->translations = new ArrayCollection();
         $this->sites        = new ArrayCollection();
         $this->rsvpActions  = new ArrayCollection();
+        $this->sponsorRegistrations = new ArrayCollection();
 
         parent::__construct();
     }

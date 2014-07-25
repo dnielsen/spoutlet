@@ -4,6 +4,9 @@ namespace Platformd\IdeaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+use Platformd\EventBundle\Entity\GroupEvent;
+use Platformd\EventBundle\Entity\GlobalEvent;
+
 /**
  * @ORM\Table(name="sponsor_registry")
  * @ORM\Entity()
@@ -15,6 +18,7 @@ class SponsorRegistry
     const GOLD     = 2;
     const SILVER   = 3;
     const BRONZE   = 4;
+    const OTHER    = 5;
 
     const STATUS_RECOMMENDED = 'recommended';
     const STATUS_WATCHING    = 'watching';
@@ -39,6 +43,11 @@ class SponsorRegistry
     protected $event;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GlobalEvent", inversedBy="sponsorRegistrations", cascade={"persist"})
+     */
+    protected $global_event;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Platformd\IdeaBundle\Entity\Sponsor", inversedBy="sponsorRegistrations", cascade={"persist"})
      */
     protected $sponsor;
@@ -46,7 +55,7 @@ class SponsorRegistry
     /**
      * @ORM\Column(type="smallint", nullable="true")
      */
-    protected $level;
+    protected $level = self::OTHER;
 
     /**
      * @ORM\Column(type="string")
@@ -62,8 +71,13 @@ class SponsorRegistry
         if ($group) {
             $this->group = $group;
         } elseif ($event) {
-            $this->event = $event;
+            if ($event instanceof GroupEvent) {
+                $this->event = $event;
+            } elseif ($event instanceof GlobalEvent) {
+                $this->global_event = $event;
+            }            
         }
+
         if ($sponsor) {
             $this->sponsor = $sponsor;
         }
@@ -81,11 +95,19 @@ class SponsorRegistry
     }
     public function setEvent($event)
     {
-        $this->event = $event;
+        if ($event instanceof GroupEvent) {
+            $this->event = $event;
+        } elseif ($event instanceof GlobalEvent) {
+            $this->global_event = $event;
+        }
     }
     public function getEvent()
     {
-        return $this->event;
+        if ($this->event) {
+            return $this->event;
+        } elseif ($this->global_event) {
+            return $this->global_event;
+        }
     }
     public function setGroup($group)
     {

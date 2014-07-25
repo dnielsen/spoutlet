@@ -1123,6 +1123,10 @@ class IdeaController extends Controller
             $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($containerId);
             $containerOwner = $event->getUser();
             $sponsorRegistry = new SponsorRegistry(null, $event, $sponsor);
+        }  elseif ($scope == 'global_event') {
+            $event = $this->getDoctrine()->getRepository('EventBundle:GlobalEvent')->find($containerId);
+            $containerOwner = $event->getUser();
+            $sponsorRegistry = new SponsorRegistry(null, $event, $sponsor);
         }
 
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'sponsor_add', $sponsorRegistry)
@@ -1181,6 +1185,9 @@ class IdeaController extends Controller
             $containerOwner = $group->getOwner();
         } elseif ($scope == 'event') {
             $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($containerId);
+            $containerOwner = $event->getUser();
+        } elseif ($scope == 'global_event') {
+            $event = $this->getDoctrine()->getRepository('EventBundle:GlobalEvent')->find($containerId);
             $containerOwner = $event->getUser();
         }
 
