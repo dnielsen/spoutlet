@@ -15,6 +15,7 @@ use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
 use FOS\UserBundle\Validator\Password;
 
 use Platformd\EventBundle\Entity\GroupEvent;
+use Platformd\GroupBundle\Entity\Group;
 use Platformd\UserBundle\Validator\User as ValidateUser;
 
 /**
@@ -454,6 +455,11 @@ class User extends BaseUser
     protected $gallarys;
 
     /**
+     * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\Group", mappedBy="owner")
+     */
+    protected $ownedGroups;
+
+    /**
      * @ORM\Column(type="string", length=36, nullable=true)
      */
     protected $uuid;
@@ -622,6 +628,7 @@ class User extends BaseUser
         $this->htmlPages                = new ArrayCollection();
         $this->watchedEvents            = new ArrayCollection();
         $this->watchedGroups            = new ArrayCollection();
+        $this->ownedGroups              = new ArrayCollection();
     }
 
     // public function __toString() {
@@ -1311,7 +1318,25 @@ class User extends BaseUser
     {
         $this->pdGroups = $pdGroups;
     }
-
+    public function getOwnedGroups()
+    {
+        return $this->ownedGroups;
+    }
+    public function setOwnedGroups($groups)
+    {
+        $this->ownedGroups = $groups;
+    }
+    public function getOwnedDepartments()
+    {
+        $ownedDepts = array();
+        foreach ($this->ownedGroups->toArray() as $group)
+        {
+            if ($group->getCategory() == Group::CAT_DEPARTMENT) {
+                $ownedDepts[] = $group;
+            }
+        }
+        return $ownedDepts;
+    }
     public function getGroupMembershipActions()
     {
         return $this->groupMembershipActions;

@@ -51,6 +51,10 @@ recommend_sponsor:
     pattern:    /recommendSponsor/{department_id}
     defaults:   { _controller: IdeaBundle:Idea:recommendSponsor }
 
+update_sponsorship_status:
+    pattern:    /updateSponsorshipStatus/{sponsorship_id}
+    defaults:   { _controller: IdeaBundle:Idea:updateSponsorshipStatus }
+
 # EntrySet Routes
 
 entry_set_view:
@@ -222,6 +226,10 @@ add_entry_set_creators:
 add_entry_set_registrations:
     pattern:    /admin/addEntrySetRegistrations
     defaults:   { _controller: IdeaBundle:Admin:addEntrySetRegistrationsToAllEvents }
+
+create_depts_for_sponsors:
+    pattern:    /admin/createDeptsForSponsors
+    defaults:   { _controller: IdeaBundle:Admin:createDepartmentsForAllExistingSponsors }
 
 # Entry Routes
 

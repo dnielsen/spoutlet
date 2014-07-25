@@ -1680,6 +1680,25 @@ class IdeaController extends Controller
         ));
     }
 
+    public function userSponsorshipsAction(Request $request)
+    {
+        $this->enforceUserSecurity();
+
+        $myDepartments = $this->getCurrentUser()->getOwnedDepartments();
+        $mySponsorships = array();
+
+        foreach ($myDepartments as $dept) {
+            foreach ($dept->getSponsor()->getSponsorRegistrations() as $sponsorship) {
+                $mySponsorships[$dept->getName()][] = $sponsorship;
+            }
+        }
+        
+        return $this->render('IdeaBundle:Idea:userSponsorships.html.twig', array(
+            'sponsorships' => $mySponsorships,
+        ));
+    }
+
+
     public function userRegistrationAnswersAction($groupSlug, $eventId, $userId)
     {
         $event = $this->getEvent($groupSlug, $eventId);
@@ -1857,15 +1876,48 @@ class IdeaController extends Controller
             throw new NotFoundHttpException('Invalid sponsorship!');
         }
 
-        $sponsorRegistry = new SponsorRegistry(null, $event, $dept->getSponsor(), null, SponsorRegistry::STATUS_RECOMMENDED);
-
         $em = $this->getDoctrine()->getEntityManager();
-        $em->persist($sponsorRegistry);
-        $em->flush();
 
-        $this->setFlash('success', $event->getName().' has been recommended to '.$dept->getName().'!');
+        $deptSponsor = $dept->getSponsor();
+
+        $sponsorRegistry = $em->getRepository('IdeaBundle:SponsorRegistry')->findOneBy(array('sponsor'=>$deptSponsor->getId(),'event'=>$event->getId()));
+
+        if (!$sponsorRegistry) {
+            $sponsorRegistry = new SponsorRegistry(null, $event, $dept->getSponsor(), null, SponsorRegistry::STATUS_RECOMMENDED);
+            $em->persist($sponsorRegistry);
+            $em->flush();
+            $this->setFlash('success', $event->getName().' has been recommended to '.$dept->getName());
+
+        } elseif ($sponsorRegistry->getStatus() == SponsorRegistry::STATUS_SPONSORING) {
+            $this->setFlash('info', $dept->getName().' is already sponsoring '.$event->getName());
+
+        } else {
+            $this->setFlash('info', $event->getName().' has already been recommended to '.$dept->getName());
+        }
 
         return new RedirectResponse($returnUrl);
+    }
+
+    public function updateSponsorshipStatusAction(Request $request, $sponsorship_id)
+    {
+        $this->enforceUserSecurity();
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $sponsorship = $em->getRepository('IdeaBundle:SponsorRegistry')->find($sponsorship_id);
+
+        if (!$sponsorship) {
+            throw new NotFoundHttpException('Sponsorship not found!');
+        }
+
+        $this->validateAuthorization($sponsorship->getSponsor());
+
+        $status = $request->query->get('status');
+
+        $sponsorship->setStatus($status);
+        $em->flush();
+        $this->setFlash('success', 'You are now '.$status.' this event.');
+
+        return new RedirectResponse($this->generateUrl('accounts_sponsorships'));
     }
 
 

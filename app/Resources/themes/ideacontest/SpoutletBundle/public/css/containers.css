@@ -562,8 +562,10 @@ table.tblStyle2 {
     border: 1px solid #F5F5F5;
 }
 .profileTable td, .myStuffTable td, .profileTable th, .myStuffTable th {
-    line-height: 40px;
     padding: 5px;
+}
+.profileTable td, .profileTable th, .myStuffTable th {
+    line-height: 40px;
 }
 .profileTable td:first-child {
     padding-right: 50px;

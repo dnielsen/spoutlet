@@ -1136,10 +1136,6 @@ class AdminController extends Controller
 
 
     //------------------------ Helper Functions -----------------------------------
-    public function isAdmin()
-    {
-        return $this->isGranted('ROLE_ADMIN');
-    }
 
     public function canEditEvent(Event $event)
     {
@@ -1388,33 +1384,85 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('default_index'));
     }
 
-    public function validateAuthorization($securedObj)
+    public function createDepartmentsForAllExistingSponsorsAction()
     {
-        if ($this->isAdmin()) {
-            return;
+        $em = $this->getDoctrine()->getEntityManager();
+        $sponsors = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor')->findAll();
+
+        $groupRepo = $this->getDoctrine()->getRepository('GroupBundle:Group');
+        $gm = $this->getGroupManager();
+
+        $output = '';
+
+        foreach ($sponsors as $sponsor) {
+
+            // Skip any sponsor that already has a department associated to it
+            if ($sponsor->getDepartment()) {
+                continue;
+            }
+
+            $companyName = $sponsor->getName();
+            $deptName    = $companyName.' Marketing';
+
+            // Check to see if company already exists
+            $company = $groupRepo->findOneBy(array('name'=>$companyName));
+
+            // Otherwise create it
+            if (!$company) {
+                $company = new Group();
+                $company->setName($companyName);
+                $company->setDescription($companyName);
+                $company->setOwner($sponsor->getCreator());
+                $company->setGroupAvatar($sponsor->getImage());
+                $company->setCategory(Group::CAT_COMPANY);
+                $company->getSites()->add($this->getCurrentSite());
+
+                $this->getGroupManager()->saveGroup($company);
+
+                $esReg = $company->createEntrySetRegistration();
+                $em->persist($esReg);
+
+                $output .= ' Creating: '.$companyName.'<br/>';
+            }
+
+            // Check if department already exists
+            $dept = $groupRepo->findOneBy(array('name'=>($deptName)));
+
+            // Otherwise create it
+            if (!$dept) {
+                $dept = new Group();
+                $dept->setName($deptName);
+                $dept->setDescription($deptName.' Department');
+                $dept->setOwner($sponsor->getCreator());
+                $dept->setGroupAvatar($sponsor->getImage());
+                $dept->setCategory(Group::CAT_DEPARTMENT);
+                $dept->getSites()->add($this->getCurrentSite());
+                $dept->setExternalUrl($sponsor->getUrl());
+                $dept->setParent($company);
+
+                $this->getGroupManager()->saveGroup($dept);
+
+                $esReg = $dept->createEntrySetRegistration();
+                $em->persist($esReg);
+
+                $output .= ' Creating: '.$deptName.'<br/>';
+            }
+
+            // If the department is not already associated to a sponsor, attach it to this one
+            if (!$dept->getSponsor()) {
+                $sponsor->setDepartment($dept);
+                $output .= ' Linking Sponsor to '.$deptName.'<br/>';
+            }
         }
 
-        if ($securedObj instanceof HtmlPage) {
-            $this->validateAuthorization($securedObj->getParent());
-            return;
+        if ($output) {
+            $em->flush();
+            $output = '<strong>Processing Sponsors: </strong><br/><br/>'.$output;
+        } else {
+            $output = 'No worries, your sponsors are already attached to departments.';
         }
 
-        $authorizedUsers = array();
-
-        // TODO: Add co-organizers to the scopes below as authorized users
-        if ($securedObj instanceof Group) {
-            $authorizedUsers[] = $securedObj->getOwner();
-        } elseif ($securedObj instanceof GroupEvent or $securedObj instanceof GlobalEvent) {
-            $authorizedUsers[] = $securedObj->getUser();
-        } elseif ($securedObj instanceof EntrySet) {
-            $authorizedUsers[] = $securedObj->getCreator();
-        } elseif ($securedObj instanceof Idea) {
-            $authorizedUsers[] = $securedObj->getCreator();
-        }
-
-        if (!in_array($this->getCurrentUser(), $authorizedUsers)) {
-            throw new AccessDeniedException();
-        }
+        $this->setFlash('success', $output);
+        return $this->redirect($this->generateUrl('default_index'));
     }
 }
-
