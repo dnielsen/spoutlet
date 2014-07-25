@@ -1689,7 +1689,7 @@ class IdeaController extends Controller
 
         foreach ($myDepartments as $dept) {
             foreach ($dept->getSponsor()->getSponsorRegistrations() as $sponsorship) {
-                $mySponsorships[] = $sponsorship;
+                $mySponsorships[$dept->getName()][] = $sponsorship;
             }
         }
         
