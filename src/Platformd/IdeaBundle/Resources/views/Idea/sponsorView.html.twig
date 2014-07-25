@@ -30,7 +30,7 @@
         <h2>Sponsored Events</h2>
         {% for level,level_events in events %}
             {% for event in level_events %}
-                <a href="{{ path('group_event_view', {'groupSlug': event.group.slug, 'eventId': event.id}) }}"><h3 class="blu midpad borderBtm">{{ event.name }}</h3></a>
+                <a href="{{ event | pd_link }}"><h3 class="blu midpad borderBtm">{{ event.name }}</h3></a>
             {% endfor %}
         {% endfor %}
     </div>

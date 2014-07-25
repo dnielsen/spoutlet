@@ -25,16 +25,9 @@
                 <tbody>
                     {% set i = 0 %}
                     {% for sponsorship in dept_sponsorships %}
-
-                        {% if sponsorship.event|default %}
-                            {% set sponsored      = sponsorship.event %}
-                            {% set sponsoredScope = 'event' %}
-                            {% set sponsoredOwner = sponsored.user %}
-                        {% elseif sponsorship.group|default %}
-                            {% set sponsored      = sponsorship.group %}
-                            {% set sponsoredScope = 'group' %}
-                            {% set sponsoredOwner = sponsored.owner %}
-                        {% endif %}
+                        {% set sponsored      = sponsorship.sponsoredObj %}
+                        {% set sponsoredOwner = sponsorship.sponsoredObjOwner %}
+                        {% set sponsoredScope = sponsorship.scope %}
 
                         {% set status = sponsorship.status %}
 
