@@ -42,12 +42,14 @@ var spec = {
         "entrySetRegistration_id" : { type : Type.Int, props : ["read-only"]},
         "owner_id" : { type : Type.Int, props : []},
         "parentGroup_id" : { type : Type.Int, props : ["read-only"] },
+        "location_id" : { type : Type.Int, props : ["default"] },
 
         "entrySetRegistration" : { type : Type.Registry, rel : "belongs_to", props : ["default"], mapping : "entrySetRegistration_id" },
         "owner" : { type : Type.User, rel : "belongs_to", mapping : "owner_id" },
         "parentGroup" : { type : Type.Group, rel : "belongs_to", mapping : "parentGroup_id" },
         "groupAvatar" : { type : Type.Media, rel : "belongs_to", mapping : "groupAvatar_id" },
-        
+        "location" : { type : Type.PdLocation, rel : "belongs_to", props : ["default"], mapping : "location_id" },
+
         "subgroups" : { type : Type.Group, rel : "has_many", mapping : "parentGroup_id", limit : 10, sort_by : "name" },
         "events" : { type : Type.Event, rel : "has_many", mapping : "group_id", limit : 10, sort_by : "name" },
     }
