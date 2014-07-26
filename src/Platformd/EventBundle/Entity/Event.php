@@ -800,10 +800,17 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     public function getAttendeesAlphabetical($limit = null)
     {
         $attendees = $this->attendees->toArray();
-        usort($attendees, function ($a, $b) {
+        $namedAttendees = array();
+        foreach ($attendees as $attendee) {
+            if ($attendee->getName()) {
+                $namedAttendees[] = $attendee;
+            }
+        }
+
+        usort($namedAttendees, function ($a, $b) {
             return ($a->getName() > $b->getName());
         });
-        return array_slice($attendees, 0, $limit);
+        return array_slice($namedAttendees, 0, $limit);
     }
 
     /**

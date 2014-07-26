@@ -1540,11 +1540,7 @@ class User extends BaseUser
     }
     public function getName()
     {
-        if ($this->name) {
-            return $this->name;
-        } else {
-            return 'No Name Provided';
-        }
+        return $this->name;
     }
 
     public function setOrganization($value)
