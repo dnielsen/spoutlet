@@ -1,11 +1,12 @@
-<table style="width:100%;" id="events-table" class="tablesorter">
+<table class="tblStyle tablesorter" id="events-table">
     <thead>
         <tr>
-            <th>{{ 'platformd.events.event_listings.start_date' | pd_trans }}</th>
-            <th style="width:8px;"></th>
-            <th style="width:29%;">{{ 'platformd.events.event_listings.event' | pd_trans }}</th>
-            <th style="width:29%;">{{ 'platformd.events.event_listings.hosted_by' | pd_trans }}</th>
-            <th style="width:29%;">{{ 'platformd.events.event_listings.location' | pd_trans }}</th>
+            <th style="width:15px;"></th>
+            <th style="width:15%;">{{ 'platformd.events.event_listings.start_date' | pd_trans }}</th>
+            <th style="width:23%;">{{ 'platformd.events.event_listings.event' | pd_trans }}</th>
+            <th style="width:23%;">{{ 'platformd.events.event_listings.hosted_by' | pd_trans }}</th>
+            <th style="width:15%;">{{ 'platformd.events.event_listings.location' | pd_trans }}</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -25,14 +26,14 @@
         {% for event in events %}
         {% set isGroupEvent = event.group is defined %}
         <tr class="eventListGroup_online">
-            <td style="vertical-align:top" data-starts="{{ event.startsAt | date('U') }}">
+            <td>
+                <img id="{% if isGroupEvent %}group{% else %}global{% endif %}-event-attending-{{ event.id }}" src="{{ asset('/bundles/spoutlet/images/form-ic-success-small.png') }}" alt="Attending" style="display:none;" />
+            </td>
+            <td data-starts="{{ event.startsAt | date('U') }}">
                 {{ event.startsAt | date_translate }}
             </td>
             {# todo - refactor this next line somewhere else #}
-            <td style="vertical-align:top">
-                <img id="{% if isGroupEvent %}group{% else %}global{% endif %}-event-attending-{{ event.id }}" src="{{ asset('/bundles/spoutlet/images/form-ic-success-small.png') }}" alt="Attending" style="display:none;" />
-            </td>
-            <td style="vertical-align:top" class="event-link">
+            <td class="event-link">
 
                 {% if isGroupEvent %}
                     {{ event | pd_link_full(event.name ) }} 
@@ -42,18 +43,18 @@
                 {% endif %}
 
             </td>
-            <td style="vertical-align:top" class="event-organizer">
+            <td class="event-organizer">
                 {% if event.hostedBy|default(null) %}
                     {{ event.hostedBy }}
                 {% else %}
                     {% if event.group|default(null) and (event.taggableType == 'platformd_global_event' or event.taggableType == 'platformd_group_event') %}
-                        <a href="{{ path('group_show', {'slug' : event.group.slug }) ~ '#events' }}">{{ event.group.name }}</a>
+                        <a href="{{ path('group_show', {'slug' : event.group.slug }) }}">{{ event.group.name }}</a>
                     {% else %}
-                        {{ 'na'|pd_trans }}
+                        Public
                     {% endif %}
                 {% endif %}
             </td>
-            <td style="vertical-align:top">
+            <td>
                 {% if event.online == true %}
                     {{ 'platformd.events.event_listings.online' | pd_trans }}
                 {% else %}
@@ -66,6 +67,50 @@
                     {% endif %}
                 {% endif %}
             </td>
+            <td>
+                {% if event.contentType == 'GlobalEvent' %}
+                    {% set rec_scope = 'global_event' %}
+                    {% set watch_url = path('watch_event', {'eventType': 'global', 'eventId': event.id}) %}
+                    {% set reg_url   = path('global_event_register', {'id': event.id}) %}
+                {% elseif event.contentType == 'GroupEvent' %}
+                    {% set rec_scope = 'group_event' %}
+                    {% set watch_url = path('watch_event', {'eventType': 'group', 'eventId': event.id}) %}
+                    {% set reg_url   = path('group_event_register_and_join', {'groupSlug': event.group.slug, 'eventId': event.id}) %}
+                {% endif %}
+
+                {% if (not event.isUserAttending(user)) and (not event.isUserWatching(user)) %}
+                    <a href="{{ watch_url }}" class="btnTny spcr-b2">Watch</a>
+                {% endif %}
+
+                {# internal or hybrid event #}
+                {% if not event.external %}
+
+                    {# hybrid event #}
+                    {% if event.externalUrl|default %}
+                        <a href="{{ event.externalUrl }}" class="btnTny spcr-b2" target="_blank">Register</a>
+
+                    {# internal event #}
+                    {% elseif event.registrationOption == constant('\\Platformd\\EventBundle\\Entity\\Event::REGISTRATION_ENABLED') %}
+                        {% if not event.isUserAttending(user) %}
+                            <a href="{{ reg_url }}" class="btnTny spcr-b2">Register</a>
+                        {% endif %}
+                    {% else %}
+                        <h3 class="ctr spcr-b2">Registration Closed</h3>
+                    {% endif %}
+
+                {% endif %}
+
+                <a href="javascript:void(0);" class="btnTny" id="rec-btn-{{ event.id }}" onclick="showRecommendForm({{ event.id }});">Recommend</a>
+                <div style="display:none;" id="recommend-{{ event.id }}">
+                    <form action="{{ path('invite_user') }}" method="post">
+                        <input type="text" placeholder="Enter email address..." name="userEmail" style="width:70%" class="left"/>
+                        <input type="hidden" name="scope" value="{{ rec_scope }}"/>
+                        <input type="hidden" name="containerId" value="{{ event.id }}"/>
+                        <input type="submit" value=">" class="left" style="padding:8px;"/>
+                        <div class="clr"></div>
+                    </form>
+                </div>
+            </td>
         </tr>
         {% endfor %}
         {% endif %}
@@ -75,6 +120,7 @@
 {% render url('_user_event_list') with {}, {'standalone': true } %}
 
 <script type="text/javascript">
+
     $(function () {
 
         $.tablesorter.addParser({
@@ -102,15 +148,15 @@
         });
 
         $('.event-link a').truncate({
-            width: 420
+            width: 290
         });
 
         $('.qtip-view-map').truncate({
-            width: 170
+            width: 290
         });
 
         $('.event-organizer a').truncate({
-            width: 170
+            width: 290
         });
 
 

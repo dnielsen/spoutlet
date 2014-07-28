@@ -32,7 +32,7 @@
 
 
 
-{% block content %}
+{% block profile_content %}
     <div class="std_2col" id="user-settings-page">
         <div class="left">
             <div id="user-settings">
@@ -62,8 +62,6 @@
                     {% endif %}
                 </div>
 
-                <div id="user-username">{{ user.username }}</div>
-
                 <div class="clear"></div>
                 <form action="{{ path('accounts_settings') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_password form form-horizontal">
                     <fieldset id="account-settings-password" class="account-settings-section">
@@ -83,17 +81,14 @@
                             {{ form_widget(form.plainPassword.second) }}
                             <span class="form-msg-error">{{ new_conf_error }}</span>
                         </div>
+                        <input type="submit" value="Save" class="right"/>
                     </fieldset>
 
                     <div class="clear"></div>
-
                     {{ form_rest(form) }}
-
-                    <div id="form-buttons">
-                        <button type="submit" class="btn btn-primary">{{ 'submit'|trans }}</button>
-                        <a href="{{ path('accounts_index') }}" class="btn">{{ 'cancel' | pd_trans }}</a>
-                    </div>
                 </form>
+
+                <br/>
                 <div class="clear"></div>
                 <form action="{{ path('subscription_settings') }}" {{ form_enctype(subscriptionForm) }} method="POST" class="fos_user_change_password form form-horizontal">
                     <fieldset class="label-full account-settings-section" id="account-settings-newsletter">
@@ -104,11 +99,8 @@
                                 <td>{{ form_label(subscriptionForm.subscribedAlienwareEvents) }}</td>
                             </tr>
                         </table>
+                        <input type="submit" value="Save" class="right"/>
                     </fieldset>
-                    <div id="form-buttons">
-                        <button type="submit" class="btn btn-primary">{{ 'submit'|trans }}</button>
-                        <a href="{{ path('accounts_index') }}" class="btn">{{ 'cancel' | pd_trans }}</a>
-                    </div>
                 </form>
             </div>
         </div>
@@ -145,75 +137,80 @@
             </div>
         {% endif %}
 
-     </div>
+    </div>
 
-{% endblock content %}
+{% endblock profile_content %}
 
 {% block file_label %}
 {% endblock %}
 
-{% block javascripts %}
-
+{% block stylesheets %}
     {{ parent() }}
-    <script type="text/javascript">
-
-        var modalVisible = false;
-
-        $(function() {
-
-            $('#submit-avatar').click(function (e) {
-
-                e.preventDefault();
-
-                $('#avatar-modal').block({
-                    message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />',
-                    css: {
-                        border: 'none',
-                        background: 'transparent'
-                    }
-                });
-
-                $(this).closest('form').submit();
-            });
-
-            $('.user-avatar').hover(
-                function() {
-                    $('#avatar-update-overlay-wrapper').show();
-                },
-                function() {
-                    $('#avatar-update-overlay-wrapper').hide();
-                }
-            );
-
-            $('.user-avatar').click(function() {
-                $.blockUI({ message: $('#avatar-modal'), css: { width: '500px', cursor: 'default', border: 'none', top: '10%' }, onBlock: showModal });
-            });
-
-            $(document).click(function(e) {
-                if (modalVisible && !$(e.target).parents().andSelf().is('#avatar-modal')) {
-                    $.unblockUI();
-                    modalVisible = false;
-                }
-            });
-
-            $(document).on('keyup', function(e) {
-            if (modalVisible && e.which === 27) { // Escape key
-                    $.unblockUI();
-                    modalVisible = false;
-                }
-            });
-
-            function showModal() {
-                modalVisible = true;
-            }
-
-            $('#avatar-listings').mCustomScrollbar();
-
-            if ($('.xnotices p').html() == '{{ 'platformd.user.avatars.invalid_avatar' | pd_trans }}') {
-                $('#avatar-modal .avatar-restrictions').show();
-                $('.user-avatar').click();
-            }
-        });
-    </script>
-
+    {% include 'SpoutletBundle:Account:_css_assets.html.twig' %}
 {% endblock %}
+
+{#{% block javascripts %}#}
+
+    {#{{ parent() }}#}
+    {#<script type="text/javascript">#}
+
+        {#var modalVisible = false;#}
+
+        {#$(function() {#}
+
+            {#$('#submit-avatar').click(function (e) {#}
+
+                {#e.preventDefault();#}
+
+                {#$('#avatar-modal').block({#}
+                    {#message: '<img src="{{ asset('bundles/spoutlet/images/loading.gif') }}" />',#}
+                    {#css: {#}
+                        {#border: 'none',#}
+                        {#background: 'transparent'#}
+                    {#}#}
+                {#});#}
+
+                {#$(this).closest('form').submit();#}
+            {#});#}
+
+            {#$('.user-avatar').hover(#}
+                    {#function() {#}
+                        {#$('#avatar-update-overlay-wrapper').show();#}
+                    {#},#}
+                    {#function() {#}
+                        {#$('#avatar-update-overlay-wrapper').hide();#}
+                    {#}#}
+            {#);#}
+
+            {#$('.user-avatar').click(function() {#}
+                {#$.blockUI({ message: $('#avatar-modal'), css: { width: '500px', cursor: 'default', border: 'none', top: '10%' }, onBlock: showModal });#}
+            {#});#}
+
+            {#$(document).click(function(e) {#}
+                {#if (modalVisible && !$(e.target).parents().andSelf().is('#avatar-modal')) {#}
+                    {#$.unblockUI();#}
+                    {#modalVisible = false;#}
+                {#}#}
+            {#});#}
+
+            {#$(document).on('keyup', function(e) {#}
+                {#if (modalVisible && e.which === 27) { // Escape key#}
+                    {#$.unblockUI();#}
+                    {#modalVisible = false;#}
+                {#}#}
+            {#});#}
+
+            {#function showModal() {#}
+                {#modalVisible = true;#}
+            {#}#}
+
+            {#$('#avatar-listings').mCustomScrollbar();#}
+
+            {#if ($('.xnotices p').html() == '{{ 'platformd.user.avatars.invalid_avatar' | pd_trans }}') {#}
+                {#$('#avatar-modal .avatar-restrictions').show();#}
+                {#$('.user-avatar').click();#}
+            {#}#}
+        {#});#}
+    {#</script>#}
+
+{#{% endblock %}#}

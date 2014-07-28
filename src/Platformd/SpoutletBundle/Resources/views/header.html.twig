@@ -1,45 +1,81 @@
-{% set facebookLink = site_link('FACEBOOK') %}
-{% set twitterLink = site_link('TWITTER') %}
-{% set instagramLink    = site_link('INSTAGRAM') %}
-{% set socialMediaStrip = site_link('SOCIAL_MEDIA_STRIP') %}
-<div id="header">
-    <div id="topHeader">
-        <div class="wide-950">
-            <div class="left">
-                {% include 'SpoutletBundle::region.html.twig' %}
-            </div>
-            <div class="right">
-                <div class="links">
+
+<div id="topNav">
+    <div id="topNav-content">
+
+        {# {% if asset_exists('themes/' ~ site.theme ~ '/spoutlet/img/logo_'~site.defaultLocale~'_sm.jpg') %}
+            {% set topNavBannerPath = 'themes/' ~ site.theme ~ '/spoutlet/img/logo_'~site.defaultLocale~'_sm.jpg' %}
+        {% else %}
+            {% set topNavBannerPath = 'themes/' ~ site.theme ~ '/spoutlet/img/logo-campsite.png' %}
+        {% endif %} #}
+        {% set topNavBannerPath = '/bundles/spoutlet/images/logo-campsite.png' %}
+
+        <a href="{{ path('default_index') }}" class="left">
+            <img src="{{ asset(topNavBannerPath) }}" alt="Campsite Small" id="brand-small">
+        </a>
+
+        <ul class="sf-menu sf-list">
+
+            {% if app.user is null %}
+                <li><a href="{{ path('login', {'directLink': true}) }}">{{ 'platformd.layout.top_menu.sign_in' | pd_trans }}</a></li>
+                <li><a href="{{ path('fos_user_registration_register') }}">Join Now</a></li>
+            {% else %}
+                <li><a>{{ app.user.name }}</a>
                     <ul>
-                        {% if facebookLink or twitterLink %}
-                            <li>
-                                <strong>{{ 'follow_us' | trans }}</strong>
-                            </li>
-                            <li class="separator">
-                                {% if facebookLink %}{{ facebookLink | raw }}{% endif %}
-                                {% if twitterLink %}{{ twitterLink | raw }}{% endif %}
-                                {% if instagramLink %}{{ instagramLink | raw }}{% endif %}
-                            </li>
-                        {% endif %}
-
-                        {% if socialMediaStrip -%}
-
-                            <li class="separator">
-                               {{ socialMediaStrip | raw }}
-                            </li>
-
-                        {%- endif -%}
-
-                        <li class="separator">
-                        {% render url('_main_user_strip') with {}, {'standalone': true } %}
-                        </li>
-                        <li class="separator"><a href="{{ path('about') }}">{{ "platformd.layout.top_menu.about" | trans }}</a></li>
-                        <li><a href="{{ path('contact') }}">{{ "platformd.layout.top_menu.contact" | trans }}</a></li>
+                        <li><a href="{{ path('accounts_settings') }}">{{ 'platformd.layout.top_menu.account' | pd_trans }}</a></li>
+                        <li><a href="{{ path('profile') }}">Profile</li>
+                        <li><a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a></li>
                     </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+                </li>
+            {% endif %}
 
-    <a href="{{ path('default_index') }}" id="header-home-link">&nbsp;</a>
+            <li><a>Events</a>
+                <ul>
+                    <li><a href="{{ path('global_events_index') }}">Browse Events</a></li>
+                    <li><a href="{{ path('accounts_events') }}">My Events</a></li>
+                    <li><a href="{{ path('accounts_groups', {'then': 'campsite_event'}) }}">Add Group Event</a></li>
+                    <li><a href="{{ path('idea_admin_global_event') }}">Add Public Event</a></li>
+                </ul>
+            </li>
+
+            <li><a>Groups</a>
+                <ul>
+                    <li><a href="{{ path('groups') }}">Browse Groups</a></li>
+                    <li><a href="{{ path('accounts_groups') }}">My Groups</a></li>
+                    <li><a href="{{ path('group_new') }}">Add Group</a></li>
+                </ul>
+            </li>
+
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <li><a>Administration</a>
+                    <ul>
+                        <li><a href="{{ path('admin_index') }}">Admin Panel</a></li>
+                        <li><a href="{{ path('idea_admin_feedback') }}">View Feedback</a></li>
+                    </ul>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
 </div>
+
+<div class="clr"></div>
+
+{% block banner %}
+    {# push navigation bar down below fixed topNav menu #}
+    <div style="height:40px;"></div>
+{% endblock %}
+
+<script type="text/javascript">
+
+    jQuery(document).ready(function(){
+        jQuery('ul.sf-menu').supersubs({
+            minWidth:    10,   // minimum width of submenus in em units
+            maxWidth:    27,   // maximum width of submenus in em units
+            extraWidth:  1     // extra width can ensure lines don't sometimes turn over
+            // due to slight rounding differences and font-family
+        }).superfish({
+            delay:      150,
+            animation:  {opacity:'show',height:'show'}
+        });
+    });
+
+</script>

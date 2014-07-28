@@ -7,7 +7,7 @@
 }
 
 #event-location-map {
-    padding: 10px 0;
+    padding: 10px;
 }
 
 #event-registration {
@@ -32,9 +32,8 @@
 }
 
 #event-banner {
-    width: 950px;
+    width: 100%;
     height: 120px;
-    background:url('/bundles/event/images/events_default_banner.jpg') top left no-repeat;
     border: none;
 }
 
@@ -44,7 +43,7 @@
 
 .event-attendee {
     position: relative;
-    margin: 10px 0;
+    margin: 10px;
     cursor: pointer;
 }
 
@@ -57,7 +56,6 @@
 
 #event-attendee-list a,
 #event-host-tag {
-    position: absolute;
     margin-left: 15px;
 }
 
@@ -89,18 +87,13 @@
     height:100%;
     display:none;
     opacity:0.3;
-    background-color:#FFF;
-}
-
-.events-sub-nav-wrapper {
-    background: url('/bundles/spoutlet/images/groups/group_subnav_bg.png') no-repeat center;
-    height: 31px;
-}
-
-.events-sub-nav {
-    padding: 10px 0 10px 0;
-    width: 100%;
-    float: left;
+    background-color: #2faad9;
+    padding: 7px;
+    top: -7px;
+    left: -7px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
 }
 
 .events-sub-nav ul {
@@ -119,8 +112,6 @@
 }
 
 .events-sub-nav ul li.first { background: none; }
-
-.events-sub-nav ul li { background: url('/bundles/spoutlet/images/nav_divider.png') left no-repeat; }
 
 #event-registration-closed,
 #registration-response,
@@ -167,4 +158,12 @@
 
 .event-date-picker {
     width: 100px;
+}
+
+.global-event-link {
+    color: #9BC744;
+}
+
+.global-event-link:hover {
+    color: #9BC744;
 }

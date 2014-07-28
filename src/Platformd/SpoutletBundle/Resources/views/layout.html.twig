@@ -1,289 +1,80 @@
-<!DOCTYPE HTML>
-<html xmlns:fb="https://www.facebook.com/2008/fbml">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-        {% block meta_description %}{% endblock %}
-
-        {% render url('_check_account_complete') with {}, {'standalone': true } %}
-
-		<script type="text/javascript">
-			var CKEDITOR_BASEPATH = '/ckeditor/';
-		</script>
-
-        {% block open_graph %}{% endblock %}
-
-        {# This can never be overriden using the multitheme feature #}
-        {# If you want to add css or js for only one theme, use the theme specific assets template #}
-        {# Commented out pending investigation of potential bug. Using an include file like this breaks
-            additional stylesheets included on individual pages in a stylesheets block #}
-        {# {% include 'SpoutletBundle::base_assets.html.twig' %} #}
-
-        {% block stylesheets %}
-            {% stylesheets
-                'plugins/jquery.ad-gallery/jquery.ad-gallery.css'
-                'bundles/spoutlet/css/superfish-aw.css'
-                'bundles/spoutlet/css/style.css'
-                'bundles/spoutlet/css/forms.css'
-                'bundles/spoutlet/css/thickbox.css'
-                'bundles/spoutlet/css/custom-theme/jquery-ui-1.8.16.custom.css'
-                'bundles/spoutlet/css/account-registration.css'
-                'bundles/spoutlet/css/default.css'
-                'bundles/spoutlet/css/legal.css'
-                'bundles/spoutlet/css/new.css'
-                'bundles/spoutlet/css/comments.css'
-                'ckeditor/skins/kama/editor.css'
-                'bundles/spoutlet/css/jquery.mCustomScrollbar.css'
-                'bundles/spoutlet/css/qtip.css'
-                'bundles/spoutlet/css/rsvp.css'
-                'bundles/spoutlet/css/blockUI.css'
-		        filter='cssrewrite'
-		        output='css/packed/layout_default.css'
-		    %}
-		    <link type="text/css" rel="stylesheet" href="{{ asset_url }}" />
-		    {% endstylesheets %}
-        {% endblock %}
-
-        {% block javascripts %}
-            {% javascripts
-                'bundles/spoutlet/js/ie8.js'
-                'bundles/spoutlet/js/jquery-1.7.2.min.js'
-                'bundles/spoutlet/js/jquery-ui-1.8.16.custom.min.js'
-                'bundles/spoutlet/js/jquery.ajaxfileupload.js'
-                'bundles/spoutlet/js/jquery.cycle.all.js'
-                'bundles/spoutlet/js/jquery.dropshadow.js'
-                'bundles/spoutlet/js/jquery.qtip.min.js'
-                'bundles/spoutlet/js/jquery.simplemodal.js'
-                'bundles/spoutlet/js/jquery.simpletip.js'
-                'bundles/spoutlet/js/jquery.truncate.min.js'
-                'bundles/spoutlet/js/progressbar.js'
-                'bundles/spoutlet/js/superfish.js'
-                'bundles/spoutlet/js/supersubs.js'
-                'bundles/spoutlet/js/custom.js'
-                'bundles/spoutlet/js/google-dfp.js'
-                'bundles/spoutlet/js/jquery.countdown.min.js'
-                'bundles/spoutlet/js/jquery.ddslick.min.js'
-                'bundles/spoutlet/js/jstz.min.js'
-		        'bundles/spoutlet/alt_js/*'
-                'bundles/spoutlet/js/jquery.timeago.min.js'
-                'ckeditor/ckeditor.js'
-                'ckeditor/config.js'
-                'ckeditor/lang/en.js'
-                'plugins/jquery.ad-gallery/jquery.ad-gallery.js'
-                'bundles/spoutlet/js/jquery.blockUI.js'
-                'bundles/spoutlet/js/jquery.watermark.min.js'
-                'bundles/spoutlet/js/libs/jquery.form.js'
-                'bundles/spoutlet/js/jquery.mCustomScrollbar.js'
-		        output='js/packed/layout_default.js'
-		    %}
-		    <script type="text/javascript" src="{{ asset_url }}"></script>
-
-		    {% endjavascripts %}
-        {% endblock %}
-
-        {% if app.user is not null and app.user.adminLevel == "ROLE_SUPER_ADMIN" %}
-            <script type="text/javascript">
-                CKEDITOR.config.customConfig = '/ckeditor/config.admin.js';
-            </script>
-        {% endif %}
-
-        {# Here we include assets for the current active theme #}
-        {% include '::' ~ site.theme ~ '_assets.html.twig' ignore missing %}
-
+<!DOCTYPE html>
+<html>
+    {% set _isFrontPage = app.request.get('_route') == 'default_index' %}
+    <head>
+        <meta charset="UTF-8" />
         <title>
-            {%- if block('title') -%}
-                {{ block('title') }} | {{ 'platformd.layout.title_suffix' | trans }}
-            {%- else -%}
-            {{ 'platformd.layout.default_title' | trans }}
-            {%- endif -%}
+            {% block title %}
+                {% if eventSession|default %}
+                    {{ eventSession.name }}
+                {% elseif idea|default %}
+                    {{ idea.name }}
+                {% elseif entrySet|default %}
+                    {{ entrySet.name }}
+                {% elseif event|default %}
+                    {{ event.name }}
+                {% elseif group|default %}
+                    {{ group.name }}
+                {% else %}
+                    Campsite
+                {% endif %}
+            {% endblock %}
         </title>
 
-		<script type="text/javascript">
+        <script type="text/javascript">
+            var CKEDITOR_BASEPATH = '/ckeditor/';
+        </script>
 
-            var ajaxRequestSent = false;
+        <link rel="shortcut icon" type="image/png" href="{{ asset('/bundles/spoutlet/images/favicon.ico') }}">
 
-            function logSearchterm(criteria) {
-                if (ajaxRequestSent) return;
+        {# Here we include assets for the current active theme #}
+        {% include '::theme_' ~ site.theme ~ '_assets.html.twig' ignore missing %}
 
-                if (criteria == "") {
-                    return false;
-                }
+        {{ block('javascripts') }}
+        {{ block('stylesheets') }}
 
-                var data        = { 'criteria' : criteria };
-                ajaxRequestSent = true;
+    </head>
+    <body>
+        <noscript>For optimal site interaction, please turn javascript on in your browser. For Firefox, go to Tools &rsaquo; Options &rsaquo; Content. For Internet Explorer, go to Tools &rsaquo; Internet Options &rsaquo; Security &rsaquo; Internet &rsaquo; Custom Level &rsaquo; Enable Active Scripting.<br>Otherwise, please visit our <a href="#sitemap">sitemap</a> for easier navigation.</noscript>
 
-                $.ajax({
-                    url: '{{ path('log_search') }}',
-                    type: 'post',
-                    async: false,
-                    data: JSON.stringify(data),
-                    contentType: 'application/json',
-                    success: function () {
-                        ajaxRequestSent = false;
-                    }
-                });
-            }
+        {% embed 'IdeaBundle::social_scripts.html.twig' %}{% endembed %}
 
-		    $(document).ready(function(){
-                $('a[href^="http://"]').not('a[href*=alienwarearena]').attr('target','_blank');
-                $('a[href*="alienwarearena"]').attr('target','');
-                $('a[href*="mediastaging.alienwarearena"]').attr('target', '_blank');
-                $('a[href*="media.alienwarearena"]').attr('target', '_blank');
-
-		        $("ul.sf-list").supersubs({
-		            minWidth:   12,
-		            maxWidth:   27,
-		            extraWidth: 1
-		        }).superfish({
-					delay:		150
-				});
-
-                var width = 0;
-                $('ul.sf-menu').children().each(function(){
-                    width += ($(this).width() + 10);
-                });
-                $('#nav-wrapper').width(width);
-
-                {% if not block('page_background_image') or block('page_background_link') %}
-                    {% if current_background_ad_link(block('page_background_link')) %}
-                        $('#custom_background_bot').css('cursor', 'pointer');
-                    {% endif %}
-                {% endif %}
-
-                // clearing overlay defaults so they can be loaded in from css (div.blockOverlay)
-                $.blockUI.defaults.overlayCSS = {};
-
-                $.fn.qtip.defaults.style.classes = 'qtip-dark qtip-shadow qtip-rounded';
-
-				$('#toggleRegion').click(function(e){
-                    e.preventDefault();
-
-				    $('#selectRegion').toggle();
-				    $('#selectLanguage').hide();
-				});
-
-				$('#toggleLanguage').click(function(e){
-                    e.preventDefault();
-
-				    $('#selectLanguage').toggle();
-				    $('#selectRegion').hide();
-				});
-
-                $('#header-search input').watermark("{{ 'platformd.search.form.default.all' | pd_trans }}");
-
-                $('#header .search input').focus(function() {
-                    $('#header .search .submit').addClass('focused');
-                });
-
-                $('#header .search input').blur(function() {
-                    $('#header .search .submit').removeClass('focused');
-                });
-
-                $('.search .submit').click(function() {
-                    $(this).closest('.search').find('.search-form').submit();
-                });
-
-                $('.search-form').submit(function(e) {
-                    e.preventDefault();
-
-                    var criteria = $(this).find('.search-criteria').val().replace('/', '');
-
-                    if (criteria && criteria != '') {
-                        logSearchterm(criteria);
-                        window.location = '{{ path('search_form') }}' + '/' + $(this).find('.search-category').val() + '/' + encodeURIComponent(criteria);
-                    } else {
-                        $(this).find('.search-criteria').addClass('invalid');
-                    }
-                });
-
-                $('.search-criteria').keyup(function() {
-                    if ($(this).val() != '') {
-                        $(this).removeClass('invalid');
-                    }
-                });
-			});
-		</script>
-
-        {% if features.hasGoogleAnalytics and config.googleAnalyticsAccount %}
-            {% include 'SpoutletBundle:Default:_prep_google_dfp.html.twig' %}
-            {% include 'SpoutletBundle::_analytics.html.twig' %}
+        {% set feedbackKey = app.request.get('_route') %}
+        {% if feedbackKey in feedback_ids|keys %}
+            <a href="{{ path('entry_set_view', {'entrySetId': feedback_ids[feedbackKey] }) }}">
+                <div class="card feedback"><h3 class="blu">Feedback</h3></div>
+            </a>
         {% endif %}
 
-	</head>
-	<body class="site-{{ app.session.locale }}">
-        {% if features.hasFacebook and config.facebookAppId %}
-        <div id="fb-root"></div>
-        <script src="//connect.facebook.net/{{ site.defaultLocale }}/all.js"></script>
-        <script>
-          // assume we are already logged in
-          FB.init({appId: '{{ config.facebookAppId }}', xfbml: true, cookie: true});
-        </script>
-        {% endif %}
+        <div id="wrapper-ht">
 
-		<div id="omni">
-            {# big line to add a background-image if the page_background_image block has been set #}
-            <div id="page" {{ current_background_ad_url(block('page_background_image'))|raw }} {% if not block('page_background_image') or block('page_background_link') %} {{ current_background_ad_link(block('page_background_link')) }}{% endif %}>
-                <div class="background-takeover" id="custom_background_top">
-                    <div id="header">
-                    	{% include 'SpoutletBundle::header.html.twig' %}
-                    </div>
-                    <div id="mainNav-wrapper">
-                        {% include 'SpoutletBundle::navigation.html.twig' %}
-                    </div>
-                    <div class="background-takeover" id="custom_background_bot">
-                        <div id="content-wrapper">
-                            <div id="{{ (block('content_background_override_class') ? block('content_background_override_class') : 'content-background') }}">
-                                <div id="content">
+            {%  block header %}
+                {% embed 'SpoutletBundle::header.html.twig' %}{% endembed %}
+                {% embed 'SpoutletBundle::navigation.html.twig' %}{% endembed %}
+            {%  endblock %}
 
-                                    {% block pre_content_nav %}{% endblock %}
+            <div id="content">
 
-                                    {% render url('_flash_message') with {}, {'standalone': true } %}
+                {% block pre_content_nav %}{% endblock %}
 
-                                    {% block content %}{% endblock %}
+                {% render url('_flash_message') with {}, {'standalone': true } %}
+                <script type="text/javascript">
+                    $('.notice').draggable();
+                </script>
 
-                                </div>
-                            </div>
-                        </div>
-	                    {% include 'SpoutletBundle:Default:_dealsAdBottom.html.twig' %}
-                        {% if block('legal_footer') %}
-                            <div class="legalese">
-                                {{ block('legal_footer') }}
-                            </div>
-                        {% endif %}
-                        {% render url('_layout_footer') with {}, {'standalone': true } %}
-	                </div>
-	            </div>
-	        </div>
-	    </div>
+                <div class="clear"></div>
 
-        <!-- omniture -->
-        <script language="JavaScript" type="text/javascript" src="/omniture/s_code{% if app.debug %}_dev{% endif %}.js "></script>
-        <script language="JavaScript" type="text/javascript">
-            s_dell.pageName="";
-            s_dell.events="";
-            s_dell.prop29="3rd party sites";
-            s_dell.prop49="c=us&l=en&s=gen";
-            var s_code=s_dell.t();if(s_code)document.write(s_code);
-        </script>
-        <!-- end omniture -->
+                {% include 'IdeaBundle:Idea:breadcrumbs.html.twig' %}
 
-        <!-- mediaplex -->
-        <script language="javascript" type="text/javascript">
-            <!--
-            var page_url = escape(document.URL);
-            var ref_url = escape(document.referrer);
+                {% block content %}
+                {% endblock %}
 
-            var mpt = new Date();
-            var mpts = mpt.getTimezoneOffset() + mpt.getTime();
+                <br class="clr">
 
-            if (window.location.protocol == "https:"){
-                document.write("<iframe src=\"https:\/\/secure.img-cdn.mediaplex.com\/0\/12309\/universal.html?page_name=us_content&mpt=" + mpts + "&url=" + page_url + "&ref=" + ref_url + "\" height=\"1\" width=\"1\" frameborder=\"0\" style=\"position: absolute; top: -20px; left: -20px;\"><\/iframe>");
-            } else {
-                document.write("<iframe src=\"http:\/\/img-cdn.mediaplex.com\/0\/12309\/universal.html?page_name=us_content&mpt=" + mpts + "&url=" + page_url + "&ref=" + ref_url + "\" height=\"1\" width=\"1\" frameborder=\"0\" style=\"position: absolute; top: -20px; left: -20px;\"><\/iframe>");
-            }
-            // -->
-        </script>
-        <!-- end mediaplex -->
-	</body>
+            </div>
+            <div class="push"></div> <!-- needed for sticky footer -->
+        </div><!-- end wrapper-ht -->
+
+        {% include 'SpoutletBundle::footer.html.twig' %}
+    </body>
 </html>

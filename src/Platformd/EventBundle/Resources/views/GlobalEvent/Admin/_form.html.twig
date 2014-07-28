@@ -14,13 +14,12 @@
         <div class="row-fluid first">
             <div class="span8">
                 {{ form_row(form.name) }}
-                {{ form_row(form.registrationOption) }}
+                {#{{ form_row(form.registrationOption) }}#}
                 {{ form_row(form.hostedBy) }}
                 {{ form_row(form.bannerImage) }}
-                {{ form_row(form.slug) }}
                 {{ form_row(form.externalUrl) }}
                 {{ form_row(form.content) }}
-                {{ form_row(form.tags) }}
+                {#{{ form_row(form.tags) }}#}
                 {{ form_row(form.online) }}
                 <div id="location-info" {% if isOnline %}style="display:none;"{% endif %}>
                     {{ form_row(form.location) }}
@@ -31,9 +30,9 @@
                     <div class="start-date">{{ form_row(form.startsAt) }}</div>
                     <div class="end-date">{{ form_row(form.endsAt) }}</div>
                 </div>
-                {{ form_row(form.timezone) }}
-                {{ form_row(form.sites) }}
-                {{ form_row(form.published) }}
+                {#{{ form_row(form.timezone) }}#}
+                {#{{ form_row(form.sites) }}#}
+                {#{{ form_row(form.published) }}#}
             </div>
         </div>
     </fieldset>
@@ -64,10 +63,10 @@
 <script type="text/javascript">
     $(function () {
 
-        $('.event-date-picker').datepicker({
-            minDate: 0,
-            dateFormat: 'mm/dd/yy'
-        });
+        // $('.event-date-picker').datepicker({
+        //     minDate: 0,
+        //     dateFormat: 'mm/dd/yy'
+        // });
 
         $('#global-event-form').submit(function() {
 
@@ -103,32 +102,32 @@
             }
         });
 
-        var $i = 0;
-        $('#globalEvent_translations > .control-group > label').each(function (){
-            switch ($i) {
-                case 0:
-                    $(this).text('JAPANESE');
-                    break;
-                case 1:
-                    $(this).text('CHINESE');
-                    break;
-                case 2:
-                    $(this).text("SPANISH");
-                    break;
-            }
-            $i++;
-        });
+        // var $i = 0;
+        // $('#globalEvent_translations > .control-group > label').each(function (){
+        //     switch ($i) {
+        //         case 0:
+        //             $(this).text('JAPANESE');
+        //             break;
+        //         case 1:
+        //             $(this).text('CHINESE');
+        //             break;
+        //         case 2:
+        //             $(this).text("SPANISH");
+        //             break;
+        //     }
+        //     $i++;
+        // });
 
-        $('#translations').click(function () {
-            $('#translations-wrapper').toggle();
-        });
+        // $('#translations').click(function () {
+        //     $('#translations-wrapper').toggle();
+        // });
 
         $("input[name='globalEvent[online]']").change(function () {
             var val = $(this).val();
             if(val == 0) {
-                $('#location-info').fadeIn();
+                $('#location-info').slideDown();
             } else {
-                $('#location-info').fadeOut();
+                $('#location-info').slideUp();
             }
         });
 

@@ -1,92 +1,144 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block content %}
-<div id="row-1" class="std_2col">
-    <div class="right">
-        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
-    </div>
-
-    <div class="left">
-        <div id="rotator">
-            {% render url('banner') %}
-        </div>
-    </div>
-</div>
-<div class="std_2col">
-    <div class="left">
-            {% render url('featured_content') %}
-            {% if features.hasGroups %}
-                {% render url('_groups_index') %}
-            {% endif %}
-            {% if features.hasVideo %}
-                {% render url('video_feed', {'height': '287'}) %}
-            {% endif %}
-            {% if features.hasArp and features.hasPolls %}
-                <div id="arp-widget">{% render url('_arp_index') %}</div>
-                <div id="poll-widget">{% render url('_polls_index') %}</div>
-            {% endif %}
-    </div>
-    <div class="right">
-        {% if features.hasNews %}
-            {% render url('hot_stories') %}
-        {% endif %}
-
-        {% if features.hasForums %}
-            {% include "SpoutletBundle:Default:_forums.html.twig" %}
-        {% endif %}
-
-        {% if features.hasPhotos and not features.hasStaticPhotoWidget %}
-            {% include 'SpoutletBundle:Default:_rightPhotoGallery.html.twig' with {'height': '288px'} %}
-        {% else %}
-            {% include 'SpoutletBundle:Default:_staticPhotoWidget.html.twig' with {'height': '288px'} %}
-        {% endif %}
-
-    </div>
-</div>
-
-
-{% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/video/css/youtube.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/group/css/groups.css') }}" />
-{% endblock %}
-
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.resize.min.js"></script>
-    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.mousewheel.min.js"></script>
     <script type="text/javascript">
-        $(function () {
-            $('.ellipse').truncate({
-                width: '160'
+        var GROUPS = [];
+        var HITS = [];
+
+        function processGroup(index, comparator) {
+            var group = GROUPS[index];
+
+            if(comparator(group)) {
+                return;
+            }
+
+            HITS.push(group);
+        }
+
+        function renderHits() {
+            var col1 = $("#groups-col1");
+            var col2 = $("#groups-col2");
+
+            col1.empty();
+            col2.empty();
+
+            for (var i=0; i<HITS.length; i+=2) {
+                var group = HITS[i];
+
+                col1.append("<li><a href=\""+group.url+"\">"+group.name+"</a></li>");
+
+                if(i+1<HITS.length) {
+                    var group2 = HITS[i+1];
+                    col2.append("<li><a href=\""+group2.url+"\">"+group2.name+"</a></li>");
+                }
+            }
+
+            HITS = [];
+        }
+
+        function updateSearchResults(comparator) {
+            for(var i=0; i<GROUPS.length; i+=2) {
+                processGroup(i, comparator);
+                if(i+1<GROUPS.length) {
+                    processGroup(i+1, comparator);
+                }
+            }
+            renderHits();
+        }
+
+        jQuery(document).ready(function($) {
+            var url = '{{ path('api_all_groups') }}';
+
+            var featuredTopicsComparator = function(group) {
+                return !group.isTopic || !group.isFeatured;
+            };
+
+            var topicComparator = function (group) {
+                var topic = searchBox.val().toLowerCase();
+                return group.name.toLowerCase().indexOf(topic) == -1;
+            };
+
+            $.getJSON(url, null,
+                function(data) {
+                    //Initially populate with all groups
+                    GROUPS = data.groups;
+                    if(GROUPS) {
+                        updateSearchResults(featuredTopicsComparator);
+                    }
+                });
+
+            //Register search callback
+            var globalTimeout = null;
+            var searchBox = $('#groups-by-topic-search');
+            searchBox.keyup(function() {
+                var topic = searchBox.val();
+                var comparator = (topic == '') ? featuredTopicsComparator : topicComparator;
+                updateSearchResults(comparator);
             });
-            $('.home-more-videos-link a').truncate({
-                width: '130'
-            });
-            $('.ellipse').qtip();
 
-            $('.group-index-link').truncate();
+            var socialPanel = $('#socialPanel');
+            var showSocialPanel = $('#showSocialPanel');
 
-            $('div#featured-content').mCustomScrollbar();
+            showSocialPanel.hover(function(){
+                socialPanel.fadeIn();
 
-            $(".featured-content-header a").click(function() {
-                    var id = $(this).attr("id");
-                    $(".featured-content-header a.active").removeClass("active");
-                    $(this).addClass("active");
-                    $(".featured-content-category").removeClass('active');
-                    $(".featured-content-category#featured-content-"+id).addClass('active');
-                    // show the widget footer
-                    $(".widget-footer #featured-footer-"+id).show();
-                    $('#featured-content').resize();
-                    $('#featured-content').mCustomScrollbar('update');
-            });
-
-            $('.reg-source').click(function() {
-                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
+                socialPanel.mouseleave(function(){
+                    $(this).fadeOut();
+                });
             });
         });
+
     </script>
 {% endblock %}
 
+
+{% block content %}
+
+    <div id="contentLftMP">
+
+        <div id="socialWidget" class="card nopad">
+            <h3 class="blu midpad" id="showSocialPanel">Share</h3>
+        </div>
+
+        <div id="socialPanel" class="card nopad hidden">
+            <div class="smallpad">
+                <div class="fb-like left spcr-r3" data-href="{{ path('default_index') }}" data-layout="box_count" data-action="like" data-show-faces="false" data-share="true"></div>
+                <a href="https://twitter.com/share" class="twitter-share-button right" data-hashtags="campsite" data-count="vertical">Tweet</a>
+                <div class="clr"></div>
+            </div>
+        </div>
+
+        <div id="group-by-topic">
+            <h2 class="spcr-b2">Find a Group by Topic</h2>
+
+            <input id="groups-by-topic-search" type="text" size="80" placeholder="Enter Topic" autocomplete="off">
+
+            <div class="group-list">
+                <ul id="groups-col1">
+                </ul>
+            </div>
+
+            <div class="group-list">
+                <ul id="groups-col2">
+                </ul>
+            </div>
+        </div>
+
+        <hr>
+
+        <h2 class="left">Popular Groups</h2>
+
+        <a href="{{ path('group_new') }}" class="right spcr-l2 spcr-b3 btn bld bgBtn">Create Group &rsaquo;</a>
+        {% render url('_popular_groups') %}
+
+        <br class="clr"/>
+    </div>
+
+    <div id="contentRtMP">
+        {% render "SpoutletBundle:Default:groupsMap" %}
+        <hr class="clr">
+        {% render 'SpoutletBundle:Default:groupEvents' %}
+    </div>
+
+{% endblock %}
