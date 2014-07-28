@@ -116,7 +116,7 @@ class Sponsor {
                 if ($group->getId() == $containerId) {
                     return $reg->getLevel();
                 }
-            } elseif ($scope == 'event' && $event = $reg->getEvent()) {
+            } elseif (($scope == 'event' || $scope == 'global_event') && $event = $reg->getEvent()) {
                 if ($event->getId() == $containerId) {
                     return $reg->getLevel();
                 }

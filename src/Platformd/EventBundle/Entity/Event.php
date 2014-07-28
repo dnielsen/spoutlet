@@ -319,11 +319,6 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     protected $entrySetRegistration;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\SponsorRegistry", mappedBy="event", cascade={"persist", "remove"})
-     */
-    protected $sponsorRegistrations;
-
-    /**
      * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\RegistrationField", mappedBy="event", cascade={"persist", "remove"})
      */
     protected $registrationFields;
@@ -355,7 +350,6 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     public function __construct()
     {
         $this->attendees            = new ArrayCollection();
-        $this->sponsorRegistrations = new ArrayCollection();
         $this->registrationFields   = new ArrayCollection();
         $this->htmlPages            = new ArrayCollection();
         $this->createdAt            = new DateTime();
@@ -1294,9 +1288,9 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         usort($sponsorRegistrations, function ($a, $b) {
             $aLevel = $a->getLevel();
             $bLevel = $b->getLevel();
-            if ($aLevel && !$bLevel) {
+            if ($aLevel == null) {
                 return -1;
-            } elseif ($bLevel && !$aLevel) {
+            } elseif ($bLevel == null) {
                 return 1;
             }
             return ($aLevel - $bLevel);
@@ -1360,7 +1354,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
         $sessionsByDate = array();
 
-        foreach ($this->getSortedSessionsByRoom() as $session){
+        foreach ($this->getSortedSessions() as $session){
             $sessionsByDate[$session->getDateString()][] = $session;
         }
         return $sessionsByDate;
@@ -1384,7 +1378,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
             $bStartTime = $bStartTime->format('U');
 
             if ($aStartTime == $bStartTime) {
-                return 0;
+                return strcmp($a->getRoom(), $b->getRoom());
             }
             return ($aStartTime > $bStartTime) ? +1 : -1;
         });

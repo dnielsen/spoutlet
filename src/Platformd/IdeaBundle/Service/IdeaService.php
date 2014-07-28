@@ -92,17 +92,58 @@ class IdeaService
         $handle = curl_init($url);
         curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);     //We want the result to be saved into variable, not printed out
         $response = curl_exec($handle);
+        $json_resp = json_decode($response, true);
+        
+        // Check if any error occurred
+        if(!curl_errno($handle))
+        {
+            $info = curl_getinfo($handle);
+            if($info['http_code'] >= 300 || $info['http_code'] < 200) {
+                $error_msg = "Error: " . $info['http_code'];
+                if( array_key_exists('error', $json_resp)) {
+                    $error_msg += " " . $json_resp['error']['error_type'] . ": " . $json_resp['error']['error_message'];
+                }
+                throw new Exception($error_msg);
+            }
+                
+        }
+
         curl_close($handle);
 
-        $json_resp = json_decode($response, true);
         if($json_resp == null) {
             return null;
         } else if(array_key_exists('event', $json_resp)) {
             return $json_resp['event'];
-        } else if( array_key_exists('error', $json_resp)) {
-            throw new Exception( $json_resp['error']['error_type'] . ": " . $json_resp['error']['error_message'] );
-        }
+        } 
 
         return null;
+    }
+
+    public function getMeetupEvent($muEventId) {
+        $apiKey = "7ae43171676a5440625b593573722e";
+        $url = "https://api.meetup.com/2/event/" . $muEventId . "?key=" . $apiKey;
+
+        $handle = curl_init($url);
+        curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);     //We want the result to be saved into variable, not printed out
+        $response = curl_exec($handle);
+        $json_resp = json_decode($response, true);
+        
+        // Check if any error occurred
+        if(!curl_errno($handle))
+        {
+            $info = curl_getinfo($handle);
+            if($info['http_code'] >= 300 || $info['http_code'] < 200) {
+                $error_msg = "Error: " . $info['http_code'];
+                if( array_key_exists('error', $json_resp)) {
+                    $error_msg += " " . $json_resp['error']['error_type'] . ": " . $json_resp['error']['error_message'];
+                }
+                throw new Exception($error_msg);
+            }
+                
+        }
+
+        curl_close($handle);
+
+        return $json_resp;
     }
 }

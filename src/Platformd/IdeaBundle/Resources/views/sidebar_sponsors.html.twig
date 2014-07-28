@@ -4,15 +4,20 @@
     {% set gold   = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::GOLD') %}
     {% set silver = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::SILVER') %}
     {% set bronze = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::BRONZE') %}
+    {% set other  = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::OTHER') %}
 
     {% if event|default %}
-        {% set sponsors = event.sponsors %}
-        {% set scope = 'event' %}
+        {% if group|default %}
+            {% set scope = 'event' %}
+        {% else %}
+            {% set scope = 'global_event' %}
+        {% endif %}
         {% set containerId = event.id %}
-    {% elseif group | default %}
-        {% set sponsors = group.sponsors %}
+        {% set sponsors = event.sponsors %}
+    {% elseif group|default %}
         {% set scope = 'group' %}
         {% set containerId = group.id %}
+        {% set sponsors = group.sponsors %}
     {% endif %}
 
     {% set lastLevel = -1 %}
@@ -21,9 +26,7 @@
         {% set currentLevel = sponsor.getLevel(scope, containerId) %}
 
         {% if currentLevel != lastLevel %}
-            {% if currentLevel == null %}
-                <div class="sponsorLevelText spcr-t">Other Sponsors</div>
-            {% elseif currentLevel == venue %}
+            {% if currentLevel == venue %}
                 <div class="sponsorLevelText venueText spcr-t">Venue Sponsors</div>
             {% elseif currentLevel == plat %}
                 <div class="sponsorLevelText platText spcr-t">Platinum Sponsors</div>
@@ -33,6 +36,8 @@
                 <div class="sponsorLevelText silverText spcr-t">Silver Sponsors</div>
             {% elseif currentLevel == bronze %}
                 <div class="sponsorLevelText bronzeText spcr-t">Bronze Sponsors</div>
+            {% elseif currentLevel == other %}
+                <div class="sponsorLevelText spcr-t">Other Sponsors</div>
             {% endif %}
         {% endif %}
 

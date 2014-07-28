@@ -30,7 +30,7 @@ echo
 echo "Grabbing data from production server database ... "
 echo
 ssh -t campsite '~/sites/campsite/misc_scripts/backupDbs.sh' 
-scp campsite:~/sites/campsite/misc_scripts/dbBackups.tar.gz ./
+scp campsite:~/dbBackups.tar.gz ./
 tar -xzvf ./dbBackups.tar.gz
 
 echo

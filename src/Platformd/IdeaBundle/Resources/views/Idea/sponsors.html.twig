@@ -11,6 +11,7 @@
         {% set gold   = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::GOLD') %}
         {% set silver = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::SILVER') %}
         {% set bronze = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::BRONZE') %}
+        {% set other  = constant('\\Platformd\\IdeaBundle\\Entity\\SponsorRegistry::OTHER') %}
 
         <h1 class="left">Remove Current Sponsors</h1>
 
@@ -20,9 +21,7 @@
 
         {% for sponsor in attachedSponsors %}
         <div class="sponsorBx card">
-            {% if sponsor.getLevel(scope, containerId) == null %}
-                {% set sponsorText = '' %}
-            {% elseif sponsor.getLevel(scope, containerId) == venue %}
+            {% if sponsor.getLevel(scope, containerId) == venue %}
                 {% set sponsorText = '<div class="sponsorLevelText venueText">VENUE</div>' %}
             {% elseif sponsor.getLevel(scope, containerId) == plat %}
                 {% set sponsorText = '<div class="sponsorLevelText platText">PLATINUM</div>' %}
@@ -32,6 +31,8 @@
                 {% set sponsorText = '<div class="sponsorLevelText silverText">SILVER</div>' %}
             {% elseif sponsor.getLevel(scope, containerId) == bronze %}
                 {% set sponsorText = '<div class="sponsorLevelText bronzeText">BRONZE</div>' %}
+            {% elseif sponsor.getLevel(scope, containerId) == other %}
+                {% set sponsorText = '<div class="sponsorLevelText"></div>' %}
             {% endif %}
 
             <a href="{{ path('sponsor_remove', {'id': sponsor.id, 'scope': scope, 'containerId': containerId}) }}" onclick="return confirm('Are you sure you want to remove this sponsor from your {{ scope }}?');">
