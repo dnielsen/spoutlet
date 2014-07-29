@@ -28,7 +28,8 @@
         <link rel="shortcut icon" type="image/png" href="{{ asset('/bundles/spoutlet/images/favicon.ico') }}">
 
         {# Here we include assets for the current active theme #}
-        {% include '::theme_' ~ site.theme ~ '_assets.html.twig' ignore missing %}
+        {# {% include '::theme_' ~ site.theme ~ '_assets.html.twig' ignore missing %} #}
+        {% include 'SpoutletBundle::base_assets.html.twig' %}
 
         {{ block('javascripts') }}
         {{ block('stylesheets') }}
