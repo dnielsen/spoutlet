@@ -48,7 +48,7 @@
             {% if eventSession.publicNotesLink|default %}
                 <a href="{{ eventSession.publicNotesLink }}" class="btn spcr-l" target="_blank">Public Notes</a>
             {% endif %}
-            <a href="http://onenote.heroku.com/takenotes?title={{ eventSession.name }}&url={{ eventSession | pd_link | absolute_url }}&snippet={{ eventSession.description }}&section={{ eventSession.event.name }}" class="spcr-l" target="_blank"><img src="{{ asset('themes/ideacontest/spoutlet/img/takenote_button.png') }}"/></a>
+            <a href="http://onenote.heroku.com/takenotes?title={{ eventSession.name }}&url={{ eventSession | pd_link | absolute_url }}&snippet={{ eventSession.description }}&section={{ eventSession.event.name }}" class="spcr-l" target="_blank"><img src="{{ asset('/bundles/spoutlet/images/takenote_button.png') }}"/></a>
         </div>
     </div>
 

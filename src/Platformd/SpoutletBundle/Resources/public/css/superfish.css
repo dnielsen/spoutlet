@@ -114,7 +114,7 @@ html body .sf-menu a.sf-with-ul {
 html body .sf-menu li li a.sf-with-ul {
 	/* padding-right: 	2.25em; */
 	min-width:		1px; /* trigger IE7 hasLayout so spans position accurately */
-	background-image:url('../img/nav-arrow.gif');
+	background-image:url('../images/nav-arrow.gif');
 	background-position:top right;
 	background-repeat:no-repeat;
 }
@@ -130,7 +130,7 @@ ul ul .sf-sub-indicator {
 	height:			10px;
 	text-indent: 	-999em;
 	overflow:		hidden;
-	background:		url('../img/nav-arrow.png') no-repeat top right; /* 8-bit indexed alpha png. IE6 gets solid image only */
+	background:		url('../images/nav-arrow.png') no-repeat top right; /* 8-bit indexed alpha png. IE6 gets solid image only */
 }
 a > .sf-sub-indicator {  /* give all except IE6 the correct values */
 	top:			.8em;
@@ -174,5 +174,5 @@ li.sfHover > a > .sf-sub-indicator {
 }
 .sf-with-ul {
 	padding-right: 13px;
-	background: url('../img/nav-arrow.png') no-repeat center right;
+	background: url('../images/nav-arrow.png') no-repeat center right;
 }

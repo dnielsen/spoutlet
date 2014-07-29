@@ -1,11 +1,34 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block title %}{{ 'platformd.about.title' | trans | raw }}{% endblock %}
+{% block title %}About Campsite{% endblock %}
 
 {% block content %}
-<div class="terms">
-    <h1>{{ 'platformd.about.title' | trans | raw }}</h1>
+<div class="about col1">
 
-    {% include ['SpoutletBundle:Default:about/' ~ app.session.locale ~ '.html.twig', 'SpoutletBundle:Default:about/en.html.twig'] %}
+    <h1>About Campsite</h1>
+
+    <h2>SHARE—LEARN —GROW with your peers and mentors</h2>
+
+    <h2>FOR THE PEOPLE, BY THE PEOPLE</h2>
+
+    <p>Campsite will maximize the opportunities for all of us to Share, Learn and Grow.</p>
+
+    <h3>SHARE</h3>
+    Join other geniuses, tech wizards, and product visionaries in an event of sharing best practices, success stories, battle scars, brilliant ideas and novel "how to" approaches to innovation. Dialogue, debate, and brainstorm successful use of old and new tools and applications alike.
+
+    <h3>LEARN</h3>
+    <p>Gain innovative expertise—exchange insights, bounce ideas off fellow experts, discover emerging tools, and explore new techniques to squeeze more results from your efforts.</p>
+
+    <h3>GROW</h3>
+    <p>Come Camping to expand your:</p>
+    <ul>
+        <li>Skills - apply today’s latest techniques</li>
+        <li>Knowledge - incorporate best practices </li>
+        <li>Network - speak with “movers and shakers” in the field</li>
+        <li>Business - use the latest tools to grow your business</li>
+    </ul>
+
+    <h2>See you there!</h2>
+
 </div>
 {% endblock %}

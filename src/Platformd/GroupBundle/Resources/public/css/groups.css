@@ -1,341 +1,18 @@
-#group-avatar {
-    padding: 10px 0 0 0;
+#new-groups-widget,
+#popular-groups-widget {
+    margin-top: 15px;
 }
 
-#group-avatar img {
-    width: 950px;
-    height: 120px;
+#new-groups-widget .widget-content,
+#popular-groups-widget .widget-content {
+    height: 200px;
 }
 
-#map_canvas {
-    width: 290px;
-    height: 250px;
-    margin: 10px auto;
-}
-
-#group-name {
-
-}
-
-.groups-sub-nav-wrapper {
-    background: url('/bundles/spoutlet/images/groups/group_subnav_bg.png') no-repeat center;
-    height: 31px;
-}
-
-.groups-sub-nav {
-    padding: 10px 0 10px 0;
-    width: 100%;
-    float: left;
-}
-
-#group-like-wrapper {
-    padding: 5px 0 10px 0;
-    margin-left: 15px;
-}
-
-#group-invite-wrapper {
-    padding: 5px 0 10px 0;
-    margin-left: 15px;
-    margin-bottom: 5px;
-}
-
-#leave-group {
-    margin-left: 15px;
-}
-
-#report-group-wrapper {
-    padding: 5px 0 10px 0;
-    margin-left: 15px;
-    margin-bottom: 5px;
-}
-
-#group-video-form-wrapper h2 {
-    font-size: 12pt;
-}
-
-#group-video-form-wrapper ul {
-    margin-left: 25px;
-}
-
-#group-image-form-wrapper h2 {
-    font-size: 12pt;
-}
-
-#group-image-form-wrapper ul {
-    margin-left: 25px;
-}
-
-.groups-sub-nav ul {
-    padding: 0;
-    margin: 0;
-}
-
-.groups-sub-nav ul li {
-    float:none;
-    background-repeat:no-repeat;
-    margin: 2px 0 0 0;
-    padding: 0 7px;
-    display: inline;
-    padding-top: 5px;
-    padding-bottom: 4px;
-}
-
-.groups-sub-nav ul li.first { background: none; }
-
-.groups-sub-nav ul li { background: url('/bundles/spoutlet/images/nav_divider.png') left no-repeat; }
-
-.side-nav {
-    float: left;
-    width: 250px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    -moz-border-radius-topleft: 5px;
-    -moz-border-radius-topright: 5px;
-    background: #191919;
-}
-
-.main-content {
-    float: left;
-    width: 400px;
-
-}
-
-#group-member-count {
-    display: inline-table;
-    width: 140px;
-    font-size: 16px;
-    text-align: center;
-    font-weight: bold;
-    padding: 20px 0 20px 0;
-}
-
-#group-comment-count {
-    display: inline-table;
-    width: 140px;
-    font-size: 16px;
-    text-align: center;
-    font-weight: bold;
-    padding: 20px 0 20px 0;
-}
-
-#group-blurb {
-    padding: 0 15px 10px 15px;
-}
-
-.location-info {
-    font-weight: bold;
-}
-
-#group-location-address {
-    border-top: 1px solid #B3B3B3;
-    padding: 15px;
-}
-
-.join-group-options {
-    text-align: center;
-}
-
-.join-group-options a {
-    background: url('/bundles/spoutlet/images/groups/join_group.png') no-repeat 0 0;
-    width: 230px;
-    height: 62px;
-    margin: 0px auto;
-    border: none;
-}
-
-.join-group-options a:hover {
-    background: url('/bundles/spoutlet/images/groups/join_group.png') no-repeat 0 -62px;
-    width: 230px;
-    height: 62px;
-    margin: 0px auto;
-    border: none;
-}
-
-button#join-group-button {
-    background: url('/bundles/spoutlet/images/groups/join_group.png') no-repeat 0 0;
-    width: 230px;
-    height: 62px;
-    margin: 0px auto;
-    border: none;
-    cursor: pointer;
-    filter: none;
-}
-
-button#join-group-button:hover {
-    background: url('/bundles/spoutlet/images/groups/join_group.png') no-repeat 0 -62px;
-    filter: none;
-}
-
-#group-invite {
-    padding: 0 0 0 20px;
-    font-size: 14px;
-    background: url('/bundles/spoutlet/images/icons/icon-fb-14.png') no-repeat left;
-    width: auto;
-}
-
-#videos-wrapper {
-    margin: 20px auto;
-    height: 150px;
-}
-
-#videos-wrapper li {
-    list-style: none;
-    float: left;
-    width: 138px;
-    height: 83px;
-    padding-left: 10px;
-    text-align: left;
-}
-
-.youtube-link img {
-    width: 135px;
+.default-group-thumbnail {
+    width: 320px;
     height: 80px;
-}
-
-.youtube-link img:hover {
-    box-shadow: 0px 0px 10px rgba(0, 156, 218, 0.65);
-    -moz-box-shadow: 0px 0px 10px rgba(0, 156, 218, 0.65);
-    -webkit-box-shadow: 0px 0px 10px rgba(0, 156, 218, 0.65);
-
-}
-
-.active-video {
-    box-shadow: 0px 0px 10px rgba(0, 156, 218, 0.65);
-    -moz-box-shadow: 0px 0px 10px rgba(0, 156, 218, 0.65);
-    -webkit-box-shadow: 0px 0px 10px rgba(0, 156, 218, 0.65);
-}
-
-.group-news-date {
-    margin: 0 0 10px 0;
-}
-
-#content-group-news {
-    height: 550px;
-}
-
-#content-group-events {
-    height: 550px;
-}
-
-#content-group-photos {
-    height: 550px;
-}
-
-#content-group-videos {
-    height: 550px;
-}
-
-#theater-screen-wrapper {
-    width:600px;
-    height:350px;
-}
-
-#report-options {
-    height: 120px;
-}
-
-.report-option {
-    margin: 5px 0 0 0;
-}
-
-.file-upload img {
-    width: 300px;
-}
-
-.group-image-item {
-    display: inline-table;
-    width: 135px;
-    height: 100px;
-    margin: 5px;
-}
-
-.group-image-image {
-    border: 1px solid #4A4A4A;
-}
-
-.group-image-image img {
-    width: 135px;
-    height: 80px;
-}
-
-.group-image-title {
-    width: 135px;
-    color: #17B8F8;
-}
-
-.group-image-actions {
-    font-size: 0.8em;
-}
-
-.scrollable {
-    /* required settings */
-    position:relative;
-    overflow:hidden;
-}
-
-.scrollable .items {
-    /* this cannot be too large */
-    width:20000em;
-    position:absolute;
-}
-
-.items .items-wrapper {
-    width: 600px;
-    float: left;
-}
-
-#scroll-actions a.video-scroll-prev {
-    background: url('/bundles/spoutlet/images/gallery_prev.png') no-repeat;
-    width: 13px;
-    height: 24px;
-    margin-left: 30px;
-}
-
-#scroll-actions a.video-scroll-next {
-    background: url('/bundles/spoutlet/images/gallery_next.png') no-repeat;
-    width: 13px;
-    height: 24px;
-    margin-right: 30px;
-}
-
-.browse {
-    cursor: pointer;
-}
-
-.disabled {
-    display: none;
-}
-
-#scrollable-location-groups {
-    height: 310px;
-    width: 600px;
-}
-
-#scrollable-topic-groups {
-    height: 310px;
-    width: 600px;
-}
-
-.group-list-item {
-    display: inline-table;
-    width: 135px;
-    height: 130px;
-    margin: 5px;
-    position: relative;
-}
-
-.group-list-item .details {
-    margin-top: 2px;
-}
-
-.group-list-item .item-detail {
-    font-size: 10px;
-}
-
-.group-list-item img {
-    width: 135px;
-    height: 80px;
-    border: 1px solid #4A4A4A;
+    background:url('../images/default_group_thumbnail.png') top left no-repeat;
+    border: 1px solid #e1e1e8;
 }
 
 .groups-category-header {
@@ -343,15 +20,34 @@ button#join-group-button:hover {
     font-weight: bold;
     font-size: 14px;
     margin: 10px 0 10px 0;
-    text-shadow:1px 1px 8px #009CDA;
 }
 
-.group-details-table {
-    width: 100%;
+.group-index-link {
+    color: #2faad9;
+    font-weight: bold;
+    font-size: 20px;
 }
 
-.group-details-table td {
-    padding: 0 0 5px 0;
+.group-list-item {
+    display: inline-table;
+    position: relative;
+    margin: 4px;
+    text-align: center;
+    width: 28%;
+}
+
+.group-list-item .details {
+    margin-top: 2px;
+}
+
+.group-list-item .item-detail {
+    font-size: 14px;
+}
+
+.group-list-item img {
+    width: 320px;
+    height: 80px;
+    border: 1px solid #e1e1e8;
 }
 
 .group-list-item .report-group-caption {
@@ -362,12 +58,49 @@ button#join-group-button:hover {
     font-size: 10px;
 }
 
+#group-avatar img {
+    width: 1050px;
+    height: 120px;
+}
+
+.browse {
+    cursor: pointer;
+}
+
+.disabled {
+    display: none;
+}
+
+#scrollable-topic-groups,
+#scrollable-location-groups {
+    background-color: #f3f3f3;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    height: 310px;
+    min-width: 550px;
+}
+
+#group-widget-content {
+    min-height: 560px;
+    overflow: hidden;
+}
+
+#group-content {
+    height: 550px;
+}
+
+#group-images .scrollable {
+    height: 540px;
+    width: 600px;
+}
+
 .group-event-actions {
     font-size: 10px;
 }
 
 .group-event-item {
-    background-color: #252525;
+    background-color: #e0f0ff;
     padding: 10px;
     border-radius: 5px;
     margin: 7px 0;
@@ -398,101 +131,41 @@ button#join-group-button:hover {
     padding-top: 10px;
 }
 
-#new-groups-widget,
-#popular-groups-widget {
-    margin-top: 15px;
-    background-color: #191919;
-    height: 230px;
-}
-
-#groups-index-title {
-    margin: 0;
-    color: #fff;
-    font-weight: bold;
-}
-
-#groups-main-banner {
-    width: 100%;
-    height: 120px;
-    background:url('/bundles/spoutlet/images/groups/groups_main_banner.jpg') top left no-repeat;
-    border: none;
-}
-
-.default-group-thumbnail {
-    width: 135px;
-    height: 80px;
-    background:url('/bundles/spoutlet/images/alienwarelogothumb-140x85.png') top left no-repeat;
-    border: 1px solid #4A4A4A;
-}
-
-#group-events-pending th {
-    width:15%;
-    color:#FFF;
-}
-
-#group-widget-content,
-#group-content {
-    background: #191919;
-}
-
-#group-widget-content {
-    min-height: 560px;
-    width: 625px;
-    overflow: hidden;
-}
-
-#group-content {
-    height: 550px;
-}
-
-#group-images .scrollable {
-    height: 550px;
-    width: 600px;
-    background: #191919;
-}
-
 #group-content #theater_screen {
-     margin: 10px 0 0 12px;
-     width:600px;
-     height:350px;
+     width:100%;
+     height:100%;
 }
 
-#group-video-scroll-pagination {
-    float: right;
-    margin-bottom: 10px;
+#group-content #theater-screen-wrapper {
+    width:600px;
+    height:350px;
+    margin: 10px auto;
 }
 
-.group-video-item {
+.group-image-item {
     display: inline-table;
-    width: 185px;
-    height: 104px;
+    width: 135px;
+    height: 100px;
     margin: 5px;
 }
 
-.group-video-video img {
-    width: 185px;
-    height: 104px;
-    border: 1px solid #aaa;
+#map_canvas {
+    width: 290px;
+    height: 250px;
+    margin: 10px auto;
 }
 
-#group-contact-page .form-horizontal .control-label {
-    width: 80px;
+button#join-group-button,
+.join-group-options a {
+    background: url('/bundles/spoutlet/images/groups/join_group.png') no-repeat 0 0;
+    width: 230px;
+    height: 62px;
+    margin: 0px auto;
+    border: none;
+    cursor: pointer;
+    filter: none;
 }
 
-#group-contact-page .form-horizontal .controls {
-    margin-left: 100px;
-}
-
-#group-details {
-    background: none;
-}
-
-#group-details .widget-header {
-    background-color: #131313;
-    min-height: 36px;
-    height: auto;
-    width: 293px;
-    margin: 0 auto;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
+.join-group-options {
+    text-align: center;
 }

@@ -345,7 +345,7 @@ table.uploadedFiles td {
 }
 
 #accountHeader li.more > a {
-    background: url('/bundles/spoutlet/images/nav-arrow-1.png') right center no-repeat;
+    background: url('/bundles/spoutlet/img/nav-arrow-1.png') right center no-repeat;
     padding-right: 15px;
     margin-right: 5px;
     cursor: pointer;

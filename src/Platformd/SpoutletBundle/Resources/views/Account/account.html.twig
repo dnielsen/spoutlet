@@ -1,45 +1,22 @@
 {% extends 'UserBundle::accountLayout.html.twig' %}
 
-{% block title %}{{ "platformd.account_page.account.welcome_to_control" | pd_trans }}{% endblock %}
+{% block title %}{{ "platformd.account_page.account.welcome_to_control" | trans }}{% endblock %}
 
-
-{% block content %}
-<div class="std_2col control_panel">
-    <div class="right">
-        {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
+{% block profile_content %}
+<div class="std_1col">
+    <div class="pad">
+        <h2 id="welcomeControlPanel">{{ "platformd.account_page.account.welcome_to_control" |
+            trans({ "%username%" : app.user.username }) }} </h2>
+        <p>
+            Welcome to Campsite. This is your account page, where you can view and manage all of your groups and events.
+        </p>
     </div>
-    <div class="left">
-        <div class="pad">
-            <h2 id="welcomeControlPanel">{{ "platformd.account_page.account.welcome_to_control" | pd_trans({
-                "%username%" : app.user.username
-            }) }}</h2>
-
-            <p>
-                {{ 'platformd.account_page.account.hello_user' | pd_trans({
-                    '%firstname%': (app.user.firstName|default(app.user.username)),
-                    '%username%': app.user.username
-                }) }}
-                <a href="{{ path('_fos_user_security_logout') }}">{{ 'platformd.layout.top_menu.sign_out' | pd_trans }}</a>
-            </p>
-
-            {# little temporary message for japan only #}
-            {% if showSweepstakesMessage %}
-            <p style="color: #ff0000;">
-                「ALIENWARE M14x ホワイト・リミテッド・エディション」プレゼントキャンペーンに応募するためには <a href="http://japan.alienwarearena.com/sweepstakes/alienware-m14x-sweepstakes">こちら</a>
-                にお進みください。
-            </p>
-            {% endif %}
-
-            <p>{{ "platformd.account_page.account.ready_to_game" | pd_trans }}</p>
-
-            <p>{{ "platformd.account_page.account.warning" | pd_trans }}</p>
-
-            <p>{{ "platformd.account_page.account.under_construction" | pd_trans }}</p>
-        </div>
-    </div>
-
-    <div class="clr"></div>
 </div>
 
 <div class="clear"></div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% include 'SpoutletBundle:Account:_css_assets.html.twig' %}
 {% endblock %}

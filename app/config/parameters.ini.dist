@@ -61,7 +61,7 @@
 
     ; Here we must have at least default
     liip_enabled_themes[] = default
-    liip_enabled_themes[] = ideacontest
+    ; liip_enabled_themes[] = ideacontest
 
     secure_url_scheme     = http
 

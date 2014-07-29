@@ -1,35 +1,24 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block title %}{{ 'platformd.news.listings.page_title' | pd_trans }}{% endblock %}
+{% block title %}{{ 'news_and_announcements' | trans }}{% endblock %}
 
 {% block content %}
 
-<div id="row-2" class="std_2col">
-    <div class="right">
-        <div class="std-item">
-            {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
-        </div>
-    </div>
-    <div class="left">
-        <h1 class="content-title">{{ 'platformd.news.listings.page_title' | pd_trans }}</h1>
-        <div>
-            {% for newsItem in news %}
-                {% include 'NewsBundle:Default:_news.html.twig' with {
-                        'item' : newsItem
-                }%}
-            {% endfor %}
-        </div>
-    </div>
-</div>
-{% endblock %}
+<div id="news" class="std_1col">
 
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript">
-        $(function () {
-            $('.reg-source').click(function() {
-                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
-            });
-        });
-    </script>
+    {% for newsItem in news %}
+        {% include 'NewsBundle:Default:_news.html.twig' with {
+            'item' : newsItem
+        }%}
+    {% endfor %}
+
+</div>
+
+<script type="text/javascript">
+    $(function() {
+
+
+    });
+</script>
+
 {% endblock %}

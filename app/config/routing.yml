@@ -43,9 +43,9 @@ GameBundle:
     resource: "@GameBundle/Resources/config/routing.yml"
     prefix:   /
 
-liip_theme:
-    resource: "@LiipThemeBundle/Resources/config/routing.xml"
-    prefix: /theme
+# liip_theme:
+#     resource: "@LiipThemeBundle/Resources/config/routing.xml"
+#     prefix: /theme
 
 VideoBundle:
     resource: "@VideoBundle/Resources/config/routing.yml"

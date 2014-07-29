@@ -1,52 +1,18 @@
 {% extends 'SpoutletBundle::layout.html.twig' %}
 
-{% block title %}{{ news.title | pd_trans }}{% endblock %}
+{% block title %}{{ news.title | trans }}{% endblock %}
 
 {% block content %}
-{# this whole thing was copied from the homepage template.... #}
-<div id="row-2" class="std_2col">
-    <div class="right">
-        <div class="std-item">
-            {% include 'SpoutletBundle:Default:_dealsAd.html.twig' %}
-        </div>
 
-        <div class="std-item">
-            {% render url('hot_stories') %}
-        </div>
-    </div>
-    <div class="left">
-        <div class="newsPost">
-            <h1 class="controlled-spacing">{{ news.title }}</h1>
+<div id="news-show" class="std_1col">
 
-            <h6>
-                {{ (news.type == 'article' ? 'platformd.news.published_date' : 'platformd.news.announced_date') | pd_trans({
-                    '%posted_date%': (news.postedAt|date_translate)
-                })}}
-            </h6>
-            {% if news.image %}
-                <div class="article-image-large">
-                    <img src="{{ news.image.filename | imagine_filter('article_full')  }}" alt="{{ news.title }}" />
-                </div>
-            {% endif %}
-            <div style="margin: 10px 0;">
-                {{ news.body | raw }}
-            </div>
+    {% include 'NewsBundle:Default:_news.html.twig' with {
+            'item' : news
+    }%}
 
-            {% if features.hasComments %}
-                {% include 'SpoutletBundle:Comments:_commentsLoader.html.twig' with({ 'threadId': news.threadId }) %}
-            {% endif %}
-        </div>
-    </div>
+    {% if features.hasComments %}
+        {% render 'SpoutletBundle:Comments:thread' with { 'threadId' : news.commentThreadId, 'object' : news } %}
+    {% endif %}
+
 </div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript">
-        $(function () {
-            $('.reg-source').click(function() {
-                addSourceInfo(this, '{{ regSourceData | base64_encode }}');
-            });
-        });
-    </script>
 {% endblock %}

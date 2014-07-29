@@ -1,202 +1,81 @@
 {% form_theme form theme %}
-{% form_theme form.recaptcha 'EWZRecaptchaBundle:Form:ewz_recaptcha_widget.html.twig' %}
 
-{% set username_error = '' %}
 {% set email_error = '' %}
 {% set password_error = '' %}
-{% set firstname_error = '' %}
-{% set lastname_error = '' %}
-{% set state_error = '' %}
-{% set has_system_error = '' %}
-{% set news_source_error = '' %}
-{% set accept_error = '' %}
-{% set birthdate_error = '' %}
-{% set invalid_captcha = '' %}
 
 {% for error in errors %}
-    {% if error.messageTemplate == 'fos_user.username.blank' or error.messageTemplate == 'fos_user.username.already_used' or error.messageTemplate == 'fos_user.username.short' %}
-        {% set username_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
-    {% endif %}
     {% if error.messageTemplate == 'fos_user.email.blank' or error.messageTemplate == 'fos_user.email.already_used' or error.messageTemplate == 'fos_user.email.invalid' %}
-        {% set email_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
+        {% set email_error = error.messageTemplate|pd_trans(error.messageParameters, 'validators') %}
     {% endif %}
     {% if error.messageTemplate == 'fos_user.password.blank' or error.messageTemplate == 'passwords_do_not_match' or error.messageTemplate == 'password_too_short' %}
         {% set password_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
     {% endif %}
-    {% if error.messageTemplate == 'first_name_not_blank' %}
-        {% set firstname_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
-    {% endif %}
-    {% if error.messageTemplate == 'last_name_not_blank' %}
-        {% set lastname_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
-    {% endif %}
-    {% if error.messageTemplate == 'state_not_blank' %}
-        {% set state_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
-    {% endif %}
-    {% if error.messageTemplate == 'has_system_not_blank' %}
-        {% set has_system_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
-    {% endif %}
-    {% if error.messageTemplate == 'news_source_not_blank' %}
-        {% set news_source_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
-    {% endif %}
-    {% if error.messageTemplate == 'You must accept the terms and conditions and the privacy policy' %}
-        {% set accept_error = error.messageTemplate|trans(error.messageParameters, 'validators') %}
-    {% endif %}
-    {% if error.messageTemplate == 'birthdate_not_blank' or error.messageTemplate == 'age_requirement_not_met' %}
-        {% set birthdate_error = error.messageTemplate|trans(error.messageParameters, 'validators') | format(config.minAgeRequirement)  %}
-    {% endif %}
-    {% if error.messageTemplate == 'This value is not a valid captcha' %}
-        {% set invalid_captcha = error.messageTemplate|trans(error.messageParameters, 'validators') %}
-    {% endif %}
 {% endfor %}
 
-<div class="std_2col">
-    <div class="left">
-        <div id="registrationArea">
-            <h2>{{ 'platformd.user.register_title' | pd_trans }}</h2>
-            <div class="registration-requirements">
-                <p>
-                    {{ 'platformd.user.register.requirements' | pd_trans }}&nbsp;{{ 'platformd.user.register.already' | pd_trans({'<': '<a href="'~path('fos_user_security_login')~'">', '>': '</a>'})|raw }}
-                </p>
-            </div>
-            {% if errors | length %}
-            <div class="formErrors">
-                <div class="error">
-                    <div class="title">{{ 'platformd.user.register.oops' | pd_trans }}</div>
-                    <div class="message text">{{ 'platformd.user.register.cannot_process' | pd_trans | format(path('contact')) | raw }}</div>
-                </div>
-            </div>
-            {% endif %}
-            <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register form form-horizontal">
+{% block javascripts %}
+    <script>
+        function showLogin() {
+            $('#register_content').hide();
+            $('#login_content').show();
+            $('#username').val($('#fos_user_registration_form_email').val());
+            $('#password').val($('#fos_user_registration_form_plainPassword_first').val());
+            window.history.pushState(null, null, '/login');
+        }
+        function showRegister() {
+            $('#register_content').show();
+            $('#login_content').hide();
+            $('#fos_user_registration_form_email').val($('#username').val());
+            $('#fos_user_registration_form_plainPassword_first').val($('#password').val());
+            window.history.pushState(null, null, '/register');
+        }
+    </script>
+{% endblock %}
 
-                <table border="0" width="100%" cellpadding="6" spacing="2" class="form-table" align="center">
-                    <tbody>
-                        <tr id="row_alias">
-                            <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.username) }}</td>
-                            <td class="form-element-cell" valign="top">
-                                {{ form_widget(form.username, {'attr' : {'class' : 'registration-text'}}) }}
-                                <span class="field-error">{{ username_error }}</span>
-                            </td>
-                        </tr>
-
-                        <tr id="row_email">
-                            <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.email) }}</td>
-                            <td class="form-element-cell" valign="top">
-                                {{ form_widget(form.email, {'attr' : {'class' : 'registration-text'}}) }}
-                                <span class="field-error">{{ email_error }}</span>
-                            </td>
-                        </tr>
-                        <tr id="row_password">
-                            <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.plainPassword) }}</td>
-                            <td class="form-element-cell" valign="top">
-                                {{ form_widget(form.plainPassword, {'attr' : {'class' : 'registration-text'}}) }}
-                                <span class="field-error">{{ password_error }}</span>
-                            </td>
-                        </tr>
-                        <tr id="row_name_first">
-                            <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.firstname) }}</td>
-                            <td class="form-element-cell" valign="top">
-                                {{ form_widget(form.firstname, {'attr' : {'class' : 'registration-text'}}) }}
-                                <span class="field-error">{{ firstname_error }}</span>
-                            </td>
-                        </tr>
-                        <tr id="row_name_last">
-                            <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.lastname) }}</td>
-                            <td class="form-element-cell" valign="top">
-                                {{ form_widget(form.lastname, {'attr' : {'class' : 'registration-text'}}) }}
-                                <span class="field-error">{{ lastname_error }}</span>
-                            </td>
-                        </tr>
-                        <tr id="row_birthdate">
-                            <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.birthdate) }}</td>
-                            <td class="form-element-cell" valign="top">
-                                {% include 'UserBundle:Registration:_register_dob.html.twig' with { 'form': form, 'birthdate_error': birthdate_error, 'locale': locale} %}
-                            </td>
-                        </tr>
-                        <tr id="row_address_country">
-                            <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.country) }}</td>
-                            <td class="form-element-cell" valign="top">
-                                {{ form_widget(form.country) }}
-                                {{ form_errors(form.country) }}
-                            </td>
-                        </tr>
-                        <tr id="row_address_state">
-                            <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.state) }}</td>
-                            <td class="form-element-cell" valign="top">
-                                {{ form_widget(form.state, {'attr' : {'class' : 'registration-text'}}) }}
-                                <span class="field-error">{{ state_error }}</span>
-                            </td>
-                        </tr>
-                        <tr id="row_recaptcha">
-                            <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.recaptcha) }}</td>
-                            <td class="form-element-cell" valign="top">
-                                {{ form_widget(form.recaptcha, {'attr' : {'class' : 'registration-text'}}) }}
-                                <span class="field-error-np">{{ invalid_captcha }}</span>
-                            </td>
-                        </tr>
-                        <tr id="row_survey_ownership">
-                            <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.hasAlienwareSystem) }}</td>
-                            <td class="form-element-cell" valign="top">
-                                {{ form_widget(form.hasAlienwareSystem) }}
-                                <span class="field-error">{{ has_system_error }}</span>
-                            </td>
-                        </tr>
-                        <tr id="row_survey_discover">
-                            <td class="form-title-cell" width="33%" align="right" valign="top">{{ form_label(form.latestNewsSource) }}</td>
-                            <td class="form-element-cell" valign="top">
-                                {{ form_widget(form.latestNewsSource) }}
-                                <br />
-                                <span class="field-error-np">{{ news_source_error }}</span>
-                            </td>
-                        </tr>
-                        <tr id="row_agreed_tos_privacy">
-                            <td class="form-title-cell" width="33%" align="right" valign="top"><span class="required">*</span></td>
-                            <td class="form-element-cell" valign="top">
-                                {{ form_widget(form.termsAccepted) }}
-
-                                {{ 'fos_user_registration_form_termsAccepted' | pd_trans(
-                                    {
-                                        '%terms_url%': path('terms_conditions'),
-                                        '%privacy_url%': path('privacy')
-                                    },
-                                    'forms'
-                                ) | raw }}
-                                <br />
-                                <span class="field-error-np">{{ accept_error }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="form-title-cell" width="33%" align="right" valign="top"></td>
-                            <td class="form-element-cell" valign="top">
-                                {{ form_widget(form.subscribedGamingNews) }}
-                                {{ 'fos_user_registration_form_subscribedGamingNews' | pd_trans({}, 'forms') | raw }}
-                            </td>
-                        </tr>
-                        {% if form.subscribedAlienwareEvents is defined %}
-                        <tr>
-                            <td class="form-title-cell" width="33%" align="right" valign="top"></td>
-                            <td class="form-element-cell" valign="top">
-                                {{ form_widget(form.subscribedAlienwareEvents) }}
-                                {{ 'fos_user_registration_form_subscribedAlienwareEvent' | pd_trans([], 'FOSUserBundle') | raw }}
-                            </td>
-                        </tr>
-                        {% endif %}
-                        <tr>
-                            <td colspan="2">
-                                {{ form_rest(form) }}
-                            </td>
-                        </tr>
-                        <tr id="row_">
-                            <td class="form-title-cell"></td>
-                            <td class="form-title-cell" align="left">
-                                <input type="submit" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" class="button btn btn-primary btn-registration" formnovalidate />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </form>
+<div id="register_content">
+    <h1 class="spcr-b2">Create Your Campsite Account</h1>
+    <p>Already have an account? <a href="javascript:void(0);" class="blue" id="sign_in" onclick="showLogin();">Sign In</a></p>
+    <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register form form-horizontal">
+        {{ form_row(form.name) }}
+        {{ form_label(form.email) }}
+        {% if email_error|length > 0 %}<div class="form_error">{{ email_error }}</div>{% endif %}
+        {{ form_widget(form.email) }}
+        {% if password_error|length > 0 %}<div class="form_error">{{ password_error }}</div>{% endif %}
+        {{ form_row(form.plainPassword.first) }}
+        {{ form_row(form.plainPassword.second) }}
+        <div>
+            <div style="display:none;">{{ form_rest(form) }}</div>
+            <input type="submit" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}" formnovalidate />
         </div>
-    </div>
-    <div class="right">
-    </div>
+    </form>
 </div>
 
+
+<div id="login_content" style="display:none;">
+    <div id="login_form">
+        <h1>Please sign in:</h1>
+        
+        <form action="{{ login_check_path() }}" method="post">
+            <label for="username">Email Address:</label>
+            <input type="text" id="username" name="_username" value="" class="auth" tabindex="1"/>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="_password" class="auth" tabindex="2"/>
+
+            <label for="remember_me">Remember me</label>
+            <input type="checkbox" id="remember_me" name="_remember_me" value="on" tabindex="3"/>
+            <br/><br/>
+
+            <input type="submit" id="_submit" name="_submit" value="Login" class='btnMdm left'/>
+            <input type="button" class="btnMdm left marginlft" id="join_now" value="Join Now" onclick="showRegister();"/>
+        </form>
+    </div>
+    <br/><br/>
+
+    <div>
+        <div style="width: 60%">
+            <a href="/app_dev.php/account/reset-password/request">Forgot Password?</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="/app_dev.php/contact">Need Help?</a>
+            <p>Your password is case sensitive. Please make sure CAPS-LOCK is off. If you've forgotten your password you can have it reset. If you can't remember which email address you used <a href="/app_dev.php/contact">please contact support</a>.</p>
+        </div>
+    </div>
+</div>

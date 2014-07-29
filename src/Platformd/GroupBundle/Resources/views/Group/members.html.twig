@@ -1,122 +1,18 @@
-{% extends 'SpoutletBundle::layout.html.twig' %}
-
-{% block title 'Groups - ' ~ group.name %}
+{% extends 'IdeaBundle::group_layout.html.twig' %}
 
 {% block content %}
 
-    <div class="std_1col" style="padding: 0;">
-        <div id="group-avatar">
-            {% if group.groupAvatar %}
-                <img src="{{ media_path(group.groupAvatar) }}" />
-            {% else %}
-                <div id="groups-main-banner"></div>
-            {% endif %}
-        </div>
-    </div>
-    <div class="std_1col" style="padding: 0;">
-        {% include 'GroupBundle:Group:_subNav.html.twig' %}
-    </div>
-    <div class="widget-100">
-        <div class="widget-header">
-            <div class="widget-title">Members</div>
-        </div>
-        <div class="widget-content">
-            <table style="width: 100%;" class="tablesorter">
-                <tbody>
-                <tr>
-                    {% if canRemove %}
-                        <th style="width:15%;">Action</th>
-                    {% endif %}
-                    <th style="width:15%;">Username</th>
-                    <th style="width:15%;">Joined</th>
-                </tr>
-                <tr class="eventListGroup_lan">
-                    {% if canRemove %}
-                    <td>
-                        &nbsp;
-                    </td>
-                    {% endif %}
-                    <td>
-                        <a href="{{ account_link(group.owner.username) }}">{{ group.owner.username }}</a> (Group Owner)
-                    </td>
-                    <td>
-                        {{ group.createdAt|date('M j, Y') }}
-                    </td>
-                </tr>
-                {% for member in members %}
-                    {% if member['username'] is not null %}
-                    <tr class="eventListGroup_lan">
-                        {% if canRemove %}
-                        <td>
-                            <a href="javascript:void(0);" class="remove-member" data-path="{{ path('group_remove_member', { 'slug': group.slug, 'uid' : member['id'] }) }}">Remove from Group</a>
-                        </td>
-                        {% endif %}
-                        <td>
-                            <a href="{{ account_link(member['username']) }}">{{ member['username'] }}</a>
-                        </td>
-                        <td>
-                            {{ member['created_at']|date('M j, Y') }}
-                        </td>
-                    </tr>
-                    {% endif %}
-                {% else %}
-                    <tr>
-                        <td colspan="2">
-                            <em>There are no members!</em>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+    {% set memberList = group.membersSorted %}
 
-        <div class="widget-footer">
-            {% if pager.haveToPaginate %}
-                <div class="pagerfanta" id="pager" style="float:right;margin: 5px;">
-                    {{ pagerfanta(pager, 'spoutlet', {
-                        'previous_message': '',
-                        'next_message': '',
-                        'routeName': 'group_members',
-                        'routeParams': { 'slug': group.slug }
-                    }) }}
-                </div>
-                <div class="clear"></div>
-            {% else %}
-                &nbsp;
-            {% endif %}
-        </div>
-    </div>
-    <div id="remove-member-dialog" title="Remove Member" style="display:none;">
-        <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>Are you sure you want to remove this user?</p>
-    </div>
-{% endblock %}
-{% block stylesheets %}
-    {{ parent() }}
-    {% include 'GroupBundle:Group:_css_assets.html.twig' %}
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript">
-        $(function () {
-            $('.remove-member').click(function () {
-                var path = $(this).attr('data-path');
-                $('#remove-member-dialog').dialog({
-                    modal: true,
-                    resizable: false,
-                    movable: false,
-                    height: 150,
-                    buttons: {
-                        "Yes": function() {
-                            document.location = path;
-                        },
-                        "No": function() {
-                            $(this).dialog("close");
-                        }
-                    }
-                });
-            });
-        });
-    </script>
+    <h1>Members ({{ memberList|length }})</h1>
+    {% set i=0 %}
+    <table class="myStuffTable">
+        {% for member in memberList %}
+            <tr {% if i%2 %}class="fill"{% endif %}>
+                <td><a href="{{ path('profile', {'userId': member.id}) }}" class="blu">{{ member.name }}</a></td>
+            </tr>
+            {% set i=i+1 %}
+        {% endfor %}
+    </table>
 
 {% endblock %}

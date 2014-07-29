@@ -12,7 +12,7 @@
             {% for index, banner in banners %}
                 <li>
                     <a href="{{ media_path(banner, { "size" : "banner" }) }}">
-                        <img src="{{ media_path(banner) }}" class="image{{ index }}" data-id="{{ 'banner' ~ banner.id}}" data-url="{{ banner.url }}" data-new="{{ banner.newWindow }}" />
+                        <img src="{{ media_path(banner) }}" class="image{{ index }}" data-url="{{ banner.url }}" data-new="{{ banner.newWindow }}" />
                     </a>
                 </li>
             {% endfor %}
@@ -21,22 +21,15 @@
     </div>
 </div>
 
-<div id="progress-bar">
-    <div class="pbar"></div>
-</div>
-
 <script type="text/javascript">
 /**
  * Todo : move this in a global javascript file
  */
 jQuery(function($) {
 
-  // initializes the progress bar, which we'll use by calling anim_progressbar
-  setupProgressBar();
-
   var galleries = $('.ad-gallery').adGallery({
-    width: 635,
-    height: 183,
+    width: 620,
+    height: 341,
     loader_image: '{{ asset('plugins/jquery.ad-gallery/loader.gif') }}',
     display_next_and_prev: false,
     display_back_and_forward: false,
@@ -48,7 +41,7 @@ jQuery(function($) {
         speed: 7000,
         stop_on_scroll: false
     },
-    effect: 'fade',
+    effect: 'slide-hori',
 
     callbacks: {
       afterImageVisible: function() {
@@ -59,7 +52,7 @@ jQuery(function($) {
           newWindow = $("img[src='" + current + "']").data("new");
 
         /**
-         * Redirects user to a speedific URL
+         * Redirects user to a specific URL
          *
          * @param event
          */
@@ -79,13 +72,6 @@ jQuery(function($) {
         } else {
           $("div.ad-image img").css("cursor", "default").unbind("unclick", handleFullsizeClick);
         }
-      },
-
-      beforeImageVisible: function() {
-          // hook into a progress bar, since this gallery doesn't have the one we need
-          $('#progress-bar').anim_progressbar({
-              interval: 400
-          }, 7);
       }
     }
   });
