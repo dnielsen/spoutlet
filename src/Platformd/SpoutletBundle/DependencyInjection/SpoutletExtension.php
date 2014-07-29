@@ -27,6 +27,6 @@ class SpoutletExtension extends Extension
         $loader->load('listeners.yml');
         $loader->load('events.yml');
         $loader->load('banners.yml');
-        $loader->load('theme.yml');
+        //$loader->load('theme.yml');
     }
 }

@@ -214,7 +214,7 @@ parameters:
     ip_lookup_override: false
     ip2location_lookup_directory: %kernel.root_dir%/../external_data/ip2location/
     object_storage: %objectStorage%
-   
+
     queue_service: %queue.service%   
     rabbitmq_host: %rabbitmq.host%
     rabbitmq_port: %rabbitmq.port%
@@ -236,7 +236,7 @@ parameters:
         # we're abusing the locales to make our many "sites"
         # this will change in the future
         - en_campsite       # www.
-        - en_dev            # no prefix
+        # - en_dev            # no prefix
         - en_staging        # staging.
         - en_sjsu           # sjsu.
         - en_bigdatacamp    # bigdatacamp.
@@ -250,7 +250,7 @@ parameters:
     site_host_map:
         # %host_suffix% might be something like "staging"
         en_campsite:        www%host_suffix%.%base_host%
-        en_dev:             %base_host%
+        # en_dev:             %base_host%
         en_staging:         %host_suffix%.%base_host%
         en_sjsu:            sjsu%host_suffix%.%base_host%
         en_bigdatacamp:     bigdatacamp%host_suffix%.%base_host%
@@ -263,7 +263,7 @@ parameters:
     # this is repeated in the multitenancy manager - should not be
     platformd_sites:
         en_campsite:        Campsite
-        en_dev:             Dev
+        # en_dev:             Dev
         en_staging:         Staging
         en_sjsu:            SanJoseStateUniversity
         en_bigdatacamp:     BigDataCamp
@@ -276,15 +276,15 @@ parameters:
     # an array of "sites" where we host their main site
     # used by the SiteProtectionListener to prevent, for example, Latin America users
     # from accessing pages on our site, other than the few that we host of theirs
-    allowed_sites: [en, ja, zh]
+    allowed_sites: [en] #, ja, zh]
 
 
     # Used for the translation admin
     locale_translations:
         en: English
-        ja: Japanese
-        zh: Chinese
-        es: Spanish
+        # ja: Japanese
+        # zh: Chinese
+        # es: Spanish
 
     # important to setup the translation DB loader to load things for these domains
     available_translation_domains: [messages, forms, FOSUserBundle, messages, validators]
@@ -435,7 +435,7 @@ services:
 
     upload_picture_service:
         class: Platformd\SpoutletBundle\Consumer\UploadPictureConsumer
-         
+
 knp_gaufrette:
     adapters:
         platformd.avatar:
@@ -483,94 +483,94 @@ jms_translation:
             excluded_names: [*TestCase.php, *Test.php]
             excluded_dirs: [cache, data, logs, Features]
 
-liip_imagine:
-    data_loader:    s3
-    cache: amazon_s3
-    filter_sets:
-        # on a list of articles, for example
-        article_list:
-            quality: 100
-            filters:
-                # usually 200x113 - but we don't care much about the height
-                thumbnail: { size: [200, 150], mode: inset }
-        article_full:
-            quality: 100
-            filters:
-                # usually 634x400 - but we don't care much about the height
-                thumbnail: { size: [634, 500], mode: inset }
+# liip_imagine:
+#     data_loader:    s3
+#     cache: amazon_s3
+#     filter_sets:
+#         # on a list of articles, for example
+#         article_list:
+#             quality: 100
+#             filters:
+#                 # usually 200x113 - but we don't care much about the height
+#                 thumbnail: { size: [200, 150], mode: inset }
+#         article_full:
+#             quality: 100
+#             filters:
+#                 # usually 634x400 - but we don't care much about the height
+#                 thumbnail: { size: [634, 500], mode: inset }
 
-        game_list_logo:
-            quality: 100
-            filters:
-                thumbnail: { size: [195, 80], mode: inset }
+#         game_list_logo:
+#             quality: 100
+#             filters:
+#                 thumbnail: { size: [195, 80], mode: inset }
 
-        game_show_logo:
-            quality: 100
-            filters:
-                thumbnail: { size: [440, 166], mode: inset }
+#         game_show_logo:
+#             quality: 100
+#             filters:
+#                 thumbnail: { size: [440, 166], mode: inset }
 
-        image_thumb:
-            quality: 100
-            filters:
-                thumbnail: { size: [204, 114], mode: inset }
-                relative_resize: { widen: 204 }
-                crop: { start: [0, 0], size: [204, 114] }
+#         image_thumb:
+#             quality: 100
+#             filters:
+#                 thumbnail: { size: [204, 114], mode: inset }
+#                 relative_resize: { widen: 204 }
+#                 crop: { start: [0, 0], size: [204, 114] }
 
-        image_thumb_small:
-            quality: 100
-            filters:
-                thumbnail: { size: [135, 80], mode: inset }
+#         image_thumb_small:
+#             quality: 100
+#             filters:
+#                 thumbnail: { size: [135, 80], mode: inset }
 
-        lightbox_medium:
-            quality: 100
-            filters:
-                thumbnail: { size: [400, 400], mode: inset }
+#         lightbox_medium:
+#             quality: 100
+#             filters:
+#                 thumbnail: { size: [400, 400], mode: inset }
 
-        nivo_slider:
-            quality: 100
-            filters:
-                relative_resize: { widen: 636, heighten: 295 }
-                crop: { start: [0, 0], size: [636, 295] }
+#         nivo_slider:
+#             quality: 100
+#             filters:
+#                 relative_resize: { widen: 636, heighten: 295 }
+#                 crop: { start: [0, 0], size: [636, 295] }
 
-        media_photo_thumb:
-            quality: 100
-            filters:
-                relative_resize: { widen: 135, heighten: 80 }
-                crop: { start: [0, 0], size: [135, 80] }
+#         media_photo_thumb:
+#             quality: 100
+#             filters:
+#                 relative_resize: { widen: 135, heighten: 80 }
+#                 crop: { start: [0, 0], size: [135, 80] }
 
-        media_photo_thumb_square:
-            quality: 100
-            filters:
-                relative_resize: { widen: 150, heighten: 150 }
-                crop: { start: [0, 0], size: [92, 92] }
+#         media_photo_thumb_square:
+#             quality: 100
+#             filters:
+#                 relative_resize: { widen: 150, heighten: 150 }
+#                 crop: { start: [0, 0], size: [92, 92] }
 
-        gallery_image_square:
-            quality: 100
-            filters:
-                relative_resize: { widen: 400, heighten: 400 }
-                crop: { start: [0, 0], size: [300, 300] }
+#         gallery_image_square:
+#             quality: 100
+#             filters:
+#                 relative_resize: { widen: 400, heighten: 400 }
+#                 crop: { start: [0, 0], size: [300, 300] }
 
-        media_photo_show:
-            quality: 100
-            filters:
-                relative_resize: { widen: 636 }
+#         media_photo_show:
+#             quality: 100
+#             filters:
+#                 relative_resize: { widen: 636 }
 
-        media_contest_winner:
-            quality: 100
-            filters:
-                relative_resize: { widen: 300, heighten: 250 }
-                crop: { start: [0, 0], size: [300, 250] }
+#         media_contest_winner:
+#             quality: 100
+#             filters:
+#                 relative_resize: { widen: 300, heighten: 250 }
+#                 crop: { start: [0, 0], size: [300, 250] }
 
-        media_feed_thumbnail:
-            quality: 100
-            filters:
-                relative_resize: { heighten: 300 }
-                crop: { start: [0, 0], size: [250, 250] }
+#         media_feed_thumbnail:
+#             quality: 100
+#             filters:
+#                 relative_resize: { heighten: 300 }
+#                 crop: { start: [0, 0], size: [250, 250] }
 
-        featured_article_thumb:
-            quality: 100
-            filters:
-                crop: { start: [0, 0], size: [274, 92] }
+#         featured_article_thumb:
+#             quality: 100
+#             filters:
+#                 crop: { start: [0, 0], size: [274, 92] }
 
 knp_time: ~
 
@@ -582,13 +582,13 @@ exercise_html_purifier:
     editor_admin:
         HTML.Allowed: a[href], p, strong, hr, u, em, ul, ol, li, h1, h2, h3, h4, img[src|width|height], strike, sub, sup, blockquote, table[border|cellpadding|cellspacing], tbody, tr, td[width|colspan], thead, tfoot, th[width], pre, span, div, *[style], *[class], br
 
-liip_theme:
-    themes: %liip_enabled_themes%
-    active_theme: 'default'
-    path_patterns:
-        app_resource:
-            - %%app_path%%/themes/%%current_theme%%/%%template%%
-            - %%app_path%%/views/%%template%%
-        bundle_resource_dir:
-            - %%dir%%/themes/%%current_theme%%/%%bundle_name%%/views/%%template%%
-            - %%dir%%/%%bundle_name%%/%%override_path%%
+# liip_theme:
+#     themes: %liip_enabled_themes%
+#     active_theme: 'default'
+#     path_patterns:
+#         app_resource:
+#             - %%app_path%%/themes/%%current_theme%%/%%template%%
+#             - %%app_path%%/views/%%template%%
+#         bundle_resource_dir:
+#             - %%dir%%/themes/%%current_theme%%/%%bundle_name%%/views/%%template%%
+#             - %%dir%%/%%bundle_name%%/%%override_path%%
