@@ -1346,7 +1346,6 @@ class IdeaController extends Controller
                 $toUser = $um->createUser();
                 $toUser->setEmail($toEmail);
                 $toUser->setUsername($toEmail);
-                $toUser->setName($toEmail);
                 $toUser->setPlainPassword($password);
                 $toUser->generateConfirmationToken();
                 $toUser->setPasswordRequestedAt(new DateTime());
@@ -1363,13 +1362,11 @@ class IdeaController extends Controller
                 $params['userId'] = 'external';
             }
         }
-
-        if ($toUser) {
-            $toName = $toUser->getName();
-        } else {
+        
+        if (!$toName = $toUser->getName()) {
             $toName = $toEmail;
         }
-        
+
         if ($forceAdd && $this->isGranted('ROLE_ADMIN')) {
             if ($scope == 'group') {
                 $this->getGroupManager()->autoJoinGroup($container, $toUser);
@@ -1435,11 +1432,14 @@ class IdeaController extends Controller
         if ($userId !== 'external') {
             $toUser  = $this->getUserManager()->findUserBy(array('id' => $userId));
             $toEmail = $toUser->getEmail();
-            $toName  = $toUser->getName();
+            if (!$toName = $toUser->getName()) {
+                $toName = $toEmail;
+            }
         } else {
             $toEmail = $request->query->get('userEmail');
             $toName  = $toEmail;
         }
+
 
         $subject      = null;
         $bodyText     = null;
