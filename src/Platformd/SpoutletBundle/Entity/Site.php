@@ -83,10 +83,16 @@ class Site implements EntrySetScopeable
     private $region;
 
     /**
+     * @ORM\OneToOne(targetEntity="Platformd\GroupBundle\Entity\Group", inversedBy="communitySite")
+     */
+    private $communityGroup;
+
+    /**
      * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySetRegistry", cascade={"persist"})
      */
-    protected $entrySetRegistration;
+    private $entrySetRegistration;
 
+    public function __sleep() { return array('id', 'name', 'defaultLocale', 'fullDomain', 'theme'); }
 
     public function __construct() {
         $this->siteFeatures = new SiteFeatures();
@@ -221,6 +227,13 @@ class Site implements EntrySetScopeable
 
     public function getEntrySets() {
         return $this->entrySetRegistration->getEntrySets();
+    }
+
+    public function getCommunityGroup() {
+        return $this->communityGroup;
+    }
+    public function setCommunityGroup($communityGroup) {
+        $this->communityGroup = $communityGroup;
     }
 
     /**

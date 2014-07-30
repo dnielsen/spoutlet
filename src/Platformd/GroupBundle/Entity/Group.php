@@ -355,6 +355,11 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
      */
     protected $htmlPages;
 
+    /**
+     * @ORM\OneToOne(targetEntity="Platformd\SpoutletBundle\Entity\Site", mappedBy="communityGroup")
+     */
+    protected $communitySite;
+
 
     public function __construct()
     {
@@ -1282,5 +1287,11 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     }
     public function setExternalUrl($externalUrl) {
         $this->externalUrl = $externalUrl;
+    }
+    public function getCommunitySite() {
+        return $this->communitySite;
+    }
+    public function setCommunitySite($communitySite) {
+        $this->communitySite = $communitySite;
     }
 }

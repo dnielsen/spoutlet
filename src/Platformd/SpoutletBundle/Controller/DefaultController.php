@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Controller\Controller as Controller;
 use Symfony\Component\HttpFoundation\Cookie;
+use Platformd\GroupBundle\Entity\Group;
 
 class DefaultController extends Controller
 {
@@ -284,7 +285,36 @@ class DefaultController extends Controller
             throw $this->createNotFoundException();
         }
 
+        if ($community = $site->getCommunityGroup()) {
+            $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($community);
+            $pastEvents     = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($community);
+
+            $locationGroups = array();
+            $locationGroups = $this->collectLocations($community, $locationGroups);
+
+            return $this->render('GroupBundle:Group:show.html.twig', array(
+                'group'          => $community,
+                'upcomingEvents' => $upcomingEvents,
+                'pastEvents'     => $pastEvents,
+                'locationGroups' => $locationGroups,
+            ));
+        }
+
         return $this->render('SpoutletBundle:Default:index.html.twig');
+    }
+
+    private function collectLocations($group) {
+
+        $locationGroups = array();
+        foreach($group->getChildren() as $child) {
+            if ($child->getCategory() == Group::CAT_LOCATION) {
+                $data = $this->getGroupManager()->getGroupIndexData($child);
+                if ($data) {
+                    $locationGroups[] = $data;
+                }
+            }
+        }
+        return $locationGroups;
     }
 
     public function healthCheckAction() {
