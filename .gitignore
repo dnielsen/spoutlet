@@ -1,5 +1,8 @@
 /bin/AwaReset.log
 /.idea/*
+.buildpath
+.project
+.settings
 .DS_Store
 /web/bundles/
 /app/bootstrap*
