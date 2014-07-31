@@ -1259,17 +1259,17 @@ class IdeaController extends Controller
                 'userId' => $userId,
             )));
         }
+
         $this->enforceUserSecurity();
 
         $currentUser = $this->getCurrentUser();
+        $profileUser = $this->getDoctrine()->getRepository('UserBundle:User')->find($userId);
 
-        $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
-        $user     = $userRepo->findOneBy(array('id' => $userId));
-
-        if ($currentUser != $user){
+        if ($currentUser != $profileUser && !$this->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
-        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'profile', $user, array('validation_groups' => array('ideaProfile')))
+
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'profile', $profileUser, array('validation_groups' => array('ideaProfile')))
             ->add('name')
             ->add('title')
             ->add('organization')
@@ -1283,14 +1283,13 @@ class IdeaController extends Controller
             ->add('mailingAddress', null, array('attr' => array('size' => '60%')))
             ->getForm();
 
-        if($request->getMethod() == 'POST') {
+        if ($request->getMethod() == 'POST') {
 
             $form->bindRequest($request);
 
-            if($form->isValid()) {
+            if ($form->isValid()) {
 
-                $em = $this->getDoctrine()->getEntityManager();
-                $em->flush();
+                $this->getDoctrine()->getEntityManager()->flush();
 
                 return $this->redirect($this->generateUrl('profile', array(
                     'userId' => $userId,
@@ -1298,12 +1297,10 @@ class IdeaController extends Controller
             }
         }
 
-        $isAdmin = $this->isGranted('ROLE_ADMIN');
-
         return $this->render('IdeaBundle:Idea:profileForm.html.twig', array(
             'form'      => $form->createView(),
             'userId'    => $userId,
-            'isAdmin'   => $isAdmin,
+            'isAdmin'   => $this->isGranted('ROLE_ADMIN'),
         ));
 
     }
