@@ -103,6 +103,16 @@ class User extends BaseUser
     protected $expired;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $displayProfile = 1;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $displayPrivateInfoToOrganizers = 1;
+
+    /**
      * @ORM\Column(name="expires_at", type="datetime", nullable=true)
      */
     protected $expiresAt;
@@ -1760,5 +1770,17 @@ class User extends BaseUser
     }
     public function setTshirtSize($value) {
         $this->tshirtSize = $value;
+    }
+    public function getDisplayProfile() {
+        return $this->displayProfile;
+    }
+    public function setDisplayProfile($value) {
+        $this->displayProfile = $value;
+    }
+    public function getDisplayPrivateInfoToOrganizers() {
+        return $this->displayPrivateInfoToOrganizers;
+    }
+    public function setDisplayPrivateInfoToOrganizers($value) {
+        $this->displayPrivateInfoToOrganizers = $value;
     }
 }

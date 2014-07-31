@@ -109,6 +109,8 @@ profile_website: Website URL
 profile_professionalEmail: Professional Email
 profile_mailingAddress: Mailing Address
 profile_tshirtSize: T-Shirt Size
+profile_displayProfile: 'Display my account profile on Campsite.org'
+profile_displayPrivateInfoToOrganizers: 'Allow my private information to be seen by my group & event organizers'
 
 knp_media_fileObject: Image to Upload
 image_file: Image to Upload

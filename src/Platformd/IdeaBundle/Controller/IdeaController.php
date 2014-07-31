@@ -1281,6 +1281,8 @@ class IdeaController extends Controller
             ->add('website', null, array('attr' => array('size' => '60%')))
             ->add('tshirtSize', null, array('attr' => array('size' => '60%')))
             ->add('mailingAddress', null, array('attr' => array('size' => '60%')))
+            ->add('displayProfile',                 'checkbox', array('required' => false))
+            ->add('displayPrivateInfoToOrganizers', 'checkbox', array('required' => false))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
