@@ -1771,4 +1771,16 @@ class User extends BaseUser
     public function setTshirtSize($value) {
         $this->tshirtSize = $value;
     }
+    public function getDisplayProfile() {
+        return $this->displayProfile;
+    }
+    public function setDisplayProfile($value) {
+        $this->displayProfile = $value;
+    }
+    public function getDisplayPrivateInfoToOrganizers() {
+        return $this->displayPrivateInfoToOrganizers;
+    }
+    public function setDisplayPrivateInfoToOrganizers($value) {
+        $this->displayPrivateInfoToOrganizers = $value;
+    }
 }
