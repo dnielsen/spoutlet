@@ -1562,4 +1562,26 @@ class AdminController extends Controller
         $this->setFlash('success', $output);
         return $this->redirect($this->generateUrl('default_index'));
     }
+
+    public function associateGroupToSiteAction(Request $request, $groupSlug) {
+        $domain = $request->query->get('domain') ?: 'www';
+
+        $group = $this->getGroup($groupSlug);
+        if( !$group) {
+            echo $groupSlug . " could not be found.";
+            exit;
+        }
+
+        $siteEm = $this->getDoctrine()->getRepository('SpoutletBundle:Site');
+        $site = $siteEm->findOneByFullDomain($domain);
+        if(! $site) {
+            echo $domain . " could not be found.";
+            exit;
+        }
+
+        $this->getIdeaService()->associateGroupToSite($group, $site);
+        $em = $this->getDoctrine()->getEntityManager()->flush();
+
+        return new Response(); //$this->redirect($this->generateUrl('default_index'));
+    }
 }

@@ -146,4 +146,19 @@ class IdeaService
 
         return $json_resp;
     }
+
+    public function associateGroupToSite($group, $site) {
+        $grpSites = $group->getSites();
+        if( !$grpSites->contains($site) ) {
+            $grpSites->add($site);
+            echo "{$site->getFullDomain()} added to {$group->getName()}<br/>";
+        } else {
+            echo "{$site->getFullDomain()} is already added to {$group->getName()}<br/>";
+        }
+
+        $childGroups = $group->getChildren();
+        foreach ($childGroups as $child) {
+            $this->associateGroupToSite($child, $site);
+        }
+    }
 }
