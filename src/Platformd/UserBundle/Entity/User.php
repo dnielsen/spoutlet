@@ -103,6 +103,16 @@ class User extends BaseUser
     protected $expired;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $displayProfile = 1;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $displayPrivateInfoToOrganizers = 1;
+
+    /**
      * @ORM\Column(name="expires_at", type="datetime", nullable=true)
      */
     protected $expiresAt;
