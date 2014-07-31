@@ -66,6 +66,8 @@
 
 <div class="col_three_fifths">
 
+    <h2 class="ctr">{{ event.name }}</h2>
+
     {% set numImages = event.rotatorImages|length %}
 
     {% if numImages > 0 %}
@@ -208,25 +210,27 @@
     </div>
     <div class="clear"></div>
 
-    <div class="event-details ctr spcr-b">
-        <h2>{{ event.name }}</h2>
-        <hr class="small-margin"/>
-        {% if event.startsAt|default %}
-            <h2>When:</h2>
-            {{ event.DateAndTime|raw }}
-            {% if event.location|default %}
-                <hr class="small-margin"/>
+    {% if event.startsAt|default or event.location|default or event.fullAddress|default %}
+        <div class="event-details ctr spcr-b">
+ 
+            {% if event.startsAt|default %}
+                 <h2>When:</h2>
+                 {{ event.DateAndTime|raw }}
+                 {% if event.location|default %}
+                     <hr class="small-margin"/>
+                 {% endif %}
             {% endif %}
-        {% endif %}
 
-        {% if event.location|default or event.fullAddress|default %}
-            <h2>Where:</h2>
-            {% if event.location|default %} {{ event.location }}<br/> {% endif %}
-            {% if event.fullAddress|default %}
-                <a href="http://maps.google.com/?q={{ event.fullAddress }}" target="_blank" class="blu">{{ event.htmlFormattedAddress|raw}}</a>
+            {% if event.location|default or event.fullAddress|default %}
+                <h2>Where:</h2>
+                {% if event.location|default %} {{ event.location }}<br/> {% endif %}
+                {% if event.fullAddress|default %}
+                    <a href="http://maps.google.com/?q={{ event.fullAddress }}" target="_blank" class="blu">{{ event.htmlFormattedAddress|raw}}</a>
+                {% endif %}
             {% endif %}
-        {% endif %}
-    </div>
+
+        </div>
+    {% endif %}
 
     <a href="{{ path('recommend_sponsor_list', {'rec_type': 'group', 'rec_id': event.id}) }}" class="btnLg2">Recommend a Sponsor ></a>
     <div class="spcr-t"></div>
