@@ -235,6 +235,10 @@ create_depts_for_sponsors:
     pattern:    /admin/createDeptsForSponsors
     defaults:   { _controller: IdeaBundle:Admin:createDepartmentsForAllExistingSponsors }
 
+associate_group_to_site:
+    pattern:    /admin/associate_group_to_site/{groupSlug}
+    defaults:   { _controller: IdeaBundle:Admin:associateGroupToSite }
+
 # Entry Routes
 
 idea_create:
