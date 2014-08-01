@@ -18,6 +18,7 @@ use Platformd\IdeaBundle\Form\Type\RegistrationFieldFormType;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SpoutletBundle\Controller\Controller;
+use Platformd\SpoutletBundle\Entity\Site;
 use Platformd\UserBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -1564,7 +1565,9 @@ class AdminController extends Controller
     }
 
     public function associateGroupToSiteAction(Request $request, $groupSlug) {
-        $domain = $request->query->get('domain') ?: 'www';
+
+        $force = $request->query->get('force') ?: false;
+        $domain = $request->query->get('domain') ?: 'example.campsite.org';
 
         $group = $this->getGroup($groupSlug);
         if( !$group) {
@@ -1572,15 +1575,51 @@ class AdminController extends Controller
             exit;
         }
 
-        $siteEm = $this->getDoctrine()->getRepository('SpoutletBundle:Site');
+        $doc = $this->getDoctrine();
+        $siteEm = $doc->getRepository('SpoutletBundle:Site');
         $site = $siteEm->findOneByFullDomain($domain);
         if(! $site) {
-            echo $domain . " could not be found.";
-            exit;
+            if($force) {
+                echo 'Creating new domain: ' . $domain . "<br/>";
+
+                $subdomain = explode('.',$domain)[0];
+
+                $site = new Site();
+
+                $site->setName( ucfirst($subdomain) . 'Camp' );
+                $site->setFullDomain($domain);
+                $site->setDefaultLocale("en_campsite");
+                $site->setTheme("ideacontest");
+
+                $siteConfig = $site->getSiteConfig();
+                $siteConfig->setSupportEmailAddress("support@campsite.org");
+                $siteConfig->setAutomatedEmailAddress("noreply@campsite.org");
+                $siteConfig->setEmailFromName("Campsite.org");
+
+                $siteFeatures = $site->getSiteFeatures();
+                $siteFeatures->setHasGroups(true);
+                $siteFeatures->setHasComments(true);
+                $siteFeatures->setHasEvents(true);
+                $siteFeatures->setHasHtmlWidgets(true);
+                $siteFeatures->setHasIndex(true);
+                $siteFeatures->setHasAbout(true);
+                $siteFeatures->setHasContact(true);
+
+                $doc->getEntityManager()->persist($site);
+                $doc->getEntityManager()->flush();
+            } else {
+                echo $domain . " could not be found.";
+                exit;
+            }
         }
 
         $this->getIdeaService()->associateGroupToSite($group, $site);
-        $em = $this->getDoctrine()->getEntityManager()->flush();
+        $doc->getEntityManager()->flush();
+
+        if($force) {
+            $site->createEntrySetRegistration();
+            $doc->getEntityManager()->flush();
+        }
 
         return new Response(); //$this->redirect($this->generateUrl('default_index'));
     }
