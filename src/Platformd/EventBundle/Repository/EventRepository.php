@@ -139,6 +139,17 @@ class EventRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function getAllEventObjectsUserIsAttending(User $user)
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('e')
+            ->leftJoin('e.attendees', 'a')
+            ->andWhere('a = :user')
+            ->setParameter('user', $user);
+
+        return $qb->getQuery()->getResult();
+    }
+
     /**
      * Persists EventEmail in the DB
      *

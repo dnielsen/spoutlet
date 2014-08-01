@@ -407,6 +407,10 @@ class EventService
     {
         return $user instanceof User ? $this->repository->isUserAttending($event, $user) : false;
     }
+    public function getAllEventObjectsUserIsAttending(User $user)
+    {
+        return $this->repository->getAllEventObjectsUserIsAttending($user);
+    }
 
     public function getUserRsvpStatus(Event $event, User $user)
     {
