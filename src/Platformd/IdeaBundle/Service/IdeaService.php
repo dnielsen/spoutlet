@@ -148,6 +148,11 @@ class IdeaService
     }
 
     public function associateGroupToSite($group, $site) {
+        $site->setCommunityGroup($group);
+        $this->associateGroupToSite_helper($group, $site);
+    }
+
+    public function associateGroupToSite_helper($group, $site) {
         $grpSites = $group->getSites();
         if( !$grpSites->contains($site) ) {
             $grpSites->add($site);
@@ -158,7 +163,7 @@ class IdeaService
 
         $childGroups = $group->getChildren();
         foreach ($childGroups as $child) {
-            $this->associateGroupToSite($child, $site);
+            $this->associateGroupToSite_helper($child, $site);
         }
     }
 }
