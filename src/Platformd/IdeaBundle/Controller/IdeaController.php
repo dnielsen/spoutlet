@@ -1241,15 +1241,50 @@ class IdeaController extends Controller
             }
         }
 
-        $ownProfile = ($currentUser == $user);
-        $isAdmin = $this->isGranted('ROLE_ADMIN');
+        $ownProfile  = ($currentUser == $user);
+        $isAdmin     = $this->isGranted('ROLE_ADMIN');
+
+        $showProfile     = ($ownProfile || $isAdmin || $user->getDisplayProfile());
+        $showPrivateInfo = $this->canCurrentUserViewThisUsersPrivateInfo($user);
 
         return $this->render('IdeaBundle:Idea:profile.html.twig', array(
-                'user'       => $user,
-                'ownProfile' => $ownProfile,
-                'isAdmin'    => $isAdmin,
-                'sidebar'    => true,
+                'user'            => $user,
+                'ownProfile'      => $ownProfile,
+                'isAdmin'         => $isAdmin,
+                'showProfile'     => $showProfile,
+                'showPrivateInfo' => $showPrivateInfo,
+                'sidebar'         => true,
             ));
+    }
+
+    public function canCurrentUserViewThisUsersPrivateInfo($user) 
+    {
+        // Obviously not if there's no current user
+        if (!$currentUser = $this->getCurrentUser()) {
+            return false;
+        }
+        // Admins and the users themselves can always view their private info
+        if ($this->isGranted('ROLE_ADMIN') || $user == $currentUser) {
+            return true;
+        }
+        // Not if the user said that organizers can't view their private info
+        if (!$user->getDisplayPrivateInfoToOrganizers()) {
+            return false;
+        }
+        // Grab all groups and events that the user belongs to
+        $usersGroups       = $this->getDoctrine()->getRepository('GroupBundle:Group')->getAllGroupsForUser($user);
+        $usersGlobalEvents = $this->getGlobalEventService()->getAllEventObjectsUserIsAttending($user);
+        $usersGroupEvents  = $this->getGroupEventService()->getAllEventObjectsUserIsAttending($user);
+        $usersEvents       = array_merge($usersGlobalEvents, $usersGroupEvents);
+
+        // Check if the current user owns any of them
+        foreach ($usersGroups as $group) {
+            if ($group->getOwner() == $currentUser) { return true; }
+        }
+        foreach ($usersEvents as $event) {
+            if ($event->getUser() == $currentUser) { return true; }
+        }
+        return false;
     }
 
     public function profileEditAction(Request $request, $userId) {
