@@ -35,7 +35,13 @@
                     {% for attendee in attendees %}
                         {% set i=i+1 %}
                         <tr {% if i%2 %}class="fill"{% endif %}>
-                            <td><a href="{{ path('profile', {'userId': attendee.id}) }}" class="blue">{{ attendee.name }}</a></td>
+                            <td>
+                                {% if attendee.displayProfile %}
+                                    <a href="{{ path('profile', {'userId': attendee.id}) }}" class="blue">{{ attendee.name }}</a>
+                                {% else %}
+                                    {{ attendee.name }}
+                                {% endif %}
+                            </td>
                             <td><a href="{{ path('group_event_contact', {'groupSlug': group.slug, 'eventId': event.id, 'recipient': attendee.username}) }}">Send Message</a></td>
                             {% if showRegFields|default %}
                                 <td>

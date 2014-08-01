@@ -53,7 +53,13 @@
             </li>
             {% for member in attendeeList %}
                 {% if member.id != event.user.id %}
-                    <li class="spcr-t7 spcr-l3"><a href="{{ path('profile', {'userId': member.id}) }}"><h3 class="blu">{{ member.name }}</h3></a></li>
+                    <li class="spcr-t7 spcr-l3">
+                        {% if member.displayProfile %}
+                            <a href="{{ path('profile', {'userId': member.id}) }}"><h3 class="blu">{{ member.name }}</h3></a>
+                        {% else %}
+                            <h3>{{ member.name }}</h3>
+                        {% endif %}
+                    </li>
                 {% endif %}
             {% endfor %}
         </ul>
