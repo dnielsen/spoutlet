@@ -44,6 +44,9 @@
                 <h2 style="margin-bottom: 15px;">Admin Options</h2>
 
                 {{ form_row(form.slug) }}
+                {% if site.communityGroup|default %}
+                    {{ form_row(form.relativeSlug) }}
+                {% endif %}
 
                 {% if form.sites is defined %}
                     {{ form_row(form.sites) }}
