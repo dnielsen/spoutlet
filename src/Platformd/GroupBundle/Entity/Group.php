@@ -84,6 +84,13 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     private $slug;
 
     /**
+     * @var string $relativeSlug
+     *
+     * @ORM\Column(type="string", length=255)
+     */
+    private $relativeSlug;
+
+    /**
      * @var string $name
      * @Assert\NotNull(message="Required")
      * @ORM\Column(type="string", length=255, unique=true)
@@ -414,6 +421,15 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     public function getSlug()
     {
         return $this->slug;
+    }
+
+    public function setRelativeSlug($relativeSlug)
+    {
+        $this->relativeSlug = $relativeSlug;
+    }
+    public function getRelativeSlug()
+    {
+        return $this->relativeSlug;
     }
 
     /**
