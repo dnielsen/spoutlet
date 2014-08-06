@@ -2094,6 +2094,14 @@ Alienware Arena Team
 
                 $group = $form->getData();
 
+                // If the relative slug wasn't specified, use the unique slug
+                if (!$group->getRelativeSlug()) {
+                    $group->setRelativeSlug($group->getSlug());
+                }
+
+                // TODO: Insert validation for relative slug here:
+                //       Relative Slug should be unique to Site
+
                 // Clear out the group's old children before adding the new ones
                 if ($oldChildrenIds = $request->getSession()->get('oldChildrenIds')) {
                     foreach ($oldChildrenIds as $childId) {

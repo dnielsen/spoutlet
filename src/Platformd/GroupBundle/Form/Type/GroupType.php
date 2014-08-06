@@ -37,6 +37,9 @@ class GroupType extends AbstractType
             ->add('slug', new SlugType(), array(
                 'label' => 'URL Text',
             ))
+            ->add('relativeSlug', 'text', array(
+                'label' => 'Community URL Slug',
+            ))
             ->add('category', 'choice', array(
                 'choices'   => self::getCategoryChoices(),
                 'label'     => 'Group Category',
