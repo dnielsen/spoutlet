@@ -1778,6 +1778,12 @@ Alienware Arena Team
         // Coming from 'Create Sub Group' link
         if ($parentId = $request->query->get('parentGroupId')) {
             $parentGroup = $this->getGroup($parentId);
+        // Creating group on community site
+        } else {
+            $parentGroup = $this->getCurrentSite()->getCommunityGroup();
+        }
+
+        if ($parentGroup) {
             $group->setParent($parentGroup);
 
             if ($parentGroup->getCategory() == Group::CAT_TOPIC) {
