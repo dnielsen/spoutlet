@@ -127,7 +127,7 @@ class GroupRepository extends EntityRepository
             ->setParameter('relSlug', $relSlug)
             ->setParameter('site', $site);
 
-        return $qb->getQuery()->getSingleResult();
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     public function findFeaturedGroupsByCategoryAndSite($category, $site)
