@@ -2102,6 +2102,15 @@ Alienware Arena Team
                 // TODO: Insert validation for relative slug here:
                 //       Relative Slug should be unique to Site
 
+                $siteGroups = $this->getDoctrine()->getRepository('GroupBundle:Group')->findAllGroupsRelevantForSite($this->getCurrentSite());
+
+                foreach ($siteGroups as $otherGroup) {
+                    if ($otherGroup->getRelativeSlug() == $group->getRelativeSlug()) {
+                        $this->setFlash('error', 'Please choose another relative slug');
+                        return false;
+                    }
+                }
+
                 // Clear out the group's old children before adding the new ones
                 if ($oldChildrenIds = $request->getSession()->get('oldChildrenIds')) {
                     foreach ($oldChildrenIds as $childId) {
