@@ -26,6 +26,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Platformd\UserBundle\Entity\RegistrationSource;
+use Gedmo\Sluggable\Util\Urlizer;
 
 /**
  * Group controller.
@@ -2100,22 +2101,23 @@ Alienware Arena Team
 
                 $group = $form->getData();
 
-                // If the relative slug wasn't specified, use the unique slug
-                if (!$group->getRelativeSlug()) {
-                    $group->setRelativeSlug($group->getSlug());
+                $slug = Urlizer::urlize($group->getSlug());
+
+                // If the relative slug wasn't specified, use the global slug
+                if (!$relativeSlug = $group->getRelativeSlug()) {
+                    $relativeSlug = $slug;
+                } else {
+                    $relativeSlug = Urlizer::urlize($relativeSlug);
                 }
 
-                // TODO: Insert validation for relative slug here:
-                //       Relative Slug should be unique to Site
-
-                $siteGroups = $this->getDoctrine()->getRepository('GroupBundle:Group')->findAllGroupsRelevantForSite($this->getCurrentSite());
-
-                foreach ($siteGroups as $otherGroup) {
-                    if ($otherGroup->getRelativeSlug() == $group->getRelativeSlug()) {
-                        $this->setFlash('error', 'Please choose another relative slug');
-                        return false;
-                    }
+                // Check for a conflicting relative slug on the same site
+                if ($conflictingGroup = $this->getDoctrine()->getRepository('GroupBundle:Group')->findGroupByRelativeSlugAndSite($relativeSlug, $this->getCurrentSite())) {
+                    $this->setFlash('error', 'A group with this slug already exists in this community. Please choose another.');
+                    return false;
                 }
+
+                $group->setSlug($slug);
+                $group->setRelativeSlug($relativeSlug);
 
                 // Clear out the group's old children before adding the new ones
                 if ($oldChildrenIds = $request->getSession()->get('oldChildrenIds')) {
