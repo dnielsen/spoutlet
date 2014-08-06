@@ -117,6 +117,19 @@ class GroupRepository extends EntityRepository
         return $qb->getQuery()->execute();
     }
 
+    public function findGroupByRelativeSlugAndSite($relSlug, $site)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->leftJoin('g.sites', 's')
+            ->where('g.relativeSlug = :relSlug')
+            ->andWhere('s = :site')
+            ->andWhere('g.deleted = false')
+            ->setParameter('relSlug', $relSlug)
+            ->setParameter('site', $site);
+
+        return $qb->getQuery()->getSingleResult();
+    }
+
     public function findFeaturedGroupsByCategoryAndSite($category, $site)
     {
         $qb = $this->createQueryBuilder('g')

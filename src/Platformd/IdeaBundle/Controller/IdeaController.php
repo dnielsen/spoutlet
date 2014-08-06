@@ -2035,18 +2035,6 @@ class IdeaController extends Controller
         return $this->isGranted('ROLE_ADMIN') || $this->isCreator($idea);
     }
 
-    public function getGroup($groupSlug)
-    {
-        $group = $this->getGroupManager()->getGroupBySlug($groupSlug);
-
-        if (!$group) {
-            throw new NotFoundHttpException('Group not found.');
-        }
-
-        return $group;
-    }
-
-
     public function getEvent($groupSlug, $eventId)
     {
         $group = $this->getGroup($groupSlug);

@@ -111,24 +111,6 @@ class GroupController extends Controller
         return $result['data']['thumbnail']['sqDefault'];
     }
 
-    private function getGroup($id) {
-        return $this
-            ->getEntityManager()
-            ->getRepository('GroupBundle:Group')
-            ->find($id);
-    }
-
-    private function getGroupBySlug($slug) {
-        $group = $this
-            ->getEntityManager()
-            ->getRepository('GroupBundle:Group')
-            ->findOneBy(array('slug' => $slug));
-
-        $this->ensureGroupExists($group);
-
-        return $group;
-    }
-
     private function getGroupApplicationRepo() {
         return $this
             ->getEntityManager()

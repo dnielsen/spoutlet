@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Our custom base controller
@@ -561,5 +562,53 @@ class Controller extends BaseController
     
     public function isAdmin() {
         return $this->isGranted('ROLE_ADMIN');
+    }
+
+    private function ensureGroupExists($group) {
+        if (!$group) {
+            throw new NotFoundHttpException('Group does not exist.');
+        }
+    }
+
+    public function getGroup($identifier)
+    {
+        if(ctype_digit($identifier))
+            $identifier = intval($identifier);
+
+        if( is_int($identifier) )
+            return $this->getGroupById($identifier);
+
+        if( is_string($identifier) )
+            return $this->getGroupBySlug($identifier);
+
+        return null;
+    }
+
+    public function getGroupById($id) {
+        return $this
+            ->getDoctrine()
+            ->getRepository('GroupBundle:Group')
+            ->find($id);
+    }
+
+    public function getGroupBySlug($slug) {
+        $repo = $this->getDoctrine()->getRepository('GroupBundle:Group');
+        $group = null;
+        $site = $this->getCurrentSite();
+        if($site->getCommunityGroup()) {
+            try {
+                $group = $repo->findGroupByRelativeSlugAndSite($slug, $site);
+            } catch(\Exception $e) {
+                //log message
+            }
+        }
+
+        if(!$group) {
+            $group = $repo->findOneBySlug($slug);
+        }
+
+        $this->ensureGroupExists($group);
+
+        return $group;
     }
 }

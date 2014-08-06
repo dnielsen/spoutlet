@@ -46,7 +46,7 @@ class AdminController extends Controller
             )));
         }
 
-        $event = $this->getEvent($groupSlug, $eventId);
+        $event = $this->getEvent($eventId);
 
         if (!$event) {
             throw new NotFoundHttpException('Event not found.');
@@ -163,7 +163,7 @@ class AdminController extends Controller
 
     public function eventSessionDeleteAction($groupSlug, $eventId, $sessionId) {
 
-        $event = $this->getEvent($groupSlug, $eventId);
+        $event = $this->getEvent($eventId);
 
         if (!$event) {
             throw new NotFoundHttpException('Event not found.');
@@ -207,78 +207,6 @@ class AdminController extends Controller
         }
 
         var_dump($event_data);
-
-        // $group = $this->getGroup($groupSlug);
-        // $event = new GroupEvent($group);
-        // $group->addEvent($event);
-
-        // $user  = $this->getCurrentUser();
-        // $event->setUser($user);
-        // $event->setActive(true);
-        // $event->setApproved(true);
-        // $event->setExternal(0);
-        // $event->setRegistrationOption(Event::REGISTRATION_DISABLED);
-
-        // $title = $event_data['title'];
-        // if(strlen($title) !== 0) $event->setName($title);
-
-        // $start_date = $event_data['start_date'];
-        // if(strlen($start_date) !== 0) $event->setStartsAt(new \DateTime($start_date));
-
-        // $end_date = $event_data['end_date'];
-        // if(strlen($end_date) !== 0) $event->setEndsAt(new \DateTime($end_date));
-
-        // $timezone = $event_data['timezone'];
-        // if(strlen($timezone) !== 0) $event->setTimezone($timezone);
-
-        // $description = $event_data['description'];
-        // if(strlen($description) !== 0) $event->setContent($description);
-
-        // $tags = $event_data['tags'];
-        // if(strlen($tags) !== 0) $event->setEBTags($tags);
-
-
-        // $venue = $event_data['venue'];
-
-        // $venue_name = $venue['name'];
-        // if(strlen($venue_name) !== 0) $event->setLocation($venue_name);
-
-        // $venue_address1 = $venue['address'];
-        // if(strlen($venue_address1) !== 0) $event->setAddress1($venue_address1);
-
-        // $venue_address2 = $venue['address_2'];
-        // if(strlen($venue_address2) !== 0) $event->setAddress2($venue_address2);
-
-        // $longitude = $venue['longitude'];
-        // if(strlen($longitude) !== 0) $event->setLongitude(''.$longitude);
-
-        // $latitude = $venue['latitude'];
-        // if(strlen($latitude) !== 0) $event->setLatitude(''.$latitude);
-
-        // $city = $venue['city'];
-        // if(strlen($city) !== 0) $event->setCity($city);
-
-        // $state = $venue['region'];
-        // if(strlen($state) !== 0) $event->setState($state);
-
-        // $country = $venue['country'];
-        // if(strlen($country) !== 0) $event->setCountry($country);
-
-        // $postal_code = $venue['postal_code'];
-        // if(strlen($postal_code) !== 0) $event->setPostalCode($postal_code);
-
-        // $this->getGroupEventService()->createEvent($event);
-
-        // $em = $this->getDoctrine()->getEntityManager();
-        // $em->persist($event);
-        // $em->flush();
-
-        // // Registration needs to be created after event is persisted, relies on generated event ID
-        // $esReg = $event->createEntrySetRegistration();
-        // $em->persist($esReg);
-
-        // $this->getGroupEventService()->register($event, $event->getUser());
-        // $em->flush();
 
         return $this->redirect($this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters()));
     }
@@ -394,7 +322,7 @@ class AdminController extends Controller
         }
 
         $group = $this->getGroup($groupSlug);
-        $event = $this->getEvent($groupSlug, $eventId);
+        $event = $this->getEvent($eventId);
 
         $originalRegistrationFields = new ArrayCollection();
 
@@ -611,7 +539,7 @@ class AdminController extends Controller
     public function adminAction(Request $request, $groupSlug, $eventId) {
 
         $group = $this->getGroup($groupSlug);
-        $event = $this->getEvent($groupSlug, $eventId);
+        $event = $this->getEvent($eventId);
 
         $this->validateAuthorization($event);
 
@@ -826,7 +754,7 @@ class AdminController extends Controller
         }
 
         $group = $this->getGroup($groupSlug);
-        $event = $this->getEvent($groupSlug, $eventId);
+        $event = $this->getEvent($eventId);
 
         $this->validateAuthorization($event);
 
@@ -895,7 +823,7 @@ class AdminController extends Controller
         }
 
         $group = $this->getGroup($groupSlug);
-        $event = $this->getEvent($groupSlug, $eventId);
+        $event = $this->getEvent($eventId);
 
         $this->validateAuthorization($event);
 
@@ -965,7 +893,7 @@ class AdminController extends Controller
     public function summaryAction(Request $request, $groupSlug, $eventId) {
 
         $group = $this->getGroup($groupSlug);
-        $event = $this->getEvent($groupSlug, $eventId);
+        $event = $this->getEvent($eventId);
 
         $this->validateAuthorization($event);
 
@@ -987,7 +915,7 @@ class AdminController extends Controller
         $vcRepo = $this->getDoctrine()->getRepository('IdeaBundle:VoteCriteria');
         $sortCriteria = $vcRepo->find($critId);
         
-        $params['criteriaList'] = $vcRepo->findByEventId($this->getEvent($groupSlug, $event->getSlug()));
+        $params['criteriaList'] = $vcRepo->findByEventId($this->getEvent($event->getSlug()));
 
         //retrieve tag filter parameter
         $tag = $request->query->get('tag');
@@ -1026,7 +954,7 @@ class AdminController extends Controller
 
     public function advanceAction($groupSlug, $eventId) {
 
-        $event = $this->getEvent($groupSlug, $eventId);
+        $event = $this->getEvent($eventId);
 
         $this->validateAuthorization($event);
 
@@ -1061,7 +989,7 @@ class AdminController extends Controller
         $newImage = new Media();
         $form = $this->createForm(new MediaType(), $newImage, array('image_label' => 'Image File:'));
 
-        $event = $this->getEvent($groupSlug, $eventId);
+        $event = $this->getEvent($eventId);
 
         $this->validateAuthorization($event);
 
@@ -1101,7 +1029,7 @@ class AdminController extends Controller
 
     public function approvalsAction($groupSlug, $eventId) {
 
-        $event = $this->getEvent($groupSlug, $eventId);
+        $event = $this->getEvent($eventId);
 
         $this->validateAuthorization($event);
 
@@ -1134,7 +1062,7 @@ class AdminController extends Controller
 
     public function processApprovalAction($groupSlug, $eventId, $userId, $action) {
 
-        $event = $this->getEvent($groupSlug, $eventId);
+        $event = $this->getEvent($eventId);
 
         $this->validateAuthorization($event);
 
@@ -1177,7 +1105,7 @@ class AdminController extends Controller
 
     public function removeImageAction($groupSlug, $eventId, $imageId) {
 
-        $this->validateAuthorization($this->getEvent($groupSlug, $eventId));
+        $this->validateAuthorization($this->getEvent($eventId));
 
         $image = $this->getDoctrine()->getRepository('MediaBundle:Media')->find($imageId);
 
@@ -1243,19 +1171,7 @@ class AdminController extends Controller
         return false;
     }
 
-    public function getGroup($groupSlug)
-    {
-        $groupEm = $this->getDoctrine()->getRepository('GroupBundle:Group');
-        $group = $groupEm->findOneBySlug($groupSlug);
-
-        if ($group == null){
-            return false;
-        }
-
-        return $group;
-    }
-
-    public function getEvent($groupSlug, $eventId)
+    public function getEvent($eventId)
     {
         $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($eventId);
         
@@ -1267,7 +1183,7 @@ class AdminController extends Controller
 
     public function getEventSession($groupSlug, $eventId, $sessionId)
     {
-        $event = $this->getEvent($groupSlug, $eventId);
+        $event = $this->getEvent($eventId);
 
         if (!$event){
             return false;
@@ -1286,7 +1202,7 @@ class AdminController extends Controller
     {
         $doc = $this->getDoctrine();
 
-        $this->validateAuthorization($this->getEvent($groupSlug, $eventId));
+        $this->validateAuthorization($this->getEvent($eventId));
 
         $judgeAssignment = $request->request->get('judgeAssignment');
         $idea = $doc->getRepository('IdeaBundle:Idea')->findOneBy(array('id' => $ideaId));
@@ -1349,7 +1265,7 @@ class AdminController extends Controller
 
 	public function exportIdeasAction($groupSlug, $eventId) {
 
-        $this->validateAuthorization($this->getEvent($groupSlug, $eventId));
+        $this->validateAuthorization($this->getEvent($eventId));
 
         $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
         $csvString = $ideaRepo->toCSV();
@@ -1363,7 +1279,7 @@ class AdminController extends Controller
 
     public function exportUsersAction($groupSlug, $eventId) {
 
-        $this->validateAuthorization($this->getEvent($groupSlug, $eventId));
+        $this->validateAuthorization($this->getEvent($eventId));
 
         $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
         $csvString = $userRepo->toCSV();
@@ -1377,7 +1293,7 @@ class AdminController extends Controller
 
     public function exportVotesAction($groupSlug, $eventId) {
 
-        $event = $this->getEvent($groupSlug, $eventId);
+        $event = $this->getEvent($eventId);
         $this->validateAuthorization($event);
 
         $voteRepo = $this->getDoctrine()->getRepository('IdeaBundle:Vote');
