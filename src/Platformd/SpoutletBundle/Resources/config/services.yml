@@ -74,6 +74,7 @@ services:
         class: Platformd\SpoutletBundle\Link\LinkableManager
         arguments:
             - "@router"
+            - "@service_container"
 
     # our generic twig extension
     platformd.twig.spoutlet_extension:

@@ -611,4 +611,13 @@ class Controller extends BaseController
 
         return $group;
     }
+
+    public function getRelevantSlugForGroup($group) {
+        if($this->getCurrentSite()->getCommunityGroup()) {
+            if ($slug = $group->getRelativeSlug()){
+                return $slug;
+            }
+        }
+        return $group->getSlug();
+    }
 }

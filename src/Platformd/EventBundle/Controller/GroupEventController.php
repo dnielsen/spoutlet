@@ -298,7 +298,7 @@ class GroupEventController extends Controller
     public function viewAction($groupSlug, $eventId)
     {
         /** @var $group Group */
-        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+        $group = $this->getGroup($groupSlug);
 
         if (!$group) {
             throw new NotFoundHttpException('Group does not exist.');

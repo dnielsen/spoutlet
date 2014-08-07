@@ -107,7 +107,7 @@
             {% for event in upcomingEvents %}
                 <div class="card spcr-b2">
                     <div class="event-summary">
-                        <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}"><h2 class="ctr blu spcr-b2">{{ event.name }}</h2></a>
+                        <a href="{{ event | pd_link }}"><h2 class="ctr blu spcr-b2">{{ event.name }}</h2></a>
                         <hr class="small-margin"/>
                         <div class="col_third borderRt">
                             {% if (not event.isUserAttending(app.user)) and (event.registrationOption != constant('\\Platformd\\EventBundle\\Entity\\Event::REGISTRATION_DISABLED')) %}
@@ -152,7 +152,7 @@
                     </div>
 
                     <div class="event-see-more">
-                        <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}"><h3 class="blu ctr">See More</h3></a>
+                        <a href="{{ event | pd_link }}"><h3 class="blu ctr">See More</h3></a>
                     </div>
                 </div>
 
@@ -161,7 +161,7 @@
             {% for event in pastEvents %}
                 <div class="card spcr-b2">
                     <div class="event-summary">
-                        <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}"><h2 class="ctr blu spcr-b2">{{ event.name }}</h2></a>
+                        <a href="{{ event | pd_link }}"><h2 class="ctr blu spcr-b2">{{ event.name }}</h2></a>
                         <hr class="small-margin"/>
                         <div class="col_third borderRt">
                             <p>
@@ -203,7 +203,7 @@
                     </div>
 
                     <div class="event-see-more">
-                        <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}"><h3 class="blu ctr">See More</h3></a>
+                        <a href="{{ event | pd_link }}"><h3 class="blu ctr">See More</h3></a>
                     </div>
                 </div>
             {% endfor %}

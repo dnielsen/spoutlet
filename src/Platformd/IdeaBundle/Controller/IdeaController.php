@@ -747,7 +747,7 @@ class IdeaController extends Controller
             $eventType = 'group';
             $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($eventId);
             $returnLink = $this->generateUrl('group_event_view', array(
-                                             'groupSlug'=>$event->getGroup()->getSlug(), 
+                                             'groupSlug'=>$this->getRelevantSlugForGroup($event->getGroup()), 
                                              'eventId'=>$event->getId()));
         }
 

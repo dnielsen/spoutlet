@@ -16,10 +16,8 @@
                 {% else %}
                     {% set bannerContent = '<span id="groupHeader">' ~ group.name ~ '</span>' %}
                 {% endif %}
-
-                <a href="{{ path('group_show', {'slug': group.slug}) }}">{{ bannerContent | raw }}</a>
+                <a href="{{ group | pd_link }}">{{ bannerContent | raw }}</a>
             </div>
-
         {% endblock %}
 
     {% endembed %}
