@@ -53,9 +53,9 @@
                             <a href="{{ path('group_edit', {'slug': group.slug}) }}" target="_blank">{{ group.name }}</a></td>
                         {% else %}
                             {% if site in group.sites or group.allLocales %}
-                                <a href="{{ path('group_show', {'slug': group.slug}) }}" target="_blank">{{ group.name }}</a>
+                                <a href="{{ group | pd_link }}" target="_blank">{{ group.name }}</a>
                             {% else %}
-                                <a href="http://{{ group.sites[0].fullDomain }}{{ path('group_show', {'slug':group.slug}) }}" target="_blank">{{ group.name }}</a>
+                                <a href="http://{{ group.sites[0].fullDomain }}{{ group | pd_link }}" target="_blank">{{ group.name }}</a>
                             {% endif %}
                         {% endif %}
                         </td>

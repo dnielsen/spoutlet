@@ -4,7 +4,7 @@
 
     <div class="col_third">
         <img class="sponsorLogoFill" src="{{ media_path(sponsor.image) }}"/>
-        <a href="{{ path('group_show', {'slug': sponsor.department.slug}) }}"><h2 class="blu">{{ sponsor.name }}</h2></a>
+        <a href="{{ sponsor.department | pd_link }}"><h2 class="blu">{{ sponsor.name }}</h2></a>
         <strong>Website: </strong><a href="{{ sponsor.url }}" class="blu">{{ sponsor.url }}</a><br/>
         {% if sponsor.creator == app.user or is_granted('ROLE_ADMIN') %}
         <div class="spcr-t">
@@ -19,7 +19,7 @@
         <h2>Sponsored Groups</h2>
         {% for level,level_groups in groups %}
             {% for group in level_groups %}
-                <a href="{{ path('group_show', {'slug': group.slug}) }}"><h3 class="blu midpad borderBtm">{{ group.name }}</h3></a>
+                <a href="{{ group | pd_link }}"><h3 class="blu midpad borderBtm">{{ group.name }}</h3></a>
             {% endfor %}
         {% endfor %}
     </div>

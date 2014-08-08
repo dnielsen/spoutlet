@@ -15,7 +15,7 @@
             <div style="padding: 3px 0 3px 0;float:left;">
                 <a href="{{ path('groups') }}">Groups</a>
                 <span style="color:#B3B3B3;padding:0 2px 0 2px;">></span>
-                <a href="{{ path('group_show', { 'slug' : group.slug }) }}#images">{{ group.name }}</a>
+                <a href="{{ group | pd_link }}#images">{{ group.name }}</a>
                 <span style="color:#B3B3B3;padding:0 2px 0 2px;">></span>
                 <span style="color:#B3B3B3">{{ media.title }}</span>
             </div>

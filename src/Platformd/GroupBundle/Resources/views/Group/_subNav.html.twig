@@ -2,7 +2,7 @@
     <div class="sub-nav groups-sub-nav">
         <ul>
 
-            <li><a href="{{ path('group_show', {'slug': group.slug }) }}">Group Home</a></li>
+            <li><a href="{{ group | pd_link }) }}">Group Home</a></li>
 
             <span data-group-admin="true">
                 <li><a href="{{ path('group_edit', { 'slug': group.slug }) }}">Edit Group</a></li>

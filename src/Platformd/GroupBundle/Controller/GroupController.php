@@ -302,7 +302,7 @@ Alienware Arena Team
         $locationGroups = $repo->findAllGroupsWithMemberCountsByCategoryAndSite('location', $site);
         $topicGroups    = $repo->findAllGroupsWithMemberCountsByCategoryAndSite('topic', $site);
         $recentGroups   = $repo->findMostRecentlyCreatedGroupsForSite($site);
-        $popularGroups  = $repo->findMostPopularGroupsForSite($site);
+        $popularGroups  = $repo->findPopularGroupsForSite($site);
 
         $location = array();
         $topic    = array();

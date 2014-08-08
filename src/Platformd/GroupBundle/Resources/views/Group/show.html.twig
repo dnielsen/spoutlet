@@ -262,7 +262,7 @@
         {% endif %}
 
         <div class="spcr-t spcr-b2">
-            <div class="fb-like left" data-href="{{ path('group_show', {'slug': group.slug}) }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
+            <div class="fb-like left" data-href="{{ group | pd_link }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
             <a href="https://twitter.com/share" class="twitter-share-button left spcr-l3 spcr-t8" data-hashtags="{{ group.hashtag }}">Tweet</a>
         </div>
 

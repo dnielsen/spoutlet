@@ -3,7 +3,7 @@
 {% block content %}
 
     <h2 class="spcr-b2">
-        Please answer the following questions to register for <a href="{{ path('group_event_view', {'groupSlug':group.slug, 'eventId': event.id}) }}" class="blue">{{ event.name }}</a>
+        Please answer the following questions to register for <a href="{{ event | pd_link }}" class="blue">{{ event.name }}</a>
     </h2>
 
     <form action = "{{ path('event_registration', {'groupSlug': group.slug, 'eventId': event.id}) }}" method="POST">

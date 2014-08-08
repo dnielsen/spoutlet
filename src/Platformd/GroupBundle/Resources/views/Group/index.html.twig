@@ -125,7 +125,7 @@
             <div id="featured-groups">
                 {% for group in featuredGroups %}
                     <div class="card group-list-item">
-                        <a href="{{ path('group_show', { slug: group[0].slug}) }}" class="group-index-link" title="{{ group[0].name }}">
+                        <a href="{{ group[0] | pd_link }}" class="group-index-link" title="{{ group[0].name }}">
                             {{ group[0].name }}
                         </a>
                         <div class="details">
@@ -176,7 +176,7 @@
             {% for recentGroup in recentGroups %}
                 {% set i=i+1 %}
                 <tr {% if i%2 %}class="fill"{% endif %}>
-                    <td><a href="{{ path('group_show', { 'slug': recentGroup.slug }) }}">{{ recentGroup.name }}</a></td>
+                    <td><a href="{{ recentGroup | pd_link }}">{{ recentGroup.name }}</a></td>
                 </tr>
             {% else %}
                 <p>{{ 'platformd.groups.index.no_groups_found' | pd_trans }}</p>
@@ -194,7 +194,7 @@
             {% for popularGroup in popularGroups %}
                 {% set i=i+1 %}
                 <tr {% if i%2 %}class="fill"{% endif %}>
-                    <td><a href="{{ path('group_show', { 'slug': popularGroup['slug'] }) }}">{{ popularGroup['group_name'] }}</a></td>
+                    <td><a href="{{ popularGroup[0] | pd_link }}">{{ popularGroup[0].getName() }}</a></td>
                 </tr>
             {% else %}
                 <p>{{ 'platformd.groups.index.no_groups_found' | pd_trans }}</p>

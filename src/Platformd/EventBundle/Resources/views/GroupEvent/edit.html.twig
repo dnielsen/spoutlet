@@ -35,7 +35,7 @@
                 {% endif %}
             {% endif %}
 
-            <button id="cancel" class="btn btn-primary" rel="{{ path('group_show', { 'slug': group.slug }) }}#events" style="margin-left: 10px;">Group Events</button>
+            <button id="cancel" class="btn btn-primary" rel="{{ group | pd_link }}#events" style="margin-left: 10px;">Group Events</button>
         </div>
     </form>
 
