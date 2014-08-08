@@ -83,7 +83,7 @@
 
             $('#cancel').click(function(e){
                 e.preventDefault();
-                var url = {% if event.externalUrl %}'{{ path("group_show", { "slug": group.slug }) ~ "#events" }}'{% else %}'{{ event | pd_link }}'{% endif %};
+                var url = {% if event.externalUrl %}'{{ group | pd_link ~ "#events" }}'{% else %}'{{ event | pd_link }}'{% endif %};
                 document.location.href = url;
             });
 

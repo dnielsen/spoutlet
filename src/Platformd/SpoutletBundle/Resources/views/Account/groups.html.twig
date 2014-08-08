@@ -41,10 +41,10 @@
                             {% elseif action == "campsite_event" %}
                                 <a href="{{ path('idea_admin_event', { 'groupSlug': group[0].slug, 'eventId': 'newEvent' }) }}" class="blue">{{ group[0].name }}</a>
                             {% else %}
-                                <a href="{{ path('group_show', { 'slug': group[0].slug }) }}" class="blue">{{ group[0].name }}</a>
+                                <a href="{{ group[0] | pd_link }}" class="blue">{{ group[0].name }}</a>
                             {% endif %}
                         {% else %}
-                            <a href="{{ path('group_show', { 'slug': group[0].slug }) }}" class="blue">{{ group[0].name }}</a>
+                            <a href="{{ group[0] | pd_link }}" class="blue">{{ group[0].name }}</a>
                         {% endif %}
                         ({{ group[0].members|length }})
                     </td>

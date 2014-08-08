@@ -51,7 +51,7 @@
                             <div class="form-actions" style="padding-left: 100px;">
                                 <button type="submit" id="preview" class="btn btn-primary" formnovalidate>{{ 'platformd.groups.contact.form.preview' | pd_trans }}</button>
                                 <button type="submit" id="submit" class="btn btn-primary" style="margin-left: 10px;" formnovalidate>{{ 'platformd.groups.contact.form.send' | pd_trans }}</button>
-                                <button id="cancel" class="btn btn-primary" rel="{{ path('group_show', { 'slug': group.slug }) }}" style="margin-left: 10px;">{{ 'platformd.groups.contact.form.cancel' | pd_trans }}</button>
+                                <button id="cancel" class="btn btn-primary" rel="{{ group | pd_link }}" style="margin-left: 10px;">{{ 'platformd.groups.contact.form.cancel' | pd_trans }}</button>
                             </div>
                         </form>
                     </div>
@@ -81,7 +81,7 @@
 
             $('#cancel').click(function(e){
                 e.preventDefault();
-                document.location.href = '{{ path('group_show', { 'slug': group.slug }) }}';
+                document.location.href = '{{ group | pd_link }}';
             });
         });
     </script>

@@ -296,7 +296,7 @@
                     FB.ui({
                         method: 'send',
                         name: "You are invited to the {{ group.name | e('js') }}!",
-                        link: '{{ path('group_show', { 'slug': group.slug })  | absolute_url }}',
+                        link: '{{ (group | pd_link) | absolute_url }}',
                         description: "{{ 'groups.opengraph.description' | pd_trans }}",
                         image: '{{ openGraphThumb }}'
                     });

@@ -55,7 +55,7 @@
                     {% elseif item[0].getContentType == 'GroupDiscussion' %}
 
                         <h1>Group</h1>
-                        <div><a href="{{ path('group_show', { 'slug' : item[0].group.getSlug() }) }}">{{ item[0].group.name }}</a></div>
+                        <div><a href="{{ item[0].group | pd_link }}">{{ item[0].group.name }}</a></div>
                         <h1>Discussion Title</h1>
                         <div>{{ item[0].title }}</div>
                         <h1>Content</h1>
@@ -64,7 +64,7 @@
                     {% elseif item[0].getContentType == 'GroupDiscussionPost' %}
 
                         <h1>Group</h1>
-                        <div><a href="{{ path('group_show', { 'slug' : item[0].groupDiscussion.group.getSlug() }) }}">{{ item[0].groupDiscussion.group.name }}</a></div>
+                        <div><a href="{{ item[0].groupDiscussion.group | pd_link }) }}">{{ item[0].groupDiscussion.group.name }}</a></div>
                         <h1>Discussion Post Id</h1>
                         <div>{{ item[0].id }}</div>
                         <h1>Message</h1>

@@ -16,7 +16,7 @@
 
     <table class="paddedTable">
         <td>
-            <a href="{{ path('group_event_view', {'groupSlug': group.slug, 'eventId': event.id}) }}" method="get" id='home'>
+            <a href="{{ event | pd_link }}" method="get" id='home'>
                 <input type="submit" value="< {{ event.name | truncate(20) }}" form='home' />
             </a>
         </td>

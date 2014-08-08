@@ -48,7 +48,7 @@
                     {{ event.hostedBy }}
                 {% else %}
                     {% if event.group|default(null) and (event.taggableType == 'platformd_global_event' or event.taggableType == 'platformd_group_event') %}
-                        <a href="{{ path('group_show', {'slug' : event.group.slug }) }}">{{ event.group.name }}</a>
+                        <a href="{{ event.group | pd_link }}">{{ event.group.name }}</a>
                     {% else %}
                         Public
                     {% endif %}

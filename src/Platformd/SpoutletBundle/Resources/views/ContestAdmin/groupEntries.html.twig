@@ -41,7 +41,7 @@
                             <img src="/bundles/spoutlet/images/alienwarelogothumb-140x85.png" alt="{{ group.name }}" title="{{ group.name }}" />
                             {% endif %}
                         </td>
-                        <td><a href="{{ path('group_show', { slug: group.slug}) }}">{{ group.name }}</a></td>
+                        <td><a href="{{ group | pd_link }}">{{ group.name }}</a></td>
                         <td>{{ group.owner.username }}</td>
                         <td>{{ entry.created | date }}</td>
                         <td>{{ entry.ipAddress }}</td>

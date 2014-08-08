@@ -24,7 +24,7 @@
                         <a href="{{ account_link(winner.author.username) }}">{{ winner.author.username }}</a>
                     </p>
                     {% elseif contest.category == 'group' %}
-                    <a href="{{ path('group_show', {slug : winner.slug}) }}">
+                    <a href="{{ winner | pd_link }}">
                         {% if winner.thumbNail %}
                         <img src="{{ media_path(winner.thumbNail) }}" alt="{{ winner.name }}" title="{{ winner.name }}" />
                         {% else %}

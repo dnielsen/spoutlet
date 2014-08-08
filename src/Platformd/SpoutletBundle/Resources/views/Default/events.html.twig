@@ -16,7 +16,7 @@
         {% for event in events %}
             {% set i=i+1 %}
             <tr {% if i%2 %}class="fill"{% endif %}>
-                <td><a href="{{ path('group_event_view', {'groupSlug': event.group.slug, 'eventId': event.id}) }}">{{ event.name }}</a></td>
+                <td><a href="{{ event | pd_link }}">{{ event.name }}</a></td>
                 <td>{{ event.startDateString }}</td>
             </tr>
         {% else %}
