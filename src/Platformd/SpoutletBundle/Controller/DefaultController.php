@@ -90,7 +90,7 @@ class DefaultController extends Controller
         $groupRepo = $this->getDoctrine()->getEntityManager()->getRepository('GroupBundle:Group');
         $site      = $this->getCurrentSite();
 
-        $groups    = $groupRepo->findMostPopularGroupsForSite($site);
+        $groups    = $groupRepo->findPopularGroupsForSite($site);
 
         $response = $this->render('SpoutletBundle:Default:popularGroups.html.twig', array(
                 'groups' => $groups,

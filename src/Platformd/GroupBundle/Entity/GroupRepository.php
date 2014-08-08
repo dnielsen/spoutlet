@@ -443,7 +443,7 @@ class GroupRepository extends EntityRepository
         return $qb->getQuery()->execute();
     }
 
-    public function findMostPopularGroupsForSite($site, $limit=8)
+    public function findPopularGroupsForSite($site, $limit=8)
     {
         $qb = $this->createQueryBuilder('g')
             ->select('g, COUNT(DISTINCT m.id) member_count')
