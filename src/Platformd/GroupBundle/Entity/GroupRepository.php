@@ -445,39 +445,19 @@ class GroupRepository extends EntityRepository
 
     public function findMostPopularGroupsForSite($site, $limit=8)
     {
-        $query = '
-        SELECT
-            pd_groups.`id` AS group_id,
-            pd_groups.`name` AS group_name,
-            pd_group_site.group_id,
-            pd_groups.slug,
-            (
-                SELECT
-                    COUNT(*)
-                FROM
-                    pd_groups_members
-                WHERE
-                    pd_groups.id = group_id
-            ) AS member_count
-        FROM
-            pd_groups
-        INNER JOIN pd_group_site ON pd_group_site.group_id = pd_groups.id
-        WHERE
-            pd_group_site.site_id = :site
-        AND pd_groups.deleted = 0
-        ORDER BY
-            member_count DESC
-        LIMIT 8';
+        $qb = $this->createQueryBuilder('g')
+            ->select('g, COUNT(DISTINCT m.id) member_count')
+            ->leftJoin('g.sites', 's')
+            ->leftJoin('g.members', 'm')
+            ->where('(s = :site OR g.allLocales = true)')
+            ->andWhere('g.deleted = false')
+            ->addOrderBy('member_count', 'DESC')
+            ->distinct('g.id')
+            ->setMaxResults($limit)
+            ->setParameter('site', $site)
+            ->groupBy('g.id');
 
-        $stmt = $this->getEntityManager()
-                     ->getConnection()
-                     ->prepare($query);
-
-        $stmt->bindValue('site', $site->getId());
-
-        $stmt->execute();
-
-        return $stmt->fetchAll();
+        return $qb->getQuery()->execute();
     }
 
     public function getGroupMembers($id)
