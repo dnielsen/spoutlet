@@ -36,8 +36,8 @@ tar -xzvf ./dbBackups.tar.gz
 echo
 echo "Updating local database ... "
 
-mysql -h$DB_HOST -P$DB_PORT -u$DB_USER -p$DB_PASS $PROD_DB_NAME < ./prodDbBackup.sql
-mysql -h$DB_HOST -P$DB_PORT -u$DB_USER -p$DB_PASS $ACL_DB_NAME < ./aclDbBackup.sql
+mysql -h$DB_HOST -P$DB_PORT -u$DB_USER -p$DB_PASS $PROD_DB_NAME < ./db_backups/prodDbBackup.sql
+mysql -h$DB_HOST -P$DB_PORT -u$DB_USER -p$DB_PASS $ACL_DB_NAME < ./db_backups/aclDbBackup.sql
 
 echo
 echo "Updating site domain to www.campsite.local ... "
@@ -53,7 +53,7 @@ echo "flush_all" | nc -q 2 localhost 11211
 echo
 echo "Cleaning up temporary files ... "
 
-rm dbBackups.tar.gz prodDbBackup.sql aclDbBackup.sql
+rm dbBackups.tar.gz
 
 echo
 echo "Database up to date: http://www.campsite.local/app_dev.php"

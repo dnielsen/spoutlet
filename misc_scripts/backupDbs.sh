@@ -12,6 +12,8 @@ if [ ! -e $INI_FILE_PATH ]; then
     exit 1
 fi
 
+DB_BACKUP=${SCRIPTPATH}/../db_backups/
+
 # Get db username, pass, schema from parameters.ini
 DB_USER=$( sed -n 's/^ *database_user *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
 DB_PASS=$( sed -n 's/^ *database_password *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
@@ -26,11 +28,10 @@ if [ -z "$DB_USER" ] || [ -z "$DB_PASS" ] || [ -z "$DB_HOST" ] || [ -z "$DB_PORT
     exit 1
 fi
 
-mysqldump -P$DB_PORT -h$DB_HOST -u$DB_USER -p$DB_PASS $PROD_DB_NAME > prodDbBackup.sql
-mysqldump -P$DB_PORT -h$DB_HOST -u$DB_USER -p$DB_PASS $ACL_DB_NAME > aclDbBackup.sql 
+mysqldump -P$DB_PORT -h$DB_HOST -u$DB_USER -p$DB_PASS $PROD_DB_NAME > ${DB_BACKUP}/prodDbBackup.sql
+mysqldump -P$DB_PORT -h$DB_HOST -u$DB_USER -p$DB_PASS $ACL_DB_NAME > ${DB_BACKUP}/aclDbBackup.sql 
 
-tar -cvzf dbBackups.tar.gz prodDbBackup.sql aclDbBackup.sql
-rm prodDbBackup.sql aclDbBackup.sql
+tar -cvzf dbBackups.tar.gz ${DB_BACKUP}/prodDbBackup.sql ${DB_BACKUP}
 
 echo
 echo 'Backup sql scripts have been generated and zipped into dbBackups.tar.gz'
