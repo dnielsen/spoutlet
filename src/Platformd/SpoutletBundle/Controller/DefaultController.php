@@ -85,25 +85,6 @@ class DefaultController extends Controller
         return $response;
     }
 
-    public function _groupsAction(Request $request)
-    {
-        $em     = $this->getDoctrine()->getEntityManager();
-        $repo   = $em->getRepository('GroupBundle:Group');
-        $site   = $this->getCurrentSite();
-
-        $featured = $repo->findAllFeaturedGroupsForSite($site);
-        $popular  = $repo->findPopularGroupsForHomepage($site);
-
-        $response = $this->render('SpoutletBundle:Default:_groups.html.twig', array(
-            'featured' => $featured,
-            'popular'  => $popular,
-        ));
-
-        $this->varnishCache($response, 30);
-
-        return $response;
-    }
-
     public function _popularGroupsAction(Request $request)
     {
         $groupRepo = $this->getDoctrine()->getEntityManager()->getRepository('GroupBundle:Group');

@@ -617,23 +617,6 @@ class GroupRepository extends EntityRepository
             ->getSingleScalarResult();
     }
 
-    public function findPopularGroupsForHomepage($site, $limit = 4)
-    {
-        $qb = $this->createQueryBuilder('g')
-            ->select('g, COUNT(DISTINCT m.id) memberCount')
-            ->leftJoin('g.sites', 's')
-            ->leftJoin('g.members', 'm')
-            ->where('(s = :site OR g.allLocales = true)')
-            ->andWhere('g.deleted = false')
-            ->addOrderBy('memberCount', 'DESC')
-            ->distinct('g.id')
-            ->setMaxResults($limit)
-            ->setParameter('site', $site)
-            ->groupBy('g.id');
-
-        return $qb->getQuery()->execute();
-    }
-
     public function findGroupsForImage($media)
     {
         $qb = $this->createQueryBuilder('g')
