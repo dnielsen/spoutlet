@@ -2112,8 +2112,10 @@ Alienware Arena Team
 
                 // Check for a conflicting relative slug on the same site
                 if ($conflictingGroup = $this->getDoctrine()->getRepository('GroupBundle:Group')->findGroupByRelativeSlugAndSite($relativeSlug, $this->getCurrentSite())) {
-                    $this->setFlash('error', 'A group with this slug already exists in this community. Please choose another.');
-                    return false;
+                    if ($conflictingGroup->getId() != $group->getId()) {
+                        $this->setFlash('error', 'A group with this slug already exists in this community. Please choose another.');
+                        return false;
+                    }
                 }
 
                 $group->setSlug($slug);
