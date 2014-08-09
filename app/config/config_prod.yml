@@ -17,4 +17,4 @@ monolog:
             path:  %kernel.logs_dir%/%kernel.environment%.log
             level: debug
 parameters:
-    secure_url_scheme: https
+    secure_url_scheme: http
