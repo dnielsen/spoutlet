@@ -13,6 +13,7 @@ var spec = {
         "group_id" : { type : Type.Int, props : ["default"]},
         "event_id" : { type : Type.Int, props : ["default"]},
         "level" : { type : Type.Int, props : ["default"]},
+        "status" : { type : Type.Str, props : ["default"] },
         
         "sponsor" : { type : Type.Sponsor, rel : "belongs_to", props : ["default"], mapping : "sponsor_id" },
         "grp" : { type : Type.Group, rel : "belongs_to", props : ["default"], mapping : "group_id" },
