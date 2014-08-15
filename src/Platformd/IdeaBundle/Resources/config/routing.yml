@@ -239,6 +239,10 @@ associate_group_to_site:
     pattern:    /admin/associate_group_to_site/{groupSlug}
     defaults:   { _controller: IdeaBundle:Admin:associateGroupToSite }
 
+import_svic:
+    pattern:    /admin/import_svic
+    defaults:   { _controller: IdeaBundle:Admin:importSvic }
+
 # Entry Routes
 
 idea_create:

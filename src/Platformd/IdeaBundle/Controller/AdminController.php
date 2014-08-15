@@ -11,7 +11,11 @@ use Platformd\EventBundle\Entity\GroupEvent;
 use Platformd\EventBundle\Entity\GroupEventRsvpAction;
 use Platformd\GroupBundle\Entity\Group;
 use Platformd\IdeaBundle\Entity\HtmlPage;
+use Platformd\IdeaBundle\Entity\Idea;
+use Platformd\IdeaBundle\Entity\Vote;
+use Platformd\IdeaBundle\Entity\Comment;
 use Platformd\IdeaBundle\Entity\EntrySet;
+use Platformd\IdeaBundle\Entity\FollowMapping;
 use Platformd\IdeaBundle\Entity\VoteCriteria;
 use Platformd\IdeaBundle\Entity\RegistrationField;
 use Platformd\IdeaBundle\Form\Type\RegistrationFieldFormType;
@@ -1538,5 +1542,280 @@ class AdminController extends Controller
         }
 
         return new Response(); //$this->redirect($this->generateUrl('default_index'));
+    }
+
+    public function importSvicAction(Request $req) {
+        $EVENT_ID = 34;
+        $evt = $this->getGroupEventService()->find($EVENT_ID);
+        
+        //connect to svic db
+        $svic_db = $this->connectToSvic();
+        $this->importUsers($evt);
+        $this->importIdeas($evt);
+        $this->importComments($evt);
+        //$this->importFollows();
+        $this->importVotes($evt);
+        $this->disconnectFromSvic($evt);
+
+        return new Response();
+    }
+
+    private function importVotes($event) {
+        global $svic_db;
+        
+        $em = $this->getDoctrine()->getEntityManager();
+        $criteriaList = $em->getRepository('IdeaBundle:VoteCriteria')->findByEventId($event);
+        if(sizeof($criteriaList) < 4){
+            $vc1 = new VoteCriteria(); 
+            $vc1->setEvent($event);
+            $vc1->setDisplayName('Advantage');
+            $vc1->setDescription('ADVANTAGE.     Idea exhibits a clear advantage over other existing products, services or technology currently available in the market. The idea definitely addresses a market need.');
+            $em->persist($vc1);
+            
+            $vc2 = new VoteCriteria(); 
+            $vc2->setEvent($event);
+            $vc2->setDisplayName('Benefits');
+            $vc2->setDescription('BENEFITS.     The target users of the product, service or technology are clearly defined. The idea has well-articulated benefits. The target users will definitely benefit from this product.');
+            $em->persist($vc2);
+            
+            $vc3 = new VoteCriteria(); 
+            $vc3->setEvent($event);
+            $vc3->setDisplayName('Breadth of Impact');
+            $vc3->setDescription('BREADTH OF IMPACT.     The potential market is widespread, adaptable to a large number of segments and markets.');
+            $em->persist($vc3);
+            
+            $vc4 = new VoteCriteria(); 
+            $vc4->setEvent($event);
+            $vc4->setDisplayName('Doable');
+            $vc4->setDescription('DOABLE.     The idea can be executed or implemented as it is.');
+            $em->persist($vc4);
+
+            $em->flush();
+        }
+
+        $sql = 'SELECT votecriteria.displayName, fos_user.email_canonical, idea.name, vote.* FROM vote, fos_user, idea, votecriteria WHERE vote.voter = fos_user.username AND vote.idea_id = idea.id AND vote.criteria_id = votecriteria.id';
+        $result = mysql_query($sql, $svic_db) or die('Invalid query: ' . mysql_error());
+        while ($row = mysql_fetch_assoc($result)) {
+            $idea = $em->getRepository('IdeaBundle:Idea')->findOneBy(array('name' => $row['name']));
+            if(!$idea) {
+                echo "Can't find idea named " . $row['name'] . "<br/>";
+                continue;
+            }
+
+            $user = $em->getRepository('UserBundle:User')->findOneBy(array('emailCanonical' => $row['email_canonical']));
+            if(!$user) {
+                echo "Can't find creator for idea " . $row['name'] . "<br/>";
+                continue;
+            }
+
+            $criteria = $em->getRepository('IdeaBundle:VoteCriteria')->findOneBy(array('displayName' => $row['displayName']));
+            if(!$user) {
+                echo "Can't find vote criteria " . $row['displayName'] . "<br/>";
+                continue;
+            }
+
+            $vote = new Vote($idea, $criteria, $row['round']);
+            $vote->setVoter($user);
+            $vote->setValue($row['value']);
+            $em->persist($vote);
+        }
+        mysql_free_result($result);
+
+        $em->flush();
+    }
+
+    private function importFollows() {
+        global $svic_db;
+
+        $sql =  "SELECT fos_user.email_canonical, idea.name, followmappings.* FROM followmappings, fos_user, idea WHERE fos_user.username = followmappings.user AND idea.id = followmappings.idea";
+        $result = mysql_query($sql, $svic_db) or die('Invalid query: ' . mysql_error());
+        while ($row = mysql_fetch_assoc($result)) {
+
+            $em = $this->getDoctrine()->getEntityManager();
+            $idea = $em->getRepository('IdeaBundle:Idea')->findOneBy(array('name' => $row['name']));
+            if(!$idea) {
+                echo "Can't find idea named " . $row['name'] . "<br/>";
+                continue;
+            }
+
+            $user = $em->getRepository('UserBundle:User')->findOneBy(array('emailCanonical' => $row['email_canonical']));
+            if(!$user) {
+                echo "Can't find creator for idea " . $row['name'] . "<br/>";
+                continue;
+            }
+
+            $follow = new FollowMapping($user->getUsername(), $idea);
+            $em->persist($follow);
+        }
+        mysql_free_result($result);
+
+        try {
+            $em->flush();
+        } catch(\Exception $e) {
+
+        }
+    }
+
+    private function importComments($event) {
+        global $svic_db;
+
+        $list = null;
+        if(!$list = $event->getEntrySetRegistration()->getEntrySets()[0]) {
+            echo "No Idea list found.";
+            return;
+        }
+
+        $sql =  "SELECT fos_user.email_canonical, idea.name, comments.* FROM comments, fos_user, idea WHERE comments.user_id = fos_user.id AND comments.idea_id = idea.id";
+        $result = mysql_query($sql, $svic_db) or die('Invalid query: ' . mysql_error());
+        while ($row = mysql_fetch_assoc($result)) {
+
+            $em = $this->getDoctrine()->getEntityManager();
+            $idea = $em->getRepository('IdeaBundle:Idea')->findOneBy(array('name' => $row['name']));
+            if(!$idea) {
+                echo "Can't find idea named " . $row['name'] . "<br/>";
+                continue;
+            }
+
+            $user = $em->getRepository('UserBundle:User')->findOneBy(array('emailCanonical' => $row['email_canonical']));
+            if(!$user) {
+                echo "Can't find creator for idea " . $row['name'] . "<br/>";
+                continue;
+            }
+
+            $comment = new Comment($user, $row['text'], $idea);
+            $comment->setTimestamp($row['timestamp']);
+            $em->persist($comment);
+        }
+        mysql_free_result($result);
+
+        $em->flush();
+    }
+
+    private function importIdeas($event) {
+        global $svic_db;
+
+        $list = null;
+        if(!$list = $event->getEntrySetRegistration()->getEntrySets()[0]) {
+            echo "No Idea list found.";
+            return;
+        }
+        
+        $result = mysql_query("SELECT idea.*, fos_user.email_canonical FROM idea, fos_user WHERE idea.creator_id = fos_user.id", $svic_db) or die('Invalid query: ' . mysql_error());
+        while ($row = mysql_fetch_assoc($result)) {
+
+            $em = $this->getDoctrine()->getEntityManager();
+            $creator = $em->getRepository('UserBundle:User')->findOneBy(array('emailCanonical' => $row['email_canonical']));
+            if(!$creator) {
+                echo "Can't find user for idea " . $row[id] . "<br/>";
+                continue;
+            }
+
+            $idea = new Idea();
+
+            $idea->setName($row['name']);
+
+            $idea->setCreator($creator);
+            $idea->setEntrySet($list);
+            $idea->setDescription($row['description']);
+
+            if (array_key_exists('members', $row)) {
+                $idea->setMembers($row['members']);
+            }
+
+            if (array_key_exists('stage', $row)) {
+                $idea->setStage($row['stage']);
+            }
+
+            if (array_key_exists('forCourse', $row)) {
+                $idea->setForCourse(true);
+                $idea->setProfessors($row['professors']);
+            }
+            else{
+                $idea->setForCourse(false);
+            }
+
+            if (array_key_exists('amount', $row)) {
+                if (!empty($row['amount'])){
+                    $idea->setAmount($row['amount']);
+                }
+            }
+
+            //no tag import
+            //$idea->addTags($this->getIdeaService()->processTags($params['tags']));
+
+            if (isset($params['isPrivate'])){
+                $idea->setIsPrivate(true);
+            }
+
+            $idea->setHighestRound($event->getCurrentRound());
+            $em->persist($idea);
+        }
+        mysql_free_result($result);
+
+        $em->flush();
+    }
+
+    private function importUsers($event) {
+        global $svic_db;
+        
+        $result = mysql_query("SELECT * FROM fos_user", $svic_db) or die('Invalid query: ' . mysql_error());
+
+        while ($row = mysql_fetch_assoc($result)) {
+            $email = $row['email_canonical'];
+
+            $toUser = $this->getUserManager()->findUserBy(array('emailCanonical' => $email));
+            if($toUser) {
+                //echo ": '" . $email . "' already exists with id:" . $toUser->getId();
+                continue;
+            } 
+            
+            //$password = mt_rand(100000, 999999);
+            echo "Creating user: '" . $row['name'] . "<br/>";
+                
+            $um = $this->getUserManager();
+            $toUser = $um->createUser();
+
+            $toUser->setEmail($email);
+            $toUser->setUsername($email);
+            $toUser->setPlainPassword(mt_rand(100000, 999999));
+            $toUser->setEnabled(true);
+
+            $toUser->setEventRole($row['svicRole']);
+            $toUser->setOrganization($row['school']);
+            $toUser->setTitle($row['affiliation']);
+            $toUser->setCountry($row['country']);
+            $toUser->setName($row['name']);
+            $toUser->setIpAddress($row['ipAddress']);
+            
+            // $toUser->setDegree($row['major']);  // Need to add this one
+
+            $um->updateUser($toUser);
+
+            $this->getGroupManager()->autoJoinGroup($event->getGroup(), $toUser);
+            $this->getGroupEventService()->register($event, $toUser);
+        }
+
+        // Free the resources associated with the result set
+        // This is done automatically at the end of the script
+        mysql_free_result($result);
+    }
+
+    private function connectToSvic() {
+        global $svic_db;
+        if ($svic_db) {
+            return;
+        }
+
+        $svic_db = mysql_connect('localhost', 'root', 'sqladmin', TRUE) or die('Could not connect to server.' );
+        mysql_select_db("svic", $svic_db) or die('Could not select database.');
+
+        return $svic_db;
+    }
+
+    private function disconnectFromSvic() {
+        global $svic_db;
+        if( $svic_db != false )
+            mysql_close($svic_db);
+        $svic_db = false;
     }
 }
