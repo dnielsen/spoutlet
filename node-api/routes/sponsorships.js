@@ -12,6 +12,7 @@ var spec = {
         "sponsor_id" : { type : Type.Int, props : ["default"]},
         "group_id" : { type : Type.Int, props : ["default"]},
         "event_id" : { type : Type.Int, props : ["default"]},
+        "global_event_id" : { type : Type.Int, props : ["default"]},
         "level" : { type : Type.Int, props : ["default"]},
         "status" : { type : Type.Str, props : ["default"] },
         

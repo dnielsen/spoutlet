@@ -10,6 +10,7 @@ var spec = {
         "id" : { type : Type.Int, props : ["default", "read_only"]},
         "creator_id" : { type : Type.Int, props : ["default"]},
         "image_id" : { type : Type.Int, props : ["default"]},
+        "department_id" : { type : Type.Int, props : ["default"]},
         "name" : { type : Type.Str, props : ["default"]},
         "url" : { type : Type.Str, props : ["default"]},
 
