@@ -154,7 +154,7 @@ server.get('/sponsors', sponsors.find_all);
 server.get('/sponsors/:id', sponsors.find_by_primary_key);
 
 server.get('/sponsorships', sponsorships.find_all);
-server.get('/sponsorships/:id', sponsors.find_by_primary_key);
+server.get('/sponsorships/:id', sponsorships.find_by_primary_key);
 
 server.get('/locations', locations.find_all);
 server.get('/locations/:id', locations.find_by_primary_key);
