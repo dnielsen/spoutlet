@@ -78,6 +78,7 @@ Type.Group.Category = new Type();
 Type.Event = new Resource.ResourceType();
 Type.Event.RegOpt = new Type();
 Type.Session = new Resource.ResourceType();
+Type.SessionSpeaker = new Resource.ResourceType();
 Type.List = new Resource.ResourceType();
 Type.List.Type = new Type();
 Type.List.Size = new Resource.ResourceType();

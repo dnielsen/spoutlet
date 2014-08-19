@@ -123,6 +123,11 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     protected $speakerBio;
 
     /**
+     * @ORM\OneToMany(targetEntity="Platformd\EventBundle\Entity\SessionSpeaker", mappedBy="session")
+     */
+    protected $speakers;
+
+    /**
      * Session Room name/number
      *
      * @ORM\Column(type="string", nullable=true)
@@ -150,6 +155,7 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
         $this->event        = $event;
         $this->attendees    = new ArrayCollection();
         $this->followers    = new ArrayCollection();
+        $this->speakers     = new ArrayCollection();
 //        $this->tags         = new ArrayCollection();
     }
 
@@ -379,6 +385,15 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     public function getPublicNotesLink()
     {
         return $this->publicNotesLink;
+    }
+
+    public function setSpeakers($speakers)
+    {
+        $this->speakers = $speakers;
+    }
+    public function getSpeakers()
+    {
+        return $this->speakers;
     }
 
 //    public function addTag(Tag $tag)
