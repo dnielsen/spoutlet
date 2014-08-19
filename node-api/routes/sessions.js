@@ -14,6 +14,12 @@ var spec = {
         "event_id" : { type : Type.Int, props : ["required", "default"] },
         "source_idea_id" : { type : Type.Int, props : [] },
 
+        "speaker_id" : { type : Type.Int, props : ["default"] },
+        "room" : { type : Type.Int, props : ["default"] },
+        "slidesLink" : { type : Type.Str, props : ["default"] },
+        "speaker_bio" : { type : Type.Str, props : ["default"] },
+
+        "speaker" : { type : Type.User, rel : "belongs_to", mapping : 'speaker_id' },
         "event" : { type : Type.Event, rel : "belongs_to", mapping : 'event_id' },
         "source_idea" : { type : Type.Entry, rel : "belongs_to", mapping : 'source_idea_id' }
     }

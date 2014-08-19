@@ -12,7 +12,9 @@ var spec = {
         "sponsor_id" : { type : Type.Int, props : ["default"]},
         "group_id" : { type : Type.Int, props : ["default"]},
         "event_id" : { type : Type.Int, props : ["default"]},
+        "global_event_id" : { type : Type.Int, props : ["default"]},
         "level" : { type : Type.Int, props : ["default"]},
+        "status" : { type : Type.Str, props : ["default"] },
         
         "sponsor" : { type : Type.Sponsor, rel : "belongs_to", props : ["default"], mapping : "sponsor_id" },
         "grp" : { type : Type.Group, rel : "belongs_to", props : ["default"], mapping : "group_id" },
@@ -76,9 +78,9 @@ exports.find_all = function (req, resp, next) {
     return resource.find_all(req, resp, next, collection_handler);
 };
 
-// exports.find_by_primary_key = function (req, resp, next) {
-//     return resource.find_by_primary_key(req, resp, next);
-// };
+exports.find_by_primary_key = function (req, resp, next) {
+    return resource.find_by_primary_key(req, resp, next);
+};
 
 // exports.create = function (req, resp, next) {
 //     return resource.create(req, resp, next);
