@@ -236,7 +236,6 @@ parameters:
         # we're abusing the locales to make our many "sites"
         # this will change in the future
         - en_campsite       # www.
-        # - en_dev            # no prefix
         - en_staging        # staging.
         - en_sjsu           # sjsu.
         - en_bigdatacamp    # bigdatacamp.
@@ -245,12 +244,13 @@ parameters:
         - en_platformd      # platformd.
         - en_toyota         # quantified-car.
         - en_cloudcampbd    # cloudcampbd.
+        - en_marketing      # www.marketingcamp.org
 
     # used by the router
     site_host_map:
         # %host_suffix% might be something like "staging"
         en_campsite:        www%host_suffix%.%base_host%
-        # en_dev:             %base_host%
+        en_marketing:       www.marketingcamp.org
         en_staging:         %host_suffix%.%base_host%
         en_sjsu:            sjsu%host_suffix%.%base_host%
         en_bigdatacamp:     bigdatacamp%host_suffix%.%base_host%
@@ -263,7 +263,6 @@ parameters:
     # this is repeated in the multitenancy manager - should not be
     platformd_sites:
         en_campsite:        Campsite
-        # en_dev:             Dev
         en_staging:         Staging
         en_sjsu:            SanJoseStateUniversity
         en_bigdatacamp:     BigDataCamp
@@ -272,6 +271,7 @@ parameters:
         en_platformd:       PlatformD
         en_toyota:          Toyota
         en_cloudcampbd:     CloudCampBD
+        en_marketing:       MarketingCamp
 
     # an array of "sites" where we host their main site
     # used by the SiteProtectionListener to prevent, for example, Latin America users
