@@ -235,26 +235,34 @@ parameters:
     available_locales:
         # we're abusing the locales to make our many "sites"
         # this will change in the future
-        - en_campsite       # www.
-        - en_staging        # staging.
-        - en_sjsu           # sjsu.
-        - en_bigdatacamp    # bigdatacamp.
-        - en_dataminingcamp # dataminingcamp.
-        - en_hackomaha      # hackomaha.
-        - en_platformd      # platformd.
-        - en_toyota         # quantified-car.
-        - en_cloudcampbd    # cloudcampbd.
-        - en_marketing      # www.marketingcamp.org
+        - en_campsite        # www.
+        - en_marketing       # www.marketingcamp.org
+        - en_bigdatacamp     # www.bigdatacamp.org
+        - en_dataminingcamp  # www.dataminingcamp.org
+        - en_datasciencecamp # www.datasciencecamp.org
+        - en_opscamp         # www.opscamp.org
+        - en_iotcamp         # www.iotcamp.org
+        - en_stackup         # www.stackup.org
+        - en_staging         # staging.
+        - en_sjsu            # sjsu.
+        - en_hackomaha       # hackomaha.
+        - en_platformd       # platformd.
+        - en_toyota          # quantified-car.
+        - en_cloudcampbd     # cloudcampbd.
 
     # used by the router
     site_host_map:
         # %host_suffix% might be something like "staging"
         en_campsite:        www%host_suffix%.%base_host%
         en_marketing:       www.marketingcamp.org
+        en_bigdatacamp:     www.bigdatacamp.org
+        en_dataminingcamp:  www.dataminingcamp.org
+        en_datasciencecamp: www.datasciencecamp.org
+        en_opscamp:         www.opscamp.org
+        en_iotcamp:         www.iotcamp.org
+        en_stackup:         www.stackup.org
         en_staging:         %host_suffix%.%base_host%
         en_sjsu:            sjsu%host_suffix%.%base_host%
-        en_bigdatacamp:     bigdatacamp%host_suffix%.%base_host%
-        en_dataminingcamp:  dataminingcamp%host_suffix%.%base_host%
         en_hackomaha:       hackomaha%host_suffix%.%base_host%
         en_platformd:       platformd%host_suffix%.%base_host%
         en_toyota:          quantified-car%host_suffix%.%base_host%
@@ -263,15 +271,19 @@ parameters:
     # this is repeated in the multitenancy manager - should not be
     platformd_sites:
         en_campsite:        Campsite
-        en_staging:         Staging
-        en_sjsu:            SanJoseStateUniversity
+        en_marketing:       MarketingCamp
         en_bigdatacamp:     BigDataCamp
         en_dataminingcamp:  DataMiningCamp
+        en_datasciencecamp: DataScienceCamp
+        en_opscamp:         OpsCamp
+        en_iotcamp:         IoTCamp
+        en_stackup:         Stackup
+        en_staging:         Staging
+        en_sjsu:            SanJoseStateUniversity
         en_hackomaha:       HackOmaha
         en_platformd:       PlatformD
         en_toyota:          Toyota
         en_cloudcampbd:     CloudCampBD
-        en_marketing:       MarketingCamp
 
     # an array of "sites" where we host their main site
     # used by the SiteProtectionListener to prevent, for example, Latin America users
