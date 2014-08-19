@@ -3,6 +3,7 @@ var restify = require('restify'),
     entries = require('./routes/entries'),
     lists = require('./routes/lists'),
     sessions = require('./routes/sessions'),
+    session_speakers = require('./routes/session_speakers'),
     events = require('./routes/events'),
     groups = require('./routes/groups'),
     votes = require('./routes/votes'),
@@ -138,6 +139,9 @@ server.get('/lists/:id', lists.find_by_primary_key);
 
 server.get('/sessions', sessions.find_all);
 server.get('/sessions/:id', sessions.find_by_primary_key);
+
+server.get('/session_speakers', session_speakers.find_all);
+server.get('/session_speakers/:id', session_speakers.find_by_primary_key);
 
 server.get('/events', events.find_all);
 server.get('/events/:id', events.find_by_primary_key);

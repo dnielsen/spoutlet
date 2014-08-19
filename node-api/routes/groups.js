@@ -34,6 +34,7 @@ var spec = {
         "category" : { type : Type.Group.Category, props : ["default"] },
         "description" : { type : Type.Str, props : [] },
         "slug" : { type : Type.Str, props : ["default", "required"] },
+        "relativeSlug" : { type : Type.Str, props : ["default"] },
         "featured" : { type : Type.Bool, props : ["default"], initial : false },
         "isPublic" : { type : Type.Bool, props : [], initial : true },
         "created_at" : { type : Type.Date, props : ["read-only"], initial : get_now },
@@ -43,6 +44,7 @@ var spec = {
         "owner_id" : { type : Type.Int, props : []},
         "parentGroup_id" : { type : Type.Int, props : ["read-only"] },
         "location_id" : { type : Type.Int, props : ["default"] },
+
 
         "entrySetRegistration" : { type : Type.Registry, rel : "belongs_to", props : ["default"], mapping : "entrySetRegistration_id" },
         "owner" : { type : Type.User, rel : "belongs_to", mapping : "owner_id" },
