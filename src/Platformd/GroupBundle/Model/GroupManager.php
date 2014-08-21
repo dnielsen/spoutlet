@@ -721,7 +721,7 @@ class GroupManager
             'id' => $group->getId(),
             'slug' => $group->getSlug(),
             'urlRouteName' => $group->getLinkableRouteName(),
-            'urlRouteParams' => $group->getLinkableRouteParameters(),
+            'urlRouteParams' => $this->getRouteParamsForGroup($group),
             'thumbnail' => $group->getThumbnail() ? $this->mediaExposer->getPath($group->getThumbnail(), array()) : null,
             'name' => $group->getName(),
             'owner' => array(
@@ -736,5 +736,20 @@ class GroupManager
             'latitude' => $group->getLocation()->getLatitude(),
             'longitude' => $group->getLocation()->getLongitude(),
         );
+    }
+
+    public function getRouteParamsForGroup($group) {
+        return array(
+            'slug' => $this->getRelevantSlugForGroup($group),
+        );
+    }
+
+    public function getRelevantSlugForGroup($group) {
+        if($this->siteUtil->getCurrentSite()->getCommunityGroup()) {
+            if ($slug = $group->getRelativeSlug()){
+                return $slug;
+            }
+        }
+        return $group->getSlug();
     }
 }

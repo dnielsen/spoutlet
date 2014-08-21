@@ -805,7 +805,7 @@ class IdeaController extends Controller
         
         if ($eventType == 'group') {
             return new RedirectResponse($this->generateUrl('group_event_view', 
-                                        array('groupSlug'=>$event->getGroup()->getSlug(), 
+                                        array('groupSlug'=>$this->getRelevantSlugForGroup($event->getGroup()), 
                                               'eventId'=>$event->getId())));
         }
         
@@ -836,7 +836,7 @@ class IdeaController extends Controller
             $this->setFlash('info', 'You are already watching '.$group->getName().'!');
         }
 
-        return new RedirectResponse($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+        return new RedirectResponse($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))));
     }
 
     public function unwatchGroupAction($groupId)
@@ -862,7 +862,7 @@ class IdeaController extends Controller
             $this->setFlash('info', 'You are not watching this group.');
         }
 
-        return new RedirectResponse($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+        return new RedirectResponse($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))));
     }
 
     public function followAction(Request $request, $entrySetId, $entryId) {
@@ -1906,7 +1906,7 @@ class IdeaController extends Controller
         if ($eventType == 'group') {
             $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($eventId);
             $returnUrl = $this->generateUrl('group_event_view', array(
-                                            'groupSlug' => $event->getGroup()->getSlug(), 
+                                            'groupSlug' => $this->getRelevantSlugForGroup($event->getGroup()), 
                                             'eventId' => $event->getId()));
         } elseif ($eventType == 'global') {
             $event = $this->getDoctrine()->getRepository('EventBundle:GlobalEvent')->find($eventId);

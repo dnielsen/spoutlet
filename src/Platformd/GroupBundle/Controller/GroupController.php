@@ -126,7 +126,7 @@ class GroupController extends Controller
         $baseHost           = $this->container->getParameter('base_host');
 
         $groupName          = $application->getGroup()->getName();
-        $groupUrlRelative   = $this->generateUrl('group_show', array('slug' => $application->getGroup()->getSlug()));
+        $groupUrlRelative   = $this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($application->getGroup())));
         $groupUrlAbsolute   = sprintf('http://%s%s', $applicationSite->getFullDomain(), $groupUrlRelative);
 
         $subject            = "You’re approved to be in an Alienware Arena Group!";
@@ -154,7 +154,7 @@ Alienware Arena Team
 
         if (!$application) {
             $this->setFlash('error', 'Application not found!');
-            return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
+            return $this->redirect($this->generateUrl('group_applications', array('slug' => $this->getRelevantSlugForGroup($group))));
         }
 
         $user = $application->getApplicant();
@@ -162,7 +162,7 @@ Alienware Arena Team
 
         if (!$user) {
             $this->setFlash('error', 'User not found!');
-            return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
+            return $this->redirect($this->generateUrl('group_applications', array('slug' => $this->getRelevantSlugForGroup($group))));
         }
 
         $em = $this->getEntityManager();
@@ -175,7 +175,7 @@ Alienware Arena Team
             $em->flush();
 
             $this->setFlash('success', 'This user is already a member of this group - application removed!');
-            return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
+            return $this->redirect($this->generateUrl('group_applications', array('slug' => $this->getRelevantSlugForGroup($group))));
         }
 
         $joinAction = new GroupMembershipAction();
@@ -225,7 +225,7 @@ Alienware Arena Team
 
         $this->varnishBan($this->generateUrl('_group_member_check', array('groupId' => $group->getId())), array('userId' => $user->getId()));
 
-        return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
+        return $this->redirect($this->generateUrl('group_applications', array('slug' => $this->getRelevantSlugForGroup($group))));
     }
 
     public function rejectApplicationAction($slug, $applicationId) {
@@ -239,14 +239,14 @@ Alienware Arena Team
 
         if (!$application) {
             $this->setFlash('error', 'Application not found!');
-            return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
+            return $this->redirect($this->generateUrl('group_applications', array('slug' => $this->getRelevantSlugForGroup($group))));
         }
 
         $user = $application->getApplicant();
 
         if (!$user) {
             $this->setFlash('error', 'User not found!');
-            return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
+            return $this->redirect($this->generateUrl('group_applications', array('slug' => $this->getRelevantSlugForGroup($group))));
         }
 
         $em = $this->getEntityManager();
@@ -259,7 +259,7 @@ Alienware Arena Team
             $em->flush();
 
             $this->setFlash('error', 'This user is already a member of this group - application removed!');
-            return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
+            return $this->redirect($this->generateUrl('group_applications', array('slug' => $this->getRelevantSlugForGroup($group))));
         }
 
         $em->remove($application);
@@ -268,7 +268,7 @@ Alienware Arena Team
         $this->setFlash('success', sprintf('You have successfully rejected \'%s\' from joining your group!', $user->getUsername()));
         $this->varnishBan($this->generateUrl('_group_member_check', array('groupId' => $group->getId())), array('userId' => $user->getId()));
 
-        return $this->redirect($this->generateUrl('group_applications', array('slug' => $group->getSlug())));
+        return $this->redirect($this->generateUrl('group_applications', array('slug' => $this->getRelevantSlugForGroup($group))));
     }
 
     public function applicationsAction($slug) {
@@ -371,12 +371,12 @@ Alienware Arena Team
 
         if ($group->isOwner($user)) {
             $this->setFlash('error', 'You are the group owner, you are not allowed to leave the group!');
-            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))));
         }
 
         if (!$groupManager->isMember($user, $group)) {
             $this->setFlash('error', 'You are not a member of this group!');
-            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))));
         }
 
         $ownedEvents = $this->getGroupEventService()->findBy(array(
@@ -398,7 +398,7 @@ Alienware Arena Team
 
         if ($unexpired > 0) {
             $this->setFlash('error', 'Sorry! We are unable to process your request because you have upcoming events listed for this group. Please cancel your events by going to Account > Events or wait until your events are over.');
-            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))));
         }
 
         $this->ensureAllowed($group, 'LeaveGroup');
@@ -432,7 +432,7 @@ Alienware Arena Team
         $this->varnishBan($this->generateUrl('_group_show_content', array('slug' => $slug)));
         $this->varnishBan($this->generateUrl('_group_member_check', array('groupId' => $group->getId())), array('userId' => $user->getId()));
 
-        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+        return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))));
     }
 
     public function joinAction(Request $request, $slug)
@@ -486,7 +486,7 @@ Alienware Arena Team
         }
 
         $groupName       = $group->getName();
-        $groupUrl        = $this->generateUrl('group_show', array('slug' => $group->getSlug()), true);
+        $groupUrl        = $this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group)), true);
         $groupOwnerEmail = $group->getOwner()->getEmail();
 
         $subject         = $this->trans('platformd.group.email.welcome.title', array('%groupName%' => $groupName));
@@ -551,7 +551,7 @@ Alienware Arena Team
                     '%userName%' => $user->getUsername(),
                     '%groupUrl%' => $this->generateUrl($group->getLinkableRouteName(), $group->getLinkableRouteParameters(), true),
                     '%groupName%' => $group->getName(),
-                    '%approvalUrl%' => $this->generateUrl('group_applications', array('slug' => $group->getSlug()), true),
+                    '%approvalUrl%' => $this->generateUrl('group_applications', array('slug' => $this->getRelevantSlugForGroup($group)), true),
                 ), 'messages', $emailLocale));
 
         $emailTo = $group->getOwner()->getEmail();
@@ -579,7 +579,7 @@ Alienware Arena Team
 
         if ($groupManager->isMember($user, $group) || $group->isOwner($user)) {
             $this->setFlash('error', 'You are already a member of this group!');
-            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))));
         }
 
         $userApplications = $this->getGroupApplicationRepo()->findByApplicant($user->getId());
@@ -589,7 +589,7 @@ Alienware Arena Team
 
                 if ($app->getGroup() && ($app->getGroup()->getId() == $group->getId())) {
                     $this->setFlash('error', 'You have already applied to this group!');
-                    return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+                    return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))));
                 }
             }
         }
@@ -618,7 +618,7 @@ Alienware Arena Team
                 $this->setFlash('success', 'You will receive an email if you are admitted into this group.');
                 $this->varnishBan($this->generateUrl('_group_member_check', array('groupId' => $group->getId())), array('userId' => $user->getId()));
 
-                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))));
             }
 
             $this->setFlash('error', 'Please correct the following errors and try again!');
@@ -651,19 +651,19 @@ Alienware Arena Team
 
         if($user == null) {
             $this->setFlash('error', 'The user you are trying to remove could not be found!');
-            return $this->redirect($this->generateUrl('group_members', array('slug' => $group->getSlug())));
+            return $this->redirect($this->generateUrl('group_members', array('slug' => $this->getRelevantSlugForGroup($group))));
         }
 
         $groupManager = $this->getGroupManager();
 
         if ($group->isOwner($user)) {
             $this->setFlash('error', 'You are the group organizer. Please email contact@alienwarearena.com if you want to be removed from this group.');
-            return $this->redirect($this->generateUrl('group_members', array('slug' => $group->getSlug())));
+            return $this->redirect($this->generateUrl('group_members', array('slug' => $this->getRelevantSlugForGroup($group))));
         }
 
         if (!$groupManager->isMember($user, $group)) {
             $this->setFlash('error', 'You cannot remove someone who is not a member of this group!');
-            return $this->redirect($this->generateUrl('group_members', array('slug' => $group->getSlug())));
+            return $this->redirect($this->generateUrl('group_members', array('slug' => $this->getRelevantSlugForGroup($group))));
         }
 
         //$this->ensureAllowed($group, 'LeaveGroup');
@@ -686,7 +686,7 @@ Alienware Arena Team
 
         }
 
-        return $this->redirect($this->generateUrl('group_members', array('slug' => $group->getSlug())));
+        return $this->redirect($this->generateUrl('group_members', array('slug' => $this->getRelevantSlugForGroup($group))));
     }
 
     public function eventsAction($slug)
@@ -786,7 +786,7 @@ Alienware Arena Team
 
                 $this->varnishBan($this->generateUrl('_group_news', array('slug' => $slug)));
 
-                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#news');
             }
 
             $this->setFlash('error', 'Please correct the following errors and try again!');
@@ -812,7 +812,7 @@ Alienware Arena Team
 
         if (!$newsArticle) {
             $this->setFlash('error', 'News article does not exist!');
-            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#news');
         }
 
         $tagManager->loadTagging($newsArticle);
@@ -846,7 +846,7 @@ Alienware Arena Team
                 $this->setFlash('success', 'New article updated successfully.');
                 $this->varnishBan($this->generateUrl('_group_news', array('slug' => $slug)));
 
-                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#news');
             }
 
             $this->setFlash('error', 'Please correct the following errors and try again!');
@@ -871,7 +871,7 @@ Alienware Arena Team
 
         if (!$newsArticle) {
             $this->setFlash('error', 'News article does not exist!');
-            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#news');
         }
 
         $newsArticle->setDeleted(true);
@@ -882,7 +882,7 @@ Alienware Arena Team
 
         $this->varnishBan($this->generateUrl('_group_news', array('slug' => $slug)));
 
-        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#news');
+        return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#news');
     }
 
     public function imageAction($slug)
@@ -997,7 +997,7 @@ Alienware Arena Team
 
                 $this->varnishBan($this->generateUrl('_group_images', array('slug' => $slug)));
 
-                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#images');
             }
 
             $this->setFlash('error', 'Please correct the following errors and try again!');
@@ -1022,7 +1022,7 @@ Alienware Arena Team
 
         if (!$image) {
             $this->setFlash('error', 'Image does not exist!');
-            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#images');
         }
 
         $form = $this->createFormBuilder($image)
@@ -1041,7 +1041,7 @@ Alienware Arena Team
                 $this->setFlash('success', 'Image updated successfully.');
                 $this->varnishBan($this->generateUrl('_group_images', array('slug' => $slug)));
 
-                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#images');
             }
         }
 
@@ -1065,7 +1065,7 @@ Alienware Arena Team
 
         if (!$image) {
             $this->setFlash('error', 'Image does not exist!');
-            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#images');
         }
 
         $image->setDeleted(true);
@@ -1077,7 +1077,7 @@ Alienware Arena Team
 
         $this->varnishBan($this->generateUrl('_group_images', array('slug' => $slug)));
 
-        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#images');
+        return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#images');
     }
 
     public function videosAction($slug)
@@ -1155,7 +1155,7 @@ Alienware Arena Team
 
                 $this->varnishBan($this->generateUrl('_group_videos', array('slug' => $slug)));
 
-                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#videos');
             }
 
             $this->setFlash('error', 'Please correct the following errors and try again!');
@@ -1180,7 +1180,7 @@ Alienware Arena Team
 
         if (!$video) {
             $this->setFlash('error', 'Video does not exist!');
-            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#videos');
         }
 
         $form = $this->createFormBuilder($video)
@@ -1202,7 +1202,7 @@ Alienware Arena Team
 
                 $this->varnishBan($this->generateUrl('_group_videos', array('slug' => $slug)));
 
-                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#videos');
             }
 
             $this->setFlash('error', 'Please correct the following errors and try again!');
@@ -1227,7 +1227,7 @@ Alienware Arena Team
 
         if (!$videoArticle) {
             $this->setFlash('error', 'Video does not exist!');
-            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#videos');
         }
 
         $em = $this->getEntityManager();
@@ -1238,7 +1238,7 @@ Alienware Arena Team
 
         $this->varnishBan($this->generateUrl('_group_videos', array('slug' => $slug)));
 
-        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#videos');
+        return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#videos');
     }
 
     public function discussionsAction($slug)
@@ -1281,7 +1281,7 @@ Alienware Arena Team
         $group->setDiscussionsEnabled(true);
         $this->getGroupManager()->saveGroup($group);
 
-        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+        return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#discussions');
     }
 
     public function disableDiscussionsAction($slug)
@@ -1293,7 +1293,7 @@ Alienware Arena Team
         $group->setDiscussionsEnabled(false);
         $this->getGroupManager()->saveGroup($group);
 
-        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+        return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#discussions');
     }
 
     public function addDiscussionAction($slug, Request $request)
@@ -1339,7 +1339,7 @@ Alienware Arena Team
 
                 $this->varnishBan($this->generateUrl('_group_discussions', array('slug' => $slug)));
 
-                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#discussions');
             }
 
             $this->setFlash('error', 'Please correct the following errors and try again!');
@@ -1365,7 +1365,7 @@ Alienware Arena Team
 
         if (!$discussion) {
             $this->setFlash('error', 'Discussion does not exist!');
-            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#discussions');
         }
 
         $tagManager->loadTagging($discussion);
@@ -1402,7 +1402,7 @@ Alienware Arena Team
 
                 $this->varnishBan($this->generateUrl('_group_discussions', array('slug' => $slug)));
 
-                return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+                return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#discussions');
             }
 
             $this->setFlash('error', 'Please correct the following errors and try again!');
@@ -1429,7 +1429,7 @@ Alienware Arena Team
 
         if (!$discussion) {
             $this->setFlash('error', 'Discussion does not exist!');
-            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#discussions');
         }
 
         $this->getGroupManager()->deleteGroupDiscussion($discussion);
@@ -1438,7 +1438,7 @@ Alienware Arena Team
 
         $this->varnishBan($this->generateUrl('_group_discussions', array('slug' => $slug)));
 
-        return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+        return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#discussions');
     }
 
     public function viewDiscussionAction($slug, $discussionId, Request $request)
@@ -1452,7 +1452,7 @@ Alienware Arena Team
 
         if (!$groupDiscussion) {
             $this->setFlash('error', 'Discussion does not exist!');
-            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#discussions');
         }
 
         // We increment viewCount
@@ -1518,7 +1518,7 @@ Alienware Arena Team
 
         if (!$groupDiscussion) {
             $this->setFlash('error', 'Discussion does not exist!');
-            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())) . '#discussions');
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))) . '#discussions');
         }
 
         $groupDiscussionPost = new GroupDiscussionPost();
@@ -1595,7 +1595,7 @@ Alienware Arena Team
                 $this->setFlash('success', 'You edited the reply successfully.');
 
                 return $this->redirect($this->generateUrl('group_view_discussion', array(
-                            'slug' => $group->getSlug(),
+                            'slug' => $this->getRelevantSlugForGroup($group),
                             'discussionId' => $groupDiscussion->getId()
                         )));
             }
@@ -1639,7 +1639,7 @@ Alienware Arena Team
         $this->setFlash('success', 'Discussion Post was deleted successfully!');
 
         return $this->redirect($this->generateUrl('group_view_discussion', array(
-                    'slug' => $group->getSlug(),
+                    'slug' => $this->getRelevantSlugForGroup($group),
                     'discussionId' => $groupDiscussion->getId()
                 )));
     }
@@ -1816,7 +1816,7 @@ Alienware Arena Team
 
                     $this->setFlash('success', 'Your group was created. Fill in the details below to list your upcoming event.');
 
-                    $url = $this->generateUrl('group_event_new', array('groupSlug' => $group->getSlug()));
+                    $url = $this->generateUrl('group_event_new', array('groupSlug' => $this->getRelevantSlugForGroup($group)));
                     $request->getSession()->remove('PostCreateAction');
                     return $this->redirect($url);
                 }
@@ -1824,7 +1824,7 @@ Alienware Arena Team
 
                     $this->setFlash('success', 'Your group was created. Fill in the details below to list your upcoming event.');
 
-                    $url = $this->generateUrl('idea_admin_event', array('groupSlug' => $group->getSlug(), 'eventId' => 'newEvent'));
+                    $url = $this->generateUrl('idea_admin_event', array('groupSlug' => $this->getRelevantSlugForGroup($group), 'eventId' => 'newEvent'));
                     $request->getSession()->remove('PostCreateAction');
                     return $this->redirect($url);
                 }
@@ -1837,7 +1837,7 @@ Alienware Arena Team
                 return $this->redirect($return);
             }
 
-            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))));
         }
 
         return $this->render('GroupBundle:Group:new.html.twig', array(
@@ -1871,7 +1871,7 @@ Alienware Arena Team
 
             $this->varnishBan($this->generateUrl('_group_about', array('slug' => $slug)));
 
-            return $this->redirect($this->generateUrl('group_show', array('slug' => $group->getSlug())));
+            return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))));
         }
 
         return $this->render('GroupBundle:Group:edit.html.twig', array(
@@ -2101,7 +2101,7 @@ Alienware Arena Team
 
                 $group = $form->getData();
 
-                $slug = Urlizer::urlize($group->getSlug());
+                $slug = Urlizer::urlize($this->getRelevantSlugForGroup($group));
 
                 // If the relative slug wasn't specified, use the global slug
                 if (!$relativeSlug = $group->getRelativeSlug()) {

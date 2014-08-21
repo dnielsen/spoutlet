@@ -85,7 +85,7 @@ class GroupEventController extends Controller
         $importedGroupEvent = $this->getGroupEventService()->findOneBy(array('id' => $request->get('existing_event_select')));
 
         if ($importedGroupEvent) {
-            return $this->redirect($this->generateUrl('group_event_new_import', array('groupSlug' => $group->getSlug(), 'eventId' => $importedGroupEvent->getId())));
+            return $this->redirect($this->generateUrl('group_event_new_import', array('groupSlug' => $this->getRelevantSlugForGroup($group), 'eventId' => $importedGroupEvent->getId())));
         }
 
         $groupEvent = new GroupEvent($group);
@@ -129,19 +129,19 @@ class GroupEventController extends Controller
 
                     if ($groupEvent->getExternalUrl()) {
                         return $this->redirect($this->generateUrl('group_show', array(
-                            'slug' => $group->getSlug()
+                            'slug' => $this->getRelevantSlugForGroup($group)
                         )) . '#events');
                     }
 
                     return $this->redirect($this->generateUrl('group_event_view', array(
-                        'groupSlug' => $group->getSlug(),
+                        'groupSlug' => $this->getRelevantSlugForGroup($group),
                         'eventId' => $groupEvent->getId()
                     )));
                 } else {
                     $this->setFlash('success', 'Success! Your event has been created. The group organizer has been notified via email to review your event. If approved, your event will be listed on the group page allowing other members to RSVP for your event.');
 
                     return $this->redirect($this->generateUrl('group_show', array(
-                        'slug' => $group->getSlug()
+                        'slug' => $this->getRelevantSlugForGroup($group)
                     )) . '#events');
                 }
 
@@ -206,19 +206,19 @@ class GroupEventController extends Controller
 
                     if ($groupEvent->getExternalUrl()) {
                         return $this->redirect($this->generateUrl('group_show', array(
-                            'slug' => $group->getSlug()
+                            'slug' => $this->getRelevantSlugForGroup($group)
                         )) . '#events');
                     }
 
                     return $this->redirect($this->generateUrl('group_event_view', array(
-                        'groupSlug' => $group->getSlug(),
+                        'groupSlug' => $this->getRelevantSlugForGroup($group),
                         'eventId' => $groupEvent->getId()
                     )));
                 } else {
                     $this->setFlash('success', 'Success! Your event has been created. The group organizer has been notified via email to review your event. If approved, your event will be listed on the group page allowing other members to RSVP for your event.');
 
                     return $this->redirect($this->generateUrl('group_show', array(
-                        'slug' => $group->getSlug()
+                        'slug' => $this->getRelevantSlugForGroup($group)
                     )) . '#events');
                 }
 
@@ -282,7 +282,7 @@ class GroupEventController extends Controller
                 $this->setFlash('success', 'Event has been saved successfully.');
 
                 return $this->redirect($this->generateUrl('group_event_view', array(
-                    'groupSlug' => $group->getSlug(),
+                    'groupSlug' => $this->getRelevantSlugForGroup($group),
                     'eventId' => $groupEvent->getId()
                 )));
             }
@@ -702,7 +702,7 @@ class GroupEventController extends Controller
         $this->setFlash('success', 'An automated email was sent to the event organizer and the group members to inform them about the event.');
 
         return $this->redirect($this->generateUrl('group_event_pending_approval', array(
-            'groupSlug' => $group->getSlug()
+            'groupSlug' => $this->getRelevantSlugForGroup($group)
         )));
     }
 
@@ -743,7 +743,7 @@ class GroupEventController extends Controller
         }
 
         return $this->redirect($this->generateUrl('group_event_contact', array(
-            'groupSlug' => $groupEvent->getGroup()->getSlug(),
+            'groupSlug' => $this->getRelevantSlugForGroup($groupEvent->getGroup()),
             'eventId' => $groupEvent->getId()
         )));
     }
@@ -777,7 +777,7 @@ class GroupEventController extends Controller
         }
 
         return $this->redirect($this->generateUrl('group_event_contact', array(
-            'groupSlug' => $groupEvent->getGroup()->getSlug(),
+            'groupSlug' => $this->getRelevantSlugForGroup($groupEvent->getGroup()),
             'eventId' => $groupEvent->getId()
         )));
     }
@@ -1011,7 +1011,7 @@ class GroupEventController extends Controller
             $this->setFlash('success', ' Your event is deleted.');
         }
 
-        return $this->redirect($this->generateUrl('group_show', array('slug' => $groupEvent->getGroup()->getSlug())) . '#events');
+        return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($groupEvent->getGroup()))) . '#events');
     }
 
     private function getTagManager()

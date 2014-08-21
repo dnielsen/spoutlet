@@ -597,7 +597,7 @@ class DefaultController extends Controller
             $groupsArray[] = array(
                 'name' => $group->getName(),
                 'location' => $group->getLocation(),
-                'url' => $this->getLinkableUrl($group),
+                'url' => $this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))),
             );
         }
 
