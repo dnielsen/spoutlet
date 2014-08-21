@@ -15,6 +15,7 @@ then
 echo "deb http://repo.varnish-cache.org/ubuntu/ precise varnish-3.0" | sudo tee -a /etc/apt/sources.list
 fi
 
+sudo add-apt-repository ppa:ondrej/php5-oldstable -y
 sudo apt-get update
 
 sudo apt-get -q -y install varnish htop screen vim acl apache2-doc git-core libapache2-mod-php5 php5-intl php-apc php5-curl php5-gd php5-mysql php5-mcrypt memcached php5-memcache php5-memcached php5-sqlite ftp-upload ncurses-term php5-xdebug mysql-server mysql-client php-pear
