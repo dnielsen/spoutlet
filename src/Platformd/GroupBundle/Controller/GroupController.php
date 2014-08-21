@@ -82,6 +82,19 @@ class GroupController extends Controller
         }
     }
 
+    private function ensureGroupExistsOnCurrentSite($group) {
+        $this->ensureGroupExists($group);
+        if ($group->getAllLocales()) {
+            return;
+        }
+        foreach ($group->getSites() as $site) {
+            if ($site == $this->getCurrentSite()) {
+                return;
+            }
+        }
+        throw new NotFoundHttpException('The group does not exist in this community.');
+    }
+
     private function getYoutubeThumb($videoId) {
 
         if (!$videoId) {
@@ -1667,6 +1680,7 @@ Alienware Arena Team
     public function showAction($slug)
     {
         $group = $this->getGroupBySlug($slug);
+        $this->ensureGroupExistsOnCurrentSite($group);
 
         $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($group);
         $pastEvents     = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($group);
