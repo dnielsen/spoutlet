@@ -1,0 +1,15 @@
+<VirtualHost *:80>
+    
+    ServerAdmin dave@platformd.com
+    ServerName m.campsite.org
+   
+    DocumentRoot "/home/ubuntu/sites/mobile-campsite"
+    
+    DirectoryIndex index.html
+    
+    <Directory "/home/ubuntu/sites/mobile-campsite">
+       AllowOverride All
+       Options FollowSymLinks
+    </Directory>    
+
+</VirtualHost>

@@ -1,0 +1,19 @@
+<VirtualHost *:80>
+    
+    ServerAdmin dave@platformd.com
+    ServerName staging.campsite.org
+   
+    DocumentRoot    "/home/ubuntu/sites/staging_campsite/web"
+    ErrorLog        "/home/ubuntu/sites/staging_campsite/logs/error.log"
+    CustomLog       "/home/ubuntu/sites/staging_campsite/logs/access.log" common
+    
+    DirectoryIndex  app_dev.php
+    
+    <Directory "/home/ubuntu/sites/staging_campsite/web">
+       AllowOverride All
+       Options FollowSymLinks
+       Header set Access-Control-Allow-Origin "*"
+
+    </Directory>    
+
+</VirtualHost>
