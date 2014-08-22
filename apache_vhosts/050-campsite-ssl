@@ -4,13 +4,13 @@
     ServerName campsite.org
     ServerAlias www.campsite.org
    
-    DocumentRoot    "/home/ubuntu/sites/campsite/web"
-    ErrorLog        "/home/ubuntu/sites/campsite/logs/error.log"
-    CustomLog       "/home/ubuntu/sites/campsite/logs/access.log" common
+    DocumentRoot    "CAMPSITE_ROOT/web"
+    ErrorLog        "CAMPSITE_ROOT/logs/error.log"
+    CustomLog       "CAMPSITE_ROOT/logs/access.log" common
     
     DirectoryIndex  app.php
     
-    <Directory "/home/ubuntu/sites/campsite/web">
+    <Directory "CAMPSITE_ROOT/web">
        AllowOverride All
        Options FollowSymLinks
     </Directory>    

@@ -39,6 +39,8 @@ if [ ! -e $INI_FILE_PATH ]; then
     exit 1
 fi
 
+CAMPSITE_ROOT=`pwd`;
+
 echo "===================================================="
 echo "Server Configuration"
 echo
@@ -153,7 +155,9 @@ echo "flush_all" | nc -q 2 localhost 11211
 echo
 
 echo "Configuring Apache Virtual Hosts"
-sudo cp ./apache_vhosts/* /etc/apache2/sites-available/
+sudo cp ./apache_vhosts/*-campsite* /etc/apache2/sites-available/
+sudo sed -i "s|\(CAMPSITE_ROOT\)|${CAMPSITE_ROOT}|" /etc/apache2/sites-available/*-campsite*
+
 sudo a2dissite default
 sudo a2ensite 040-campsite 
 sudo a2enmod rewrite headers proxy proxy_http ssl
