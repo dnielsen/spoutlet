@@ -39,6 +39,7 @@ UPDATING
 * Run the update scripts to grab the latest code
 
     $ ./updateAssets.sh [dev|prod] - Dumps and installs assets, clears relevant cache if environment argument is provided
+    
     $ ./deploy.sh [dev|prod] - Pulls the latest code from git, runs db migrations, updates vendors, dumps and installs assets, clears cache (takes several minutes to clear cache)  
 
 * Head to the site (in dev mode)!
