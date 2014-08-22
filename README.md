@@ -1,15 +1,15 @@
 Campsite Install Instructions:
 ==
 
-Must use UBUNTU 12.04 LTS
+Must use UBUNTU 12.04 LTS (won't work on UBUNTU 14.04 becuase Symfony2.0 requires PHP 5.4 which won't run on UBUNTU 14.04)
 
-1. Download and extract Campsite zip OR clone repo from GitHub
+1. Download and extract Campsite zip OR install git and clone repo from GitHub
 
     a. unzip campsite-master.zip -d ~/sites/; mv ~/sites/campsite-master ~/sites/campsite
 
     OR
 
-    b. git clone git@github.com:dnielsen/spoutlet ~/sites/campsite
+    b. sudo apt-get install git; git clone git@github.com:dnielsen/spoutlet ~/sites/campsite
 
 2. If using a local DB, install MySQL Server:
 
@@ -21,7 +21,7 @@ Must use UBUNTU 12.04 LTS
 
     b. Edit app/config/parameters.ini and fill in DB details
 
-4. Run first time setup script as root:
+4. Run first time setup script as root: (this will install PHP 5.4 from a non UBUNTU repo, etc.)
 
     a. $ sudo misc_scripts/first_time_setup.sh
 
