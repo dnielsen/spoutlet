@@ -28,7 +28,8 @@ if [ ${SCRIPTPATH##*/} != "misc_scripts" ]; then
     exit 1
 fi
 
-INI_FILE_PATH="${SCRIPTPATH}/../app/config/parameters.ini";
+CAMPSITE_ROOT="${SCRIPTPATH}/..";
+INI_FILE_PATH="${CAMPSITE_ROOT}/app/config/parameters.ini";
 if [ ! -e $INI_FILE_PATH ]; then
     echo
     echo "You must first set up the parameters.ini file:"
@@ -153,6 +154,7 @@ echo "flush_all" | nc -q 2 localhost 11211
 echo
 
 echo "Configuring Apache Virtual Hosts"
+sed -i "s/\(CAMPSITE_ROOT\)/$CAMPSITE_ROOT/" ./apache_vhosts/*-campsite*
 sudo cp ./apache_vhosts/* /etc/apache2/sites-available/
 sudo a2dissite default
 sudo a2ensite 040-campsite 
