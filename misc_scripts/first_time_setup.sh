@@ -22,12 +22,15 @@ site_user_email=${2:-'admin@example.com'}
 
 SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 if [ ${SCRIPTPATH##*/} != "misc_scripts" ]; then
+    echo
     echo "Fatal error: This script must be placed in the misc_scripts directory of campsite";
+    echo
     exit 1
 fi
 
 INI_FILE_PATH="${SCRIPTPATH}/../app/config/parameters.ini";
 if [ ! -e $INI_FILE_PATH ]; then
+    echo
     echo "You must first set up the parameters.ini file:"
     echo
     echo "    1. cp app/config/parameters.ini.dist app/config/parameters.ini"
@@ -36,37 +39,44 @@ if [ ! -e $INI_FILE_PATH ]; then
     exit 1
 fi
 
+echo "===================================================="
+echo "Server Configuration"
 echo
-echo "Setting Locale & timezone"
+
+echo "Setting locale and timezone"
 sudo tee /etc/default/locale <<EOF > /dev/null
 LANG="en_US.UTF-8"
 LANGUAGE="en_US:en"
 EOF
 echo \"America/Los_Angeles\" | sudo tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
-echo "---------------------------------------"
+echo
 
-echo
-echo "Updating System Clock"
-echo
+echo "Syncing time server"
 sudo ntpdate -u pool.ntp.org
-echo "---------------------------------------"
+echo
 
 sudo ./install_packages.sh
-
 echo
-echo "Fix php.ini"
+
+echo 'Setting ServerName in apache2.conf'
+sudo echo 'ServerName localhost' >> /etc/apache2/apache2.conf
+echo
+
+echo "Configuring php.ini"
 sed -i "s/\(disable_functions = *\).*/\1/" /etc/php5/cli/php.ini
 sed -i "s/\(memory_limit = *\).*/\1-1/" /etc/php5/cli/php.ini
 sed -i "s/.*\(date.timezone *=\).*/\1 America\/Los_Angeles/" /etc/php5/cli/php.ini
 sed -i "s/.*\(date.timezone *=\).*/\1 America\/Los_Angeles/" /etc/php5/apache2/php.ini
-echo "---------------------------------------"
+echo
 
 # Get db username, pass, schema from parameters.ini
+echo "Fetching DB credentials from parameters.ini"
 db_user=$( sed -n 's/^ *database_user *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
 db_pass=$( sed -n 's/^ *database_password *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
 db_host=$( sed -n 's/^ *database_host *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
 db_name=$( sed -n 's/^ *database_name *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
 db_port=$( sed -n 's/^ *database_port *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
+echo
 
 if [ -z "$db_user" ] || [ -z "$db_pass" ] || [ -z "$db_host" ] || [ -z "$db_port" ] || [ -z "$db_name" ]; then
     echo "Fatal error: One of the following database properties in parameters.ini is empty:"
@@ -76,19 +86,29 @@ fi
 
 #--------------------
 
+echo "===================================================="
+echo "Application Configuration"
+echo
+
+echo "Installing Symfony Vendors"
 php ./bin/vendors install
+echo
 
 # Create the database and migrate the changes
+echo "Creating Database and migrating schema"
 php ./app/console doc:data:create
 php ./app/console doc:mig:mig --no-interaction
-
 php ./app/console doctrine:database:create --connection="acl" --env=prod
 php ./app/console init:acl --env=prod
+echo
 
+echo "Creating initial user"
 # Create initial user using db password
 php ./app/console fos:user:create $site_user $site_user_email $db_pass --super-admin
+echo
 
-# Create initial sites (www.campsite.org, www.campsite.local)
+echo "Insert initial site and community data"
+# Add initial data
 mysql -h$db_host -u$db_user -p$db_pass -P$db_port $db_name <<!!
 
 INSERT INTO entry_set_registry VALUES 
@@ -119,22 +139,27 @@ id, site_id,has_video,has_steam_xfire_communities,has_sweepstakes,has_forums,has
 ('2', '2', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '0', '1', '1', '0', '1', '0', '0', '0', '0', '0', '0', '1', '1', '1', '0', '0', '0', '0'), 
 ('3', '3', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '0', '1', '1', '0', '1', '0', '0', '0', '0', '0', '0', '1', '1', '1', '0', '0', '0', '0');
 
-INSERT INTO pd_groups_sites VALUES (1, 2);
+INSERT INTO pd_group_site VALUES (1, 2);
 
 quit
 !!
+echo
 
 ./updateAssets.sh prod
 
 # Flush memcached
+echo "Flushing memcached"
 echo "flush_all" | nc -q 2 localhost 11211
+echo
 
+echo "Configuring Apache Virtual Hosts"
 sudo cp ./apache_vhosts/* /etc/apache2/sites-available/
 sudo a2dissite default
-sudo a2ensite 010-mobile-campsite
-sudo a2ensite 020-api-campsite  
-sudo a2ensite 030-staging-campsite  
 sudo a2ensite 040-campsite 
-sudo a2enmod rewrite
+sudo a2enmod rewrite headers proxy proxy_http ssl
 sudo service apache2 restart
+echo
+echo "===================================================="
+echo "Campsite Installation complete!" 
+echo
 

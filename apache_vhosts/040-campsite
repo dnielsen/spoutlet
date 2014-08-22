@@ -18,41 +18,4 @@
     </Directory>    
 
 </VirtualHost>
-<VirtualHost *:443>
-    
-    ServerAdmin dave@platformd.com
-    ServerName campsite.org
-    ServerAlias www.campsite.org
-   
-    DocumentRoot    "/home/ubuntu/sites/campsite/web"
-    ErrorLog        "/home/ubuntu/sites/campsite/logs/error.log"
-    CustomLog       "/home/ubuntu/sites/campsite/logs/access.log" common
-    
-    DirectoryIndex  app.php
-    
-    <Directory "/home/ubuntu/sites/campsite/web">
-       AllowOverride All
-       Options FollowSymLinks
-    </Directory>    
 
-    #   SSL Engine Switch:
-    #   Enable/Disable SSL for this virtual host.
-    SSLEngine on
-
-    #   A self-signed (snakeoil) certificate can be created by installing
-    #   the ssl-cert package. See
-    #   /usr/share/doc/apache2.2-common/README.Debian.gz for more info.
-    #   If both key and certificate are stored in the same file, only the
-    #   SSLCertificateFile directive is needed.
-    SSLCertificateFile    /etc/ssl/certs/www.campsite.org.public.crt
-    SSLCertificateKeyFile /etc/ssl/private/www.campsite.org.private.no_key.key
-
-    #   Server Certificate Chain:
-    #   Point SSLCertificateChainFile at a file containing the
-    #   concatenation of PEM encoded CA certificates which form the
-    #   certificate chain for the server certificate. Alternatively
-    #   the referenced file can be the same as SSLCertificateFile
-    #   when the CA certificates are directly appended to the server
-    #   certificate for convinience.
-    SSLCertificateChainFile /etc/ssl/certs/www.campsite.org.intermediate.crt
-</VirtualHost>
