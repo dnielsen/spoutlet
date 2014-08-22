@@ -154,8 +154,8 @@ echo "flush_all" | nc -q 2 localhost 11211
 echo
 
 echo "Configuring Apache Virtual Hosts"
-sed -i "s/\(CAMPSITE_ROOT\)/$CAMPSITE_ROOT/" ./apache_vhosts/*-campsite*
 sudo cp ./apache_vhosts/* /etc/apache2/sites-available/
+sed -i "s/\(CAMPSITE_ROOT\)/$CAMPSITE_ROOT/" /etc/apache2/sites-available/*-campsite*
 sudo a2dissite default
 sudo a2ensite 040-campsite 
 sudo a2enmod rewrite headers proxy proxy_http ssl
