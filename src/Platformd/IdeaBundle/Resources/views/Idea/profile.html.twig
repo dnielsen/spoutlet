@@ -1,5 +1,11 @@
 {% extends 'UserBundle::accountLayout.html.twig' %}
-
+{% block title %}
+{% if showProfile %}
+    {% if user == app.user %}My Profile{% else %}{{ user.name }}{% endif %} | Campsite
+{% else %}
+    Profile | Campsite
+{% endif %}
+{% endblock %}
 {% block profile_content %}
 
     {% if ownProfile or isAdmin %}
@@ -9,9 +15,9 @@
         <a href="{{ path('contact_user', {'userId': user.id}) }}" class="btnLg right">Contact User</a>
     {% endif %}
 
-    <h1>{{ user.name }}</h1>
-
     {% if showProfile %}
+
+        <h1>{{ user.name }}</h1>
 
         {% set i = 0 %}
 
@@ -106,6 +112,7 @@
             </tbody>
         </table>
     {% else %}
+
         This profile is not available.
     {% endif %}
 {% endblock %}
