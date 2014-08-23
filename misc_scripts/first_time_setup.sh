@@ -156,7 +156,7 @@ echo
 
 echo "Configuring Apache Virtual Hosts"
 sudo cp ./apache_vhosts/*-campsite* /etc/apache2/sites-available/
-sudo sed -i "s|\(CAMPSITE_ROOT\)|${CAMPSITE_ROOT}|" /etc/apache2/sites-available/*-campsite*
+sudo sed -i "s|\(CAMPSITE_ROOT\)|${CAMPSITE_ROOT}|" /etc/apache2/sites-available/???-campsite*
 
 sudo a2dissite default
 sudo a2ensite 040-campsite 
