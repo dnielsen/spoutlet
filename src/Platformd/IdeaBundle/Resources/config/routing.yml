@@ -259,6 +259,7 @@ import_svic:
 
 # Entry Routes
 
+
 idea_create:
     pattern:    /list/{entrySetId}/create
     defaults:   { _controller: IdeaBundle:Idea:create }
@@ -350,6 +351,14 @@ idea_comment_delete:
 idea_delete:
     pattern:    /list/{entrySetId}/entry/{entryId}/delete
     defaults:   { _controller: IdeaBundle:Idea:delete }
+
+idea_add_speaker:
+    pattern:    /list/{entrySetId}/entry/{entryId}/addSpeaker
+    defaults:   { _controller: IdeaBundle:Idea:addIdeaSpeaker }
+
+idea_remove_speaker:
+    pattern:    /list/{entrySetId}/entry/{entryId}/removeSpeaker/{userId}
+    defaults:   { _controller: IdeaBundle:Idea:removeIdeaSpeaker }
 
 # Account Routes
 

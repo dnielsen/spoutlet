@@ -21,6 +21,7 @@ use Platformd\IdeaBundle\Entity\EventRecommendation;
 use Platformd\IdeaBundle\Entity\GroupRecommendation;
 use Platformd\IdeaBundle\Entity\WatchedEventMapping;
 use Platformd\IdeaBundle\Entity\WatchedGroupMapping;
+use Platformd\IdeaBundle\Entity\IdeaSpeaker;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
@@ -1966,6 +1967,107 @@ class IdeaController extends Controller
 
         return new RedirectResponse($this->generateUrl('accounts_sponsorships'));
     }
+
+    public function addIdeaSpeakerAction(Request $request, $entrySetId, $entryId) 
+    {
+        if ($request->get('cancel') == 'Cancel') {
+            return $this->redirect($this->generateUrl('idea_show', array('entrySetId' => $entrySetId,
+                                                                         'entryId'    => $entryId,)));
+        }
+
+        $doc = $this->getDoctrine();
+        $entry = $doc->getRepository('IdeaBundle:Idea')->find($entryId);
+
+        if (!$entry) {
+            throw new NotFoundHttpException('The entry with id: '.$entryId.' does not exist!');
+        }
+
+        $this->validateAuthorization($entry);
+
+        $ideaSpeaker = null;
+
+        if ($userId = $request->get('userId')) {
+            $ideaSpeaker = $doc->getRepository('IdeaBundle:IdeaSpeaker')->findOneBy(array('idea' => $entryId, 'speaker' => $userId));
+        }
+
+        if (!$ideaSpeaker) {
+            $ideaSpeaker = new IdeaSpeaker();
+            $isNew = true;
+        } else {
+            $isNew = false;
+        }
+
+        $parent = $this->getParentByIdea($entry);
+
+        if ($parent instanceof Group) {
+            $speakerChoices = $parent->getMembersSorted();
+        } elseif ($parent instanceof GroupEvent || $parent instanceof GlobalEvent) {
+            $speakerChoices = $parent->getAttendeesAlphabetical();
+        } else {
+            $speakerChoices = array();
+        }
+
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'idea_speaker', $ideaSpeaker)
+            ->add('speaker',   'entity',    array('class'   => 'UserBundle:User',
+                                                               'choices' => $speakerChoices))
+            ->add('role',      'text',      array('attr'    => array('class' => 'formRowWidth')))
+            ->add('biography', 'textarea',  array('attr'    => array('class' => 'formRowWidth', 'rows' => '6')))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+            if ($form->isValid()) {
+
+                $em = $doc->getEntityManager();
+
+                if ($isNew) {
+                    $ideaSpeaker->setIdea($entry);
+                    $em->persist($ideaSpeaker);
+                }
+
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('idea_show', array('entrySetId' => $entrySetId,
+                                                                             'entryId'    => $entryId,)));
+            }
+        }
+
+        $params = array(
+            'entry'    => $entry,
+            'entrySet' => $entry->getEntrySet(),
+            'parent'   => $parent,
+            'form'     => $form->createView(),
+        );
+
+        if ($userId) {
+            $params['userId'] = $userId;
+        }
+
+        return $this->render('IdeaBundle:Idea:ideaSpeakerForm.html.twig', $params);
+    }
+
+    public function removeIdeaSpeakerAction(Request $request, $entrySetId, $entryId, $userId) 
+    {
+        $doc = $this->getDoctrine();
+
+        $ideaSpeaker = $doc->getRepository('IdeaBundle:IdeaSpeaker')->findOneBy(array('idea' => $entryId, 'speaker' => $userId));
+        
+        if (!$ideaSpeaker) {
+            throw new NotFoundHttpException('Idea speaker not found.');
+        }
+
+        $this->validateAuthorization($ideaSpeaker->getIdea());
+
+        $em = $doc->getEntityManager();
+        $em->remove($ideaSpeaker);
+        $em->flush();
+
+        $this->setFlash('success', 'Speaker '.$ideaSpeaker->getSpeaker()->getName().' has been removed.');
+
+        return $this->redirect($this->generateUrl('idea_show', array('entrySetId' => $entrySetId,
+                                                                     'entryId'    => $entryId,)));
+    }
+
 
 
     //TODO: Move this to Idea Service
