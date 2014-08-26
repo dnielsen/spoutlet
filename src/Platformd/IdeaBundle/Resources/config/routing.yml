@@ -75,6 +75,10 @@ entry_set_delete:
 
 # Session Routes
 
+event_session_schedule:
+    pattern:    /{groupSlug}/event/{eventId}/sessions
+    defaults:   { _controller: IdeaBundle:Idea:eventSessions }
+
 event_session_create:
     pattern:    /{groupSlug}/event/{eventId}/createSession
     defaults:   { _controller: IdeaBundle:Admin:eventSession }
@@ -87,13 +91,18 @@ event_session_delete:
     pattern:    /{groupSlug}/event/{eventId}/session/{sessionId}/delete
     defaults:   { _controller: IdeaBundle:Admin:eventSessionDelete }
 
+event_session_add_speaker:
+    pattern:    /{groupSlug}/event/{eventId}/session/{sessionId}/addSpeaker
+    defaults:   { _controller: IdeaBundle:Admin:addEventSessionSpeaker }
+
+event_session_remove_speaker:
+    pattern:    /{groupSlug}/event/{eventId}/session/{sessionId}/removeSpeaker/{userId}
+    defaults:   { _controller: IdeaBundle:Admin:removeEventSessionSpeaker }
+
 event_session:
     pattern:    /{groupSlug}/event/{eventId}/session/{sessionId}
     defaults:   { _controller: IdeaBundle:Idea:eventSession }
 
-event_session_schedule:
-    pattern:    /{groupSlug}/event/{eventId}/sessions
-    defaults:   { _controller: IdeaBundle:Idea:eventSessions }
 
 # Watching Routes
 
