@@ -104,6 +104,12 @@ class AdminController extends Controller
                     $evtSession->setDescription($idea->getDescription());
 //                    $evtSession->addTags($idea->getTags());
 
+                    foreach ($idea->getSpeakers() as $speaker) {
+                        $sessionSpeaker = new SessionSpeaker($speaker);
+                        $sessionSpeaker->setSession($evtSession);
+                        $em->persist($sessionSpeaker);
+                    }
+
                     $eventStart = $event->getStartsAt();
 
                     if ($eventStart) {
