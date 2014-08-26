@@ -532,6 +532,11 @@ class Controller extends BaseController
             return;
         }
 
+        if ($securedObj instanceof EventSession) {
+            $this->validateAuthorization($securedObj->getEvent());
+            return;
+        }
+
         if ($securedObj instanceof HtmlPage) {
             $this->validateAuthorization($securedObj->getParent());
             return;

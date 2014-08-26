@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: gimballock
- * Date: 2/13/14
- * Time: 11:21 AM
- */
 
 namespace Platformd\EventBundle\Entity;
 
@@ -52,15 +46,6 @@ class SessionSpeaker
      * @ORM\Column(name="role", type="text", nullable=true)
      */
     protected $role;
-
-    /**
-     * Constructor
-     */
-    public function __construct(GroupEvent $event) {
-        // $this->event        = $event;
-        // $this->attendees    = new ArrayCollection();
-        // $this->followers    = new ArrayCollection();
-    }
 
     /**
      * Get id
