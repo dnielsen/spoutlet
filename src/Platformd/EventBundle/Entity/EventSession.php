@@ -111,18 +111,6 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     protected $source_idea;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
-     */
-    protected $speaker;
-
-    /**
-     * Speaker Bio
-     *
-     * @ORM\Column(name="speaker_bio", type="text", nullable=true)
-     */
-    protected $speakerBio;
-
-    /**
      * @ORM\OneToMany(targetEntity="Platformd\EventBundle\Entity\SessionSpeaker", mappedBy="session")
      */
     protected $speakers;
@@ -345,22 +333,6 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     public function setEndsAt($endsAt)
     {
         $this->endsAt = $endsAt;
-    }
-    public function getSpeaker()
-    {
-        return $this->speaker;
-    }
-    public function setSpeaker($value)
-    {
-        $this->speaker = $value;
-    }
-    public function getSpeakerBio()
-    {
-        return $this->speakerBio;
-    }
-    public function setSpeakerBio($value)
-    {
-        $this->speakerBio = $value;
     }
     public function setRoom($room)
     {

@@ -31,8 +31,12 @@
                         </td>
                         <td>
                             <a href="{{ eventSession | pd_link }}" class="blue">{{ eventSession.name }}</a><br/>
-                            {% if eventSession.speaker %}
-                                <em class="tnytxt">Speaker: {{ eventSession.speaker.name }}</em><br/>
+                            {% if eventSession.speakers|length > 0 %}
+                                <em class="tnytxt">
+                                {% for speaker in eventSession.speakers %}
+                                    {% if not loop.first %}, {% endif %}{{ speaker.speaker.name }}
+                                {% endfor %}
+                                </em><br/>
                             {% endif %}
                             {{ eventSession.description | truncate(300) | striptags }}
                             {#{% if eventSession.tags|length > 0 %}#}
