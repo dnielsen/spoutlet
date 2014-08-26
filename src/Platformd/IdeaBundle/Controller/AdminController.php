@@ -6,6 +6,7 @@ use DateTime;
 use Platformd\EventBundle\Entity\Event;
 use Platformd\EventBundle\Entity\EventRsvpAction;
 use Platformd\EventBundle\Entity\EventSession;
+use Platformd\EventBundle\Entity\SessionSpeaker;
 use Platformd\EventBundle\Entity\GlobalEvent;
 use Platformd\EventBundle\Entity\GroupEvent;
 use Platformd\EventBundle\Entity\GroupEventRsvpAction;
@@ -70,9 +71,6 @@ class AdminController extends Controller
         $form = $this->container->get('form.factory')->createNamedBuilder('form', 'evtSession', $evtSession)
             ->add('name',               'text',             array('attr'    => array('class' => 'formRowWidth')))
             ->add('description',        'textarea',         array('attr'    => array('class' => 'formRowWidth', 'rows' => '6')))
-            ->add('speaker',            'entity',           array('class'   => 'UserBundle:User',
-                                                                  'choices' => $event->getAttendeesAlphabetical(), 'required' => false))
-            ->add('speakerBio',         'textarea',         array('attr'    => array('class' => 'formRowWidth', 'rows' => '6')))
             ->add('room',               'text',             array('attr'    => array('class' => 'formRowWidth'), 'required' => false))
             ->add('date',               'date',             array('widget'  => 'single_text',
                                                                   'format'  => 'L/dd/yyyy',
@@ -104,7 +102,6 @@ class AdminController extends Controller
                     $evtSession->setSourceIdea($idea);
                     $evtSession->setName($idea->getName());
                     $evtSession->setDescription($idea->getDescription());
-                    $evtSession->setSpeaker($idea->getCreator());
 //                    $evtSession->addTags($idea->getTags());
 
                     $eventStart = $event->getStartsAt();
@@ -190,123 +187,97 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('event_session_schedule', $event->getLinkableRouteParameters()));
     }
 
-    public function importMeetupEventAction(Request $request, $groupSlug, $muEventId)
+    public function addEventSessionSpeakerAction(Request $request, $groupSlug, $eventId, $sessionId) 
     {
-        if (!$this->isAdmin()) {
-            throw new AccessDeniedException;
+        if ($request->get('cancel') == 'Cancel') {
+            return $this->redirect($this->generateUrl('event_session', array('groupSlug' => $groupSlug,
+                                                                      'eventId'   => $eventId,
+                                                                      'sessionId' => $sessionId)));
         }
 
-        $event_data = null;
-        try {
-            $event_data = $this->getIdeaService()->getMeetupEvent($muEventId);
-            var_dump($event_data);
-        } catch (\Exception $e) {
-            echo 'Caught exception: ',  $e->getMessage(), "\n";
-            return new Response();
+        $doc = $this->getDoctrine();
+        $session = $doc->getRepository('EventBundle:EventSession')->find($sessionId);
+
+        if (!$session) {
+            throw new NotFoundHttpException('The session with id: '.$sessionId.' does not exist!');
         }
 
-        if( $event_data == null ) {
-            echo "Response does not contain an event, aborting";
-            return new Response();
+        $this->validateAuthorization($session);
+
+        $sessionSpeaker = null;
+
+        if ($userId = $request->get('userId')) {
+            $sessionSpeaker = $doc->getRepository('EventBundle:SessionSpeaker')->findOneBy(array('session' => $sessionId, 'speaker' => $userId));
         }
 
-        var_dump($event_data);
+        if (!$sessionSpeaker) {
+            $sessionSpeaker = new SessionSpeaker();
+            $isNew = true;
+        } else {
+            $isNew = false;
+        }
 
-        return $this->redirect($this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters()));
+        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'session_speaker', $sessionSpeaker)
+            ->add('speaker',   'entity',    array('class'   => 'UserBundle:User',
+                                                               'choices' => $session->getEvent()->getAttendeesAlphabetical()))
+            ->add('role',      'text',      array('attr'    => array('class' => 'formRowWidth')))
+            ->add('biography', 'textarea',  array('attr'    => array('class' => 'formRowWidth', 'rows' => '6')))
+            ->getForm();
+
+        if ($request->getMethod() == 'POST') {
+            $form->bindRequest($request);
+            if ($form->isValid()) {
+
+                $em = $doc->getEntityManager();
+
+                if ($isNew) {
+                    $sessionSpeaker->setSession($session);
+                    $em->persist($sessionSpeaker);
+                }
+
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('event_session', array('groupSlug' => $groupSlug,
+                                                                                 'eventId'   => $eventId,
+                                                                                 'sessionId' => $sessionId)));
+            }
+        }
+
+        $params = array(
+            'eventSession' => $session,
+            'event'        => $session->getEvent(),
+            'group'        => $session->getEvent()->getGroup(),
+            'form'         => $form->createView(),
+        );
+
+        if ($userId) {
+            $params['userId'] = $userId;
+        }
+
+        return $this->render('IdeaBundle:Admin:sessionSpeakerForm.html.twig', $params);
     }
 
-    public function importEventbriteEventAction(Request $request, $groupSlug, $ebEventId)
+    public function removeEventSessionSpeakerAction(Request $request, $groupSlug, $eventId, $sessionId, $userId) 
     {
-        if (!$this->isAdmin()) {
-            throw new AccessDeniedException;
+        $doc = $this->getDoctrine();
+
+        $sessionSpeaker = $doc->getRepository('EventBundle:SessionSpeaker')->findOneBy(array('session' => $sessionId, 'speaker' => $userId));
+        
+        if (!$sessionSpeaker) {
+            throw new NotFoundHttpException('Session speaker not found.');
         }
 
-        $event_data = null;
-        try {
-            $event_data = $this->getIdeaService()->getEventbriteEvent($ebEventId);
-        } catch (\Exception $e) {
-            echo 'Caught exception: ',  $e->getMessage(), "\n";
-            return new Response();
-        }
+        $this->validateAuthorization($sessionSpeaker->getSession());
 
-        if( $event_data == null ) {
-            echo "Response does not contain an event, aborting";
-            return new Response();
-        }
-
-        $group = $this->getGroup($groupSlug);
-        $event = new GroupEvent($group);
-        $group->addEvent($event);
-
-        $user  = $this->getCurrentUser();
-        $event->setUser($user);
-        $event->setActive(true);
-        $event->setApproved(true);
-        $event->setExternal(0);
-        $event->setRegistrationOption(Event::REGISTRATION_DISABLED);
-
-        $title = $event_data['title'];
-        if(strlen($title) !== 0) $event->setName($title);
-
-        $start_date = $event_data['start_date'];
-        if(strlen($start_date) !== 0) $event->setStartsAt(new \DateTime($start_date));
-
-        $end_date = $event_data['end_date'];
-        if(strlen($end_date) !== 0) $event->setEndsAt(new \DateTime($end_date));
-
-        $timezone = $event_data['timezone'];
-        if(strlen($timezone) !== 0) $event->setTimezone($timezone);
-
-        $description = $event_data['description'];
-        if(strlen($description) !== 0) $event->setContent($description);
-
-        $tags = $event_data['tags'];
-        if(strlen($tags) !== 0) $event->setEBTags($tags);
-
-
-        $venue = $event_data['venue'];
-
-        $venue_name = $venue['name'];
-        if(strlen($venue_name) !== 0) $event->setLocation($venue_name);
-
-        $venue_address1 = $venue['address'];
-        if(strlen($venue_address1) !== 0) $event->setAddress1($venue_address1);
-
-        $venue_address2 = $venue['address_2'];
-        if(strlen($venue_address2) !== 0) $event->setAddress2($venue_address2);
-
-        $longitude = $venue['longitude'];
-        if(strlen($longitude) !== 0) $event->setLongitude(''.$longitude);
-
-        $latitude = $venue['latitude'];
-        if(strlen($latitude) !== 0) $event->setLatitude(''.$latitude);
-
-        $city = $venue['city'];
-        if(strlen($city) !== 0) $event->setCity($city);
-
-        $state = $venue['region'];
-        if(strlen($state) !== 0) $event->setState($state);
-
-        $country = $venue['country'];
-        if(strlen($country) !== 0) $event->setCountry($country);
-
-        $postal_code = $venue['postal_code'];
-        if(strlen($postal_code) !== 0) $event->setPostalCode($postal_code);
-
-        $this->getGroupEventService()->createEvent($event, false);
-
-        $em = $this->getDoctrine()->getEntityManager();
-        $em->persist($event);
+        $em = $doc->getEntityManager();
+        $em->remove($sessionSpeaker);
         $em->flush();
 
-        // Registration needs to be created after event is persisted, relies on generated event ID
-        $esReg = $event->createEntrySetRegistration();
-        $em->persist($esReg);
+        $this->setFlash('success', 'Speaker '.$sessionSpeaker->getSpeaker()->getName().' has been removed.');
 
-        $this->getGroupEventService()->register($event, $event->getUser());
-        $em->flush();
-
-        return $this->redirect($this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters()));
+        return $this->redirect($this->generateUrl('event_session', array('groupSlug' => $groupSlug,
+                                                                         'eventId'   => $eventId,
+                                                                         'sessionId' => $sessionId)));
     }
 
     public function eventAction(Request $request, $groupSlug, $eventId)
@@ -1311,6 +1282,125 @@ class AdminController extends Controller
     }
 
     // Admin Scripts
+
+    public function importMeetupEventAction(Request $request, $groupSlug, $muEventId)
+    {
+        if (!$this->isAdmin()) {
+            throw new AccessDeniedException;
+        }
+
+        $event_data = null;
+        try {
+            $event_data = $this->getIdeaService()->getMeetupEvent($muEventId);
+            var_dump($event_data);
+        } catch (\Exception $e) {
+            echo 'Caught exception: ',  $e->getMessage(), "\n";
+            return new Response();
+        }
+
+        if( $event_data == null ) {
+            echo "Response does not contain an event, aborting";
+            return new Response();
+        }
+
+        var_dump($event_data);
+
+        return $this->redirect($this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters()));
+    }
+
+    public function importEventbriteEventAction(Request $request, $groupSlug, $ebEventId)
+    {
+        if (!$this->isAdmin()) {
+            throw new AccessDeniedException;
+        }
+
+        $event_data = null;
+        try {
+            $event_data = $this->getIdeaService()->getEventbriteEvent($ebEventId);
+        } catch (\Exception $e) {
+            echo 'Caught exception: ',  $e->getMessage(), "\n";
+            return new Response();
+        }
+
+        if( $event_data == null ) {
+            echo "Response does not contain an event, aborting";
+            return new Response();
+        }
+
+        $group = $this->getGroup($groupSlug);
+        $event = new GroupEvent($group);
+        $group->addEvent($event);
+
+        $user  = $this->getCurrentUser();
+        $event->setUser($user);
+        $event->setActive(true);
+        $event->setApproved(true);
+        $event->setExternal(0);
+        $event->setRegistrationOption(Event::REGISTRATION_DISABLED);
+
+        $title = $event_data['title'];
+        if(strlen($title) !== 0) $event->setName($title);
+
+        $start_date = $event_data['start_date'];
+        if(strlen($start_date) !== 0) $event->setStartsAt(new \DateTime($start_date));
+
+        $end_date = $event_data['end_date'];
+        if(strlen($end_date) !== 0) $event->setEndsAt(new \DateTime($end_date));
+
+        $timezone = $event_data['timezone'];
+        if(strlen($timezone) !== 0) $event->setTimezone($timezone);
+
+        $description = $event_data['description'];
+        if(strlen($description) !== 0) $event->setContent($description);
+
+        $tags = $event_data['tags'];
+        if(strlen($tags) !== 0) $event->setEBTags($tags);
+
+
+        $venue = $event_data['venue'];
+
+        $venue_name = $venue['name'];
+        if(strlen($venue_name) !== 0) $event->setLocation($venue_name);
+
+        $venue_address1 = $venue['address'];
+        if(strlen($venue_address1) !== 0) $event->setAddress1($venue_address1);
+
+        $venue_address2 = $venue['address_2'];
+        if(strlen($venue_address2) !== 0) $event->setAddress2($venue_address2);
+
+        $longitude = $venue['longitude'];
+        if(strlen($longitude) !== 0) $event->setLongitude(''.$longitude);
+
+        $latitude = $venue['latitude'];
+        if(strlen($latitude) !== 0) $event->setLatitude(''.$latitude);
+
+        $city = $venue['city'];
+        if(strlen($city) !== 0) $event->setCity($city);
+
+        $state = $venue['region'];
+        if(strlen($state) !== 0) $event->setState($state);
+
+        $country = $venue['country'];
+        if(strlen($country) !== 0) $event->setCountry($country);
+
+        $postal_code = $venue['postal_code'];
+        if(strlen($postal_code) !== 0) $event->setPostalCode($postal_code);
+
+        $this->getGroupEventService()->createEvent($event, false);
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->persist($event);
+        $em->flush();
+
+        // Registration needs to be created after event is persisted, relies on generated event ID
+        $esReg = $event->createEntrySetRegistration();
+        $em->persist($esReg);
+
+        $this->getGroupEventService()->register($event, $event->getUser());
+        $em->flush();
+
+        return $this->redirect($this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters()));
+    }
 
     public function fixEventACLsAction(Request $request) {
         $eventEm = $this->getDoctrine()->getRepository('EventBundle:GroupEvent');

@@ -1844,11 +1844,18 @@ class IdeaController extends Controller
             throw new NotFoundHttpException('Session not found.');
         }
 
+        if ($currentUser = $this->getCurrentUser()) {
+            $canEdit = ($this->isAdmin() || $currentUser == $eventSession->getEvent()->getUser());
+        } else {
+            $canEdit = false;
+        }
+        
         return $this->render('IdeaBundle:Idea:session.html.twig', array(
             'group'        => $event->getGroup(),
             'event'        => $event,
             'eventSession' => $eventSession,
-            'sidebar'       => true,
+            'sidebar'      => true,
+            'canEdit'      => $canEdit,
             'breadCrumbs'  => $this->getBreadCrumbsString($eventSession),
         ));
     }
@@ -1872,7 +1879,6 @@ class IdeaController extends Controller
             'breadCrumbs'  => $this->getBreadCrumbsString($event, true),
         ));
     }
-
 
     public function infoPageAction($groupSlug, $page)
     {

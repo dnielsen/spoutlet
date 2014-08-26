@@ -14,21 +14,27 @@
     <div>
         <div class="col_third">
 
-            {% if eventSession.speaker %}
-                <a href="{{ path('profile', {'userId': eventSession.speaker.id}) }}"><h3 class="blu">{{ eventSession.speaker.name }}</h3></a>
+            {% for speaker in eventSession.speakers %}
+                <a href="{{ path('profile', {'userId': speaker.speaker.id}) }}"><h3 class="blu">{{ speaker.speaker.name }}</h3></a>
+                <em>{{ speaker.role }}</em><br/>
+                {{ speaker.biography }}<br/>
+                {% if canEdit %}
+                    <a href="{{ path('event_session_add_speaker', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': eventSession.id, 'userId': speaker.speaker.id} ) }}" class="blu">Edit</a>
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a href="{{ path('event_session_remove_speaker', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': eventSession.id, 'userId': speaker.speaker.id} ) }}" class="blu" onclick="return confirm('Are you sure you want to remove this speaker?');">Remove</a>
+                {% endif %}
+                <hr class="small-margin"/>
+            {% endfor %}
+
+            {% if canEdit %}
+                <a href="{{ path('event_session_add_speaker', {'groupSlug': group.slug, 'eventId': event.id, 'sessionId': eventSession.id} ) }}" class="blu">+ Add a Speaker</a>
+                <hr/>
             {% endif %}
 
-            {% if eventSession.speakerBio|default %}
-                <div class="smallpad">
-                    {{ eventSession.speakerBio }}
-                </div>
-                <hr class="small-margin"/>
-            {% endif %}
 
             {% if eventSession.room %}
                 <strong>Room: {{ eventSession.room }}</strong><br/>
             {% endif %}
-
             {{ eventSession.dateString }}<br/>
             {{ eventSession.timeRangeString }}<br/>
 
