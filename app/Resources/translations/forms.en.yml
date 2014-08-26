@@ -147,5 +147,9 @@ session_speaker_speaker: Speaker
 session_speaker_role: Role
 session_speaker_biography: Biography
 
+idea_speaker_speaker: Speaker
+idea_speaker_role: Role
+idea_speaker_biography: Biography
+
 htmlPage_title: Page Title
 htmlPage_content: Content
