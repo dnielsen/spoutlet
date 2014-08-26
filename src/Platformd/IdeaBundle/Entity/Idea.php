@@ -134,7 +134,7 @@ class Idea implements LinkableInterface
     protected $completed;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\IdeaSpeaker", mappedBy="idea")
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\IdeaSpeaker", mappedBy="idea", cascade={"all"})
      */
     protected $speakers;
 
@@ -371,7 +371,7 @@ class Idea implements LinkableInterface
 
     /**
      * Get array of tag names
-
+     *
      * @return Array of strings $tagNames
      */
      public function getTagNames()

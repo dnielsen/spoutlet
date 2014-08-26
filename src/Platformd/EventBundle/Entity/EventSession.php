@@ -111,7 +111,7 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     protected $source_idea;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\EventBundle\Entity\SessionSpeaker", mappedBy="session")
+     * @ORM\OneToMany(targetEntity="Platformd\EventBundle\Entity\SessionSpeaker", mappedBy="session", cascade={"all"})
      */
     protected $speakers;
 

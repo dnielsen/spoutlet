@@ -47,6 +47,15 @@ class SessionSpeaker
      */
     protected $role;
 
+    function __construct($ideaSpeaker = null)
+    {
+        if ($ideaSpeaker) {
+            $this->biography = $ideaSpeaker->getBiography();
+            $this->role = $ideaSpeaker->getRole();
+            $this->speaker = $ideaSpeaker->getSpeaker();
+        }
+    }
+
     /**
      * Get id
      *
