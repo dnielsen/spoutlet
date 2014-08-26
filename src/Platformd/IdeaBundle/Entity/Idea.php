@@ -134,7 +134,7 @@ class Idea implements LinkableInterface
     protected $completed;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\EventBundle\Entity\SessionSpeaker", mappedBy="session")
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\IdeaSpeaker", mappedBy="idea")
      */
     protected $speakers;
 
