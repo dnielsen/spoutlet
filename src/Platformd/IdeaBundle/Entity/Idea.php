@@ -133,6 +133,11 @@ class Idea implements LinkableInterface
      */
     protected $completed;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Platformd\EventBundle\Entity\SessionSpeaker", mappedBy="session")
+     */
+    protected $speakers;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -144,6 +149,7 @@ class Idea implements LinkableInterface
         $this->isPrivate = false;
         $this->completed = false;
         $this->createdAt = new \DateTime();
+        $this->speakers = new ArrayCollection();
     }
 
     /**
@@ -831,5 +837,14 @@ class Idea implements LinkableInterface
         $this->completed = $completed;
 
         return $this;
+    }
+
+    public function setSpeakers($speakers)
+    {
+        $this->speakers = $speakers;
+    }
+    public function getSpeakers()
+    {
+        return $this->speakers;
     }
 }
