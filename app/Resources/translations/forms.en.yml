@@ -143,5 +143,9 @@ evtSession_endsAt: End Time
 evtSession_speaker: Speaker
 evtSession_speakerBio: Speaker Bio
 
+session_speaker_speaker: Speaker
+session_speaker_role: Role
+session_speaker_biography: Biography
+
 htmlPage_title: Page Title
 htmlPage_content: Content
