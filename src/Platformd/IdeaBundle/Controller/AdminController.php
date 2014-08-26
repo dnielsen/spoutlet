@@ -1283,6 +1283,49 @@ class AdminController extends Controller
 
     // Admin Scripts
 
+    public function updateSessionSpeakersAction(Request $request)
+    {
+        if (!$this->isAdmin()) {
+            throw new AccessDeniedException;
+        }
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $sessions = $em->getRepository('EventBundle:EventSession')->findAll();
+        $output = '';
+
+        foreach ($sessions as $session) {
+
+            $speaker = $session->getSpeaker();
+            $speakerBio = $session->getSpeakerBio();
+
+            if ($speaker || $speakerBio) {
+
+                $sessionSpeaker = new SessionSpeaker();
+
+                if (!$speaker) {
+                    // User Id 5 is Dave in the production database, set him as the default speaker
+                    $speaker = $em->getRepository('UserBundle:User')->find(5);
+                }
+
+                $sessionSpeaker->setSession($session);
+                $sessionSpeaker->setSpeaker($speaker);
+                $sessionSpeaker->setBiography($speakerBio);
+                $sessionSpeaker->setRole('Speaker');
+
+                $output.='Added '.$sessionSpeaker->getSpeaker()->getName().' to '.$sessionSpeaker->getSession()->getName().'<br/>';
+
+                $em->persist($sessionSpeaker);
+            }
+        }
+
+        if ($output) {
+            $this->setFlash('success', $output);
+            $em->flush();
+        }
+        
+        return $this->redirect($this->generateUrl('default_index'));
+    }
+
     public function importMeetupEventAction(Request $request, $groupSlug, $muEventId)
     {
         if (!$this->isAdmin()) {

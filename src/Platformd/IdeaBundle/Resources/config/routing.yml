@@ -228,6 +228,11 @@ idea_admin_import_meetup_event:
 
 
 # Admin Scripts
+
+update_session_speakers:
+    pattern:    /admin/updateSessionSpeakers
+    defaults:   { _controller: IdeaBundle:Admin:updateSessionSpeakers }
+
 all_event_acl_fix:
     pattern:    /admin/fixEventACLs
     defaults:   { _controller: IdeaBundle:Admin:fixEventACLs }
