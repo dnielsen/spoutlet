@@ -1623,6 +1623,11 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('default_index'));
     }
 
+    /** 
+     * Used to create new communities
+     * Example for creating new site: 
+     * http://www.campsite.org/admin/associate_group_to_site/cloudcamp?domain=www.cloudcamp.org&force=1
+     */
     public function associateGroupToSiteAction(Request $request, $groupSlug) {
 
         $force = $request->query->get('force') ?: false;
