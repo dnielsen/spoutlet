@@ -42,7 +42,7 @@
                                     {{ attendee.name }}
                                 {% endif %}
                             </td>
-                            <td><a href="{{ path('group_event_contact', {'groupSlug': group.slug, 'eventId': event.id, 'recipient': attendee.username}) }}">Send Message</a></td>
+                            <td><a href="{{ path('contact_user', {'userId': attendee.id}) }}">Send Message</a></td>
                             {% if showRegFields|default %}
                                 <td>
                                     {% set attendeeAnswers = attendee.answersForEvent(event) %}
