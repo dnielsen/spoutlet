@@ -38,6 +38,14 @@
 {% block group_content %}
 
     <div class="col_fifth">
+    
+        {% if group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_COMPANY') %}
+            {% set createSubButton = 'Add Department' %}
+            {% set subsLabel = 'Departments' %}
+        {% else %}
+            {% set createSubButton = 'Create Local Group' %}
+            {% set subsLabel = 'Local Groups' %}
+        {% endif %}
 
         {% if (not group.isMember(user)) and (not group.isUserWatching(user)) %}
             <a href="{{ path('watch_group', {'groupId': group.id}) }}" class="btnLg2">Follow This Group</a>
@@ -250,14 +258,6 @@
     </div>
 
     <div class="col_fifth">
-
-        {% if group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_COMPANY') %}
-            {% set createSubButton = 'Add Department' %}
-            {% set subsLabel = 'Departments' %}
-        {% else %}
-            {% set createSubButton = 'Create Local Group' %}
-            {% set subsLabel = 'Local Groups' %}
-        {% endif %}
 
         <div class="spcr-t spcr-b2">
             <div class="fb-like left" data-href="{{ group | pd_link }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
