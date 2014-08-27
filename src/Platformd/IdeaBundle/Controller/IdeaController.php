@@ -1372,6 +1372,7 @@ class IdeaController extends Controller
 
         if ($toUser = $this->getUserManager()->findUserBy(array('email' => $toEmail))) {
             $params['userId'] = $toUser->getId();
+            $toName = $toUser->getName();
         } else {
 
             // if an admin is trying to add a new user to a container
@@ -1396,9 +1397,6 @@ class IdeaController extends Controller
                 $flashMessage = $toEmail.' does not yet have a Campsite account. ';
                 $params['userId'] = 'external';
             }
-        }
-        
-        if (!$toName = $toUser->getName()) {
             $toName = $toEmail;
         }
 
