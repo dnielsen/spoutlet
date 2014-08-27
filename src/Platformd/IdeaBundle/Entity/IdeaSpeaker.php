@@ -1,18 +1,18 @@
 <?php
 
-namespace Platformd\EventBundle\Entity;
+namespace Platformd\IdeaBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Platformd\EventBundle\Entity\SessionSpeaker
+ * Platformd\Idea\Entity\IdeaSpeaker
  *
- * @ORM\Table(name="session_speakers")
+ * @ORM\Table(name="idea_speakers")
  * @ORM\Entity
  */
-class SessionSpeaker
+class IdeaSpeaker
 {
     /**
      * @var integer $id
@@ -24,9 +24,9 @@ class SessionSpeaker
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\EventSession", inversedBy="speakers")
+     * @ORM\ManyToOne(targetEntity="Platformd\IdeaBundle\Entity\Idea", inversedBy="speakers")
      */
-    protected $session;
+    protected $idea;
 
     /**
      * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
@@ -46,15 +46,6 @@ class SessionSpeaker
      * @ORM\Column(name="role", type="text", nullable=true)
      */
     protected $role;
-
-    function __construct($ideaSpeaker = null)
-    {
-        if ($ideaSpeaker) {
-            $this->biography = $ideaSpeaker->getBiography();
-            $this->role = $ideaSpeaker->getRole();
-            $this->speaker = $ideaSpeaker->getSpeaker();
-        }
-    }
 
     /**
      * Get id
@@ -107,23 +98,23 @@ class SessionSpeaker
     }
 
     /**
-     * Set session
+     * Set idea
      *
-     * @param Platformd\EventBundle\Entity\EventSession $session
+     * @param Platformd\IdeaBundle\Entity\Idea $idea
      */
-    public function setSession(\Platformd\EventBundle\Entity\EventSession $session)
+    public function setIdea(\Platformd\IdeaBundle\Entity\Idea $idea)
     {
-        $this->session = $session;
+        $this->idea = $idea;
     }
 
     /**
-     * Get session
+     * Get idea
      *
-     * @return Platformd\EventBundle\Entity\EventSession 
+     * @return Platformd\IdeaBundle\Entity\Idea 
      */
-    public function getSession()
+    public function getIdea()
     {
-        return $this->session;
+        return $this->idea;
     }
 
     /**

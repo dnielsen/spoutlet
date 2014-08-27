@@ -1,0 +1,26 @@
+{% extends 'SpoutletBundle::layout.html.twig' %}
+
+{% block content %}
+
+    <h1>Speaker for {{ entry.name }}</h1>
+
+    {% if userId|default %}
+        {% set form_path = path('idea_add_speaker', {'entrySetId': entrySet.id, 'entryId': entry.id, 'userId': userId}) %}
+    {% else %}
+        {% set form_path = path('idea_add_speaker', {'entrySetId': entrySet.id, 'entryId': entry.id}) %}
+    {% endif %}
+
+    <form action="{{ form_path }}" method="post" {{ form_enctype(form) }} id="idea_speaker" novalidate>
+        {{ form_row(form.speaker) }}
+        {{ form_row(form.role) }}
+        {{ form_row(form.biography) }}
+        {{ form_rest(form) }}
+
+        <br class="clr"/>
+
+        <input type="submit" value="Submit" id="submit"/>
+        <input type="submit" value="Cancel" name="cancel" formnovalidate/>
+
+    </form>
+
+{% endblock %}

@@ -39,17 +39,44 @@
 
     <div class="col_fifth">
 
-        <a href="{{ path('entry_set_new', {'registrationId': group.entrySetRegistration.id, 'entrySetId': 'new'}) }}" class="btnLg2">Create New List</a>
+        {% if (not group.isMember(user)) and (not group.isUserWatching(user)) %}
+            <a href="{{ path('watch_group', {'groupId': group.id}) }}" class="btnLg2">Follow This Group</a>
+        {% endif %}
 
-        {% if group.entrySets|length > 0 %}
-            <h2 class="widgetHeader">Lists</h2>
-            <ul class="scrollableWidget">
-                {% for entrySet in group.entrySets %}
-                    <li class="padtop padbtm spcr-l3 borderBtm">
-                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
-                    </li>
-                {% endfor %}
-            </ul>
+        {% if not group.external %}
+            {% if not group.isMember(user) %}
+                <a href="{{ path('group_join', {'slug': group.slug}) }}" class="btnLg2">Join This Group</a>
+            {% elseif group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_TOPIC') or
+                      group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_COMPANY') %}
+                <a href="{{ path('group_new', {'parentGroupId': group.id}) }}" class="btnLg2">{{ createSubButton }}</a>
+            {% endif %}
+        {% endif %}
+
+        {% if group.externalUrl %}
+            <a href="{{ group.externalUrl }}" class="btnLg2" target="_blank">View Group Website</a>
+        {% endif %}
+
+
+        <form action="{{ path('invite_user') }}" method="post">
+            <h3>Recommend This Group</h3>
+            <input type="text" placeholder="Enter email address..." name="userEmail" style="width:70%" class="left"/>
+            <input type="hidden" name="scope" value="group"/>
+            <input type="hidden" name="containerId" value="{{ group.id }}"/>
+            <input type="submit" value=">" class="left"/>
+            <div class="clr"></div>
+        </form>
+
+        {% if is_granted('ROLE_ADMIN') %}
+        
+            <form action="{{ path('invite_user', {'force': 1}) }}" method="post">
+                <h3>Add a User</h3>
+                <input type="text" placeholder="Enter email address..." name="userEmail" style="width:70%" class="left"/>
+                <input type="hidden" name="scope" value="group"/>
+                <input type="hidden" name="containerId" value="{{ group.id }}"/>
+                <input type="submit" value=">" class="left redButton"/>
+                <div class="clr"></div>
+            </form>
+
         {% endif %}
 
         {% if group.htmlPages|length > 0 %}
@@ -195,6 +222,7 @@
                                 </ul>
                                 <hr class="small-margin"/>
                             {% endif %}
+
                         </div>
 
                         <div class="col_two_thirds">
@@ -223,14 +251,6 @@
 
     <div class="col_fifth">
 
-        {% if (not group.isMember(user)) and (not group.isUserWatching(user)) %}
-            <a href="{{ path('watch_group', {'groupId': group.id}) }}" class="btnLg2">Follow This Group</a>
-        {% endif %}
-
-        {% if group.externalUrl %}
-            <a href="{{ group.externalUrl }}" class="btnLg2" target="_blank">View Group Website</a>
-        {% endif %}
-
         {% if group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_COMPANY') %}
             {% set createSubButton = 'Add Department' %}
             {% set subsLabel = 'Departments' %}
@@ -239,13 +259,15 @@
             {% set subsLabel = 'Local Groups' %}
         {% endif %}
 
-        {% if not group.external %}
-            {% if not group.isMember(user) %}
-                <a href="{{ path('group_join', {'slug': group.slug}) }}" class="btnLg2">Join This Group</a>
-            {% elseif group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_TOPIC') or
-                      group.category == constant('\\Platformd\\GroupBundle\\Entity\\Group::CAT_COMPANY') %}
-                <a href="{{ path('group_new', {'parentGroupId': group.id}) }}" class="btnLg2">{{ createSubButton }}</a>
-            {% endif %}
+        <div class="spcr-t spcr-b2">
+            <div class="fb-like left" data-href="{{ group | pd_link }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
+            <a href="https://twitter.com/share" class="twitter-share-button left spcr-l4 spcr-t8" data-hashtags="{{ group.hashtag }}">Tweet</a>
+        </div>
+
+        <div class="clr"></div>
+
+        {% if group.parent|default %}
+            <h3 class="spcr-t">Belongs to <a href="{{ group.parent | pd_link }}" class="blu">{{ group.parent.name }}</a></h3>
         {% endif %}
 
         {% if group.children|length > 0 %}
@@ -260,47 +282,23 @@
                 {% endfor %}
             </ul>
         {% endif %}
-
-        <div class="spcr-t spcr-b2">
-            <div class="fb-like left" data-href="{{ group | pd_link }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
-            <a href="https://twitter.com/share" class="twitter-share-button left spcr-l3 spcr-t8" data-hashtags="{{ group.hashtag }}">Tweet</a>
-        </div>
-
-        <div class="clr"></div>
-
-        {% if group.parent|default %}
-            <h3 class="spcr-t">Belongs to <a href="{{ group.parent | pd_link }}" class="blu">{{ group.parent.name }}</a></h3>
-        {% endif %}
-
-        <hr class="small-margin"/>
-        <form action="{{ path('invite_user') }}" method="post">
-            <h3>Recommend This Group</h3>
-            <input type="text" placeholder="Enter email address..." name="userEmail" style="width:70%" class="left"/>
-            <input type="hidden" name="scope" value="group"/>
-            <input type="hidden" name="containerId" value="{{ group.id }}"/>
-            <input type="submit" value=">" class="left" style="padding:8px;"/>
-            <div class="clr"></div>
-        </form>
-
-        {% if is_granted('ROLE_ADMIN') %}
         
-            <form action="{{ path('invite_user', {'force': 1}) }}" method="post">
-                <h3>Add a User</h3>
-                <input type="text" placeholder="Enter email address..." name="userEmail" style="width:70%" class="left"/>
-                <input type="hidden" name="scope" value="group"/>
-                <input type="hidden" name="containerId" value="{{ group.id }}"/>
-                <input type="submit" value=">" class="left redButton" style="padding:8px;"/>
-                <div class="clr"></div>
-            </form>
-
-        {% endif %}
-        
-        <hr class="small-margin"/>
-
         {% if group.sponsors|length > 0 %}
             {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
         {% endif %}
 
+        {% if group.entrySets|length > 0 %}
+            <h2 class="widgetHeader">Lists</h2>
+            <ul class="scrollableWidget">
+                {% for entrySet in group.entrySets %}
+                    <li class="padtop padbtm spcr-l3 borderBtm">
+                        <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <a href="{{ path('entry_set_new', {'registrationId': group.entrySetRegistration.id, 'entrySetId': 'new'}) }}" class="blu spcr-l3 spcr-t"> + Create New List</a>
     </div>
 
 {% endblock %}

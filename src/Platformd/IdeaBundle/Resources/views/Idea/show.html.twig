@@ -68,6 +68,25 @@
             {% if idea.forCourse %}<strong>Course Professor(s):</strong> {{ idea.professors }}<hr/>{% endif %}
             {% if idea.amount %}<strong>Amount needed to start up venture:</strong> {{ idea.amount }}<hr/>{% endif %}
 
+            {# For session lists, allow adding of speakers #}
+            {% if entrySet.type == constant('\\Platformd\\IdeaBundle\\Entity\\EntrySet::TYPE_SESSION') %}
+                {% for speaker in idea.speakers %}
+                    <a href="{{ path('profile', {'userId': speaker.speaker.id}) }}"><h3 class="blu">{{ speaker.speaker.name }}</h3></a>
+                    <em>{{ speaker.role }}</em><br/>
+                    {{ speaker.biography }}<br/>
+                    {% if canEdit %}
+                        <a href="{{ path('idea_add_speaker', {'entrySetId': entrySet.id, 'entryId': idea.id, 'userId': speaker.speaker.id} ) }}" class="blu">Edit</a>
+                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                        <a href="{{ path('idea_remove_speaker', {'entrySetId': entrySet.id, 'entryId': idea.id, 'userId': speaker.speaker.id} ) }}" class="blu" onclick="return confirm('Are you sure you want to remove this speaker?');">Remove</a>
+                    {% endif %}
+                    <hr class="small-margin"/>
+                {% endfor %}
+
+                {% if canEdit %}
+                    <a href="{{ path('idea_add_speaker', {'entrySetId': entrySet.id, 'entryId': idea.id} ) }}" class="blu">+ Add a Speaker</a><hr/>
+                {% endif %}
+            {% endif %}
+
             <div style="padding-bottom: 15px">
                 {% if (idea.getImage()) and (idea.canUserView(app.user)) %}
                     <img src="{{ media_path(idea.image) }}" style="max-width:100%;vertical-align:top;">
@@ -81,6 +100,7 @@
                 {% elseif canEdit %}
                     <a href="{{ path('idea_upload_form', {'entrySetId': entrySet.id, 'entryId': idea.id}) }}" class="blue btn">Add Image</a>
                 {% endif %}
+
             </div>
             <div id="links" style="padding-bottom: 15px;">
                 {% if ((idea.links|length > 0) and (idea.canUserView(app.user)))%}

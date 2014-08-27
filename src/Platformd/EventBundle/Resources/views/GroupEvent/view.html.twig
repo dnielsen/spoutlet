@@ -3,17 +3,61 @@
 {% block event_content %}
 
 <div class="col_fifth">
-    <a href="{{ path('entry_set_new', {'registrationId': event.entrySetRegistration.id, 'entrySetId': 'new'}) }}" class="btnLg2">Create New List</a>
 
-    {% if event.entrySets|length > 0 %}
-        <h2 class="widgetHeader">Lists</h2>
-        <ul class="scrollableWidget">
-            {% for entrySet in event.entrySets %}
-                <li class="spcr-l3 padtop padbtm borderBtm">
-                    <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
-                </li>
-            {% endfor %}
-        </ul>
+    {% if (not event.isUserAttending(user)) and (not event.isUserWatching(user)) %}
+        <a href="{{ path('watch_event', {'eventId': event.id, 'eventType': 'group'}) }}" class="btnLg2">Follow This Event</a>
+    {% endif %}
+
+    {% if not event.external %}
+        
+        {# Hybrid Event #}
+        {% if event.externalUrl|default %} 
+            <a href="{{ event.externalUrl }}" class="btnLg2" target="_blank">Register to Attend</a>
+            {% if not event.isUserAttending(user) %}
+                <div class="ctr">OR</div>
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Participate Online</a>
+            {% endif %}
+
+        {# Campsite Event #}
+        {% elseif not event.isUserAttending(user) %}
+            {% if event.registrationOption == constant('\\Platformd\\EventBundle\\Entity\\Event::REGISTRATION_ENABLED') %}
+                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Register to Attend</a>
+            {% else %}
+                <h2 class="ctr spcr-b2">Registration Closed</h2>
+            {% endif %}
+        {% endif %}
+
+    {# External Event #}
+    {% else %}
+
+        {% if event.externalUrl|default %} 
+            <a href="{{ event.externalUrl }}" class="btnLg2" target="_blank">View Event Website</a>
+        {% else %}
+            The organizer has not yet added a link to the event. 
+        {% endif %}
+
+    {% endif %}
+
+    <form action="{{ path('invite_user') }}" method="post">
+        <h3>Recommend a Friend</h3>
+        <input type="text" placeholder="Enter email address..." name="userEmail" style="width:70%" class="left"/>
+        <input type="hidden" name="scope" value="event"/>
+        <input type="hidden" name="containerId" value="{{ event.id }}"/>
+        <input type="submit" value=">" class="left"/>
+        <div class="clr"></div>
+    </form>
+
+    {% if is_granted('ROLE_ADMIN') %}
+    
+        <form action="{{ path('invite_user', {'force': 1}) }}" method="post">
+            <h3>Add a User</h3>
+            <input type="text" placeholder="Enter email address..." name="userEmail" style="width:70%" class="left"/>
+            <input type="hidden" name="scope" value="event"/>
+            <input type="hidden" name="containerId" value="{{ event.id }}"/>
+            <input type="submit" value=">" class="left redButton"/>
+            <div class="clr"></div>
+        </form>
+
     {% endif %}
 
     {% if event.htmlPages|length > 0 %}
@@ -173,48 +217,15 @@
 
 <div class="col_fifth">
 
-    {% if (not event.isUserAttending(user)) and (not event.isUserWatching(user)) %}
-        <a href="{{ path('watch_event', {'eventId': event.id, 'eventType': 'group'}) }}" class="btnLg2">Follow This Event</a>
-    {% endif %}
-
-    {% if not event.external %}
-        
-        {# Hybrid Event #}
-        {% if event.externalUrl|default %} 
-            <a href="{{ event.externalUrl }}" class="btnLg2" target="_blank">Register to Attend</a>
-            {% if not event.isUserAttending(user) %}
-                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Participate Online</a>
-            {% endif %}
-
-        {# Campsite Event #}
-        {% elseif not event.isUserAttending(user) %}
-            {% if event.registrationOption == constant('\\Platformd\\EventBundle\\Entity\\Event::REGISTRATION_ENABLED') %}
-                <a href="{{ path('group_event_register_and_join', {'groupSlug': group.slug, 'eventId': event.id}) }}" class="btnLg2">Register to Attend</a>
-            {% else %}
-                <h2 class="ctr spcr-b2">Registration Closed</h2>
-            {% endif %}
-        {% endif %}
-
-    {# External Event #}
-    {% else %}
-
-        {% if event.externalUrl|default %} 
-            <a href="{{ event.externalUrl }}" class="btnLg2" target="_blank">View Event Website</a>
-        {% else %}
-            The organizer has not yet added a link to the event. 
-        {% endif %}
-
-    {% endif %}
-
-    {% if event.sessions | length > 0 %}
-        <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}" class="btnLg2">Session Schedule</a>
-    {% endif %}
-
     <div style="display:inline-block;">
         <div class="fb-like left" data-href="{{ event | pd_link }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
         <a href="https://twitter.com/share" class="twitter-share-button left spcr-l3 spcr-t8" data-hashtags="{{ group.hashtag }},{{ event.hashtag }}">Tweet</a>
     </div>
     <div class="clear"></div>
+
+    {% if event.sessions | length > 0 %}
+        <a href="{{ path('event_session_schedule', event.linkableRouteParameters) }}" class="btnLg2">Session Schedule</a>
+    {% endif %}
 
     {% if event.startsAt|default or event.location|default or event.fullAddress|default %}
         <div class="event-details ctr spcr-b">
@@ -238,34 +249,25 @@
         </div>
     {% endif %}
 
-    <a href="{{ path('recommend_sponsor_list', {'rec_type': 'group', 'rec_id': event.id}) }}" class="btnLg2">Recommend a Sponsor ></a>
-    <div class="spcr-t"></div>
-
-    <form action="{{ path('invite_user') }}" method="post">
-        <h3>Recommend a Friend</h3>
-        <input type="text" placeholder="Enter email address..." name="userEmail" style="width:70%" class="left"/>
-        <input type="hidden" name="scope" value="event"/>
-        <input type="hidden" name="containerId" value="{{ event.id }}"/>
-        <input type="submit" value=">" class="left" style="padding:8px;"/>
-        <div class="clr"></div>
-    </form>
-
-    {% if is_granted('ROLE_ADMIN') %}
-    
-        <form action="{{ path('invite_user', {'force': 1}) }}" method="post">
-            <h3>Add a User</h3>
-            <input type="text" placeholder="Enter email address..." name="userEmail" style="width:70%" class="left"/>
-            <input type="hidden" name="scope" value="event"/>
-            <input type="hidden" name="containerId" value="{{ event.id }}"/>
-            <input type="submit" value=">" class="left redButton" style="padding:8px;"/>
-            <div class="clr"></div>
-        </form>
-
-    {% endif %}
-
     {% if event.sponsors|length > 0 %}
         {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
     {% endif %}
+
+    <a href="{{ path('recommend_sponsor_list', {'rec_type': 'group', 'rec_id': event.id}) }}" class="btnLg2">Recommend a Sponsor ></a>
+    <div class="spcr-t"></div>
+
+    {% if event.entrySets|length > 0 %}
+        <h2 class="widgetHeader">Lists</h2>
+        <ul class="scrollableWidget">
+            {% for entrySet in event.entrySets %}
+                <li class="spcr-l3 padtop padbtm borderBtm">
+                    <a href="{{ path('entry_set_view', {'entrySetId': entrySet.id}) }}"><h3 class="blu">{{ entrySet.name }}</h3></a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <a href="{{ path('entry_set_new', {'registrationId': event.entrySetRegistration.id, 'entrySetId': 'new'}) }}" class="blu spcr-l3 spcr-t"> + Create New List</a>
 
 </div>
 
