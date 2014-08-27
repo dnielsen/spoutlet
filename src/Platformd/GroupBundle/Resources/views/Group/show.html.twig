@@ -259,6 +259,17 @@
             {% set subsLabel = 'Local Groups' %}
         {% endif %}
 
+        <div class="spcr-t spcr-b2">
+            <div class="fb-like left" data-href="{{ group | pd_link }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
+            <a href="https://twitter.com/share" class="twitter-share-button left spcr-l4 spcr-t8" data-hashtags="{{ group.hashtag }}">Tweet</a>
+        </div>
+
+        <div class="clr"></div>
+
+        {% if group.parent|default %}
+            <h3 class="spcr-t">Belongs to <a href="{{ group.parent | pd_link }}" class="blu">{{ group.parent.name }}</a></h3>
+        {% endif %}
+
         {% if group.children|length > 0 %}
             <h2 class="widgetHeader">{{ subsLabel }}</h2>
             <ul class="scrollableWidget spcr-b3">
@@ -271,19 +282,6 @@
                 {% endfor %}
             </ul>
         {% endif %}
-
-        <div class="spcr-t spcr-b2">
-            <div class="fb-like left" data-href="{{ group | pd_link }}" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
-            <a href="https://twitter.com/share" class="twitter-share-button left spcr-l4 spcr-t8" data-hashtags="{{ group.hashtag }}">Tweet</a>
-        </div>
-
-        <div class="clr"></div>
-
-        {% if group.parent|default %}
-            <h3 class="spcr-t">Belongs to <a href="{{ group.parent | pd_link }}" class="blu">{{ group.parent.name }}</a></h3>
-        {% endif %}
-
-        <hr class="small-margin"/>
         
         {% if group.sponsors|length > 0 %}
             {% include 'IdeaBundle::sidebar_sponsors.html.twig' %}
