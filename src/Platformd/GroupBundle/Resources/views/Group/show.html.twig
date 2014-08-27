@@ -268,6 +268,7 @@
 
         {% if group.parent|default %}
             <h3 class="spcr-t">Belongs to <a href="{{ group.parent | pd_link }}" class="blu">{{ group.parent.name }}</a></h3>
+            <hr class="small-margin"/>
         {% endif %}
 
         {% if group.children|length > 0 %}
