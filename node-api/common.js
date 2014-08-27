@@ -43,3 +43,7 @@ exports.hash_password = function (password, salt) {
     var new_hashed_password = new Buffer(digest).toString(password_encoding);
     return new_hashed_password;
 };
+
+exports.make_salt = function() {
+    return crypto.createHash('md5').update(""+Date.now()/1000).digest('hex');
+};

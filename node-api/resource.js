@@ -596,32 +596,23 @@ Resource.prototype.assemble_insert = function (post_data) {
 Resource.prototype.create = function (req, resp, next, post_process_handler) {
     var that = this;
 
-    //Process POST query parameters
-    var expand_result = false;
-    if (req.query.hasOwnProperty('expand')) {
-        expand_result = true;
-    }
-
-    var insert_data;
-    try {
+    var validate_request = function (entity, requester) {
         // If the requested resource has an owner/creator association
-        if (!__.isUndefined(this.user_mapping)) {
-            var my_user_field = this.user_mapping.me;
-            var assoc_user_field = this.user_mapping.user;
+        if (!__.isUndefined(that.user_mapping)) {
+            var my_user_field = that.user_mapping.me;
+            var assoc_user_field = that.user_mapping.user;
 
             // make sure the requesting user isn't trying to set that field
-            if (__.has(req.body, my_user_field) && req.body[my_user_field] !== req.user[assoc_user_field]) {
+            if (__.has(entity, my_user_field) && entity[my_user_field] !== requester[assoc_user_field]) {
                 throw new restify.InvalidArgumentError('Cannot assign different user.');
             }
 
             // then set the field to the current user
-            req.body[my_user_field] = req.user[assoc_user_field];
+            entity[my_user_field] = requester[assoc_user_field];
         }
 
-        insert_data = this.assemble_insert(req.body);
-    } catch (e) {
-        return next(e);
-    }
+        return that.assemble_insert(entity);
+    };
 
     var return_error = function (err) {
         var response = "Internal Error";
@@ -662,9 +653,26 @@ Resource.prototype.create = function (req, resp, next, post_process_handler) {
         query.then(send_response, return_error);
     };
 
-    //Assemble 
-    knex(this.tableName)
-        .insert(insert_data)
+    //Process POST query parameters
+    var expand_result = false;
+    if (req.query.hasOwnProperty('expand')) {
+        expand_result = true;
+    }
+
+    var insert_data = [];
+    if ( !__.isArray(req.body) ) {
+        try {
+            validate_request(req.body, req.user);
+        } catch (e) { return next(e); }
+    } else {
+        __.each(req.body, function(entity) {
+            try {
+                validate_request(entity, req.user);
+            } catch (e) { return next(e); }
+        });
+    }
+    return knex(this.tableName)
+        .insert(req.body)
         .then(get_resource, return_error);
 };
 

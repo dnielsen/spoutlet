@@ -1,13 +1,18 @@
 var Type = require('../type'),
-    Resource = require('../resource');
+    Resource = require('../resource'),
+    common = require('../common');
 
 var spec = {
     tableName : 'fos_user',
     primary_key : 'id',
     schema : {
         "id" : { type : Type.Int, props : ["default", "read_only"]},
-        "username" : { type : Type.Str, props : ["default"]},
-        "email" : { type : Type.Str, props : ["default"]},
+        "username" : { type : Type.Str, props : ["default","required"]},
+        "email" : { type : Type.Str, props : ["default","required"]},
+
+        "username_canonical" : { type : Type.Str, props : ["required"]},
+        "email_canonical" : { type : Type.Str, props : ["required"]},
+
         "country" : { type : Type.Str, props : []},
         "created" : { type : Type.Date, props : ["read_only"]},
         "updated" : { type : Type.Date, props : ["read_only"]},
@@ -21,9 +26,10 @@ var spec = {
         "twitterUsername" : { type : Type.Str, props : []},
         "website" : { type : Type.Str, props : []},
         "mailingAddress" : { type : Type.Str, props : []},
-        //"enabled" : { type : Type.Bool, props : [, "read_only"]},
-        //"salt" : { type : Type.Str, props : ["default"]},
-        //"password" : { type : Type.Str, props : ["default"]},
+
+        "enabled" : { type : Type.Bool, props : [], initial : false },
+        "salt" : { type : Type.Str, props : [] },
+        "password" : { type : Type.Str, props : ["required"] },
         //"confirmation_token" : { type : Type.Str, props : ["default"]},
         //"password_requested_at" : { type : Type.Date, props : ["default"]},
         //"roles" : { type : Type.Str, props : ["default"]},
@@ -32,6 +38,8 @@ var spec = {
         //"gallary_id" : { type : Type.Int, props : []},
         //"faceprintId" : { type : Type.Int, props : [, "read_only"]},
         //"faceprint_image" : { type : Type.Int, props : [, "read_only"]},
+
+        //enabled, salt, password, locked, expired, roles, credentials_expired, created, updated, facebook_id, twitter_id, about_me, faceprint_image, displayProfile, displayPrivateInfoToOrganizers
     }
 };
 
@@ -47,6 +55,14 @@ exports.find_by_primary_key = function (req, resp, next) {
 };
 
 exports.create = function (req, resp, next) {
+    //use random salt regardless of value
+    req.body.salt = common.make_salt();
+
+    //hash provided password (required)
+    if(req.body.password) {
+        req.body.password = common.hash_password(req.body.password, req.body.salt)
+    }
+
     return resource.create(req, resp, next);
 };
 

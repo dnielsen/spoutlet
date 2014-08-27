@@ -195,6 +195,9 @@ server.del('/events/:id', events.delete_by_primary_key);
 server.post('/groups', groups.create);
 server.del('/groups/:id', groups.delete_by_primary_key);
 
+server.post('/users', users.create);
+server.del('/users/:id', users.delete_by_primary_key);
+
 //----------------------  Start the server  --------------------------------------
 
 server.listen(common.basePort, function () {
