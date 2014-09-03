@@ -249,6 +249,7 @@ parameters:
         - en_platformd       # platformd.
         - en_toyota          # quantified-car.
         - en_cloudcampbd     # cloudcampbd.
+        - en_visibleagile    # www.visibleagile.com
 
     # used by the router
     site_host_map:
@@ -267,6 +268,7 @@ parameters:
         en_platformd:       platformd%host_suffix%.%base_host%
         en_toyota:          quantified-car%host_suffix%.%base_host%
         en_cloudcampbd:     cloudcampbd%host_suffix%.%base_host%
+        en_visibleagile     www.visibleagile.com
 
     # this is repeated in the multitenancy manager - should not be
     platformd_sites:
@@ -284,6 +286,7 @@ parameters:
         en_platformd:       PlatformD
         en_toyota:          Toyota
         en_cloudcampbd:     CloudCampBD
+        en_visibleagile:    VisibleAgile
 
     # an array of "sites" where we host their main site
     # used by the SiteProtectionListener to prevent, for example, Latin America users
