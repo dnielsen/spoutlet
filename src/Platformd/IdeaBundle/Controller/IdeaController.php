@@ -1611,6 +1611,10 @@ class IdeaController extends Controller
             return $this->redirect($redirectUrl);
         }
 
+        if ($userId !== 'external') {
+            $toEmail = null;
+        }
+
         return $this->render('IdeaBundle:Idea:contactForm.html.twig', array(
             'toName'      => $toName,
             'toEmail'     => $toEmail,
