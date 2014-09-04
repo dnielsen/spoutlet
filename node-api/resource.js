@@ -671,8 +671,10 @@ Resource.prototype.create = function (req, resp, next, post_process_handler) {
             } catch (e) { return next(e); }
         });
     }
-    return knex(this.tableName)
-        .insert(req.body)
+
+    //Do regular insert sql stmt then add 'ignore duplicate entry errors'
+    var baseQuery = knex(this.tableName).insert( req.body ).toString();
+    return knex.raw( baseQuery + ' ON DUPLICATE KEY UPDATE email_canonical=email_canonical')
         .then(get_resource, return_error);
 };
 

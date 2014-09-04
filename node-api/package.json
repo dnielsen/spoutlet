@@ -8,6 +8,7 @@
     "restify": "~2.6.2",
     "knex": "~0.5.8",
     "crypto": "0.0.3",
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "bunyan": "~1.0.1"
   }
 }

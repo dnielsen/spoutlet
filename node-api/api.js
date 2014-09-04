@@ -1,5 +1,6 @@
 var restify = require('restify'),
     common = require('./common'),
+    logger = require('bunyan'),
     entries = require('./routes/entries'),
     lists = require('./routes/lists'),
     sessions = require('./routes/sessions'),
@@ -86,8 +87,27 @@ var api_token_checker = function (req, res, next) {
     common.knex("fos_user").where("uuid", uuid).then(save_user, return_error);
 };
 
+var log = new logger({
+  name: 'campsiteapi',
+  streams: [
+    {
+      stream: process.stdout,
+      level: 'debug'
+    },
+    {
+      path: 'campsite-api.log',
+      level: 'trace'
+    }
+  ],
+  serializers: {
+    req: logger.stdSerializers.req,
+    // res: restify.bunyan.serializers.response,
+  },
+});
+
 var server = restify.createServer({
-    name : common.baseHost
+    name : common.baseHost,
+    log : log
 });
 
 //process the response formats user-agent accepts
@@ -115,6 +135,12 @@ server.use(restify.jsonp());
 restify.CORS.ALLOW_HEADERS.push('sid');
 restify.CORS.ALLOW_HEADERS.push('x-api-key');
 server.use(restify.CORS());
+
+
+server.pre(function (request, response, next) {
+  request.log.info({req: request}, 'start');        // (1)
+  return next();
+});
 
 //-------------------------  Anonymous calls here  ---------------------------------
 

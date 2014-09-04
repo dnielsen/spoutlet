@@ -1,6 +1,7 @@
 var Type = require('../type'),
     Resource = require('../resource'),
-    common = require('../common');
+    common = require('../common'),
+    __ = require('underscore');
 
 var spec = {
     tableName : 'fos_user',
@@ -30,6 +31,13 @@ var spec = {
         "enabled" : { type : Type.Bool, props : [], initial : false },
         "salt" : { type : Type.Str, props : [] },
         "password" : { type : Type.Str, props : ["required"] },
+        "roles" : { type : Type.Str, props : [] },
+        "locale" : { type : Type.Str, props : [], initial : "en" },
+        "created" : { type : Type.Date, props : [] },
+        "updated" : { type : Type.Date, props : [] },
+        "displayProfile" : { type : Type.Bool, props : [] },
+        "displayPrivateInfoToOrganizers" : { type : Type.Bool, props : [] }
+
         //"confirmation_token" : { type : Type.Str, props : ["default"]},
         //"password_requested_at" : { type : Type.Date, props : ["default"]},
         //"roles" : { type : Type.Str, props : ["default"]},
@@ -38,13 +46,15 @@ var spec = {
         //"gallary_id" : { type : Type.Int, props : []},
         //"faceprintId" : { type : Type.Int, props : [, "read_only"]},
         //"faceprint_image" : { type : Type.Int, props : [, "read_only"]},
-
-        //enabled, salt, password, locked, expired, roles, credentials_expired, created, updated, facebook_id, twitter_id, about_me, faceprint_image, displayProfile, displayPrivateInfoToOrganizers
     }
 };
 
 var resource = new Resource(spec);
 Type.User.init(resource);
+
+var get_now = function () {
+    return new Date();
+};
 
 exports.find_all = function (req, resp, next) {
     return resource.find_all(req, resp, next);
@@ -55,12 +65,39 @@ exports.find_by_primary_key = function (req, resp, next) {
 };
 
 exports.create = function (req, resp, next) {
-    //use random salt regardless of value
-    req.body.salt = common.make_salt();
 
-    //hash provided password (required)
-    if(req.body.password) {
-        req.body.password = common.hash_password(req.body.password, req.body.salt)
+    var process_user = function (user) {
+        //use random salt regardless of value
+        user.salt = common.make_salt();
+
+        //Can only create standard users
+        user.roles = 'a:0:{}';
+
+        var now = new Date();
+        user.created = now;
+        user.updated = now;
+
+        if(!user.locale)
+            user.locale = 'en';
+
+        //replace plain text password with salted hashed password
+        if(user.password) {
+            user.password = common.hash_password(req.body.password, req.body.salt)
+        }
+
+        if(!user.displayProfile) {
+            user.displayProfile = true;
+        }
+
+        if(!user.displayPrivateInfoToOrganizers) {
+            user.displayPrivateInfoToOrganizers = true;
+        }
+    };
+
+    if( __.isArray(req.body) ) {
+        __.each(req.body, process_user);
+    } else {
+        process_user(req.body);
     }
 
     return resource.create(req, resp, next);
