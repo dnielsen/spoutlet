@@ -450,9 +450,11 @@ Alienware Arena Team
 
     public function joinAction(Request $request, $slug)
     {
+        // If unregistered users try to join a group, remember what group they were trying to join before bouncing to the register page
         $session = $request->getSession();
         $session->set('group_slug', $slug);
         $this->basicSecurityCheck('ROLE_USER');
+        // If the user passes the security check, we don't need the slug anymore
         $session->remove('group_slug');
 
         $group = $this->getGroupBySlug($slug);
