@@ -448,6 +448,30 @@ Alienware Arena Team
         return $this->redirect($this->generateUrl('group_show', array('slug' => $this->getRelevantSlugForGroup($group))));
     }
 
+    private function join($group, $user) {
+        // TODO This should probably be refactored to use the global activity table
+        $joinAction = new GroupMembershipAction();
+        $joinAction->setGroup($group);
+        $joinAction->setUser($user);
+        $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
+
+        $user->getPdGroups()->add($group);
+        $group->getUserMembershipActions()->add($joinAction);
+
+        // TODO Add a service layer for managing groups and dispatching such events
+        /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
+        $dispatcher = $this->get('event_dispatcher');
+        $event = new GroupEvent($group, $user);
+        $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
+
+        $this->getUserManager()->updateUser($user);
+        $this->getGroupManager()->saveGroup($group);
+
+        if( $group->getParent() != null ) {
+            $this->join($group->getParent(), $user);
+        }
+    }
+
     public function joinAction(Request $request, $slug)
     {
         $session = $request->getSession();
@@ -470,23 +494,7 @@ Alienware Arena Team
 
         $this->ensureAllowed($group, 'JoinGroup');
 
-        // TODO This should probably be refactored to use the global activity table
-        $joinAction = new GroupMembershipAction();
-        $joinAction->setGroup($group);
-        $joinAction->setUser($user);
-        $joinAction->setAction(GroupMembershipAction::ACTION_JOINED);
-
-        $user->getPdGroups()->add($group);
-        $group->getUserMembershipActions()->add($joinAction);
-
-        // TODO Add a service layer for managing groups and dispatching such events
-        /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
-        $dispatcher = $this->get('event_dispatcher');
-        $event = new GroupEvent($group, $user);
-        $dispatcher->dispatch(GroupEvents::GROUP_JOIN, $event);
-
-        $this->getUserManager()->updateUser($user);
-        $this->getGroupManager()->saveGroup($group);
+        $this->join($group, $user);
 
         //$this->setFlash('success', 'You will receive an email if you are admitted into this group.');
 
