@@ -526,25 +526,22 @@ class Controller extends BaseController
         );
     }
 
-    public function validateAuthorization($securedObj)
+    public function isAuthorized($securedObj)
     {
         if ($this->isGranted('ROLE_ADMIN')) {
-            return;
+            return true;
         }
 
         if ($securedObj instanceof EventSession) {
-            $this->validateAuthorization($securedObj->getEvent());
-            return;
+            return $this->isAuthorized($securedObj->getEvent());
         }
 
         if ($securedObj instanceof HtmlPage) {
-            $this->validateAuthorization($securedObj->getParent());
-            return;
+            return $this->isAuthorized($securedObj->getParent());
         }
 
         if ($securedObj instanceof Sponsor) {
-            $this->validateAuthorization($securedObj->getDepartment());
-            return;
+            return $this->isAuthorized($securedObj->getDepartment());
         }
 
         $authorizedUsers = array();
@@ -560,7 +557,16 @@ class Controller extends BaseController
             $authorizedUsers[] = $securedObj->getCreator();
         }
 
-        if (!in_array($this->getCurrentUser(), $authorizedUsers)) {
+        if (in_array($this->getCurrentUser(), $authorizedUsers)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function validateAuthorization($securedObj)
+    {
+        if (!$this->isAuthorized()) {
             throw new AccessDeniedException();
         }
     }

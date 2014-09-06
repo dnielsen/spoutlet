@@ -2136,8 +2136,7 @@ class IdeaController extends Controller
     }
 
     public function canEditIdea($entrySet, $idea) {
-
-        return $this->isGranted('ROLE_ADMIN') || ($this->isCreator($idea) && $entrySet->getIsSubmissionActive());
+        return ($this->isAuthorized($this->getParentByEntrySet($entrySet)) || ($this->isAuthorized($idea) && $entrySet->getIsSubmissionActive()));
     }
 
     public function canRemoveComment($idea) {

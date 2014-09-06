@@ -22,7 +22,7 @@
                 {% set _key = app.request.get('entryId') %}
                 {% set _key2 = app.request.get('entrySetId') %}
                 {% if idea|default %}
-                    {% set _isOwner = (idea.creator == app.user) or (is_granted('ROLE_ADMIN')) %}
+                    {% set _isOwner = canEdit|default %}
                     {% set _canDelete = _isOwner %}
                 {% endif %}
             {% elseif app.request.get('entrySetId')|default %}
