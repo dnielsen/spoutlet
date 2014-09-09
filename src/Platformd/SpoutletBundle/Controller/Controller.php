@@ -566,7 +566,7 @@ class Controller extends BaseController
 
     public function validateAuthorization($securedObj)
     {
-        if (!$this->isAuthorized()) {
+        if (!$this->isAuthorized($securedObj)) {
             throw new AccessDeniedException();
         }
     }
