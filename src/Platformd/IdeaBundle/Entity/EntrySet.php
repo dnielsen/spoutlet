@@ -199,6 +199,12 @@ class EntrySet implements LinkableInterface {
             return ($entry->getNumVotes() > 0);
         });*/
 
+        // filter out any private entries
+        $topEntries = array_filter($topEntries, function($entry)
+        {
+            return (!$entry->getIsPrivate());
+        });
+
         return $topEntries;
     }
 
