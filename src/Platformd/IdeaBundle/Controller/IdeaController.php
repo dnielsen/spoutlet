@@ -56,29 +56,28 @@ class IdeaController extends Controller
         //filter the idea list using the query parameters
         $userParam  = $viewPrivate ? $this->getCurrentUser() : null;
         $round = null;
-        $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         $canSubmit = $entrySet->getIsSubmissionActive();
+        $isAdmin   = $this->isAuthorized($this->getParentByEntrySet($entrySet));
+
         if ($event) {
-            $isAdmin    = $isAdmin || ( $this->getCurrentUser() == $event->getUser() );
             $round      = $event->getCurrentRound();
             $roundParam = $showAllRounds == 'true' ? null : $round;
             $canSubmit  = $canSubmit && ($event->isUserAttending($this->getCurrentUser()) || $isAdmin);
         } else {
             $roundParam = null;
             if ($group) {
-                $isAdmin    = $isAdmin || ( $group->isOwner($this->getCurrentUser()) );
                 $canSubmit  = $canSubmit && ($group->isMember($this->getCurrentUser()) || $isAdmin);
             }
         }
 
         $ideaRepo 	= $this->getDoctrine()->getRepository('IdeaBundle:Idea');
-        $ideaList 	= $ideaRepo->filter($entrySet, $roundParam, $tag, $userParam);
+        $ideaList 	= $ideaRepo->filter($entrySet, $roundParam, $tag, $userParam, $isAdmin);
 
 
-        //For admin remove the public ideas from the full list to just show private ideas
+        // For admin remove the public ideas from the full list to just show private ideas
         if ($viewPrivate && $isAdmin) {
-            $publicList 	= $ideaRepo->filter($entrySet, $roundParam, $tag, null);
+            $publicList = $ideaRepo->filter($entrySet, $roundParam, $tag, null);
             foreach($publicList as $publicIdea) {
                 $index = array_search($publicIdea,$ideaList);
                 unset($ideaList[$index]);
@@ -123,7 +122,7 @@ class IdeaController extends Controller
         list($group, $event, $entrySet, $idea) = $this->getHierarchy($idea);
 
         $attendance = $this->getCurrentUserApproved($entrySet);
-        $isAdmin = $this->isGranted('ROLE_ADMIN');
+        $isAdmin = $this->isAuthorized($this->getParentByEntrySet($entrySet));
 
         $params = array(
             'group' 			=> $group,
@@ -166,7 +165,7 @@ class IdeaController extends Controller
         //For Admin sidebar
         if( $sidebarState == IdeaController::SIDEBAR_ADMIN) {
 
-            $ideas = $ideaRepo->filter($entrySet, $currentRound, null, $user);
+            $ideas = $ideaRepo->filter($entrySet, $currentRound, null, $user, $isAdmin);
 
             // determine previous idea, next idea
             $ideaRepo->sortByFollows($ideas);
@@ -213,7 +212,7 @@ class IdeaController extends Controller
 
         } elseif( $sidebarState == IdeaController::SIDEBAR_JUDGE ) {
             // determine previous idea, next idea
-            $ideas = $ideaRepo->filter($event, $currentRound, null, $user);
+            $ideas = $ideaRepo->filter($event, $currentRound, null, $user, $isAdmin);
             $ideaRepo->sortByFollows($ideas);
 
             list($previousIdea, $nextIdea) = $this->findNextAndPrevious($ideas, $idea);

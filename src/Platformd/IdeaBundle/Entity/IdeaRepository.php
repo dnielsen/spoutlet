@@ -26,7 +26,7 @@ class IdeaRepository extends EntityRepository
      * @param null $user If null show public ideas otherwise show user specific filtered idea.
      * @return array
      */
-    public function filter($entrySet, $round = null, $tag = null, $user = null)
+    public function filter($entrySet, $round = null, $tag = null, $user = null, $isAdmin = false)
     {
         $qb = $this->createQueryBuilder('i')
             ->select      ('i')
@@ -41,21 +41,20 @@ class IdeaRepository extends EntityRepository
             $qb->innerJoin('i.tags', 't', 'WITH', 't.tagName = :tag')->setParameter('tag', $tag);
         }
 
-        //Handle anon or "public" ideas
+        // Handle anon user or "public" view
         if($user == null) {
             $qb->andWhere('i.isPrivate = false');
             return $qb->getQuery()->getResult();
         }
 
-        $isAdmin = $user->hasRole('ROLE_SUPER_ADMIN');
         $isJudge = !$isAdmin && $entrySet->getIsVotingActive() && $entrySet->containsVoter($user->getUsername());
 
-        //for normal users filter out other peoples ideas
+        // For normal users filter out other peoples ideas ("My Ideas")
         if(!$isAdmin && !$isJudge) {
             $qb->andWhere('i.creator = :creator')->setParameter('creator', $user->getId());
         }
 
-        //process he query
+        // process the query
         $result = $qb->getQuery()->getResult();
 
         // judge case, all ideas assigned to this judge

@@ -55,12 +55,14 @@
             <em class="tnytxt left">{{ idea.dateTimeString }}</em>
             <div class="clr"></div>
 
-                {% if idea.canUserView(app.user) %}
+                {% if isAdmin or idea.canUserView(app.user) %}
                     <p class="left">
                         {{ idea.description | nl2br }}
                     </p>
                 {% else %}
-                    [This {{ entrySet.type }} is private]
+                    <p>
+                        [This {{ entrySet.type }} is private]
+                    </p>
                 {% endif %}
             <br class="clr"/>
 
