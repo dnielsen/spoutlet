@@ -58,7 +58,7 @@ class IdeaController extends Controller
         $round = null;
 
         $canSubmit = $entrySet->getIsSubmissionActive();
-        $isAdmin   = $this->isAuthorized($this->getParentByEntrySet($entrySet));
+        $isAdmin   = $this->isAuthorized($entrySet);
 
         if ($event) {
             $round      = $event->getCurrentRound();
@@ -122,7 +122,7 @@ class IdeaController extends Controller
         list($group, $event, $entrySet, $idea) = $this->getHierarchy($idea);
 
         $attendance = $this->getCurrentUserApproved($entrySet);
-        $isAdmin = $this->isAuthorized($this->getParentByEntrySet($entrySet));
+        $isAdmin = $this->isAuthorized($idea);
 
         $params = array(
             'group' 			=> $group,
@@ -2135,12 +2135,12 @@ class IdeaController extends Controller
     }
 
     public function canEditIdea($entrySet, $idea) {
-        return ($this->isAuthorized($this->getParentByEntrySet($entrySet)) || ($this->isAuthorized($idea) && $entrySet->getIsSubmissionActive()));
+        return ($this->isAuthorized($entrySet) || ($this->isAuthorized($idea) && $entrySet->getIsSubmissionActive()));
     }
 
     public function canRemoveComment($idea) {
 
-        return $this->isGranted('ROLE_ADMIN') || $this->isCreator($idea);
+        return $this->isAuthorized($idea);
     }
 
     public function getEvent($groupSlug, $eventId)
