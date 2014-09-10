@@ -4,10 +4,13 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\EventBundle\Entity\Event;
 use Platformd\EventBundle\Entity\GroupEvent;
+use Platformd\EventBundle\Entity\GlobalEvent;
 use Platformd\EventBundle\Entity\EventSession;
 use Platformd\GroupBundle\Entity\Group;
 use Platformd\IdeaBundle\Entity\EntrySet;
 use Platformd\IdeaBundle\Entity\Idea;
+use Platformd\IdeaBundle\Entity\HtmlPage;
+use Platformd\IdeaBundle\Entity\Sponsor;
 use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Platformd\SpoutletBundle\Util\HttpUtil;
@@ -526,42 +529,51 @@ class Controller extends BaseController
         );
     }
 
+    public function getAuthorizedUsers($securedObj, $authorizedUsers = array()) 
+    {
+        // TODO: Add co-organizers to the scopes below as authorized users
+        if ($securedObj instanceof EventSession) {
+            return $this->getAuthorizedUsers($securedObj->getEvent(), $authorizedUsers);
+
+        } elseif ($securedObj instanceof HtmlPage) {
+            $authorizedUsers[] = $securedObj->getCreator()->getUsername();
+            return $this->getAuthorizedUsers($securedObj->getParent(), $authorizedUsers);
+
+        } elseif ($securedObj instanceof Sponsor) {
+            $authorizedUsers[] = $securedObj->getCreator()->getUsername();
+            return $this->getAuthorizedUsers($securedObj->getDepartment(), $authorizedUsers);
+
+        } elseif ($securedObj instanceof Idea) {
+            $authorizedUsers[] = $securedObj->getCreator()->getUsername();
+            return $this->getAuthorizedUsers($securedObj->getEntrySet(), $authorizedUsers);
+
+        } elseif ($securedObj instanceof EntrySet) {
+            $authorizedUsers[] = $securedObj->getCreator()->getUsername();
+            return $this->getAuthorizedUsers($this->getParentByEntrySet($securedObj), $authorizedUsers);
+
+        } elseif ($securedObj instanceof GroupEvent) {
+            $authorizedUsers[] = $securedObj->getUser()->getUsername();
+            return $this->getAuthorizedUsers($securedObj->getGroup(), $authorizedUsers);
+
+        } elseif ($securedObj instanceof GlobalEvent) {
+            $authorizedUsers[] = $securedObj->getUser()->getUsername();
+
+        } elseif ($securedObj instanceof Group) {
+            $authorizedUsers[] = $securedObj->getOwner()->getUsername();
+            // Add parent groups here? Up to community level?
+        }
+        return $authorizedUsers;
+    }
+
     public function isAuthorized($securedObj)
     {
         if ($this->isGranted('ROLE_ADMIN')) {
             return true;
         }
 
-        if ($securedObj instanceof EventSession) {
-            return $this->isAuthorized($securedObj->getEvent());
-        }
+        $authorizedUsers = $this->getAuthorizedUsers($securedObj);
 
-        if ($securedObj instanceof HtmlPage) {
-            return $this->isAuthorized($securedObj->getParent());
-        }
-
-        if ($securedObj instanceof Sponsor) {
-            return $this->isAuthorized($securedObj->getDepartment());
-        }
-
-        $authorizedUsers = array();
-
-        // TODO: Add co-organizers to the scopes below as authorized users
-        if ($securedObj instanceof Group) {
-            $authorizedUsers[] = $securedObj->getOwner();
-        } elseif ($securedObj instanceof GroupEvent or $securedObj instanceof GlobalEvent) {
-            $authorizedUsers[] = $securedObj->getUser();
-        } elseif ($securedObj instanceof EntrySet) {
-            $authorizedUsers[] = $securedObj->getCreator();
-        } elseif ($securedObj instanceof Idea) {
-            $authorizedUsers[] = $securedObj->getCreator();
-        }
-
-        if (in_array($this->getCurrentUser(), $authorizedUsers)) {
-            return true;
-        }
-
-        return false;
+        return in_array($this->getCurrentUser()->getUsername(), $authorizedUsers);
     }
 
     public function validateAuthorization($securedObj)
