@@ -81,7 +81,7 @@ http://api.campsite.org/groups                          Default attributes of al
 http://api.campsite.org/events/6?verbose                All attributes for event 6
 http://api.campsite.org/lists?fields=id,name            Specifically the name and id for all lists
 
-Soring results
+Sorting results
 http://api.campsite.org/events?fields=name&sort_by=name Events sorted by name
 http://api.campsite.org/events?sort_by=-name            Events reverse sorted by name
 
