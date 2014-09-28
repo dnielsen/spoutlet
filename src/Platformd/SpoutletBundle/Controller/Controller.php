@@ -567,13 +567,16 @@ class Controller extends BaseController
 
     public function isAuthorized($securedObj)
     {
+        if (!$user = $this->getCurrentUser()) {
+            return false;
+        }
         if ($this->isGranted('ROLE_ADMIN')) {
             return true;
         }
 
         $authorizedUsers = $this->getAuthorizedUsers($securedObj);
 
-        return in_array($this->getCurrentUser()->getUsername(), $authorizedUsers);
+        return in_array($user->getUsername(), $authorizedUsers);
     }
 
     public function validateAuthorization($securedObj)
