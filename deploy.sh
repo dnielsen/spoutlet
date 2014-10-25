@@ -74,17 +74,17 @@ elif [ $ENV == 'prod' ]; then
     php app/console cache:clear --env=prod --no-debug
 fi
 
-echo '============================='
-echo 'Updating Node dependencies'
-cd node-api
-npm install
-cd ..
-echo
-
-echo '============================='
-echo 'Restarting Node API Service'
-forever restartall
-echo
+# echo '============================='
+# echo 'Updating Node dependencies'
+# cd node-api
+# npm install
+# cd ..
+# echo
+#
+# echo '============================='
+# echo 'Restarting Node API Service'
+# forever restartall
+# echo
 
 echo '============================='
 echo 'Restarting Apache (gracefully)'
