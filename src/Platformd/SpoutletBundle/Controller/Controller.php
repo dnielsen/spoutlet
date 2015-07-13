@@ -330,7 +330,7 @@ class Controller extends BaseController
         return $this->container->get('knp_media.util.media_util');
     }
 
-    protected function getMediaPathResolver() 
+    protected function getMediaPathResolver()
     {
         return $this->get('platformd.media_path_resolver');
     }
@@ -529,7 +529,7 @@ class Controller extends BaseController
         );
     }
 
-    public function getAuthorizedUsers($securedObj, $authorizedUsers = array()) 
+    public function getAuthorizedUsers($securedObj, $authorizedUsers = array())
     {
         // TODO: Add co-organizers to the scopes below as authorized users
         if ($securedObj instanceof EventSession) {
@@ -585,7 +585,7 @@ class Controller extends BaseController
             throw new AccessDeniedException();
         }
     }
-    
+
     public function isAdmin() {
         return $this->isGranted('ROLE_ADMIN');
     }

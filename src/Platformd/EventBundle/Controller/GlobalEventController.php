@@ -147,14 +147,20 @@ class GlobalEventController extends Controller
         $pastExternalEvents = array();
         $this->filter_internal_external_events($pastEvents, $pastInternalEvents, $pastExternalEvents);
 
-        uasort($upcomingInternalEvents, array($this, 'eventCompare'));
-        uasort($upcomingExternalEvents, array($this, 'eventCompare'));
-        uasort($pastInternalEvents, array($this, 'eventCompare'));
-        uasort($pastExternalEvents, array($this, 'eventCompare'));
+        if ($useExternal) {
+            $upcomingEvents = $upcomingExternalEvents;
+            $pastEvents = $pastExternalEvents;
+        } else {
+            $upcomingEvents = $upcomingInternalEvents;
+            $pastEvents = $pastInternalEvents;
+        }
+
+        uasort($upcomingEvents, array($this, 'eventCompare'));
+        uasort($pastEvents, array($this, 'eventCompare'));
 
         return $this->render('EventBundle:GlobalEvent:list.html.twig', array(
-            'upcomingEvents' => $useExternal ? $upcomingExternalEvents : $upcomingInternalEvents,
-            'pastEvents'     => $useExternal ? $pastExternalEvents : $pastInternalEvents,
+            'upcomingEvents' => $upcomingEvents,
+            'pastEvents'     => $pastEvents,
             'useExternal'    => $useExternal,
         ));
     }

@@ -67,7 +67,7 @@ class Site implements EntrySetScopeable
     private $siteConfig;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\CountrySpecificItem", mappedBy="site", cascade={"persist"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\CountrySpecificItem", mappedBy="site", cascade={"persist"})
      */
     private $countrySpecificItems;
 
@@ -83,7 +83,7 @@ class Site implements EntrySetScopeable
     private $region;
 
     /**
-     * @ORM\OneToOne(targetEntity="Platformd\GroupBundle\Entity\Group", inversedBy="communitySite")
+     * @ORM\OneToOne(targetEntity="Platformd\GroupBundle\Entity\Group", inversedBy="communitySite", fetch="EAGER")
      */
     private $communityGroup;
 

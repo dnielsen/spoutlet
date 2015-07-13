@@ -1067,7 +1067,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
             }
             return ($a->getStartsAt() < $b->getStartsAt()) ? -1 : 1;
         });
-        
+
         return $upcomingWatchedEvents;
     }
     public function getNumEvents() {
@@ -1258,16 +1258,16 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
 
         return false;
     }
-    
-    
+
+
     public function getParent() {
-        return $this->parentGroup;    
+        return $this->parentGroup;
     }
-    
+
     public function setParent($parent) {
         $this->parentGroup = $parent;
     }
-    
+
     public function addChild($child) {
         $this->childGroups->add($child);
     }
@@ -1291,15 +1291,15 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     public function getHashTag() {
         return str_replace('-', '', $this->slug);
     }
-    
+
     public function isExternal() {
-        return $this->external;    
+        return $this->external;
     }
     public function setExternal($external) {
         $this->external = $external;
     }
     public function getExternalUrl() {
-        return $this->externalUrl;    
+        return $this->externalUrl;
     }
     public function setExternalUrl($externalUrl) {
         $this->externalUrl = $externalUrl;

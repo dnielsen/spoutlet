@@ -84,8 +84,11 @@ class GroupRepository extends EntityRepository
     public function findAllLocationGroupsRelevantForSite($site) {
 
         return $this->getEntityManager()->createQuery('
-            SELECT g FROM GroupBundle:Group g
+            SELECT g, sponsor, location, communitySite FROM GroupBundle:Group g
             LEFT JOIN g.sites s
+            LEFT JOIN g.sponsor sponsor
+            LEFT JOIN g.location location
+            LEFT JOIN g.communitySite communitySite
             WHERE g.deleted = false
             AND g.category = :location
             AND (g.allLocales = true OR s = :site)')
@@ -446,8 +449,11 @@ class GroupRepository extends EntityRepository
     public function findPopularGroupsForSite($site, $limit=8)
     {
         $qb = $this->createQueryBuilder('g')
-            ->select('g, COUNT(DISTINCT m.id) member_count')
+            ->select('g, sponsor, location, communitySite, COUNT(DISTINCT m.id) member_count')
             ->leftJoin('g.sites', 's')
+            ->leftJoin('g.sponsor', 'sponsor')
+            ->leftJoin('g.location', 'location')
+            ->leftJoin('g.communitySite', 'communitySite')
             ->leftJoin('g.members', 'm')
             ->where('(s = :site OR g.allLocales = true)')
             ->andWhere('g.deleted = false')

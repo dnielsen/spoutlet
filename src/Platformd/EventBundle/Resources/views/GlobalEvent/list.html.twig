@@ -73,6 +73,8 @@
         &nbsp;
     </div>
 </div>
+
+{% render url('_user_event_list') with {}, {'standalone': true } %}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}

@@ -175,4 +175,4 @@ class Sponsor {
     {
         return $this->url;
     }
-} 
+}
