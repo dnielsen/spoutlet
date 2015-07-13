@@ -55,7 +55,7 @@
     </div>
 </div>
 
-<div id="past-events" class="widget-100" style="margin-top:15px;display:none;">
+<div id="past-events" class="widget-100" style="margin-top:15px;{% if page is null %}display:none;{% endif %}">
     <div class="widget-header">
         <div class="widget-title">
             {{ 'platformd.events.event_listings.past_events' | pd_trans }}
@@ -70,7 +70,14 @@
     </div>
 
     <div class="widget-footer">
-        &nbsp;
+        {% if pager.haveToPaginate %}
+            <div class="pagerfanta" id="pager" style="float:right;">
+                {{ pagerfanta(pager, 'spoutlet', {
+                    'routeName': 'global_events_index'
+                }) }}
+            </div>
+            <div style="clear:both;"></div>
+        {% endif %}
     </div>
 </div>
 

@@ -17,6 +17,10 @@ use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\Security\Core\Exception\AccessDeniedException
 ;
 
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\ArrayAdapter;
+use Pagerfanta\Exception\OutOfRangeCurrentPageException;
+
 class GlobalEventController extends Controller
 {
     private $globalEventService;
@@ -158,10 +162,25 @@ class GlobalEventController extends Controller
         uasort($upcomingEvents, array($this, 'eventCompare'));
         uasort($pastEvents, array($this, 'eventCompare'));
 
+        $adapter = new ArrayAdapter($pastEvents);
+        $pager   = new Pagerfanta($adapter);
+
+        $pager->setMaxPerPage(50);
+
+        try {
+            $pager->setCurrentPage($page);
+        } catch (OutOfRangeCurrentPageException $e) {
+            $pager->setCurrentPage(1);
+        }
+
+        $pastEvents  = $pager->getCurrentPageResults();
+
         return $this->render('EventBundle:GlobalEvent:list.html.twig', array(
             'upcomingEvents' => $upcomingEvents,
             'pastEvents'     => $pastEvents,
+            'pager'          => $pager,
             'useExternal'    => $useExternal,
+            'page'           => $request->query->get('page'),
         ));
     }
 
