@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Default behavior runs for production 
+# Default behavior runs for production
 # First parameter 'dev' or 'prod' overrides it
 
 if [ $# -eq 0 ]; then
@@ -19,9 +19,9 @@ echo '===================================================='
 echo
 
 echo 'This will update the code, alter the database, and restart Apache. It may take several minutes to complete.'
-echo 
+echo
 read -p "Are you sure you wish to proceed? (y/n) " -r
-echo 
+echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
     exit 1
@@ -35,7 +35,7 @@ sudo rm -rf app/cache/*
 echo '============================='
 echo 'Pulling latest code from git'
 echo
-git pull 
+git pull
 
 echo '============================='
 echo 'Installing vendors'
@@ -57,21 +57,28 @@ echo 'Assetic Dump'
 echo
 if [ $ENV == 'dev' ]; then
     php app/console assetic:dump
-elif [ $ENV == 'prod' ]; then 
+elif [ $ENV == 'prod' ]; then
     php app/console assetic:dump --env=prod --no-debug
 fi
 
 echo '============================='
 echo 'Migrating Doctrine schema'
-echo 
+echo
 php app/console doc:mig:mig --no-interaction
 
 echo '============================='
 echo 'Clearing Symfony cache'
 if [ $ENV == 'dev' ]; then
     php app/console cache:clear
-elif [ $ENV == 'prod' ]; then 
+elif [ $ENV == 'prod' ]; then
     php app/console cache:clear --env=prod --no-debug
+fi
+
+if [ $ENV == 'prod' ]; then
+    echo '============================='
+    echo 'Clearing Controllers'
+    echo
+    rm web/app_*.php
 fi
 
 # echo '============================='
@@ -88,7 +95,7 @@ fi
 
 echo '============================='
 echo 'Restarting Apache (gracefully)'
-echo 
+echo
 sudo apache2ctl graceful
 
 echo '============================='
