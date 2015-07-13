@@ -48,9 +48,28 @@ class GlobalEventController extends Controller
         $groupEvents  = implode(',', $groupEvents);
         $globalEvents = implode(',', $globalEvents);
 
+        $watchedRepo           = $this->getDoctrine()->getEntityManager()->getRepository('IdeaBundle:WatchedEventMapping');
+        $watchedGlobalEventIds = $watchedRepo->getAllGlobalEventsUserIsWatching($user);
+        $watchedGroupEventIds  = $watchedRepo->getAllGroupEventsUserIsWatching($user);
+
+        $watchedGlobalEvents = $watchedGroupEvents = array();
+
+        foreach ($watchedGlobalEventIds as $event) {
+            $watchedGlobalEvents[] = $event['id'];
+        }
+
+        foreach ($watchedGroupEventIds as $event) {
+            $watchedGroupEvents[] = $event['id'];
+        }
+
+        $watchedGlobalEvents = implode(',', $watchedGlobalEvents);
+        $watchedGroupEvents  = implode(',', $watchedGroupEvents);
+
         $response = $this->render('EventBundle:GlobalEvent:_userEventList.html.twig', array(
-            'globalEvents' => $globalEvents,
-            'groupEvents'  => $groupEvents,
+            'globalEvents'        => $globalEvents,
+            'groupEvents'         => $groupEvents,
+            'watchedGlobalEvents' => $watchedGlobalEvents,
+            'watchedGroupEvents'  => $watchedGroupEvents,
         ));
 
         $this->varnishCache($response, 1);
@@ -104,7 +123,7 @@ class GlobalEventController extends Controller
     public function indexAction(Request $request)
     {
         $useExternal = $request->query->get('useExternal') === 'true'? true: false;
-        
+
         $page = $request->query->get('page', 1);
         $site = $this->getCurrentSite();
         $hasGroups = $site->getSiteFeatures()->getHasGroups();
@@ -119,11 +138,11 @@ class GlobalEventController extends Controller
 
         $upcomingEvents       = array_merge($upcomingGlobalEvents, $upcomingGroupEvents, $currentSweepstakes);
         $pastEvents           = array_merge($pastGroupEvents, $pastGlobalEvents, $pastSweepstakes);
-        
+
         $upcomingInternalEvents = array();
         $upcomingExternalEvents = array();
         $this->filter_internal_external_events($upcomingEvents, $upcomingInternalEvents, $upcomingExternalEvents);
-        
+
         $pastInternalEvents = array();
         $pastExternalEvents = array();
         $this->filter_internal_external_events($pastEvents, $pastInternalEvents, $pastExternalEvents);

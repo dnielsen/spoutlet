@@ -36,8 +36,8 @@
             <td class="event-link">
 
                 {% if isGroupEvent %}
-                    {{ event | pd_link_full(event.name ) }} 
-      
+                    {{ event | pd_link_full(event.name ) }}
+
                 {% else %}
                     {{ event | pd_link_full(event.name, ['global-event-link']) }}
                 {% endif %}
@@ -78,9 +78,7 @@
                     {% set reg_url   = path('group_event_register_and_join', {'groupSlug': event.group.slug, 'eventId': event.id}) %}
                 {% endif %}
 
-                {% if (not event.isUserAttending(user)) and (not event.isUserWatching(user)) %}
-                    <a href="{{ watch_url }}" class="btnTny spcr-b2">Watch</a>
-                {% endif %}
+                <a data-id="{{ event.id }}" href="{{ watch_url }}" class="btnTny spcr-b2 {% if isGroupEvent %}group{% else %}global{% endif %}-event-watch" style="display:none;">Watch</a>
 
                 {# internal or hybrid event #}
                 {% if not event.external %}
@@ -91,9 +89,7 @@
 
                     {# internal event #}
                     {% elseif event.registrationOption == constant('\\Platformd\\EventBundle\\Entity\\Event::REGISTRATION_ENABLED') %}
-                        {% if not event.isUserAttending(user) %}
-                            <a href="{{ reg_url }}" class="btnTny spcr-b2">Register</a>
-                        {% endif %}
+                        <a data-id="{{ event.id }}" href="{{ reg_url }}" class="btnTny spcr-b2 {% if isGroupEvent %}group{% else %}global{% endif %}-event-register" style="display:none;">Register</a>
                     {% else %}
                         <h3 class="ctr spcr-b2">Registration Closed</h3>
                     {% endif %}

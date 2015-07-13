@@ -1,9 +1,10 @@
 <script type="text/javascript">
-    var global_event_ids = "{{ globalEvents }}".split(',');
-    var group_event_ids  = "{{ groupEvents }}".split(',');
+    var global_event_ids         = "{{ globalEvents }}".split(',');
+    var group_event_ids          = "{{ groupEvents }}".split(',');
+    var watched_global_event_ids = "{{ watchedGlobalEvents }}".split(',');
+    var watched_group_event_ids  = "{{ watchedGroupEvents }}".split(',');
 
     $(function () {
-
         for (var i = 0; i < global_event_ids.length; i++) {
             $('#global-event-attending-' + global_event_ids[i]).show();
         }
@@ -12,5 +13,36 @@
             $('#group-event-attending-' + group_event_ids[i]).show();
         }
 
+        $('.global-event-watch').each(function() {
+            var $ele = $(this);
+            var id = $ele.data('id').toString();
+            if (global_event_ids.indexOf(id) < 0 && watched_global_event_ids.indexOf(id) < 0) {
+                $ele.show();
+            }
+        });
+
+        $('.group-event-watch').each(function() {
+            var $ele = $(this);
+            var id = $ele.data('id').toString();
+            if (group_event_ids.indexOf(id) < 0 && watched_group_event_ids.indexOf(id) < 0) {
+                $ele.show();
+            }
+        });
+
+        $('.global-event-register').each(function() {
+            var $ele = $(this);
+            var id = $ele.data('id').toString();
+            if (global_event_ids.indexOf(id) < 0) {
+                $ele.show();
+            }
+        });
+
+        $('.group-event-register').each(function() {
+            var $ele = $(this);
+            var id = $ele.data('id').toString();
+            if (group_event_ids.indexOf(id) < 0) {
+                $ele.show();
+            }
+        });
     });
 </script>

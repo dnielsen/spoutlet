@@ -42,8 +42,9 @@ class GlobalEventRepository extends EventRepository
     public function findUpcomingEventsForSitePaged(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true)
     {
         $qb = $this->createQueryBuilder('gE')
-            ->select('gE', 's')
+            ->select('gE', 's', 't')
             ->leftJoin('gE.sites', 's')
+            ->leftJoin('gE.translations', 't')
             ->where('gE.endsAt >= :now')
             ->andWhere('gE.published = :published')
             ->andWhere('s = :site')
@@ -77,8 +78,9 @@ class GlobalEventRepository extends EventRepository
     public function findPastEventsForSitePaged(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true)
     {
         $qb = $this->createQueryBuilder('gE')
-            ->select('gE', 's')
+            ->select('gE', 's', 't')
             ->leftJoin('gE.sites', 's')
+            ->leftJoin('gE.translations', 't')
             ->where('gE.endsAt < :now')
             ->andWhere('gE.published = :published')
             ->andWhere('s = :site')

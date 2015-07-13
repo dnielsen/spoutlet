@@ -715,7 +715,8 @@ class GroupManager
             return false;
         }
 
-        $owner       = $group->getOwner();
+        $owner    = $group->getOwner();
+        $location = $group->getLocation();
 
         return array(
             'id' => $group->getId(),
@@ -728,13 +729,13 @@ class GroupManager
                 'adminLevel' => $owner->getAdminLevel() == 'ROLE_SUPER_ADMIN',
                 'username' => $owner->getUsername(),
             ),
-            'city' => $group->getLocation()->getCity(),
-            'stateProvince' => $group->getLocation()->getStateProvince(),
-            'address1' => $group->getLocation()->getAddress1(),
-            'address2' => $group->getLocation()->getAddress2(),
-            'metroArea' => $group->getLocation()->getMetroArea(),
-            'latitude' => $group->getLocation()->getLatitude(),
-            'longitude' => $group->getLocation()->getLongitude(),
+            'city' => $location ? $location->getCity() : '',
+            'stateProvince' => $location ? $location->getStateProvince() : '',
+            'address1' => $location ? $location->getAddress1() : '',
+            'address2' => $location ? $location->getAddress2() : '',
+            'metroArea' => $location ? $location->getMetroArea() : '',
+            'latitude' => $location ? $location->getLatitude() : '',
+            'longitude' => $location ? $location->getLongitude() : '',
         );
     }
 

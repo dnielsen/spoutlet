@@ -101,9 +101,10 @@ class GroupEventRepository extends EventRepository
     public function findUpcomingEventsForSitePaged(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true, $private = false)
     {
         $qb = $this->createQueryBuilder('e')
-            ->select('e', 's')
+            ->select('e', 's', 't')
             ->leftJoin('e.sites', 's')
             ->leftJoin('e.group', 'g')
+            ->leftJoin('e.translations', 't')
             ->where('e.endsAt >= :now')
             ->andWhere('e.published = :published')
             ->andWhere('s = :site')
@@ -168,9 +169,10 @@ class GroupEventRepository extends EventRepository
     public function findPastEventsForSitePaged(Site $site, $maxPerPage = 20, $currentPage = 1, &$pager, $published = true, $private = false)
     {
         $qb = $this->createQueryBuilder('e')
-            ->select('e', 's')
+            ->select('e', 's', 't')
             ->leftJoin('e.sites', 's')
             ->leftJoin('e.group', 'g')
+            ->leftJoin('e.translations', 't')
             ->where('e.endsAt < :now')
             ->andWhere('e.published = :published')
             ->andWhere('s = :site')
