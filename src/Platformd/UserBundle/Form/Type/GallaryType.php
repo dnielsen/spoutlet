@@ -2,13 +2,14 @@
 
 namespace Platformd\UserBundle\Form\Type;
 
+use Platformd\UserBundle\Entity\Gallary;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Platformd\MediaBundle\Form\Type\MediaType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class GallaryType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('file', 'file', array(
@@ -18,15 +19,15 @@ class GallaryType extends AbstractType
         ;
     }
 
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => Gallary::class,
+        ]);
+    }
+
     public function getName()
     {
         return 'platformd_userbundle_gallarytype';
-    }
-
-    public function getDefaultOptions(array $options)
-    {
-        return array(
-            'data_class' => 'Platformd\UserBundle\Entity\Gallary',
-        );
     }
 }

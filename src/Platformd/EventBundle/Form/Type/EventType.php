@@ -3,15 +3,13 @@
 namespace Platformd\EventBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType,
-    Symfony\Component\Form\FormBuilder,
-    Symfony\Component\Security\Core\SecurityContextInterface,
-    Symfony\Component\EventDispatcher\EventSubscriberInterface
-;
+    Symfony\Component\Security\Core\SecurityContextInterface;
 
 use Platformd\EventBundle\Form\EventSubscriber\AdminEventSubscriber,
     Platformd\EventBundle\Entity\Event,
-    Platformd\MediaBundle\Form\Type\MediaType
-;
+    Platformd\MediaBundle\Form\Type\MediaType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class EventType extends AbstractType
 {
@@ -25,22 +23,20 @@ class EventType extends AbstractType
      *
      * @param \Symfony\Component\Security\Core\SecurityContextInterface $security
      */
-    public function __construct(
-        SecurityContextInterface $security
-    )
+    public function __construct(SecurityContextInterface $security)
     {
-        $this->security         = $security;
+        $this->security = $security;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name', 'text', array(
                 'label' => 'platformd.event.form.name',
             ))
             ->add('bannerImage', new MediaType(), array(
-                'image_label'   => 'platformd.event.form.banner_image',
-                'image_help'    => 'platformd.event.form.help.banner_image',
+                'image_label' => 'platformd.event.form.banner_image',
+                'image_help' => 'platformd.event.form.help.banner_image',
                 'required' => false
             ))
             ->add('content', 'purifiedTextarea', array(
@@ -50,7 +46,7 @@ class EventType extends AbstractType
                 )
             ))
             ->add('online', 'choice', array(
-                'choices'   => array(
+                'choices' => array(
                     0 => 'platformd.event.form.choice.physical_event',
                     1 => 'platformd.event.form.choice.online_event'
                 ),
@@ -95,17 +91,14 @@ class EventType extends AbstractType
                 ),
                 'expanded' => true,
                 'label' => 'platformd.event.form.event_options'
-            ))
-        ;
+            ));
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $options = parent::getDefaultOptions($options);
-
-        $options['data_class'] = 'Platformd\EventBundle\Entity\Event';
-
-        return $options;
+        $resolver->setDefaults([
+            'data_class' => Event::class,
+        ]);
     }
 
     public function getName()

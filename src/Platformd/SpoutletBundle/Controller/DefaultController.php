@@ -87,7 +87,7 @@ class DefaultController extends Controller
 
     public function _popularGroupsAction(Request $request)
     {
-        $groupRepo = $this->getDoctrine()->getEntityManager()->getRepository('GroupBundle:Group');
+        $groupRepo = $this->getDoctrine()->getRepository('GroupBundle:Group');
         $site      = $this->getCurrentSite();
 
         $groups    = $groupRepo->findPopularGroupsForSite($site);

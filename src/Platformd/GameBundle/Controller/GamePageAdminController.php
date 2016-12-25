@@ -126,7 +126,7 @@ class GamePageAdminController extends Controller
         $gamePage = $form->getData();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 /* Use the youtube title if the video id is valid, if not it will return a blank string */

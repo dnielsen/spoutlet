@@ -4,30 +4,20 @@ namespace Platformd\EventBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller,
     Platformd\GroupBundle\Entity\Group,
-    Platformd\GroupManager\Model\GroupManager
-;
+    Platformd\GroupManager\Model\GroupManager;
 
 use Platformd\EventBundle\Entity\GroupEvent,
-    Platformd\EventBundle\Form\Type\EventType,
-    Platformd\EventBundle\Form\Type\GroupEventType,
-    Platformd\EventBundle\Service\EventService,
     Platformd\EventBundle\Entity\GroupEventTranslation,
     Platformd\EventBundle\Entity\GroupEventEmail,
-    Platformd\UserBundle\Entity\RegistrationSource
-;
+    Platformd\UserBundle\Entity\RegistrationSource;
 
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
     Symfony\Component\Security\Core\Exception\AccessDeniedException,
-    Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
-;
-
-use Doctrine\Common\Collections\ArrayCollection;
+    Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 use JMS\SecurityExtraBundle\Annotation\Secure;
-
-use DateTime;
 
 class GroupEventController extends Controller
 {
@@ -39,22 +29,22 @@ class GroupEventController extends Controller
             throw $this->createNotFoundException(sprintf('No event find for "%s"', $id));
         }
 
-        $user  = $this->getUser();
+        $user = $this->getUser();
         $group = $event->getGroup();
 
-        $isAttending   = $this->isGranted('ROLE_USER') ? $this->getGroupEventService()->isUserAttending($event, $user) : false;
-        $isOwner       = $user == $event->getUser();
+        $isAttending = $this->isGranted('ROLE_USER') ? $this->getGroupEventService()->isUserAttending($event, $user) : false;
+        $isOwner = $user == $event->getUser();
         $isGroupMember = $this->getGroupManager()->isMember($user, $group);
-        $isApplicant   = $this->getGroupManager()->isApplicant($user, $group);
-        $canJoin       = $this->getGroupManager()->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinEvent');
+        $isApplicant = $this->getGroupManager()->isApplicant($user, $group);
+        $canJoin = $this->getGroupManager()->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinEvent');
         $attendeeCount = $event->getAttendeeCount();
 
         $response = $this->render('EventBundle:GlobalEvent:_eventUserInfo.html.twig', array(
-            'isAttending'   => $isAttending,
-            'isOwner'       => $isOwner,
+            'isAttending' => $isAttending,
+            'isOwner' => $isOwner,
             'isGroupMember' => $isGroupMember,
-            'isApplicant'   => $isApplicant,
-            'canJoin'       => $canJoin,
+            'isApplicant' => $isApplicant,
+            'canJoin' => $canJoin,
             'attendeeCount' => $attendeeCount,
         ));
 
@@ -81,7 +71,7 @@ class GroupEventController extends Controller
             throw new AccessDeniedHttpException('You are not allowed/eligible to do that.');
         }
 
-        $existingEvents     = $this->getGroupEventService()->findAllOwnedEventsForUser($this->getUser());
+        $existingEvents = $this->getGroupEventService()->findAllOwnedEventsForUser($this->getUser());
         $importedGroupEvent = $this->getGroupEventService()->findOneBy(array('id' => $request->get('existing_event_select')));
 
         if ($importedGroupEvent) {
@@ -103,7 +93,7 @@ class GroupEventController extends Controller
         $form = $this->createForm('groupEvent', $groupEvent);
 
         if ($request->getMethod() == 'POST' && !$importedGroupEvent) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
@@ -129,8 +119,8 @@ class GroupEventController extends Controller
 
                     if ($groupEvent->getExternalUrl()) {
                         return $this->redirect($this->generateUrl('group_show', array(
-                            'slug' => $this->getRelevantSlugForGroup($group)
-                        )) . '#events');
+                                'slug' => $this->getRelevantSlugForGroup($group)
+                            )) . '#events');
                     }
 
                     return $this->redirect($this->generateUrl('group_event_view', array(
@@ -141,8 +131,8 @@ class GroupEventController extends Controller
                     $this->setFlash('success', 'Success! Your event has been created. The group organizer has been notified via email to review your event. If approved, your event will be listed on the group page allowing other members to RSVP for your event.');
 
                     return $this->redirect($this->generateUrl('group_show', array(
-                        'slug' => $this->getRelevantSlugForGroup($group)
-                    )) . '#events');
+                            'slug' => $this->getRelevantSlugForGroup($group)
+                        )) . '#events');
                 }
 
             }
@@ -186,7 +176,7 @@ class GroupEventController extends Controller
         $form = $this->createForm('groupEvent', $groupEvent);
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
@@ -206,8 +196,8 @@ class GroupEventController extends Controller
 
                     if ($groupEvent->getExternalUrl()) {
                         return $this->redirect($this->generateUrl('group_show', array(
-                            'slug' => $this->getRelevantSlugForGroup($group)
-                        )) . '#events');
+                                'slug' => $this->getRelevantSlugForGroup($group)
+                            )) . '#events');
                     }
 
                     return $this->redirect($this->generateUrl('group_event_view', array(
@@ -218,8 +208,8 @@ class GroupEventController extends Controller
                     $this->setFlash('success', 'Success! Your event has been created. The group organizer has been notified via email to review your event. If approved, your event will be listed on the group page allowing other members to RSVP for your event.');
 
                     return $this->redirect($this->generateUrl('group_show', array(
-                        'slug' => $this->getRelevantSlugForGroup($group)
-                    )) . '#events');
+                            'slug' => $this->getRelevantSlugForGroup($group)
+                        )) . '#events');
                 }
 
             }
@@ -237,7 +227,7 @@ class GroupEventController extends Controller
      */
     public function editAction($groupSlug, $eventId, Request $request)
     {
-        $group      = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
+        $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
         $tagManager = $this->getTagManager();
 
         if (!$group) {
@@ -254,8 +244,7 @@ class GroupEventController extends Controller
         }
 
         // check for edit access
-        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN'))
-        {
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException();
         }
 
@@ -264,7 +253,7 @@ class GroupEventController extends Controller
         $form = $this->createForm('groupEvent', $groupEvent);
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
@@ -327,11 +316,11 @@ class GroupEventController extends Controller
         $isAdmin = $this->getSecurity()->isGranted('ROLE_ADMIN');
 
         return $this->render('EventBundle:GroupEvent:view.html.twig', array(
-            'group'         => $group,
-            'event'         => $groupEvent,
-            'regSourceData' => array('type'=>RegistrationSource::REGISTRATION_SOURCE_TYPE_GROUP, 'id'=>$group->getId()),
-            'attendance'    => $attendance,
-            'isAdmin'       => $isAdmin,
+            'group' => $group,
+            'event' => $groupEvent,
+            'regSourceData' => array('type' => RegistrationSource::REGISTRATION_SOURCE_TYPE_GROUP, 'id' => $group->getId()),
+            'attendance' => $attendance,
+            'isAdmin' => $isAdmin,
         ));
     }
 
@@ -355,8 +344,7 @@ class GroupEventController extends Controller
         }
 
         // check for edit access (permissions match those required to send email)
-        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN'))
-        {
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException();
         }
 
@@ -384,21 +372,21 @@ class GroupEventController extends Controller
         // Optionally pass in recipient username to pre-populate recipient field
         $recipient = $request->get('recipient');
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'email', $email)
+        $form = $this->container->get('form.factory')->createNamedBuilder('email', 'form', $email)
             ->add('users', 'text', array(
-                'property_path' => false,
                 'label' => 'platformd.events.event_contact.form.recipients',
-                'help' => 'platformd.events.event_contact.form.recipient_help',
+//                'help' => 'platformd.events.event_contact.form.recipient_help',
                 'attr' => array('value' => $recipient),
+                'mapped' => false,
             ))
             ->add('message', 'purifiedTextarea', array(
-                'attr'  => array('class' => 'ckeditor'),
+                'attr' => array('class' => 'ckeditor'),
                 'label' => 'platformd.events.event_contact.form.message',
             ))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
@@ -408,9 +396,7 @@ class GroupEventController extends Controller
                 $recipients = array();
 
                 if ($recipientsString === null) {
-
                     $email->setSentToAll(true);
-
                 } else {
                     $email->setSentToAll(false);
                     $recipientArr = explode(',', $recipientsString);
@@ -433,7 +419,7 @@ class GroupEventController extends Controller
                     return $this->render('EventBundle:GroupEvent:contact.html.twig', array(
                         'group' => $group,
                         'event' => $groupEvent,
-                        'form'  => $form->createView(),
+                        'form' => $form->createView(),
                     ));
                 }
 
@@ -457,7 +443,7 @@ class GroupEventController extends Controller
                 ));
 
                 $emailManager = $this->container->get('platformd.model.email_manager');
-                $queueResult  = $emailManager->queueMassEmail($email);
+                $emailManager->queueMassEmail($email);
 
                 $this->setFlash('success', $this->trans(
                     'platformd.events.event_contact.confirmation',
@@ -474,9 +460,9 @@ class GroupEventController extends Controller
         }
 
         return $this->render('EventBundle:GroupEvent:contact.html.twig', array(
-            'group'       => $group,
-            'event'       => $groupEvent,
-            'form'        => $form->createView(),
+            'group' => $group,
+            'event' => $groupEvent,
+            'form' => $form->createView(),
             'breadCrumbs' => $this->getBreadCrumbsString($groupEvent, true),
         ));
     }
@@ -500,20 +486,20 @@ class GroupEventController extends Controller
             $emailLocale
         ));
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'email', $email)
+        $form = $this->container->get('form.factory')->createNamedBuilder('email', 'form', $email)
             ->add('users', 'text', array(
-                'property_path' => false,
                 'label' => 'platformd.events.event_contact.form.recipients',
-                'help' => 'platformd.events.event_contact.form.recipient_help',
+//                'help' => 'platformd.events.event_contact.form.recipient_help',
+                'mapped' => false,
             ))
             ->add('message', 'purifiedTextarea', array(
-                'attr'  => array('class' => 'ckeditor'),
+                'attr' => array('class' => 'ckeditor'),
                 'label' => 'platformd.events.event_contact.form.message',
             ))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $email = $form->getData();
@@ -548,6 +534,7 @@ class GroupEventController extends Controller
 
     /**
      * @param $slug
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
@@ -561,7 +548,7 @@ class GroupEventController extends Controller
 
         $groupEvent = $this->getGroupEventService()->findOneBy(array(
             'group' => $group->getId(),
-            'id'    => $eventId,
+            'id' => $eventId,
         ));
 
         if (!$groupEvent) {
@@ -571,9 +558,9 @@ class GroupEventController extends Controller
         $attendees = $groupEvent->getAttendeesAlphabetical();
 
         return $this->render('EventBundle:GroupEvent:attendees.html.twig', array(
-            'group'       => $group,
-            'event'       => $groupEvent,
-            'attendees'   => $attendees,
+            'group' => $group,
+            'event' => $groupEvent,
+            'attendees' => $attendees,
             'breadCrumbs' => $this->getBreadCrumbsString($groupEvent, true),
         ));
     }
@@ -597,8 +584,7 @@ class GroupEventController extends Controller
             throw new NotFoundHttpException('Event does not exist.');
         }
 
-        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN'))
-        {
+        if (false === $this->getSecurity()->isGranted('EDIT', $groupEvent) && !$this->isGranted('ROLE_SUPER_ADMIN')) {
             throw new AccessDeniedException();
         }
 
@@ -616,16 +602,16 @@ class GroupEventController extends Controller
             '%eventName%' => $groupEvent->getName(),
         ), 'messages', $locale);
 
-        $url        = $this->generateUrl('group_event_view', array('groupSlug' => $groupSlug, 'eventId' => $groupEvent->getId()), true);
+        $url = $this->generateUrl('group_event_view', array('groupSlug' => $groupSlug, 'eventId' => $groupEvent->getId()), true);
 
         $message = nl2br($this->trans('platformd.event.email.attendee_removed.message', array(
-            '%username%'       => $user->getUsername(),
-            '%url%'            => $url,
-            '%eventName%'      => $groupEvent->getName(),
+            '%username%' => $user->getUsername(),
+            '%url%' => $url,
+            '%eventName%' => $groupEvent->getName(),
         ), 'messages', $locale));
 
-        $emailType  = "Event unregister notification";
-        $emailTo    = $user->getEmail();
+        $emailType = "Event unregister notification";
+        $emailTo = $user->getEmail();
         $this->get('platformd.model.email_manager')->sendHtmlEmail($emailTo, $subject, $message, $emailType);
 
         $this->setFlash('success', sprintf('%s has been successfully removed from this event!', $user->getUsername()));
@@ -642,6 +628,7 @@ class GroupEventController extends Controller
      * Only for group owner
      *
      * @param $groupSlug
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function pendingApprovalListAction($groupSlug)
@@ -711,6 +698,7 @@ class GroupEventController extends Controller
      * Triggers email notifications
      *
      * @param $eventId
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */
@@ -787,8 +775,8 @@ class GroupEventController extends Controller
         $response = new Response();
         $response->headers->set('Content-type', 'text/json; charset=utf-8');
 
-        $params   = array();
-        $content  = $request->getContent();
+        $params = array();
+        $content = $request->getContent();
 
         if (empty($content)) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => "Some required information was not passed.")));
@@ -802,8 +790,8 @@ class GroupEventController extends Controller
             return $response;
         }
 
-        $id     = (int) $params['id'];
-        $rsvp   = $params['rsvp'];
+        $id = (int)$params['id'];
+        $rsvp = $params['rsvp'];
 
         if (!$this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => 'You must be logged in to RSVP to an event')));
@@ -811,7 +799,7 @@ class GroupEventController extends Controller
         }
 
         $groupEvent = $this->getGroupEventService()->find($id);
-        $user       = $this->getUser();
+        $user = $this->getUser();
 
         if (!$groupEvent) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => "Event not found!")));
@@ -849,7 +837,7 @@ class GroupEventController extends Controller
         $session->remove('event_id');
 
         $group = $this->getGroupManager()->getGroupBy(array('slug' => $groupSlug));
-        $user  = $this->getUser();
+        $user = $this->getUser();
 
         if (!$group) {
             throw new NotFoundHttpException('Group does not exist.');
@@ -864,7 +852,7 @@ class GroupEventController extends Controller
 
         $params = array(
             'groupSlug' => $groupSlug,
-            'eventId'   => $eventId,
+            'eventId' => $eventId,
         );
 
         if (!$this->getGroupManager()->isAllowedTo($user, $group, $this->getCurrentSite(), 'JoinEvent')) {
@@ -884,16 +872,13 @@ class GroupEventController extends Controller
         $this->getGroupEventService()->register($groupEvent, $user);
         $this->getGroupManager()->autoJoinGroup($group, $user);
 
-        if ($groupEvent->getPrivate()){
+        if ($groupEvent->getPrivate()) {
             $flashMessage = "We have received your request for private access. You will receive a response by an administrator when your account has been reviewed.";
-        }
-        elseif ($groupEvent->getExternalUrl()) {
+        } elseif ($groupEvent->getExternalUrl()) {
             $flashMessage = $this->trans('platformd.events.event_show.now_attending_external');
-        }
-        elseif ($wasGroupMember || $group->isOwner($user)) {
+        } elseif ($wasGroupMember || $group->isOwner($user)) {
             $flashMessage = $this->trans('platformd.events.event_show.now_attending');
-        }
-        else {
+        } else {
             $flashMessage = $this->trans('platformd.events.event_show.group_joined', array('%groupName%' => $group->getName()));
         }
         $this->setFlash('success', $flashMessage);
@@ -918,7 +903,7 @@ class GroupEventController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $answerRepo = $this->getDoctrine()->getRepository('IdeaBundle:RegistrationAnswer');
 
-        foreach ($fields as $field){
+        foreach ($fields as $field) {
             $answer = $answerRepo->findOneBy(array('field' => $field->getId(), 'user' => $user->getId()));
             $em->remove($answer);
         }
@@ -933,8 +918,8 @@ class GroupEventController extends Controller
         $response = new Response();
         $response->headers->set('Content-type', 'text/json; charset=utf-8');
 
-        $params   = array();
-        $content  = $request->getContent();
+        $params = array();
+        $content = $request->getContent();
 
         if (empty($content)) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => "Some required information was not passed.")));
@@ -948,7 +933,7 @@ class GroupEventController extends Controller
             return $response;
         }
 
-        $id = (int) $params['id'];
+        $id = (int)$params['id'];
 
         if (!$this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => 'You must be logged in to delete an event')));
@@ -956,7 +941,7 @@ class GroupEventController extends Controller
         }
 
         $groupEvent = $this->getGroupEventService()->find($id);
-        $user           = $this->getUser();
+        $user = $this->getUser();
 
         if (!$groupEvent) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => "Event not found!")));
@@ -979,7 +964,8 @@ class GroupEventController extends Controller
     /**
      * Sets an event as deleted
      *
-     * @param $groupSlug, $eventId
+     * @param $groupSlug , $eventId
+     *
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
      */

@@ -13,7 +13,6 @@ services:
             - "@platformd.util.site_util"
             - "@pd_giveaway.util.key_counter_util"
             - "@pd_giveaway.entity.repository.giveaway_key"
-            - "@doctrine.orm.entity_manager"
             - "@platformd.repository.comment_thread"
             - "@platformd.link.linkable_manager"
             - "@media_exposer"

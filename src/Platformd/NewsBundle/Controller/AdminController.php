@@ -7,7 +7,6 @@ use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\NewsBundle\Entity\News;
 use Platformd\NewsBundle\Form\Type\CreateNewsFormType;
 
-use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,17 +56,17 @@ class AdminController extends Controller
         ));
     }
 
-    public function newAction()
+    public function newAction(Request $request)
     {
         $this->addNewsBreadcrumb()->addChild('New');
         $news       = new News();
         $tagManager = $this->getTagManager();
         $form       = $this->createForm(new CreateNewsFormType($news, $tagManager), $news);
-        $request    = $this->getRequest();
 
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', $this->trans('platformd.news.admin.created'));
-            return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
+
+            return $this->redirectToRoute('NewsBundle_admin_homepage');
         }
 
         return $this->render('NewsBundle:Admin:new.html.twig', array(
@@ -131,7 +130,7 @@ class AdminController extends Controller
         $tagManager = $this->getTagManager();
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 

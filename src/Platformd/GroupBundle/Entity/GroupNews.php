@@ -34,7 +34,7 @@ class GroupNews implements LinkableInterface, ReportableContentInterface, Taggab
     /**
      *
      * @var \Platformd\GroupBundle\Entity\Group
-     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group")
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group", inversedBy="newsArticles")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $group;

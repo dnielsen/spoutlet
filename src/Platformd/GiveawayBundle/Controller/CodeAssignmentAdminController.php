@@ -20,7 +20,7 @@ class CodeAssignmentAdminController extends Controller
         $form       = $this->createForm(new CodeAssignmentType(), $assignment);
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 

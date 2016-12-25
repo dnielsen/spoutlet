@@ -15,7 +15,7 @@ class RsvpAttendeeValidator extends ConstraintValidator
         $this->em = $em;
     }
 
-    public function isValid($entity, Constraint $constraint)
+    public function validate($entity, Constraint $constraint)
     {
         $rsvpAttendeeRepo = $this->em->getRepository('SpoutletBundle:RsvpAttendee');
 

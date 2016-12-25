@@ -3,8 +3,8 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Platformd\SpoutletBundle\Model\ExportQueryManager;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class ExportQueryType extends AbstractType
 {
@@ -15,12 +15,11 @@ class ExportQueryType extends AbstractType
         $this->exportQueryManager = $exportQueryManager;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $reportTypes = $this->getReportTypes();
         $builder->add('reportTypes', 'choice', array(
             'label'     => 'Report',
-            'help'      => 'Please be aware that running certain reports may take a long time depending on what is being asked for.',
             'choices'   => $reportTypes,
             'required'  => false,
             'data'      => key($reportTypes),

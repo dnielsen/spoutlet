@@ -39,7 +39,7 @@ class MetricController extends Controller
 
             // bind only if we have that query parameter
             if (null !== $request->query->get($select->getName())) {
-                $select->bindRequest($request);
+                $select->handleRequest($request);
             }
 
             // used for MySQL query
@@ -93,7 +93,7 @@ class MetricController extends Controller
 
             if ($request->getMethod() == 'POST') {
 
-                $form->bindRequest($request);
+                $form->handleRequest($request);
                 $formData = $form->getData();
                 $session = $request->getSession();
 
@@ -213,7 +213,7 @@ class MetricController extends Controller
 
         if ($request->getMethod() == 'POST') {
 
-            $form->bindRequest($request);
+            $form->handleRequest($request);
             $settings = $form->getData();
 
             $currentSettings = json_decode($settings['currentSettings'], true) ?: array();

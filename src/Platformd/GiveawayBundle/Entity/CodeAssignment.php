@@ -39,12 +39,12 @@ class CodeAssignment
     /**
      * @Assert\Url
      * @Assert\NotBlank()
-     * @ORM\Column(name="url", type="string", length="255")
+     * @ORM\Column(name="url", type="string", length=255)
      */
     private $url;
 
     /**
-     * @ORM\Column(name="type", type="string", length="255")
+     * @ORM\Column(name="type", type="string", length=255)
      */
     private $type;
 

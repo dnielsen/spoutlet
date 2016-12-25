@@ -15,7 +15,7 @@ class SpoutletView extends DefaultView
             return $url.'#commentList';
         };
 
-                $options = array_merge(array(
+        $options = array_merge(array(
             'proximity'          => 2,
             'previous_message'   => 'Previous',
             'next_message'       => 'Next',
@@ -98,6 +98,11 @@ class SpoutletView extends DefaultView
 
         return '<nav class="spoutlet-pager">'.$pagesHtml.'</nav>';
         //return parent::render($pagerfanta, $customRouteGenerator, $options);
+    }
+
+    public function getName()
+    {
+        return 'spoutlet';
     }
 }
 

@@ -3,10 +3,8 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Form\Extension\Core\ChoiceList\ArrayChoiceList;
-use Doctrine\ORM\EntityRepository;
 use Platformd\UserBundle\Entity\User;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class GalleryMediaType extends AbstractType
 {
@@ -26,10 +24,8 @@ class GalleryMediaType extends AbstractType
         $this->tagManager   = $tagManager;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $currentSite = $this->currentSite;
-
         $builder->add('title', 'text', array(
             'max_length' => 255,
             'label'      => 'galleries.edit_photo.name',

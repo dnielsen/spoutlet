@@ -18,8 +18,8 @@ use Platformd\SpoutletBundle\Entity\Site;
 class ContentReport
 {
 
-    const DELETED_BY_REPORT         = 'REPORTED_PENDING_INVESTIGATION';
-    const DELETED_BY_REPORT_ADMIN   = 'REPORTED_AND_REMOVED_BY_ADMIN';
+    const DELETED_BY_REPORT = 'REPORTED_PENDING_INVESTIGATION';
+    const DELETED_BY_REPORT_ADMIN = 'REPORTED_AND_REMOVED_BY_ADMIN';
 
     static private $validReasons = array(
         'inappropriate_content',
@@ -90,68 +90,67 @@ class ContentReport
     private $deleted = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\GroupImage")
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\GroupImage", inversedBy="contentReports")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
 
     protected $groupImage = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\GroupNews")
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\GroupNews", inversedBy="contentReports")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
 
     protected $groupNews = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\GroupVideo")
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\GroupVideo", inversedBy="contentReports")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
 
     protected $groupVideo = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="GalleryMedia")
+     * @ORM\ManyToOne(targetEntity="GalleryMedia", inversedBy="contentReports")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
 
     protected $galleryMedia = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group")
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group", inversedBy="contentReports")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
 
     protected $group = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\GroupDiscussion")
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\GroupDiscussion", inversedBy="contentReports")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
-
     protected $groupDiscussion = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\GroupDiscussionPost")
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\GroupDiscussionPost", inversedBy="contentReports")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
 
     protected $groupDiscussionPost = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Comment")
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Comment", inversedBy="contentReports")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $comment = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\VideoBundle\Entity\YoutubeVideo")
+     * @ORM\ManyToOne(targetEntity="Platformd\VideoBundle\Entity\YoutubeVideo", inversedBy="contentReports")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $youtubeVideo = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GroupEvent")
+     * @ORM\ManyToOne(targetEntity="Platformd\EventBundle\Entity\GroupEvent", inversedBy="contentReports")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
 

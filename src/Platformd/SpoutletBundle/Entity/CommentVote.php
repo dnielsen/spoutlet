@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Table(name="commenting_vote", indexes={@ORM\index(name="votetype_idx", columns={"vote_type"})})
+ * @ORM\Table(name="commenting_vote", indexes={@ORM\Index(name="votetype_idx", columns={"vote_type"})})
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\CommentVoteRepository")
  */
 
@@ -23,24 +23,24 @@ class CommentVote extends AbstractVote
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Comment")
-     * @ORM\JoinColumn(onDelete="cascade", nullable="false")
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Comment", inversedBy="votes")
+     * @ORM\JoinColumn(onDelete="cascade", nullable=false)
      */
     protected $comment;
 
     /**
      * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
-     * @ORM\JoinColumn(onDelete="cascade", nullable="false")
+     * @ORM\JoinColumn(onDelete="cascade", nullable=false)
      */
     protected $user;
 
     /**
-     * @ORM\Column(name="ip_address", type="string", length="20")
+     * @ORM\Column(name="ip_address", type="string", length=20)
      */
     protected $ipAddress;
 
     /**
-     * @ORM\Column(name="vote_type", type="string", length="255")
+     * @ORM\Column(name="vote_type", type="string", length=255)
      */
     protected $voteType;
 

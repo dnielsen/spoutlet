@@ -4,17 +4,17 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Form\HomepageBannerType;
 use Platformd\SpoutletBundle\Entity\HomepageBanner;
+use Symfony\Component\HttpFoundation\Request;
+
 /**
 * Admin controller for homepage banners
 */
 class HomepageBannerController extends Controller
 {
-
     public function indexAction()
     {
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-            $url = $this->generateUrl('admin_homepage_banner_list', array('site' => 2));
-            return $this->redirect($url);
+            return $this->redirectToRoute('admin_homepage_banner_list', array('site' => 2));
         }
 
         $this->addBannersBreadcrumb();
@@ -45,17 +45,16 @@ class HomepageBannerController extends Controller
         ));
     }
 
-    public function newAction()
+    public function newAction(Request $request)
     {
         $this->addBannersBreadcrumb()->addChild('New');
-        $request = $this->getRequest();
 
         $banner = new HomepageBanner();
 
         $form = $this->createForm(new HomepageBannerType(), $banner);
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
@@ -72,7 +71,7 @@ class HomepageBannerController extends Controller
                 $this->moveAllBannersDown($banner);
 
                 $this->setFlash('success', 'success');
-                return $this->redirect($this->generateUrl('admin_homepage_banner_index'));
+                return $this->redirectToRoute('admin_homepage_banner_index');
             }
         }
 
@@ -119,7 +118,7 @@ class HomepageBannerController extends Controller
         $form = $this->createForm(new HomepageBannerType(), $banner);
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 

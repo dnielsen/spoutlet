@@ -2,7 +2,7 @@
 
 namespace Platformd\UserBundle\ViewModel;
 
-class avatar_index_data
+class AvatarIndexData
 {
     public $avatars;
     public $unapprovedCount;

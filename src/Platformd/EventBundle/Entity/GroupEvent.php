@@ -76,7 +76,7 @@ class GroupEvent extends Event implements ReportableContentInterface, LinkableIn
      * Groups the event pertains to
      *
      * @var Group
-     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group")
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group", inversedBy="events")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $group;

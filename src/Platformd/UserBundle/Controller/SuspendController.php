@@ -17,7 +17,7 @@ class SuspendController extends Controller
         }
 
         $form = $this->createForm(new SuspendUserType, $user);
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
 

@@ -2,11 +2,10 @@
 
 namespace Platformd\UserBundle\Form\Type;
 
+use Platformd\UserBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Form\Event\DataEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class SubscriptionSettingsType extends AbstractType
 {
@@ -23,22 +22,25 @@ class SubscriptionSettingsType extends AbstractType
         $this->apiAuth         = $apiAuth;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $user       = $this->securityContext->getToken()->getUser();
-        $encoder    = $this->encoderFactory->getEncoder($user);
-        $apiManager = $this->apiManager;
-        $apiAuth    = $this->apiAuth;
+//        $encoder    = $this->encoderFactory->getEncoder($user);
+//        $apiManager = $this->apiManager;
+//        $apiAuth    = $this->apiAuth;
 
         $builder->add('subscribedAlienwareEvents');
     }
 
-    public function getDefaultOptions(array $options)
+    /**
+     * @param OptionsResolverInterface $resolver
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array_merge($options, array(
-            'data_class' => 'Platformd\UserBundle\Entity\User',
-            'validation_groups' => array('Default')
-        ));
+        $resolver->setDefaults([
+            'data_class' => User::class,
+            'validation_groups' => ['Default'],
+        ]);
     }
 
     public function getName()

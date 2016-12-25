@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil;
+use Symfony\Component\Validator\Context\LegacyExecutionContext;
 use Symfony\Component\Validator\ExecutionContext;
 use DateTime;
 use DateTimezone;
@@ -171,7 +172,7 @@ class SiteTakeover
         return $siteList;
     }
 
-    public function validateDateRanges(ExecutionContext $executionContext)
+    public function validateDateRanges(LegacyExecutionContext $executionContext)
     {
         // error if submissionEnd or votingEnd datetime values are before their respective start datetimes
 
@@ -181,13 +182,10 @@ class SiteTakeover
 
         if ($this->endsAt < $this->startsAt) {
             $propertyPath = $executionContext->getPropertyPath() . '.endsAt';
-            $executionContext->setPropertyPath($propertyPath);
 
-            $executionContext->addViolation(
-                "The  end date/time must be after the start date/time",
-                array(),
-                "endsAt"
-            );
+            $executionContext->buildViolation("The  end date/time must be after the start date/time")
+                ->atPath($propertyPath)
+                ->addViolation();
 
             return;
         }

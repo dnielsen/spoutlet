@@ -336,7 +336,7 @@ class CommentsController extends Controller
         $rangeString   = '';
 
         if (!empty($requestData)) {
-            $filterForm->bindRequest($request);
+            $filterForm->handleRequest($request);
             if ($filterForm->isValid()) {
                 $data   = $filterForm->getData();
 

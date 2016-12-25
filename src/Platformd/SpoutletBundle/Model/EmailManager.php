@@ -8,15 +8,8 @@ use Platformd\SpoutletBundle\Entity\SentEmail;
 use Platformd\SpoutletBundle\Entity\MassEmail;
 use Platformd\SpoutletBundle\QueueMessage\MassEmailQueueMessage;
 use Platformd\SpoutletBundle\QueueMessage\ChunkedMassEmailQueueMessage;
-
-use Symfony\Component\HttpFoundation\Session;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
-use AmazonSES;
-use DateTime;
-use SendGrid;
 class EmailManager
 {
     private $container;
@@ -24,23 +17,25 @@ class EmailManager
     private $ses;
     private $sendGridObj;
     private $email_service;
-    public function __construct(ContainerInterface $container, EntityManager $em, AmazonSES $ses, $sendgrid_username='', $sendgrid_password='', $email_service='')
+
+    public function __construct(ContainerInterface $container, EntityManager $em, \AmazonSES $ses, $sendgrid_username = '', $sendgrid_password = '', $email_service = '')
     {
-        $this->container        = $container;
-        $this->em               = $em;
-        $this->email_service    = $email_service;
-        if($this->email_service == 'SendGrid') {           
-          $this->sendGridObj = new SendGrid\SendGridPHP($sendgrid_username, $sendgrid_password);
-          $this->mailObj = new SendGrid\Mail();
+        $this->container = $container;
+        $this->em = $em;
+        $this->email_service = $email_service;
+
+        if ($this->email_service === 'SendGrid') {
+            $this->sendGridObj = new \SendGrid($sendgrid_username, $sendgrid_password);
+            $this->mailObj = new \SendGrid\Email();
         } else {
-          $this->ses  = $ses;
+            $this->ses = $ses;
         }
     }
 
     public function sendHtmlEmail($to, $subject, $body, $emailType = null, $site = null, $fromName = null, $fromEmail = null, $andFlush = true)
     {
         $params = $this->setupEmail($to, $subject, $body, $emailType, $site, $fromName, $fromEmail);
-        $finalEmail     = array('Subject'  => array('Data' => $params['subject'], 'Charset' => 'UTF-8'), 'Body' => array('Html' => array('Data' => $params['body'], 'Charset' => 'UTF-8')));
+        $finalEmail = array('Subject' => array('Data' => $params['subject'], 'Charset' => 'UTF-8'), 'Body' => array('Html' => array('Data' => $params['body'], 'Charset' => 'UTF-8')));
         ($this->email_service == 'SendGrid') ? $this->mailObj->setHtml($params['body']) : '';
         $this->processEmail($params, $finalEmail, $andFlush);
     }
@@ -48,13 +43,13 @@ class EmailManager
     public function sendEmail($to, $subject, $body, $emailType = null, $site = null, $fromName = null, $fromEmail = null, $andFlush = true)
     {
         $params = $this->setupEmail($to, $subject, $body, $emailType, $site, $fromName, $fromEmail);
-        $finalEmail = array('Subject'  => array('Data' => $params['subject'], 'Charset' => 'UTF-8'), 'Body' => array('Text' => array('Data' => $params['body'], 'Charset' => 'UTF-8')));
-        ($this->email_service == 'SendGrid') ? $this->mailObj->setText($params['body']) : '';
+        $finalEmail = array('Subject' => array('Data' => $params['subject'], 'Charset' => 'UTF-8'), 'Body' => array('Text' => array('Data' => $params['body'], 'Charset' => 'UTF-8')));
+        ($this->email_service === 'SendGrid') ? $this->mailObj->setText($params['body']) : '';
         $this->processEmail($params, $finalEmail, $andFlush);
     }
 
-    private function setupEmail($to, $subject, $body, $emailType = null, $site = null, $fromName = null, $fromEmail = null) {
-
+    private function setupEmail($to, $subject, $body, $emailType = null, $site = null, $fromName = null, $fromEmail = null)
+    {
         $params = array();
 
         if ($to == null) {
@@ -96,8 +91,8 @@ class EmailManager
         $params['body'] = $body;
         $params['site'] = $site;
         $params['emailType'] = $emailType;
-        $params['from'] = $fromName.' <'.$fromEmail.'>';
-        $params['finalTo'] = array('ToAddresses'  => array($to));
+        $params['from'] = $fromName . ' <' . $fromEmail . '>';
+        $params['finalTo'] = array('ToAddresses' => array($to));
         $params['from_name'] = $fromName;
         $params['from_email'] = $fromEmail;
         return $params;
@@ -111,24 +106,30 @@ class EmailManager
 
         try {
 
-            if ($this->email_service == 'SendGrid') {
-
+            if ($this->email_service === 'SendGrid') {
                 $this->mailObj->addTo($params['to']);
                 $this->mailObj->setFromName($params['from_name']);
                 $this->mailObj->setFrom($params['from_email']);
                 $this->mailObj->setSubject($params['subject']);
-                 
+
                 $messageId = '1';
-                $status = $this->sendGridObj->smtp->send($this->mailObj);
-                $sentEmail->setSendStatusOk($status);
-                $sentEmail->setSendStatusCode(200);
+                try {
+                    $response = $this->sendGridObj->send($this->mailObj);
+                    $status = $response['code'];
+                    $isOk = true;
+                } catch (\SendGrid\Exception $e) {
+                    $status = $e->getCode();
+                    $isOk = false;
+                }
+
+                $sentEmail->setSendStatusOk($isOk);
+                $sentEmail->setSendStatusCode($status);
 
             } else {
-
-                $response  = $this->ses->send_email($params['from'], $params['finalTo'], $finalEmail);
+                $response = $this->ses->send_email($params['from'], $params['finalTo'], $finalEmail);
                 $messageId = $response->body->SendEmailResult->MessageId;
-                $status    = $response->isOk();
-             
+                $status = $response->isOk();
+
                 if (!$status) {
                     $sentEmail->setErrorMessage($response->body->Error->Message);
                 }
@@ -166,10 +167,10 @@ class EmailManager
         $this->em->persist($email);
         $this->em->flush();
 
-        $message            = new MassEmailQueueMessage();
-        $message->senderId  = $email->getSender()->getId();
+        $message = new MassEmailQueueMessage();
+        $message->senderId = $email->getSender()->getId();
         $message->emailType = $email->getEmailType();
-        $message->emailId   = $email->getId();
+        $message->emailId = $email->getId();
 
         $result = $this->container->get('platformd.util.queue_util')->addToQueue($message);
 
@@ -184,7 +185,7 @@ class EmailManager
             $recipientIds = $this->em->createQueryBuilder('e')
                 ->select('u.id')
                 ->from($email->getLinkedEntityClass(), 'e')
-                ->leftJoin('e.'.$email->getLinkedEntityAllRecipientsField(), 'u')
+                ->leftJoin('e.' . $email->getLinkedEntityAllRecipientsField(), 'u')
                 ->andWhere('e = :linkedEntity')
                 ->setParameter('linkedEntity', $email->getLinkedEntity())
                 ->getQuery()
@@ -200,42 +201,42 @@ class EmailManager
                 ->getResult();
         }
 
-        $message            = new ChunkedMassEmailQueueMessage();
-        $message->emailId   = $emailId;
-        $message->senderId  = $email->getSender()->getId();
+        $message = new ChunkedMassEmailQueueMessage();
+        $message->emailId = $emailId;
+        $message->senderId = $email->getSender()->getId();
         $message->emailType = $email->getEmailType();
-        $recipientCount     = 0;
+        $recipientCount = 0;
 
         foreach ($recipientIds as $user) {
             $message->recipientIds[] = $user['id'];
             $recipientCount++;
 
             if ($recipientCount >= ChunkedMassEmailQueueMessage::RECIPIENT_CHUNK_SIZE) {
-                $result = $this->container->get('platformd.util.queue_util')->addToQueue($message);
+                $this->container->get('platformd.util.queue_util')->addToQueue($message);
 
-                $message            = new ChunkedMassEmailQueueMessage();
-                $message->emailId   = $emailId;
-                $message->senderId  = $email->getSender()->getId();
+                $message = new ChunkedMassEmailQueueMessage();
+                $message->emailId = $emailId;
+                $message->senderId = $email->getSender()->getId();
                 $message->emailType = $email->getEmailType();
 
-                $recipientCount     = 0;
+                $recipientCount = 0;
             }
         }
 
         if ($recipientCount > 0) {
-            $result = $this->container->get('platformd.util.queue_util')->addToQueue($message);
+            $this->container->get('platformd.util.queue_util')->addToQueue($message);
         }
     }
 
     public function sendMassEmail(MassEmail $email, ChunkedMassEmailQueueMessage $queueMessage)
     {
-        $subject    = $email->getSubject();
-        $message    = $email->getMessage();
+        $subject = $email->getSubject();
+        $message = $email->getMessage();
 
-        $fromName   = $email->getSender() ? ($email->getSender()->getAdminLevel() ? null : $email->getSender()->getUsername()) : null;
-        $site       = $email->getSite() ? $email->getSite()->getDefaultLocale() : null;
-        $emailType  = $email->getEmailType();
-        $sendCount  = 0;
+        $fromName = $email->getSender() ? ($email->getSender()->getAdminLevel() ? null : $email->getSender()->getUsername()) : null;
+        $site = $email->getSite() ? $email->getSite()->getDefaultLocale() : null;
+        $emailType = $email->getEmailType();
+        $sendCount = 0;
 
         $recipientEmails = $this->em->createQueryBuilder('e')
             ->select('u.email')
@@ -250,7 +251,7 @@ class EmailManager
             $sendCount++;
         }
 
-        $email->setSentAt(new DateTime());
+        $email->setSentAt(new \DateTime());
 
         $this->em->persist($email);
         $this->em->flush();

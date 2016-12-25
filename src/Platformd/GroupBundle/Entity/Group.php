@@ -2,6 +2,7 @@
 
 namespace Platformd\GroupBundle\Entity;
 
+use Platformd\TagBundle\Entity\Tag;
 use Symfony\Component\Validator\Constraints as Assert;
 use Platformd\SpoutletBundle\Entity\Location;
 use Platformd\MediaBundle\Entity\Media;
@@ -10,17 +11,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Sluggable\Util\Urlizer;
 use Platformd\UserBundle\Entity\User;
-use Platformd\SpoutletBundle\Entity\Site;
-use Platformd\GroupBundle\Entity\GroupApplication;
 use Platformd\SpoutletBundle\Model\ReportableContentInterface;
-use Symfony\Component\Validator\ExecutionContext;
+use Symfony\Component\Validator\Context\LegacyExecutionContext;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Platformd\GroupBundle\Validator\GroupSlugCollision;
 use Platformd\TagBundle\Model\TaggableInterface;
-use Platformd\SpoutletBundle\Entity\GalleryMedia;
 
 use Doctrine\ORM\Mapping as ORM;
-use Platformd\GroupBundle\Entity\GroupMembershipAction;
 use Platformd\SearchBundle\Model\IndexableInterface;
 
 use Platformd\IdeaBundle\Entity\EntrySetRegistry,
@@ -33,21 +30,23 @@ use Platformd\IdeaBundle\Entity\EntrySetRegistry,
  * @ORM\Entity(repositoryClass="Platformd\GroupBundle\Entity\GroupRepository")
  * @UniqueEntity(fields={"name"}, message="This group name is already used.")
  * @UniqueEntity(fields={"slug"}, message="This group url is already used.")
+ *
  * @Assert\Callback(methods={"locationRequiredCallBack"})
+ *
  * @GroupSlugCollision()
  * @ORM\HasLifecycleCallbacks()
  */
 class Group implements LinkableInterface, ReportableContentInterface, IndexableInterface, TaggableInterface, EntrySetScopeable
 {
-    const GROUP_CATEGORY_LABEL_PREFIX  = 'platformd.groups.category.';
-    const DELETED_BY_OWNER  = 'by_owner';
-    const DELETED_BY_ADMIN  = 'by_admin';
+    const GROUP_CATEGORY_LABEL_PREFIX = 'platformd.groups.category.';
+    const DELETED_BY_OWNER = 'by_owner';
+    const DELETED_BY_ADMIN = 'by_admin';
     const DELETED_BY_REPORT = 'REPORTED_PENDING_INVESTIGATION';
     const DELETED_BY_REPORT_ADMIN = 'REPORTED_AND_REMOVED_BY_ADMIN';
 
-    const CAT_TOPIC      = 'topic';
-    const CAT_LOCATION   = 'location';
-    const CAT_COMPANY    = 'company';
+    const CAT_TOPIC = 'topic';
+    const CAT_LOCATION = 'location';
+    const CAT_COMPANY = 'company';
     const CAT_DEPARTMENT = 'department';
 
     static private $validCategories = array(
@@ -65,7 +64,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     );
 
     const COMMENT_PREFIX = 'group-';
-    const SEARCH_PREFIX  = 'group_';
+    const SEARCH_PREFIX = 'group_';
 
     /**
      * @var integer $id
@@ -105,7 +104,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     private $category;
 
     /**
-     * @var text $description
+     * @var string $description
      * @Assert\NotNull(message="Required")
      * @ORM\Column(name="description", type="text")
      */
@@ -117,7 +116,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     private $deletedReason;
 
     /**
-     * @var text $howToJoin
+     * @var string $howToJoin
      * @ORM\Column(name="howToJoin", type="text", nullable=true)
      */
     private $howToJoin;
@@ -173,7 +172,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
      */
     private $location;
 
-     /**
+    /**
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Site")
@@ -204,7 +203,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
      *
      * @var string
      * @Assert\Url
-     * @ORM\Column(name="external_url", length="255", nullable=true)
+     * @ORM\Column(name="external_url", length=255, nullable=true)
      */
     protected $externalUrl;
 
@@ -266,9 +265,9 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     private $membershipActions;
 
     /**
-    * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupMembershipAction", mappedBy="group", cascade={"persist"})
-    * @ORM\JoinColumn(onDelete="SET NULL")
-    */
+     * @ORM\OneToMany(targetEntity="Platformd\GroupBundle\Entity\GroupMembershipAction", mappedBy="group", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
     private $userMembershipActions;
 
     /**
@@ -320,9 +319,8 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
 
     /**
      * @var Platformd\TagBundle\Entity\Tag[]
-     *
      */
-    private $tags;
+    protected $tags;
 
     /**
      * @ORM\OneToOne(targetEntity="Platformd\IdeaBundle\Entity\Sponsor", mappedBy="department", cascade={"persist"})
@@ -370,22 +368,23 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
 
     public function __construct()
     {
-        $this->sites                    = new ArrayCollection();
-        $this->members                  = new ArrayCollection();
-        $this->applications             = new ArrayCollection();
-        $this->userMembershipActions    = new ArrayCollection();
-        $this->contentReports           = new ArrayCollection();
-        $this->deals                    = new ArrayCollection();
-        $this->videos                   = new ArrayCollection();
-        $this->events                   = new ArrayCollection();
-        $this->sponsorRegistrations     = new ArrayCollection();
-        $this->registrationFields       = new ArrayCollection();
-        $this->childGroups              = new ArrayCollection();
-        $this->htmlPages                = new ArrayCollection();
+        $this->sites = new ArrayCollection();
+        $this->members = new ArrayCollection();
+        $this->applications = new ArrayCollection();
+        $this->userMembershipActions = new ArrayCollection();
+        $this->contentReports = new ArrayCollection();
+        $this->deals = new ArrayCollection();
+        $this->videos = new ArrayCollection();
+        $this->events = new ArrayCollection();
+        $this->sponsorRegistrations = new ArrayCollection();
+        $this->registrationFields = new ArrayCollection();
+        $this->childGroups = new ArrayCollection();
+        $this->htmlPages = new ArrayCollection();
     }
 
-    public function __toString() {
-        return 'Group => { Id = '.$this->id.', Name = "'.$this->name.'" }';
+    public function __toString()
+    {
+        return 'Group => { Id = ' . $this->id . ', Name = "' . $this->name . '" }';
     }
 
     /**
@@ -427,6 +426,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     {
         $this->relativeSlug = $relativeSlug;
     }
+
     public function getRelativeSlug()
     {
         return $this->relativeSlug;
@@ -656,7 +656,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         $this->createdAt = $createdAt;
     }
 
-      /**
+    /**
      * @return \DateTime
      */
     public function getUpdatedAt()
@@ -699,13 +699,13 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     public function getMembersSorted($limit = null)
     {
         $memberList = $this->members->toArray();
-        usort($memberList, function($a, $b) {
+        usort($memberList, function ($a, $b) {
             return strcmp($a->getName(), $b->getName());
         });
         return array_slice($memberList, 0, $limit);
     }
 
-     /**
+    /**
      * @param \Doctrine\Common\Collections\ArrayCollection $members
      */
     public function setMembers($members)
@@ -737,7 +737,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         return $this->sites;
     }
 
-     /**
+    /**
      * @param \Doctrine\Common\Collections\ArrayCollection $sites
      */
     public function setSites($sites)
@@ -753,7 +753,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         return $this->newsArticles;
     }
 
-     /**
+    /**
      * @param \Doctrine\Common\Collections\ArrayCollection $newsArticles
      */
     public function setNewsArticles($newsArticles)
@@ -801,27 +801,31 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         $this->contentReports = $value;
     }
 
-    public function getContentType() {
+    public function getContentType()
+    {
         return "Group";
     }
 
-    public function isVisibleOnSite($site) {
+    public function isVisibleOnSite($site)
+    {
 
         if (!$site) {
             return false;
         }
 
-        $isGlobal         = $this->allLocales;
+        $isGlobal = $this->allLocales;
         $isAllowedForSite = $this->sites && $this->sites->contains($site);
 
         return $isGlobal || $isAllowedForSite;
     }
 
-    public function getUserMembershipActions() {
+    public function getUserMembershipActions()
+    {
         return $this->userMembershipActions;
     }
 
-    public function setUserMembershipActions($value) {
+    public function setUserMembershipActions($value)
+    {
         $this->userMembershipActions = $value;
     }
 
@@ -860,7 +864,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
      *
      * @return string
      */
-    public function  getLinkableRouteName()
+    public function getLinkableRouteName()
     {
         return 'group_show';
     }
@@ -870,7 +874,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
      *
      * @return array
      */
-    public function  getLinkableRouteParameters()
+    public function getLinkableRouteParameters()
     {
         return array(
             'slug' => $this->getSlug(),
@@ -902,10 +906,10 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
             throw new \LogicException('A group needs an id before it can have a comment thread');
         }
 
-        return self::COMMENT_PREFIX.$this->getId();
+        return self::COMMENT_PREFIX . $this->getId();
     }
 
-    public function locationRequiredCallBack(ExecutionContext $executionContext)
+    public function locationRequiredCallBack(LegacyExecutionContext $executionContext)
     {
         if ($this->getCategory() != 'location') {
             return;
@@ -917,8 +921,8 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
             return;
         }
 
-        $propertyPath = $executionContext->getPropertyPath().'.location.city';
-        $executionContext->setPropertyPath($propertyPath);
+        $propertyPath = $executionContext->getPropertyPath() . '.location.city';
+        $executionContext->atPath($propertyPath);
 
         $executionContext->addViolation(
             'Required',
@@ -1001,23 +1005,23 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
 
     public function getLeftMemberCount()
     {
-        return $this->getMembershipActions()->filter(function($x) {
+        return $this->getMembershipActions()->filter(function ($x) {
             return
                 $x->getCreatedAt() >= new \DateTime('-30 days') &&
                 $x->getAction() == GroupMembershipAction::ACTION_LEFT;
         })
-        ->count();
+            ->count();
     }
 
     public function getNewMemberCount()
     {
-        return $this->getMembershipActions()->filter(function($x) {
+        return $this->getMembershipActions()->filter(function ($x) {
             return
-                    $x->getCreatedAt() >= new \DateTime('-30 days') &&
-                    ($x->getAction() == GroupMembershipAction::ACTION_JOINED ||
+                $x->getCreatedAt() >= new \DateTime('-30 days') &&
+                ($x->getAction() == GroupMembershipAction::ACTION_JOINED ||
                     $x->getAction() == GroupMembershipAction::ACTION_JOINED_APPLICATION_ACCEPTED);
         })
-        ->count();
+            ->count();
     }
 
     public function getRegion()
@@ -1027,7 +1031,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         } else {
             $regions = '';
             foreach ($this->sites as $site) {
-                $regions .=  '['.$site->getName().']';
+                $regions .= '[' . $site->getName() . ']';
             }
 
             return $regions;
@@ -1049,19 +1053,21 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     {
         $this->events = $value;
     }
+
     public function getEvents()
     {
         return $this->events;
     }
+
     public function getUpcomingWatchedEvents(User $user)
     {
         $upcomingWatchedEvents = array();
         foreach ($this->events->toArray() as $event) {
-            if ($event->isUpcoming() && !$event->getDeleted() && ($event->isUserWatching($user) || $event->isUserAttending($user)) ) {
+            if ($event->isUpcoming() && !$event->getDeleted() && ($event->isUserWatching($user) || $event->isUserAttending($user))) {
                 $upcomingWatchedEvents[] = $event;
             }
         }
-        usort($upcomingWatchedEvents, function($a, $b) {
+        usort($upcomingWatchedEvents, function ($a, $b) {
             if ($a->getStartsAt() == $b->getStartsAt()) {
                 return 0;
             }
@@ -1070,13 +1076,16 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
 
         return $upcomingWatchedEvents;
     }
-    public function getNumEvents() {
+
+    public function getNumEvents()
+    {
         $count = 0;
-        foreach($this->events as $event)
-            if($event->getDeleted() == 0)
+        foreach ($this->events as $event)
+            if ($event->getDeleted() == 0)
                 $count++;
         return $count;
     }
+
     public function addEvent($event)
     {
         $this->events[] = $event;
@@ -1090,12 +1099,13 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
 
         return $this->owner === $user;
     }
+
     public function isMember($user)
     {
         if (!$user) {
             return false;
         }
-        if (in_array($user, $this->members->toArray())){
+        if (in_array($user, $this->members->toArray())) {
             return true;
         }
 
@@ -1134,7 +1144,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
 
     public function getSearchId()
     {
-        return self::SEARCH_PREFIX.$this->id;
+        return self::SEARCH_PREFIX . $this->id;
     }
 
     public function getSearchTitle()
@@ -1164,6 +1174,16 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         return $this->tags;
     }
 
+    public function addTag(Tag $tag)
+    {
+        $this->getTags()->add($tag);
+    }
+
+    public function removeTag(Tag $tag)
+    {
+        $this->getTags()->removeElement($tag);
+    }
+
     public function getTaggableType()
     {
         return 'platformd_group';
@@ -1174,25 +1194,31 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         return $this->getId();
     }
 
-    public function getEntrySetRegistration() {
+    public function getEntrySetRegistration()
+    {
         return $this->entrySetRegistration;
     }
 
-    public function createEntrySetRegistration() {
+    public function createEntrySetRegistration()
+    {
         if (!$this->entrySetRegistration) {
             $this->entrySetRegistration = new EntrySetRegistry($this);
         }
         return $this->entrySetRegistration;
     }
 
-    public function getEntrySets() {
+    public function getEntrySets()
+    {
         return $this->entrySetRegistration->getEntrySets();
     }
 
-    public function getSponsor() {
+    public function getSponsor()
+    {
         return $this->sponsor;
     }
-    public function setSponsor($sponsor) {
+
+    public function setSponsor($sponsor)
+    {
         $this->sponsor = $sponsor;
     }
 
@@ -1200,6 +1226,7 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     {
         $this->sponsorRegistrations->add($sponsorRegistration);
     }
+
     public function getSponsorRegistrations()
     {
         return $this->sponsorRegistrations;
@@ -1247,12 +1274,13 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         return $this->registrationFields;
     }
 
-    public function isMemberOf(User $user) {
-        if($user->getId() == $this->getOwner()->getId())
+    public function isMemberOf(User $user)
+    {
+        if ($user->getId() == $this->getOwner()->getId())
             return true;
 
         foreach ($this->getMembers() as $member) {
-            if($user->getId() == $member->getId())
+            if ($user->getId() == $member->getId())
                 return true;
         }
 
@@ -1260,54 +1288,73 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
     }
 
 
-    public function getParent() {
+    public function getParent()
+    {
         return $this->parentGroup;
     }
 
-    public function setParent($parent) {
+    public function setParent($parent)
+    {
         $this->parentGroup = $parent;
     }
 
-    public function addChild($child) {
+    public function addChild($child)
+    {
         $this->childGroups->add($child);
     }
 
-    public function getChildren() {
+    public function getChildren()
+    {
         return $this->childGroups;
     }
+
     public function addHtmlPage($htmlPage)
     {
         $this->htmlPages[] = $htmlPage;
     }
+
     public function removeHtmlPage($htmlPage)
     {
         $this->htmlPages->removeElement($htmlPage);
     }
+
     public function getHtmlPages()
     {
         return $this->htmlPages;
     }
 
-    public function getHashTag() {
+    public function getHashTag()
+    {
         return str_replace('-', '', $this->slug);
     }
 
-    public function isExternal() {
+    public function isExternal()
+    {
         return $this->external;
     }
-    public function setExternal($external) {
+
+    public function setExternal($external)
+    {
         $this->external = $external;
     }
-    public function getExternalUrl() {
+
+    public function getExternalUrl()
+    {
         return $this->externalUrl;
     }
-    public function setExternalUrl($externalUrl) {
+
+    public function setExternalUrl($externalUrl)
+    {
         $this->externalUrl = $externalUrl;
     }
-    public function getCommunitySite() {
+
+    public function getCommunitySite()
+    {
         return $this->communitySite;
     }
-    public function setCommunitySite($communitySite) {
+
+    public function setCommunitySite($communitySite)
+    {
         $this->communitySite = $communitySite;
     }
 }

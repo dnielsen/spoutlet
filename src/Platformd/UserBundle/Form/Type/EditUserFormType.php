@@ -3,11 +3,12 @@
 namespace Platformd\UserBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class EditUserFormType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('username', null, array('label' => 'Username'))
@@ -45,19 +46,17 @@ class EditUserFormType extends AbstractType
         }
     }
 
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults([
+            'allow_promote' => false,
+            'local_auth' => false,
+            'validation_groups' => array('AdminEdit')
+        ]);
+    }
+
     public function getName()
     {
         return 'fos_user_profile_form_user';
     }
-
-    public function getDefaultOptions(array $options)
-    {
-        return array_merge($options, array(
-            'allow_promote' => false,
-            'local_auth' => false,
-            'validation_groups' => array('AdminEdit')
-        ));
-    }
-
 }
-

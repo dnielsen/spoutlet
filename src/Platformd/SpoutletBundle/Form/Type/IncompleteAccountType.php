@@ -3,9 +3,8 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class IncompleteAccountType extends AbstractType
 {
@@ -16,22 +15,22 @@ class IncompleteAccountType extends AbstractType
         $this->siteUtil = $siteUtil;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $config            = $this->siteUtil->getCurrentSite()->getSiteConfig();
+        $config = $this->siteUtil->getCurrentSite()->getSiteConfig();
         $birthdateRequired = $config->getBirthdateRequired();
-        $user              = $builder->getData();
+        $user = $builder->getData();
 
         if (!$user->getUsername()) {
             $builder->add('username', null, array(
-                'label'    => 'platformd.account_page.incomplete_form.username',
+                'label' => 'platformd.account_page.incomplete_form.username',
                 'required' => true,
             ));
         }
 
         if (!$user->getFirstname()) {
             $builder->add('firstname', null, array(
-                'label'    => 'platformd.account_page.incomplete_form.first_name',
+                'label' => 'platformd.account_page.incomplete_form.first_name',
                 'required' => true,
 
             ));
@@ -39,23 +38,23 @@ class IncompleteAccountType extends AbstractType
 
         if (!$user->getLastname()) {
             $builder->add('lastname', null, array(
-                'label'    => 'platformd.account_page.incomplete_form.last_name',
+                'label' => 'platformd.account_page.incomplete_form.last_name',
                 'required' => true,
             ));
         }
 
         if (!$user->getEmail()) {
-                $builder->add('email', 'text', array(
-                'label'             => 'platformd.account_page.incomplete_form.email',
-                'required'          => true,
+            $builder->add('email', 'text', array(
+                'label' => 'platformd.account_page.incomplete_form.email',
+                'required' => true,
             ));
         }
 
         if (!$user->getPassword()) {
             $builder->add('plainPassword', 'repeated', array(
-                'label'           => 'platformd.account_page.incomplete_form.password',
-                'type'            => 'password',
-                'required'        => true,
+                'label' => 'platformd.account_page.incomplete_form.password',
+                'type' => 'password',
+                'required' => true,
                 'invalid_message' => 'passwords_do_not_match',
             ));
         }
@@ -63,9 +62,9 @@ class IncompleteAccountType extends AbstractType
         if ($user->getHasAlienwareSystem() === null) {
             $builder->add('hasAlienwareSystem', 'choice', array(
                 'expanded' => true,
-                'choices'  => array(1 => 'Yes', 0 => 'No'),
+                'choices' => array(1 => 'Yes', 0 => 'No'),
                 'required' => true,
-                'label'    => 'platformd.account_page.incomplete_form.has_alienware',
+                'label' => 'platformd.account_page.incomplete_form.has_alienware',
             ));
         }
 
@@ -83,7 +82,7 @@ class IncompleteAccountType extends AbstractType
 
         if (!$user->getTermsAccepted()) {
             $builder->add('termsAccepted', 'checkbox', array(
-                'label'    => 'platformd.account_page.incomplete_form.agree_to_terms',
+                'label' => 'platformd.account_page.incomplete_form.agree_to_terms',
                 'required' => true,
                 'error_bubbling' => true,
             ));
@@ -91,7 +90,7 @@ class IncompleteAccountType extends AbstractType
 
         if (!$user->getCountry()) {
             $builder->add('termsAccepted', 'checkbox', array(
-                'label'    => 'platformd.account_page.incomplete_form.agree_to_terms',
+                'label' => 'platformd.account_page.incomplete_form.agree_to_terms',
                 'required' => true,
                 'error_bubbling' => true,
             ));
@@ -99,13 +98,13 @@ class IncompleteAccountType extends AbstractType
 
         if (!$user->getState()) {
             $builder->add('termsAccepted', 'checkbox', array(
-                'label'    => 'platformd.account_page.incomplete_form.agree_to_terms',
+                'label' => 'platformd.account_page.incomplete_form.agree_to_terms',
                 'required' => true,
                 'error_bubbling' => true,
             ));
         }
 
-        if($birthdateRequired && !$user->getBirthdate()) {
+        if ($birthdateRequired && !$user->getBirthdate()) {
             $builder->add('birthdate', 'birthday', array(
                 'empty_value' => '--', 'required' => true,
                 'years' => range(1940, date('Y')),
@@ -113,15 +112,15 @@ class IncompleteAccountType extends AbstractType
         }
     }
 
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults([
+            'validation_groups' => array('IncompleteUser'),
+        ]);
+    }
+
     public function getName()
     {
         return 'platformd_incomplete_account';
-    }
-
-    public function getDefaultOptions(array $options)
-    {
-        return array(
-            'validation_groups' => array('IncompleteUser')
-        );
     }
 }

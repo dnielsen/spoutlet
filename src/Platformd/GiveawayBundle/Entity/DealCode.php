@@ -15,7 +15,7 @@ class DealCode extends AbstractCode
 {
     /**
      * @ORM\JoinColumn(name="pool", referencedColumnName="id", onDelete="CASCADE")
-     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\DealPool", inversedBy="dealCodes", cascade={"persist", "remove", "merge"})
+     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\DealPool", inversedBy="codes", cascade={"persist", "remove", "merge"})
      */
     protected $pool;
 

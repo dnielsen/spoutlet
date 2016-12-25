@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilder;
 use Platformd\SpoutletBundle\Util\SiteUtil;
 use Platformd\SpoutletBundle\Entity\GalleryRepository;
 use Platformd\GroupBundle\Entity\GroupRepository;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\TagBundle\Model\TagManager;
@@ -31,7 +32,7 @@ class YoutubeType extends AbstractType
         $this->tagManager       = $tagManager;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $youtube = $builder->getData();
         $this->video = $youtube;

@@ -95,7 +95,7 @@ class YoutubeController extends Controller
         $referer = $request->headers->get('referer');
 
         if($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if($form->isValid()) {
                 $video = $form->getData();
@@ -144,7 +144,7 @@ class YoutubeController extends Controller
         $form    = $this->createForm('youtube', $youtube);
 
         if($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if($form->isValid()) {
                 $this->processForm($form, $user, true);

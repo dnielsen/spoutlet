@@ -16,7 +16,14 @@
                 {{ form_row(form.name) }}
                 {{ form_row(form.slug) }}
                 {{ form_row(form.externalUrl) }}
+                <p class="help">
+                    {{ 'sweepstakes.admin.form.slug.help'|pd_trans }}
+                </p>
+
                 {{ form_row(form.testOnly) }}
+                <p class="help">
+                    {{ 'sweepstakes.admin.form.test_only.help'|pd_trans }}
+                </p>
                 <div class="control-group">
                 <label for="group-auto-complete" class="control-label">Link to a Group</label>
                     <div class="controls">
@@ -48,11 +55,23 @@
         {{ form_row(form.content) }}
         {{ form_row(form.backgroundImage) }}
         {{ form_row(form.tags) }}
+        <p class="help">
+            {{ 'sweepstakes.admin.form.tags.help'|pd_trans }}
+        </p>
+
         {{ form_row(form.metaDescription) }}
+        <p class="help">
+            {{ 'sweepstakes.admin.form.meta_description.help'|pd_trans }}
+        </p>
+
         {{ form_row(form.hasOptionalCheckbox) }}
 
         <div id="optional-checkbox-label" style="display:none">
             {{ form_row(form.optionalCheckboxLabel) }}
+
+            <p class="help">
+                Can be HTML or plain text
+            </p>
         </div>
     </fieldset>
 

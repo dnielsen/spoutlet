@@ -2,6 +2,9 @@
 
 namespace Platformd\EventBundle\Form\Type;
 
+use Platformd\EventBundle\Entity\GroupEventTranslation;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
 class GroupEventTranslationType extends EventTranslationType
 {
     public function getName()
@@ -9,10 +12,10 @@ class GroupEventTranslationType extends EventTranslationType
         return 'platformd_group_event_translation';
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $options['data_class'] = 'Platformd\EventBundle\Entity\GroupEventTranslation';
-
-        return $options;
+        $resolver->setDefaults([
+            'data_class' => GroupEventTranslation::class,
+        ]);
     }
 }

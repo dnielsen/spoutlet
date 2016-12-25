@@ -142,9 +142,9 @@ class UserManager extends BaseUserManager
 
         if (!$user) {
             $username            = isset($userDetails['username'])              ? $userDetails['username']                                                          : null;
-            $birth_date          = isset($userDetails['birth_date'])            ? \DateTime::createFromFormat(\DateTime::ISO8601, $userDetails['birth_date'])       : null;
+            $birth_date          = isset($userDetails['birth_date'])            ? \DateTime::createFromFormat(\DateTime::ISO8601, $userDetails['birth_date']) : null;
             $country             = isset($userDetails['country'])               ? $userDetails['country']                                                           : null;
-            $created             = isset($userDetails['created'])               ? \DateTime::createFromFormat(\DateTime::ISO8601, $userDetails['created'])          : null;
+            $created             = isset($userDetails['created'])               ? \DateTime::createFromFormat(\DateTime::ISO8601, $userDetails['created'])    : null;
             $creation_ip_address = isset($userDetails['creation_ip_address'])   ? $userDetails['creation_ip_address']                                               : null;
             $email               = isset($userDetails['email'])                 ? $userDetails['email']                                                             : null;
             $first_name          = isset($userDetails['first_name'])            ? $userDetails['first_name']                                                        : null;
@@ -171,14 +171,6 @@ class UserManager extends BaseUserManager
         }
 
         return $user;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function updateUser(UserInterface $user, $andFlush = true)
-    {
-        parent::updateUser($user, $andFlush);
     }
 
     public function updateUserAndApi(UserInterface $user, $andFlush = true)
@@ -292,7 +284,7 @@ class UserManager extends BaseUserManager
             return false;
         }
 
-        return $this->container->get('session')->getLocale();
+        return $this->container->get('request')->getLocale();
     }
 
     private function getClientIpAddress()

@@ -44,7 +44,6 @@ services:
         arguments:
             - %fos_user.model.user.class%
             - %platformd.news_source%
-            - @session
             - @platformd.model.translator
             - @platformd.model.ip_lookup_util
             - @request
@@ -91,6 +90,7 @@ services:
             - @request
             - @platformd_user.manager
             - @platformd_user.mailer
+            - @fos_user.util.token_generator
             - @doctrine.orm.entity_manager
             - @service_container
             - @platformd.model.ip_lookup_util

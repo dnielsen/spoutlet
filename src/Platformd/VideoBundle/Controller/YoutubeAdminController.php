@@ -3,22 +3,14 @@
 namespace Platformd\VideoBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller;
-use Platformd\VideoBundle\Entity\YoutubeVideo;
-use Platformd\VideoBundle\Entity\YoutubeVote;
 use Platformd\VideoBundle\Form\Type\YoutubeMetricsType;
-use Platformd\GroupBundle\Entity\GroupVideo;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
-use DateTime,
-    DateInterval
-;
+use DateInterval;
 
 use Pagerfanta\Pagerfanta,
-    Pagerfanta\Adapter\DoctrineORMAdapter,
     Pagerfanta\Adapter\ArrayAdapter
 ;
 
@@ -31,7 +23,7 @@ class YoutubeAdminController extends Controller
         $form       = $this->createForm(new YoutubeMetricsType(), $filters);
 
         if($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             $data     = $form->getData();
             $fromDate = $data['fromDate'];

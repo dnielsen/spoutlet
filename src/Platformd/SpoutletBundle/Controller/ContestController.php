@@ -175,7 +175,7 @@ class ContestController extends Controller
         if ($request->getMethod() == 'POST')
         {
             $em = $this->getEntityManager();
-            $form->bindRequest($request);
+            $form->handleRequest($request);
             $images = $form->getData();
 
             foreach ($images['galleryImages'] as $image)

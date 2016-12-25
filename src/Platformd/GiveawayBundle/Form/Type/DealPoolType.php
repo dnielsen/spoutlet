@@ -3,18 +3,14 @@
 namespace Platformd\GiveawayBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Platformd\SpoutletBundle\Form\Type\OpenGraphOverrideType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 
-/**
-*
-*/
 class DealPoolType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             // this is a long field, but it's mean for users not to put much here
@@ -31,7 +27,6 @@ class DealPoolType extends AbstractType
      */
     public function getName()
     {
-
         return 'deal_pool';
     }
 }

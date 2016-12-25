@@ -6,14 +6,16 @@ use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+use Platformd\IdeaBundle\Entity\RegistrationField;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert,
     Symfony\Component\Validator\ExecutionContext;
 
+use Symfony\Component\Validator\Context\LegacyExecutionContext;
 use Vich\GeographicalBundle\Annotation as Vich;
 
 use Gedmo\Mapping\Annotation as Gedmo,
-    Gedmo\Sluggable\Util\Urlizer
-;
+    Gedmo\Sluggable\Util\Urlizer;
 
 use Platformd\GameBundle\Entity\Game,
     Platformd\SpoutletBundle\Link\LinkableInterface,
@@ -23,12 +25,7 @@ use Platformd\GameBundle\Entity\Game,
     Platformd\IdeaBundle\Entity\SponsorRegistry,
     Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil,
     Platformd\SearchBundle\Model\IndexableInterface,
-    Platformd\TagBundle\Model\TaggableInterface
-;
-
-use DateTime,
-    DateTimeZone
-;
+    Platformd\TagBundle\Model\TaggableInterface;
 
 /**
  * Base Event
@@ -37,18 +34,20 @@ use DateTime,
  * @Vich\Geographical
  * @Assert\Callback(methods={"externalContentCheck", "validateDateRanges", "validateSlug"})
  * @ORM\HasLifecycleCallbacks()
+ *
+ * @UniqueEntity(fields={"externalUrl"}, message="Please choose another URL string - this one is not unique within the system.")
  */
 abstract class Event implements LinkableInterface, IndexableInterface, TaggableInterface, EntrySetScopeable
 {
-    const REGISTRATION_ENABLED      = 'REGISTRATION_ENABLED';
-    const REGISTRATION_DISABLED     = 'REGISTRATION_DISABLED';
-    const REGISTRATION_3RD_PARTY    = 'REGISTRATION_3RDPARTY';
-    const TYPE_UNCONFERENCE         = 'unconference';
-    const TYPE_IDEATHON             = 'ideathon';
-    const TYPE_FORUM                = 'forum';
+    const REGISTRATION_ENABLED = 'REGISTRATION_ENABLED';
+    const REGISTRATION_DISABLED = 'REGISTRATION_DISABLED';
+    const REGISTRATION_3RD_PARTY = 'REGISTRATION_3RDPARTY';
+    const TYPE_UNCONFERENCE = 'unconference';
+    const TYPE_IDEATHON = 'ideathon';
+    const TYPE_FORUM = 'forum';
 
     // overridden in group and global event entities
-    const SEARCH_PREFIX             = 'event_';
+    const SEARCH_PREFIX = 'event_';
 
     /**
      * Event's name
@@ -189,7 +188,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      *
      * @var string
      * @Assert\Url
-     * @ORM\Column(name="external_url", length="255", nullable=true)
+     * @ORM\Column(name="external_url", length=255, nullable=true)
      */
     protected $externalUrl;
 
@@ -225,7 +224,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     protected $address2;
 
     /**
-     * Country 
+     * Country
      *
      * @var string $country
      * @ORM\Column(name="country", type="string", length=255, nullable=true)
@@ -233,7 +232,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     protected $country;
 
     /**
-     * State / Region / Province 
+     * State / Region / Province
      *
      * @var string $state
      * @ORM\Column(name="state", type="string", length=255, nullable=true)
@@ -241,7 +240,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     protected $state;
 
     /**
-     * City name 
+     * City name
      *
      * @var string $city
      * @ORM\Column(name="city", type="string", length=255, nullable=true)
@@ -319,7 +318,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     protected $entrySetRegistration;
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\RegistrationField", mappedBy="event", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\RegistrationField", mappedBy="event", cascade={"persist"})
      */
     protected $registrationFields;
 
@@ -349,13 +348,14 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      */
     public function __construct()
     {
-        $this->attendees            = new ArrayCollection();
-        $this->registrationFields   = new ArrayCollection();
-        $this->htmlPages            = new ArrayCollection();
-        $this->createdAt            = new DateTime();
-        $this->startsAt             = new \DateTime('now');
-        $this->endsAt               = new \DateTime('now');
-        $this->currentRound         = 1;
+        $this->attendees = new ArrayCollection();
+        $this->registrationFields = new ArrayCollection();
+        $this->htmlPages = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+        $this->startsAt = new \DateTime();
+        $this->date = new \DateTime();
+        $this->endsAt = new \DateTime();
+        $this->currentRound = 1;
     }
 
     /**
@@ -370,7 +370,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
             $addressString .= $this->address1;
         }
         if ($this->address2) {
-            $addressString .= ', '.$this->address2;
+            $addressString .= ', ' . $this->address2;
         }
         return $addressString;
     }
@@ -381,12 +381,12 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     public function getHtmlFormattedAddress()
     {
         if ($this->address1 && $this->address2) {
-            return $this->address1.'<br/>'.$this->address2;
+            return $this->address1 . '<br/>' . $this->address2;
         } elseif ($this->address1) {
             return $this->address1;
         } elseif ($this->address2) {
             return $this->address2;
-        }    
+        }
         return null;
     }
 
@@ -752,7 +752,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
     public function isUpcoming()
     {
-        return $this->endsAt > new DateTime();
+        return $this->endsAt > new \DateTime();
     }
 
     /**
@@ -858,15 +858,15 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
             $endsAtYear = $this->getEndsAt()->format('Y');
 
             if ($startsAtYear == $endsAtYear) {
-                return ($startsAtDate == $endsAtDate) ? $startsAtDate.', '.$endsAtYear : $startsAtDate.' - '.$endsAtDate.', '.$startsAtYear;
+                return ($startsAtDate == $endsAtDate) ? $startsAtDate . ', ' . $endsAtYear : $startsAtDate . ' - ' . $endsAtDate . ', ' . $startsAtYear;
             } else {
-                return $startsAtDate.', '.$startsAtYear.' - '.$endsAtDate.', '.$endsAtYear;
+                return $startsAtDate . ', ' . $startsAtYear . ' - ' . $endsAtDate . ', ' . $endsAtYear;
             }
-        }
-        else {
+        } else {
             return null;
         }
     }
+
     public function getDateAndTime()
     {
         if ($this->getNoDate()) {
@@ -875,26 +875,24 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
         $dateAndTime = '';
 
-        if ($this->getStartsAt() && $this->getEndsAt())
-        {
-            $startsAtDate   = $this->getStartsAt()->format('M d, Y');
-            $startsAtTime   = $this->getStartsAt()->format('g:i a');
-            $endsAtDate     = $this->getEndsAt()->format('M d, Y');
-            $endsAtTime     = $this->getEndsAt()->format('g:i a');
+        if ($this->getStartsAt() && $this->getEndsAt()) {
+            $startsAtDate = $this->getStartsAt()->format('M d, Y');
+            $startsAtTime = $this->getStartsAt()->format('g:i a');
+            $endsAtDate = $this->getEndsAt()->format('M d, Y');
+            $endsAtTime = $this->getEndsAt()->format('g:i a');
 
             if ($startsAtDate == $endsAtDate) {
-                $dateAndTime = $startsAtDate.'<br/>'.$startsAtTime.' - '.$endsAtTime;
-            }
-            else {
-                $dateAndTime = $startsAtDate.' '.$startsAtTime.' - <br/>'.$endsAtDate.' '.$endsAtTime;
+                $dateAndTime = $startsAtDate . '<br/>' . $startsAtTime . ' - ' . $endsAtTime;
+            } else {
+                $dateAndTime = $startsAtDate . ' ' . $startsAtTime . ' - <br/>' . $endsAtDate . ' ' . $endsAtTime;
             }
         }
 
         return $dateAndTime;
     }
 
-    public function getStartDateString() {
-
+    public function getStartDateString()
+    {
         if ($this->getNoDate()) {
             return $this->getStartsAt()->format('M Y');
         }
@@ -902,8 +900,8 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         return $this->getStartsAt()->format('n/d/Y');
     }
 
-    public function getEndDateString() {
-
+    public function getEndDateString()
+    {
         if ($this->getNoDate()) {
             return $this->getStartsAt()->format('M Y');
         }
@@ -962,10 +960,12 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     /**
      * @todo - refactor this somewhere more public
      * @static
+     *
      * @param \DateTime $dt
+     *
      * @return array
      */
-    static public function convertDateTimeIntoTranslationArray(DateTime $dt)
+    static public function convertDateTimeIntoTranslationArray(\DateTime $dt)
     {
         return array(
             '%year%' => $dt->format('Y'),
@@ -982,22 +982,22 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
      */
     public function getTimezoneString()
     {
-        $dt = new DateTime('now');
-        $dt->setTimezone(new DateTimeZone($this->timezone));
+        $dt = new \DateTime('now');
+        $dt->setTimezone(new \DateTimeZone($this->timezone));
         $tz = $dt->format('T');
-        $offset = $tz == "GMT" ? "" : ' (GMT '.$dt->format('P').')';
+        $offset = $tz == "GMT" ? "" : ' (GMT ' . $dt->format('P') . ')';
 
-        return $dt->format('T').$offset;
+        return $dt->format('T') . $offset;
     }
 
-    private function convertDatetimeToTimezone(DateTime $dt)
+    private function convertDatetimeToTimezone(\DateTime $dt)
     {
-        $userTimezone = new DateTimeZone($this->getTimezone());
+        $userTimezone = new \DateTimeZone($this->getTimezone());
         $offset = $userTimezone->getOffset($dt);
 
         $timestamp = $dt->format('U') + $offset;
 
-        return DateTime::createFromFormat('U', $timestamp, $userTimezone);
+        return \DateTime::createFromFormat('U', $timestamp, $userTimezone);
     }
 
     /**
@@ -1045,7 +1045,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         $this->attendeeCount += $increment;
     }
 
-    public function externalContentCheck(ExecutionContext $context)
+    public function externalContentCheck(LegacyExecutionContext $context)
     {
         if ($this instanceof GlobalEvent) {
             $external = $this->externalUrl ? true : false;
@@ -1064,23 +1064,20 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         }
     }
 
-    public function validateDateRanges(ExecutionContext $executionContext)
+    public function validateDateRanges(LegacyExecutionContext $executionContext)
     {
         if ($this->endsAt < $this->startsAt) {
             $propertyPath = $executionContext->getPropertyPath() . '.endsAt';
-            $executionContext->setPropertyPath($propertyPath);
 
-            $executionContext->addViolation(
-                "The end date/time must be after the start date/time.",
-                array(),
-                "endsAt"
-            );
+            $executionContext->buildViolation("The end date/time must be after the start date/time.")
+                ->atPath($propertyPath)
+                ->addViolation();
         }
     }
 
     public function isUserAttending($user)
     {
-        if (!$user){
+        if (!$user) {
             return false;
         }
 
@@ -1095,12 +1092,12 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
     public function isUserWatching($user)
     {
-        if (!$user){
+        if (!$user) {
             return false;
         }
 
         foreach ($user->getWatchedEvents() as $watchedEvent) {
-            if ( !($event = $watchedEvent->getGlobalEvent()) ) {
+            if (!($event = $watchedEvent->getGlobalEvent())) {
                 $event = $watchedEvent->getGroupEvent();
             }
             if ($event->getContentType() == $this->getContentType() && $event->getId() == $this->getId()) {
@@ -1119,7 +1116,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
 
             if ($this->location == null) {
                 $propertyPath = $oldPath . '.location';
-                $executionContext->setPropertyPath($propertyPath);
+                $executionContext->atPath($propertyPath);
 
                 $executionContext->addViolation(
                     "You must enter a location for an In-Person event.",
@@ -1127,12 +1124,12 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
                     "location"
                 );
 
-                $executionContext->setPropertyPath($oldPath);
+                $executionContext->atPath($oldPath);
             }
 
             if ($this->address1 == null) {
                 $propertyPath = $oldPath . '.address1';
-                $executionContext->setPropertyPath($propertyPath);
+                $executionContext->atPath($propertyPath);
 
                 $executionContext->addViolation(
                     "You must enter a complete address for an In-Person event.",
@@ -1140,12 +1137,12 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
                     "address1"
                 );
 
-                $executionContext->setPropertyPath($oldPath);
+                $executionContext->atPath($oldPath);
             }
 
-             if ($this->address2 == null) {
+            if ($this->address2 == null) {
                 $propertyPath = $oldPath . '.address2';
-                $executionContext->setPropertyPath($propertyPath);
+                $executionContext->atPath($propertyPath);
 
                 $executionContext->addViolation(
                     "You must enter a complete address for an In-Person event.",
@@ -1153,12 +1150,12 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
                     "address2"
                 );
 
-                $executionContext->setPropertyPath($oldPath);
+                $executionContext->atPath($oldPath);
             }
         }
     }
 
-    public function validateSlug(ExecutionContext $executionContext)
+    public function validateSlug(LegacyExecutionContext $executionContext)
     {
         if (!$this->getSlug()) {
             $slug = Urlizer::urlize($this->getName());
@@ -1166,7 +1163,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
             if (!$slug) {
                 $oldPath = $executionContext->getPropertyPath();
                 $propertyPath = $oldPath . '.name';
-                $executionContext->setPropertyPath($propertyPath);
+                $executionContext->atPath($propertyPath);
 
                 $executionContext->addViolation(
                     "Please enter a valid name for your event.",
@@ -1253,20 +1250,22 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         $this->currentRound = $currentRound;
     }
 
-    public function getEntrySetRegistration() {
+    public function getEntrySetRegistration()
+    {
         return $this->entrySetRegistration;
     }
 
-    public function createEntrySetRegistration() {
+    public function createEntrySetRegistration()
+    {
         $this->entrySetRegistration = new EntrySetRegistry($this);
         return $this->entrySetRegistration;
     }
 
-    public function getEntrySets() {
-        if($this->entrySetRegistration){
+    public function getEntrySets()
+    {
+        if ($this->entrySetRegistration) {
             return $this->entrySetRegistration->getEntrySets();
-        }
-        else {
+        } else {
             return array();
         }
     }
@@ -1275,6 +1274,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
     {
         $this->sponsorRegistrations->add($sponsorRegistration);
     }
+
     public function getSponsorRegistrations()
     {
         return $this->sponsorRegistrations;
@@ -1312,19 +1312,19 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         return $sponsors;
     }
 
-    public function addRegistrationField($registrationField)
+    public function addRegistrationField(RegistrationField $registrationField)
     {
         $registrationField->setEvent($this);
         $this->registrationFields->add($registrationField);
     }
 
-    public function removeRegistrationField($registrationField)
+    public function removeRegistrationField(RegistrationField $registrationField)
     {
         $registrationField->setEvent(null);
-        $this->registrationFields->remove($registrationField);
+        $this->registrationFields->removeElement($registrationField);
     }
 
-    public function setRegistrationFields($registrationFields)
+    public function setRegistrationFields(array $registrationFields)
     {
         $this->registrationFields = new ArrayCollection();
         foreach ($registrationFields as $field) {
@@ -1337,48 +1337,52 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         return $this->registrationFields;
     }
 
-    public function isMemberOf(User $user) {
-        if($user->getId() == $this->getUser()->getId())
+    public function isMemberOf(User $user)
+    {
+        if ($user->getId() == $this->getUser()->getId())
             return true;
 
         foreach ($this->getAttendees() as $attendee) {
-            if($user->getId() == $attendee->getId())
+            if ($user->getId() == $attendee->getId())
                 return true;
         }
 
         return false;
     }
 
-    public function addSession(EventSession $evtSession) {
+    public function addSession(EventSession $evtSession)
+    {
         $this->sessions->add($evtSession);
     }
 
-    public function getSessions() {
+    public function getSessions()
+    {
         return $this->sessions;
     }
 
-    public function getSessionsByDate() {
+    public function getSessionsByDate()
+    {
 
         $sessionsByDate = array();
 
-        foreach ($this->getSortedSessions() as $session){
+        foreach ($this->getSortedSessions() as $session) {
             $sessionsByDate[$session->getDateString()][] = $session;
         }
         return $sessionsByDate;
     }
 
-    public function getSortedSessions() {
+    public function getSortedSessions()
+    {
 
         $sessions = $this->sessions->toArray();
 
-        usort($sessions, function($a, $b)
-        {
+        usort($sessions, function ($a, $b) {
             $aStartTime = $a->getStartsAt();
             $bStartTime = $b->getStartsAt();
             if (!$aStartTime) {
                 return +1;
             }
-            if (!$bStartTime){
+            if (!$bStartTime) {
                 return -1;
             }
             $aStartTime = $aStartTime->format('U');
@@ -1393,48 +1397,55 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         return $sessions;
     }
 
-    public function getSortedSessionsByRoom() {
+    public function getSortedSessionsByRoom()
+    {
 
         $sessions = $this->sessions->toArray();
 
-        usort($sessions, function($a, $b)
-        {
+        usort($sessions, function ($a, $b) {
             return strcmp($a->getRoom(), $b->getRoom());
         });
 
         return $sessions;
     }
-    
+
     public function addHtmlPage($htmlPage)
     {
         $this->htmlPages[] = $htmlPage;
     }
+
     public function removeHtmlPage($htmlPage)
     {
         $this->htmlPages->removeElement($htmlPage);
     }
+
     public function getHtmlPages()
     {
         return $this->htmlPages;
     }
+
     public function setExternal($value)
     {
         $this->external = $value;
     }
+
     public function isExternal()
     {
         return $this->external;
     }
+
     public function setNoDate($value)
     {
         $this->noDate = $value;
     }
+
     public function getNoDate()
     {
         return $this->noDate;
     }
 
-    public function getHashTag() {
+    public function getHashTag()
+    {
         return str_replace('-', '', $this->slug);
     }
 }

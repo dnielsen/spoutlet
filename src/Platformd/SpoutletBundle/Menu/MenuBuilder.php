@@ -2,8 +2,8 @@
 
 namespace Platformd\SpoutletBundle\Menu;
 
-use Symfony\Component\HttpFoundation\Request;
 use Knp\Menu\FactoryInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Router;
 
 class MenuBuilder
@@ -25,16 +25,16 @@ class MenuBuilder
     /**
      * The admin breadcrumbs
      *
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\HttpFoundation\RequestStack $requestStack
      * @return \Knp\Menu\ItemInterface
      */
-    public function createAdminBreadcrumbs(Request $request)
+    public function createAdminBreadcrumbs(RequestStack $requestStack)
     {
         $menu = $this->factory->createItem('root');
-        $menu->setCurrentUri($request->getRequestUri());
+        $menu->setUri($requestStack->getCurrentRequest()->getRequestUri());
         $menu->setAttribute('class', 'breadcrumb');
 
-        $menu->addChild('Home', array('route' => 'admin_index'));
+        $menu->addChild('Home', ['route' => 'admin_index']);
 
         return $menu;
     }

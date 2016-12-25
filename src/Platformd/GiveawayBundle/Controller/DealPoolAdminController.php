@@ -54,7 +54,7 @@ class DealPoolAdminController extends Controller
         $form = $this->createForm(new DealPoolType(), $pool);
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $result = $this->savePool($pool);
@@ -96,7 +96,7 @@ class DealPoolAdminController extends Controller
         $form = $this->createForm(new DealPoolType(), $pool);
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $result = $this->savePool($pool);

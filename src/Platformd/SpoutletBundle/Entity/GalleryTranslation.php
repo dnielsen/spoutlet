@@ -29,7 +29,7 @@ class GalleryTranslation
     protected $gallery;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true, nullable="true")
+     * @ORM\Column(type="string", length=255, unique=true, nullable=true)
      */
     private $name;
 

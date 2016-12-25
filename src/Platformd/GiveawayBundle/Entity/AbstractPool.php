@@ -3,17 +3,14 @@
 namespace Platformd\GiveawayBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM,
-    Doctrine\Common\Collections\ArrayCollection
-;
+    Doctrine\Common\Collections\ArrayCollection;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile,
-    Symfony\Component\Validator\Constraints as Assert
-;
+    Symfony\Component\Validator\Constraints as Assert;
 
 use Platformd\SpoutletBundle\Entity\Country,
     Platformd\GiveawayBundle\Entity\DealPool,
-    Platformd\GiveawayBundle\Entity\GiveawayPool
-;
+    Platformd\GiveawayBundle\Entity\GiveawayPool;
 
 use Symfony\Component\Validator\ExecutionContext;
 
@@ -48,7 +45,10 @@ abstract class AbstractPool
     /**
      * @var int
      * @ORM\Column(type="integer", nullable=true)
-     * @Assert\Min(0)
+     *
+     * @Assert\Length(
+     *     min="0"
+     * )
      */
     protected $maxKeysPerIp;
 
@@ -60,7 +60,10 @@ abstract class AbstractPool
      *
      * @var int
      * @ORM\Column(type="integer", nullable=true)
-     * @Assert\Min(0)
+     *
+     * @Assert\Length(
+     *     min="0"
+     * )
      */
     protected $upperLimit;
 
@@ -68,7 +71,10 @@ abstract class AbstractPool
      * @see upperLimit
      * @var int
      * @ORM\Column(type="integer", nullable=true)
-     * @Assert\Min(0)
+     *
+     * @Assert\Length(
+     *     min="0"
+     * )
      */
     protected $lowerLimit;
 
@@ -108,8 +114,9 @@ abstract class AbstractPool
      */
     abstract public function isTotallyActive();
 
-    public function __toString() {
-        return 'Pool => { Id = '.$this->getId().', MaxKeysPerIP = '.$this->getMaxKeysPerIp().', Description = "'.$this->getDescription().'" }';
+    public function __toString()
+    {
+        return 'Pool => { Id = ' . $this->getId() . ', MaxKeysPerIP = ' . $this->getMaxKeysPerIp() . ', Description = "' . $this->getDescription() . '" }';
     }
 
     public function getId()
@@ -173,7 +180,7 @@ abstract class AbstractPool
      */
     public function shouldEnforceUpperAndLower()
     {
-        return $this->getLowerLimit() > 0 && $this->getUpperLimit() >0;
+        return $this->getLowerLimit() > 0 && $this->getUpperLimit() > 0;
     }
 
     /**
@@ -254,8 +261,8 @@ abstract class AbstractPool
         }
 
         if ($this instanceof GiveawayPool) {
-            $rules      = $this->getRuleset();
-            $regions    = $this->getRegions();
+            $rules = $this->getRuleset();
+            $regions = $this->getRegions();
 
             $allRules = $rules ? $rules->getRules() : array();
 
@@ -316,7 +323,7 @@ abstract class AbstractPool
         }
 
         $originalFileName = $upload->getClientOriginalName();
-        $extension        = strtolower(substr(strrchr($originalFileName,'.'),1));
+        $extension = strtolower(substr(strrchr($originalFileName, '.'), 1));
 
         if ($extension == 'csv') {
             return;

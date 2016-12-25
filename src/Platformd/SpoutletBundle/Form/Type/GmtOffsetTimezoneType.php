@@ -3,9 +3,11 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\ChoiceList\TimezoneChoiceList;
-use Symfony\Component\Form\Extension\Core\ChoiceList\ArrayChoiceList;
 
+/**
+ * Class GmtOffsetTimezoneType
+ * TODO: fix this.
+ */
 class GmtOffsetTimezoneType extends AbstractType
 {
     /**
@@ -55,7 +57,7 @@ class GmtOffsetTimezoneType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getParent(array $options)
+    public function getParent()
     {
         return 'choice';
     }

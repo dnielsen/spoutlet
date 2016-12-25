@@ -5,7 +5,14 @@
     <div class="span6" style="width: 450px;">
         <div style="width:350px;">
             {{ form_row(form.thumb_file) }}
+            <p class="help">
+                Recommended Size: 120x60px
+            </p>
+
             {{ form_row(form.banner_file) }}
+            <p class="help">
+                Recommended Size: Size: 634x183px
+            </p>
         </div>
         {{ form_row(form.url) }}
         {{ form_row(form.newWindow) }}

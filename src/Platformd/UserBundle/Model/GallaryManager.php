@@ -3,8 +3,7 @@
 namespace Platformd\UserBundle\Model;
 
 use Doctrine\ORM\EntityRepository,
-    Doctrine\ORM\EntityManager
-;
+    Doctrine\ORM\EntityManager;
 
 use Symfony\Component\HttpFoundation\File\File;
 use Gaufrette\Filesystem;
@@ -13,12 +12,12 @@ use Platformd\UserBundle\Entity\User,
     Platformd\UserBundle\Entity\Gallary,
     Platformd\UserBundle\ViewModel\gallary_index_data,
     Platformd\UserBundle\QueueMessage\AvatarResizeQueueMessage,
-    Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage
-;
+    Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage;
 use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
+
 class GallaryManager
 {
-    const IMAGE_CROP_MAX_WIDTH  = 512;
+    const IMAGE_CROP_MAX_WIDTH = 512;
     const IMAGE_CROP_MAX_HEIGHT = 512;
 
     private $em;
@@ -30,21 +29,21 @@ class GallaryManager
     private $queueUtil;
     private $userManager;
 
-    public function __construct(EntityManager $em, Filesystem $filesystem, $publicBucket, $privateBucket, $s3, $queueUtil, $userManager, $hpcloud_accesskey='', $hpcloud_secreatkey='', $hpcloud_tenantid='', $hpcloud_url='', $hpcloud_container='',$objectStorage='')
+    public function __construct(EntityManager $em, Filesystem $filesystem, $publicBucket, $privateBucket, $s3, $queueUtil, $userManager, $hpcloud_accesskey = '', $hpcloud_secreatkey = '', $hpcloud_tenantid = '', $hpcloud_url = '', $hpcloud_container = '', $objectStorage = '')
     {
-        $this->em            = $em;
-        $this->filesystem    = $filesystem;
-        $this->galaryRepo    = $em->getRepository('UserBundle:Gallary');
-        $this->publicBucket  = $publicBucket;
+        $this->em = $em;
+        $this->filesystem = $filesystem;
+        $this->galaryRepo = $em->getRepository('UserBundle:Gallary');
+        $this->publicBucket = $publicBucket;
         $this->privateBucket = $privateBucket;
-        $this->s3            = $s3;
-        $this->queueUtil     = $queueUtil;
-        $this->userManager   = $userManager;
+        $this->s3 = $s3;
+        $this->queueUtil = $queueUtil;
+        $this->userManager = $userManager;
 
         $this->objectStorage = $objectStorage;
-        $this->hpcloud_container =   $hpcloud_container;
+        $this->hpcloud_container = $hpcloud_container;
         $this->hpcloud_url = $hpcloud_url;
-        $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey,$hpcloud_secreatkey,$hpcloud_tenantid);
+        $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatkey, $hpcloud_tenantid);
 
     }
 
@@ -74,11 +73,11 @@ class GallaryManager
     public function getAllApprovedForUser(User $user)
     {
         return $this->gallaryRepo->findBy(array(
-            'user'      => $user->getId(),
-            'approved'  => true,
-            'deleted'   => false,
-            'cropped'   => true,
-            'resized'   => true,
+            'user' => $user->getId(),
+            'approved' => true,
+            'deleted' => false,
+            'cropped' => true,
+            'resized' => true,
             'processed' => true,
         ));
     }
@@ -106,20 +105,19 @@ class GallaryManager
         $fileUuid = $this->uuidGen();
         $this->checkUserUuid($user);
 
-        $rawFilename = 'raw.'.$file->guessExtension();
+        $rawFilename = 'raw.' . $file->guessExtension();
         $opts = array('headers' => array('Cache-Control' => 'max-age=0'));
-        $filename = $user->getUuid().'/'.$fileUuid.'/'.$rawFilename;
-        
-        $filename = $user->getUuid().".".$file->guessExtension();
-        //$filename = $fileUuid;
-         if($this->objectStorage == 'HpObjectStorage') {
-  	  $this->hpCloudObj->SaveToObjectStorage($this->hpcloud_container,$filename,$file,Gallary::GALLARY_DIRECTORY_PREFIX);
-         }
-         else {
-          $data = $this->filesystem->write($filename, file_get_contents($file),$opts);
-         }
+        $filename = $user->getUuid() . '/' . $fileUuid . '/' . $rawFilename;
 
-     //   $this->filesystem->write($user->getUuid().'/'.$fileUuid.'/'.$rawFilename, file_get_contents($file), $opts);
+        $filename = $user->getUuid() . "." . $file->guessExtension();
+        //$filename = $fileUuid;
+        if ($this->objectStorage == 'HpObjectStorage') {
+            $this->hpCloudObj->SaveToObjectStorage($this->hpcloud_container, $filename, $file, Gallary::GALLARY_DIRECTORY_PREFIX);
+        } else {
+            $data = $this->filesystem->write($filename, file_get_contents($file), $opts);
+        }
+
+        //   $this->filesystem->write($user->getUuid().'/'.$fileUuid.'/'.$rawFilename, file_get_contents($file), $opts);
 
         unlink($file);
 
@@ -129,14 +127,14 @@ class GallaryManager
     protected function uuidGen()
     {
         return str_replace("\n", '', `uuidgen -r`);
-      // return rand(5, 15);
+        // return rand(5, 15);
     }
 
     public function getSignedImageUrl($gallaryUuid, $filename, User $user)
     {
         $this->checkUserUuid($user);
 
-        $filePath = $this->filesystem->getAdapter()->getDirectory().'/'.$user->getUuid().'/'.$gallaryUuid.'/'.$filename;
+        $filePath = $this->filesystem->getAdapter()->getDirectory() . '/' . $user->getUuid() . '/' . $gallaryUuid . '/' . $filename;
         return $this->s3->get_object_url($this->privateBucket, $filePath, '1 hour');
     }
 
@@ -144,14 +142,14 @@ class GallaryManager
     {
         $this->checkUserUuid($user);
 
-        $message            = new AvatarResizeQueueMessage();
-        $message->userUuid  = $user->getUuid();
-        $message->fileUuid  = $fileUuid;
+        $message = new AvatarResizeQueueMessage();
+        $message->userUuid = $user->getUuid();
+        $message->fileUuid = $fileUuid;
         $message->extension = $extension;
-        $message->width     = $width;
-        $message->height    = $height;
-        $message->x         = $x;
-        $message->y         = $y;
+        $message->width = $width;
+        $message->height = $height;
+        $message->x = $x;
+        $message->y = $y;
 
         $result = $this->queueUtil->addToQueue($message);
 
@@ -161,12 +159,12 @@ class GallaryManager
 
     public function addToFilesystemActionsQueue($fileUuid, User $user, $action)
     {
-        $message  = new AvatarFileSystemActionsQueueMessage();
+        $message = new AvatarFileSystemActionsQueueMessage();
 
         $this->checkUserUuid($user);
 
         $message->userUuid = $user->getUuid();
-        $message->action   = $action;
+        $message->action = $action;
         $message->fileUuid = $fileUuid;
 
         $result = $this->queueUtil->addToQueue($message);
@@ -175,18 +173,18 @@ class GallaryManager
 
     }
 
-    public function getGallaryListingData(User $user, $size=84)
+    public function getGallaryListingData(User $user, $size = 84)
     {
         $this->checkUserUuid($user);
 
-        $data    = new gallary_index_data();
+        $data = new gallary_index_data();
         $gallarys = $this->getAllApprovedForUser($user);
 
-        foreach($gallarys as $gallary) {
+        foreach ($gallarys as $gallary) {
             $url = $this->getGallaryUrl($user->getUuid(), $size, $gallary->getUuid());
 
             $gallaryDetails = array(
-                'id'  => $gallary->getId(),
+                'id' => $gallary->getId(),
                 'url' => $url,
                 'uuid' => $gallary->getUuid(),
             );
@@ -206,7 +204,7 @@ class GallaryManager
 
     public function getUnapprovedGallarys($maxPerPage = 64, $currentPage = 1, &$pager = null, $locale = null)
     {
-        $gallarys   = $this->gallaryRepo->getUnapprovedGallarys($maxPerPage, $currentPage, $pager, $locale);
+        $gallarys = $this->gallaryRepo->getUnapprovedGallarys($maxPerPage, $currentPage, $pager, $locale);
         $galaryArr = array();
 
         foreach ($gallarys as $gallary) {
@@ -230,7 +228,7 @@ class GallaryManager
         }
 
         $approved = $processType == 'approve';
-        $gallarys  = $this->gallaryRepo->findIdsIn($gallaryIds);
+        $gallarys = $this->gallaryRepo->findIdsIn($gallaryIds);
 
         foreach ($gallarys as $gallary) {
 
@@ -254,29 +252,29 @@ class GallaryManager
         $this->em->flush();
     }
 
-    public function getGallaryUrl($userUuid, $size, $fileUuid = 'by_size',$subDir= null)
+    public function getGallaryUrl($userUuid, $size, $fileUuid = 'by_size', $subDir = null)
     {
         if ($this->publicBucket == "platformd") {
             $cf = "http://media.alienwarearena.com";
         } else {
-            $cf = ($this->objectStorage == "HpObjectStorage") ? $this->hpcloud_url.$this->hpcloud_container :  "https://s3.amazonaws.com/platformd-public" ;
+            $cf = ($this->objectStorage == "HpObjectStorage") ? $this->hpcloud_url . $this->hpcloud_container : "https://s3.amazonaws.com/platformd-public";
         }
-       if($subDir != "") {
-           $url = $this->hpcloud_url.$this->hpcloud_container.'/'.Gallary::GALLARY_DIRECTORY_PREFIX;
-           return $url.$userUuid;
+        if ($subDir != "") {
+            $url = $this->hpcloud_url . $this->hpcloud_container . '/' . Gallary::GALLARY_DIRECTORY_PREFIX;
+            return $url . $userUuid;
 
-       }
-        
+        }
+
         //return $cf.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$fileUuid.'/'.$size.'x'.$size.'.png';
-       return  $cf.'/'.Gallary::GALLARY_DIRECTORY_PREFIX.'/'.$userUuid.".jpg";
-    
+        return $cf . '/' . Gallary::GALLARY_DIRECTORY_PREFIX . '/' . $userUuid . ".jpg";
+
 
     }
 
     private function checkUserUuid($user)
     {
         if (!$user->getUuid()) {
-            throw new \Exception('User [ ID => '.$user->getId().' ] tried to create an avatar but does not have a UUID set.');
+            throw new \Exception('User [ ID => ' . $user->getId() . ' ] tried to create an avatar but does not have a UUID set.');
         }
     }
 }

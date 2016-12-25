@@ -139,11 +139,13 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     /**
      * Constructor
      */
-    public function __construct(GroupEvent $event) {
-        $this->event        = $event;
-        $this->attendees    = new ArrayCollection();
-        $this->followers    = new ArrayCollection();
-        $this->speakers     = new ArrayCollection();
+    public function __construct(GroupEvent $event)
+    {
+        $this->event = $event;
+        $this->attendees = new ArrayCollection();
+        $this->followers = new ArrayCollection();
+        $this->speakers = new ArrayCollection();
+        $this->date = new \DateTime();
 //        $this->tags         = new ArrayCollection();
     }
 
@@ -242,7 +244,6 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     }
 
 
-
     /**
      * @param string $name
      */
@@ -278,10 +279,9 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     public function getDateString()
     {
         $date = $this->getDate();
-        if ($date){
+        if ($date) {
             return $date->format('M d, Y');
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -334,26 +334,32 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     {
         $this->endsAt = $endsAt;
     }
+
     public function setRoom($room)
     {
         $this->room = $room;
     }
+
     public function getRoom()
     {
         return $this->room;
     }
+
     public function setSlidesLink($slidesLink)
     {
         $this->slidesLink = $slidesLink;
     }
+
     public function getSlidesLink()
     {
         return $this->slidesLink;
     }
+
     public function setPublicNotesLink($publicNotesLink)
     {
         $this->publicNotesLink = $publicNotesLink;
     }
+
     public function getPublicNotesLink()
     {
         return $this->publicNotesLink;
@@ -363,6 +369,7 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     {
         $this->speakers = $speakers;
     }
+
     public function getSpeakers()
     {
         return $this->speakers;
@@ -488,7 +495,7 @@ class EventSession implements LinkableInterface //,EntrySetScopeable
     {
         return array(
             'groupSlug' => $this->event->getGroup()->getSlug(),
-            'eventId'   => $this->event->getId(),
+            'eventId' => $this->event->getId(),
             'sessionId' => $this->id,
         );
     }

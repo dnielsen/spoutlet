@@ -3,14 +3,13 @@
 namespace Platformd\GameBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Platformd\GameBundle\Entity\Game;
 use Platformd\MediaBundle\Form\Type\MediaType;
-use Platformd\SpoutletBundle\Form\Type\SlugType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class GameType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name', null, array(

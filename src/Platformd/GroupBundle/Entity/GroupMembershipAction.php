@@ -54,7 +54,7 @@ class GroupMembershipAction
     private $group;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", inversedBy="groupMembershipActions")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $user;

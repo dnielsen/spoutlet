@@ -95,7 +95,7 @@ class HtmlWidgetAdminController extends Controller
     private function processForm(Form $form, Request $request)
     {
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 

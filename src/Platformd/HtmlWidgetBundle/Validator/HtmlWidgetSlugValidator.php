@@ -20,7 +20,7 @@ class HtmlWidgetSlugValidator extends ConstraintValidator
         $this->htmlWidgetManager = $htmlWidgetManager;
     }
 
-    public function isValid($widget, Constraint $constraint)
+    public function validate($widget, Constraint $constraint)
     {
         // @TODO add more criteria like sites, etc...
         $criteria = array(

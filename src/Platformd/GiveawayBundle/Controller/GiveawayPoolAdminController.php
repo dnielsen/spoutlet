@@ -52,7 +52,7 @@ class GiveawayPoolAdminController extends Controller
         $form = $this->createForm(new GiveawayPoolType(), $pool);
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $result = $this->savePool($pool);
@@ -91,7 +91,7 @@ class GiveawayPoolAdminController extends Controller
          $form = $this->createForm(new GiveawayPoolType(), $pool);
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $result = $this->savePool($pool);

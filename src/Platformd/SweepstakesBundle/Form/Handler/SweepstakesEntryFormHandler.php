@@ -83,7 +83,7 @@ class SweepstakesEntryFormHandler
             }
 
             if ('POST' == $this->request->getMethod()) {
-                $this->form->bindRequest($this->request);
+                $this->form->handleRequest($this->request);
 
                 $ageManager = $this->container->get('platformd.age.age_manager');
                 $site       = $this->siteUtil->getCurrentSite();
@@ -148,7 +148,7 @@ class SweepstakesEntryFormHandler
             $valid = true;
 
             if (!$this->form->isBound()) {
-                $this->form->bindRequest($this->request);
+                $this->form->handleRequest($this->request);
                 $valid = $this->form->isValid();
             }
 

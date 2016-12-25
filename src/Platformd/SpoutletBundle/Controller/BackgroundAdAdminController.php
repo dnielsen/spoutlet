@@ -5,10 +5,7 @@ namespace Platformd\SpoutletBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\SpoutletBundle\Form\Type\BackgroundAdType;
 use Platformd\SpoutletBundle\Entity\BackgroundAd;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Knp\MediaBundle\Util\MediaUtil;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
-use Platformd\SpoutletBundle\Entity\BackgroundAdSite;
 
 class BackgroundAdAdminController extends Controller
 {
@@ -39,7 +36,7 @@ class BackgroundAdAdminController extends Controller
     {
         $this->addBackgroundAdBreadcrumb();
 
-        $ad = new BackgroundAd;
+        $ad = new BackgroundAd();
         $form = $this->createForm(new BackgroundAdType(true), $ad);
 
         return $this->render('SpoutletBundle:BackgroundAdAdmin:new.html.twig', array(
@@ -51,11 +48,11 @@ class BackgroundAdAdminController extends Controller
     {
         $this->addBackgroundAdBreadcrumb();
 
-        $em     = $this->getDoctrine()->getEntityManager();
-        $form   = $this->createForm(new BackgroundAdType(true), new BackgroundAd);
+        $em     = $this->getDoctrine()->getManager();
+        $form   = $this->createForm(new BackgroundAdType(true), new BackgroundAd());
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             $ad = $form->getData();
 
@@ -104,7 +101,7 @@ class BackgroundAdAdminController extends Controller
         $em   = $this->getDoctrine()->getEntityManager();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             $ad = $form->getData();
 

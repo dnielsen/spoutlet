@@ -89,7 +89,7 @@ class SiteTakeoverAdminController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 

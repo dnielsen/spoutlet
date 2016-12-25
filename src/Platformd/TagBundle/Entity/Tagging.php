@@ -12,7 +12,6 @@ use Platformd\TagBundle\Model\TaggableInterface;
  */
 class Tagging
 {
-
     /**
      * @var integer $id
      *
@@ -32,14 +31,14 @@ class Tagging
     /**
      * @var string
      *
-     * @ORM\Column(name="resource_type", type="string", length="50")
+     * @ORM\Column(name="resource_type", type="string", length=50)
      */
     protected $resourceType;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="resource_id", type="string", length="50")
+     * @ORM\Column(name="resource_id", type="string", length=50)
      */
     protected $resourceId;
 
@@ -139,7 +138,7 @@ class Tagging
     /**
      * Set createdAt
      *
-     * @param DateTime $value
+     * @param \DateTime $value
      */
     public function setCreatedAt(\DateTime $value)
     {
@@ -149,7 +148,7 @@ class Tagging
     /**
      * Get createdAt
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -159,7 +158,7 @@ class Tagging
     /**
      * Set updatedAt
      *
-     * @param DateTime $value
+     * @param \DateTime $value
      */
     public function setUpdatedAt(\DateTime $value)
     {
@@ -169,7 +168,7 @@ class Tagging
     /**
      * Get updatedAt
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {

@@ -3,7 +3,7 @@
 namespace Platformd\SweepstakesBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\SecurityContext;
 
@@ -16,7 +16,7 @@ class SweepstakesEntryType extends AbstractType
         $this->securityContext = $securityContext;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $entry = $builder->getData();
         $sweeps = $entry->getSweepstakes();
@@ -29,15 +29,14 @@ class SweepstakesEntryType extends AbstractType
 
         $builder
             ->add('phoneNumber', 'text', array(
-                'label'         => 'sweepstakes.entry.form.phone_number',
+                'label' => 'sweepstakes.entry.form.phone_number',
             ))
             ->add('answers', 'collection', array(
                 'type' => new SweepstakesAnswerType(),
             ))
             ->add('termsAccepted', 'checkbox', array(
                 'label' => 'sweepstakes.entry.form.read_and_agreed_to_rules',
-            ))
-        ;
+            ));
 
         if ($sweeps->getHasOptionalCheckbox()) {
             $builder->add('optionalCheckboxAnswer', 'checkbox', array(
@@ -51,4 +50,3 @@ class SweepstakesEntryType extends AbstractType
         return 'sweepstakes_entry';
     }
 }
-

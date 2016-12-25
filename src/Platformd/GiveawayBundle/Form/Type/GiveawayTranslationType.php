@@ -2,15 +2,16 @@
 
 namespace Platformd\GiveawayBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Platformd\GiveawayBundle\Entity\GiveawayTranslation;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class GiveawayTranslationType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('locale', 'entity', array(
             'label' => 'Language',
@@ -50,16 +51,16 @@ class GiveawayTranslationType extends AbstractType
         ));
     }
 
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => GiveawayTranslation::class,
+        ]);
+    }
+
     public function getName()
     {
         return 'giveaway_translation';
-    }
-
-    public function getDefaultOptions(array $options)
-    {
-        $options['data_class'] = 'Platformd\GiveawayBundle\Entity\GiveawayTranslation';
-
-        return $options;
     }
 
     public function buildViewBottomUp(FormView $view, FormInterface $form)

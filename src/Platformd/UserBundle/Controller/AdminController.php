@@ -206,7 +206,7 @@ class AdminController extends Controller
             'local_auth'    => $this->container->getParameter('local_auth'),
         ));
 
-        $form->bindRequest($request);
+        $form->handleRequest($request);
         if ($form->isValid()) {
 
             try {

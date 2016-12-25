@@ -2,16 +2,15 @@
 
 namespace Platformd\EventBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType,
-    Symfony\Component\Form\FormBuilder
-;
-
-use Platformd\EventBundle\Entity\GroupEventTranslation;
+use Platformd\EventBundle\Entity\EventTranslation;
+use Symfony\Component\Form\AbstractType;
 use Platformd\MediaBundle\Form\Type\MediaType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class EventTranslationType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name', 'text', array(
@@ -33,15 +32,15 @@ class EventTranslationType extends AbstractType
         ;
     }
 
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => EventTranslation::class,
+        ]);
+    }
+
     public function getName()
     {
         return 'platformd_event_translation';
-    }
-
-    public function getDefaultOptions(array $options)
-    {
-        $options['data_class'] = 'Platformd\EventBundle\Entity\EventTranslation';
-
-        return $options;
     }
 }

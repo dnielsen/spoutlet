@@ -2,14 +2,12 @@
 
 namespace Platformd\IdeaBundle\Form\Type;
 
-use Symfony\Component\Form\FormBuilder;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
-use Platformd\UserBundle\Entity\User;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class RegistrationFormType extends BaseType
 {
-
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name')
                 ->add('email', 'email')

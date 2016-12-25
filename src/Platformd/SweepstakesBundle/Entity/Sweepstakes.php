@@ -10,8 +10,7 @@ use Gedmo\Mapping\Annotation as Gedmo,
 
 use Symfony\Component\Validator\Constraints as Assert,
     Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity,
-    Symfony\Component\Validator\ExecutionContext
-;
+    Symfony\Component\Validator\ExecutionContext;
 
 use DateTime;
 
@@ -19,12 +18,12 @@ use Platformd\UserBundle\Entity\User,
     Platformd\TagBundle\Model\TaggableInterface,
     Platformd\SpoutletBundle\Link\LinkableInterface,
     Platformd\SweepstakesBundle\Entity\SweepstakesQuestion,
-    Platformd\MediaBundle\Entity\Media
-;
+    Platformd\MediaBundle\Entity\Media;
+use Symfony\Component\Validator\Context\LegacyExecutionContext;
 
 /**
  * Platformd\SweepstakesBundle\Entity\Sweepstakes
- * @ORM\Table(name="pd_sweepstakes", indexes={@ORM\index(name="event_type_idx", columns={"event_type"})}, uniqueConstraints={@ORM\UniqueConstraint(name="slug_unique", columns={"slug"})})
+ * @ORM\Table(name="pd_sweepstakes", indexes={@ORM\Index(name="event_type_idx", columns={"event_type"})}, uniqueConstraints={@ORM\UniqueConstraint(name="slug_unique", columns={"slug"})})
  * @ORM\Entity(repositoryClass="Platformd\SweepstakesBundle\Entity\SweepstakesRepository")
  *
  * @Assert\Callback(methods={"validatePromoCodeFields"})
@@ -33,11 +32,11 @@ use Platformd\UserBundle\Entity\User,
  */
 class Sweepstakes implements TaggableInterface, LinkableInterface
 {
-    const COMMENT_PREFIX  = 'sweepstake-';
+    const COMMENT_PREFIX = 'sweepstake-';
     const FORMS_S3_PREFIX = 'promo_code/';
 
     const SWEEPSTAKES_TYPE_SWEEPSTAKES = 'sweepstakes';
-    const SWEEPSTAKES_TYPE_PROMO_CODE  = 'promocode';
+    const SWEEPSTAKES_TYPE_PROMO_CODE = 'promocode';
 
     static protected $validTypes = array(
         self::SWEEPSTAKES_TYPE_SWEEPSTAKES,
@@ -76,9 +75,9 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
      * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Site")
      * @ORM\JoinTable(name="pd_sweepstakes_site")
      */
-     protected $sites;
+    protected $sites;
 
-     /**
+    /**
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
@@ -97,7 +96,7 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
 
     /**
      * @Assert\Url
-     * @ORM\Column(name="external_url", length="255", nullable=true)
+     * @ORM\Column(name="external_url", length=255, nullable=true)
      */
     protected $externalUrl;
 
@@ -227,7 +226,7 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
     protected $w9form;
 
     /**
-     * @ORM\Column(name="winner_message", type="text", nullable="true")
+     * @ORM\Column(name="winner_message", type="text", nullable=true)
      */
     protected $winnerMessage;
 
@@ -243,14 +242,21 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
 
     public function __construct()
     {
-        $this->entries   = new ArrayCollection();
+        $this->entries = new ArrayCollection();
         $this->questions = new ArrayCollection();
-        $this->sites     = new ArrayCollection();
+        $this->sites = new ArrayCollection();
     }
 
-    public function getId() { return $this->id; }
+    public function getId()
+    {
+        return $this->id;
+    }
 
-    public function getName() { return $this->name; }
+    public function getName()
+    {
+        return $this->name;
+    }
+
     public function setName($value)
     {
         $this->name = $value;
@@ -265,7 +271,11 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
         }
     }
 
-    public function getSlug() { return $this->slug; }
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
     public function setSlug($value)
     {
         if (!$value) {
@@ -275,45 +285,125 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
         $this->slug = $value;
     }
 
-    public function getPublished()       { return $this->published; }
-    public function setPublished($value) { $this->published = $value; }
+    public function getPublished()
+    {
+        return $this->published;
+    }
 
-    public function getSites()       { return $this->sites; }
-    public function setSites($value) { $this->sites = $value; }
+    public function setPublished($value)
+    {
+        $this->published = $value;
+    }
 
-    public function getCreated()                { return $this->created; }
-    public function setCreated(DateTime $value) { $this->created = $value; }
+    public function getSites()
+    {
+        return $this->sites;
+    }
 
-    public function getUpdated()                { return $this->updated; }
-    public function setUpdated(DateTime $value) { $this->updated = $value; }
+    public function setSites($value)
+    {
+        $this->sites = $value;
+    }
+
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    public function setCreated(DateTime $value)
+    {
+        $this->created = $value;
+    }
+
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    public function setUpdated(DateTime $value)
+    {
+        $this->updated = $value;
+    }
 
     public function getTimezone()
     {
         return $this->timezone ? $this->timezone : 'UTC';
     }
 
-    public function setTimezone($value) { $this->timezone = $value; }
+    public function setTimezone($value)
+    {
+        $this->timezone = $value;
+    }
 
-    public function getExternalUrl()       { return $this->externalUrl; }
-    public function setExternalUrl($value) { $this->externalUrl = $value; }
+    public function getExternalUrl()
+    {
+        return $this->externalUrl;
+    }
 
-    public function getStartsAt()       { return $this->startsAt; }
-    public function setStartsAt($value) { $this->startsAt = $value; }
+    public function setExternalUrl($value)
+    {
+        $this->externalUrl = $value;
+    }
 
-    public function getEndsAt()       { return $this->endsAt; }
-    public function setEndsAt($value) { $this->endsAt = $value; }
+    public function getStartsAt()
+    {
+        return $this->startsAt;
+    }
 
-    public function getHidden()       { return $this->hidden; }
-    public function setHidden($value) { $this->hidden = $value; }
+    public function setStartsAt($value)
+    {
+        $this->startsAt = $value;
+    }
 
-    public function getContent()       { return $this->content; }
-    public function setContent($value) { $this->content = $value; }
+    public function getEndsAt()
+    {
+        return $this->endsAt;
+    }
 
-    public function getBackgroundImage()       { return $this->backgroundImage; }
-    public function setBackgroundImage($value) { $this->backgroundImage = $value; }
+    public function setEndsAt($value)
+    {
+        $this->endsAt = $value;
+    }
 
-    public function getEntries()       { return $this->entries; }
-    public function setEntries($value) { $this->entries = $value; }
+    public function getHidden()
+    {
+        return $this->hidden;
+    }
+
+    public function setHidden($value)
+    {
+        $this->hidden = $value;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    public function setContent($value)
+    {
+        $this->content = $value;
+    }
+
+    public function getBackgroundImage()
+    {
+        return $this->backgroundImage;
+    }
+
+    public function setBackgroundImage($value)
+    {
+        $this->backgroundImage = $value;
+    }
+
+    public function getEntries()
+    {
+        return $this->entries;
+    }
+
+    public function setEntries($value)
+    {
+        $this->entries = $value;
+    }
 
     public function getTags()
     {
@@ -322,33 +412,82 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
         return $this->tags;
     }
 
-    public function setTags($value) { $this->tags = $value; }
+    public function setTags($value)
+    {
+        $this->tags = $value;
+    }
 
-    public function getGroup()       { return $this->group; }
-    public function setGroup($value) { $this->group = $value; }
+    public function getGroup()
+    {
+        return $this->group;
+    }
 
-    public function getOfficialRules()       { return $this->officialRules;  }
-    public function setOfficialRules($value) { $this->officialRules = $value; }
+    public function setGroup($value)
+    {
+        $this->group = $value;
+    }
 
-    public function getQuestions()       { return $this->questions;  }
+    public function getOfficialRules()
+    {
+        return $this->officialRules;
+    }
 
-    public function setQuestions($value) {
-        foreach($value as $question){
+    public function setOfficialRules($value)
+    {
+        $this->officialRules = $value;
+    }
+
+    public function getQuestions()
+    {
+        return $this->questions;
+    }
+
+    public function setQuestions($value)
+    {
+        foreach ($value as $question) {
             $this->addSweepstakesQuestion($question);
         }
     }
 
-    public function getTestOnly()       { return $this->testOnly;  }
-    public function setTestOnly($value) { $this->testOnly = $value; }
+    public function getTestOnly()
+    {
+        return $this->testOnly;
+    }
 
-    public function getMetaDescription()       { return $this->metaDescription;  }
-    public function setMetaDescription($value) { $this->metaDescription = $value; }
+    public function setTestOnly($value)
+    {
+        $this->testOnly = $value;
+    }
 
-    public function getHasOptionalCheckbox()       { return $this->hasOptionalCheckbox;  }
-    public function setHasOptionalCheckbox($value) { $this->hasOptionalCheckbox = $value; }
+    public function getMetaDescription()
+    {
+        return $this->metaDescription;
+    }
 
-    public function getOptionalCheckboxLabel()       { return $this->optionalCheckboxLabel;  }
-    public function setOptionalCheckboxLabel($value) { $this->optionalCheckboxLabel = $value; }
+    public function setMetaDescription($value)
+    {
+        $this->metaDescription = $value;
+    }
+
+    public function getHasOptionalCheckbox()
+    {
+        return $this->hasOptionalCheckbox;
+    }
+
+    public function setHasOptionalCheckbox($value)
+    {
+        $this->hasOptionalCheckbox = $value;
+    }
+
+    public function getOptionalCheckboxLabel()
+    {
+        return $this->optionalCheckboxLabel;
+    }
+
+    public function setOptionalCheckboxLabel($value)
+    {
+        $this->optionalCheckboxLabel = $value;
+    }
 
     public function setEventType($value)
     {
@@ -359,19 +498,50 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
         $this->eventType = $value;
     }
 
-    public function getEventType()       { return $this->eventType; }
+    public function getEventType()
+    {
+        return $this->eventType;
+    }
 
-    public function setWinningCodes($value) { $this->winningCodes = $value; }
-    public function getWinningCodes()       { return $this->winningCodes; }
+    public function setWinningCodes($value)
+    {
+        $this->winningCodes = $value;
+    }
 
-    public function setConsolationCodes($value) { $this->consolationCodes = $value; }
-    public function getConsolationCodes()       { return $this->consolationCodes; }
+    public function getWinningCodes()
+    {
+        return $this->winningCodes;
+    }
 
-    public function setWinningCodesCount($value) { $this->winningCodesCount = $value; }
-    public function getWinningCodesCount()       { return $this->winningCodesCount ?: 0; }
+    public function setConsolationCodes($value)
+    {
+        $this->consolationCodes = $value;
+    }
 
-    public function setConsolationCodesCount($value) { $this->consolationCodesCount = $value; }
-    public function getConsolationCodesCount()       { return $this->consolationCodesCount ?: 0; }
+    public function getConsolationCodes()
+    {
+        return $this->consolationCodes;
+    }
+
+    public function setWinningCodesCount($value)
+    {
+        $this->winningCodesCount = $value;
+    }
+
+    public function getWinningCodesCount()
+    {
+        return $this->winningCodesCount ?: 0;
+    }
+
+    public function setConsolationCodesCount($value)
+    {
+        $this->consolationCodesCount = $value;
+    }
+
+    public function getConsolationCodesCount()
+    {
+        return $this->consolationCodesCount ?: 0;
+    }
 
     public function incrementWinningCodesCount($amount = 1)
     {
@@ -383,11 +553,25 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
         $this->consolationCodesCount = (null === $this->consolationCodesCount ? $amount : $this->consolationCodesCount + $amount);
     }
 
-    public function getWinningCodesFile()       { return $this->winningCodesFile;  }
-    public function setWinningCodesFile($value) { $this->winningCodesFile = $value; }
+    public function getWinningCodesFile()
+    {
+        return $this->winningCodesFile;
+    }
 
-    public function getConsolationCodesFile()       { return $this->consolationCodesFile;  }
-    public function setConsolationCodesFile($value) { $this->consolationCodesFile = $value; }
+    public function setWinningCodesFile($value)
+    {
+        $this->winningCodesFile = $value;
+    }
+
+    public function getConsolationCodesFile()
+    {
+        return $this->consolationCodesFile;
+    }
+
+    public function setConsolationCodesFile($value)
+    {
+        $this->consolationCodesFile = $value;
+    }
 
     public function getAffidavit()
     {
@@ -400,7 +584,10 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
         return $this->affidavit;
     }
 
-    public function setAffidavit($value) { $this->affidavit = $value; }
+    public function setAffidavit($value)
+    {
+        $this->affidavit = $value;
+    }
 
     public function getW9form()
     {
@@ -413,16 +600,40 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
         return $this->w9form;
     }
 
-    public function setW9form($value) { $this->w9form = $value; }
+    public function setW9form($value)
+    {
+        $this->w9form = $value;
+    }
 
-    public function getWinnerMessage()       { return $this->winnerMessage;  }
-    public function setWinnerMessage($value) { $this->winnerMessage = $value; }
+    public function getWinnerMessage()
+    {
+        return $this->winnerMessage;
+    }
 
-    public function getLoserMessage()       { return $this->loserMessage;  }
-    public function setLoserMessage($value) { $this->loserMessage = $value; }
+    public function setWinnerMessage($value)
+    {
+        $this->winnerMessage = $value;
+    }
 
-    public function getBackupLoserMessage()       { return $this->backupLoserMessage;  }
-    public function setBackupLoserMessage($value) { $this->backupLoserMessage = $value; }
+    public function getLoserMessage()
+    {
+        return $this->loserMessage;
+    }
+
+    public function setLoserMessage($value)
+    {
+        $this->loserMessage = $value;
+    }
+
+    public function getBackupLoserMessage()
+    {
+        return $this->backupLoserMessage;
+    }
+
+    public function setBackupLoserMessage($value)
+    {
+        $this->backupLoserMessage = $value;
+    }
 
     public function addWinningCode(PromoCodeContestCode $code)
     {
@@ -448,16 +659,25 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
         $this->consolationCodesCount++;
     }
 
-    public function getEntriesCount() { return count($this->entries); }
+    public function getEntriesCount()
+    {
+        return count($this->entries);
+    }
 
-    public function getLinkableOverrideUrl()     { return $this->getExternalUrl(); }
+    public function getLinkableOverrideUrl()
+    {
+        return $this->getExternalUrl();
+    }
 
     public function getLinkableRouteName()
     {
         return $this->eventType == self::SWEEPSTAKES_TYPE_SWEEPSTAKES ? 'sweepstakes_show' : 'promo_code_contest_show';
     }
 
-    public function getLinkableRouteParameters() { return array('slug' => $this->getSlug()); }
+    public function getLinkableRouteParameters()
+    {
+        return array('slug' => $this->getSlug());
+    }
 
     public function getThreadId()
     {
@@ -465,11 +685,18 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
             throw new \LogicException('A sweepstakes needs an id before it can have a comment thread');
         }
 
-        return self::COMMENT_PREFIX.$this->getId();
+        return self::COMMENT_PREFIX . $this->getId();
     }
 
-    public function getTaggableType() { return 'platformd_sweepstakes'; }
-    public function getTaggableId() { return $this->getId(); }
+    public function getTaggableType()
+    {
+        return 'platformd_sweepstakes';
+    }
+
+    public function getTaggableId()
+    {
+        return $this->getId();
+    }
 
     public function addSweepstakesQuestion(SweepstakesQuestion $question)
     {
@@ -491,7 +718,7 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
         }
 
         $start = $this->getStartsAt()->format('U');
-        $end   = $this->getEndsAt() ? $this->getEndsAt()->format('U') : null;
+        $end = $this->getEndsAt() ? $this->getEndsAt()->format('U') : null;
 
         if ($now < $start || ($end && $now > $end)) {
             return false;
@@ -525,7 +752,7 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
             return false;
         }
 
-        $end   = $this->getEndsAt() ? $this->getEndsAt()->format('U') : null;
+        $end = $this->getEndsAt() ? $this->getEndsAt()->format('U') : null;
 
         if ($end && $now > $end) {
             return true;
@@ -539,7 +766,7 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
         return self::$validTypes;
     }
 
-    public function validatePromoCodeFields(ExecutionContext $executionContext)
+    public function validatePromoCodeFields(LegacyExecutionContext $executionContext)
     {
         if ($this->getEventType() == self::SWEEPSTAKES_TYPE_SWEEPSTAKES) {
             return;
@@ -573,18 +800,13 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
         }
     }
 
-    private function addError(ExecutionContext $executionContext, $path, $message)
+    private function addError(LegacyExecutionContext $executionContext, $path, $message)
     {
         $oldPath = $executionContext->getPropertyPath();
-        $executionContext->setPropertyPath($oldPath.'.'.$path);
 
-        $executionContext->addViolation(
-            $message,
-            array(),
-            $path
-        );
-
-        $executionContext->setPropertyPath($oldPath);
+        $executionContext->buildViolation($message)
+            ->atPath($oldPath . '.' . $path)
+            ->addViolation();
 
         return $executionContext;
     }

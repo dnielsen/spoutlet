@@ -458,10 +458,10 @@ class GroupRepository extends EntityRepository
             ->where('(s = :site OR g.allLocales = true)')
             ->andWhere('g.deleted = false')
             ->addOrderBy('member_count', 'DESC')
+            ->groupBy('g.id')
             ->distinct('g.id')
             ->setMaxResults($limit)
-            ->setParameter('site', $site)
-            ->groupBy('g.id');
+            ->setParameter('site', $site);
 
         return $qb->getQuery()->execute();
     }

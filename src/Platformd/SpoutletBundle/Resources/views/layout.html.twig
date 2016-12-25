@@ -40,8 +40,9 @@
 
         {% embed 'IdeaBundle::social_scripts.html.twig' %}{% endembed %}
 
-        {% set feedbackKey = app.request.get('_route') %}
-        {% if feedbackKey in feedback_ids|keys %}
+        {% set feedbackKey = app.request.attributes.get('_route') %}
+
+        {% if feedbackKey in feedback_ids|keys and feedback_ids[feedbackKey] %}
             <a href="{{ path('entry_set_view', {'entrySetId': feedback_ids[feedbackKey] }) }}">
                 <div class="card feedback"><h3 class="blu">Feedback</h3></div>
             </a>
@@ -58,7 +59,7 @@
 
                 {% block pre_content_nav %}{% endblock %}
 
-                {% render url('_flash_message') with {}, {'standalone': true } %}
+                {% render url('_flash_message') %}
                 <script type="text/javascript">
                     $('.notice').draggable();
                 </script>

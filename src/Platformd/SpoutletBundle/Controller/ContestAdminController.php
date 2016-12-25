@@ -3,13 +3,9 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Contest;
-use Platformd\SpoutletBundle\Entity\ContestRepository;
-use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule;
-use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset;
 use Platformd\SpoutletBundle\Form\Type\ContestType;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use Knp\MediaBundle\Util\MediaUtil;
 
@@ -47,10 +43,10 @@ class ContestAdminController extends Controller
     {
         $this->addContestsBreadcrumb()->addChild('New Contest');
 
-        $em                 = $this->getDoctrine()->getEntityManager();
+        $em                 = $this->getDoctrine()->getManager();
         $tagManager         = $this->getTagManager();
         $existingContests   = $em->getRepository('SpoutletBundle:Contest')->findAllForSiteAlphabetically($this->getCurrentSite());
-        $importId           = $request->get('existing_contest_select');
+        $importId           = $request->get('existing_contest_select', 0);
         $importedContest    = $em->getRepository('SpoutletBundle:Contest')->find($importId);
 
         if ($importId) {
@@ -495,7 +491,7 @@ class ContestAdminController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 

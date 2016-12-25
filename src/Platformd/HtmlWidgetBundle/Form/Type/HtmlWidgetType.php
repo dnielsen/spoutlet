@@ -3,15 +3,13 @@
 namespace Platformd\HtmlWidgetBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Platformd\HtmlWidgetBundle\Entity\HtmlWidget;
 use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
-
+use Symfony\Component\Form\FormBuilderInterface;
 
 class HtmlWidgetType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name', null)

@@ -3,11 +3,8 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Platformd\SpoutletBundle\Entity\GalleryMedia;
-use Platformd\SpoutletBundle\Form\Type\GalleryChoiceType;
 use Platformd\MediaBundle\Form\Type\MediaType;
-use Platformd\UserBundle\Entity\User;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class SubmitImageType extends AbstractType
 {
@@ -18,7 +15,7 @@ class SubmitImageType extends AbstractType
         $this->user = $user;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('galleryImages', 'collection', array(
@@ -28,7 +25,6 @@ class SubmitImageType extends AbstractType
                 'options'   => array(
                     'image_label' => ' ',
                 )
-
             ))
         ;
     }

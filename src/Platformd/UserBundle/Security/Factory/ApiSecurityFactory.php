@@ -23,11 +23,10 @@ class ApiSecurityFactory extends FormLoginFactory
     protected function createAuthProvider(ContainerBuilder $container, $id, $config, $userProviderId)
     {
         if ($config['api_authentication']) {
-            $provider = 'platformd.security.user.authentication.provider.api.'.$id;
+            $provider = 'platformd.security.user.authentication.provider.api.' . $id;
             $container
                 ->setDefinition($provider, new DefinitionDecorator('platformd.security.user.authentication.provider.api'))
-                ->replaceArgument(3, $id)
-            ;
+                ->replaceArgument(3, $id);
 
             return $provider;
         } else {
@@ -41,8 +40,6 @@ class ApiSecurityFactory extends FormLoginFactory
 
         $node
             ->children()
-                ->scalarNode('api_authentication')->defaultValue(false)->end()
-        ;
+            ->scalarNode('api_authentication')->defaultValue(false)->end();
     }
-
 }

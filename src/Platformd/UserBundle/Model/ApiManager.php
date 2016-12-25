@@ -17,52 +17,55 @@ class ApiManager
     private $logger;
     private $translator;
 
-    public function __construct($apiBaseUrl, $accessKey, $secretKey, $logger, $translator) {
+    public function __construct($apiBaseUrl, $accessKey, $secretKey, $logger, $translator)
+    {
         $this->apiBaseUrl = $apiBaseUrl;
-        $this->accessKey  = $accessKey;
-        $this->secretKey  = $secretKey;
-        $this->logger     = $logger;
+        $this->accessKey = $accessKey;
+        $this->secretKey = $secretKey;
+        $this->logger = $logger;
         $this->translator = $translator;
     }
 
-    private function logInfo($message) {
+    private function logInfo($message)
+    {
         $this->logger->info(sprintf(self::LOG_MESSAGE_PREFIX, $message));
     }
 
-    private function logDebug($message) {
+    private function logDebug($message)
+    {
         $this->logger->debug(sprintf(self::LOG_MESSAGE_PREFIX, $message));
     }
 
-    private function getSignedUrl($path, $getParameters=array())
+    private function getSignedUrl($path, $getParameters = array())
     {
         ksort($getParameters);
 
         $unsignedUrl = rtrim($this->apiBaseUrl, '/') . '/' . trim($path, '/');
-        $query       = http_build_query($getParameters);
+        $query = http_build_query($getParameters);
 
         if ($query) {
             $unsignedUrl .= '?' . $query;
         }
 
-        $unsignedUrl = $unsignedUrl . ( $query ? '&' : '?' ) . 'access_key=' . $this->accessKey;
+        $unsignedUrl = $unsignedUrl . ($query ? '&' : '?') . 'access_key=' . $this->accessKey;
         $unsignedUrl = strtolower($unsignedUrl);
-        $signature   = '&sig='.hash_hmac('sha1', $unsignedUrl, $this->secretKey);
+        $signature = '&sig=' . hash_hmac('sha1', $unsignedUrl, $this->secretKey);
 
-        $this->logInfo('Unsigned URL generated - [ '. $unsignedUrl .' ]');
+        $this->logInfo('Unsigned URL generated - [ ' . $unsignedUrl . ' ]');
 
         return $unsignedUrl . $signature;
     }
 
     public function getSessionInfo($uuid)
     {
-        $path   = 'sessions/'.$uuid;
+        $path = 'sessions/' . $uuid;
         $result = $this->makeRequest($path, 'GET');
         return $result;
     }
 
     public function deleteSession($uuid)
     {
-        $path   = 'sessions/'.$uuid;
+        $path = 'sessions/' . $uuid;
         $result = $this->makeRequest($path, 'DELETE');
         return $result ? $result['metaData']['status'] == 200 : false;
     }
@@ -70,10 +73,10 @@ class ApiManager
     // Password is the plaintext password presented at login
     public function updatePassword($user, $password)
     {
-        $path           = 'users/'.$user->getUuid();
+        $path = 'users/' . $user->getUuid();
         $postParameters = array(
-            'action'   => 'updatePassword',
-            'data'     => array(
+            'action' => 'updatePassword',
+            'data' => array(
                 'password' => $password,
             ),
         );
@@ -82,7 +85,7 @@ class ApiManager
         return $result ? $result['metaData']['status'] == 200 : false;
     }
 
-    public function authenticate($user, $presentedPassword, $returnSession=true)
+    public function authenticate($user, $presentedPassword, $returnSession = true)
     {
         $this->logDebug('Authenticate started');
 
@@ -90,13 +93,13 @@ class ApiManager
             return false;
         }
 
-        $path           = 'sessions';
-        $getParameters  = $returnSession ? array() : array('authenticateonly' => 'true');
+        $path = 'sessions';
+        $getParameters = $returnSession ? array() : array('authenticateonly' => 'true');
         $postParameters = array(
             'action' => 'authenticate',
-            'data'   => array(
+            'data' => array(
                 'usernameOrEmail' => $user->getEmail(),
-                'password'        => $presentedPassword,
+                'password' => $presentedPassword,
             ),
         );
 
@@ -147,15 +150,15 @@ class ApiManager
 
     public function getUserByUsernameOrEmail($usernameOrEmail)
     {
-        $path           = 'users';
+        $path = 'users';
         $postParameters = array(
             'action' => 'findByUsernameOrEmail',
-            'data'   => array(
+            'data' => array(
                 'usernameOrEmail' => $usernameOrEmail,
             ),
         );
 
-        $result        = $this->makeRequest($path, 'POST', array('post' => $postParameters));
+        $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
 
         return $result ?: null;
     }
@@ -167,17 +170,17 @@ class ApiManager
 
             $postParameters = array(
                 'action' => 'update',
-                'user'   => array(
-                    'username'        => $user->getUsername(),
-                    'email'           => $user->getEmail(),
-                    'uuid'            => $uuid,
-                    'custom_avatar'   => $user->getAvatar() && $user->getAvatar()->isUsable(),
-                    'birth_date'      => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
-                    'first_name'      => $user->getFirstname(),
-                    'last_name'       => $user->getLastname(),
-                    'country'         => $user->getCountry(),
-                    'state'           => $user->getState(),
-                    'banned'          => $user->getExpired(),
+                'user' => array(
+                    'username' => $user->getUsername(),
+                    'email' => $user->getEmail(),
+                    'uuid' => $uuid,
+                    'custom_avatar' => $user->getAvatar() && $user->getAvatar()->isUsable(),
+                    'birth_date' => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
+                    'first_name' => $user->getFirstname(),
+                    'last_name' => $user->getLastname(),
+                    'country' => $user->getCountry(),
+                    'state' => $user->getState(),
+                    'banned' => $user->getExpired(),
                     'suspended_until' => $user->getExpiredUntil() ? $user->getExpiredUntil()->format('Y-m-d H:i:s') : null,
                 ),
             );
@@ -197,7 +200,7 @@ class ApiManager
             throw new ApiRequestException('updateRemoteUserData - Unexpected user type - not User entity or array.');
         }
 
-        $path   = 'users/'.$uuid;
+        $path = 'users/' . $uuid;
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
 
         return $result ? $result['metaData']['status'] == 200 : false;
@@ -207,26 +210,26 @@ class ApiManager
     {
         $dt = new \DateTime();
 
-        $path           = 'users';
+        $path = 'users';
         $postParameters = array(
             'action' => 'create',
-            'data'   => array(
-                'username'            => $user->getUsername(),
-                'password'            => $password,
-                'email'               => $user->getEmail(),
-                'uuid'                => $user->getUuid(),
-                'banned'              => false,
-                'birth_date'          => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
-                'country'             => $user->getCountry(),
-                'created'             => $user->getCreated() ? $user->getCreated()->format('Y-m-d H:i:s') : $dt->format('Y-m-d H:i:s'),
+            'data' => array(
+                'username' => $user->getUsername(),
+                'password' => $password,
+                'email' => $user->getEmail(),
+                'uuid' => $user->getUuid(),
+                'banned' => false,
+                'birth_date' => $user->getBirthdate() ? $user->getBirthdate()->format('Y-m-d') : null,
+                'country' => $user->getCountry(),
+                'created' => $user->getCreated() ? $user->getCreated()->format('Y-m-d H:i:s') : $dt->format('Y-m-d H:i:s'),
                 'creation_ip_address' => $user->getIpAddress(),
-                'custom_avatar'       => false,
-                'first_name'          => $user->getFirstName(),
-                'last_name'           => $user->getLastName(),
-                'last_updated'        => $user->getUpdated() ? $user->getUpdated()->format('Y-m-d H:i:s') : $dt->format('Y-m-d H:i:s'),
-                'state'               => $user->getState(),
-                'banned'              => $user->getExpired(),
-                'suspended_until'     => $user->getExpiredUntil() ? $user->getExpiredUntil()->format('Y-m-d H:i:s') : null,
+                'custom_avatar' => false,
+                'first_name' => $user->getFirstName(),
+                'last_name' => $user->getLastName(),
+                'last_updated' => $user->getUpdated() ? $user->getUpdated()->format('Y-m-d H:i:s') : $dt->format('Y-m-d H:i:s'),
+                'state' => $user->getState(),
+                'banned' => $user->getExpired(),
+                'suspended_until' => $user->getExpiredUntil() ? $user->getExpiredUntil()->format('Y-m-d H:i:s') : null,
             ),
         );
 
@@ -236,9 +239,9 @@ class ApiManager
 
     public function banUser($user)
     {
-        $path           = 'users/'.$user->getUuid();
+        $path = 'users/' . $user->getUuid();
         $postParameters = array(
-            'action'   => 'ban',
+            'action' => 'ban',
         );
 
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
@@ -253,9 +256,9 @@ class ApiManager
 
     public function unbanUser($user)
     {
-        $path           = 'users/'.$user->getUuid();
+        $path = 'users/' . $user->getUuid();
         $postParameters = array(
-            'action'   => 'unban',
+            'action' => 'unban',
         );
 
         $result = $this->makeRequest($path, 'POST', array('post' => $postParameters));
@@ -268,11 +271,11 @@ class ApiManager
         return $success;
     }
 
-    public function getUserList($offset=0, $limit=100, $sortMethod='created', $since=null)
+    public function getUserList($offset = 0, $limit = 100, $sortMethod = 'created', $since = null)
     {
         $getParameters = array(
-            'limit'   => $limit,
-            'offset'  => $offset,
+            'limit' => $limit,
+            'offset' => $offset,
             'orderby' => 'created',
         );
 
@@ -280,23 +283,22 @@ class ApiManager
             $getParameters['since'] = $since->format('Y-m-d');
         }
 
-        $path   = 'users';
+        $path = 'users';
         $result = $this->makeRequest($path, 'GET', array('get' => $getParameters));
 
         return $result ?: array();
     }
 
-    private function makeRequest($relativeUrl, $method='GET', $parameters = array())
+    private function makeRequest($relativeUrl, $method = 'GET', $parameters = array())
     {
-        $getParameters  = isset($parameters['get']) ? $parameters['get'] : array();
+        $getParameters = isset($parameters['get']) ? $parameters['get'] : array();
         $postParameters = isset($parameters['post']) ? $parameters['post'] : array();
 
         $url = $this->getSignedUrl($relativeUrl, $getParameters);
 
         $curl2 = curl_init();
 
-        if (strtolower($method) == "post")
-        {
+        if (strtolower($method) == "post") {
             if (is_array($postParameters)) {
                 $parameters = json_encode($postParameters);
 
@@ -304,8 +306,8 @@ class ApiManager
                 curl_setopt($curl2, CURLOPT_POSTFIELDS, $parameters);
 
                 curl_setopt($curl2, CURLOPT_HTTPHEADER, array(
-                    'Content-Type: application/json',
-                    'Content-Length: ' . strlen($parameters))
+                        'Content-Type: application/json',
+                        'Content-Length: ' . strlen($parameters))
                 );
             }
         }
@@ -316,7 +318,7 @@ class ApiManager
 
         curl_setopt($curl2, CURLOPT_URL, $url);
         curl_setopt($curl2, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl2, CURLOPT_CAINFO, __DIR__.'/../../../../external_data/ssl/RapidSSL.pem');
+        curl_setopt($curl2, CURLOPT_CAINFO, __DIR__ . '/../../../../external_data/ssl/RapidSSL.pem');
 
         $result = curl_exec($curl2);
 

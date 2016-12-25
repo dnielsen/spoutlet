@@ -13,6 +13,9 @@
             {{ form_errors(form) }}
 
             {{ form_row(form.reportTypes) }}
+            <p class="help">
+                Please be aware that running certain reports may take a long time depending on what is being asked for.
+            </p>
             {{ form_row(form.fromDate) }}
             {{ form_row(form.thruDate) }}
             {{ form_row(form.sites) }}

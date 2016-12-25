@@ -23,7 +23,7 @@ class Gallary
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", inversedBy="avatars")
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", inversedBy="gallarys")
      * @ORM\JoinColumn(onDelete="SET NULL")
      **/
     protected $user;

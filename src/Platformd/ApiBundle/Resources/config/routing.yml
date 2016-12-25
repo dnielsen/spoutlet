@@ -1,4 +1,3 @@
-
 api_group:
     pattern:    /groups/{groupId}
     defaults:   { _controller: ApiBundle:Api:group }

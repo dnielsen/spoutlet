@@ -30,10 +30,10 @@ class ApiSessionListener
     {
         $this->securityContext = $securityContext;
         $this->sessionStrategy = $sessionStrategy;
-        $this->apiManager      = $apiManager;
-        $this->apiAuth         = $apiAuth;
-        $this->userManager     = $userManager;
-        $this->firewallName    = $firewallName;
+        $this->apiManager = $apiManager;
+        $this->apiAuth = $apiAuth;
+        $this->userManager = $userManager;
+        $this->firewallName = $firewallName;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -83,7 +83,7 @@ class ApiSessionListener
                 return;
             }
 
-            $suspendedUntil     = $response['data']['user']['suspended_until'] ? new \DateTime($response['data']['user']['suspended_until']) : null;
+            $suspendedUntil = $response['data']['user']['suspended_until'] ? new \DateTime($response['data']['user']['suspended_until']) : null;
             $currentlySuspended = $suspendedUntil ? ($suspendedUntil > new \DateTime()) : false;
 
             if ($response['data']['user']['banned'] || $currentlySuspended) {

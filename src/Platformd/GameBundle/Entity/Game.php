@@ -7,6 +7,7 @@ use Platformd\MediaBundle\Entity\Media;
 use Gedmo\Sluggable\Util\Urlizer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Context\LegacyExecutionContext;
 use Symfony\Component\Validator\ExecutionContext;
 
 /**
@@ -276,7 +277,7 @@ class Game
      *
      * @param \Symfony\Component\Validator\ExecutionContext $executionContext
      */
-    public function validateGameCategory(ExecutionContext $executionContext)
+    public function validateGameCategory(LegacyExecutionContext $executionContext)
     {
         // error if invalid or no category is specified
 
@@ -285,12 +286,9 @@ class Game
         }
 
         $propertyPath = $executionContext->getPropertyPath() . '.category';
-        $executionContext->setPropertyPath($propertyPath);
 
-        $executionContext->addViolation(
-            "Please select a valid category for this game",
-            array(),
-            "category"
-        );
+        $executionContext->buildViolation("Please select a valid category for this game")
+            ->atPath($propertyPath)
+            ->addViolation();
     }
 }

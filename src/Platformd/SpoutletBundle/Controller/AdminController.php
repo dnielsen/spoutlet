@@ -28,7 +28,7 @@ class AdminController extends Controller
         $form   = $this->createForm(new MediaType(), $media);
 
         if($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if($form->isValid()) {
 
@@ -65,7 +65,7 @@ class AdminController extends Controller
         $emailCount = null;
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 

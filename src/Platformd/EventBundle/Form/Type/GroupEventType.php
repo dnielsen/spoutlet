@@ -2,11 +2,9 @@
 
 namespace Platformd\EventBundle\Form\Type;
 
-use Symfony\Component\Form\FormBuilder,
-    Symfony\Component\Security\Core\SecurityContextInterface
-;
-
+use Symfony\Component\Security\Core\SecurityContextInterface;
 use Platformd\EventBundle\Form\EventSubscriber\AdminGroupEventSubscriber as EventSubscriber;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class GroupEventType extends EventType
 {
@@ -17,11 +15,11 @@ class GroupEventType extends EventType
     {
         parent::__construct($security);
 
-        $this->eventSubscriber  = $eventSubscriber;
-        $this->tagManager       = $tagManager;
+        $this->eventSubscriber = $eventSubscriber;
+        $this->tagManager = $tagManager;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
 
@@ -33,11 +31,10 @@ class GroupEventType extends EventType
             'label' => 'platformd.event.form.private_public',
             'expanded' => true
         ))
-        ->add('timezone', 'gmtTimezone', array(
-            'label' => 'platformd.event.form.timezone',
-            'full' => true,
-        ))
-        ;
+            ->add('timezone', 'gmtTimezone', array(
+                'label' => 'platformd.event.form.timezone',
+                'full' => true,
+            ));
 
         $builder->add('tags', 'text', array(
             'label' => 'platformd.event.form.tags',
@@ -45,8 +42,7 @@ class GroupEventType extends EventType
             'property_path' => false,
             'data' => $builder->getData() ? $this->tagManager->getConcatenatedTagNames($builder->getData()) : null,
             'required' => false,
-        ))
-        ;
+        ));
 
         // Needed to show fields only to admins
         $adminEventSubscriber = new $this->eventSubscriber($builder->getFormFactory(), $this->security);

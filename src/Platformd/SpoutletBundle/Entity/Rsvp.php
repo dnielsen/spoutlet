@@ -5,9 +5,9 @@ namespace Platformd\SpoutletBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\HttpFoundation\File\File;
 use Gedmo\Sluggable\Util\Urlizer;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
+use Symfony\Component\Validator\Context\LegacyExecutionContext;
 use Symfony\Component\Validator\ExecutionContext;
 
 /**
@@ -256,17 +256,14 @@ class Rsvp implements LinkableInterface
         $this->successMessage = $value;
     }
 
-    public function validateCodeUpload(ExecutionContext $executionContext)
+    public function validateCodeUpload(LegacyExecutionContext $executionContext)
     {
         if ($this->getCodes() === false) {
             $oldPath = $executionContext->getPropertyPath();
-            $executionContext->setPropertyPath($oldPath.'.codes');
 
-            $executionContext->addViolation(
-                "You must upload your codes in CSV format.",
-                array(),
-                "codes"
-            );
+            $executionContext->addViolation('You must upload your codes in CSV format.')
+                ->atPath($oldPath.'.codes')
+                ->addVioladtion();
 
             $executionContext->setPropertyPath($oldPath);
 

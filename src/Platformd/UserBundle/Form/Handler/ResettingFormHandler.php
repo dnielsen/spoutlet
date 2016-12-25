@@ -2,18 +2,18 @@
 
 namespace Platformd\UserBundle\Form\Handler;
 
+use FOS\UserBundle\Form\Model\ChangePassword;
 use FOS\UserBundle\Model\UserInterface;
-use FOS\UserBundle\Form\Model\ResetPassword;
 use FOS\UserBundle\Form\Handler\ResettingFormHandler as BaseHandler;
 
 class ResettingFormHandler extends BaseHandler
 {
     public function process(UserInterface $user)
     {
-        $this->form->setData(new ResetPassword());
+        $this->form->setData(new ChangePassword());
 
         if ('POST' === $this->request->getMethod()) {
-            $this->form->bindRequest($this->request);
+            $this->form->handleRequest($this->request);
 
             if ($this->form->isValid()) {
                 return $this->onSuccess($user);

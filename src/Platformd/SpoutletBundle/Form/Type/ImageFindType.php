@@ -2,17 +2,12 @@
 
 namespace Platformd\SpoutletBundle\Form\Type;
 
-use Platformd\SpoutletBundle\Entity\GalleryMedia;
-use Platformd\SpoutletBundle\Entity\Gallery;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\FormInterface;
-
+use Symfony\Component\Form\FormBuilderInterface;
 
 class ImageFindType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('title', 'text', array(
@@ -44,7 +39,6 @@ class ImageFindType extends AbstractType
             ))
             ->add('startDate', 'date', array(
                 'label' => 'Upload Start Date:',
-                'property_path' => false,
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'attr'   => array(
@@ -53,7 +47,6 @@ class ImageFindType extends AbstractType
             ))
             ->add('endDate', 'date', array(
                 'label' => 'Upload End Date:',
-                'property_path' => false,
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'attr'   => array(

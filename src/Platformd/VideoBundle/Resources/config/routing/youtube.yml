@@ -44,13 +44,6 @@ youtube_vote:
         _format: json
         _method: POST
 
-youtube_vote:
-    pattern:  /vote
-    defaults: { _controller: "VideoBundle:Youtube:vote" }
-    requirements:
-        _format: json
-        _method: POST
-
 youtube_feed:
     pattern: /feed
     defaults: { _controller: "VideoBundle:Youtube:feed" }

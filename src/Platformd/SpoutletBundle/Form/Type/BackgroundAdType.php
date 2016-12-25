@@ -2,9 +2,11 @@
 
 namespace Platformd\SpoutletBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Platformd\MediaBundle\Form\Type\MediaType;
+use Platformd\SpoutletBundle\Entity\Site;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class BackgroundAdType extends AbstractType
 {
@@ -15,7 +17,7 @@ class BackgroundAdType extends AbstractType
         $this->isNew = $isNew;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('title')
@@ -26,52 +28,49 @@ class BackgroundAdType extends AbstractType
                 ),
                 'label' => 'Status',
             ))
-            ->add('sites', 'entity', array(
-                'class' => 'SpoutletBundle:Site',
-                'expanded' => true,
-                'multiple' => true,
-                'property' => 'name',
-            ))
+//            ->add('sites', 'entity', array(
+//                'class' => Site::class,
+//                'expanded' => true,
+//                'multiple' => true,
+//                'property' => 'name',
+//            ))
             ->add('adSites', 'collection', array(
-                'type' => new BackgroundAdSiteType,
+                'type' => new BackgroundAdSiteType(),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
             ))
-             ->add('file', new MediaType(), array(
+            ->add('file', new MediaType(), array(
                 'image_label' => 'Image',
-                'image_help'  => 'Recommended width: 2000px with the center being 970 pixels wide and pure black.',
+                'image_help' => 'Recommended width: 2000px with the center being 970 pixels wide and pure black.',
                 'with_remove_checkbox' => true,
             ))
             ->add('dateStart', 'datetime', array(
                 'label' => 'Start date',
                 'widget' => 'single_text',
-                'attr'   => array(
+                'attr' => array(
                     'class' => 'datetime-picker',
                 )
             ))
             ->add('dateEnd', 'datetime', array(
                 'label' => 'End date',
                 'widget' => 'single_text',
-                'attr'   => array(
+                'attr' => array(
                     'class' => 'datetime-picker',
                 )
             ))
-            ->add('timezone', 'timezone', array(
-                'help' => 'Set the timezone that the start/end times are in.',
-            ))
-        ;
+            ->add('timezone', 'timezone');
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults([
+            'validation_groups' => $this->isNew ? array('Default', 'New') : array('Default'),
+        ]);
     }
 
     public function getName()
     {
         return 'admin_background_ad';
-    }
-
-    public function getDefaultOptions(array $options)
-    {
-        return array(
-            'validation_groups' => $this->isNew ? array('Default', 'New') : array('Default'),
-        );
     }
 }

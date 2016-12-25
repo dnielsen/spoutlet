@@ -2,9 +2,7 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
-use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\SpoutletBundle\Entity\Rsvp;
-use Platformd\SpoutletBundle\Entity\RsvpCode;
 use Platformd\SpoutletBundle\Form\Type\RsvpType;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
@@ -29,7 +27,7 @@ class RsvpAdminController extends Controller
         $form = $this->createForm(new RsvpType, new Rsvp);
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->save($form->getData());
@@ -52,7 +50,7 @@ class RsvpAdminController extends Controller
         $form = $this->createForm(new RsvpType, $rsvp);
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 

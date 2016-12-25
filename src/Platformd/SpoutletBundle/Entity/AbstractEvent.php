@@ -2,22 +2,16 @@
 
 namespace Platformd\SpoutletBundle\Entity;
 
-use Platformd\UserBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-
-use Doctrine\Common\Collections\Collection,
-    Doctrine\Common\Collections\ArrayCollection;
-
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use DateTime;
-use DateTimezone;
 use Symfony\Component\HttpFoundation\File\File;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Sluggable\Util\Urlizer;
 use Platformd\SpoutletBundle\Validator\AbstractEventUniqueSlug as AssertUniqueSlug;
 use Platformd\GameBundle\Entity\Game as Game;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
-use Platformd\GroupBundle\Entity\Group;
 
 /**
  * We create a unique index on the slug-discr-site combination
@@ -104,7 +98,7 @@ abstract class AbstractEvent implements LinkableInterface
     protected $published = false;
 
     /**
-     * @ORM\Column(name="hidden", type="boolean", nullable="true")
+     * @ORM\Column(name="hidden", type="boolean", nullable=true)
      */
     protected $hidden = false;
 
@@ -118,7 +112,7 @@ abstract class AbstractEvent implements LinkableInterface
     /**
      * @var string $locale
      *
-     * @ORM\Column(name="locale", type="string", length="10", nullable=true)
+     * @ORM\Column(name="locale", type="string", length=10, nullable=true)
      */
     protected $locale;
 
@@ -205,7 +199,7 @@ abstract class AbstractEvent implements LinkableInterface
     /**
      * @Assert\Url
      * @var string
-     * @ORM\Column(name="external_url", length="255", nullable=true)
+     * @ORM\Column(name="external_url", length=255, nullable=true)
      */
     private $externalUrl;
 
@@ -223,7 +217,7 @@ abstract class AbstractEvent implements LinkableInterface
     private $ruleset;
 
     /**
-     * @ORM\Column(name="sitified_at", type="datetime", nullable="true")
+     * @ORM\Column(name="sitified_at", type="datetime", nullable=true)
      */
     protected $sitifiedAt;
 

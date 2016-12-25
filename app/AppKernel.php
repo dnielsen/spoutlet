@@ -7,25 +7,27 @@ class AppKernel extends Kernel
 {
     public function registerBundles()
     {
-        $bundles = array(
+        $bundles = [
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
-            new Symfony\Bundle\DoctrineBundle\DoctrineBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
+            new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
 
             // third part bundles
-            new FOS\UserBundle\FOSUserBundle(),
+            new JMS\AopBundle\JMSAopBundle($this),
+            new JMS\SecurityExtraBundle\JMSSecurityExtraBundle(),
             new JMS\I18nRoutingBundle\JMSI18nRoutingBundle(),
+            new JMS\TranslationBundle\JMSTranslationBundle(),
+
+            new FOS\UserBundle\FOSUserBundle(),
             new EWZ\Bundle\RecaptchaBundle\EWZRecaptchaBundle(),
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
-            new Symfony\Bundle\DoctrineMigrationsBundle\DoctrineMigrationsBundle(),
-            new JMS\TranslationBundle\JMSTranslationBundle(),
+            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Liip\ImagineBundle\LiipImagineBundle(),
             new Liip\ThemeBundle\LiipThemeBundle(),
             new Cybernox\AmazonWebServicesBundle\CybernoxAmazonWebServicesBundle(),
@@ -58,24 +60,25 @@ class AppKernel extends Kernel
             new Platformd\TagBundle\TagBundle(),
             new Platformd\IdeaBundle\IdeaBundle(),
             new Platformd\ApiBundle\ApiBundle(),
-        );
+        ];
 
-        if (in_array($this->getEnvironment(), array('dev', 'test'))) {
+        if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
             $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
             $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
-            $bundles[] = new Symfony\Bundle\DoctrineFixturesBundle\DoctrineFixturesBundle();
+            $bundles[] = new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle();
+            $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
         }
 
         if ('test' === $this->getEnvironment()) {
             // don't autoload Symfony2 classes, as they are
             // already loaded by the Symfony2 itself
-            if (!defined('BEHAT_AUTOLOAD_SF2')) define('BEHAT_AUTOLOAD_SF2', false);
-            require_once 'behat/autoload.php';
-            require_once 'mink/autoload.php';
+//            if (!defined('BEHAT_AUTOLOAD_SF2')) define('BEHAT_AUTOLOAD_SF2', false);
+//            require_once 'behat/autoload.php';
+//            require_once 'mink/autoload.php';
 
-            $bundles[] = new Behat\BehatBundle\BehatBundle();
-            $bundles[] = new Behat\MinkBundle\MinkBundle();
+//            $bundles[] = new Behat\BehatBundle\BehatBundle(); //Check
+//            $bundles[] = new Behat\MinkBundle\MinkBundle();
         }
 
         return $bundles;

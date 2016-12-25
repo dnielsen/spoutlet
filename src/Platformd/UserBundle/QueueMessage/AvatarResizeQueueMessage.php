@@ -14,11 +14,13 @@ class AvatarResizeQueueMessage extends SqsMessageBase
     public $x;
     public $y;
 
-    public function __toString() {
-        return 'AvatarResizeQueueMessage => { User = "'.$this->userUuid.'", File UUID = "'.$this->fileUuid.'", Extension = "'.$this->extension.'" }';
+    public function __toString()
+    {
+        return 'AvatarResizeQueueMessage => { User = "' . $this->userUuid . '", File UUID = "' . $this->fileUuid . '", Extension = "' . $this->extension . '" }';
     }
 
-    public function getQueueName() {
+    public function getQueueName()
+    {
         return 'AVATAR_RESIZE';
     }
 }

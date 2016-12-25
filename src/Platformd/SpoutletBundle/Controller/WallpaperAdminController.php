@@ -106,7 +106,7 @@ class WallpaperAdminController extends Controller
 
         if ($request->getMethod() == 'POST') {
 
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 /** @var $wallpaper \Platformd\SpoutletBundle\Entity\Wallpaper */

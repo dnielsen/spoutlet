@@ -1,6 +1,5 @@
 var map;
 var markersArray = [];
-var infoArray = [];
 
 function initialize() {
 
@@ -9,7 +8,7 @@ function initialize() {
 
     if (mapCanvas) {
         var suggestedZoom = mapCanvas.getAttribute('data-zoom');
-        if (suggestedZoom != null){
+        if (suggestedZoom != null) {
             zoomLevel = parseInt(suggestedZoom);
         }
     }
@@ -27,7 +26,7 @@ function initialize() {
 
     autocomplete.bindTo('bounds', map);
 
-    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+    google.maps.event.addListener(autocomplete, 'place_changed', function () {
         input.className = '';
         var place = autocomplete.getPlace();
         if (!place.geometry) {
@@ -49,7 +48,7 @@ function initialize() {
 
         var infowindow = new google.maps.InfoWindow();
 
-        for (i=0; i<groupsArray.length; i++) {
+        for (var i = 0; i < groupsArray.length; i++) {
 
             var contentString = '<div class="map-info">' +
                 '<div class="map-info-title"><a href="' + groupsArray[i]['url'] + '">' + groupsArray[i]['name'] + '</a></div>' +
@@ -60,7 +59,7 @@ function initialize() {
                 '</div>';
 
             var marker = new google.maps.Marker({
-                position: new google.maps.LatLng (groupsArray[i]['lat'], groupsArray[i]['long']),
+                position: new google.maps.LatLng(groupsArray[i]['lat'], groupsArray[i]['long']),
                 title: groupsArray[i]['name'],
                 map: map,
                 info: contentString
@@ -68,7 +67,7 @@ function initialize() {
 
             markersArray.push(marker);
 
-            google.maps.event.addListener(marker, 'click', function() {
+            google.maps.event.addListener(marker, 'click', function () {
                 infowindow.setContent(this.info);
                 infowindow.open(map, this);
             });

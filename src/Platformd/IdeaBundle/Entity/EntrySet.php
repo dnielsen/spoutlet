@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: gimballock
- * Date: 12/3/13
- * Time: 11:17 AM
- */
 
 namespace Platformd\IdeaBundle\Entity;
 
@@ -48,17 +42,17 @@ class EntrySet implements LinkableInterface {
     protected $creator;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySetRegistry", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="Platformd\IdeaBundle\Entity\EntrySetRegistry", inversedBy="entrySets")
      */
     protected $entrySetRegistration;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable="true")
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $type;
 
     /**
-     * @ORM\Column(type="text", nullable="true")
+     * @ORM\Column(type="text", nullable=true)
      */
     protected $description;
 
@@ -78,7 +72,7 @@ class EntrySet implements LinkableInterface {
     protected $isSubmissionActive;
 
     /**
-     * @ORM\Column(type="string", nullable="true", length=5000)
+     * @ORM\Column(type="string", nullable=true, length=5000)
      */
     protected $allowedVoters;
 

@@ -9,9 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity()
  * @ORM\Table(name="registration_field")
  */
-class RegistrationField {
+class RegistrationField
+{
 
-    const TYPE_TEXT     = 'text';
+    const TYPE_TEXT = 'text';
     const TYPE_CHECKBOX = 'checkbox';
 
     /**
@@ -47,11 +48,11 @@ class RegistrationField {
     protected $answers;
 
 
-    public function __construct($question=null, $type=self::TYPE_TEXT)
+    public function __construct($question = null, $type = self::TYPE_TEXT)
     {
-        $this->type     = $type;
+        $this->type = $type;
         $this->question = $question;
-        $this->answers  = new ArrayCollection();
+        $this->answers = new ArrayCollection();
     }
 
     public function getId()
@@ -111,6 +112,7 @@ class RegistrationField {
     {
         $this->type = $type;
     }
+
     public function getType()
     {
         return $this->type;

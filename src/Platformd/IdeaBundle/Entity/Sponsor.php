@@ -15,8 +15,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity(repositoryClass="Platformd\IdeaBundle\Entity\SponsorRepository")
  * @ORM\Table(name="sponsor")
  */
-class Sponsor {
-
+class Sponsor
+{
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -39,7 +39,7 @@ class Sponsor {
     protected $url;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", inversedBy="sponsors")
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
      */
     protected $creator;
 
@@ -73,6 +73,7 @@ class Sponsor {
     {
         $this->department = $department;
     }
+
     public function getDepartment()
     {
         return $this->department;
@@ -82,6 +83,7 @@ class Sponsor {
     {
         $this->sponsorRegistrations->add($sponsorRegistration);
     }
+
     public function getSponsorRegistrations()
     {
         return $this->sponsorRegistrations;
@@ -100,9 +102,9 @@ class Sponsor {
         $sponsorRegistrations = $this->sponsorRegistrations;
 
         $groups = array();
-        foreach ($sponsorRegistrations as $reg){
+        foreach ($sponsorRegistrations as $reg) {
             $group = $reg->getGroup();
-            if ($group){
+            if ($group) {
                 $groups[] = $group;
             }
         }
@@ -110,7 +112,8 @@ class Sponsor {
         return $groups;
     }
 
-    public function getLevel($scope, $containerId) {
+    public function getLevel($scope, $containerId)
+    {
         foreach ($this->sponsorRegistrations as $reg) {
             if ($scope == 'group' && $group = $reg->getGroup()) {
                 if ($group->getId() == $containerId) {
@@ -130,9 +133,9 @@ class Sponsor {
         $sponsorRegistrations = $this->sponsorRegistrations;
 
         $events = array();
-        foreach ($sponsorRegistrations as $reg){
+        foreach ($sponsorRegistrations as $reg) {
             $event = $reg->getEvent();
-            if ($event){
+            if ($event) {
                 $events[] = $event;
             }
         }
@@ -144,6 +147,7 @@ class Sponsor {
     {
         $this->creator = $creator;
     }
+
     public function getCreator()
     {
         return $this->creator;
@@ -153,6 +157,7 @@ class Sponsor {
     {
         $this->image = $image;
     }
+
     public function getImage()
     {
         return $this->image;
@@ -162,6 +167,7 @@ class Sponsor {
     {
         $this->name = $name;
     }
+
     public function getName()
     {
         return $this->name;
@@ -171,6 +177,7 @@ class Sponsor {
     {
         $this->url = $url;
     }
+
     public function getUrl()
     {
         return $this->url;

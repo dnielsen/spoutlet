@@ -48,7 +48,7 @@ class ApiManager
      */
     private $userId;
 
-    public function __construct(ContainerInterface $container, CEVOAuthManager $authManager , $debug = false)
+    public function __construct(ContainerInterface $container, CEVOAuthManager $authManager, $debug = false)
     {
         $this->container = $container;
         $this->authManager = $authManager;
@@ -166,7 +166,7 @@ class ApiManager
     {
         $sessionId = '';
 
-        if(isset($_COOKIE['aw_session'])) {
+        if (isset($_COOKIE['aw_session'])) {
             $parts = explode('$', $_COOKIE['aw_session']);
             $sessionId = $parts[1];
         }
@@ -178,7 +178,7 @@ class ApiManager
     {
         $userId = '';
 
-        if(isset($_COOKIE['aw_session'])) {
+        if (isset($_COOKIE['aw_session'])) {
             $parts = explode('$', $_COOKIE['aw_session']);
             $userId = $parts[0];
         }
@@ -194,7 +194,7 @@ class ApiManager
      * @return mixed
      * @throws \LogicException
      */
-    private function makeRequest($action, array $params = array(), $useCevoAuth=false)
+    private function makeRequest($action, array $params = array(), $useCevoAuth = false)
     {
         $params['_method'] = $action;
         $params['_user_id'] = $useCevoAuth ? $this->getCevoUserId() : $this->getUserId();
@@ -218,7 +218,7 @@ class ApiManager
         // check for errors
         $info = curl_getinfo($ch);
         if (!$output || $info['http_code'] != 200) {
-            $this->logError(sprintf('Error making CURL request to CEVO at URL: '.$action));
+            $this->logError(sprintf('Error making CURL request to CEVO at URL: ' . $action));
 
             throw new ApiException(sprintf(
                 'Error with CEVO API. Status code: %s. Message: %s. URL: %s',
@@ -233,15 +233,15 @@ class ApiManager
         $jsonArr = json_decode($output, true);
 
         if ($jsonArr === false) {
-            throw new ApiException('Problem with CEVO API Response. Content: '.$output);
+            throw new ApiException('Problem with CEVO API Response. Content: ' . $output);
         }
 
         if (isset($jsonArr['error']) && $jsonArr['error']) {
-            throw new ApiException('API error. Valid response, but with error: '.$jsonArr['error']);
+            throw new ApiException('API error. Valid response, but with error: ' . $jsonArr['error']);
         }
 
         if (isset($jsonArr['api_err_msg']) && $jsonArr['api_err_msg']) {
-            throw new ApiException('API error. Valid response, but with error: '.$jsonArr['api_err_msg']);
+            throw new ApiException('API error. Valid response, but with error: ' . $jsonArr['api_err_msg']);
         }
 
         return $jsonArr;
@@ -272,7 +272,7 @@ class ApiManager
     {
         $uid = isset($user_id) ? $user_id : $this->getCevoUserId();
 
-        $response = $this->makeRequest('GiveUserXp', array('user'=>$uid, 'award'=>$award), true);
+        $response = $this->makeRequest('GiveUserXp', array('user' => $uid, 'award' => $award), true);
         return $response;
     }
 

@@ -65,7 +65,7 @@ class GlobalEventAdminController extends Controller
 
         $existingEvents         = $this->getGlobalEventService()->findAllOwnedEventsForUser($this->getUser());
         $importedGlobalEvent    = $this->getGlobalEventService()->findOneBy(array('id' => $request->get('existing_event_select')));
-        $tagManager             = $this->getTagManager();
+//        $tagManager             = $this->getTagManager();
 
         if ($importedGlobalEvent) {
             return $this->redirect($this->generateUrl('admin_events_new_import', array('id' => $importedGlobalEvent->getId())));
@@ -77,7 +77,7 @@ class GlobalEventAdminController extends Controller
         // TODO improve this
         $siteLocalesForTranslation = array('ja', 'zh', 'es');
         foreach ($siteLocalesForTranslation as $locale) {
-            $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
+            $site = $this->getDoctrine()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
             if ($site) {
                 $event->addTranslation(new GlobalEventTranslation($site));
             }
@@ -87,7 +87,7 @@ class GlobalEventAdminController extends Controller
 
         if($request->getMethod() == 'POST')
         {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if($form->isValid())
             {
@@ -151,7 +151,7 @@ class GlobalEventAdminController extends Controller
         $form = $this->createForm('globalEvent', $globalEvent);
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
@@ -193,7 +193,7 @@ class GlobalEventAdminController extends Controller
 
         if($request->getMethod() == 'POST')
         {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if($form->isValid())
             {
@@ -269,7 +269,7 @@ class GlobalEventAdminController extends Controller
 
         if ('POST' == $request->getMethod()) {
 
-            $form->bindRequest($request);
+            $form->handleRequest($request);
             if ($form->isValid()) {
 
                 $data = $form->getData();

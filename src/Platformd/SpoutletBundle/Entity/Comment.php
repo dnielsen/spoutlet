@@ -38,7 +38,7 @@ class Comment implements ReportableContentInterface
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Thread")
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\Thread", inversedBy="comments")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $thread;

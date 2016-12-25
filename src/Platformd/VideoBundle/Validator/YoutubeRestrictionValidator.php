@@ -26,7 +26,7 @@ class YoutubeRestrictionValidator extends ConstraintValidator
         $this->container    = $container;
     }
 
-    public function isValid($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint)
     {
         $ipAddress    = $this->container->get('request')->getClientIp(true);
         $clientLocale = $this->ipLookupUtil->getCountryCode($ipAddress);

@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityRepository;
  */
 class SiteRepository extends EntityRepository
 {
-    public function findOneByFullDomain($fullDomain=null)
+    public function findOneByFullDomain($fullDomain = null)
     {
         if ($fullDomain) {
             $site = $this->createQueryBuilder('s')

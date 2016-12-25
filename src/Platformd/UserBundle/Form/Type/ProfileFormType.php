@@ -2,13 +2,12 @@
 
 namespace Platformd\UserBundle\Form\Type;
 
-use Symfony\Component\Form\FormBuilder;
-
 use FOS\UserBundle\Form\Type\ProfileFormType as BaseProfileFormType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class ProfileFormType extends BaseProfileFormType
 {
-    protected function buildUserForm(FormBuilder $builder, array $options)
+    protected function buildUserForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildUserForm($builder, $options);
 

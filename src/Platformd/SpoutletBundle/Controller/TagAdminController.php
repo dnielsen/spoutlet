@@ -3,8 +3,6 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\TagBundle\Entity\Tag,
-    Platformd\TagBundle\Entity\Tagging,
-    Platformd\TagBundle\Model\TagManager,
     Platformd\SpoutletBundle\Form\Type\TagUploadType
 ;
 
@@ -25,7 +23,7 @@ class TagAdminController extends Controller
         $form = $this->createForm(new TagUploadType());
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
             $data = $form->getData();
             $attachment = $data['attachment'];
 

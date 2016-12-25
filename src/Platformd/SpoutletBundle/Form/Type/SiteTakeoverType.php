@@ -3,11 +3,11 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class SiteTakeoverType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('title')
@@ -36,7 +36,6 @@ class SiteTakeoverType extends AbstractType
             ))
             ->add('content', 'textarea', array(
                 'attr'  => array('class' => 'ckeditor'),#
-                'help'  => 'Press the "Source" button if you want to paste in HTML code directly. Please ensure that the code is valid.',
             ));
 
     }

@@ -3,11 +3,12 @@
 namespace Platformd\EventBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class EventFindType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('eventName', 'text', array(
@@ -53,16 +54,15 @@ class EventFindType extends AbstractType
             ));
     }
 
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
+        $resolver->setDefaults([
             'csrf_protection' => false,
-        );
+        ]);
     }
 
     public function getName()
     {
         return 'platformd_eventbundle_eventfindtype';
     }
-
 }

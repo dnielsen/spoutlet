@@ -3,8 +3,7 @@
 namespace Platformd\EventBundle\Repository;
 
 use Doctrine\ORM\EntityManager,
-    Doctrine\ORM\EntityRepository
-;
+    Doctrine\ORM\EntityRepository;
 
 use Platformd\EventBundle\Entity\Event;
 use Platformd\EventBundle\Repository\GroupEventRepository;
@@ -14,8 +13,7 @@ use Platformd\UserBundle\Entity\User;
 use DateTime;
 
 use Pagerfanta\Pagerfanta,
-    Pagerfanta\Adapter\DoctrineORMAdapter
-;
+    Pagerfanta\Adapter\DoctrineORMAdapter;
 
 class EventRepository extends EntityRepository
 {
@@ -51,8 +49,7 @@ class EventRepository extends EntityRepository
         $qb = $this->createQueryBuilder('e')
             ->select('e')
             ->where('e.user = :user')
-            ->setParameter('user', $user)
-        ;
+            ->setParameter('user', $user);
 
         return $qb->getQuery()->getResult();
     }
@@ -61,22 +58,22 @@ class EventRepository extends EntityRepository
     {
 
         # this is what i'd like to have...
-/*        '
-        SELECT
-            f0_.id AS id0,
-            f0_.username AS username1,
-            f0_.email AS email2,
-            SUM(CASE WHEN g1_.attendance = 'ATTENDING_YES' THEN 1 ELSE 0 END) `yes`,
-            SUM(CASE WHEN g1_.attendance = 'ATTENDING_NO' THEN 1 ELSE 0 END) `no`
-        FROM
-            global_event g2_
-        LEFT JOIN global_events_attendees g4_ ON g2_.id = g4_.globalevent_id
-        LEFT JOIN fos_user f3_ ON f3_.id = g4_.user_id
-        LEFT JOIN global_event_rsvp_actions g1_ ON g2_.id = g1_.event_id
-        LEFT JOIN fos_user f0_ ON g1_.user_id = f0_.id
-        WHERE
-            g2_.id = 1
-        HAVING `yes` > `no`'*/
+        /*        '
+                SELECT
+                    f0_.id AS id0,
+                    f0_.username AS username1,
+                    f0_.email AS email2,
+                    SUM(CASE WHEN g1_.attendance = 'ATTENDING_YES' THEN 1 ELSE 0 END) `yes`,
+                    SUM(CASE WHEN g1_.attendance = 'ATTENDING_NO' THEN 1 ELSE 0 END) `no`
+                FROM
+                    global_event g2_
+                LEFT JOIN global_events_attendees g4_ ON g2_.id = g4_.globalevent_id
+                LEFT JOIN fos_user f3_ ON f3_.id = g4_.user_id
+                LEFT JOIN global_event_rsvp_actions g1_ ON g2_.id = g1_.event_id
+                LEFT JOIN fos_user f0_ ON g1_.user_id = f0_.id
+                WHERE
+                    g2_.id = 1
+                HAVING `yes` > `no`'*/
 
         $ids = array(0);
 
@@ -246,8 +243,8 @@ class EventRepository extends EntityRepository
     {
         $daysOffset = abs((int)$days);
 
-        $startDateTime = new \DateTime('+ '.$daysOffset.' days');
-        $endDateTime = new \DateTime('+ '.$daysOffset.' days');
+        $startDateTime = new \DateTime('+ ' . $daysOffset . ' days');
+        $endDateTime = new \DateTime('+ ' . $daysOffset . ' days');
 
         $startDateTime->setTime(0, 0, 0);
         $endDateTime->setTime(23, 59, 59);
@@ -258,7 +255,7 @@ class EventRepository extends EntityRepository
             ->andWhere('e.published = 1')
             ->setParameters(array(
                 'start' => $startDateTime,
-                'end'   => $endDateTime,
+                'end' => $endDateTime,
             ));
 
         if ($this instanceof GroupEventRepository) {
@@ -282,8 +279,7 @@ class EventRepository extends EntityRepository
             ->setParameter('now', new DateTime())
             ->setParameter('published', $published)
             ->setParameter('site', $site)
-            ->setMaxResults($limit)
-        ;
+            ->setMaxResults($limit);
 
         if ($this instanceof GroupEventRepository) {
             $qb->andWhere('e.deleted = 0');

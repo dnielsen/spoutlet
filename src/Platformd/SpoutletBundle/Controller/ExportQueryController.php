@@ -2,20 +2,16 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
-use Platformd\SpoutletBundle\Model\ExportQueryManager;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class ExportQueryController extends Controller
 {
     public function reportsAction(Request $request)
     {
-        set_time_limit(0);
-
         $form = $this->createForm('platformd_export_query_type');
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             $data   = $form->getData();
             $csv    = $this->getReportResults($data['reportTypes'], array(

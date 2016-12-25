@@ -17,8 +17,8 @@ class ApiUserProvider implements UserProviderInterface
 
     public function __construct($apiManager, EntityManager $em, $userManager)
     {
-        $this->apiManager  = $apiManager;
-        $this->em          = $em;
+        $this->apiManager = $apiManager;
+        $this->em = $em;
         $this->userManager = $userManager;
     }
 
@@ -37,10 +37,10 @@ class ApiUserProvider implements UserProviderInterface
             if ($record = $this->apiManager->getUserByUsernameOrEmail($usernameOrEmail)) {
                 if ($record['metaData']['status'] == 200) {
 
-                    $birthdate    = $record['data']['birth_date'] ? new \DateTime($record['data']['birth_date']) : null;
+                    $birthdate = $record['data']['birth_date'] ? new \DateTime($record['data']['birth_date']) : null;
                     $expiredUntil = $record['data']['suspended_until'] ? new \DateTime($record['data']['suspended_until']) : null;
-                    $created      = $record['data']['created'] ? new \DateTime($record['data']['created']) : null;
-                    $updated      = $record['data']['last_updated'] ? new \DateTime($record['data']['last_updated']) : null;
+                    $created = $record['data']['created'] ? new \DateTime($record['data']['created']) : null;
+                    $updated = $record['data']['last_updated'] ? new \DateTime($record['data']['last_updated']) : null;
 
                     // Set some fields
                     $user = new User();

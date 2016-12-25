@@ -3,33 +3,27 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Platformd\UserBundle\Entity\User;
 use Platformd\EventBundle\Service\GroupEventService;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Platformd\UserBundle\Form\Type\AccountSettingsType;
 use Platformd\UserBundle\Entity\Avatar;
 use Platformd\UserBundle\Form\Type\AvatarType;
 use Platformd\UserBundle\Exception\ApiRequestException;
 use Platformd\UserBundle\Form\Type\UnsubscribeFormType;
-use Platformd\SpoutletBundle\Form\Type\TradeshowCompleteRegType;
-use Symfony\Component\Form as Form;
-use DateTime;
 
 class AccountController extends Controller
 {
-	public function profileAction($username = null)
+    public function profileAction($username = null)
     {
-        $context = $this->get('security.context');
+        $authChecker = $this->get('security.authorization_checker');
 
         if ($username) {
             $manager = $this->get('fos_user.user_manager');
             if (!$user = $manager->findUserByUsername($username)) {
                 throw $this->createNotFoundException(sprintf('Unable to find an user with username "%s"', $username));
             }
-        } else if ($context->isGranted('IS_AUTHENTICATED_FULLY')) {
-            $user = $this->get('security.context')->getToken()->getUser();
+        } else if ($authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+            $user = $this->getUser();
         } else {
             throw $this->createNotFoundException();
         }
@@ -37,7 +31,6 @@ class AccountController extends Controller
         $localAuth = $this->container->getParameter('local_auth');
 
         if (!$localAuth) {
-
             $locale = $this->getLocale();
 
             switch ($locale) {
@@ -62,20 +55,20 @@ class AccountController extends Controller
                 $cevoUserId = $user->getUuid();
 
                 if ($cevoUserId && $cevoUserId > 0) {
-                    return $this->redirect(sprintf('http://www.alienwarearena.com/%s/member/%d', $subdomain , $cevoUserId));
+                    return $this->redirect(sprintf('http://www.alienwarearena.com/%s/member/%d', $subdomain, $cevoUserId));
                 }
             }
 
             return $this->redirect('http://www.alienwarearena.com/account/profile');
-        } else {
-            return $this->render('UserBundle:Profile:show.html.twig', array(
-                'user' => $user,
-            ));
         }
-	}
 
-	public function accountAction()
-	{
+        return $this->render('UserBundle:Profile:show.html.twig', array(
+            'user' => $user,
+        ));
+    }
+
+    public function accountAction()
+    {
         $this->checkSecurity();
 
         // we have a little, temporary message until around April 1st
@@ -84,13 +77,11 @@ class AccountController extends Controller
         $isItAprilYet = time() < 1333256400;
         $showSweepstakesMessage = ($isJapan && $isItAprilYet);
 
-
-
-		return $this->render('SpoutletBundle:Account:account.html.twig', array(
+        return $this->render('SpoutletBundle:Account:account.html.twig', array(
             'showSweepstakesMessage' => $showSweepstakesMessage,
             'cevoUserId' => $this->getUser()->getCevoUserId(),
         ));
-	}
+    }
 
     public function eventsAction()
     {
@@ -100,23 +91,23 @@ class AccountController extends Controller
         $groupEventService = $this->get('platformd_event.service.group_event');
         $globalEventService = $this->get('platformd_event.service.global_event');
 
-        $upcomingGroupEvents    = $groupEventService->findUpcomingEventsForUser($this->getUser());
-        $ownedGroupEvents       = $groupEventService->findUpcomingEventsForUser($this->getUser(), true);
-        $pastGroupEvents        = $groupEventService->findPastEventsForUser($this->getUser());
-        $pastOwnedGroupEvents   = $groupEventService->findPastEventsForUser($this->getUser(), true);
+        $upcomingGroupEvents = $groupEventService->findUpcomingEventsForUser($this->getUser());
+        $ownedGroupEvents = $groupEventService->findUpcomingEventsForUser($this->getUser(), true);
+        $pastGroupEvents = $groupEventService->findPastEventsForUser($this->getUser());
+        $pastOwnedGroupEvents = $groupEventService->findPastEventsForUser($this->getUser(), true);
 
-        $upcomingGlobalEvents   = $globalEventService->findUpcomingEventsForUser($this->getUser());
-        $ownedGlobalEvents      = $globalEventService->findUpcomingEventsForUser($this->getUser(), true);
-        $pastGlobalEvents       = $globalEventService->findPastEventsForUser($this->getUser());
-        $pastOwnedGlobalEvents  = $globalEventService->findPastEventsForUser($this->getUser(), true);
+        $upcomingGlobalEvents = $globalEventService->findUpcomingEventsForUser($this->getUser());
+        $ownedGlobalEvents = $globalEventService->findUpcomingEventsForUser($this->getUser(), true);
+        $pastGlobalEvents = $globalEventService->findPastEventsForUser($this->getUser());
+        $pastOwnedGlobalEvents = $globalEventService->findPastEventsForUser($this->getUser(), true);
 
-        $upcomingEvents     = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
-        $ownedEvents        = array_merge($ownedGroupEvents, $ownedGlobalEvents);
-        $pastEvents         = array_merge($pastGroupEvents, $pastGlobalEvents);
-        $pastOwnedEvents    = array_merge($pastOwnedGroupEvents, $pastOwnedGlobalEvents);
+        $upcomingEvents = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
+        $ownedEvents = array_merge($ownedGroupEvents, $ownedGlobalEvents);
+        $pastEvents = array_merge($pastGroupEvents, $pastGlobalEvents);
+        $pastOwnedEvents = array_merge($pastOwnedGroupEvents, $pastOwnedGlobalEvents);
 
-        $recommendations = $this->getDoctrine()->getRepository('IdeaBundle:EventRecommendation')->findBy(array('user'=>$this->getCurrentUser()->getId(),
-                                                                                                               'dismissed'=>false));
+        $recommendations = $this->getDoctrine()->getRepository('IdeaBundle:EventRecommendation')->findBy(array('user' => $this->getCurrentUser()->getId(),
+            'dismissed' => false));
 
         $watchedEvents = $this->getCurrentUser()->getWatchedEvents()->toArray();
 
@@ -124,7 +115,7 @@ class AccountController extends Controller
             $event = $watch->getEvent();
 
             // don't bother showing watched past events
-            if ($event->getStartsAt() < new DateTime()) {
+            if ($event->getStartsAt() < new \DateTime()) {
                 continue;
             }
 
@@ -139,22 +130,24 @@ class AccountController extends Controller
         uasort($pastOwnedEvents, array($this, 'eventCompare'));
 
         return $this->render('SpoutletBundle:Account:events.html.twig', array(
-            'events'            => $upcomingEvents,
-            'ownedEvents'       => $ownedEvents,
-            'pastEvents'        => $pastEvents,
-            'pastOwnedEvents'   => $pastOwnedEvents,
-            'recommendations'   => $recommendations,
+            'events' => $upcomingEvents,
+            'ownedEvents' => $ownedEvents,
+            'pastEvents' => $pastEvents,
+            'pastOwnedEvents' => $pastOwnedEvents,
+            'recommendations' => $recommendations,
         ));
     }
 
-    private function eventCompare($a, $b) {
+    private function eventCompare($a, $b)
+    {
         if ($a->getStartsAt() == $b->getStartsAt()) {
             return 0;
         }
         return ($a->getStartsAt() < $b->getStartsAt()) ? -1 : 1;
     }
 
-    private function groupCompare($a, $b) {
+    private function groupCompare($a, $b)
+    {
         return strcmp($a->getName(), $b->getName());
     }
 
@@ -171,15 +164,14 @@ class AccountController extends Controller
 
         $keyRequests = $this->container
             ->get('pd_giveaway.giveaway_manager')
-            ->getGiveawayKeyRequestsForUser($this->getUser())
-        ;
+            ->getGiveawayKeyRequestsForUser($this->getUser());
 
         $i = 0;
 
         foreach ($keyRequests as $request) {
             $combinedKeys[$i]['type'] = 'keyRequest';
             $combinedKeys[$i]['name'] = $request->getGiveaway()->getName();
-            $combinedKeys[$i]['key']  = $request;
+            $combinedKeys[$i]['key'] = $request;
             $i++;
         }
 
@@ -189,11 +181,11 @@ class AccountController extends Controller
         foreach ($assignedCodes as $assignedCode) {
             $combinedKeys[$i]['type'] = 'assignedCode';
             $combinedKeys[$i]['name'] = $assignedCode->getAssignment()->getName();
-            $combinedKeys[$i]['key']  = $assignedCode;
+            $combinedKeys[$i]['key'] = $assignedCode;
             $i++;
         }
 
-        usort($combinedKeys, function($a, $b) {
+        usort($combinedKeys, function ($a, $b) {
             return $a['name'] < $b['name'] ? -1 : 1;
         });
 
@@ -214,8 +206,7 @@ class AccountController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         $dealCodes = $em->getRepository('GiveawayBundle:DealCode')
-            ->getUserAssignedCodes($this->getUser())
-        ;
+            ->getUserAssignedCodes($this->getUser());
 
         return $this->render('SpoutletBundle:Account:deals.html.twig', array(
             'dealCodes' => $dealCodes,
@@ -229,11 +220,11 @@ class AccountController extends Controller
         $doc = $this->getDoctrine();
 
         $groupRepo = $doc->getRepository('GroupBundle:Group');
-        $recRepo   = $doc->getRepository('IdeaBundle:GroupRecommendation');
+        $recRepo = $doc->getRepository('IdeaBundle:GroupRecommendation');
 
-        $watchedGroups   = $this->getCurrentUser()->getWatchedGroups();
-        $joinedGroups    = $groupRepo->getAllGroupsForUserAndSite($this->getUser(), $this->getCurrentSite());
-        $recommendations = $recRepo->findBy(array('user'=>$this->getCurrentUser()->getId(), 'dismissed'=>false));
+        $watchedGroups = $this->getCurrentUser()->getWatchedGroups();
+        $joinedGroups = $groupRepo->getAllGroupsForUserAndSite($this->getUser(), $this->getCurrentSite());
+        $recommendations = $recRepo->findBy(array('user' => $this->getCurrentUser()->getId(), 'dismissed' => false));
 
         $groups = array_merge($joinedGroups, $watchedGroups);
         usort($groups, array($this, 'groupCompare'));
@@ -252,51 +243,44 @@ class AccountController extends Controller
         return $this->render('SpoutletBundle:Account:groups.html.twig', array(
             'groupsAndEvents' => $groupsAndWatchedEvents,
             'recommendations' => $recommendations,
-            'action'          => $action,
+            'action' => $action,
         ));
     }
 
-    public function photosAction($filter='all')
+    public function photosAction($filter = 'all')
     {
         $this->checkSecurity();
 
         $em = $this->getDoctrine()->getEntityManager();
 
         $galleries = $em->getRepository('SpoutletBundle:Gallery')
-                ->findAllGalleriesByCategoryForSite($this->getCurrentSite())
-            ;
+            ->findAllGalleriesByCategoryForSite($this->getCurrentSite());
 
-        switch($filter)
-        {
+        switch ($filter) {
             case 'all':
                 $images = $em->getRepository('SpoutletBundle:GalleryMedia')
-                    ->findAllPublishedByUserNewestFirst($this->getUser())
-                ;
+                    ->findAllPublishedByUserNewestFirst($this->getUser());
                 break;
             case 'deleted':
                 $images = $em->getRepository('SpoutletBundle:GalleryMedia')
-                    ->findAllDeletedMediaForUser($this->getUser())
-                ;
+                    ->findAllDeletedMediaForUser($this->getUser());
                 break;
             default:
-                foreach ($galleries as $gallery)
-                {
-                    if(strtolower($gallery->getName()) == strtolower($filter))
-                    {
+                foreach ($galleries as $gallery) {
+                    if (strtolower($gallery->getName()) == strtolower($filter)) {
                         $images = $em->getRepository('SpoutletBundle:GalleryMedia')
-                            ->findAllMediaByUserAndGallery($this->getUser(), $gallery)
-                        ;
+                            ->findAllMediaByUserAndGallery($this->getUser(), $gallery);
                     }
                 }
 
-                if(!isset($images)) {
+                if (!isset($images)) {
                     $images = null;
                 }
                 break;
         }
 
         return $this->render('SpoutletBundle:Account:photos.html.twig', array(
-            'images'    => $images,
+            'images' => $images,
         ));
     }
 
@@ -304,14 +288,14 @@ class AccountController extends Controller
     {
         $this->checkSecurity();
 
-        $page    = $request->query->get('page', 1);
-        $user    = $this->getUser();
+        $page = $request->query->get('page', 1);
+        $user = $this->getUser();
         $manager = $this->getYoutubeManager();
-        $pager   = $manager->findUserAccountVideos($user, 10, $page);
-        $videos  = $pager->getCurrentPageResults();
+        $pager = $manager->findUserAccountVideos($user, 10, $page);
+        $videos = $pager->getCurrentPageResults();
 
         return $this->render('SpoutletBundle:Account:videos.html.twig', array(
-            'pager'  => $pager,
+            'pager' => $pager,
             'videos' => $videos,
         ));
     }
@@ -329,8 +313,7 @@ class AccountController extends Controller
     protected function getGiveawayKeyRepository()
     {
         return $this->getDoctrine()
-            ->getRepository('GiveawayBundle:GiveawayKey')
-        ;
+            ->getRepository('GiveawayBundle:GiveawayKey');
     }
 
     protected function getYoutubeManager()
@@ -345,10 +328,9 @@ class AccountController extends Controller
         $form = $this->createForm($this->getFormType(), $this->getUser());
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
-
                 try {
                     $this->getUserManager()->updateApiPassword($form->getData(), $form->get('plainPassword')->getData());
                     $this->setFlash('success', 'platformd.user.account.changes_saved');
@@ -361,19 +343,19 @@ class AccountController extends Controller
         }
 
         $avatarManager = $this->getAvatarManager();
-        $data          = $avatarManager->getAvatarListingData($this->getUser(), 184);
-        $newAvatar     = new Avatar();
+        $data = $avatarManager->getAvatarListingData($this->getUser(), 184);
+        $newAvatar = new Avatar();
 
         $newAvatar->setUser($this->getUser());
 
-        $avatarForm         = $this->createForm(new AvatarType(), $newAvatar);
-        $subscriptionForm   = $this->createForm($this->getSubscriptionFormType(), $this->getUser());
+        $avatarForm = $this->createForm(new AvatarType(), $newAvatar);
+        $subscriptionForm = $this->createForm($this->getSubscriptionFormType(), $this->getUser());
 
         return $this->render('SpoutletBundle:Account:settings.html.twig', array(
-            'form'              => $form->createView(),
-            'avatarForm'        => $avatarForm->createView(),
-            'data'              => $data,
-            'subscriptionForm'  => $subscriptionForm->createView(),
+            'form' => $form->createView(),
+            'avatarForm' => $avatarForm->createView(),
+            'data' => $data,
+            'subscriptionForm' => $subscriptionForm->createView(),
         ));
     }
 
@@ -383,27 +365,32 @@ class AccountController extends Controller
 
         $form = $this->createForm($this->getSubscriptionFormType(), $this->getUser());
 
-        if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+        if ($request->getMethod() === 'POST') {
+            $form->handleRequest($request);
 
-            $this->getUserManager()->updateUser($form->getData());
-            $this->setFlash('success', 'platformd.user.account.changes_saved');
+            if ($form->isValid()) {
+                $this->getUserManager()->updateUser($form->getData());
+
+                $this->setFlash('success', 'platformd.user.account.changes_saved');
+            } else {
+                $this->setFlash('error', 'platformd.user.account.changes_not_saved');
+            }
         }
 
-        return $this->redirect($this->generateUrl('accounts_settings'));
+        return $this->redirectToRoute('accounts_settings');
     }
 
     public function addAvatarAction(Request $request)
     {
         $this->checkSecurity();
 
-        $newAvatar     = new Avatar();
+        $newAvatar = new Avatar();
         $newAvatar->setUser($this->getUser());
 
         $form = $this->createForm(new AvatarType(), $newAvatar);
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
@@ -412,16 +399,16 @@ class AccountController extends Controller
                 $this->getAvatarManager()->save($newAvatar);
 
                 if ($newAvatar->getUuid()) {
-                    return $this->redirect($this->generateUrl('avatar_crop', array(
+                    return $this->redirectToRoute('avatar_crop', array(
                         'uuid' => $newAvatar->getUuid(),
-                    )));
+                    ));
                 }
             }
         }
 
         $this->setFlash('error', 'platformd.user.avatars.invalid_avatar');
 
-        return $this->redirect($this->generateUrl('accounts_settings'));
+        return $this->redirectToRoute('accounts_settings');
     }
 
     private function getFormType()
@@ -444,11 +431,11 @@ class AccountController extends Controller
             return $this->redirect($this->generateUrl('accounts_settings'));
         }
 
-        $form        = $this->createForm('platformd_incomplete_account', $user);
+        $form = $this->createForm('platformd_incomplete_account', $user);
         $childErrors = false;
 
-        if($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+        if ($request->getMethod() == 'POST') {
+            $form->handleRequest($request);
 
             if ($form->hasChildren()) {
                 foreach ($form->getChildren() as $child) {
@@ -458,7 +445,7 @@ class AccountController extends Controller
                 }
             }
 
-            if($form->isValid()) {
+            if ($form->isValid()) {
                 try {
                     $this->getUserManager()->updateUserAndApi($form->getData());
                     return $this->redirect($this->generateUrl('accounts_settings'));
@@ -469,8 +456,8 @@ class AccountController extends Controller
         }
 
         return $this->render('SpoutletBundle:Account:incomplete.html.twig', array(
-            'form'        => $form->createView(),
-            'errors'      => $form->getErrors(),
+            'form' => $form->createView(),
+            'errors' => $form->getErrors(),
             'childErrors' => $childErrors,
         ));
     }
@@ -486,7 +473,7 @@ class AccountController extends Controller
                     $form = $this->createForm(new UnsubscribeFormType(), array('unsubscribe' => false, 'email' => $email));
 
                     if ($request->getMethod() == 'POST') {
-                        $form->bindRequest($request);
+                        $form->handleRequest($request);
 
                         $data = $form->getData();
 
@@ -498,43 +485,43 @@ class AccountController extends Controller
                         } catch (\PDOException $e) {
                             # this is for catching the PDOException due to blank usernames
                             return $this->render('SpoutletBundle:Account:unsubscribe.html.twig', array(
-                                'userIsValid'   => false,
-                                'success'       => false,
-                                'apiException'  => true,
+                                'userIsValid' => false,
+                                'success' => false,
+                                'apiException' => true,
                             ));
                         }
 
                         return $this->render('SpoutletBundle:Account:unsubscribe.html.twig', array(
-                            'success'      => true,
-                            'userIsValid'  => true,
+                            'success' => true,
+                            'userIsValid' => true,
                         ));
                     }
 
                     return $this->render('SpoutletBundle:Account:unsubscribe.html.twig', array(
-                        'form'          => $form->createView(),
-                        'email'         => $email,
-                        'userIsValid'   => true,
-                        'success'       => false,
+                        'form' => $form->createView(),
+                        'email' => $email,
+                        'userIsValid' => true,
+                        'success' => false,
                     ));
                 }
             } catch (UsernameNotFoundException $e) {
                 return $this->render('SpoutletBundle:Account:unsubscribe.html.twig', array(
                     'userIsValid' => false,
-                    'success'     => false,
+                    'success' => false,
                 ));
             }
         }
 
         return $this->render('SpoutletBundle:Account:unsubscribe.html.twig', array(
             'userIsValid' => false,
-            'success'     => false,
+            'success' => false,
         ));
     }
 
     public function confirmTradeshowRegAction(Request $request, $token)
     {
-        $manager    = $this->getUserManager();
-        $user       = $manager->findUserByConfirmationToken($token);
+        $manager = $this->getUserManager();
+        $user = $manager->findUserByConfirmationToken($token);
 
         if (null === $user) {
             $this->createNotFoundException('User not found.');
@@ -544,11 +531,10 @@ class AccountController extends Controller
         $form = $this->createFormBuilder($default)
             ->add('username', 'text', array('required' => true, 'label' => 'Username:'))
             ->add('password', 'password', array('required' => true, 'label' => 'Password:'))
-            ->getForm()
-        ;
+            ->getForm();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
             $data = $form->getData();
 
             if (!$data['username']) {
@@ -567,8 +553,8 @@ class AccountController extends Controller
                 ));
             }
 
-            $usernameExists     = $manager->findUserByUsername($data['username']);
-            $passwordTooShort   = strlen($data['password']) < 5;
+            $usernameExists = $manager->findUserByUsername($data['username']);
+            $passwordTooShort = strlen($data['password']) < 5;
 
             if ($usernameExists) {
                 $form->addError(new Form\FormError('Username already exists.'));

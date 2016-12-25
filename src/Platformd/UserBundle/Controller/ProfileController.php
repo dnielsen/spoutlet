@@ -3,7 +3,6 @@
 namespace Platformd\UserBundle\Controller;
 
 use FOS\UserBundle\Controller\ProfileController as BaseProfileController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

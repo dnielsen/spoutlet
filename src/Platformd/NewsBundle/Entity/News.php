@@ -78,7 +78,7 @@ class News implements LinkableInterface, IndexableInterface, TaggableInterface
     /**
      * @var string $locale
      *
-     * @ORM\Column(name="locale", type="string", length="2", nullable=true)
+     * @ORM\Column(name="locale", type="string", length=2, nullable=true)
      */
     protected $locale;
 

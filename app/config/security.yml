@@ -1,13 +1,16 @@
-security:
+jms_security_extra:
+    secure_all_services: false
+    expressions: true
 
+security:
     encoders:
         "FOS\UserBundle\Model\UserInterface":
             algorithm: sha512
             encode_as_base64: false
             iterations: 1
 
-    factories:
-            - "%kernel.root_dir%/../src/Platformd/UserBundle/Resources/config/security_factory.yml"
+#    factories:
+#        - "%kernel.root_dir%/../src/Platformd/UserBundle/Resources/config/security_factory.yml"
 
     providers:
         fos_userbundle:
@@ -23,11 +26,11 @@ security:
             security: false
 
         main:
-            platformd-form-login:
-                success_handler: platformd_user.authentication_handler
-                failure_handler: platformd_user.authentication_handler
-                use_referer: true
-                api_authentication: %api_authentication%
+#            platformd-form-login:
+#                success_handler: platformd_user.authentication_handler
+#                failure_handler: platformd_user.authentication_handler
+#                use_referer: true
+#                api_authentication: %api_authentication%
             pattern: ^/
             anonymous:    true
             logout:
@@ -35,18 +38,16 @@ security:
                 target:   default_index
                 success_handler: platformd_user.authentication_handler
             switch_user: ~
-            remember_me:
-                key:      "%secret%"
-                lifetime: 604800 # 1 week (in seconds)
-                path:     /
-                domain:   ~ # Defaults to the current domain from $_SERVER
+#            remember_me:
+#                key:      "%secret%"
+#                lifetime: 604800 # 1 week (in seconds)
+#                path:     /
+#                domain:   ~ # Defaults to the current domain from $_SERVER #TODO: check
 
     acl:
         connection: acl
 
     access_control:
-
-
         # the "([\w]+\/)?" pattern allows for the optional locale prefix (e.g. /jp/comments/new or just /comments/new)
         - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
 

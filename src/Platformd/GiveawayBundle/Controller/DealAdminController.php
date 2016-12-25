@@ -159,7 +159,7 @@ class DealAdminController extends Controller
 
         $requestData = $request->query->get($filterForm->getName());
         if (!empty($requestData)) {
-            $filterForm->bindRequest($request);
+            $filterForm->handleRequest($request);
             if ($filterForm->isValid()) {
                 $data   = $filterForm->getData();
 
@@ -207,7 +207,7 @@ class DealAdminController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 /** @var $deal \Platformd\GiveawayBundle\Entity\Deal */

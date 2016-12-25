@@ -910,12 +910,12 @@ class SpoutletExtension extends Twig_Extension
 
     public function dateTranslate($datetime)
     {
-        return $datetime->format($this->themedTranslate('date_format', array(), $this->session->getLocale()));
+        return $datetime->format($this->themedTranslate('date_format', array(), $this->request->getLocale()));
     }
 
     public function dateTimeTranslate($datetime)
     {
-        return $datetime->format($this->themedTranslate('datetime_format', array(), $this->session->getLocale()));
+        return $datetime->format($this->themedTranslate('datetime_format', array(), $this->request->getLocale()));
     }
 
     public function themedTranslate($transKey, $variables = array(), $domain = 'messages', $locale = null)

@@ -3,16 +3,12 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Platformd\SpoutletBundle\Entity\Wallpaper;
 use Platformd\MediaBundle\Form\Type\MediaType;
-use Platformd\MediaBundle\Form\Type\MediaZipType;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\Event\DataEvent;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class WallpaperType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('thumbnail', new MediaType(), array(

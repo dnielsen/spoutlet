@@ -39,7 +39,7 @@ abstract class AbstractCode
     /**
      * Holds the site/locale that this key was assigned under
      *
-     * @ORM\Column(name="assigned_site", type="string", nullable=true, length="10")
+     * @ORM\Column(name="assigned_site", type="string", nullable=true, length=10)
      */
     protected $assignedSite;
 

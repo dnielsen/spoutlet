@@ -298,8 +298,6 @@ class TagManager
 
     /**
      *
-     *
-     *
      */
     public function getConcatenatedTagNames(TaggableInterface $resource, $separator=', ')
     {
@@ -358,8 +356,6 @@ class TagManager
     }
 
     /**
-     *
-     *
      *
      */
     public function getAllTagsSortByAlphaWithCount()

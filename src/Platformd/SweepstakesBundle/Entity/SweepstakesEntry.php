@@ -82,7 +82,7 @@ class SweepstakesEntry
     protected $answers;
 
     /**
-     * @ORM\Column(name="optional_checkbox_answer", type="boolean", nullable="true")
+     * @ORM\Column(name="optional_checkbox_answer", type="boolean", nullable=true)
      */
     protected $optionalCheckboxAnswer;
 

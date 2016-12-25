@@ -3,13 +3,9 @@
 namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Platformd\MediaBundle\Entity\Media;
-use Gedmo\Sluggable\Util\Urlizer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Platformd\SpoutletBundle\Entity\SiteFeatures;
 use Platformd\UserBundle\Entity\User;
-use Platformd\SpoutletBundle\Entity\SiteConfig;
 use Doctrine\Common\Collections\ArrayCollection;
 use Platformd\IdeaBundle\Entity\EntrySetScopeable;
 use Platformd\IdeaBundle\Entity\EntrySetRegistry;
@@ -92,9 +88,13 @@ class Site implements EntrySetScopeable
      */
     private $entrySetRegistration;
 
-    public function __sleep() { return array('id', 'name', 'defaultLocale', 'fullDomain', 'theme'); }
+    public function __sleep()
+    {
+        return array('id', 'name', 'defaultLocale', 'fullDomain', 'theme');
+    }
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->siteFeatures = new SiteFeatures();
         $this->siteFeatures->setSite($this);
 
@@ -104,8 +104,9 @@ class Site implements EntrySetScopeable
         $this->countrySpecificItems = new ArrayCollection();
     }
 
-    public function __toString() {
-         return 'Site => { Id = '.$this->getId().', Name = "'.$this->getName().'" }';
+    public function __toString()
+    {
+        return 'Site => { Id = ' . $this->getId() . ', Name = "' . $this->getName() . '" }';
     }
 
     /**
@@ -216,23 +217,29 @@ class Site implements EntrySetScopeable
         return $this->region;
     }
 
-    public function getEntrySetRegistration() {
+    public function getEntrySetRegistration()
+    {
         return $this->entrySetRegistration;
     }
 
-    public function createEntrySetRegistration() {
+    public function createEntrySetRegistration()
+    {
         $this->entrySetRegistration = new EntrySetRegistry($this);
         return $this->entrySetRegistration;
     }
 
-    public function getEntrySets() {
+    public function getEntrySets()
+    {
         return $this->entrySetRegistration->getEntrySets();
     }
 
-    public function getCommunityGroup() {
+    public function getCommunityGroup()
+    {
         return $this->communityGroup;
     }
-    public function setCommunityGroup($communityGroup) {
+
+    public function setCommunityGroup($communityGroup)
+    {
         $this->communityGroup = $communityGroup;
     }
 
@@ -266,7 +273,8 @@ class Site implements EntrySetScopeable
         return array();
     }
 
-    public function isMemberOf(User $user) {
+    public function isMemberOf(User $user)
+    {
         return true;
     }
 }

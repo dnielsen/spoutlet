@@ -16,7 +16,11 @@
                     </div>
                     <div class="widget-content">
                         <form id="event-contact-form" action="{{ path('group_event_contact', event.linkableRouteParameters) }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
-                            {{ form_widget(form) }}
+                            {{ form_widget(form.users) }}
+                            <p class="help-block">
+                                {{ 'platformd.events.event_contact.form.recipient_help'|pd_trans }}
+                            </p>
+                            {{ form_widget(form.message) }}
                             <div class="form-actions right" >
                                 <input type="submit" id="preview" formnovalidate value="Preview"/>
                                 <input type="submit" id="submit" formnovalidate value="Send"/>

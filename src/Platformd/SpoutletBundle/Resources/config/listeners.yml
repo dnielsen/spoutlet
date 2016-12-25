@@ -75,6 +75,12 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request }
 
+    platform.locale_listener:
+        class: Platformd\SpoutletBundle\EventListener\LocaleListener
+        arguments: ['%kernel.default_locale%']
+        tags:
+            - { name: kernel.event_subscriber }
+
     # used for facebook and twitter account creation. commented out for now since we wont release with migration.
     # platformd.listener.account_not_complete_listener:
     #     class: Platformd\SpoutletBundle\EventListener\AccountNotCompleteListener

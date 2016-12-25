@@ -53,7 +53,7 @@ class GroupApplication
 
      /**
      * @var \Platformd\GroupBundle\Entity\Group
-     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group")
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group", inversedBy="applications")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $group;

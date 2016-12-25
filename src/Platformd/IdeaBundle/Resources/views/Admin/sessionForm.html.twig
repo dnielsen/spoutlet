@@ -97,7 +97,11 @@
             }
 
             {% if isNew %}
-                dateInput.val('{{ event.startDateString }}');
+                dateInput.datetimepicker({
+                    timepicker: false,
+                    format: 'n/d/Y',
+                    formatDate: 'n/d/Y',
+                });
             {% endif %}
 
             startTimeInput.datetimepicker({

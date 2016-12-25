@@ -11,7 +11,15 @@
             {{ form_row(form.description) }}
 
             {{ form_widget(form.groupAvatar) }}
+            <p class="alert alert-info help"><i class="icon-info-sign"></i>
+                Maximum width: 830px, maximum height: 72px. Please use JPEG or PNG.
+            </p>
+
             {{ form_row(form.isPublic) }}
+            <p class="alert alert-info help">
+                <i class="icon-info-sign"></i>
+                Public: Group information is visible to all users and any user can join your group. Private: Group information is visible to approved group members only. Group organizer must approve users to be in group.
+            </p>
 
             <div id="category" class="styled-select">
                 {{ form_row(form.category) }}

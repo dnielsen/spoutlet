@@ -4,8 +4,7 @@ namespace Platformd\GiveawayBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM,
     Doctrine\Common\Collections\Collection,
-    Doctrine\Common\Collections\ArrayCollection
-;
+    Doctrine\Common\Collections\ArrayCollection;
 use Platformd\SpoutletBundle\Entity\AbstractEvent,
     Platformd\GiveawayBundle\Entity\GiveawayPool,
     Platformd\MediaBundle\Entity\Media,
@@ -14,13 +13,11 @@ use Platformd\SpoutletBundle\Entity\AbstractEvent,
     Platformd\SpoutletBundle\Link\LinkableInterface,
     Platformd\SpoutletBundle\Entity\Site,
     Platformd\SearchBundle\Model\IndexableInterface,
-    Platformd\TagBundle\Model\TaggableInterface
-;
+    Platformd\TagBundle\Model\TaggableInterface;
 
 use Symfony\Component\Validator\Constraints as Assert,
     Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity,
-    Symfony\Component\HttpFoundation\File\File
-;
+    Symfony\Component\HttpFoundation\File\File;
 
 use Gedmo\Mapping\Annotation as Gedmo,
     Gedmo\Sluggable\Util\Urlizer;
@@ -129,7 +126,7 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
     /**
      * @var string $locale
      *
-     * @ORM\Column(name="locale", type="string", length="10", nullable=true)
+     * @ORM\Column(name="locale", type="string", length=10, nullable=true)
      */
     protected $locale;
 
@@ -139,8 +136,7 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
      * @ORM\ManyToMany(targetEntity="Platformd\SpoutletBundle\Entity\Site")
      * @ORM\JoinTable(name="pd_giveaway_site")
      */
-     private $sites;
-
+    private $sites;
 
     /**
      * @ORM\Column(name="bannerImage", type="string", length=255, nullable=true)
@@ -216,7 +212,7 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
     /**
      * @Assert\Url
      * @var string
-     * @ORM\Column(name="external_url", length="255", nullable=true)
+     * @ORM\Column(name="external_url", length=255, nullable=true)
      */
     private $externalUrl;
 
@@ -241,7 +237,7 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
 
     const COMMENT_PREFIX = 'giveaway-';
 
-    const SEARCH_PREFIX  = 'giveaway_';
+    const SEARCH_PREFIX = 'giveaway_';
 
     /**
      * One to Many with GiveawayPool
@@ -346,9 +342,9 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
     public function __construct()
     {
         // auto-publish, this uses the "status" field instead
-        $this->published    = true;
-        $this->sites        = new ArrayCollection();
-        $this->pools        = new ArrayCollection();
+        $this->published = true;
+        $this->sites = new ArrayCollection();
+        $this->pools = new ArrayCollection();
         $this->translations = new ArrayCollection();
     }
 
@@ -715,17 +711,19 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
         $this->game = $game;
     }
 
-     /**
+    /**
      * @param string $externalUrl
      */
-    public function setExternalUrl($externalUrl) {
+    public function setExternalUrl($externalUrl)
+    {
         $this->externalUrl = $externalUrl;
     }
 
     /**
      * @return string
      */
-    public function getExternalUrl() {
+    public function getExternalUrl()
+    {
         return $this->externalUrl;
     }
 
@@ -752,14 +750,16 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
     /**
      * @param boolean $display_timezone
      */
-    public function setDisplayTimezone($display_timezone) {
+    public function setDisplayTimezone($display_timezone)
+    {
         $this->display_timezone = $display_timezone;
     }
 
     /**
      * @return boolean
      */
-    public function getDisplayTimezone() {
+    public function getDisplayTimezone()
+    {
         return $this->display_timezone;
     }
 
@@ -788,7 +788,7 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
 
     public function __toString()
     {
-        return 'Giveaway => { Id = '.$this->getId().', Name = "'.$this->getName().'", Status = "'.$this->getStatus().'", TestOnly = '.($this->getTestOnly() ? 'True' : 'False').', Type = "'.$this->getGiveawayType().'" }';
+        return 'Giveaway => { Id = ' . $this->getId() . ', Name = "' . $this->getName() . '", Status = "' . $this->getStatus() . '", TestOnly = ' . ($this->getTestOnly() ? 'True' : 'False') . ', Type = "' . $this->getGiveawayType() . '" }';
     }
 
     public function getThreadId()
@@ -797,7 +797,7 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
             throw new \LogicException('A giveaway needs an id before it can have a comment thread');
         }
 
-        return self::COMMENT_PREFIX.$this->getId();
+        return self::COMMENT_PREFIX . $this->getId();
     }
 
     /**
@@ -829,7 +829,7 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
     {
         $currentLocale = $locale ?: $this->getCurrentLocale();
 
-        return $this->translations->filter(function($translation) use($currentLocale) {
+        return $this->translations->filter(function ($translation) use ($currentLocale) {
             return $translation->getLocale() === $currentLocale;
         })->first();
     }
@@ -954,7 +954,7 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
         foreach ($instructions as $line) {
             // only store the line if it's non-blank
             if ($line) {
-                $str .= self::REDEMPTION_LINE_PREFIX . $line."\n";
+                $str .= self::REDEMPTION_LINE_PREFIX . $line . "\n";
             }
         }
 
@@ -992,8 +992,8 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
     /**
      * Makes sure the redemption instructions are trimmed
      *
-     * @ORM\prePersist
-     * @ORM\preUpdate
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
      */
     public function trimRedemptionInstructions()
     {
@@ -1027,7 +1027,7 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
             return;
         }
 
-        if (!in_array($status, array_keys(self::$validStatuses))) {
+        if (!array_key_exists($status, self::$validStatuses)) {
             throw new \InvalidArgumentException(sprintf('Invalid status "%s" given', $status));
         }
 
@@ -1084,7 +1084,7 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
      */
     public function getActivePoolForCountry($country)
     {
-        foreach($this->getPools() as $pool) {
+        foreach ($this->getPools() as $pool) {
 
             if ($pool->isEnabledForCountry($country) && $pool->getIsActive()) {
                 return $pool;
@@ -1113,7 +1113,7 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
 
     public function giveawayTypeText()
     {
-        return self::TYPE_TEXT_PREFIX.$this->getGiveawayType();
+        return self::TYPE_TEXT_PREFIX . $this->getGiveawayType();
     }
 
     /**
@@ -1160,8 +1160,8 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
     static public function getTypeChoices()
     {
         return array(
-            self::TYPE_KEY_GIVEAWAY => self::TYPE_TEXT_PREFIX.self::TYPE_KEY_GIVEAWAY,
-            self::TYPE_MACHINE_CODE_SUBMIT => self::TYPE_TEXT_PREFIX.self::TYPE_MACHINE_CODE_SUBMIT,
+            self::TYPE_KEY_GIVEAWAY => self::TYPE_TEXT_PREFIX . self::TYPE_KEY_GIVEAWAY,
+            self::TYPE_MACHINE_CODE_SUBMIT => self::TYPE_TEXT_PREFIX . self::TYPE_MACHINE_CODE_SUBMIT,
         );
     }
 
@@ -1209,7 +1209,7 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
     public function setFeatured($value)
     {
         $this->featured = $value;
-        if($value) {
+        if ($value) {
             $this->featuredAt = new DateTime('now');
         }
     }
@@ -1316,7 +1316,7 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
 
     public function getSearchId()
     {
-        return self::SEARCH_PREFIX.$this->id;
+        return self::SEARCH_PREFIX . $this->id;
     }
 
     public function getSearchTitle()

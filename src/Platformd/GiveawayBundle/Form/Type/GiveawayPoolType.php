@@ -3,19 +3,16 @@
 namespace Platformd\GiveawayBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Platformd\SpoutletBundle\Form\Type\CountryRestrictionRulesetType;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\FormBuilderInterface;
 
-/**
-*
-*/
 class GiveawayPoolType extends AbstractType
 {
     /**
      * {@inheritdoc}
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             // this is a long field, but it's mean for users not to put much here
@@ -62,7 +59,6 @@ class GiveawayPoolType extends AbstractType
      */
     public function getName()
     {
-
         return 'giveway_pool';
     }
 }

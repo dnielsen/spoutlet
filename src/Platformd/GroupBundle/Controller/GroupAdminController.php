@@ -31,7 +31,7 @@ class GroupAdminController extends Controller
     public function filterAction(Request $request)
     {
         $form = $this->createForm(new GroupFindType(), $this->getFilterFormData());
-        $form->bindRequest($request);
+        $form->handleRequest($request);
 
         $this->setFilterFormData($form->getData());
 
@@ -65,7 +65,7 @@ class GroupAdminController extends Controller
         $form = $this->createForm(new GroupFindType(), $data);
 
         if ('POST' == $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
             if ($form->isValid()) {
                 $data = $form->getData();
                 $this->setFilterFormData(array(
@@ -311,7 +311,7 @@ class GroupAdminController extends Controller
         }
 
         if ('POST' == $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
             if ($form->isValid()) {
                 $data = $form->getData();
 
@@ -891,7 +891,7 @@ class GroupAdminController extends Controller
         $groups = array();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $data = $form->getData();

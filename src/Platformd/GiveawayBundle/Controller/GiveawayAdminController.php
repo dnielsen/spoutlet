@@ -9,12 +9,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
-use DateTime;
 use Platformd\GiveawayBundle\Model\Exception\MissingKeyException;
 use Symfony\Component\Form\FormError;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
-use Symfony\Component\Form\FormBuilder;
 use Doctrine\ORM\EntityRepository;
 
 class GiveawayAdminController extends Controller
@@ -66,15 +64,15 @@ class GiveawayAdminController extends Controller
 
         $form = $this->createForm(new GiveawayType($giveaway, $tagManager), $giveaway);
 
-        if($request->getMethod() == 'POST')
+        if($request->getMethod() === 'POST')
         {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if($form->isValid()) {
                 $this->saveGiveaway($form);
 
                 // redirect to the "new pool" page
-                return $this->redirect($this->generateUrl('admin_giveaway_pool_new', array('giveaway' => $giveaway->getId())));
+                return $this->redirectToRoute('admin_giveaway_pool_new', array('giveaway' => $giveaway->getId()));
             }
         }
 
@@ -210,7 +208,7 @@ class GiveawayAdminController extends Controller
 
         if($request->getMethod() == 'POST')
         {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if($form->isValid())
             {
@@ -250,7 +248,7 @@ class GiveawayAdminController extends Controller
 
         $successEmails = array();
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $data = $form->getData();
@@ -332,7 +330,7 @@ class GiveawayAdminController extends Controller
 
         $successEmails = array();
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $data = $form->getData();
@@ -420,7 +418,7 @@ class GiveawayAdminController extends Controller
 
         $requestData = $request->query->get($filterForm->getName());
         if (!empty($requestData)) {
-            $filterForm->bindRequest($request);
+            $filterForm->handleRequest($request);
             if ($filterForm->isValid()) {
                 $data   = $filterForm->getData();
 
@@ -478,7 +476,7 @@ class GiveawayAdminController extends Controller
     {
         // save to db
         $giveaway = $giveawayForm->getData();
-        $startsAt = $giveaway->getCreated() === NULL ? new DateTime : $giveaway->getCreated();
+        $startsAt = $giveaway->getCreated() === NULL ? new \DateTime() : $giveaway->getCreated();
         $giveaway->setStartsAt($startsAt);
 
         if ($giveawayForm['removeBannerImage'] && $removeBannerImage = $giveawayForm['removeBannerImage']->getData()) {

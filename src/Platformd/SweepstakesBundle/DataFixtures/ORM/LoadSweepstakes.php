@@ -178,5 +178,3 @@ class LoadSweepstakes extends AbstractFixture implements OrderedFixtureInterface
 EOF;
     }
 }
-
-?>

@@ -2,11 +2,13 @@
 
 namespace Platformd\UserBundle\Form\Type;
 
+use Platformd\UserBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Form\Event\DataEvent;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class AccountSettingsType extends AbstractType
 {
@@ -23,7 +25,7 @@ class AccountSettingsType extends AbstractType
         $this->apiAuth         = $apiAuth;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $user       = $this->securityContext->getToken()->getUser();
         $encoder    = $this->encoderFactory->getEncoder($user);
@@ -41,7 +43,7 @@ class AccountSettingsType extends AbstractType
                 'invalid_message'   => 'passwords_do_not_match',
                 'error_bubbling'    => true
             ))
-            ->addEventListener(FormEvents::POST_BIND, function(DataEvent $event) use ($encoder, $user, $apiManager, $apiAuth) {
+            ->addEventListener(FormEvents::POST_BIND, function(FormEvent $event) use ($encoder, $user, $apiManager, $apiAuth) {
                 $data           = $event->getData();
                 $form           = $event->getForm();
                 $plainPassword  = $data->getPlainPassword();
@@ -65,12 +67,15 @@ class AccountSettingsType extends AbstractType
         ;
     }
 
-    public function getDefaultOptions(array $options)
+    /**
+     * @param OptionsResolverInterface $resolver
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array_merge($options, array(
-            'data_class' => 'Platformd\UserBundle\Entity\User',
-            'validation_groups' => array('Default')
-        ));
+        $resolver->setDefaults([
+            'data_class' => User::class,
+            'validation_groups' => ['Default']
+        ]);
     }
 
     public function getName()

@@ -1,5 +1,5 @@
 {# Removes the underscroe label thing #}
-{% block generic_label %}
+{% block form_label %}
 {% spaceless %}
     {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-lbl'}) %}
     {% if required %}

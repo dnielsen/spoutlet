@@ -2,10 +2,8 @@
 
 namespace Platformd\EventBundle\Form\Type;
 
-use Symfony\Component\Form\FormBuilder;
-
 use Platformd\SpoutletBundle\Form\Type\SlugType;
-use Platformd\TagBundle\Model\TaggableInterface;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class GlobalEventType extends EventType
 {
@@ -18,7 +16,7 @@ class GlobalEventType extends EventType
         $this->tagManager   = $tagManager;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
 

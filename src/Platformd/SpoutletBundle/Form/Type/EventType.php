@@ -4,7 +4,7 @@ namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilder;
-use Platformd\SpoutletBundle\Form\Type\SlugType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class EventType extends AbstractType
 {
@@ -23,7 +23,7 @@ class EventType extends AbstractType
         'timezone',
     );
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'textarea');
         $builder->add('slug', new SlugType());
@@ -31,22 +31,22 @@ class EventType extends AbstractType
 
         $this->createStartsAtField($builder);
         $this->createEndsAtField($builder);
+
         $builder->add('timezone', 'gmtTimezone');
         $builder->add('display_timezone', null, array(
             'label' => 'Display Timezone',
-
         ));
 
-    	$builder->add('city', 'text');
-    	$builder->add('country', 'text');
-    	$builder->add('content', 'textarea');
+        $builder->add('city', 'text');
+        $builder->add('country', 'text');
+        $builder->add('content', 'textarea');
         $builder->add('hosted_by', 'text');
         $builder->add('gameStr', 'text', array('label' => 'Game Name (don\'t use anymore)'));
         $builder->add('game', null, array('empty_value' => 'N/A'));
         $builder->add('location', 'text');
         $builder->add('bannerImageFile', 'file');
         $builder->add('sites', 'entity', array(
-            'class'    => 'SpoutletBundle:Site',
+            'class' => 'SpoutletBundle:Site',
             'multiple' => true,
             'expanded' => true,
             'property' => 'name',
@@ -59,9 +59,9 @@ class EventType extends AbstractType
     /**
      * Utility function to properly mark fields as required/not-required
      *
-     * @param \Symfony\Component\Form\FormBuilder $builder
+     * @param \Symfony\Component\Form\FormBuilderInterface $builder
      */
-    protected function unrequireFields(FormBuilder $builder)
+    protected function unrequireFields(FormBuilderInterface $builder)
     {
         foreach ($this->nonRequiredFields as $name) {
             if ($builder->has($name)) {
@@ -75,21 +75,21 @@ class EventType extends AbstractType
         return 'event';
     }
 
-    protected function createStartsAtField(FormBuilder $builder)
+    protected function createStartsAtField(FormBuilderInterface $builder)
     {
         return $builder->add('starts_at', 'datetime', array(
             'widget' => 'single_text',
-            'attr'   => array(
+            'attr' => array(
                 'class' => 'datetime-picker',
             )
         ));
     }
 
-    protected function createEndsAtField(FormBuilder $builder)
+    protected function createEndsAtField(FormBuilderInterface $builder)
     {
         return $builder->add('ends_at', 'datetime', array(
             'widget' => 'single_text',
-            'attr'   => array(
+            'attr' => array(
                 'class' => 'datetime-picker',
             )
         ));

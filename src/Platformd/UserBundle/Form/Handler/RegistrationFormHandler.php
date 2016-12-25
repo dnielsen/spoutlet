@@ -6,15 +6,13 @@ use FOS\UserBundle\Form\Handler\RegistrationFormHandler as BaseRegistrationFormH
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\UserBundle\Model\UserManagerInterface;
-use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Mailer\MailerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Util\IpLookupUtil;
 use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
 use Platformd\UserBundle\Exception\UserRegistrationTimeoutException;
-use Platformd\UserBundle\Exception\ApiRequestException;
+use FOS\UserBundle\Util\TokenGeneratorInterface;
 
 class RegistrationFormHandler extends BaseRegistrationFormHandler
 {
@@ -27,16 +25,27 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
     protected $ipLookupUtil;
     protected $apiManager;
 
-    public function __construct(Form $form, Request $request, UserManagerInterface $userManager, MailerInterface $mailer, EntityManager $em, ContainerInterface $container, IpLookupUtil $ipLookupUtil, $apiManager)
-    {
-        $this->form         = $form;
-        $this->request      = $request;
-        $this->userManager  = $userManager;
-        $this->mailer       = $mailer;
-        $this->em           = $em;
-        $this->container    = $container;
+    public function __construct(
+        Form $form,
+        Request $request,
+        UserManagerInterface $userManager,
+        MailerInterface $mailer,
+        TokenGeneratorInterface $tokenGenerator,
+        EntityManager $em,
+        ContainerInterface $container,
+        IpLookupUtil $ipLookupUtil,
+        $apiManager
+    ) {
+        parent::__construct($form, $request, $userManager, $mailer, $tokenGenerator);
+
+        $this->form = $form;
+        $this->request = $request;
+        $this->userManager = $userManager;
+        $this->mailer = $mailer;
+        $this->em = $em;
+        $this->container = $container;
         $this->ipLookupUtil = $ipLookupUtil;
-        $this->apiManager   = $apiManager;
+        $this->apiManager = $apiManager;
     }
 
     public function process($confirmation = false)
@@ -46,29 +55,21 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
         $user->setCountry($country);
         $this->form->setData($user);
 
-        if ($country == 'US') {
+        if ($country === 'US') {
             $user->setSubscribedAlienwareEvents(true);
         }
 
-        if ('POST' == $this->request->getMethod()) {
-
-            $form_data = $this->request->request->get('fos_user_registration_form');
-
-            if (!in_array('username', $form_data)) {
-                $user->setUsername($form_data['email']);
-                $user->setUsernameCanonical($this->userManager->canonicalizeUsername($form_data['email']));
-            }
-
-            $this->form->bindRequest($this->request);
-
-            $ageManager = $this->container->get('platformd.age.age_manager');
-            $site       = $this->container->get('platformd.util.site_util')->getCurrentSite();
+        if ('POST' === $this->request->getMethod()) {
+            $this->form->submit($this->request);
 
             if ($this->form->getData()->getBirthdate()) {
+                $ageManager = $this->container->get('platformd.age.age_manager');
 
-                if(!$ageManager->getUsersAge()) {
+                if (!$ageManager->getUsersAge()) {
                     $ageManager->setUsersBirthday($this->form->getData()->getBirthdate());
                 }
+
+                $site = $this->container->get('platformd.util.site_util')->getCurrentSite();
 
                 if ($ageManager->getUsersAge() < $site->getSiteConfig()->getMinAgeRequirement()) {
                     throw new InsufficientAgeException();
@@ -76,8 +77,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
             }
 
             if ($this->form->isValid()) {
-
-                $ipAddress  = $this->request->getClientIp(true);
+                $ipAddress = $this->request->getClientIp(true);
                 $user->setIpAddress($ipAddress);
 
                 if ($this->checkRegistrationTimeoutPassed() === false) {
@@ -109,15 +109,15 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
     {
         $repo = $this->em->getRepository('UserBundle:User');
 
-        $request    = $this->request;
-        $ipAddress  = $request->getClientIp(true);
+        $request = $this->request;
+        $ipAddress = $request->getClientIp(true);
 
         $result = $repo->createQueryBuilder('u')
             ->andWhere('u.ipAddress = :ipAddress')
             ->andWhere('u.created > :dateTime')
             ->setParameters(array(
                 'ipAddress' => $ipAddress,
-                'dateTime'  => new \DateTime('-1 minute')
+                'dateTime' => new \DateTime('-1 minute')
             ))
             ->getQuery()
             ->execute();
@@ -127,7 +127,7 @@ class RegistrationFormHandler extends BaseRegistrationFormHandler
 
     private function getUserCountry()
     {
-        $ipAddress  = $this->request->getClientIp(true);
+        $ipAddress = $this->request->getClientIp(true);
         return $this->ipLookupUtil->getCountryCode($ipAddress);
     }
 }

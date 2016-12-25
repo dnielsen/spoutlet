@@ -171,12 +171,6 @@ class Controller extends BaseController
         return $this->container->get('platformd.util.queue_util');
     }
 
-    # this function getUser is only here because it exists in many files... we should no longer use this one and should instead use getCurrentUser()
-    protected function getUser()
-    {
-        return $this->getCurrentUser();
-    }
-
     /**
      * Shortcut for enforcing security
      *
@@ -204,15 +198,6 @@ class Controller extends BaseController
     protected function getUserManager()
     {
         return $this->get('fos_user.user_manager');
-    }
-
-    /**
-     * @param $roles
-     * @return bool
-     */
-    protected function isGranted($roles)
-    {
-        return $this->container->get('security.context')->isGranted($roles);
     }
 
     protected function enforceUserSecurity()

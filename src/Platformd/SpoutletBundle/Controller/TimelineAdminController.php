@@ -2,16 +2,11 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
-use Platformd\SpoutletBundle\Controller\Controller,
-    Platformd\SpoutletBundle\Entity\Timeline,
-    Platformd\SpoutletBundle\Entity\TimelineRepository,
+use Platformd\SpoutletBundle\Entity\Timeline,
     Platformd\SpoutletBundle\Form\Type\TimelineType
 ;
 
-use Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response
-;
-
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Admin controller for timelines
@@ -38,7 +33,7 @@ class TimelineAdminController extends Controller
         $form = $this->createForm(new TimelineType(), new Timeline());
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if($form->isValid()) {
                 $this->save($form->getData());
@@ -68,7 +63,7 @@ class TimelineAdminController extends Controller
         $form = $this->createForm(new TimelineType(), $timeline);
 
         if('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if($form->isValid()) {
                 $this->save($form->getData());

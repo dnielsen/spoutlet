@@ -3,15 +3,15 @@
 namespace Platformd\UserBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 
 use Doctrine\ORM\EntityRepository;
 
 use Platformd\UserBundle\Entity\RegistrationSource;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class RegistrationActivitiesMetricsType extends AbstractType
 {
-    static $choices = array(
+    public static $choices = array(
         0 => 'All Activities',
         RegistrationSource::REGISTRATION_SOURCE_TYPE_GIVEAWAY    => 'Giveaways',
         RegistrationSource::REGISTRATION_SOURCE_TYPE_CONTEST     => 'Contests',
@@ -27,7 +27,7 @@ class RegistrationActivitiesMetricsType extends AbstractType
         RegistrationSource::REGISTRATION_SOURCE_TYPE_OTHER       => 'Other',
     );
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('country', 'entity', array(

@@ -58,7 +58,7 @@ update_sponsorship_status:
 # EntrySet Routes
 
 entry_set_view:
-    pattern:    /list/{entrySetId}
+    path:    /list/{entrySetId}
     defaults:   { _controller: IdeaBundle:Idea:entrySetView }
 
 entry_set_new:

@@ -3,7 +3,7 @@
 namespace Platformd\SpoutletBundle\Age;
 
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Manager for keeping track of how old the current user is

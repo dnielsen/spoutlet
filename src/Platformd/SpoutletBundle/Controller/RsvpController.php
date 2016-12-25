@@ -25,7 +25,7 @@ class RsvpController extends Controller
         $form = $this->createForm(new RsvpAttendeeType, new RsvpAttendee($rsvp));
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->save($form->getData());

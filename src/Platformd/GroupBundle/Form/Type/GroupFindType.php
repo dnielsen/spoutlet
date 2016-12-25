@@ -2,16 +2,12 @@
 
 namespace Platformd\GroupBundle\Form\Type;
 
-use Platformd\GroupBundle\Entity\Group;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\FormInterface;
-
+use Symfony\Component\Form\FormBuilderInterface;
 
 class GroupFindType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('groupName', 'text', array(

@@ -27,7 +27,7 @@ use Doctrine\ORM\EntityManager;
 use Knp\MediaBundle\Util\MediaUtil;
 
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -79,8 +79,7 @@ class GroupManager
         EventDispatcherInterface $eventDispatcher,
         GroupEventService $groupEventService,
         $mediaExposer
-    )
-    {
+    ) {
         $this->em = $em;
         $this->session = $session;
         $this->mediaUtil = $mediaUtil;

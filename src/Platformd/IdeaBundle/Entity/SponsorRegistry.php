@@ -53,7 +53,7 @@ class SponsorRegistry
     protected $sponsor;
 
     /**
-     * @ORM\Column(type="smallint", nullable="true")
+     * @ORM\Column(type="smallint", nullable=true)
      */
     protected $level = self::OTHER;
 

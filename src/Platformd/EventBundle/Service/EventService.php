@@ -19,8 +19,7 @@ use Platformd\EventBundle\Repository\EventRepository,
     Platformd\SpoutletBundle\Entity\Site,
     Platformd\SpoutletBundle\Model\EmailManager,
     Platformd\SpoutletBundle\Model\Translator,
-    Platformd\CEVOBundle\Api\ApiException
-;
+    Platformd\CEVOBundle\Api\ApiException;
 
 use Symfony\Component\EventDispatcher\EventDispatcher,
     Symfony\Component\Security\Core\SecurityContextInterface,
@@ -28,12 +27,12 @@ use Symfony\Component\EventDispatcher\EventDispatcher,
     Symfony\Component\Security\Acl\Domain\ObjectIdentity,
     Symfony\Component\Security\Acl\Domain\UserSecurityIdentity,
     Symfony\Component\Security\Acl\Permission\MaskBuilder,
-    Symfony\Component\Routing\RouterInterface
-;
+    Symfony\Component\Routing\RouterInterface;
 
 use Knp\MediaBundle\Util\MediaUtil;
 
 use DateTime;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class EventService
 {
@@ -80,22 +79,21 @@ class EventService
     public function __construct(
         EventRepository $repository,
         MediaUtil $mediaUtil,
-        EventDispatcher $dispatcher,
+        EventDispatcherInterface $dispatcher,
         AclProvider $aclProvider,
         EmailManager $emailManager,
         RouterInterface $router,
         Translator $translator,
         $cevoApi
-    )
-    {
-        $this->repository    = $repository;
-        $this->mediaUtil     = $mediaUtil;
-        $this->dispatcher    = $dispatcher;
-        $this->aclProvider   = $aclProvider;
-        $this->emailManager  = $emailManager;
-        $this->router        = $router;
-        $this->translator    = $translator;
-        $this->cevoApi       = $cevoApi;
+    ) {
+        $this->repository = $repository;
+        $this->mediaUtil = $mediaUtil;
+        $this->dispatcher = $dispatcher;
+        $this->aclProvider = $aclProvider;
+        $this->emailManager = $emailManager;
+        $this->router = $router;
+        $this->translator = $translator;
+        $this->cevoApi = $cevoApi;
     }
 
     /**
@@ -103,7 +101,7 @@ class EventService
      *
      * @param \Platformd\EventBundle\Entity\Event $event
      */
-    public function createEvent(Event $event, $dispatchEvent=true)
+    public function createEvent(Event $event, $dispatchEvent = true)
     {
         $this->handleMedia($event);
         $this->repository->saveEvent($event);
@@ -118,7 +116,7 @@ class EventService
         $this->aclProvider->updateAcl($acl);
 
         // We dispatch an event for further tasks
-        if($dispatchEvent) {
+        if ($dispatchEvent) {
             $event = new EventEvent($event);
             $this->dispatcher->dispatch(EventEvents::EVENT_CREATE, $event);
         }
@@ -258,30 +256,30 @@ class EventService
         } else {
             $rsvpAction->setAttendance(EventRsvpAction::ATTENDING_YES);
 
-            $locale     = $user->getLocale() ?: 'en';
-            $eventName  = $event->getName();
+            $locale = $user->getLocale() ?: 'en';
+            $eventName = $event->getName();
             $eventOwner = $event->getUser()->getEmail();
-            $eventUrl   = $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true);
+            $eventUrl = $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true);
 
             if ($externalUrl = $event->getExternalUrl()) {
                 $subjectTemplate = 'platformd.event.email.welcome.external_title';
                 $messageTemplate = 'platformd.event.email.welcome.external_message';
-                $messageParams   = array(
-                                     '%eventName%'   => $eventName,
-                                     '%eventOwner%'  => $eventOwner,
-                                     '%eventUrl%'    => $eventUrl,
-                                     '%userName%'    => $user->getName(),
-                                     '%externalUrl%' => $externalUrl,
-                                 );
+                $messageParams = array(
+                    '%eventName%' => $eventName,
+                    '%eventOwner%' => $eventOwner,
+                    '%eventUrl%' => $eventUrl,
+                    '%userName%' => $user->getName(),
+                    '%externalUrl%' => $externalUrl,
+                );
             } else {
                 $subjectTemplate = 'platformd.event.email.welcome.title';
                 $messageTemplate = 'platformd.event.email.welcome.message';
-                $messageParams   = array(
-                                     '%eventName%'   => $eventName,
-                                     '%eventOwner%'  => $eventOwner,
-                                     '%eventUrl%'    => $eventUrl,
-                                     '%userName%'    => $user->getName(),
-                                 );
+                $messageParams = array(
+                    '%eventName%' => $eventName,
+                    '%eventOwner%' => $eventOwner,
+                    '%eventUrl%' => $eventUrl,
+                    '%userName%' => $user->getName(),
+                );
             }
 
             $subject = $this->translator->trans($subjectTemplate, array('%eventName%' => $event->getName()), 'messages', $locale);
@@ -321,8 +319,7 @@ class EventService
         $rsvpAction->setEvent($event);
         if ($rejected) {
             $rsvpAction->setAttendance(EventRsvpAction::ATTENDING_REJECTED);
-        }
-        else {
+        } else {
             $rsvpAction->setAttendance(EventRsvpAction::ATTENDING_NO);
         }
         $rsvpAction->setRsvpAt(new DateTime('now'));
@@ -391,7 +388,8 @@ class EventService
      *
      * @param \Platformd\EventBundle\Entity\Event $event
      */
-    protected function handleMedia(Event $event) {
+    protected function handleMedia(Event $event)
+    {
         if (!$this->mediaUtil->persistRelatedMedia($event->getBannerImage())) {
             $event->setBannerImage(null);
         }
@@ -407,6 +405,7 @@ class EventService
     {
         return $user instanceof User ? $this->repository->isUserAttending($event, $user) : false;
     }
+
     public function getAllEventObjectsUserIsAttending(User $user)
     {
         return $this->repository->getAllEventObjectsUserIsAttending($user);
@@ -439,7 +438,7 @@ class EventService
         $email->setEvent($event);
         $email->setRecipients($recipients);
 
-        $emailType  = $email instanceof GroupEventEmail ? "Group Event Reminder Email" : $email instanceof GlobalEventEmail ? "Global Event Reminder Email" : "Event Reminder Email";
+        $emailType = $email instanceof GroupEventEmail ? "Group Event Reminder Email" : $email instanceof GlobalEventEmail ? "Global Event Reminder Email" : "Event Reminder Email";
 
         $sendCount = 0;
 
@@ -455,14 +454,14 @@ class EventService
             ), $locale);
 
             $message = nl2br($this->translator->themeTrans('platformd.event.email.event_reminder.message', $eventSite->getTheme(), array(
-                '%eventName%'       => $event->getName(),
-                '%dateString%'      => $event->getDateRangeString(),
-                '%timeString%'      => $event->getStartsAt()->format('g:i A'),
-                '%timezone%'        => $event->getTimezoneString(),
-                '%location%'        => $event->getOnline() ? 'Online' : $event->getHtmlFormattedAddress(),
-                '%eventUrl%'        => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
-                '%organizerUrl%'    => $event->getUser()->getAccountLink($locale),
-                '%organizerName%'   => $event->getUser()->getUsername(),
+                '%eventName%' => $event->getName(),
+                '%dateString%' => $event->getDateRangeString(),
+                '%timeString%' => $event->getStartsAt()->format('g:i A'),
+                '%timezone%' => $event->getTimezoneString(),
+                '%location%' => $event->getOnline() ? 'Online' : $event->getHtmlFormattedAddress(),
+                '%eventUrl%' => $this->router->generate($event->getLinkableRouteName(), $event->getLinkableRouteParameters(), true),
+                '%organizerUrl%' => $event->getUser()->getAccountLink($locale),
+                '%organizerName%' => $event->getUser()->getUsername(),
             ), $locale));
 
             $fromName = $site->getSiteFeatures()->getEmailFromName() ?: null;
@@ -508,12 +507,13 @@ class EventService
         return $this->repository->findPastEventsForSitePaged($site, $maxPerPage, $currentPage, $pager, $published);
     }
 
-    public function findUpcomingEventsForSiteLimited(Site $site, $limit=6, $published = true)
+    public function findUpcomingEventsForSiteLimited(Site $site, $limit = 6, $published = true)
     {
         return $this->repository->findUpcomingEventsForSiteLimited($site, $limit, $published);
     }
 
-    public function eventCompare($a, $b) {
+    public function eventCompare($a, $b)
+    {
 
         if ($a->getStartsAt() == $b->getStartsAt()) {
             return 0;

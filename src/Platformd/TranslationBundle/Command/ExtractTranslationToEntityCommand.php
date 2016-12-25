@@ -2,12 +2,7 @@
 
 namespace Platformd\TranslationBundle\Command;
 
-use JMS\TranslationBundle\Translation\ConfigBuilder;
-use JMS\TranslationBundle\Exception\RuntimeException;
-use Symfony\Component\Console\Input\InputArgument;
-use JMS\TranslationBundle\Translation\Config;
 use JMS\TranslationBundle\Logger\OutputLogger;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -17,7 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
  *
  * @author Ryan Weaver
  */
-class ExtractTranslationToEntitycommand extends ContainerAwareCommand
+class ExtractTranslationToEntityCommand extends ContainerAwareCommand
 {
     protected function configure()
     {

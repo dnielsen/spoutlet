@@ -1,6 +1,5 @@
-
 imports:
-    - { resource: parameters.ini }
+    - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: "@CEVOBundle/Resources/config/services.yml" }
     - { resource: version.php }
@@ -16,13 +15,16 @@ imports:
     - { resource: "@TagBundle/Resources/config/services.yml" }
     - { resource: "@SweepstakesBundle/Resources/config/services.yml" }
     - { resource: "@IdeaBundle/Resources/config/services.yml" }
+    - { resource: knp/knp_menu.yml }
 
 framework:
     #esi:             ~
-    translator:      { fallback: %locale% }
+    translator:      { fallback: [en, ] }
     secret:          %secret%
-    charset:         UTF-8
-    router:          { resource: "%kernel.root_dir%/config/routing.yml" }
+#    charset:         UTF-8
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: "%kernel.debug%"
     form:            true
     csrf_protection: true
     validation:      { enable_annotations: true }
@@ -30,11 +32,11 @@ framework:
         engines: ['twig']
         assets_version: %app.version%
         assets_version_format: %%s?v=%%s
+    default_locale: "%locale%"
+    trusted_proxies: ~
     session:
-        default_locale: %locale%
-        auto_start:     true
-        domain:         .%base_host%
-        storage_id:     session.storage.pdo
+        cookie_domain:  .%base_host%
+        handler_id:     session.handler.pdo
     esi: true
 
 cybernox_amazon_web_services:
@@ -59,6 +61,7 @@ twig:
 assetic:
     debug:          %kernel.debug%
     use_controller: false
+#    bundles: []
     filters:
         cssrewrite: ~
         # closure:
@@ -104,10 +107,7 @@ swiftmailer:
     sender_address: %sender_email_address%
     encryption: %mailer_encryption%
     port: %mailer_port%
-
-jms_security_extra:
-    secure_controllers:  true
-    secure_all_services: false
+    spool: { type: memory }
 
 fos_user:
     db_driver:       orm
@@ -124,8 +124,9 @@ fos_user:
         form:
             type: platformd_user_registration
             handler: platformd_user.registration.form.handler
+            name: fos_user_registration_form
         confirmation:
-            enabled: true
+            enabled: true #FIXME
     profile:
         form:
             type: platformd_user_profile
@@ -137,7 +138,6 @@ vich_geographical:
     db_driver: orm
 
 parameters:
-
     feedback_ids:
         accounts_groups: %accounts_groups% # my groups
         accounts_events: %accounts_events% # my events
@@ -182,10 +182,7 @@ parameters:
 
     search_dev_mode: false
 
-    mock_data_directory: %kernel.root_dir%/../mock_data/
-    mock_queue_util_full_filename: %mock_data_directory%queue_util_mock_data.txt
-
-    doctrine.orm.validator.unique.class: Knp\Validator\UniqueEntityValidator
+#    doctrine.orm.validator.unique.class: Knp\Validator\UniqueEntityValidator
 
     # false = CEVO login, true = local login
     local_auth: true
@@ -268,7 +265,7 @@ parameters:
         en_platformd:       platformd%host_suffix%.%base_host%
         en_toyota:          quantified-car%host_suffix%.%base_host%
         en_cloudcampbd:     cloudcampbd%host_suffix%.%base_host%
-        en_visibleagile:     www.visibleagile.com
+        en_visibleagile:    www.visibleagile.com
 
     # this is repeated in the multitenancy manager - should not be
     platformd_sites:
@@ -303,9 +300,6 @@ parameters:
 
     # important to setup the translation DB loader to load things for these domains
     available_translation_domains: [messages, forms, FOSUserBundle, messages, validators]
-
-    email_destination_override: false
-    email_destination_override_with: ""
 
     sender_email_address: "noreply@cloudcamp.org"
     sender_email_name: Campsite
@@ -435,21 +429,27 @@ stof_doctrine_extensions:
             sluggable: true
             timestampable: true
 
-
 services:
-    pdo_session:
-        class: PDO
+    session.handler.pdo:
+        class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
+        public:    false
         arguments:
-            dsn:      "mysql:dbname=%database_name%;host=%database_host%;port=%database_port%"
-            user:     %database_user%
-            password: %database_password%
+            - 'mysql:dbname=%database_name%;host=%database_host%;port=%database_port%'
+            - { db_table: session, db_id_col: session_id, db_time_col: session_time, db_username: %database_user%, db_password: %database_password% }
 
-    session.storage.pdo:
-        class:     Symfony\Component\HttpFoundation\SessionStorage\PdoSessionStorage
-        arguments: [@pdo_session, %session.storage.options%, %pdo.session_db_options% ]
+#    pdo_session:
+#        class: Doctrine\DBAL\Driver\PDOConnection
+#        arguments:
+#            dsn:      "mysql:dbname=%database_name%;host=%database_host%;port=%database_port%"
+#            user:     %database_user%
+#            password: %database_password%
 
-    upload_picture_service:
-        class: Platformd\SpoutletBundle\Consumer\UploadPictureConsumer
+#    session.storage.pdo:
+#        class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\LegacyPdoSessionHandler
+#        arguments: [@session.handler.pdo, %pdo.session_db_options%]
+
+#    upload_picture_service:
+#        class: Platformd\SpoutletBundle\Consumer\UploadPictureConsumer
 
 knp_gaufrette:
     adapters:
@@ -486,8 +486,8 @@ knp_gaufrette:
             adapter: platformd.media
             alias: pd_media_filesystem
 
-knp_media_exposer:
-    base_url: http://%base_host%
+#knp_media_exposer:
+#    base_url: http://%base_host%
 
 jms_translation:
     configs:
@@ -495,7 +495,7 @@ jms_translation:
             dirs: [%kernel.root_dir%, %kernel.root_dir%/../src]
             output_dir: %kernel.root_dir%/Resources/translations
             ignored_domains: [routes]
-            excluded_names: [*TestCase.php, *Test.php]
+            excluded_names: ['*TestCase.php', '*Test.php']
             excluded_dirs: [cache, data, logs, Features]
 
 # liip_imagine:

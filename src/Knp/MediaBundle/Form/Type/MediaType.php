@@ -2,16 +2,18 @@
 
 namespace Knp\MediaBundle\Form\Type;
 
-use \Symfony\Component\Form\AbstractType;
-use \Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Platformd\MediaBundle\Entity\Media;
 
 abstract class MediaType extends AbstractType
 {
     private $helpMessage;
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $label = isset($options['image_label']) ? $options['image_label'] : 'Upload a file';
 
@@ -31,19 +33,14 @@ abstract class MediaType extends AbstractType
         }
     }
 
-    /**
-     * @return string
-     */
-    abstract public function getDataClass();
-
-    public function getDefaultOptions(array $options)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        return array(
-            'data_class' => $this->getDataClass(),
+        $resolver->setDefaults([
+            'data_class' => Media::class,
             'image_label' => 'Upload a file',
             'image_help' => null,
             'with_remove_checkbox' => false,
-        );
+        ]);
     }
 
     /**
@@ -62,7 +59,6 @@ abstract class MediaType extends AbstractType
             $view->set('mediaObject', $form->getData());
         }
     }
-
 
     /**
      * @return string

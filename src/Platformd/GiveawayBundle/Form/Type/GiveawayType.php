@@ -3,14 +3,15 @@
 namespace Platformd\GiveawayBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Platformd\GiveawayBundle\Entity\Giveaway;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Platformd\SpoutletBundle\Form\Type\CountryAgeRestrictionRulesetType;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\GiveawayBundle\Entity\GiveawayTranslation;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class GiveawayType extends AbstractType
 {
@@ -19,11 +20,11 @@ class GiveawayType extends AbstractType
 
     public function __construct($giveaway, $tagManager)
     {
-        $this->giveaway     = $giveaway;
-        $this->tagManager   = $tagManager;
+        $this->giveaway = $giveaway;
+        $this->tagManager = $tagManager;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name', 'textarea')
@@ -35,8 +36,8 @@ class GiveawayType extends AbstractType
             ))
             ->add('translations', 'collection', array(
                 'type' => new GiveawayTranslationType,
-                'allow_add'      => true,
-                'allow_delete'   => true,
+                'allow_add' => true,
+                'allow_delete' => true,
                 'by_reference' => false,
                 'options' => array(
                     'data' => new GiveawayTranslation,
@@ -50,14 +51,14 @@ class GiveawayType extends AbstractType
             ->add('bannerImageFile', 'file')
             ->add('removeBannerImage', 'checkbox', array(
                 'label' => 'Remove Banner',
-                'property_path' => false,
+                'mapped' => false,
             ))
             ->add('backgroundImage', 'file', array(
                 'label' => 'Background file',
             ))
             ->add('removeBackgroundImage', 'checkbox', array(
                 'label' => 'Remove Background',
-                'property_path' => false,
+                'mapped' => false,
             ))
             ->add('backgroundLink', 'text', array(
                 'label' => 'Background link'
@@ -72,13 +73,14 @@ class GiveawayType extends AbstractType
             ))
             ->add('game', null, array('empty_value' => 'N/A'))
             ->add('sites', 'entity', array(
-                'class'    => 'SpoutletBundle:Site',
+                'class' => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
                 'property' => 'name',
             ))
             ->add('externalUrl', null, array(
-                'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to the GiveAway page.')
+//                'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to the GiveAway page.'
+                )
             )
             ->add('testOnly', 'choice', array(
                 'choices' => array(
@@ -86,7 +88,7 @@ class GiveawayType extends AbstractType
                     0 => 'No',
                 ),
                 'label' => 'Allow admin testing?',
-                'help'  => 'This allows admins to still test the operation of the giveaway IF it is unpublished',
+//                'help' => 'This allows admins to still test the operation of the giveaway IF it is unpublished',
             ))
             ->add('displayRemainingKeysNumber', null, array(
                 'label' => 'Show key count'
@@ -96,7 +98,7 @@ class GiveawayType extends AbstractType
             ));
 
         $builder->add('group', 'hidden', array(
-            'property_path' => false,
+            'mapped' => false,
         ));
 
         $builder->add('featured', null, array(
@@ -104,32 +106,30 @@ class GiveawayType extends AbstractType
         ));
 
         $builder->add('thumbnail', new MediaType(), array(
-                'image_label' => 'Thumbnail',
-                'image_help'  => 'Recommended size: 138x83',
-                'with_remove_checkbox' => true
+            'image_label' => 'Thumbnail',
+            'image_help' => 'Recommended size: 138x83',
+            'with_remove_checkbox' => true
         ));
 
         $builder->add('tags', 'text', array(
             'label' => 'Tags',
-            'help' => "Enter keywords to help people discover the giveaway.",
-            'property_path' => false,
+//            'help' => "Enter keywords to help people discover the giveaway.",
+            'mapped' => false,
             'data' => $this->giveaway ? $this->tagManager->getConcatenatedTagNames($this->giveaway) : null,
             'required' => false,
         ));
     }
 
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => Giveaway::class,
+        ]);
+    }
+
     public function getName()
     {
         return 'giveaway';
-    }
-
-    public function getDefaultOptions(array $options)
-    {
-        $options = parent::getDefaultOptions($options);
-
-        $options['data_class'] = 'Platformd\GiveawayBundle\Entity\Giveaway';
-
-        return $options;
     }
 
     public function buildViewBottomUp(FormView $view, FormInterface $form)
@@ -138,5 +138,4 @@ class GiveawayType extends AbstractType
             $view->set('mediaObjects', $data);
         }
     }
-
 }

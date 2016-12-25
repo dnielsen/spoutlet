@@ -3,14 +3,10 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Gallery;
-use Platformd\SpoutletBundle\Entity\GalleryRepository;
-use Platformd\SpoutletBundle\Entity\GalleryCategory;
-use Platformd\SpoutletBundle\Entity\GalleryCategoryRepository;
 use Platformd\SpoutletBundle\Form\Type\GalleryType;
 use Platformd\SpoutletBundle\Form\Type\ImageFindType;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use Platformd\SpoutletBundle\Entity\GalleryTranslation;
 
@@ -136,7 +132,7 @@ class GalleryAdminController extends Controller
 
         $form       = $this->createForm(new ImageFindType());
         $results    = $this->processFindForm($form, $request);
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
         $upVotes    = array();
         $likes      = array();
 
@@ -167,7 +163,7 @@ class GalleryAdminController extends Controller
         $images = array();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $data = $form->getData();
@@ -343,7 +339,7 @@ class GalleryAdminController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 

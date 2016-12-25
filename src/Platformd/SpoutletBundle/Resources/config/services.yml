@@ -43,11 +43,9 @@ services:
 
     platformd.breadcrumbs_admin_menu:
         class: Knp\Menu\MenuItem
-        scope: request
-        factory_service: "platformd.menu_builder"
-        factory_method: createAdminBreadcrumbs
+        factory: ['@platformd.menu_builder', createAdminBreadcrumbs]
         arguments:
-            - "@request"
+            - @request_stack
         tags:
             - { name: knp_menu.menu, alias: admin_breadcrumbs }
 
@@ -232,10 +230,9 @@ services:
 
     pagerfanta.view.spoutlet:
         class: Platformd\SpoutletBundle\Pagerfanta\View\SpoutletView
-        arguments:
-            - @pagerfanta.view.default
         public: false
-        tags: [{ name: pagerfanta.view, alias: spoutlet }]
+        tags:
+            - { name: pagerfanta.view, alias: spoutlet }
 
     platformd.form.transformer.html_purifier_basic:
         class: Exercise\HTMLPurifierBundle\Form\HTMLPurifierTransformer

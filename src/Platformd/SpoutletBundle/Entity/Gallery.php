@@ -12,6 +12,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Sluggable\Util\Urlizer;
 
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Context\LegacyExecutionContext;
 use Symfony\Component\Validator\ExecutionContext;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -76,7 +77,7 @@ class Gallery implements LinkableInterface
      * The person who created this gallery
      *
      * @var \Platformd\UserBundle\Entity\User
-     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", cascade={"delete"})
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", cascade={"remove"})
      * @ORM\JoinColumn(onDelete="cascade")
      */
     protected $owner;
@@ -355,22 +356,17 @@ class Gallery implements LinkableInterface
         $this->sitesPositions = $sitesPositions;
     }
 
-    public function validateSlug(ExecutionContext $executionContext)
+    public function validateSlug(LegacyExecutionContext $executionContext)
     {
         if ($this->getSlug()) {
             return;
         }
 
         $oldPath = $executionContext->getPropertyPath();
-        $executionContext->setPropertyPath($oldPath.'.slug');
 
-        $executionContext->addViolation(
-            'Automatic generation of the URL string failed. Please enter this manually.',
-            array(),
-            null
-        );
-
-        $executionContext->setPropertyPath($oldPath);
+        $executionContext->buildViolation('Automatic generation of the URL string failed. Please enter this manually.')
+            ->atPath($oldPath.'.slug')
+            ->addViolation();
     }
 
     public function getTranslations()
