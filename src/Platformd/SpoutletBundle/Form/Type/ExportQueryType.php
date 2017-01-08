@@ -23,6 +23,7 @@ class ExportQueryType extends AbstractType
             'choices'   => $reportTypes,
             'required'  => false,
             'data'      => key($reportTypes),
+            'choices_as_values' => true,
         ));
 
         $builder->add('fromDate', 'datetime', array(
@@ -47,7 +48,7 @@ class ExportQueryType extends AbstractType
             'class'    => 'SpoutletBundle:Site',
             'multiple' => true,
             'expanded' => true,
-            'property' => 'name',
+            'choice_label' => 'name',
             'required' => false,
         ));
     }

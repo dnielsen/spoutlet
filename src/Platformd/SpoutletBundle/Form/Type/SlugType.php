@@ -5,14 +5,12 @@ namespace Platformd\SpoutletBundle\Form\Type;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SlugType extends TextType
 {
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        parent::setDefaultOptions($resolver);
-
         $options['required'] = false;
 
         $label = isset($options['label_override']) ? $options['label_override'] : 'URL string';
@@ -28,18 +26,17 @@ class SlugType extends TextType
         $resolver->setDefaults($options);
     }
 
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        $view->vars = array_replace($view->vars, [
+            'help' => 'This field will be generated automatically if left blank. It\'s format
+                            should be lowercase letters and dashes, without any http (e.g. my-new-giveaway).
+                            This becomes *part* of the URL for this item.',
+        ]);
+    }
+
     public function getName()
     {
         return 'slug';
-    }
-
-    public function buildViewBottomUp(FormView $view, FormInterface $form)
-    {
-        parent::buildViewBottomUp($view, $form);
-
-        $view->set('help', 'This field will be generated automatically if left blank. It\'s format
-                            should be lowercase letters and dashes, without any http (e.g. my-new-giveaway).
-                            This becomes *part* of the URL for this item.'
-        );
     }
 }

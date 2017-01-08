@@ -5,7 +5,7 @@ namespace Platformd\UserBundle\Form\Type;
 use Platformd\UserBundle\Entity\Gallary;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GallaryType extends AbstractType
 {
@@ -19,7 +19,7 @@ class GallaryType extends AbstractType
         ;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Gallary::class,

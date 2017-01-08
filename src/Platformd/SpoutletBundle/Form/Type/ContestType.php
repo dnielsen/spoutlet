@@ -9,6 +9,20 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class ContestType extends AbstractType
 {
+    const YES_NO = [
+        'Yes' => 1,
+        'No' => 0,
+    ];
+
+    const ALLOWED_ENTRIES = [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+    ];
+
     private $contest;
     private $tagManager;
 
@@ -26,10 +40,11 @@ class ContestType extends AbstractType
             ))
             ->add('category', 'choice', array(
                 'choices' => self::getCategoryChoices(),
+                'choices_as_values' => true,
             ))
             ->add('game', 'entity', array(
                 'class' => 'GameBundle:Game',
-                'property' => 'name',
+                'choice_label' => 'name',
                 'empty_value' => 'N/A'
             ))
             ->add('slug', new SlugType(), array(
@@ -40,7 +55,7 @@ class ContestType extends AbstractType
                 'class' => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name',
+                'choice_label' => 'name',
             ))
             ->add('submissionStart', 'datetime', array(
                 'label' => 'Submission Starts:',
@@ -94,18 +109,19 @@ class ContestType extends AbstractType
             ))
             ->add('maxEntries', 'choice', array(
                 'label' => 'Entries allowed',
-                'choices' => array(0, 1, 2, 3, 4, 5),
+                'choices' => self::ALLOWED_ENTRIES,
             ))
             ->add('openGraphOverride', new OpenGraphOverrideType(), array('label' => 'Facebook Info'))
             ->add('status', 'choice', array(
-                'choices' => $this->getStatusChoices()
+                'choices' => $this->getStatusChoices(),
+                'choices_as_values' => true,
             ))
-            ->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'))
+            ->add('ruleset', new CountryAgeRestrictionRulesetType(), array(
+                'label' => 'Restrictions',
+            ))
             ->add('testOnly', 'choice', array(
-                'choices' => array(
-                    1 => 'Yes',
-                    0 => 'No',
-                ),
+                'choices' => self::YES_NO,
+                'choices_as_values' => true,
                 'label' => 'Allow admin testing?',
             ))
             ->add('hidden', 'checkbox', array(
@@ -128,6 +144,8 @@ class ContestType extends AbstractType
     {
         $values = Contest::getValidCategories();
 
+        $choices = [];
+
         foreach ($values as $value) {
             $choices[$value] = $value;
         }
@@ -137,8 +155,10 @@ class ContestType extends AbstractType
 
     private static function getStatusChoices()
     {
+        $choices = [];
+
         foreach (Contest::getValidStatuses() as $status) {
-            $choices[$status] = 'status.' . $status;
+            $choices['status.' . $status] = $status;
         }
 
         return $choices;

@@ -7,6 +7,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class GroupFindType extends AbstractType
 {
+    const STATUSES = [
+        'Active' => 0,
+        'Inactive' => 1,
+    ];
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -15,10 +20,8 @@ class GroupFindType extends AbstractType
             ))
             ->add('deleted', 'choice', array(
                 'label' => 'Status:',
-                'choices' => array(
-                    '0' => 'Active',
-                    '1' => 'Inactive'
-                ),
+                'choices' => self::STATUSES,
+                'choices_as_values' => true,
                 'empty_value' => 'Select All',
                 'required' => false,
             ))
@@ -28,6 +31,7 @@ class GroupFindType extends AbstractType
                     'location' => 'Location',
                     'topic' => 'Topic'
                 ),
+                'choices_as_values' => true,
                 'empty_value' => 'Select All',
                 'required' => false,
             ))
@@ -35,7 +39,7 @@ class GroupFindType extends AbstractType
                 'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name',
+                'choice_label' => 'name',
             ))
             ->add('startDate', 'date', array(
                 'label' => 'Start Date:',

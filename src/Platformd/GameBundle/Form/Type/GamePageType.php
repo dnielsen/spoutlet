@@ -21,7 +21,9 @@ class GamePageType extends AbstractType
             ->add('externalUrl', null, array(
                 'label' => 'External URL',
             ))
-            ->add('game', 'entity', array('class' => 'GameBundle:Game', 'empty_value' => 'N/A',
+            ->add('game', 'entity', array(
+                'class' => 'GameBundle:Game',
+                'empty_value' => 'N/A',
                 'query_builder' => function(\Platformd\GameBundle\Entity\GameRepository $er) {
                     return $er->createQueryBuilder('g')
                               ->orderBy('g.name', 'ASC');
@@ -93,10 +95,11 @@ class GamePageType extends AbstractType
                 'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name',
+                'choice_label' => 'name',
             ))
             ->add('status', 'choice', array(
                 'choices' => $this->getStatusChoices(),
+                'choices_as_values' => true,
             ))
             ->add('createdAt', 'datetime', array(
                 'widget' => 'single_text',
@@ -120,8 +123,10 @@ class GamePageType extends AbstractType
 
     public function getStatusChoices()
     {
+        $choices = [];
+
         foreach (GamePage::getValidStatues() as $status) {
-            $choices[$status] = 'status.'.$status;
+            $choices['status.'.$status] = $status;
         }
 
         return $choices;

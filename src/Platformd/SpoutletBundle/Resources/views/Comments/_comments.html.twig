@@ -2,8 +2,8 @@
     <div class="comment-group" id="comment-group-0" style="display:none;"></div>
 </div>
 
-{% if app.session.locale == "es" or app.session.locale == "zh" or app.session.locale == "ja" %}
-    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.timeago.{{ app.session.locale }}.js"></script>
+{% if app.request.locale == "es" or app.request.locale == "zh" or app.request.locale == "ja" %}
+    <script type="text/javascript" src="/bundles/spoutlet/js/jquery.timeago.{{ app.request.locale }}.js"></script>
 {% endif %}
 
 {% include 'SpoutletBundle:Comments:_commentTemplate.html.twig' %}

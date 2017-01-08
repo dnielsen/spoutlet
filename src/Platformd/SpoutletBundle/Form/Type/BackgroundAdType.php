@@ -3,36 +3,50 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Platformd\MediaBundle\Form\Type\MediaType;
-use Platformd\SpoutletBundle\Entity\Site;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class BackgroundAdType extends AbstractType
 {
+    const PUBLISHED = [
+        'Unpublished' => 0,
+        'Published' => 1,
+    ];
+
+    /**
+     * @var bool
+     */
     private $isNew;
 
+    /**
+     * BackgroundAdType constructor.
+     *
+     * @param bool $isNew
+     */
     public function __construct($isNew = false)
     {
         $this->isNew = $isNew;
     }
 
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array                $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('title')
-            ->add('published', 'choice', array(
-                'choices' => array(
-                    '0' => 'Unpublished',
-                    '1' => 'Published',
-                ),
+            ->add('published', 'choice', [
                 'label' => 'Status',
-            ))
+                'choices' => self::PUBLISHED,
+                'choices_as_values' => true,
+            ])
 //            ->add('sites', 'entity', array(
 //                'class' => Site::class,
 //                'expanded' => true,
 //                'multiple' => true,
-//                'property' => 'name',
+//                'choice_label' => 'name',
 //            ))
             ->add('adSites', 'collection', array(
                 'type' => new BackgroundAdSiteType(),
@@ -62,10 +76,10 @@ class BackgroundAdType extends AbstractType
             ->add('timezone', 'timezone');
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'validation_groups' => $this->isNew ? array('Default', 'New') : array('Default'),
+            'validation_groups' => $this->isNew ? ['Default', 'New'] : ['Default'],
         ]);
     }
 

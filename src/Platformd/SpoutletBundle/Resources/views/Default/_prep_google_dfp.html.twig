@@ -1,4 +1,4 @@
-{% if app.session.locale == 'ja' %}
+{% if app.request.locale == 'ja' %}
     <script type='text/javascript'>
         var googletag = googletag || {};
         googletag.cmd = googletag.cmd || [];
@@ -22,7 +22,7 @@
             googletag.enableServices();
         });
     </script>
-{% elseif app.session.locale == 'zh' %}
+{% elseif app.request.locale == 'zh' %}
     <script type='text/javascript'>
         var googletag = googletag || {};
         googletag.cmd = googletag.cmd || [];

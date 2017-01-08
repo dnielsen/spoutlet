@@ -29,7 +29,9 @@ class DealType extends AbstractType
                 'label' => 'External URL',
                 'help'  => '(Optional) If filled in, this URL will override the destination of any links that would normally point to this deal on this site.'
             ))
-            ->add('game', 'entity', array('class' => 'GameBundle:Game', 'empty_value' => 'N/A',
+            ->add('game', 'entity', array(
+                'class' => 'GameBundle:Game',
+                'empty_value' => 'N/A',
                 'query_builder' => function(\Platformd\GameBundle\Entity\GameRepository $er) {
                     return $er->createQueryBuilder('g')
                               ->orderBy('g.name', 'ASC');
@@ -98,12 +100,13 @@ class DealType extends AbstractType
             ))
             ->add('status', 'choice', array(
                 'choices' => $this->getStatusChoices(),
+                'choices_as_values' => true,
             ))
             ->add('sites', 'entity', array(
                 'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name',
+                'choice_label' => 'name',
             ))
             ->add('legalVerbiage', 'textarea', array('label' => 'Legal Verbiage'))
             ->add('topColor', 'hidden', array(
@@ -118,6 +121,7 @@ class DealType extends AbstractType
                     1 => 'Yes',
                     0 => 'No',
                 ),
+                'choices_as_values' => true,
                 'label' => 'Allow admin testing?',
                 'help'  => 'This allows admins to still test the operation of the deal IF it is unpublished',
             ));
@@ -143,12 +147,12 @@ class DealType extends AbstractType
 
     public function getStatusChoices()
     {
-        $choices = array(
-            '' => 'status.choose_status',
-        );
+        $choices = [
+            'status.choose_status' => '',
+        ];
 
         foreach (Deal::getValidStatuses() as $status) {
-            $choices[$status] = 'status.'.$status;
+            $choices['status.'.$status] = $status;
         }
 
         return $choices;

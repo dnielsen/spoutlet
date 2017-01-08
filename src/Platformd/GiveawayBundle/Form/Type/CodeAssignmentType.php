@@ -15,6 +15,7 @@ class CodeAssignmentType extends AbstractType
             ->add('url', null)
             ->add('type', 'choice', array(
                 'choices' => CodeAssignment::getValidTypes(),
+                'choices_as_values' => true,
             ))
             ->add('codesFile', 'file', array(
                 'label' => 'Codes CSV',

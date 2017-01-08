@@ -4,10 +4,20 @@ namespace Platformd\EventBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventFindType extends AbstractType
 {
+    const STATUS = [
+        'Active' => 1,
+        'Inactive' => 0,
+    ];
+
+    const EVENT_TYPES = [
+        'Group' => 'group',
+        'Global' => 'global',
+    ];
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -16,25 +26,21 @@ class EventFindType extends AbstractType
             ))
             ->add('published', 'choice', array(
                 'label' => 'Status:',
-                'choices' => array(
-                    '1' => 'Active',
-                    '0' => 'Inactive'
-                ),
+                'choices' => self::STATUS,
+                'choices_as_values' => true,
                 'empty_value' => 'Select All',
                 'required' => false,
             ))
             ->add('eventType', 'choice', array(
                 'label' => 'Type',
-                'choices' => array(
-                    'group' => 'Group',
-                    'global' => 'Global'
-                )
+                'choices' => self::EVENT_TYPES,
+                'choices_as_values' => true,
             ))
             ->add('sites', 'entity', array(
                 'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name',
+                'choice_label' => 'name',
             ))
             ->add('from', 'date', array(
                 'label' => 'Starts After:',
@@ -54,7 +60,7 @@ class EventFindType extends AbstractType
             ));
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'csrf_protection' => false,

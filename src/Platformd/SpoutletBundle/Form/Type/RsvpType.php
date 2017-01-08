@@ -9,6 +9,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class RsvpType extends AbstractType
 {
+    const PUBLISHED = [
+        'Published' => 1,
+        'Unpublished' => 0,
+    ];
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -26,17 +31,15 @@ class RsvpType extends AbstractType
                 'label' => 'Code Required?'
             ))
             ->add('published', 'choice', array(
-                'choices' => array(
-                    1 => 'Published',
-                    0 => 'Unpublished',
-                ),
+                'choices' => self::PUBLISHED,
+                'choices_as_values' => true,
                 'label' => 'Status',
             ))
             ->add('sites', 'entity', array(
                 'class' => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name',
+                'choice_label' => 'name',
             ))
             ->add('codes', 'file', array(
                 'required' => false,
@@ -49,7 +52,7 @@ class RsvpType extends AbstractType
                 'label' => 'Success Message',
             ))
         ;
-        $builder->get('codes')->addModelTransformer(new CsvToRsvpCodeTransformer());
+        $builder->get('codes')->addViewTransformer(new CsvToRsvpCodeTransformer());
     }
 
     public function getName()

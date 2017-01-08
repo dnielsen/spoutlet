@@ -16,9 +16,7 @@ class RsvpCodeType extends AbstractType
     }
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->appendClientTransformer($this->transformer)
-        ;
+        $builder->addViewTransformer($this->transformer);
     }
 
     public function getParent()

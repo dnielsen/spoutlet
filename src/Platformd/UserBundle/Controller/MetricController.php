@@ -5,7 +5,6 @@ namespace Platformd\UserBundle\Controller;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Form\Form;
 use DateTime;
 
 use Platformd\SpoutletBundle\Entity\Country;
@@ -31,10 +30,11 @@ class MetricController extends Controller
             $select = $this->get('form.factory')
                 ->createNamedBuilder('choice', 'results_range', 7, array(
                  'choices' => array(
-                            '7'  => 'Last 7 days',
-                            '30' => 'Last 30 days',
-                            ''   => 'All time',
-            ),
+                            'Last 7 days' => '7',
+                            'Last 30 days' => '30',
+                            'All time' => '',
+                    ),
+                    'choices_as_values' => true,
             ))->getForm();
 
             // bind only if we have that query parameter
@@ -56,12 +56,11 @@ class MetricController extends Controller
             ));
 
         } else {
-
             $form = $this->createFormBuilder()
                 ->add('country', 'entity', array(
                     'class'         => 'SpoutletBundle:Country',
                     'empty_value'   => 'All',
-                    'property'      => 'name',
+                    'choice_label'      => 'name',
                 ))
                 ->add('from_date_country', 'datetime', array(
                     'widget'    => 'single_text',
@@ -76,7 +75,7 @@ class MetricController extends Controller
                 ->add('region', 'entity', array(
                     'class'         => 'SpoutletBundle:Region',
                     'empty_value'   => 'All',
-                    'property'      => 'name',
+                    'choice_label'      => 'name',
                 ))
                 ->add('from_date_region', 'datetime', array(
                     'widget'    => 'single_text',

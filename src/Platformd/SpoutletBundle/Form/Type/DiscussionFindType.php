@@ -7,6 +7,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class DiscussionFindType extends AbstractType
 {
+    const STATUSES = [
+        'Active' => 0,
+        'Inactive' => 1,
+    ];
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -15,10 +20,8 @@ class DiscussionFindType extends AbstractType
             ))
             ->add('deleted', 'choice', array(
                 'label' => 'Status:',
-                'choices' => array(
-                    '0' => 'Active',
-                    '1' => 'Inactive'
-                ),
+                'choices' => self::STATUSES,
+                'choices_as_values' => true,
                 'empty_value' => 'Select All',
                 'required' => false,
             ))
@@ -26,7 +29,7 @@ class DiscussionFindType extends AbstractType
                 'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name',
+                'choice_label' => 'name',
             ))
             ->add('from', 'date', array(
                 'label' => 'Start Date:',

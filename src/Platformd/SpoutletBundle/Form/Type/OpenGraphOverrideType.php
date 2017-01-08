@@ -6,7 +6,7 @@ use Platformd\SpoutletBundle\Entity\OpenGraphOverride;
 use Symfony\Component\Form\AbstractType;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OpenGraphOverrideType extends AbstractType
 {
@@ -24,7 +24,7 @@ class OpenGraphOverrideType extends AbstractType
         ;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => OpenGraphOverride::class,

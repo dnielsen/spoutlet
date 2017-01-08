@@ -32,10 +32,10 @@ class SiteTakeoverType extends AbstractType
                 'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name',
+                'choice_label' => 'name',
             ))
             ->add('content', 'textarea', array(
-                'attr'  => array('class' => 'ckeditor'),#
+                'attr'  => array('class' => 'ckeditor'),
             ));
 
     }

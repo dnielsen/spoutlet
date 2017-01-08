@@ -4,7 +4,6 @@ namespace Platformd\GiveawayBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\GiveawayBundle\Entity\CodeAssignment;
-use Platformd\GiveawayBundle\Entity\CodeAssignmentCode;
 use Platformd\GiveawayBundle\Form\Type\CodeAssignmentType;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -24,12 +23,13 @@ class CodeAssignmentAdminController extends Controller
 
             if ($form->isValid()) {
 
-                $em         = $this->getDoctrine()->getEntityManager();
+                $em         = $this->getDoctrine()->getManager();
                 $assignment = $form->getData();
 
                 if (null === $assignment->getCodesFile()) {
                     $this->setFlash('error', 'Please attach a .csv file containing the codes to be assigned.');
-                    return $this->redirect($this->generateUrl('admin_assign_codes'));
+
+                    return $this->redirectToRoute('admin_assign_codes');
                 }
 
                 $em->persist($assignment);
@@ -98,9 +98,9 @@ class CodeAssignmentAdminController extends Controller
             }
         }
 
-        return $this->render('GiveawayBundle:CodeAssignment:index.html.twig', array(
+        return $this->render('GiveawayBundle:CodeAssignment:index.html.twig', [
             'form' => $form->createView(),
-        ));
+        ]);
     }
 
     private function loadCodesFromFile(File $file, $assignment)

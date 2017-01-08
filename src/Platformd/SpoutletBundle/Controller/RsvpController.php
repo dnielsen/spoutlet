@@ -2,8 +2,6 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
-use Platformd\SpoutletBundle\Controller\Controller;
-use Platformd\SpoutletBundle\Entity\Rsvp;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\SpoutletBundle\Form\Type\RsvpAttendeeType;
 use Platformd\SpoutletBundle\Entity\RsvpAttendee;
@@ -40,6 +38,7 @@ class RsvpController extends Controller
         return $this->render('SpoutletBundle:Rsvp:attend.html.twig', array(
             'form' => $form->createView(),
             'rsvp' => $rsvp,
+            '_isAdmin' => false,
         ));
     }
 

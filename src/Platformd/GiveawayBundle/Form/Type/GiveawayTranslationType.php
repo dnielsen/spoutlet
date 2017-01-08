@@ -7,7 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GiveawayTranslationType extends AbstractType
 {
@@ -16,7 +16,7 @@ class GiveawayTranslationType extends AbstractType
         $builder->add('locale', 'entity', array(
             'label' => 'Language',
             'class' => 'Platformd\SpoutletBundle\Entity\Site',
-            'property' => 'name',
+            'choice_label' => 'name',
             'query_builder' => function($repository) {
                 return $repository->createQueryBuilder('s')
                     ->andWhere('s.defaultLocale IN (:siteNames)')
@@ -51,7 +51,16 @@ class GiveawayTranslationType extends AbstractType
         ));
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        if ($data = $form->getData()) {
+            $view->vars = array_replace($view->vars, [
+                'mediaObjects' => $data,
+            ]);
+        }
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => GiveawayTranslation::class,
@@ -61,12 +70,5 @@ class GiveawayTranslationType extends AbstractType
     public function getName()
     {
         return 'giveaway_translation';
-    }
-
-    public function buildViewBottomUp(FormView $view, FormInterface $form)
-    {
-        if ($data = $form->getData()) {
-            $view->set('mediaObjects', $data);
-        }
     }
 }

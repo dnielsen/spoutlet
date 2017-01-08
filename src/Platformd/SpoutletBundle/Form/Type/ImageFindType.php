@@ -7,6 +7,16 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class ImageFindType extends AbstractType
 {
+    const STATUSES = [
+        'Active' => 0,
+        'Deleted' => 1,
+    ];
+
+    const PUBLISHES = [
+        'Published' => 1,
+        'Unpublished' => 0,
+    ];
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -15,19 +25,15 @@ class ImageFindType extends AbstractType
             ))
             ->add('deleted', 'choice', array(
                 'label' => 'Deleted:',
-                'choices' => array(
-                    '0' => 'Active',
-                    '1' => 'Deleted'
-                ),
+                'choices' => self::STATUSES,
+                'choices_as_values' => true,
                 'empty_value' => 'Select All',
                 'required' => false,
             ))
             ->add('published', 'choice', array(
                 'label' => 'Status:',
-                'choices' => array(
-                    '1' => 'Published',
-                    '0' => 'Unpublished'
-                ),
+                'choices' => self::PUBLISHES,
+                'choices_as_values' => true,
                 'empty_value' => 'Select All',
                 'required' => false,
             ))
@@ -35,7 +41,7 @@ class ImageFindType extends AbstractType
                 'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name',
+                'choice_label' => 'name',
             ))
             ->add('startDate', 'date', array(
                 'label' => 'Upload Start Date:',

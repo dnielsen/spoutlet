@@ -13,6 +13,16 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class GroupType extends AbstractType
 {
+    const YES_NO = [
+        'Yes' => 1,
+        'No' => 0,
+    ];
+
+    const GROUP_VISIBILITY = [
+        'Public Group' => 1,
+        'Private Group' => 0,
+    ];
+
     private $user;
     private $group;
     private $tagManager;
@@ -43,6 +53,7 @@ class GroupType extends AbstractType
             ->add('category', 'choice', array(
                 'choices' => self::getCategoryChoices(),
                 'label' => 'Group Category',
+                'choices_as_values' => true,
             ))
             ->add('groupAvatar', new MediaType(), array(
                 'image_label' => 'Group Logo',
@@ -66,20 +77,16 @@ class GroupType extends AbstractType
             ->add('isPublic', 'choice', array(
                 'label' => 'Group Visibility',
                 'expanded' => true,
-                'choices' => [
-                    1 => 'Public Group',
-                    0 => 'Private Group',
-                ],
+                'choices' => self::GROUP_VISIBILITY,
+                'choices_as_values' => true,
             ))
             ->add('location', new LocationType(), array(
                 'label' => 'Location',
             ))
             ->add('external', 'choice', array(
                 'label' => 'Would you like this group to be listed on Campsite?',
-                'choices' => array(
-                    1 => 'No',
-                    0 => 'Yes',
-                ),
+                'choices' => self::YES_NO,
+                'choices_as_values' => true,
             ))
             ->add('externalUrl', 'text', array(
                 'attr' => array(
@@ -93,13 +100,17 @@ class GroupType extends AbstractType
         if ($this->user instanceof User && $this->user->hasRole('ROLE_SUPER_ADMIN')) {
 
             if ($this->hasMultiSiteGroups) {
-                $builder->add('sites', 'entity', array(
-                    'class' => 'SpoutletBundle:Site',
-                    'multiple' => true,
-                    'expanded' => true,
-                    'property' => 'name'
-                ))
-                    ->add('allLocales', 'checkbox', array('label' => 'Enable for all Locales', 'help' => 'If set to true this overrides the "locales" setting and sets this group to be visible to all sites'));
+                $builder
+                    ->add('sites', 'entity', array(
+                        'class' => 'SpoutletBundle:Site',
+                        'multiple' => true,
+                        'expanded' => true,
+                        'choice_label' => 'name'
+                    ))
+                    ->add('allLocales', 'checkbox', array(
+                        'label' => 'Enable for all Locales',
+//                        'help' => 'If set to true this overrides the "locales" setting and sets this group to be visible to all sites',
+                    ));
             }
 
             if ($this->group->getId() > 0) {
@@ -110,18 +121,18 @@ class GroupType extends AbstractType
 
             $builder->add('featured', 'checkbox', array(
                 'label' => 'Featured',
-                'help' => 'Make this group featured on the homepage.',
+//                'help' => 'Make this group featured on the homepage.',
             ));
 
             $builder->add('discussionsEnabled', 'checkbox', array(
                 'label' => 'Discussions',
-                'help' => 'Enable discussions for this group.',
+//                'help' => 'Enable discussions for this group.',
             ));
         }
 
         $builder->add('parent', 'entity', array(
             'class' => Group::class,
-            'property' => 'name',
+            'choice_label' => 'name',
             'empty_value' => '<None>',
             'label' => 'Parent Group',
             'attr' => array(
@@ -147,7 +158,7 @@ class GroupType extends AbstractType
 
         $builder->add('children', 'entity', array(
             'class' => 'Platformd\GroupBundle\Entity\Group',
-            'property' => 'name',
+            'choice_label' => 'name',
             'label' => 'Sub Groups (Ctrl + Click to select more than one)',
             'multiple' => true,
             'attr' => array(
@@ -205,13 +216,14 @@ class GroupType extends AbstractType
         $values = Group::getValidCategories();
 
         if ($parentGroup = $this->group->getParent()) {
-
-            $parentGroupCategory = $parentGroup->getCategory();
-
-            if ($parentGroupCategory == Group::CAT_TOPIC) {
-                return array(Group::CAT_LOCATION => Group::GROUP_CATEGORY_LABEL_PREFIX . Group::CAT_LOCATION);
-            } elseif ($parentGroupCategory == Group::CAT_COMPANY) {
-                return array(Group::CAT_DEPARTMENT => Group::GROUP_CATEGORY_LABEL_PREFIX . Group::CAT_DEPARTMENT);
+            if ($parentGroup->getCategory() === Group::CAT_TOPIC) {
+                return [
+                    Group::GROUP_CATEGORY_LABEL_PREFIX . Group::CAT_LOCATION => Group::CAT_LOCATION,
+                ];
+            } elseif ($parentGroup->getCategory() === Group::CAT_COMPANY) {
+                return [
+                    Group::GROUP_CATEGORY_LABEL_PREFIX . Group::CAT_DEPARTMENT => Group::CAT_DEPARTMENT,
+                ];
             }
 
         }
@@ -222,7 +234,7 @@ class GroupType extends AbstractType
                 continue;
             }
 
-            $choices[$value] = Group::GROUP_CATEGORY_LABEL_PREFIX . $value;
+            $choices[Group::GROUP_CATEGORY_LABEL_PREFIX . $value] = $value ;
         }
 
         return $choices;

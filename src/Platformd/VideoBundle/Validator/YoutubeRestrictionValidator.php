@@ -3,8 +3,7 @@
 namespace Platformd\VideoBundle\Validator;
 
 use Symfony\Component\Validator\ConstraintValidator,
-    Symfony\Component\Validator\Constraint
-;
+    Symfony\Component\Validator\Constraint;
 
 use Symfony\Component\DependencyInjection\ContainerInterface as Container;
 use Platformd\VideoBundle\Model\YoutubeManager;

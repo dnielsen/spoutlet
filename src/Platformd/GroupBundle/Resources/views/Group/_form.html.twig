@@ -59,6 +59,9 @@
                 {% if form.sites is defined %}
                     {{ form_row(form.sites) }}
                     {{ form_row(form.allLocales) }}
+                    <p class="help">
+                        If set to true this overrides the "locales" setting and sets this group to be visible to all sites.
+                    </p>
                 {% endif %}
 
                 {% if form.deleted is defined %}
@@ -67,6 +70,9 @@
 
                 {% if form.featured is defined %}
                     {{ form_row(form.featured) }}
+                    <p class="help">
+                        Make this group featured on the homepage.
+                    </p>
                 {% endif %}
             </div>
             {% endif %}

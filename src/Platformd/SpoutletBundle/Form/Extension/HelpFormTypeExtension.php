@@ -47,7 +47,9 @@ class HelpFormTypeExtension implements FormTypeExtensionInterface
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->set('help', $form->getAttribute('help'));
+        $view->vars = array_replace($view->vars, [
+            'help' => isset($options['help']) ? $options['help'] : '',
+        ]);
     }
 
     /**
@@ -70,35 +72,14 @@ class HelpFormTypeExtension implements FormTypeExtensionInterface
 
     }
 
+    /**
+     * @param OptionsResolverInterface $resolver
+     */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-
-    }
-
-    /**
-     * Overrides the default options form the extended type.
-     *
-     * @param array $options
-     *
-     * @return array
-     */
-    public function getDefaultOptions(array $options)
-    {
-        return array(
+        $resolver->setDefaults([
             'help' => '',
-        );
-    }
-
-    /**
-     * Returns the allowed option values for each option (if any).
-     *
-     * @param array $options
-     *
-     * @return array The allowed option values
-     */
-    public function getAllowedOptionValues(array $options)
-    {
-        return array();
+        ]);
     }
 
     /**

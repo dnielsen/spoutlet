@@ -49,8 +49,8 @@ class GiveawayPoolType extends AbstractType
                 },
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name',
-                'help' => 'You can choose from the above list of predefined regions, and add additional countries below',
+                'choice_label' => 'name',
+//                'help' => 'You can choose from the above list of predefined regions, and add additional countries below',
             ));
     }
 

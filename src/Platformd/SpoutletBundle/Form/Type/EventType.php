@@ -3,7 +3,6 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class EventType extends AbstractType
@@ -49,7 +48,7 @@ class EventType extends AbstractType
             'class' => 'SpoutletBundle:Site',
             'multiple' => true,
             'expanded' => true,
-            'property' => 'name',
+            'choice_label' => 'name',
         ));
 
 

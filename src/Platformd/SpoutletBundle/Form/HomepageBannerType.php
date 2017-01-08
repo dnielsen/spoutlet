@@ -8,6 +8,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class HomepageBannerType extends AbstractType
 {
+    const YES_NO = [
+        'Yes' => 1,
+        'No' => 0,
+    ];
+
     /**
      * {@inheritDoc}
      */
@@ -25,13 +30,11 @@ class HomepageBannerType extends AbstractType
                 'class' => Site::class,
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name'
+                'choice_label' => 'name'
             ))
             ->add('newWindow', 'choice', array(
-                'choices' => array(
-                    1 => 'Yes',
-                    0 => 'No',
-                ),
+                'choices' => self::YES_NO,
+                'choices_as_values' => true,
                 'label' => 'Open In New Window?',
             ));
     }

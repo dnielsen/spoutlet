@@ -7,6 +7,14 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class YouTubeValidator extends ConstraintValidator
 {
+    public function validate($value, Constraint $constraint)
+    {
+        if ($this->isValidYouTubeId($value) === false) {
+            $this->context->buildViolation($constraint->message)
+                ->setParameter('{{ value }}', $value)
+                ->addViolation();
+        }
+    }
 
     private function isValidYouTubeId($videoId)
     {
@@ -25,24 +33,11 @@ class YouTubeValidator extends ConstraintValidator
 
         $result = json_decode(curl_exec($curl), true);
 
-        if(isset($result))
-        {
-            if(array_key_exists('error', $result))
-            {
+        if (isset($result)) {
+            if (array_key_exists('error', $result)) {
                 return false;
             }
         } else {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function isValid($videoId, Constraint $constraint)
-    {
-        if($this->isValidYouTubeId($videoId) === false) {
-            $this->setMessage($constraint->message, array('{{ value }}' => $videoId));
-
             return false;
         }
 

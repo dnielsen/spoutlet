@@ -5,7 +5,7 @@ namespace Platformd\SpoutletBundle\Form\Type;
 use Platformd\SpoutletBundle\Entity\BackgroundAdSite;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class BackgroundAdSiteType extends AbstractType
 {
@@ -22,7 +22,7 @@ class BackgroundAdSiteType extends AbstractType
         ;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => BackgroundAdSite::class,

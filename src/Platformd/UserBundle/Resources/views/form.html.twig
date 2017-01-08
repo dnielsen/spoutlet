@@ -3,7 +3,7 @@
     required asterisk label stuff we have in our normal theme
 #}
 
-{% block field_label %}
+{% block form_label %}
 {% spaceless %}
     <label for="{{ id }}" class="form-lbl{{ required ? ' required' : '' }}">
         {% if required %}
@@ -13,19 +13,7 @@
 
     </label>
 {% endspaceless %}
-{% endblock field_label %}
-
-{% block field_errors %}
-{% spaceless %}
-    {% if errors|length > 0 %}
-
-    {% for error in errors %}
-        <span class="field-error">{{ error.messageTemplate|trans(error.messageParameters, 'validators') }}</span>
-    {% endfor %}
-
-    {% endif %}
-{% endspaceless %}
-{% endblock field_errors %}
+{% endblock form_label %}
 
 {% block form_errors %}
 {% spaceless %}

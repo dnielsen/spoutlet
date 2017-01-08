@@ -4,10 +4,16 @@ namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class IncompleteAccountType extends AbstractType
 {
+    const YES_NO = [
+        'Yes' => 1,
+        'No' => 0,
+    ];
+
     private $siteUtil;
 
     public function __construct($siteUtil)
@@ -62,7 +68,8 @@ class IncompleteAccountType extends AbstractType
         if ($user->getHasAlienwareSystem() === null) {
             $builder->add('hasAlienwareSystem', 'choice', array(
                 'expanded' => true,
-                'choices' => array(1 => 'Yes', 0 => 'No'),
+                'choices' => self::YES_NO,
+                'choices_as_values' => true,
                 'required' => true,
                 'label' => 'platformd.account_page.incomplete_form.has_alienware',
             ));
@@ -112,7 +119,7 @@ class IncompleteAccountType extends AbstractType
         }
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'validation_groups' => array('IncompleteUser'),

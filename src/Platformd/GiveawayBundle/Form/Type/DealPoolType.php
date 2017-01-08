@@ -18,7 +18,12 @@ class DealPoolType extends AbstractType
             ->add('maxKeysPerIp', 'integer', array('required' => false))
             ->add('isActive', 'checkbox', array('required' => false))
             ->add('keysAreUrls', 'checkbox', array('required' => false, 'label' => 'Keys are URLS?'))
-            ->add('allowedCountries', 'entity', array('multiple' => true, 'expanded' => false, 'class' => 'Platformd\SpoutletBundle\Entity\Country', 'property' => 'name'))
+            ->add('allowedCountries', 'entity', array(
+                'multiple' => true,
+                'expanded' => false,
+                'class' => 'Platformd\SpoutletBundle\Entity\Country',
+                'choice_label' => 'name'
+            ))
             ->add('keysfile', 'file');
     }
 

@@ -2,18 +2,14 @@
 
 namespace Platformd\IdeaBundle\Controller;
 
-use Platformd\EventBundle\Entity\GlobalEvent;
 use Platformd\EventBundle\Entity\GroupEvent;
 use Platformd\GroupBundle\Entity\Group;
 use Platformd\IdeaBundle\Entity\Comment;
-use Platformd\IdeaBundle\Entity\Document;
 use Platformd\IdeaBundle\Entity\EntrySet;
 use Platformd\IdeaBundle\Entity\FollowMapping;
-use Platformd\IdeaBundle\Entity\HtmlPage;
 use Platformd\IdeaBundle\Entity\Idea;
 use Platformd\IdeaBundle\Entity\Link;
 use Platformd\IdeaBundle\Entity\SponsorRegistry;
-use Platformd\IdeaBundle\Entity\Tag;
 use Platformd\IdeaBundle\Entity\Vote;
 use Platformd\IdeaBundle\Entity\Sponsor;
 use Platformd\IdeaBundle\Entity\RegistrationAnswer;
@@ -26,10 +22,8 @@ use Platformd\IdeaBundle\Entity\IdeaSpeaker;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
-use Symfony\Component\Form\Exception\NotValidException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use DateTime;
@@ -199,7 +193,8 @@ class IdeaController extends Controller
                 'choices' => $choices,
                 'attr' => $formAttributes,
                 'multiple' => 'true',
-                'data' => $selected
+                'data' => $selected,
+                'choices_as_values' => true,
             );
             $form = $this->container->get('form.factory')->createNamedBuilder('judgeAssignment', 'form')
                 ->add('judges', 'choice', $choiceOptions)
@@ -539,7 +534,7 @@ class IdeaController extends Controller
         return new RedirectResponse($ideaUrl);
     }
 
-    public function addLinkAction($entrySetId, $entryId)
+    public function addLinkAction($entrySetId, $entryId, Request $request)
     {
         $this->enforceUserSecurity();
 
@@ -552,20 +547,21 @@ class IdeaController extends Controller
             ->add('linkDescription', 'textarea', array('attr' => array('cols' => '60%')))
             ->add('url', 'text', array('attr' => array('size' => '60%', 'value' => 'http://')))
             ->add('type', 'choice', array(
-                'choices' => array(
-                    'other' => 'URL',
-                    'youtube' => 'YouTube',
-                    'twitter' => 'Twitter',
-                    'flickr' => 'Flickr',
-                    'slideshare' => 'SlideShare'
-                )
+                'choices' => [
+                    'URL' => 'other',
+                    'YouTube' => 'youtube',
+                    'Twitter' => 'twitter',
+                    'Flickr' => 'flickr',
+                    'SlideShare' => 'slideshare',
+                ],
+                'choices_as_values' => true,
             ))
             ->getForm();
 
-        if ($this->getRequest()->getMethod() === 'POST') {
-            $form->handleRequest($this->getRequest());
-            if ($form->isValid()) {
+        if ($request->getMethod() === 'POST') {
+            $form->handleRequest($request);
 
+            if ($form->isValid()) {
                 $idea->addLink($link);
                 $link->setIdea($idea);
 
@@ -577,6 +573,7 @@ class IdeaController extends Controller
                     'entrySetId' => $entrySetId,
                     'entryId' => $entryId,
                 ));
+
                 return new RedirectResponse($ideaUrl);
             }
         }
@@ -1121,11 +1118,16 @@ class IdeaController extends Controller
         }
 
         $form = $this->container->get('form.factory')->createNamedBuilder('sponsor_add', 'form', $sponsorRegistry)
-            ->add('level', 'choice', array('choices' => array(SponsorRegistry::BRONZE => 'Bronze',
-                SponsorRegistry::SILVER => 'Silver',
-                SponsorRegistry::GOLD => 'Gold',
-                SponsorRegistry::PLATINUM => 'Platinum',
-                SponsorRegistry::VENUE => 'Venue',)))
+            ->add('level', 'choice', array(
+                'choices' => [
+                    'Bronze' => SponsorRegistry::BRONZE,
+                    'Silver' => SponsorRegistry::SILVER,
+                    'Gold' => SponsorRegistry::SILVER,
+                    'Platinum' => SponsorRegistry::PLATINUM,
+                    'Venue' => SponsorRegistry::VENUE,
+                ],
+                'choices_as_values' => true,
+            ))
             ->getForm();
 
 

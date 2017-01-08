@@ -7,6 +7,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class GalleryType extends AbstractType
 {
+    const STATUSES = [
+        'Published' => 0,
+        'Unpublished' => 1,
+    ];
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -19,20 +24,18 @@ class GalleryType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
                 'label' => 'Enabled for',
-                'property' => 'name',
+                'choice_label' => 'name',
             ))
             ->add('sites', 'entity', array(
                 'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name'
+                'choice_label' => 'name'
             ))
             ->add('deleted', 'choice', array(
                 'label'     => 'Status',
-                'choices'   => array(
-                    0 => 'Published',
-                    1 => 'Unpublished',
-                ),
+                'choices'   => self::STATUSES,
+                'choices_as_values' => true,
             ))
             ->add('translations', 'collection', array(
                 'type' => new GalleryTranslationType,

@@ -15,7 +15,7 @@ class GalleryChoiceType extends AbstractType
     {
         $builder->add('galleries', 'entity', array(
             'class' => 'SpoutletBundle:Gallery',
-            'property' => 'name',
+            'choice_label' => 'name',
             'multiple' => true,
             'expanded' => true,
             'query_builder' => function(EntityRepository $er) {

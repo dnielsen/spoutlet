@@ -4,9 +4,7 @@ namespace Platformd\VideoBundle\Form\Type;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Platformd\SpoutletBundle\Util\SiteUtil;
-use Platformd\SpoutletBundle\Entity\GalleryRepository;
 use Platformd\GroupBundle\Entity\GroupRepository;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -23,7 +21,14 @@ class YoutubeType extends AbstractType
     private $tagManager;
     private $video;
 
-    function __construct(SiteUtil $siteUtil, EntityRepository $galleryRepo, GroupRepository $groupRepo, SecurityContext $securityContext, Request $request, TagManager $tagManager) {
+    public function __construct(
+        SiteUtil $siteUtil,
+        EntityRepository $galleryRepo,
+        GroupRepository $groupRepo,
+        SecurityContext $securityContext,
+        Request $request,
+        TagManager $tagManager
+    ) {
         $this->siteUtil         = $siteUtil;
         $this->galleryRepo      = $galleryRepo;
         $this->groupRepo        = $groupRepo;
@@ -60,6 +65,7 @@ class YoutubeType extends AbstractType
             ))
             ->add('galleries', 'choice', array(
                 'label'         => 'youtube.form.category',
+                'choices_as_values' => true,
                 'required'      => false,
                 'expanded'      => true,
                 'multiple'      => true,
@@ -84,6 +90,7 @@ class YoutubeType extends AbstractType
                 'expanded'      => true,
                 'multiple'      => true,
                 'choices'       => $this->getGroupChoices(),
+                'choices_as_values' => true,
             ));
         }
 
@@ -109,7 +116,7 @@ class YoutubeType extends AbstractType
         $results = $this->galleryRepo->findAllGalleriesByCategoryForSiteSortedByPosition($site, 'video');
 
         foreach ($results as $gallery) {
-            $choices[$gallery->getId()] = $gallery->getName($site->getId());
+            $choices[$gallery->getName($site->getId())] = $gallery->getId();
         }
 
         return $choices;
@@ -123,15 +130,13 @@ class YoutubeType extends AbstractType
         if ($this->video->getAuthor() == $user) {
             $results = $this->groupRepo->getAllGroupsForUserAndSite($user, $this->siteUtil->getCurrentSite());
             foreach ($results as $group) {
-                $choices[$group[0]->getId()] = $group[0]->getName();
+                $choices[$group[0]->getName()] = $group[0]->getId();
             }
         } elseif ($user->getAdminLevel() == 'ROLE_SUPER_ADMIN') {
             $results = $this->groupRepo->findGroupsForVideo($this->video);
             foreach ($results as $group) {
-                $choices[$group->getId()] = $group->getName();
+                $choices[$group->getName()] = $group->getId();
             }
-        } else {
-            return array();
         }
 
         return $choices;

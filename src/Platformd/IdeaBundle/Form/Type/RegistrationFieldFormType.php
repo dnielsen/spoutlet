@@ -5,6 +5,7 @@ namespace Platformd\IdeaBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Platformd\IdeaBundle\Entity\RegistrationField;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class RegistrationFieldFormType extends AbstractType
@@ -15,9 +16,10 @@ class RegistrationFieldFormType extends AbstractType
             ->add('type', 'choice', array(
                 'required' => true,
                 'choices' => array(
-                    RegistrationField::TYPE_TEXT => 'Text',
-                    RegistrationField::TYPE_CHECKBOX => 'Checkbox'
-                )
+                    'Text' => RegistrationField::TYPE_TEXT,
+                    'Checkbox' => RegistrationField::TYPE_CHECKBOX,
+                ),
+                'choices_as_values' => true,
             ))
             ->add('question', 'text', array(
                 'attr' => array(
@@ -27,7 +29,7 @@ class RegistrationFieldFormType extends AbstractType
             ));
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => RegistrationField::class

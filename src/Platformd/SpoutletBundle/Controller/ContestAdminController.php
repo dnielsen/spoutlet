@@ -25,7 +25,7 @@ class ContestAdminController extends Controller
     public function listAction($site)
     {
         $this->addContestsBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
@@ -67,7 +67,7 @@ class ContestAdminController extends Controller
         if (!$importedContest && $this->processForm($form, $request)) {
             $this->setFlash('success', 'The contest was created!');
 
-            return $this->redirect($this->generateUrl('admin_contest_index'));
+            return $this->redirectToRoute('admin_contest_index');
         }
 
         return $this->render('SpoutletBundle:ContestAdmin:new.html.twig', array(
@@ -81,7 +81,7 @@ class ContestAdminController extends Controller
     {
         $this->addContestsBreadcrumb()->addChild('Edit Contest');
 
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
         $tagManager = $this->getTagManager();
 
         $contest = $em->getRepository('SpoutletBundle:Contest')->findOneBy(array('slug' => $slug));

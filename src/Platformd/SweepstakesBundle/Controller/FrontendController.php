@@ -13,6 +13,7 @@ use Platformd\GroupBundle\GroupEvents;
 use Platformd\CEVOBundle\Api\ApiException;
 use Platformd\UserBundle\Entity\RegistrationSource;
 
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -189,7 +190,7 @@ class FrontendController extends Controller
         ));
     }
 
-    private function getEntryFormErrors($form)
+    private function getEntryFormErrors(FormInterface $form)
     {
         if ($form->isBound()) {
             $errors = array();
@@ -197,8 +198,8 @@ class FrontendController extends Controller
                 $errors[] = $error;
             }
 
-            if ($form->hasChildren()) {
-                foreach ($form->getChildren() as $child) {
+            if ($form->count()) {
+                foreach ($form->all() as $child) {
                     if (!$child->isValid()) {
                         $childErrors = $this->getEntryFormErrors($child);
                         foreach ($childErrors as $childError) {
@@ -220,7 +221,7 @@ class FrontendController extends Controller
     private function getEntryRepo()
     {
         return $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('SweepstakesBundle:SweepstakesEntry')
         ;
     }
@@ -228,7 +229,7 @@ class FrontendController extends Controller
     private function getCodeRepo()
     {
         return $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('SweepstakesBundle:PromoCodeContestCode')
         ;
     }
@@ -236,7 +237,7 @@ class FrontendController extends Controller
     private function getConsolationCodeRepo()
     {
         return $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('SweepstakesBundle:PromoCodeContestConsolationCode')
         ;
     }

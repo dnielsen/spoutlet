@@ -77,11 +77,17 @@
                             {% if _isOwner or _isAdmin %}
                                 <li><a href="{{ path('group_edit', {'slug': _key}) }}">Edit Group Details</a></li>
                                 <li><a href="{{ path('idea_admin_event', {'groupSlug': _key}) }}">Create Event</a></li>
-                                <li><a href="{{ path('page_new', {'scope': 'group', 'containerId': group.id}) }}">Create Page</a></li>
+
+                                {% if group is defined %}
+                                    <li><a href="{{ path('page_new', {'scope': 'group', 'containerId': group.id}) }}">Create Page</a></li>
+                                {% endif %}
 
                                 {% if _regId|default %}
                                     <li><a href="{{ path('entry_set_new', {'registrationId': _regId, 'entrySetId': 'new'}) }}">Create List</a></li>
-                                    <li><a href="{{ path('sponsors', {'scope': 'group', 'containerId': group.id}) }}">Manage Sponsors</a></li>
+
+                                    {% if group is defined %}
+                                        <li><a href="{{ path('sponsors', {'scope': 'group', 'containerId': group.id}) }}">Manage Sponsors</a></li>
+                                    {% endif %}
                                 {% endif %}
 
                                 {% if not group.isPublic %}
@@ -90,14 +96,16 @@
 
                             {% endif %}
 
-                            <li><a href="{{ path('group_new', {'parentGroupId': group.id}) }}">Create Sub Group</a></li>
+                            {% if group is defined %}
+                                <li><a href="{{ path('group_new', {'parentGroupId': group.id}) }}">Create Sub Group</a></li>
+                            {% endif %}
 
                             {% if not _isOwner %}
 
-                                {% if group.isMember(user) %}
+                                {% if group is defined and group.isMember(user) %}
                                     <li><a href="{{ path('group_leave', {'slug': group.slug}) }}" onclick="return confirm('Are you sure you want to leave this group?');">Leave Group</a></li>
 
-                                {% elseif group.isUserWatching(user) %}
+                                {% elseif group is defined and group.isUserWatching(user) %}
                                     <li><a href="{{ path('unwatch_group', {'groupId': group.id}) }}" onclick="return confirm('Are you sure you want to stop watching this group?');">Stop Watching Group</a></li>
                                 {% endif %}
 

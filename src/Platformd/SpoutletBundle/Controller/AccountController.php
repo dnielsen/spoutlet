@@ -437,11 +437,9 @@ class AccountController extends Controller
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
 
-            if ($form->hasChildren()) {
-                foreach ($form->getChildren() as $child) {
-                    if (!$child->isValid()) {
-                        $childErrors = true;
-                    }
+            foreach ($form->all() as $child) {
+                if (!$child->isValid()) {
+                    $childErrors = true;
                 }
             }
 

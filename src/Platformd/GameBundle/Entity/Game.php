@@ -4,11 +4,9 @@ namespace Platformd\GameBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\MediaBundle\Entity\Media;
-use Gedmo\Sluggable\Util\Urlizer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Context\LegacyExecutionContext;
-use Symfony\Component\Validator\ExecutionContext;
 
 /**
  * Platformd\GameBundle\Entity\Game
@@ -22,17 +20,17 @@ class Game
     const GAME_CATEGORY_LABEL_PREFIX    = 'platformd.admin.games.category.';
     const GAME_SUBCATEGORY_LABEL_PREFIX = 'platformd.admin.games.subcategory.';
 
-    static private $validCategories = array(
+    private static $validCategories = [
         'action',
         'rpg',
         'strategy',
         'other',
-    );
+    ];
 
-    static private $validSubcategories = array(
+    private static $validSubcategories = [
         'free-to-play',
         'mmo',
-    );
+    ];
 
     /**
      * @var integer $id

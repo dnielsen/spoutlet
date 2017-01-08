@@ -3,9 +3,7 @@
 namespace Platformd\UserBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-
 use Doctrine\ORM\EntityRepository;
-
 use Platformd\UserBundle\Entity\RegistrationSource;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -33,24 +31,26 @@ class RegistrationActivitiesMetricsType extends AbstractType
             ->add('country', 'entity', array(
                 'class'         => 'SpoutletBundle:Country',
                 'empty_value'   => 'All Countries',
-                'property'      => 'name',
+                'choice_label'      => 'name',
                 'attr'    => array(
                     'class' => 'base-select',
                 ),
             ))
             ->add('country_activity_type', 'choice', array(
-                'choices' => self::$choices,
+                'choices' => $this->getActivityTypes(),
+                'choices_as_values' => true,
                 'attr'    => array(
                     'class'         => 'activity-type country-activity-type',
                     'data-grouping' => 'country',
                 ),
             ))
             ->add('country_activity_id', 'choice', array(
-                'choices'     => array(),
+                'choices'     => [],
                 'empty_value' => 'Choose an Activity Type',
                 'attr'        => array(
                     'class' => 'country-activity-id',
                 ),
+                'choices_as_values' => true,
             ))
             ->add('from_date_country', 'date', array(
                 'widget' => 'single_text',
@@ -77,11 +77,12 @@ class RegistrationActivitiesMetricsType extends AbstractType
                 ),
             ))
             ->add('region_activity_type', 'choice', array(
-                'choices' => self::$choices,
+                'choices' => $this->getActivityTypes(),
                 'attr'    => array(
                     'class'         => 'activity-type region-activity-type',
                     'data-grouping' => 'region',
                 ),
+                'choices_as_values' => true,
             ))
             ->add('region_activity_id', 'choice', array(
                 'choices'     => array(),
@@ -89,6 +90,7 @@ class RegistrationActivitiesMetricsType extends AbstractType
                 'attr'        => array(
                     'class' => 'region-activity-id',
                 ),
+                'choices_as_values' => true,
             ))
             ->add('from_date_region', 'date', array(
                 'widget' => 'single_text',
@@ -109,6 +111,14 @@ class RegistrationActivitiesMetricsType extends AbstractType
     public function getName()
     {
         return 'user_registration_activities_metrics';
+    }
+
+    /**
+     * @return array
+     */
+    private function getActivityTypes()
+    {
+        return array_flip(self::$choices);
     }
 }
 

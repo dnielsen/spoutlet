@@ -5,14 +5,25 @@ namespace Platformd\EventBundle\Form\Type;
 use Symfony\Component\Form\AbstractType,
     Symfony\Component\Security\Core\SecurityContextInterface;
 
-use Platformd\EventBundle\Form\EventSubscriber\AdminEventSubscriber,
-    Platformd\EventBundle\Entity\Event,
+use Platformd\EventBundle\Entity\Event,
     Platformd\MediaBundle\Form\Type\MediaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class EventType extends AbstractType
 {
+    const ONLINE = [
+        'platformd.event.form.choice.physical_event' => 0,
+        'platformd.event.form.choice.online_event' => 1,
+    ];
+
+    const REGISTRATION_OPTIONS = [
+        'platformd.event.registration.enabled' => Event::REGISTRATION_ENABLED,
+        'platformd.event.registration.disabled' => Event::REGISTRATION_DISABLED,
+        'platformd.event.registration.3rdparty' => Event::REGISTRATION_3RD_PARTY,
+    ];
+
     /**
      * @var \Symfony\Component\Security\Core\SecurityContextInterface
      */
@@ -46,10 +57,8 @@ class EventType extends AbstractType
                 )
             ))
             ->add('online', 'choice', array(
-                'choices' => array(
-                    0 => 'platformd.event.form.choice.physical_event',
-                    1 => 'platformd.event.form.choice.online_event'
-                ),
+                'choices' => self::ONLINE,
+                'choices_as_values' => true,
                 'expanded' => true,
                 'label' => 'platformd.event.form.event_type'
             ))
@@ -84,17 +93,14 @@ class EventType extends AbstractType
                 'error_bubbling' => false,
             ))
             ->add('registrationOption', 'choice', array(
-                'choices' => array(
-                    Event::REGISTRATION_ENABLED => 'platformd.event.registration.enabled',
-                    Event::REGISTRATION_DISABLED => 'platformd.event.registration.disabled',
-                    Event::REGISTRATION_3RD_PARTY => 'platformd.event.registration.3rdparty'
-                ),
+                'choices' => self::REGISTRATION_OPTIONS,
+                'choices_as_values' => true,
                 'expanded' => true,
                 'label' => 'platformd.event.form.event_options'
             ));
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Event::class,

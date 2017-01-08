@@ -2,19 +2,17 @@
 
 namespace Platformd\EventBundle\Form\EventSubscriber;
 
-use Symfony\Component\Form\Event\DataEvent,
-    Symfony\Component\Form\FormFactoryInterface,
+use Symfony\Component\Form\FormFactoryInterface,
     Symfony\Component\EventDispatcher\EventSubscriberInterface,
     Symfony\Component\Form\FormEvents,
-    Symfony\Component\Security\Core\SecurityContextInterface
-;
+    Symfony\Component\Security\Core\SecurityContextInterface;
 
 use Doctrine\ORM\EntityRepository;
 
 use Platformd\SpoutletBundle\Form\Type\SlugType,
     Platformd\EventBundle\Entity\Event,
-    Platformd\EventBundle\Form\Type\GroupEventTranslationType
-;
+    Platformd\EventBundle\Form\Type\GroupEventTranslationType;
+use Symfony\Component\Form\FormEvent;
 
 class AdminGroupEventSubscriber implements EventSubscriberInterface
 {
@@ -29,10 +27,12 @@ class AdminGroupEventSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(FormEvents::PRE_SET_DATA => 'preSetData');
+        return [
+            FormEvents::PRE_SET_DATA => 'preSetData',
+        ];
     }
 
-    public function preSetData(DataEvent $event)
+    public function preSetData(FormEvent $event)
     {
         $data = $event->getData();
         $form = $event->getForm();
@@ -44,11 +44,12 @@ class AdminGroupEventSubscriber implements EventSubscriberInterface
         // If User is a super admin, they have more options
         if ($this->security->isGranted('ROLE_SUPER_ADMIN')) {
             $form->add($this->factory->createNamed('choice', 'registrationOption', null, array(
-                'choices' => array(
-                    Event::REGISTRATION_ENABLED => 'platformd.event.registration.enabled',
-                    Event::REGISTRATION_DISABLED => 'platformd.event.registration.disabled',
-                    Event::REGISTRATION_3RD_PARTY => 'platformd.event.registration.3rdparty'
-                ),
+                'choices' => [
+                    'platformd.event.registration.enabled' => Event::REGISTRATION_ENABLED,
+                    'platformd.event.registration.disabled' => Event::REGISTRATION_DISABLED,
+                    'platformd.event.registration.3rdparty' => Event::REGISTRATION_3RD_PARTY,
+                ],
+                'choices_as_values' => true,
                 'expanded' => false,
                 'multiple' => false,
                 'label' => 'platformd.event.form.event_options'
@@ -72,32 +73,33 @@ class AdminGroupEventSubscriber implements EventSubscriberInterface
             )));
 
             $form->add($this->factory->createNamed('entity', 'sites', null, array(
-                'class'    => 'SpoutletBundle:Site',
-                'query_builder' => function(EntityRepository $er) use ($sitesArr) {
+                'class' => 'SpoutletBundle:Site',
+                'query_builder' => function (EntityRepository $er) use ($sitesArr) {
                     $qb = $er->createQueryBuilder('s');
                     return $qb
                         ->add('where', $qb->expr()->in('s.id', ':sites_array'))
                         ->setParameter('sites_array', $sitesArr);
-                      },
+                },
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name',
+                'choice_label' => 'name',
                 'label' => 'platformd.event.form.sites'
             )));
 
             $form->add($this->factory->createNamed('collection', 'translations', null, array(
                 'type' => new GroupEventTranslationType,
-                'allow_add'      => false,
-                'allow_delete'   => false,
+                'allow_add' => false,
+                'allow_delete' => false,
                 'by_reference' => false,
                 'required' => false
             )));
         } else {
             $form->add($this->factory->createNamed('choice', 'registrationOption', null, array(
-                'choices' => array(
-                    Event::REGISTRATION_ENABLED => 'platformd.event.registration.enabled',
-                    Event::REGISTRATION_DISABLED => 'platformd.event.registration.disabled'
-                ),
+                'choices' => [
+                    'platformd.event.registration.enabled' => Event::REGISTRATION_ENABLED,
+                    'platformd.event.registration.disabled' => Event::REGISTRATION_DISABLED,
+                ],
+                'choices_as_values' => true,
                 'expanded' => false,
                 'multiple' => false,
                 'label' => 'platformd.event.form.event_options'

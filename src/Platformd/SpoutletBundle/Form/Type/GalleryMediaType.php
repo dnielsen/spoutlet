@@ -43,6 +43,7 @@ class GalleryMediaType extends AbstractType
             'expanded'      => true,
             'multiple'      => true,
             'choices'       => $this->getCategoryChoices(),
+            'choices_as_values' => true,
         ));
 
         if ($this->currentSite->getSiteFeatures()->getHasGroups()) {
@@ -52,6 +53,7 @@ class GalleryMediaType extends AbstractType
                 'expanded'      => true,
                 'multiple'      => true,
                 'choices'       => $this->getGroupChoices(),
+                'choices_as_values' => true,
             ));
         }
 
@@ -79,13 +81,13 @@ class GalleryMediaType extends AbstractType
 
     private function getCategoryChoices()
     {
-        $choices = array();
+        $choices = [];
         $site = $this->currentSite;
 
         $results = $this->galleryRepo->findAllGalleriesByCategoryForSiteSortedByPosition($site, 'image');
 
         foreach ($results as $gallery) {
-            $choices[$gallery->getId()] = $gallery->getName($site->getId());
+            $choices[$gallery->getName($site->getId())] = $gallery->getId();
         }
 
         return $choices;
@@ -93,20 +95,18 @@ class GalleryMediaType extends AbstractType
 
     private function getGroupChoices()
     {
-        $choices = array();
+        $choices = [];
 
         if ($this->galleryMedia->getAuthor() == $this->user) {
             $results = $this->groupRepo->getAllGroupsForUserAndSite($this->user, $this->currentSite);
             foreach ($results as $group) {
-                $choices[$group[0]->getId()] = $group[0]->getName();
+                $choices[$group[0]->getName()] = $group[0]->getId();
             }
         } elseif ($this->user->getAdminLevel() == 'ROLE_SUPER_ADMIN') {
             $results = $this->groupRepo->findGroupsForImage($this->galleryMedia);
             foreach ($results as $group) {
-                $choices[$group->getId()] = $group->getName();
+                $choices[$group->getName()] = $group->getId();
             }
-        } else {
-            return array();
         }
 
         return $choices;

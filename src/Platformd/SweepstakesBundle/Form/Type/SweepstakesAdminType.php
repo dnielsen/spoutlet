@@ -7,10 +7,21 @@ use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SweepstakesBundle\Entity\Sweepstakes;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class SweepstakesAdminType extends AbstractType
 {
+    const YES_NO = [
+        'Yes' => 1,
+        'No' => 0,
+    ];
+
+    const PUBLISHED = [
+        'status.published' => 1,
+        'status.unpublished' => 0,
+    ];
+
     private $sweepstakes;
     private $sweepstakesManager;
     private $tagManager;
@@ -35,7 +46,7 @@ class SweepstakesAdminType extends AbstractType
                 'class' => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name',
+                'choice_label' => 'name',
             ))
             ->add('timezone', 'gmtTimezone')
             ->add('backgroundImage', new MediaType(), array(
@@ -52,10 +63,8 @@ class SweepstakesAdminType extends AbstractType
                 'required' => false,
             ))
             ->add('testOnly', 'choice', array(
-                'choices' => array(
-                    1 => 'Yes',
-                    0 => 'No',
-                ),
+                'choices' => self::YES_NO,
+                'choices_as_values' => true,
                 'label' => 'Allow admin testing?',
             ))
             ->add('hidden', 'checkbox', array(
@@ -76,10 +85,7 @@ class SweepstakesAdminType extends AbstractType
                 )
             ))
             ->add('published', 'choice', array(
-                'choices' => array(
-                    1 => 'status.published',
-                    0 => 'status.unpublished'
-                ),
+                'choices' => self::PUBLISHED,
                 'label' => 'status.choose_status',
             ))
             ->add('tags', 'text', array(
@@ -159,7 +165,7 @@ class SweepstakesAdminType extends AbstractType
         }
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Sweepstakes::class,

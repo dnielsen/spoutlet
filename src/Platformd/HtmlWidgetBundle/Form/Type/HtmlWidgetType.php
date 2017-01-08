@@ -3,7 +3,6 @@
 namespace Platformd\HtmlWidgetBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Platformd\SpoutletBundle\Form\Type\SiteChoiceType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -22,7 +21,7 @@ class HtmlWidgetType extends AbstractType
                 'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name'
+                'choice_label' => 'name'
             ))
         ;
     }

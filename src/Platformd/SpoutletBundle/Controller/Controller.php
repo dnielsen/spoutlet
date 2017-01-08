@@ -16,6 +16,7 @@ use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Platformd\SpoutletBundle\Util\HttpUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -409,7 +410,7 @@ class Controller extends BaseController
         return $this->container->get('platformd.model.comment_manager');
     }
 
-    protected function getErrorMessages(Form $form) {
+    protected function getErrorMessages(FormInterface $form) {
         $errors = array();
         foreach ($form->getErrors() as $key => $error) {
             $template = $error->getMessageTemplate();
@@ -421,17 +422,15 @@ class Controller extends BaseController
 
             $errors[$key] = $template;
         }
-        if ($form->hasChildren()) {
-            foreach ($form->getChildren() as $child) {
-                if (!$child->isValid()) {
-                    $errors[$child->getName()] = $this->getErrorMessages($child);
-                }
+
+        foreach ($form->all() as $child) {
+            if (!$child->isValid()) {
+                $errors[$child->getName()] = $this->getErrorMessages($child);
             }
         }
 
         return $errors;
     }
-
 
     public function getParentByIdea($idea)
     {

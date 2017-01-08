@@ -5,7 +5,7 @@ namespace Platformd\SpoutletBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CountryRestrictionRuleType extends AbstractType
 {
@@ -15,16 +15,17 @@ class CountryRestrictionRuleType extends AbstractType
             ->add('country', 'entity', array(
                 'label'     => 'Country',
                 'class'     => 'SpoutletBundle:Country',
-                'property'  => 'name',
+                'choice_label'  => 'name',
                 'empty_value' => '',
             ))
             ->add('ruleType', 'choice', array(
                 'choices'   => $this->getValidRuleTypes(),
                 'label'     => 'Allow/Deny',
+                'choices_as_values' => true,
             ));
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => CountryAgeRestrictionRule::class,
@@ -38,6 +39,8 @@ class CountryRestrictionRuleType extends AbstractType
 
     private function getValidRuleTypes()
     {
+        $choices = [];
+
         foreach (CountryAgeRestrictionRule::getValidRuleTypes() as $ruleType) {
             $choices[$ruleType] = $ruleType;
         }

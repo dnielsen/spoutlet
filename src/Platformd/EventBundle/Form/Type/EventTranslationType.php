@@ -6,7 +6,7 @@ use Platformd\EventBundle\Entity\EventTranslation;
 use Symfony\Component\Form\AbstractType;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventTranslationType extends AbstractType
 {
@@ -32,7 +32,7 @@ class EventTranslationType extends AbstractType
         ;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => EventTranslation::class,

@@ -6,13 +6,11 @@ use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-use Doctrine\Common\Collections\ArrayCollection,
-    Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
-use FOS\UserBundle\Validator\Password;
 
 use Platformd\EventBundle\Entity\GroupEvent;
 use Platformd\GroupBundle\Entity\Group;

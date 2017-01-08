@@ -38,7 +38,7 @@ class AgeController extends Controller
             'csrf_protection' => false,
             'empty_value' => '--', 'required' => true,
             'years' => range(date('Y'), 1940),
-            'validation_constraint' => $constraint,
+            'constraints' => $constraint,
             'invalid_message' => ''
         ));
 

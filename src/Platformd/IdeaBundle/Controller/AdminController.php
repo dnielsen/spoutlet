@@ -228,8 +228,10 @@ class AdminController extends Controller
         }
 
         $form = $this->container->get('form.factory')->createNamedBuilder('session_speaker', 'form', $sessionSpeaker)
-            ->add('speaker', 'entity', array('class' => 'UserBundle:User',
-                'choices' => $session->getEvent()->getAttendeesAlphabetical()))
+            ->add('speaker', 'entity', array(
+                'class' => 'UserBundle:User',
+                'choices' => $session->getEvent()->getAttendeesAlphabetical())
+            )
             ->add('role', 'text', array('attr' => array('class' => 'formRowWidth')))
             ->add('biography', 'textarea', array('attr' => array('class' => 'formRowWidth', 'rows' => '6')))
             ->getForm();
@@ -340,12 +342,19 @@ class AdminController extends Controller
             ->add('noDate', 'checkbox', array('required' => false))
             ->add('startsAt', 'datetime', array())
             ->add('endsAt', 'datetime', array())
-            ->add('external', 'choice', array('choices' => array('1' => 'No', '0' => 'Yes')))
+            ->add('external', 'choice', array(
+                'choices' => array(
+                    '1' => 'No',
+                    '0' => 'Yes'
+                ),
+                'choices_as_values' => true,
+            ))
             ->add('registrationOption', 'choice', array(
                 'choices' => array(
                     Event::REGISTRATION_ENABLED => 'Enabled',
                     Event::REGISTRATION_DISABLED => 'Disabled',
-                )
+                ),
+                'choices_as_values' => true,
             ))
             ->add('registrationFields', 'collection', [
                 'type' => new RegistrationFieldFormType(),
@@ -460,9 +469,20 @@ class AdminController extends Controller
             ->add('externalUrl', 'text', array('attr' => array('size' => '60%', 'placeholder' => 'http://'), 'required' => true))
             ->add('startsAt', 'datetime', array())
             ->add('endsAt', 'datetime', array())
-            ->add('external', 'choice', array('choices' => array('1' => 'No', '0' => 'Yes')))
-            ->add('registrationOption', 'choice', array('choices' => array(Event::REGISTRATION_ENABLED => 'Enabled',
-                Event::REGISTRATION_DISABLED => 'Disabled',)))
+            ->add('external', 'choice', array(
+                'choices' => array(
+                    '1' => 'No',
+                    '0' => 'Yes'
+                ),
+                'choices_as_values' => true,
+            ))
+            ->add('registrationOption', 'choice', array(
+                'choices' => array(
+                    Event::REGISTRATION_ENABLED => 'Enabled',
+                    Event::REGISTRATION_DISABLED => 'Disabled',
+                ),
+                'choices_as_values' => true,
+            ))
             ->add('externalUrl', 'text', array('attr' => array('size' => '60%', 'placeholder' => 'http://')))
             ->add('location', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
             ->add('address1', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
@@ -655,13 +675,36 @@ class AdminController extends Controller
 
         $form = $this->container->get('form.factory')->createNamedBuilder('entrySet', 'form', $entrySet)
             ->add('name', 'text', array('label' => 'entrySet_name', 'translation_domain' => 'forms', 'attr' => array('style' => 'width:60%')))
-            ->add('type', 'choice', array('label' => 'entrySet_type', 'translation_domain' => 'forms', 'choices' => array(EntrySet::TYPE_IDEA => 'Ideas',
-                EntrySet::TYPE_SESSION => 'Sessions',
-                EntrySet::TYPE_THREAD => 'Threads',
-                EntrySet::TYPE_TASK => 'Tasks',)))
+            ->add('type', 'choice', array(
+                'label' => 'entrySet_type',
+                'translation_domain' => 'forms',
+                'choices' => array(
+                    EntrySet::TYPE_IDEA => 'Ideas',
+                    EntrySet::TYPE_SESSION => 'Sessions',
+                    EntrySet::TYPE_THREAD => 'Threads',
+                    EntrySet::TYPE_TASK => 'Tasks',
+                ),
+                'choices_as_values' => true,
+            ))
             ->add('description', 'textarea', array('label' => 'entrySet_description', 'translation_domain' => 'forms', 'attr' => array('style' => 'width:60%')))
-            ->add('isSubmissionActive', 'choice', array('label' => 'entrySet_isSubmissionActive', 'translation_domain' => 'forms', 'choices' => array('1' => 'Yes', '0' => 'No')))
-            ->add('isVotingActive', 'choice', array('label' => 'entrySet_isVotingActive', 'translation_domain' => 'forms', 'choices' => array('0' => 'No', '1' => 'Yes')))
+            ->add('isSubmissionActive', 'choice', array(
+                'label' => 'entrySet_isSubmissionActive',
+                'translation_domain' => 'forms',
+                'choices' => array(
+                    '1' => 'Yes',
+                    '0' => 'No',
+                ),
+                'choices_as_values' => true,
+            ))
+            ->add('isVotingActive', 'choice', array(
+                'label' => 'entrySet_isVotingActive',
+                'translation_domain' => 'forms',
+                'choices' => array(
+                    '0' => 'No',
+                    '1' => 'Yes',
+                ),
+                'choices_as_values' => true,
+            ))
             ->add('allowedVoters', 'text', array('label' => 'entrySet_allowedVoters', 'translation_domain' => 'forms', 'max_length' => '5000', 'attr' => array('style' => 'width:60%', 'placeholder' => 'username1, username2, ...'), 'required' => '0',))
             ->getForm();
 
@@ -824,9 +867,12 @@ class AdminController extends Controller
         $formAttributes = array('size' => count($choices) <= 10 ? count($choices) : 10, 'style' => 'width: 50%');
 
         $form = $this->container->get('form.factory')->createNamedBuilder('criteria', 'form')
-            ->add('displayName', 'choice', array('choices' => $choices,
+            ->add('displayName', 'choice', array(
+                'choices' => $choices,
                 'label' => 'criteria_displayName',
-                'attr' => $formAttributes))
+                'attr' => $formAttributes,
+                'choices_as_values' => true,
+            ))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {

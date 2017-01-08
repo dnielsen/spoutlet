@@ -10,11 +10,19 @@ class LocaleListener implements EventSubscriberInterface
 {
     private $defaultLocale;
 
+    /**
+     * LocaleListener constructor.
+     *
+     * @param string $defaultLocale
+     */
     public function __construct($defaultLocale = 'en')
     {
         $this->defaultLocale = $defaultLocale;
     }
 
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return [
@@ -22,6 +30,9 @@ class LocaleListener implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param GetResponseEvent $event
+     */
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
@@ -30,11 +41,10 @@ class LocaleListener implements EventSubscriberInterface
             return;
         }
 
-//        if ($locale = $request->attributes->get('_locale')) {
-//            $request->getSession()->set('_locale', $locale);
-//        } else {
-            // if no explicit locale has been set on this request, use one from the session
-        $request->setLocale($request->getSession()->get('_locale', $this->defaultLocale));
-//        }
+        if ($locale = $request->attributes->get('_locale')) {
+            $request->getSession()->set('_locale', $locale);
+        } else {
+            $request->setLocale($request->getSession()->get('_locale', $this->defaultLocale));
+        }
     }
 }

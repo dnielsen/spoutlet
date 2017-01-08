@@ -1055,7 +1055,7 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
      */
     static public function getValidStatusesMap()
     {
-        return self::$validStatuses;
+        return array_flip(self::$validStatuses);
     }
 
     /**
@@ -1159,10 +1159,10 @@ class Giveaway implements LinkableInterface, CommentableInterface, IndexableInte
 
     static public function getTypeChoices()
     {
-        return array(
-            self::TYPE_KEY_GIVEAWAY => self::TYPE_TEXT_PREFIX . self::TYPE_KEY_GIVEAWAY,
-            self::TYPE_MACHINE_CODE_SUBMIT => self::TYPE_TEXT_PREFIX . self::TYPE_MACHINE_CODE_SUBMIT,
-        );
+        return [
+            self::TYPE_TEXT_PREFIX . self::TYPE_KEY_GIVEAWAY => self::TYPE_KEY_GIVEAWAY,
+            self::TYPE_TEXT_PREFIX . self::TYPE_MACHINE_CODE_SUBMIT => self::TYPE_MACHINE_CODE_SUBMIT,
+        ];
     }
 
     /**

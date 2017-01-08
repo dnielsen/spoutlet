@@ -17,10 +17,12 @@ class GameType extends AbstractType
             ))
             ->add('category', 'choice', array(
                 'choices' => self::getCategoryChoices(),
+                'choices_as_values' => true,
                 'label' => 'Genre',
             ))
             ->add('subcategories', 'choice', array(
                 'choices' => self::getSubcategoryChoices(),
+                'choices_as_values' => true,
                 'label' => 'Subcategory',
                 'multiple' => true,
                 'expanded' => true,
@@ -56,9 +58,10 @@ class GameType extends AbstractType
     private static function getCategoryChoices()
     {
         $values = Game::getValidCategories();
-        $choices = array('' => 'Choose a Category');
+        $choices = ['Choose a Category' => ''];
+
         foreach ($values as $value) {
-            $choices[$value]  = Game::GAME_CATEGORY_LABEL_PREFIX.$value;
+            $choices[Game::GAME_CATEGORY_LABEL_PREFIX.$value] = $value;
         }
 
         return $choices;

@@ -10,6 +10,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class CreateNewsFormType extends AbstractType
 {
+    const PUBLISHED_CHOICE = [
+        'Unpublished' => 0,
+        'Published' => 1,
+    ];
+
     private $news;
     private $tagManager;
 
@@ -25,7 +30,9 @@ class CreateNewsFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('game', null, array('empty_value' => 'N/A'))
+            ->add('game', null, array(
+                'empty_value' => 'N/A',
+            ))
             ->add('title', 'text')
             ->add('slug', new SlugType(), array(
                 'url_prefix' => '/news/',
@@ -44,18 +51,19 @@ class CreateNewsFormType extends AbstractType
             ))
             ->add('blurb', 'textarea')
             ->add('body', 'purifiedTextarea', array(
-                'attr' => array('class' => 'ckeditor'),
+                'attr' => array(
+                    'class' => 'ckeditor',
+                ),
             ))
             ->add('sites', 'entity', array(
                 'class' => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name',
+                'choice_label' => 'name',
             ))
             ->add('published', 'choice', array(
-                'choices' => [
-                    0 => 'Unpublished', 1 => 'Published'
-                ],
+                'choices' => self::PUBLISHED_CHOICE,
+                'choices_as_values' => true,
                 'label' => 'published_status',
             ))
             ->add('image', new MediaType(), array(
@@ -65,6 +73,7 @@ class CreateNewsFormType extends AbstractType
             ))
             ->add('type', 'choice', array(
                 'choices' => $this->getTypeChoices(),
+                'choices_as_values' => true,
                 'attr' => array(
                     'class' => 'news-type',
                 ),
@@ -94,10 +103,10 @@ class CreateNewsFormType extends AbstractType
 
     private function getTypeChoices()
     {
-        $choices = array();
+        $choices = [];
 
         foreach (News::getTypes() as $type) {
-            $choices[$type] = ucfirst($type);
+            $choices[ucfirst($type)] = $type;
         }
 
         return $choices;

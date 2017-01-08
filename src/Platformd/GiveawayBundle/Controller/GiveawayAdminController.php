@@ -393,7 +393,7 @@ class GiveawayAdminController extends Controller
         $filterForm = $metricManager->createFilterFormBuilder($this->get('form.factory'))
             ->add('giveaway', 'entity', array(
                 'class' => 'GiveawayBundle:Giveaway',
-                'property' => 'name',
+                'choice_label' => 'name',
                 'empty_value' => 'All Giveaways',
                 'query_builder' => function(EntityRepository $er) use ($site) {
                     $qb = $er->createQueryBuilder('g')

@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 
 use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class CountryAgeRestrictionRulesetType extends AbstractType
@@ -23,27 +24,26 @@ class CountryAgeRestrictionRulesetType extends AbstractType
             ));
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => CountryAgeRestrictionRuleset::class,
         ]);
     }
 
-    public function getName()
+    public function finishView(FormView $view, FormInterface $form, array $options)
     {
-        return 'platformd_spoutletbundle_countryagerestrictionruletype';
-    }
-
-    public function buildViewBottomUp(FormView $view, FormInterface $form)
-    {
-        parent::buildViewBottomUp($view, $form);
-
-        $view->set('help', '(Optional)<ul>
+        $view->vars = array_replace($view->vars, [
+            'help' => '(Optional)<ul>
                             <li>If you add at least one "allow" restriction, everything else is disallowed unless specifically allowed</li>
                             <li>If you only add "disallowed" restrictions, everything else is allowed</li>
                             <li>If there are no restrictions, everyone will be allowed</li>
-                            </ul>'
-        );
+                            </ul>',
+        ]);
+    }
+
+    public function getName()
+    {
+        return 'platformd_spoutletbundle_countryagerestrictionruletype';
     }
 }

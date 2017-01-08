@@ -9,9 +9,6 @@ security:
             encode_as_base64: false
             iterations: 1
 
-#    factories:
-#        - "%kernel.root_dir%/../src/Platformd/UserBundle/Resources/config/security_factory.yml"
-
     providers:
         fos_userbundle:
             id: fos_user.user_manager

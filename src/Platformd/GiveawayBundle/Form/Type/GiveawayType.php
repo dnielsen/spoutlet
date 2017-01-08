@@ -11,10 +11,15 @@ use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Platformd\SpoutletBundle\Form\Type\CountryAgeRestrictionRulesetType;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\GiveawayBundle\Entity\GiveawayTranslation;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GiveawayType extends AbstractType
 {
+    const YES_NO = [
+        'Yes' => 1,
+        'No' => 0,
+    ];
+
     private $giveaway;
     private $tagManager;
 
@@ -46,7 +51,8 @@ class GiveawayType extends AbstractType
             ->add('slug', new SlugType(), array('label' => 'URL'))
             ->add('giveawayType', 'choice', array(
                 'choices' => Giveaway::getTypeChoices(),
-                'label' => 'Giveaway Type'
+                'label' => 'Giveaway Type',
+                'choices_as_values' => true,
             ))
             ->add('bannerImageFile', 'file')
             ->add('removeBannerImage', 'checkbox', array(
@@ -70,23 +76,22 @@ class GiveawayType extends AbstractType
             ->add('status', 'choice', array(
                 'choices' => Giveaway::getValidStatusesMap(),
                 'empty_value' => 'platformd.giveaway.status.blank_value',
+                'choices_as_values' => true,
             ))
             ->add('game', null, array('empty_value' => 'N/A'))
             ->add('sites', 'entity', array(
                 'class' => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name',
+                'choice_label' => 'name',
             ))
             ->add('externalUrl', null, array(
 //                'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to the GiveAway page.'
                 )
             )
             ->add('testOnly', 'choice', array(
-                'choices' => array(
-                    1 => 'Yes',
-                    0 => 'No',
-                ),
+                'choices' => self::YES_NO,
+                'choices_as_values' => true,
                 'label' => 'Allow admin testing?',
 //                'help' => 'This allows admins to still test the operation of the giveaway IF it is unpublished',
             ))
@@ -120,7 +125,16 @@ class GiveawayType extends AbstractType
         ));
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        if ($data = $form->getData()) {
+            $view->vars = array_replace($view->vars, [
+                'mediaObjects' => $data,
+            ]);
+        }
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Giveaway::class,
@@ -130,12 +144,5 @@ class GiveawayType extends AbstractType
     public function getName()
     {
         return 'giveaway';
-    }
-
-    public function buildViewBottomUp(FormView $view, FormInterface $form)
-    {
-        if ($data = $form->getData()) {
-            $view->set('mediaObjects', $data);
-        }
     }
 }

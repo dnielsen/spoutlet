@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Platformd\MediaBundle\Entity\Media;
 
 abstract class MediaType extends AbstractType
@@ -33,7 +33,7 @@ abstract class MediaType extends AbstractType
         }
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Media::class,
@@ -43,20 +43,16 @@ abstract class MediaType extends AbstractType
         ]);
     }
 
-    /**
-     * Set the "help" message on the form view
-     *
-     * @param \Symfony\Component\Form\FormView $view
-     * @param \Symfony\Component\Form\FormInterface $form
-     */
-    public function buildViewBottomUp(FormView $view, FormInterface $form)
+    public function finishView(FormView $view, FormInterface $form, array $options)
     {
         if ($this->helpMessage) {
             $view['fileObject']->set('help', $this->helpMessage);
         }
 
         if ($form->getData()) {
-            $view->set('mediaObject', $form->getData());
+            $view->vars = array_replace($view->vars, [
+                'mediaObject' => $form->getData(),
+            ]);
         }
     }
 

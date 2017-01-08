@@ -15,9 +15,9 @@
 {% endblock %}
 
 {% if features.hasPhotos %}
-    {% if app.session.locale == 'en_US' or app.session.locale == 'en_GB' %}
+    {% if app.request.locale == 'en_US' or app.request.locale == 'en_GB' %}
         {% set bgImage = asset('bundles/spoutlet/images/content-bg-galleries.jpg') %}
-    {% elseif app.session.locale == 'es' %}
+    {% elseif app.request.locale == 'es' %}
         {% set bgImage = asset('bundles/spoutlet/images/content-bg-galleries-es.jpg') %}
     {% else %}
         {% set bgImage = null %}
