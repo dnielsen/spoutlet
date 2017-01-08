@@ -22,6 +22,13 @@ use Platformd\IdeaBundle\Entity\IdeaSpeaker;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -30,7 +37,6 @@ use DateTime;
 
 class IdeaController extends Controller
 {
-
     const SIDEBAR_NONE = 0;
     const SIDEBAR_JUDGE = 1;
     const SIDEBAR_ADMIN = 2;
@@ -178,7 +184,7 @@ class IdeaController extends Controller
             if ($allowedVoterString != "") {
                 $allowedVoters = array_map('trim', explode(",", $allowedVoterString));
                 foreach ($allowedVoters as $voter) {
-                    $choices[$voter] = $userRepo->findOneBy(array('username' => $voter))->getName();
+                    $choices[$userRepo->findOneBy(array('username' => $voter))->getName()] = $voter;
                 }
             }
 
@@ -196,8 +202,8 @@ class IdeaController extends Controller
                 'data' => $selected,
                 'choices_as_values' => true,
             );
-            $form = $this->container->get('form.factory')->createNamedBuilder('judgeAssignment', 'form')
-                ->add('judges', 'choice', $choiceOptions)
+            $form = $this->container->get('form.factory')->createNamedBuilder('judgeAssignment', FormType::class)
+                ->add('judges', ChoiceType::class, $choiceOptions)
                 ->getForm();
 
             $params['form'] = $form->createView();
@@ -316,7 +322,7 @@ class IdeaController extends Controller
             $idea->setHighestRound(1);
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->persist($idea);
         $em->flush();
 
@@ -406,7 +412,7 @@ class IdeaController extends Controller
             $idea->setIsPrivate(false);
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->flush();
 
         $this->joinIdeaScope($idea);
@@ -431,14 +437,14 @@ class IdeaController extends Controller
 
         $entry->setCompleted(!$entry->getCompleted());
 
-        $this->getDoctrine()->getEntityManager()->flush();
+        $this->getDoctrine()->getManager()->flush();
 
         return $this->redirect($this->generateUrl('entry_set_view', array('entrySetId' => $entrySetId)));
     }
 
     public function joinIdeaScope(Idea $idea)
     {
-        $user = $this->get('security.context')->getToken()->getUser();
+        $user = $this->getUser();
 
         $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
         $containerScope = $esRegRepo->getContainer($idea->getEntrySet()->getEntrySetRegistration());
@@ -469,7 +475,7 @@ class IdeaController extends Controller
         $entry = $this->getEntry($entryId);
         $newImage = new Media();
 
-        $form = $this->createForm(new MediaType(), $newImage, array('image_label' => 'Image File:'));
+        $form = $this->createForm(MediaType::class, $newImage, array('image_label' => 'Image File:'));
 
         if ('POST' === $request->getMethod()) {
             $form->handleRequest($request);
@@ -487,7 +493,7 @@ class IdeaController extends Controller
                     $mUtil->persistRelatedMedia($image);
                     $entry->setImage($image);
 
-                    $em = $this->getDoctrine()->getEntityManager();
+                    $em = $this->getDoctrine()->getManager();
                     $em->flush();
 
                     $ideaUrl = $this->generateUrl('idea_show', array(
@@ -523,7 +529,7 @@ class IdeaController extends Controller
 
         $entry->removeImage();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->remove($image);
         $em->flush();
 
@@ -542,11 +548,11 @@ class IdeaController extends Controller
         list($group, $event, $entrySet, $idea) = $this->getHierarchy($idea);
 
         $link = new Link();
-        $form = $this->container->get('form.factory')->createNamedBuilder('link', 'form', $link)
+        $form = $this->container->get('form.factory')->createNamedBuilder('link', FormType::class, $link)
             ->add('title')
-            ->add('linkDescription', 'textarea', array('attr' => array('cols' => '60%')))
-            ->add('url', 'text', array('attr' => array('size' => '60%', 'value' => 'http://')))
-            ->add('type', 'choice', array(
+            ->add('linkDescription', TextareaType::class, array('attr' => array('cols' => '60%')))
+            ->add('url', TextType::class, array('attr' => array('size' => '60%', 'value' => 'http://')))
+            ->add('type', ChoiceType::class, array(
                 'choices' => [
                     'URL' => 'other',
                     'YouTube' => 'youtube',
@@ -565,7 +571,7 @@ class IdeaController extends Controller
                 $idea->addLink($link);
                 $link->setIdea($idea);
 
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($link);
                 $em->flush();
 
@@ -605,7 +611,7 @@ class IdeaController extends Controller
 
         $idea->removeLink($link);
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->remove($link);
         $em->flush();
 
@@ -638,7 +644,7 @@ class IdeaController extends Controller
         $userName = $this->getCurrentUser()->getUsername();
         $currentRound = $event->getCurrentRound();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         //see if this voter has already voted on this idea
         $votes = $this->getDoctrine()->getRepository('IdeaBundle:Vote')->findBy(
@@ -692,7 +698,7 @@ class IdeaController extends Controller
 
         $comment = new Comment($this->getCurrentUser(), $commentText, $idea);
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->persist($comment);
         $em->flush();
 
@@ -715,7 +721,7 @@ class IdeaController extends Controller
             throw new AccessDeniedException();
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->remove($comment);
         $em->flush();
 
@@ -756,7 +762,7 @@ class IdeaController extends Controller
 
         if (!$watchEventEntry) {
             $watchEventEntry = new WatchedEventMapping($user, $event);
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->persist($watchEventEntry);
             $em->flush();
             $this->setFlash('success', 'You are now watching ' . $event->getName());
@@ -791,7 +797,7 @@ class IdeaController extends Controller
         $watchEventEntry = $this->getDoctrine()->getRepository('IdeaBundle:WatchedEventMapping')->findOneBy($watchCriteria);
 
         if ($watchEventEntry) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->remove($watchEventEntry);
             $em->flush();
             $this->setFlash('success', 'You have successfully stopped watching ' . $event->getName());
@@ -824,7 +830,7 @@ class IdeaController extends Controller
 
         if (!$watchGroupEntry) {
             $watchGroupEntry = new WatchedGroupMapping($user, $group);
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->persist($watchGroupEntry);
             $em->flush();
             $this->setFlash('success', 'You are now watching ' . $group->getName());
@@ -850,7 +856,7 @@ class IdeaController extends Controller
         $watchGroupEntry = $this->getDoctrine()->getRepository('IdeaBundle:WatchedGroupMapping')->findOneBy($watchCriteria);
 
         if ($watchGroupEntry) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->remove($watchGroupEntry);
             $em->flush();
             $this->setFlash('success', 'You have successfully stopped watching ' . $group->getName());
@@ -872,7 +878,7 @@ class IdeaController extends Controller
         $idea = $this->getEntry($entryId);
         $userName = $this->getCurrentUser()->getUsername();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $followMapping = $idea->getFollowMapping($userName);
 
@@ -917,7 +923,7 @@ class IdeaController extends Controller
         $user = $idea->getCreator();
         $user->removeIdea($idea);
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->remove($idea);
         $em->flush();
 
@@ -1032,10 +1038,10 @@ class IdeaController extends Controller
             $imgFieldAttributes = array('required' => false);
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('sponsor', 'form', $sponsor)
-            ->add('name', 'text', array('attr' => array('style' => 'width:60%')))
-            ->add('url', 'text', array('attr' => array('style' => 'width:60%')))
-            ->add('image', 'file', $imgFieldAttributes)
+        $form = $this->container->get('form.factory')->createNamedBuilder('sponsor', FormType::class, $sponsor)
+            ->add('name', TextType::class, array('attr' => array('style' => 'width:60%')))
+            ->add('url', TextType::class, array('attr' => array('style' => 'width:60%')))
+            ->add('image', FileType::class, $imgFieldAttributes)
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
@@ -1061,7 +1067,7 @@ class IdeaController extends Controller
                     $sponsor->setImage($oldImage);
                 }
 
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($sponsor);
                 $em->flush();
 
@@ -1117,8 +1123,8 @@ class IdeaController extends Controller
             $sponsorRegistry = new SponsorRegistry(null, $event, $sponsor);
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('sponsor_add', 'form', $sponsorRegistry)
-            ->add('level', 'choice', array(
+        $form = $this->container->get('form.factory')->createNamedBuilder('sponsor_add', FormType::class, $sponsorRegistry)
+            ->add('level', ChoiceType::class, array(
                 'choices' => [
                     'Bronze' => SponsorRegistry::BRONZE,
                     'Silver' => SponsorRegistry::SILVER,
@@ -1138,7 +1144,7 @@ class IdeaController extends Controller
             if ($form->isValid()) {
 
                 if ($this->getCurrentUser() == $containerOwner || $this->isGranted('ROLE_ADMIN')) {
-                    $em = $this->getDoctrine()->getEntityManager();
+                    $em = $this->getDoctrine()->getManager();
                     $em->persist($sponsorRegistry);
                     $em->flush();
 
@@ -1184,7 +1190,7 @@ class IdeaController extends Controller
         }
 
         if ($this->getCurrentUser() == $containerOwner || $this->isGranted('ROLE_ADMIN')) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->remove($sponsorRegistration);
             $em->flush();
 
@@ -1206,7 +1212,7 @@ class IdeaController extends Controller
         $sponsor = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor')->find($id);
 
         if ($this->getCurrentUser() == $sponsor->getCreator() || $this->isGranted('ROLE_ADMIN')) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->remove($sponsor);
             $em->flush();
 
@@ -1301,7 +1307,7 @@ class IdeaController extends Controller
             throw new AccessDeniedException();
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('profile', 'form', $profileUser, array('validation_groups' => array('ideaProfile')))
+        $form = $this->container->get('form.factory')->createNamedBuilder('profile', FormType::class, $profileUser, array('validation_groups' => array('ideaProfile')))
             ->add('name')
             ->add('title')
             ->add('organization')
@@ -1313,8 +1319,8 @@ class IdeaController extends Controller
             ->add('website', null, array('attr' => array('size' => '60%')))
             ->add('tshirtSize', null, array('attr' => array('size' => '60%')))
             ->add('mailingAddress', null, array('attr' => array('size' => '60%')))
-            ->add('displayProfile', 'checkbox', array('required' => false))
-            ->add('displayPrivateInfoToOrganizers', 'checkbox', array('required' => false))
+            ->add('displayProfile', CheckboxType::class, array('required' => false))
+            ->add('displayPrivateInfoToOrganizers', CheckboxType::class, array('required' => false))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
@@ -1433,7 +1439,7 @@ class IdeaController extends Controller
                     $recommendation = new EventRecommendation($toUser, $container, $this->getCurrentUser());
                 }
             }
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->persist($recommendation);
             $em->flush();
             $flashMessage .= $container->getName() . ' has been recommended to ' . $toName . '. ';
@@ -1581,7 +1587,7 @@ class IdeaController extends Controller
                 } else {
                     $recommendation->setType($defaultRec);
                 }
-                $this->getDoctrine()->getEntityManager()->flush();
+                $this->getDoctrine()->getManager()->flush();
             }
 
             if (!$subject) {
@@ -1642,7 +1648,7 @@ class IdeaController extends Controller
         }
 
         $recommendation->setDismissed(true);
-        $this->getDoctrine()->getEntityManager()->flush();
+        $this->getDoctrine()->getManager()->flush();
         $this->setFlash('success', 'This recommendation has been dismissed');
 
         return $this->redirect($returnUrl);
@@ -1780,7 +1786,7 @@ class IdeaController extends Controller
 
         if ($request->getMethod() == 'POST') {
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
 
             foreach ($registrationFields as $field) {
                 $answer = new RegistrationAnswer();
@@ -1920,7 +1926,7 @@ class IdeaController extends Controller
             throw new NotFoundHttpException('Invalid sponsorship!');
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $deptSponsor = $dept->getSponsor();
 
@@ -1946,7 +1952,7 @@ class IdeaController extends Controller
     {
         $this->enforceUserSecurity();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sponsorship = $em->getRepository('IdeaBundle:SponsorRegistry')->find($sponsorship_id);
 
         if (!$sponsorship) {
@@ -2003,11 +2009,13 @@ class IdeaController extends Controller
             $speakerChoices = array();
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('idea_speaker', 'form', $ideaSpeaker)
-            ->add('speaker', 'entity', array('class' => 'UserBundle:User',
-                'choices' => $speakerChoices))
-            ->add('role', 'text', array('attr' => array('class' => 'formRowWidth')))
-            ->add('biography', 'textarea', array('attr' => array('class' => 'formRowWidth', 'rows' => '6')))
+        $form = $this->container->get('form.factory')->createNamedBuilder('idea_speaker', FormType::class, $ideaSpeaker)
+            ->add('speaker', EntityType::class, array(
+                'class' => 'UserBundle:User',
+                'choices' => $speakerChoices,
+            ))
+            ->add('role', TextType::class, array('attr' => array('class' => 'formRowWidth')))
+            ->add('biography', TextareaType::class, array('attr' => array('class' => 'formRowWidth', 'rows' => '6')))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {

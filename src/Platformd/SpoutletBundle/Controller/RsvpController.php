@@ -44,8 +44,8 @@ class RsvpController extends Controller
 
     private function save(RsvpAttendee $rsvp)
     {
-        $this->getDoctrine()->getEntityManager()->persist($rsvp);
-        $this->getDoctrine()->getEntityManager()->flush();
+        $this->getDoctrine()->getManager()->persist($rsvp);
+        $this->getDoctrine()->getManager()->flush();
     }
 
     private function getRsvpOr404($slug)

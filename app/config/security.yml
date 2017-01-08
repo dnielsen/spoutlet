@@ -4,7 +4,7 @@ jms_security_extra:
 
 security:
     encoders:
-        "FOS\UserBundle\Model\UserInterface":
+        FOS\UserBundle\Model\UserInterface:
             algorithm: sha512
             encode_as_base64: false
             iterations: 1
@@ -17,6 +17,10 @@ security:
             id: platformd.security.user.provider.api
 
     firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
         # turn security off entirely for the fake cevo site
         cevo_fake_site:
             pattern: ^%cevo_fake_api_url%
@@ -35,11 +39,10 @@ security:
                 target:   default_index
                 success_handler: platformd_user.authentication_handler
             switch_user: ~
-#            remember_me:
-#                key:      "%secret%"
-#                lifetime: 604800 # 1 week (in seconds)
-#                path:     /
-#                domain:   ~ # Defaults to the current domain from $_SERVER #TODO: check
+            remember_me:
+                secret:      "%secret%"
+                lifetime: 604800 # 1 week (in seconds)
+                path:     /
 
     acl:
         connection: acl

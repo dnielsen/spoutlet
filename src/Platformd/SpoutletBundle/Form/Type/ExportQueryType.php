@@ -2,8 +2,11 @@
 
 namespace Platformd\SpoutletBundle\Form\Type;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Platformd\SpoutletBundle\Model\ExportQueryManager;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class ExportQueryType extends AbstractType
@@ -18,7 +21,7 @@ class ExportQueryType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $reportTypes = $this->getReportTypes();
-        $builder->add('reportTypes', 'choice', array(
+        $builder->add('reportTypes', ChoiceType::class, array(
             'label'     => 'Report',
             'choices'   => $reportTypes,
             'required'  => false,
@@ -26,7 +29,7 @@ class ExportQueryType extends AbstractType
             'choices_as_values' => true,
         ));
 
-        $builder->add('fromDate', 'datetime', array(
+        $builder->add('fromDate', DateTimeType::class, array(
             'label'     => 'Start Date',
             'widget'    => 'single_text',
             'attr'      => array(
@@ -35,7 +38,7 @@ class ExportQueryType extends AbstractType
             'required'  => false,
         ));
 
-        $builder->add('thruDate', 'datetime', array(
+        $builder->add('thruDate', DateTimeType::class, array(
             'label'     => 'End Date',
             'widget'    => 'single_text',
             'attr'      => array(
@@ -44,7 +47,8 @@ class ExportQueryType extends AbstractType
             'required'  => false,
         ));
 
-        $builder->add('sites', 'entity', array(
+        $builder->add('sites', EntityType::class, array(
+            'label' => 'Sites',
             'class'    => 'SpoutletBundle:Site',
             'multiple' => true,
             'expanded' => true,
@@ -53,7 +57,7 @@ class ExportQueryType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_export_query_type';
     }

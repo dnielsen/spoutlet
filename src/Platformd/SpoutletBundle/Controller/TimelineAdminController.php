@@ -30,7 +30,7 @@ class TimelineAdminController extends Controller
     {
         $this->addTimelineBreadcrumb()->addChild('New Timeline');
 
-        $form = $this->createForm(new TimelineType(), new Timeline());
+        $form = $this->createForm(TimelineType::class, new Timeline());
 
         if ('POST' === $request->getMethod()) {
             $form->handleRequest($request);
@@ -60,7 +60,7 @@ class TimelineAdminController extends Controller
             throw $this->createNotFoundException();
         }
 
-        $form = $this->createForm(new TimelineType(), $timeline);
+        $form = $this->createForm(TimelineType::class, $timeline);
 
         if('POST' === $request->getMethod()) {
             $form->handleRequest($request);
@@ -101,14 +101,14 @@ class TimelineAdminController extends Controller
         $timeline->setAuthor($this->getUser());
         $timeline->setSite($this->getCurrentSite());
 
-        $this->getDoctrine()->getEntityManager()->persist($timeline);
-        $this->getDoctrine()->getEntityManager()->flush();
+        $this->getDoctrine()->getManager()->persist($timeline);
+        $this->getDoctrine()->getManager()->flush();
     }
 
     private function delete(Timeline $timeline)
     {
-        $this->getDoctrine()->getEntityManager()->remove($timeline);
-        $this->getDoctrine()->getEntityManager()->flush();
+        $this->getDoctrine()->getManager()->remove($timeline);
+        $this->getDoctrine()->getManager()->flush();
     }
 
     private function addTimelineBreadcrumb()

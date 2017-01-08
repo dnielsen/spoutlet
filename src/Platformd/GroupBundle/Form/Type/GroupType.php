@@ -5,10 +5,15 @@ namespace Platformd\GroupBundle\Form\Type;
 use Platformd\GroupBundle\Entity\Group;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SpoutletBundle\Form\Type\LocationType;
+use Platformd\SpoutletBundle\Form\Type\PurifiedTextareaType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Platformd\UserBundle\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class GroupType extends AbstractType
@@ -41,54 +46,54 @@ class GroupType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', null, array(
+            ->add('name', TextType::class, array(
                 'label' => 'Name',
             ))
-            ->add('slug', new SlugType(), array(
+            ->add('slug', SlugType::class, array(
                 'label' => 'URL Text',
             ))
-            ->add('relativeSlug', 'text', array(
+            ->add('relativeSlug', TextType::class, array(
                 'label' => 'Community URL Slug',
             ))
-            ->add('category', 'choice', array(
+            ->add('category', ChoiceType::class, array(
                 'choices' => self::getCategoryChoices(),
                 'label' => 'Group Category',
                 'choices_as_values' => true,
             ))
-            ->add('groupAvatar', new MediaType(), array(
+            ->add('groupAvatar', MediaType::class, array(
                 'image_label' => 'Group Logo',
                 'image_help' => 'Maximum width: 830px, maximum height: 72px. Please use JPEG or PNG.',
                 'with_remove_checkbox' => $this->group->getId() == null ? false : true
             ))
-            ->add('backgroundImage', new MediaType(), array(
+            ->add('backgroundImage', MediaType::class, array(
                 'image_label' => 'Background Image',
                 'image_help' => 'Recommended width: 2000px. File formats accepted: JPEG and PNG.',
                 'with_remove_checkbox' => $this->group->getId() == 0 ? false : true
             ))
-            ->add('thumbNail', new MediaType(), array(
+            ->add('thumbNail', MediaType::class, array(
                 'image_label' => 'Thumbnail Image',
                 'image_help' => 'Recommended size: 135x80. File formats accepted: JPEG and PNG.',
                 'with_remove_checkbox' => $this->group->getId() == 0 ? false : true
             ))
-            ->add('description', 'purifiedTextarea', array(
+            ->add('description', PurifiedTextareaType::class, array(
                 'label' => 'Description',
                 'attr' => array('class' => 'ckeditor')
             ))
-            ->add('isPublic', 'choice', array(
+            ->add('isPublic', ChoiceType::class, array(
                 'label' => 'Group Visibility',
                 'expanded' => true,
                 'choices' => self::GROUP_VISIBILITY,
                 'choices_as_values' => true,
             ))
-            ->add('location', new LocationType(), array(
+            ->add('location', LocationType::class, array(
                 'label' => 'Location',
             ))
-            ->add('external', 'choice', array(
+            ->add('external', ChoiceType::class, array(
                 'label' => 'Would you like this group to be listed on Campsite?',
                 'choices' => self::YES_NO,
                 'choices_as_values' => true,
             ))
-            ->add('externalUrl', 'text', array(
+            ->add('externalUrl', TextType::class, array(
                 'attr' => array(
                     'size' => '60%',
                     'placeholder' => 'http://'
@@ -101,39 +106,39 @@ class GroupType extends AbstractType
 
             if ($this->hasMultiSiteGroups) {
                 $builder
-                    ->add('sites', 'entity', array(
+                    ->add('sites', EntityType::class, array(
                         'class' => 'SpoutletBundle:Site',
                         'multiple' => true,
                         'expanded' => true,
                         'choice_label' => 'name'
                     ))
-                    ->add('allLocales', 'checkbox', array(
+                    ->add('allLocales', CheckboxType::class, array(
                         'label' => 'Enable for all Locales',
 //                        'help' => 'If set to true this overrides the "locales" setting and sets this group to be visible to all sites',
                     ));
             }
 
             if ($this->group->getId() > 0) {
-                $builder->add('deleted', 'checkbox', array(
+                $builder->add('deleted', CheckboxType::class, array(
                     'label' => 'Delete Group', 'help' => 'Administratively disable this group.',
                 ));
             }
 
-            $builder->add('featured', 'checkbox', array(
+            $builder->add('featured', CheckboxType::class, array(
                 'label' => 'Featured',
 //                'help' => 'Make this group featured on the homepage.',
             ));
 
-            $builder->add('discussionsEnabled', 'checkbox', array(
+            $builder->add('discussionsEnabled', CheckboxType::class, array(
                 'label' => 'Discussions',
 //                'help' => 'Enable discussions for this group.',
             ));
         }
 
-        $builder->add('parent', 'entity', array(
+        $builder->add('parent', EntityType::class, array(
             'class' => Group::class,
             'choice_label' => 'name',
-            'empty_value' => '<None>',
+            'placeholder' => '<None>',
             'label' => 'Parent Group',
             'attr' => array(
                 'class' => 'formRowWidth',
@@ -156,7 +161,7 @@ class GroupType extends AbstractType
             },
         ));
 
-        $builder->add('children', 'entity', array(
+        $builder->add('children', EntityType::class, array(
             'class' => 'Platformd\GroupBundle\Entity\Group',
             'choice_label' => 'name',
             'label' => 'Sub Groups (Ctrl + Click to select more than one)',
@@ -189,7 +194,7 @@ class GroupType extends AbstractType
             },
         ));
 
-        $builder->add('tags', 'text', array(
+        $builder->add('tags', TextType::class, array(
             'mapped' => false,
             'label' => 'tags.forms.tags',
 //                'help' => "tags.forms.enter_keywords_help",
@@ -198,7 +203,7 @@ class GroupType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_groupbundle_grouptype';
     }

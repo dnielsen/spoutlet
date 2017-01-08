@@ -351,7 +351,7 @@ class ContestController extends Controller
 
     private function getEntityManager()
     {
-        return $this->getDoctrine()->getEntityManager();
+        return $this->getDoctrine()->getManager();
     }
 
     private function getGalleryMediaRepository()

@@ -15,15 +15,12 @@ use Platformd\EventBundle\Repository\EventRepository,
     Platformd\EventBundle\Entity\EventRsvpAction,
     Platformd\EventBundle\Entity\GlobalEventRsvpAction,
     Platformd\EventBundle\Entity\GroupEventRsvpAction,
-    Platformd\GroupBundle\Entity\Group,
     Platformd\SpoutletBundle\Entity\Site,
     Platformd\SpoutletBundle\Model\EmailManager,
     Platformd\SpoutletBundle\Model\Translator,
     Platformd\CEVOBundle\Api\ApiException;
 
 use Symfony\Component\EventDispatcher\EventDispatcher,
-    Symfony\Component\Security\Core\SecurityContextInterface,
-    Symfony\Component\Security\Acl\Model\MutableAclProviderInterface as aclProvider,
     Symfony\Component\Security\Acl\Domain\ObjectIdentity,
     Symfony\Component\Security\Acl\Domain\UserSecurityIdentity,
     Symfony\Component\Security\Acl\Permission\MaskBuilder,
@@ -33,6 +30,7 @@ use Knp\MediaBundle\Util\MediaUtil;
 
 use DateTime;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Acl\Model\AclProviderInterface;
 
 class EventService
 {
@@ -52,7 +50,7 @@ class EventService
     protected $dispatcher;
 
     /**
-     * @var AclProvider
+     * @var AclProviderInterface
      */
     protected $aclProvider;
 
@@ -76,11 +74,23 @@ class EventService
      */
     protected $cevoApi;
 
+    /**
+     * EventService constructor.
+     *
+     * @param EventRepository          $repository
+     * @param MediaUtil                $mediaUtil
+     * @param EventDispatcherInterface $dispatcher
+     * @param AclProviderInterface     $aclProvider
+     * @param EmailManager             $emailManager
+     * @param RouterInterface          $router
+     * @param Translator               $translator
+     * @param                          $cevoApi
+     */
     public function __construct(
         EventRepository $repository,
         MediaUtil $mediaUtil,
         EventDispatcherInterface $dispatcher,
-        AclProvider $aclProvider,
+        AclProviderInterface $aclProvider,
         EmailManager $emailManager,
         RouterInterface $router,
         Translator $translator,
@@ -100,6 +110,7 @@ class EventService
      * Create an event
      *
      * @param \Platformd\EventBundle\Entity\Event $event
+     * @param bool                                $dispatchEvent
      */
     public function createEvent(Event $event, $dispatchEvent = true)
     {

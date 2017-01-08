@@ -12,7 +12,7 @@ class ProfileController extends BaseProfileController
 {
    public function showAction($username = null)
    {
-       $context = $this->container->get('security.context');
+       $authChecker = $this->container->get('security.authorization_checker');
 
        if ($username) {
            $manager = $this->container->get('fos_user.user_manager');
@@ -20,9 +20,9 @@ class ProfileController extends BaseProfileController
                throw new NotFoundHttpException(sprintf('Unable to find an user with username "%s"', $username));
            }
            $isCurrentUser = false;
-       } else if ($context->isGranted('IS_AUTHENTICATED_FULLY')) {
+       } else if ($authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
            $isCurrentUser = true;
-           $user = $this->container->get('security.context')->getToken()->getUser();
+           $user = $this->container->get('security.token_storage')->getToken()->getUser();
        } else {
            throw new NotFoundHttpException();
        }

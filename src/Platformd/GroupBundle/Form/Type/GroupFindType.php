@@ -2,7 +2,11 @@
 
 namespace Platformd\GroupBundle\Form\Type;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class GroupFindType extends AbstractType
@@ -15,33 +19,34 @@ class GroupFindType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('groupName', 'text', array(
+            ->add('groupName', TextType::class, array(
                 'label' => 'Name:'
             ))
-            ->add('deleted', 'choice', array(
+            ->add('deleted', ChoiceType::class, array(
                 'label' => 'Status:',
                 'choices' => self::STATUSES,
                 'choices_as_values' => true,
-                'empty_value' => 'Select All',
+                'placeholder' => 'Select All',
                 'required' => false,
             ))
-            ->add('category', 'choice', array(
+            ->add('category', ChoiceType::class, array(
                 'label' => 'Category:',
                 'choices' => array(
                     'location' => 'Location',
                     'topic' => 'Topic'
                 ),
                 'choices_as_values' => true,
-                'empty_value' => 'Select All',
+                'placeholder' => 'Select All',
                 'required' => false,
             ))
-            ->add('sites', 'entity', array(
+            ->add('sites', EntityType::class, array(
+                'label' => 'Sites',
                 'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
                 'choice_label' => 'name',
             ))
-            ->add('startDate', 'date', array(
+            ->add('startDate', DateType::class, array(
                 'label' => 'Start Date:',
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
@@ -49,7 +54,7 @@ class GroupFindType extends AbstractType
                     'class' => 'date-picker'
                 )
             ))
-            ->add('endDate', 'date', array(
+            ->add('endDate', DateType::class, array(
                 'label' => 'End Date:',
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
@@ -59,7 +64,7 @@ class GroupFindType extends AbstractType
             ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_groupbundle_groupfindtype';
     }

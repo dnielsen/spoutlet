@@ -3,7 +3,7 @@ services:
         class: Platformd\IdeaBundle\Form\Type\RegistrationFormType
         arguments:  [%fos_user.model.user.class%]
         tags:
-            - { name: 'form.type', alias: 'idea_user_registration' }
+            - { name: form.type }
 
     platformd.service.idea:
         class: Platformd\IdeaBundle\Service\IdeaService

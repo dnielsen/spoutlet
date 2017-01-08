@@ -6,14 +6,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Platformd\MediaBundle\Entity\Media;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\Context\LegacyExecutionContext;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Platformd\GameBundle\Entity\Game
  *
  * @ORM\Table(name="pd_game")
  * @ORM\Entity(repositoryClass="Platformd\GameBundle\Entity\GameRepository")
- * @Assert\Callback(methods={"validateGameCategory"})
  */
 class Game
 {
@@ -272,10 +271,11 @@ class Game
     /**
      * Category/Genre is a required field so ensure that it is present and valid in order to add game
      *
-     *
      * @param \Symfony\Component\Validator\ExecutionContext $executionContext
+     *
+     * @Assert\Callback
      */
-    public function validateGameCategory(LegacyExecutionContext $executionContext)
+    public function validateGameCategory(ExecutionContextInterface $executionContext)
     {
         // error if invalid or no category is specified
 

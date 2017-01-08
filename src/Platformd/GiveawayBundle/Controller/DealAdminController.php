@@ -5,6 +5,7 @@ namespace Platformd\GiveawayBundle\Controller;
 use Platformd\GiveawayBundle\Entity\Deal;
 use Platformd\GiveawayBundle\Form\Type\DealType;
 use Platformd\SpoutletBundle\Controller\Controller;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
 use Doctrine\ORM\EntityRepository;
@@ -127,14 +128,14 @@ class DealAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Deals');
 
-        $em     = $this->getDoctrine()->getEntityManager();
+        $em     = $this->getDoctrine()->getManager();
         $site   = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : null;
 
         $filterForm = $metricManager->createFilterFormBuilder($this->get('form.factory'))
-            ->add('deal', 'entity', array(
+            ->add('deal', EntityType::class, array(
                 'class' => 'GiveawayBundle:Deal',
                 'choice_label' => 'name',
-                'empty_value' => 'All Deals',
+                'placeholder' => 'All Deals',
                 'query_builder' => function(EntityRepository $er) use ($site) {
                     $qb = $er->createQueryBuilder('d')
                         ->orderBy('d.name', 'ASC');
@@ -203,7 +204,7 @@ class DealAdminController extends Controller
 
     private function processForm(Form $form, Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);

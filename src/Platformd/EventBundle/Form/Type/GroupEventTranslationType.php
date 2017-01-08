@@ -7,11 +7,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GroupEventTranslationType extends EventTranslationType
 {
-    public function getName()
-    {
-        return 'platformd_group_event_translation';
-    }
-
     /**
      * @param OptionsResolver $resolver
      */
@@ -20,5 +15,10 @@ class GroupEventTranslationType extends EventTranslationType
         $resolver->setDefaults([
             'data_class' => GroupEventTranslation::class,
         ]);
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'platformd_group_event_translation';
     }
 }

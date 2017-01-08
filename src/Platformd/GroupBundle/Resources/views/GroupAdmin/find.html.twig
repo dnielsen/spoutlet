@@ -50,12 +50,13 @@
                     <tr>
                         <td>
                         {% if group.deleted %}
-                            <a href="{{ path('group_edit', {'slug': group.slug}) }}" target="_blank">{{ group.name }}</a></td>
+                            <a href="{{ path('group_edit', {'slug': group.slug}) }}" target="_blank">{{ group.name }}</a>
                         {% else %}
                             {% if site in group.sites or group.allLocales %}
                                 <a href="{{ group | pd_link }}" target="_blank">{{ group.name }}</a>
                             {% else %}
                                 {#<a href="http://{{ group.sites[0].fullDomain }}{{ group | pd_link }}" target="_blank">{{ group.name }}</a>#}
+                                {{ group.name }}
                             {% endif %}
                         {% endif %}
                         </td>
@@ -64,7 +65,7 @@
                         <td>{{ group.region }}</td>
                         <td>{{ group.createdAt | date('m/d/Y') }}</td>
                         <td>{{ group.getDeleted() ? 'Inactive' : 'Active' }}</td>
-                        {#<td>{{ group.owner.username }}</td>#}
+                        <td>{% if group.owner %}{{ group.owner.username }}{% endif %}</td>
                         <td>
                             {% if group.id in memberCounts|keys and memberCounts[group.id] != "0" %}
                                 <a href="{{ path('admin_group_export', { "type" : "members", "groupId" : group.id })  }}">{{ memberCounts[group.id] }}</a>

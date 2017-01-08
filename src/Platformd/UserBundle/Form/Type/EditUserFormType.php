@@ -3,6 +3,10 @@
 namespace Platformd\UserBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CountryType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,27 +24,27 @@ class EditUserFormType extends AbstractType
     {
         $builder
             ->add('username', null, array('label' => 'Username'))
-            ->add('email', 'email')
+            ->add('email', EmailType::class)
             ->add('firstname', null, array('label' => 'First Name'))
             ->add('lastname', null, array('label' => 'Last Name'));
 
 
         if ($options['local_auth']) {
             $builder
-                ->add('birthdate', 'birthday', array(
+                ->add('birthdate', BirthdayType::class, array(
                     'empty_value' => '',
                     'attr' => array(
                         'class' => 'birthday',
                     ),
                 ))
                 ->add('phoneNumber', null, array('label' => 'Phone Number'))
-                ->add('country', 'country')
+                ->add('country', CountryType::class)
                 ->add('state')
             ;
         }
 
         if ($options['allow_promote']) {
-            $builder->add('admin_level', 'choice', array(
+            $builder->add('admin_level', ChoiceType::class, array(
                 // these are supported by a number of odd methods in User
                 'choices' => self::ROLES,
                 'choices_as_values' => true,
@@ -58,7 +62,7 @@ class EditUserFormType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'fos_user_profile_form_user';
     }

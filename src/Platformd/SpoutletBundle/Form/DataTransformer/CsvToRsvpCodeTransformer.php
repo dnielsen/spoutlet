@@ -59,4 +59,3 @@ class CsvToRsvpCodeTransformer implements DataTransformerInterface
         return $codes;
     }
 }
-

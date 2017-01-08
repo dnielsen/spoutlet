@@ -4,6 +4,8 @@ namespace Platformd\SpoutletBundle\Form\Type;
 
 use Platformd\SpoutletBundle\Entity\BackgroundAdSite;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,10 +14,10 @@ class BackgroundAdSiteType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('siteId', 'hidden', array(
+            ->add('siteId', HiddenType::class, array(
                 'attr' => array('class' => 'adSiteId'),
             ))
-            ->add('url', 'url', array(
+            ->add('url', UrlType::class, array(
                 'attr' => array('class' => 'adSiteUrl'),
 //                'help' => 'If background ad does not link to a page, leave this field blank.',
             ))
@@ -29,7 +31,7 @@ class BackgroundAdSiteType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'admin_background_ad_site';
     }

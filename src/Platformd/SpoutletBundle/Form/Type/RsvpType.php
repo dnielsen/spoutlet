@@ -2,9 +2,14 @@
 
 namespace Platformd\SpoutletBundle\Form\Type;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Platformd\SpoutletBundle\Form\DataTransformer\CsvToRsvpCodeTransformer;
 use Platformd\MediaBundle\Form\Type\MediaType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class RsvpType extends AbstractType
@@ -17,47 +22,50 @@ class RsvpType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
-            ->add('content', 'purifiedTextarea',array(
+            ->add('name', null, [
+                'label' => 'Name',
+            ])
+            ->add('content', PurifiedTextareaType::class, array(
+                'label' => 'Content',
                 'attr' => array('class' => 'ckeditor'),
                 'required' => false,
             ))
-            ->add('background', new MediaType, array(
+            ->add('background', MediaType::class, array(
                 'image_label' => 'Custom background',
                 'image_help' => 'Recommended format: 1920x988px, .jpg.',
             ))
-            ->add('codeRequired', 'checkbox', array(
+            ->add('codeRequired', CheckboxType::class, array(
                 'required' => false,
                 'label' => 'Code Required?'
             ))
-            ->add('published', 'choice', array(
+            ->add('published', ChoiceType::class, array(
                 'choices' => self::PUBLISHED,
                 'choices_as_values' => true,
                 'label' => 'Status',
             ))
-            ->add('sites', 'entity', array(
+            ->add('sites', EntityType::class, array(
+                'label' => 'Sites',
                 'class' => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
                 'choice_label' => 'name',
             ))
-            ->add('codes', 'file', array(
+            ->add('codes', FileType::class, array(
+                'label' => 'Codes',
                 'required' => false,
 //                'help' => 'Recommended format: CSV, 1 code per line.'.($builder->getData()->getCodes() ? '<br /><br />Codes added: '.count($builder->getData()->getCodes()) : ''),
             ))
-            ->add('slug', new SlugType(), array(
+            ->add('slug', SlugType::class, array(
                 'url_prefix' => '/rsvp/{slug}',
             ))
-            ->add('successMessage', 'text', array(
+            ->add('successMessage', TextType::class, array(
                 'label' => 'Success Message',
-            ))
-        ;
+            ));
         $builder->get('codes')->addViewTransformer(new CsvToRsvpCodeTransformer());
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'rsvp';
     }
 }
-

@@ -4,16 +4,17 @@ namespace Platformd\IdeaBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Platformd\IdeaBundle\Entity\RegistrationField;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class RegistrationFieldFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('type', 'choice', array(
+            ->add('type', ChoiceType::class, array(
                 'required' => true,
                 'choices' => array(
                     'Text' => RegistrationField::TYPE_TEXT,
@@ -21,11 +22,10 @@ class RegistrationFieldFormType extends AbstractType
                 ),
                 'choices_as_values' => true,
             ))
-            ->add('question', 'text', array(
+            ->add('question', TextType::class, array(
                 'attr' => array(
                     'size' => '60%'
                 ),
-                'required' => true
             ));
     }
 
@@ -36,7 +36,7 @@ class RegistrationFieldFormType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'registration_field';
     }

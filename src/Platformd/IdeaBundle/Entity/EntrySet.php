@@ -4,7 +4,6 @@ namespace Platformd\IdeaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
-
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -12,14 +11,14 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Table(name="entry_set")
  * @ORM\Entity(repositoryClass="Platformd\IdeaBundle\Entity\EntrySetRepository")
- *
  */
-class EntrySet implements LinkableInterface {
+class EntrySet implements LinkableInterface
+{
 
-    const TYPE_SESSION  = 'session';
-    const TYPE_IDEA     = 'idea';
-    const TYPE_THREAD   = 'thread';
-    const TYPE_TASK     = 'task';
+    const TYPE_SESSION = 'session';
+    const TYPE_IDEA = 'idea';
+    const TYPE_THREAD = 'thread';
+    const TYPE_TASK = 'task';
 
     /**
      * @var integer $id
@@ -94,11 +93,13 @@ class EntrySet implements LinkableInterface {
         return $this->creator;
     }
 
-    public function getEntrySetRegistration() {
+    public function getEntrySetRegistration()
+    {
         return $this->entrySetRegistration;
     }
 
-    public function setEntrySetRegistration(EntrySetRegistry $container) {
+    public function setEntrySetRegistration(EntrySetRegistry $container)
+    {
         $this->entrySetRegistration = $container;
     }
 
@@ -112,6 +113,7 @@ class EntrySet implements LinkableInterface {
         $this->isVotingActive = $isVotingActive;
         return $this;
     }
+
     public function getIsVotingActive()
     {
         return $this->isVotingActive;
@@ -122,6 +124,7 @@ class EntrySet implements LinkableInterface {
         $this->isSubmissionActive = $isSubmissionActive;
         return $this;
     }
+
     public function getIsSubmissionActive()
     {
         return $this->isSubmissionActive;
@@ -139,7 +142,7 @@ class EntrySet implements LinkableInterface {
 
     public function containsVoter($voter)
     {
-        if( strlen($this->allowedVoters) == 0)
+        if (strlen($this->allowedVoters) == 0)
             return false;
 
         $voters = preg_split("/[\s,]+/", trim($this->allowedVoters));
@@ -160,7 +163,8 @@ class EntrySet implements LinkableInterface {
         $this->entries = $entries;
     }
 
-    public function getIncompleteEntries() {
+    public function getIncompleteEntries()
+    {
         $incompleteEntries = array();
         foreach ($this->entries as $entry) {
             if ($entry->getCompleted() == false) {
@@ -174,8 +178,7 @@ class EntrySet implements LinkableInterface {
     {
         $entries = $this->entries->toArray();
 
-        usort($entries, function($a, $b)
-        {
+        usort($entries, function ($a, $b) {
             $aVotes = $a->getNumVotes();
             $bVotes = $b->getNumVotes();
 
@@ -188,14 +191,13 @@ class EntrySet implements LinkableInterface {
         $topEntries = array_slice($entries, 0, $limit);
 
         // filter out any entries with 0 votes
-       /* $popularEntries = array_filter($topEntries, function($entry)
-        {
-            return ($entry->getNumVotes() > 0);
-        });*/
+        /* $popularEntries = array_filter($topEntries, function($entry)
+         {
+             return ($entry->getNumVotes() > 0);
+         });*/
 
         // filter out any private entries
-        $topEntries = array_filter($topEntries, function($entry)
-        {
+        $topEntries = array_filter($topEntries, function ($entry) {
             return (!$entry->getIsPrivate());
         });
 
@@ -203,10 +205,13 @@ class EntrySet implements LinkableInterface {
     }
 
 
-    public function getNumEntries() {
+    public function getNumEntries()
+    {
         return $this->entries->count();
     }
-    public function getNumIncompleteEntries() {
+
+    public function getNumIncompleteEntries()
+    {
         return count($this->getIncompleteEntries());
     }
 

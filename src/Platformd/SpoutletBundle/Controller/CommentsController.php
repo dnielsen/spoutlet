@@ -47,7 +47,7 @@ class CommentsController extends Controller
             return $response;
         }
 
-        $em     = $this->getDoctrine()->getEntityManager();
+        $em     = $this->getDoctrine()->getManager();
         $thread = $em->getRepository('SpoutletBundle:Thread')->find($params['thread']);
 
         if (!$thread) {
@@ -124,7 +124,7 @@ class CommentsController extends Controller
 
         $id         = (int)$params['id'];
         $body       = $params['body'];
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
         $comment    = $em->getRepository('SpoutletBundle:Comment')->find($id);
 
 
@@ -180,7 +180,7 @@ class CommentsController extends Controller
             return $response;
         }
 
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
         $comment    = $em->getRepository('SpoutletBundle:Comment')->find($params['commentId']);
 
         if (!$comment) {
@@ -210,7 +210,7 @@ class CommentsController extends Controller
 
     public function threadAction($threadId)
     {
-        $em     = $this->getDoctrine()->getEntityManager();
+        $em     = $this->getDoctrine()->getManager();
         $thread = $em->getRepository('SpoutletBundle:Thread')->find($threadId);
 
         if (!$thread) {
@@ -235,7 +235,7 @@ class CommentsController extends Controller
         $thread->setId($threadId);
         $thread->setPermalink($this->getUrlForObject($object).'#comments');
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->persist($thread);
         $em->flush();
 
@@ -280,7 +280,7 @@ class CommentsController extends Controller
     */
     private function checkAcl($role, $object)
     {
-        return $this->container->get('security.context')->isGranted($role, $object);
+        return $this->container->get('security.authorization_checker')->isGranted($role, $object);
     }
 
     private function getUrlForObject($obj)
@@ -350,7 +350,7 @@ class CommentsController extends Controller
 
         $rangeString = $rangeString == '' ? 'All Time' : $rangeString;
 
-        $stats = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Comment')->getMetricsStats($from, $to);
+        $stats = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Comment')->getMetricsStats($from, $to);
 
         return $this->render('SpoutletBundle:CommentsAdmin:metrics.html.twig', array(
             'data' => $stats,

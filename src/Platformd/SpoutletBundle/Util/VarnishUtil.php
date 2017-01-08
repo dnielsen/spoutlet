@@ -7,20 +7,22 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 
 use Platformd\UserBundle\Entity\User;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class VarnishUtil
 {
     private $varnishDetected = false;
     private $ipLookupUtil;
-    private $securityContext;
+    private $tokenStorage;
     private $varnishServer;
 
     private $ipAddress;
 
-    public function __construct($ipLookupUtil, $securityContext, $varnishServer) {
-        $this->ipLookupUtil    = $ipLookupUtil;
-        $this->securityContext = $securityContext;
-        $this->varnishServer   = $varnishServer;
+    public function __construct($ipLookupUtil, TokenStorageInterface $tokenStorage, $varnishServer)
+    {
+        $this->ipLookupUtil = $ipLookupUtil;
+        $this->tokenStorage = $tokenStorage;
+        $this->varnishServer = $varnishServer;
     }
 
     /**
@@ -30,19 +32,18 @@ class VarnishUtil
     public function banCachedObject($path, $parameters = array(), $bestEffort = false)
     {
         if ($this->varnishDetected || $bestEffort) {
-
             try {
                 $headers = array();
 
                 if (isset($parameters['userId'])) {
-                    $headers[] = 'x-ban-user-id: '.$parameters['userId'];
+                    $headers[] = 'x-ban-user-id: ' . $parameters['userId'];
                 }
 
                 if (isset($parameters['countryCode'])) {
-                    $headers[] = 'x-ban-country-code: '.$parameters['countryCode'];
+                    $headers[] = 'x-ban-country-code: ' . $parameters['countryCode'];
                 }
 
-                $url  = 'http://' . $this->varnishServer. '/' . ltrim($path, '/');
+                $url = 'http://' . $this->varnishServer . '/' . ltrim($path, '/');
                 $curl = curl_init();
 
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -62,7 +63,8 @@ class VarnishUtil
         }
     }
 
-    public function cacheResponse($response, $sharedMaxAge, $maxAge = 0) {
+    public function cacheResponse($response, $sharedMaxAge, $maxAge = 0)
+    {
 
         if ($this->varnishDetected && $sharedMaxAge > 0) {
             $response->setSharedMaxAge($sharedMaxAge);
@@ -92,7 +94,8 @@ class VarnishUtil
         $this->ipAddress = $event->getRequest()->getClientIp(true);
     }
 
-    public function onKernelResponse(FilterResponseEvent $event) {
+    public function onKernelResponse(FilterResponseEvent $event)
+    {
 
         if ($event->getRequestType() != HttpKernelInterface::MASTER_REQUEST) {
             return;
@@ -105,7 +108,7 @@ class VarnishUtil
 
         $userId = 0;
 
-        if ($token = $this->securityContext->getToken()) {
+        if ($token = $this->tokenStorage->getToken()) {
             $user = $token->getUser();
 
             if ($user instanceof User) {

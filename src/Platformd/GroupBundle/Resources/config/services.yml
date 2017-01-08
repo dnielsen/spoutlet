@@ -10,15 +10,14 @@ services:
             - "@knp_media.util.media_util"
             - "@platformd.util.site_util"
             - "@pd.cevo.api.api_manager"
-            - "@security.context"
+            - "@security.token_storage"
             - "@event_dispatcher"
             - "@platformd_event.service.group_event"
             - "@media_exposer"
 
     platformd.repository.group:
         class: Platformd\GroupBundle\Entity\GroupRepository
-        factory_service: doctrine.orm.default_entity_manager
-        factory_method:  getRepository
+        factory: ['@doctrine.orm.default_entity_manager', 'getRepository']
         arguments:
             - 'GroupBundle:Group'
 

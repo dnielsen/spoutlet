@@ -3,6 +3,7 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
@@ -15,8 +16,8 @@ class CountryRestrictionRulesetType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('rules', 'collection', array(
-                'type' => new CountryRestrictionRuleType(),
+            ->add('rules', CollectionType::class, array(
+                'entry_type' => new CountryRestrictionRuleType(),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'label' => '',
@@ -30,7 +31,7 @@ class CountryRestrictionRulesetType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_countryagerestrictionruletype';
     }

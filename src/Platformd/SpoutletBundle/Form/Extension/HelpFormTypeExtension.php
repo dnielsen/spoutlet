@@ -2,11 +2,12 @@
 
 namespace Platformd\SpoutletBundle\Form\Extension;
 
+use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormTypeExtensionInterface;
-use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
@@ -16,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  * customizations made in our form template, causes a help message to be
  * displayed.
  */
-class HelpFormTypeExtension implements FormTypeExtensionInterface
+class HelpFormTypeExtension extends AbstractTypeExtension
 {
     /**
      * Builds the form.
@@ -26,8 +27,8 @@ class HelpFormTypeExtension implements FormTypeExtensionInterface
      *
      * @see FormTypeInterface::buildForm()
      *
-     * @param FormBuilder   $builder The form builder
-     * @param array         $options The options
+     * @param FormBuilderInterface $builder The form builder
+     * @param array                $options The options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -67,15 +68,7 @@ class HelpFormTypeExtension implements FormTypeExtensionInterface
     {
     }
 
-    public function finishView(FormView $view, FormInterface $form, array $options)
-    {
-
-    }
-
-    /**
-     * @param OptionsResolverInterface $resolver
-     */
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'help' => '',
@@ -89,6 +82,6 @@ class HelpFormTypeExtension implements FormTypeExtensionInterface
      */
     public function getExtendedType()
     {
-        return 'field';
+        return FormType::class;
     }
 }

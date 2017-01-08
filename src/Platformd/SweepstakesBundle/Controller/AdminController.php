@@ -41,7 +41,7 @@ class AdminController extends Controller
         $this->addSweepstakesBreadcrumb($type);
         $this->addSiteBreadcrumbs($site, $type);
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
@@ -72,7 +72,7 @@ class AdminController extends Controller
             $sweepstakes->setEventType(Sweepstakes::SWEEPSTAKES_TYPE_PROMO_CODE);
         }
 
-        $form = $this->createForm(new SweepstakesAdminType($sweepstakes, $this->getSweepstakesManager(), $tagManager), $sweepstakes);
+        $form = $this->createForm(new SweepstakesAdminType($sweepstakes, $tagManager), $sweepstakes);
 
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
@@ -117,7 +117,7 @@ class AdminController extends Controller
             }
         }
 
-        $form = $this->createForm(new SweepstakesAdminType($sweepstakes, $this->getSweepstakesManager(), $tagManager), $sweepstakes);
+        $form = $this->createForm(new SweepstakesAdminType($sweepstakes, $tagManager), $sweepstakes);
 
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
@@ -170,7 +170,7 @@ class AdminController extends Controller
     {
         $this->addMetricsBreadcrumbs($type);
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $site = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : null;
 
         $type = in_array($type, Sweepstakes::getValidTypes()) ? $type : Sweepstakes::SWEEPSTAKES_TYPE_SWEEPSTAKES;
@@ -234,7 +234,7 @@ class AdminController extends Controller
             $entries = $this->getEntryRepo()->findAllWithoutRegionOrderedByNewest($sweepstakes);
         } else {
             $regionId = $region;
-            $region = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Region')->find($regionId);
+            $region = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Region')->find($regionId);
 
             if (!$region) {
                 throw $this->createNotFoundException('No region for id ' . $regionId);

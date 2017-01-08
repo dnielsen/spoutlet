@@ -696,7 +696,7 @@ class GalleryController extends Controller
         $vote       = new Vote();
         $user       = $this->getCurrentUser();
 
-        if (!$this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+        if (!$this->container->get('security.authorization_checker')->isGranted(array('ROLE_USER'))) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => 'FORCE_LOGIN_TO_VOTE')));
             return $response;
         }
@@ -1022,7 +1022,7 @@ class GalleryController extends Controller
 
     private function getEntityManager()
     {
-        return $this->getDoctrine()->getEntityManager();
+        return $this->getDoctrine()->getManager();
     }
 
     private function getGalleryMediaRepository()

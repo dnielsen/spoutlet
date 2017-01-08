@@ -21,7 +21,7 @@ services:
     platformd.user.security.listener.api_session:
         class: Platformd\UserBundle\Security\Listener\ApiSessionListener
         arguments:
-            - '@security.context'
+            - '@security.token_storage'
             - '@security.authentication.session_strategy'
             - '@platformd.user.api.manager'
             - '%api_authentication%'

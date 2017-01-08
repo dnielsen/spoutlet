@@ -4,22 +4,19 @@ namespace Platformd\SpoutletBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Routing\Router;
 
 class MenuBuilder
 {
     private $factory;
 
-    private $router;
-
     /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Symfony\Component\Routing\Router $router
+     * MenuBuilder constructor.
+     *
+     * @param FactoryInterface $factory
      */
-    public function __construct(FactoryInterface $factory, Router $router)
+    public function __construct(FactoryInterface $factory)
     {
         $this->factory = $factory;
-        $this->router = $router;
     }
 
     /**
@@ -32,7 +29,7 @@ class MenuBuilder
     {
         $menu = $this->factory->createItem('root');
         $menu->setUri($requestStack->getCurrentRequest()->getRequestUri());
-        $menu->setAttribute('class', 'breadcrumb');
+        $menu->setChildrenAttribute('class', 'breadcrumb');
 
         $menu->addChild('Home', ['route' => 'admin_index']);
 

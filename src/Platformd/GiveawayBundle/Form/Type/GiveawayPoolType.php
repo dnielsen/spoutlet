@@ -2,9 +2,14 @@
 
 namespace Platformd\GiveawayBundle\Form\Type;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Platformd\SpoutletBundle\Form\Type\CountryRestrictionRulesetType;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class GiveawayPoolType extends AbstractType
@@ -16,32 +21,32 @@ class GiveawayPoolType extends AbstractType
     {
         $builder
             // this is a long field, but it's mean for users not to put much here
-            ->add('description', 'text', array(
+            ->add('description', TextType::class, array(
                 'required' => false
             ))
-            ->add('maxKeysPerIp', 'integer', array(
+            ->add('maxKeysPerIp', IntegerType::class, array(
                 'required' => false,
                 'label' => 'Max Keys Per IP',
                 ))
-            ->add('upperLimit', 'integer', array(
+            ->add('upperLimit', IntegerType::class, array(
                 'required' => false,
                 'label' => 'Upper Limit',
                 ))
-            ->add('lowerLimit', 'integer', array(
+            ->add('lowerLimit', IntegerType::class, array(
                 'required' => false,
                 'label' => 'Lower Limit',
                 ))
-            ->add('isActive', 'checkbox', array(
+            ->add('isActive', CheckboxType::class, array(
                 'required' => false,
                 'label' => 'Active?',
                 ))
-            ->add('keysfile', 'file', array(
+            ->add('keysfile', FileType::class, array(
                 'label' => 'Keys File',
             ))
-            ->add('ruleset', new CountryRestrictionRulesetType(), array(
+            ->add('ruleset', CountryRestrictionRulesetType::class, array(
                 'label' => 'Restrictions',
             ))
-            ->add('regions', 'entity', array(
+            ->add('regions', EntityType::class, array(
                 'class' => 'SpoutletBundle:Region',
                 'query_builder' => function(EntityRepository $er) {
                     return $er->createQueryBuilder('r')
@@ -54,10 +59,7 @@ class GiveawayPoolType extends AbstractType
             ));
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'giveway_pool';
     }

@@ -6,17 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil;
-use Symfony\Component\Validator\Context\LegacyExecutionContext;
-use Symfony\Component\Validator\ExecutionContext;
 use DateTime;
-use DateTimezone;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Platformd\SpoutletBundle\Entity\SiteTakeover
  *
  * @ORM\Table(name="site_takeover")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\SiteTakeoverRepository")
- * @Assert\Callback(methods={"validateDateRanges"})
  */
 class SiteTakeover
 {
@@ -172,7 +169,11 @@ class SiteTakeover
         return $siteList;
     }
 
-    public function validateDateRanges(LegacyExecutionContext $executionContext)
+    /**
+     * @param ExecutionContextInterface $executionContext
+     * @Assert\Callback
+     */
+    public function validateDateRanges(ExecutionContextInterface $executionContext)
     {
         // error if submissionEnd or votingEnd datetime values are before their respective start datetimes
 

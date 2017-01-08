@@ -276,7 +276,7 @@ class User extends BaseUser
     /**
      * @var Boolean $terms_accepted
      *
-     * //Assert\True(message="You must accept the terms and conditions and the privacy policy", groups={"Registration", "IncompleteUser"})
+     * //Assert\isTrue(message="You must accept the terms and conditions and the privacy policy", groups={"Registration", "IncompleteUser"})
      */
     protected $termsAccepted;
 

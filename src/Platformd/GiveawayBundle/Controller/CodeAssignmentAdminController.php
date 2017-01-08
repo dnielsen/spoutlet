@@ -16,7 +16,7 @@ class CodeAssignmentAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Assign Codes');
 
         $assignment = new CodeAssignment();
-        $form       = $this->createForm(new CodeAssignmentType(), $assignment);
+        $form       = $this->createForm(CodeAssignmentType::class, $assignment);
 
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
@@ -151,7 +151,7 @@ class CodeAssignmentAdminController extends Controller
             $codeInfo[$email][] = $csvRow[1];
         }
 
-        $em    = $this->getDoctrine()->getEntityManager();
+        $em    = $this->getDoctrine()->getManager();
         $usersQuery = $em->getRepository('UserBundle:User')->getFindUserListByEmailQuery($emails);
 
         $iterableResult = $usersQuery->iterate();
@@ -165,7 +165,7 @@ class CodeAssignmentAdminController extends Controller
         $invalidUsers  = array();
         $assignedCount = 0;
 
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
         $connection = $em->getConnection();
 
         foreach ($codeInfo as $email => $codes) {

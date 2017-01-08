@@ -2,11 +2,10 @@
 
 namespace Platformd\SpoutletBundle\EventListener;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface,
     Symfony\Component\HttpFoundation\RedirectResponse,
     Symfony\Component\HttpKernel\Event\GetResponseEvent;
-
-
 
 class AccountNotCompleteListener
 {
@@ -18,33 +17,33 @@ class AccountNotCompleteListener
      *
      * @param \Platformd\UserBundle\Entity\UserManager $userManager
      */
-    public function __construct(UrlGeneratorInterface $router, $container)
+    public function __construct(UrlGeneratorInterface $router, ContainerInterface $container)
     {
-        $this->router       = $router;
-        $this->container    = $container;
+        $this->router = $router;
+        $this->container = $container;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
     {
-        $request    = $this->container->get('request');
-        $routeName  = $request->get('_route');
-        $token      = $this->container->get('security.context')->getToken();
-        $user       = $this->getCurrentUser();
+        $request = $this->container->get('request');
+        $routeName = $request->get('_route');
+        $token = $this->container->get('security.token_storage')->getToken();
+        $user = $this->getCurrentUser();
 
-        if($user) {
-            if($user->getFacebookId() && !$user->getPassword()) {
-                if($routeName != 'accounts_incomplete' && $routeName != '_main_user_strip' && $routeName != '_wdt' && $routeName != '_security_logout' && $routeName) {
-                    $url        = $this->router->generate('accounts_incomplete');
-                    $response   = new RedirectResponse($url);
+        if ($user) {
+            if ($user->getFacebookId() && !$user->getPassword()) {
+                if ($routeName != 'accounts_incomplete' && $routeName != '_main_user_strip' && $routeName != '_wdt' && $routeName != '_security_logout' && $routeName) {
+                    $url = $this->router->generate('accounts_incomplete');
+                    $response = new RedirectResponse($url);
 
                     $event->setResponse($response);
                 }
             }
 
-            if($user->getTwitterId() && !$user->getPassword()) {
-                if($routeName != 'accounts_incomplete' && $routeName != '_main_user_strip' && $routeName != '_wdt' && $routeName != '_security_logout' && $routeName) {
-                    $url        = $this->router->generate('accounts_incomplete');
-                    $response   = new RedirectResponse($url);
+            if ($user->getTwitterId() && !$user->getPassword()) {
+                if ($routeName != 'accounts_incomplete' && $routeName != '_main_user_strip' && $routeName != '_wdt' && $routeName != '_security_logout' && $routeName) {
+                    $url = $this->router->generate('accounts_incomplete');
+                    $response = new RedirectResponse($url);
 
                     $event->setResponse($response);
                 }
@@ -54,9 +53,10 @@ class AccountNotCompleteListener
         return;
     }
 
-    private function getCurrentUser() {
-        $token = $this->container->get('security.context')->getToken();
-        $user  = $token === null ? null : $token->getUser();
+    private function getCurrentUser()
+    {
+        $token = $this->container->get('security.token_storage')->getToken();
+        $user = $token === null ? null : $token->getUser();
 
         if ($user === 'anon.') {
             return null;

@@ -2,6 +2,7 @@
 
 namespace Platformd\EventBundle\Controller;
 
+use Platformd\EventBundle\Form\Type\GroupEventType;
 use Platformd\SpoutletBundle\Controller\Controller,
     Platformd\GroupBundle\Entity\Group,
     Platformd\GroupManager\Model\GroupManager;
@@ -11,6 +12,9 @@ use Platformd\EventBundle\Entity\GroupEvent,
     Platformd\EventBundle\Entity\GroupEventEmail,
     Platformd\UserBundle\Entity\RegistrationSource;
 
+use Platformd\SpoutletBundle\Form\Type\PurifiedTextareaType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
@@ -84,13 +88,13 @@ class GroupEventController extends Controller
         // TODO improve this
         $siteLocalesForTranslation = array('ja', 'zh', 'es');
         foreach ($siteLocalesForTranslation as $locale) {
-            $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
+            $site = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
             if ($site) {
                 $groupEvent->addTranslation(new GroupEventTranslation($site, $groupEvent));
             }
         }
 
-        $form = $this->createForm('groupEvent', $groupEvent);
+        $form = $this->createForm(GroupEventType::class, $groupEvent);
 
         if ($request->getMethod() == 'POST' && !$importedGroupEvent) {
             $form->handleRequest($request);
@@ -173,7 +177,7 @@ class GroupEventController extends Controller
         $groupEvent = $this->getGroupEventService()->cloneGroupEvent($importedGroupEvent);
         $groupEvent->setGroup($group);
 
-        $form = $this->createForm('groupEvent', $groupEvent);
+        $form = $this->createForm(GroupEventType::class, $groupEvent);
 
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
@@ -250,7 +254,7 @@ class GroupEventController extends Controller
 
         $tagManager->loadTagging($groupEvent);
 
-        $form = $this->createForm('groupEvent', $groupEvent);
+        $form = $this->createForm(GroupEventType::class, $groupEvent);
 
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
@@ -348,7 +352,7 @@ class GroupEventController extends Controller
             throw new AccessDeniedException();
         }
 
-        $hitEmailLimit = $this->getDoctrine()->getEntityManager()->getRepository('EventBundle:GroupEventEmail')->hasUserHitEmailLimitForEvent($this->getCurrentUser(), $groupEvent);
+        $hitEmailLimit = $this->getDoctrine()->getManager()->getRepository('EventBundle:GroupEventEmail')->hasUserHitEmailLimitForEvent($this->getCurrentUser(), $groupEvent);
 
         if ($hitEmailLimit) {
             $this->setFlash('error', 'platformd.events.event_contact.limit_hit');
@@ -372,14 +376,14 @@ class GroupEventController extends Controller
         // Optionally pass in recipient username to pre-populate recipient field
         $recipient = $request->get('recipient');
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('email', 'form', $email)
-            ->add('users', 'text', array(
+        $form = $this->container->get('form.factory')->createNamedBuilder('email', FormType::class, $email)
+            ->add('users', TextType::class, array(
                 'label' => 'platformd.events.event_contact.form.recipients',
 //                'help' => 'platformd.events.event_contact.form.recipient_help',
                 'attr' => array('value' => $recipient),
                 'mapped' => false,
             ))
-            ->add('message', 'purifiedTextarea', array(
+            ->add('message', PurifiedTextareaType::class, array(
                 'attr' => array('class' => 'ckeditor'),
                 'label' => 'platformd.events.event_contact.form.message',
             ))
@@ -486,13 +490,13 @@ class GroupEventController extends Controller
             $emailLocale
         ));
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('email', 'form', $email)
-            ->add('users', 'text', array(
+        $form = $this->container->get('form.factory')->createNamedBuilder('email', FormType::class, $email)
+            ->add('users', TextType::class, array(
                 'label' => 'platformd.events.event_contact.form.recipients',
 //                'help' => 'platformd.events.event_contact.form.recipient_help',
                 'mapped' => false,
             ))
-            ->add('message', 'purifiedTextarea', array(
+            ->add('message', PurifiedTextareaType::class, array(
                 'attr' => array('class' => 'ckeditor'),
                 'label' => 'platformd.events.event_contact.form.message',
             ))
@@ -793,7 +797,7 @@ class GroupEventController extends Controller
         $id = (int)$params['id'];
         $rsvp = $params['rsvp'];
 
-        if (!$this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+        if (!$this->container->get('security.authorization_checker')->isGranted(array('ROLE_USER'))) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => 'You must be logged in to RSVP to an event')));
             return $response;
         }
@@ -900,7 +904,7 @@ class GroupEventController extends Controller
 
         $fields = $groupEvent->getRegistrationFields();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $answerRepo = $this->getDoctrine()->getRepository('IdeaBundle:RegistrationAnswer');
 
         foreach ($fields as $field) {
@@ -935,7 +939,7 @@ class GroupEventController extends Controller
 
         $id = (int)$params['id'];
 
-        if (!$this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+        if (!$this->container->get('security.authorization_checker')->isGranted(array('ROLE_USER'))) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => 'You must be logged in to delete an event')));
             return $response;
         }

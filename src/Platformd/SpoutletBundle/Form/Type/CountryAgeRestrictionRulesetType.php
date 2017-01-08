@@ -3,21 +3,21 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
 
 use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class CountryAgeRestrictionRulesetType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('rules', 'collection', array(
-                'type' => new CountryAgeRestrictionRuleType(),
+            ->add('rules', CollectionType::class, array(
+                'entry_type' => new CountryAgeRestrictionRuleType(),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'label' => '',
@@ -42,7 +42,7 @@ class CountryAgeRestrictionRulesetType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_countryagerestrictionruletype';
     }

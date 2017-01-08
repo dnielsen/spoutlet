@@ -34,7 +34,7 @@ class HomepageBannerController extends Controller
 
         $this->addBannersBreadcrumb();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
         $banners = $this->getBannerRepo()->findForSite($site);
@@ -51,7 +51,7 @@ class HomepageBannerController extends Controller
 
         $banner = new HomepageBanner();
 
-        $form = $this->createForm(new HomepageBannerType(), $banner);
+        $form = $this->createForm(HomepageBannerType::class, $banner);
 
         if ('POST' === $request->getMethod()) {
             $form->handleRequest($request);
@@ -96,7 +96,7 @@ class HomepageBannerController extends Controller
 
         $sites = $banner->getSites();
         if (!$sites) {
-            $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($banner->getLocale());
+            $site = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($banner->getLocale());
             $banner->getSites()->add($site);
             $sitesPositions[$site->getId()] = 0;
         }
@@ -115,7 +115,7 @@ class HomepageBannerController extends Controller
 
         $banner->setSitesPositions($sitesPositions);
 
-        $form = $this->createForm(new HomepageBannerType(), $banner);
+        $form = $this->createForm(HomepageBannerType::class, $banner);
 
         if ('POST' === $request->getMethod()) {
             $form->handleRequest($request);
@@ -137,7 +137,7 @@ class HomepageBannerController extends Controller
 
     public function moveAction($id, $site, $direction)
     {
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
         $bannerRepo = $this->getBannerRepo();
         $site       = $em->getRepository('SpoutletBundle:Site')->find($site);
 
@@ -189,7 +189,7 @@ class HomepageBannerController extends Controller
     private function moveBannersDown($banner, $site)
     {
         $bannerRepo         = $this->getBannerRepo();
-        $em                 = $this->getDoctrine()->getEntityManager();
+        $em                 = $this->getDoctrine()->getManager();
 
         $allBannersForSite  = $bannerRepo->findForSite($site);
 
@@ -212,7 +212,7 @@ class HomepageBannerController extends Controller
     private function moveAllBannersDown($banner)
     {
         $bannerRepo         = $this->getBannerRepo();
-        $em                 = $this->getDoctrine()->getEntityManager();
+        $em                 = $this->getDoctrine()->getManager();
 
         foreach ($banner->getSites() as $site) {
             $allBannersForSite  = $bannerRepo->findForSite($site);
@@ -262,7 +262,7 @@ class HomepageBannerController extends Controller
                 }
 
                 $otherBanner->setSitesPositions($otherBannerPositions);
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($otherBanner);
                 $em->flush();
 

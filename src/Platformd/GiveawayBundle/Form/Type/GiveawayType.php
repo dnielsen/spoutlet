@@ -2,8 +2,17 @@
 
 namespace Platformd\GiveawayBundle\Form\Type;
 
+use Platformd\SpoutletBundle\Form\Type\PurifiedTextareaType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Platformd\GiveawayBundle\Entity\Giveaway;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
@@ -32,64 +41,75 @@ class GiveawayType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'textarea')
-            ->add('content', 'purifiedTextarea', array(
+            ->add('name', TextareaType::class, [
+                'label' => 'Name',
+            ])
+            ->add('content', PurifiedTextareaType::class, array(
                 'label' => 'Description',
                 'attr' => array(
                     'class' => 'ckeditor'
                 )
             ))
-            ->add('translations', 'collection', array(
-                'type' => new GiveawayTranslationType,
+            ->add('translations', CollectionType::class, array(
+                'entry_type' => new GiveawayTranslationType,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
-                'options' => array(
+                'entry_options' => array(
                     'data' => new GiveawayTranslation,
                 ),
             ))
-            ->add('slug', new SlugType(), array('label' => 'URL'))
-            ->add('giveawayType', 'choice', array(
+            ->add('slug', SlugType::class, array(
+                'label' => 'URL',
+            ))
+            ->add('giveawayType', ChoiceType::class, array(
                 'choices' => Giveaway::getTypeChoices(),
                 'label' => 'Giveaway Type',
                 'choices_as_values' => true,
             ))
-            ->add('bannerImageFile', 'file')
-            ->add('removeBannerImage', 'checkbox', array(
+            ->add('bannerImageFile', FileType::class, [
+                'label' => 'Banner Image',
+            ])
+            ->add('removeBannerImage', CheckboxType::class, array(
                 'label' => 'Remove Banner',
                 'mapped' => false,
             ))
-            ->add('backgroundImage', 'file', array(
+            ->add('backgroundImage', FileType::class, array(
                 'label' => 'Background file',
             ))
-            ->add('removeBackgroundImage', 'checkbox', array(
+            ->add('removeBackgroundImage', CheckboxType::class, array(
                 'label' => 'Remove Background',
                 'mapped' => false,
             ))
-            ->add('backgroundLink', 'text', array(
+            ->add('backgroundLink', TextType::class, array(
                 'label' => 'Background link'
             ))
-            ->add('redemptionInstructionsArray', 'collection', array(
-                'type' => 'textarea',
+            ->add('redemptionInstructionsArray', CollectionType::class, array(
+                'entry_type' => TextareaType::class,
                 'label' => 'Redemption Instructions'
             ))
-            ->add('status', 'choice', array(
+            ->add('status', ChoiceType::class, [
+                'label' => 'Status',
                 'choices' => Giveaway::getValidStatusesMap(),
-                'empty_value' => 'platformd.giveaway.status.blank_value',
+                'placeholder' => 'platformd.giveaway.status.blank_value',
                 'choices_as_values' => true,
-            ))
-            ->add('game', null, array('empty_value' => 'N/A'))
-            ->add('sites', 'entity', array(
+            ])
+            ->add('game', null, [
+                'label' => 'Game',
+                'empty_value' => 'N/A',
+            ])
+            ->add('sites', EntityType::class, [
+                'label' => 'Sites',
                 'class' => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
                 'choice_label' => 'name',
-            ))
-            ->add('externalUrl', null, array(
+            ])
+            ->add('externalUrl', null, [
+                'label' => 'External Url',
 //                'help' => '(Optional) If filled in, this URL will override the destination of any links that would normally point to the GiveAway page.'
-                )
-            )
-            ->add('testOnly', 'choice', array(
+            ])
+            ->add('testOnly', ChoiceType::class, array(
                 'choices' => self::YES_NO,
                 'choices_as_values' => true,
                 'label' => 'Allow admin testing?',
@@ -98,11 +118,11 @@ class GiveawayType extends AbstractType
             ->add('displayRemainingKeysNumber', null, array(
                 'label' => 'Show key count'
             ))
-            ->add('ruleset', new CountryAgeRestrictionRulesetType(), array(
+            ->add('ruleset', CountryAgeRestrictionRulesetType::class, array(
                 'label' => 'Restrictions'
             ));
 
-        $builder->add('group', 'hidden', array(
+        $builder->add('group', HiddenType::class, array(
             'mapped' => false,
         ));
 
@@ -110,13 +130,13 @@ class GiveawayType extends AbstractType
             'label' => 'Featured'
         ));
 
-        $builder->add('thumbnail', new MediaType(), array(
+        $builder->add('thumbnail', MediaType::class, array(
             'image_label' => 'Thumbnail',
             'image_help' => 'Recommended size: 138x83',
             'with_remove_checkbox' => true
         ));
 
-        $builder->add('tags', 'text', array(
+        $builder->add('tags', TextType::class, array(
             'label' => 'Tags',
 //            'help' => "Enter keywords to help people discover the giveaway.",
             'mapped' => false,
@@ -141,7 +161,7 @@ class GiveawayType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'giveaway';
     }

@@ -9,24 +9,20 @@ use Gedmo\Mapping\Annotation as Gedmo,
     Gedmo\Sluggable\Util\Urlizer;
 
 use Symfony\Component\Validator\Constraints as Assert,
-    Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity,
-    Symfony\Component\Validator\ExecutionContext;
+    Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use DateTime;
 
-use Platformd\UserBundle\Entity\User,
-    Platformd\TagBundle\Model\TaggableInterface,
+use Platformd\TagBundle\Model\TaggableInterface,
     Platformd\SpoutletBundle\Link\LinkableInterface,
-    Platformd\SweepstakesBundle\Entity\SweepstakesQuestion,
     Platformd\MediaBundle\Entity\Media;
-use Symfony\Component\Validator\Context\LegacyExecutionContext;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Platformd\SweepstakesBundle\Entity\Sweepstakes
  * @ORM\Table(name="pd_sweepstakes", indexes={@ORM\Index(name="event_type_idx", columns={"event_type"})}, uniqueConstraints={@ORM\UniqueConstraint(name="slug_unique", columns={"slug"})})
  * @ORM\Entity(repositoryClass="Platformd\SweepstakesBundle\Entity\SweepstakesRepository")
  *
- * @Assert\Callback(methods={"validatePromoCodeFields"})
  * @UniqueEntity(fields={"slug"}, message="sweepstakes.errors.slug_unique")
  * @UniqueEntity(fields={"name"}, message="sweepstakes.errors.name_unique")
  */
@@ -766,7 +762,12 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
         return self::$validTypes;
     }
 
-    public function validatePromoCodeFields(LegacyExecutionContext $executionContext)
+    /**
+     * @param ExecutionContextInterface $executionContext
+     *
+     * @Assert\Callback
+     */
+    public function validatePromoCodeFields(ExecutionContextInterface $executionContext)
     {
         if ($this->getEventType() == self::SWEEPSTAKES_TYPE_SWEEPSTAKES) {
             return;
@@ -800,7 +801,7 @@ class Sweepstakes implements TaggableInterface, LinkableInterface
         }
     }
 
-    private function addError(LegacyExecutionContext $executionContext, $path, $message)
+    private function addError(ExecutionContextInterface $executionContext, $path, $message)
     {
         $oldPath = $executionContext->getPropertyPath();
 

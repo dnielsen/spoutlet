@@ -39,7 +39,7 @@ class GamePageAdminController extends Controller
 
         $gamePages = $this->getGamePageManager()->findAllForSiteNewestFirst($site);
 
-        $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->find($site);
+        $site = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Site')->find($site);
 
         return $this->render('GameBundle:GamePageAdmin:list.html.twig', array(
             'entities' => $gamePages,
@@ -58,7 +58,7 @@ class GamePageAdminController extends Controller
 
         $gamePage  = new GamePage();
         $gamePage->setCreatedAt(new \DateTime());
-        $form    = $this->createForm(new GamePageType(), $gamePage);
+        $form    = $this->createForm(GamePageType::class, $gamePage);
 
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The game page was created!');
@@ -84,7 +84,7 @@ class GamePageAdminController extends Controller
     {
         $this->addGamePagesBreadcrumb();
         $this->addSiteBreadcrumbs($site)->addChild('Edit Game Page');
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $gamePage = $em->getRepository('GameBundle:GamePage')->find($id);
 
@@ -92,7 +92,7 @@ class GamePageAdminController extends Controller
             throw $this->createNotFoundException('Unable to find GamePage.');
         }
 
-        $editForm   = $this->createForm(new GamePageType(), $gamePage);
+        $editForm   = $this->createForm(GamePageType::class, $gamePage);
         $deleteForm = $this->createDeleteForm($id);
 
         if ($this->processForm($editForm, $request)) {

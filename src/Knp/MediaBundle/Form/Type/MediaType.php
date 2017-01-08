@@ -3,6 +3,8 @@
 namespace Knp\MediaBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
@@ -22,14 +24,16 @@ abstract class MediaType extends AbstractType
         }
 
         $builder
-            ->add('fileObject', 'file', array(
+            ->add('fileObject', FileType::class, [
                 'label' => $label,
                 'required' => false,
-            ))
+            ])
         ;
 
         if (isset($options['with_remove_checkbox']) && $options['with_remove_checkbox']) {
-            $builder->add('removed', 'checkbox', array('label' => 'Remove'));
+            $builder->add('removed', CheckboxType::class, [
+                'label' => 'Remove',
+            ]);
         }
     }
 
@@ -46,7 +50,9 @@ abstract class MediaType extends AbstractType
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
         if ($this->helpMessage) {
-            $view['fileObject']->set('help', $this->helpMessage);
+            if (isset($view->children->vars['fileObject'])) {
+                $view->children->vars['fileObject'] = array_replace($view->children->vars['fileObject'], ['help' => $this->helpMessage]);
+            }
         }
 
         if ($form->getData()) {
@@ -56,10 +62,7 @@ abstract class MediaType extends AbstractType
         }
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'knp_media';
     }

@@ -3,6 +3,7 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class TimelineType extends AbstractType
@@ -16,16 +17,16 @@ class TimelineType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('googleDocUrl', 'text', array(
+            ->add('googleDocUrl', TextType::class, array(
                 'label' => 'Data Source URL:',
             ))
-            ->add('name', 'text', array(
+            ->add('name', TextType::class, array(
                 'label' => 'Name',
             ))
         ;
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_timelinetype';
     }

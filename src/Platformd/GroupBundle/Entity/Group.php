@@ -12,7 +12,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Sluggable\Util\Urlizer;
 use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Model\ReportableContentInterface;
-use Symfony\Component\Validator\Context\LegacyExecutionContext;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Platformd\GroupBundle\Validator\GroupSlugCollision;
 use Platformd\TagBundle\Model\TaggableInterface;
@@ -30,8 +30,6 @@ use Platformd\IdeaBundle\Entity\EntrySetRegistry,
  * @ORM\Entity(repositoryClass="Platformd\GroupBundle\Entity\GroupRepository")
  * @UniqueEntity(fields={"name"}, message="This group name is already used.")
  * @UniqueEntity(fields={"slug"}, message="This group url is already used.")
- *
- * @Assert\Callback(methods={"locationRequiredCallBack"})
  *
  * @GroupSlugCollision()
  * @ORM\HasLifecycleCallbacks()
@@ -909,7 +907,12 @@ class Group implements LinkableInterface, ReportableContentInterface, IndexableI
         return self::COMMENT_PREFIX . $this->getId();
     }
 
-    public function locationRequiredCallBack(LegacyExecutionContext $executionContext)
+    /**
+     * @param ExecutionContextInterface $executionContext
+     *
+     * @Assert\Callback
+     */
+    public function locationRequiredCallBack(ExecutionContextInterface $executionContext)
     {
         if ($this->getCategory() != 'location') {
             return;

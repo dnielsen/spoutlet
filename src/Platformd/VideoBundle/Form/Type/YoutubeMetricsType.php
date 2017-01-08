@@ -3,6 +3,8 @@
 namespace Platformd\VideoBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class YoutubeMetricsType extends AbstractType
@@ -10,7 +12,7 @@ class YoutubeMetricsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('fromDate', 'date', array(
+            ->add('fromDate', DateType::class, array(
                 'label' => 'From Date:',
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
@@ -18,7 +20,7 @@ class YoutubeMetricsType extends AbstractType
                     'class' => 'date-picker'
                 )
             ))
-            ->add('thruDate', 'date', array(
+            ->add('thruDate', DateType::class, array(
                 'label' => 'Thru Date:',
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
@@ -26,13 +28,13 @@ class YoutubeMetricsType extends AbstractType
                     'class' => 'date-picker'
                 )
             ))
-            ->add('keyWords', 'text', array(
+            ->add('keyWords', TextType::class, array(
                 'label' => 'Key Words',
             ))
         ;
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_videobundle_youtubemetricstype';
     }

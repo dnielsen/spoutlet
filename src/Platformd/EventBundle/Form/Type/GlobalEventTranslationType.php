@@ -7,15 +7,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GlobalEventTranslationType extends EventTranslationType
 {
-    public function getName()
-    {
-        return 'platformd_global_event_translation';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => GlobalEventTranslation::class,
         ]);
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'platformd_global_event_translation';
     }
 }

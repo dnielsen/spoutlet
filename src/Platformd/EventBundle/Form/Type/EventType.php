@@ -2,14 +2,16 @@
 
 namespace Platformd\EventBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType,
-    Symfony\Component\Security\Core\SecurityContextInterface;
+use Platformd\SpoutletBundle\Form\Type\PurifiedTextareaType;
+use Symfony\Component\Form\AbstractType;
 
 use Platformd\EventBundle\Entity\Event,
     Platformd\MediaBundle\Form\Type\MediaType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class EventType extends AbstractType
 {
@@ -24,59 +26,44 @@ class EventType extends AbstractType
         'platformd.event.registration.3rdparty' => Event::REGISTRATION_3RD_PARTY,
     ];
 
-    /**
-     * @var \Symfony\Component\Security\Core\SecurityContextInterface
-     */
-    protected $security;
-
-    /**
-     * Constructor
-     *
-     * @param \Symfony\Component\Security\Core\SecurityContextInterface $security
-     */
-    public function __construct(SecurityContextInterface $security)
-    {
-        $this->security = $security;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text', array(
+            ->add('name', TextType::class, [
                 'label' => 'platformd.event.form.name',
-            ))
-            ->add('bannerImage', new MediaType(), array(
+            ])
+            ->add('bannerImage', MediaType::class, [
                 'image_label' => 'platformd.event.form.banner_image',
                 'image_help' => 'platformd.event.form.help.banner_image',
                 'required' => false
-            ))
-            ->add('content', 'purifiedTextarea', array(
+            ])
+            ->add('content', PurifiedTextareaType::class, array(
                 'label' => 'platformd.event.form.description',
                 'attr' => array(
                     'class' => 'ckeditor'
                 )
             ))
-            ->add('online', 'choice', array(
+            ->add('online', ChoiceType::class, array(
                 'choices' => self::ONLINE,
                 'choices_as_values' => true,
                 'expanded' => true,
                 'label' => 'platformd.event.form.event_type'
             ))
-            ->add('location', 'text', array(
+            ->add('location', TextType::class, array(
                 'required' => false,
                 'label' => 'platformd.event.form.location'
             ))
-            ->add('address1', 'text', array(
+            ->add('address1', TextType::class, array(
                 'required' => false,
                 'help' => 'platformd.event.form.help.address1',
                 'label' => 'platformd.event.form.address1'
             ))
-            ->add('address2', 'text', array(
+            ->add('address2', TextType::class, array(
                 'required' => false,
                 'help' => 'platformd.event.form.help.address2',
                 'label' => 'platformd.event.form.address2'
             ))
-            ->add('startsAt', 'datetime', array(
+            ->add('startsAt', DateTimeType::class, array(
                 'label' => 'platformd.event.form.starts_at',
                 'date_widget' => 'single_text',
                 'time_widget' => 'choice',
@@ -84,7 +71,7 @@ class EventType extends AbstractType
                 'date_format' => 'MM/dd/yyyy',
                 'error_bubbling' => false,
             ))
-            ->add('endsAt', 'datetime', array(
+            ->add('endsAt', DateTimeType::class, array(
                 'label' => 'platformd.event.form.ends_at',
                 'date_widget' => 'single_text',
                 'time_widget' => 'choice',
@@ -92,7 +79,7 @@ class EventType extends AbstractType
                 'date_format' => 'MM/dd/yyyy',
                 'error_bubbling' => false,
             ))
-            ->add('registrationOption', 'choice', array(
+            ->add('registrationOption', ChoiceType::class, array(
                 'choices' => self::REGISTRATION_OPTIONS,
                 'choices_as_values' => true,
                 'expanded' => true,
@@ -107,7 +94,7 @@ class EventType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_event';
     }

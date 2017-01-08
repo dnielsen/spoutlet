@@ -44,7 +44,7 @@ class FrontendController extends Controller
         $user          = $this->getCurrentUser();
         $isGroupMember = null;
         $entryFlash    = null;
-        $em            = $this->getDoctrine()->getEntityManager();
+        $em            = $this->getDoctrine()->getManager();
         $registered    = $request->query->get('registered');
         $timedout      = $request->query->get('timedout');
         $suspended     = $request->query->get('suspended');
@@ -104,7 +104,7 @@ class FrontendController extends Controller
             $entry->addAnswer(new SweepstakesAnswer($question, $entry));
         }
 
-        $entryForm   = $this->createForm('platformd_sweeps_entry', $entry);
+        $entryForm   = $this->createForm(SweepstakesEntryType::class, $entry);
         $formHandler = $this->container->get('platformd_sweeps.entry.form.handler');
         $formHandler->setForm($entryForm);
 

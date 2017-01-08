@@ -20,7 +20,7 @@ class YoutubeAdminController extends Controller
     {
         $page       = $request->query->get('page', 1);
         $filters    = $this->getFilterFormData();
-        $form       = $this->createForm(new YoutubeMetricsType(), $filters);
+        $form       = $this->createForm(YoutubeMetricsType::class, $filters);
 
         if($request->getMethod() == 'POST') {
             $form->handleRequest($request);

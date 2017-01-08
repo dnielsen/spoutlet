@@ -24,7 +24,7 @@ class RsvpAdminController extends Controller
     {
         $this->addRsvpBreadcrumb()->addChild('New Rsvp');
 
-        $form = $this->createForm(new RsvpType, new Rsvp);
+        $form = $this->createForm(RsvpType::class, new Rsvp());
 
         if ('POST' === $request->getMethod()) {
             $form->handleRequest($request);
@@ -47,7 +47,7 @@ class RsvpAdminController extends Controller
         $this->addRsvpBreadcrumb()->addChild('Edit Rsvp');
 
         $rsvp = $this->getRsvpOr404($id);
-        $form = $this->createForm(new RsvpType, $rsvp);
+        $form = $this->createForm(RsvpType::class, $rsvp);
 
         if ('POST' === $request->getMethod()) {
             $form->handleRequest($request);
@@ -96,8 +96,8 @@ class RsvpAdminController extends Controller
 
     private function save(Rsvp $rsvp)
     {
-        $this->getDoctrine()->getEntityManager()->persist($rsvp);
-        $this->getDoctrine()->getEntityManager()->flush();
+        $this->getDoctrine()->getManager()->persist($rsvp);
+        $this->getDoctrine()->getManager()->flush();
     }
 
     private function getRsvpOr404($id)

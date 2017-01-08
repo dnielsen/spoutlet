@@ -1973,7 +1973,7 @@ Alienware Arena Team
         $this->ensureAllowed($group, 'ContactGroup');
 
         $user = $this->getCurrentUser();
-        $hitEmailLimit = $this->getDoctrine()->getEntityManager()->getRepository('GroupBundle:GroupMassEmail')->hasUserHitEmailLimitForGroup($user, $group);
+        $hitEmailLimit = $this->getDoctrine()->getManager()->getRepository('GroupBundle:GroupMassEmail')->hasUserHitEmailLimitForGroup($user, $group);
 
         if ($hitEmailLimit) {
             $this->setFlash('error', 'platformd.groups.contact.error.email_limit_hit');
@@ -2194,7 +2194,7 @@ Alienware Arena Team
 
                 if (!$group->getEntrySetRegistration()) {
                     $esReg = $group->createEntrySetRegistration();
-                    $em = $this->getDoctrine()->getEntityManager();
+                    $em = $this->getDoctrine()->getManager();
                     $em->persist($esReg);
                     $em->flush();
                 }
@@ -2229,7 +2229,7 @@ Alienware Arena Team
 
     private function getEntityManager()
     {
-        return $this->getDoctrine()->getEntityManager();
+        return $this->getDoctrine()->getManager();
     }
 
     private function getGalleryMediaRepository()

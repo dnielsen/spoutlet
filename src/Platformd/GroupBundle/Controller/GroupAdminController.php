@@ -3,11 +3,6 @@
 namespace Platformd\GroupBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller;
-use Platformd\GroupBundle\Entity\Group;
-use Platformd\GroupBundle\Entity\GroupRepository;
-use Platformd\GroupBundle\Entity\GroupVideoRepository;
-use Platformd\GroupBundle\Entity\GroupImageRepository;
-use Platformd\GroupBundle\Entity\GroupNewsRepository;
 use Platformd\GroupBundle\Entity\GroupMembershipAction;
 use Platformd\SpoutletBundle\Entity\DiscussionFindWrapper;
 use Platformd\GroupBundle\Form\Type\GroupFindType;
@@ -30,7 +25,7 @@ class GroupAdminController extends Controller
 {
     public function filterAction(Request $request)
     {
-        $form = $this->createForm(new GroupFindType(), $this->getFilterFormData());
+        $form = $this->createForm(GroupFindType::class, $this->getFilterFormData());
         $form->handleRequest($request);
 
         $this->setFilterFormData($form->getData());
@@ -62,7 +57,7 @@ class GroupAdminController extends Controller
         $this->addFindGroupsBreadcrumb();
 
         $data = new GroupFindWrapper();
-        $form = $this->createForm(new GroupFindType(), $data);
+        $form = $this->createForm(GroupFindType::class, $data);
 
         if ('POST' == $request->getMethod()) {
             $form->handleRequest($request);
@@ -117,7 +112,7 @@ class GroupAdminController extends Controller
     }
 
     public function showAction($id, Request $request) {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $group = $em->getRepository('GroupBundle:Group')->find($id);
 
@@ -295,15 +290,14 @@ class GroupAdminController extends Controller
      */
     public function findDiscussionAction(Request $request)
     {
-        $request = $this->getRequest();
-        $page = $request->query->get('page', 1);
+        $page = $request->query->getInt('page', 1);
 
         $this->addFindDiscussionsBreadcrumb();
 
         $this->resetDiscussionFilterFormData();
 
         $data = new DiscussionFindWrapper();
-        $form = $this->createForm(new DiscussionFindType(), $data);
+        $form = $this->createForm(DiscussionFindType::class, $data);
 
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
             $data->setSites(array('ja'));
@@ -564,7 +558,7 @@ class GroupAdminController extends Controller
         );
         $factory->addRow($fourthRow);
 
-        $groupDiscussionPostRepo = $this->getDoctrine()->getEntityManager()->getRepository('GroupBundle:GroupDiscussionPost');
+        $groupDiscussionPostRepo = $this->getDoctrine()->getManager()->getRepository('GroupBundle:GroupDiscussionPost');
         $groupDiscussionPosts = $groupDiscussionPostRepo->getDiscussionPosts($groupDiscussion);
 
         foreach ($groupDiscussionPosts as $groupDiscussionPost) {

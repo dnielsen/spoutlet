@@ -2,12 +2,12 @@
 
 namespace Platformd\UserBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response;
 
 use Platformd\SpoutletBundle\Controller\Controller,
-    Platformd\UserBundle\Entity\User,
     Platformd\UserBundle\Entity\Avatar,
     Platformd\UserBundle\Form\Type\AvatarType,
     Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage;
@@ -15,17 +15,22 @@ use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 
 class AvatarController extends Controller
 {
+    /**
+     * @param Request $request
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
     public function avatarAction(Request $request)
     {
-        $this->checkSecurity();
-
         $avatarManager = $this->getAvatarManager();
         $data = $avatarManager->getAvatarListingData($this->getUser(), 84);
         $newAvatar = new Avatar();
 
         $newAvatar->setUser($this->getUser());
 
-        $form = $this->createForm(new AvatarType(), $newAvatar);
+        $form = $this->createForm(AvatarType::class, $newAvatar);
         if (isset($_GET['url_pic'])) {
             $hpcloud_accesskey = $this->container->getParameter('hpcloud_accesskey');
             $hpcloud_secreatekey = $this->container->getParameter('hpcloud_secreatkey');
@@ -66,10 +71,15 @@ class AvatarController extends Controller
         ));
     }
 
+    /**
+     * @param null $uuid
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
     public function cropAvatarAction($uuid = null)
     {
-        $this->checkSecurity();
-
         if (!$uuid) {
             $this->setFlash('error', 'platformd.user.avatars.invalid_avatar');
             return $this->redirect($this->generateUrl('accounts_settings'));
@@ -141,7 +151,7 @@ class AvatarController extends Controller
     public function facePrintAction($uuid = null, $facePrintId = null, $facePrintImage = null)
     {
         $user = $this->getUser();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $user->setFacePrintId($facePrintId);
         $user->setFacePrintImage($facePrintImage);
@@ -153,10 +163,16 @@ class AvatarController extends Controller
         return $this->redirect($this->generateUrl('avatars'));
     }
 
+    /**
+     * @param $uuid
+     * @param $dimensions
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function processAvatarAction($uuid, $dimensions)
     {
-        $this->checkSecurity();
-
         $avatarManager = $this->getAvatarManager();
         $avatar = $this->findAvatar($uuid);
         $user = $this->getUser();
@@ -222,10 +238,15 @@ class AvatarController extends Controller
         return $response;
     }
 
+    /**
+     * @param $uuid
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function switchAction($uuid)
     {
-        $this->checkSecurity();
-
         $avatar = $this->findAvatar($uuid, false);
         $user = $this->getUser();
         $avatarManager = $this->getAvatarManager();
@@ -260,12 +281,5 @@ class AvatarController extends Controller
         }
 
         return $avatar;
-    }
-
-    protected function checkSecurity()
-    {
-        if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            throw new AccessDeniedException();
-        }
     }
 }

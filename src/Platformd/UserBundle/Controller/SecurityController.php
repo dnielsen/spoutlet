@@ -169,7 +169,7 @@ class SecurityController extends BaseController
     // helpers
     private function getCurrentUser()
     {
-        $token = $this->container->get('security.context')->getToken();
+        $token = $this->container->get('security.token_storage')->getToken();
         $user  = $token === null ? null : $token->getUser();
 
         if ($user === 'anon.') {

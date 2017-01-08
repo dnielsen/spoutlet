@@ -23,7 +23,7 @@ use FOS\UserBundle\Model\UserInterface;
 class SweepstakesEntry
 {
     /**
-     * @Assert\True(message="sweepstakes.errors.agree_to_terms")
+     * @Assert\IsTrue(message="sweepstakes.errors.agree_to_terms")
      */
     public $termsAccepted;
 

@@ -150,7 +150,7 @@
             var collection = $(event.target).parent();
             var prototype = collection.data('prototype');
             var num = collection.children().length + 1;
-            var item = prototype.replace(/\$\$name\$\$/g, num);
+            var item = prototype.replace(/__name__/g, num);
 
             $(item).insertBefore(this);
             CKEDITOR.replace('giveaway_translations_' + num + '_content', {toolbar: "AdminToolbar"});

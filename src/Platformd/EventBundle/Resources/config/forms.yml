@@ -7,16 +7,15 @@ services:
     platformd_event.form.type.group_event:
         class: %platformd_event.form.type.group_event.class%
         arguments:
-            - @security.context
-            - %platformd_event.form.event_subscriber.admin_group_event_subscriber.class%
+            - '@security.authorization_checker'
+            - '%platformd_event.form.event_subscriber.admin_group_event_subscriber.class%'
             - "@platformd.tags.model.tag_manager"
         tags:
-            - { name: form.type, alias: groupEvent }
+            - { name: form.type }
 
     platformd_event.form.type.global_event:
         class: %platformd_event.form.type.global_event.class%
         arguments:
-            - @security.context
             - "@platformd.tags.model.tag_manager"
         tags:
-            - { name: form.type, alias: globalEvent }
+            - { name: form.type }

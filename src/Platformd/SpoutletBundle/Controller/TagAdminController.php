@@ -20,7 +20,7 @@ class TagAdminController extends Controller
 
         $tags = $manager->getAllTagsSortByAlphaWithCount();
 
-        $form = $this->createForm(new TagUploadType());
+        $form = $this->createForm(TagUploadType::class);
 
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);

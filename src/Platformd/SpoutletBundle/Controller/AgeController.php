@@ -2,6 +2,7 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Form;
@@ -34,7 +35,7 @@ class AgeController extends Controller
         $constraint = new NotBlank();
         $constraint->message = $this->trans('error.fill_in_birthday');
 
-        $form = $this->createForm('birthday', null, array(
+        $form = $this->createForm('birthday', BirthdayType::class, array(
             'csrf_protection' => false,
             'empty_value' => '--', 'required' => true,
             'years' => range(date('Y'), 1940),

@@ -24,6 +24,18 @@ use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\SpoutletBundle\Entity\Site;
+use Platformd\SpoutletBundle\Form\Type\PurifiedTextareaType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -66,28 +78,28 @@ class AdminController extends Controller
             $isNew = true;
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('evtSession', 'form', $evtSession)
-            ->add('name', 'text', array('attr' => array('class' => 'formRowWidth')))
-            ->add('description', 'textarea', array('attr' => array('class' => 'formRowWidth', 'rows' => '6')))
-            ->add('room', 'text', array('attr' => array('class' => 'formRowWidth'), 'required' => false))
-            ->add('date', 'date', [
+        $form = $this->container->get('form.factory')->createNamedBuilder('evtSession', FormType::class, $evtSession)
+            ->add('name', TextType::class, array('attr' => array('class' => 'formRowWidth')))
+            ->add('description', TextareaType::class, array('attr' => array('class' => 'formRowWidth', 'rows' => '6')))
+            ->add('room', TextType::class, array('attr' => array('class' => 'formRowWidth'), 'required' => false))
+            ->add('date', DateType::class, [
                 'widget' => 'single_text',
                 'format' => 'MM/dd/yyyy',
                 'required' => false,
             ])
-            ->add('startsAt', 'time', [
+            ->add('startsAt', TimeType::class, [
                 'widget' => 'single_text',
                 'with_seconds' => true,
                 'required' => false,
             ])
-            ->add('endsAt', 'time', [
+            ->add('endsAt', TimeType::class, [
                 'widget' => 'single_text',
                 'with_seconds' => true,
                 'required' => false,
             ])
-            ->add('slidesLink', 'text', array('attr' => array('class' => 'formRowWidth', 'placeholder' => 'http://'),
+            ->add('slidesLink', TextType::class, array('attr' => array('class' => 'formRowWidth', 'placeholder' => 'http://'),
                 'required' => false))
-            ->add('publicNotesLink', 'text', array('attr' => array('class' => 'formRowWidth', 'placeholder' => 'http://'),
+            ->add('publicNotesLink', TextType::class, array('attr' => array('class' => 'formRowWidth', 'placeholder' => 'http://'),
                 'required' => false))
             ->getForm();
 
@@ -188,7 +200,7 @@ class AdminController extends Controller
             throw new NotFoundHttpException('Session not found.');
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->remove($evtSession);
         $em->flush();
 
@@ -227,20 +239,20 @@ class AdminController extends Controller
             $isNew = false;
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('session_speaker', 'form', $sessionSpeaker)
-            ->add('speaker', 'entity', array(
+        $form = $this->container->get('form.factory')->createNamedBuilder('session_speaker', FormType::class, $sessionSpeaker)
+            ->add('speaker', EntityType::class, array(
                 'class' => 'UserBundle:User',
                 'choices' => $session->getEvent()->getAttendeesAlphabetical())
             )
-            ->add('role', 'text', array('attr' => array('class' => 'formRowWidth')))
-            ->add('biography', 'textarea', array('attr' => array('class' => 'formRowWidth', 'rows' => '6')))
+            ->add('role', TextType::class, array('attr' => array('class' => 'formRowWidth')))
+            ->add('biography', TextareaType::class, array('attr' => array('class' => 'formRowWidth', 'rows' => '6')))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
             if ($form->isValid()) {
 
-                $em = $doc->getEntityManager();
+                $em = $doc->getManager();
 
                 if ($isNew) {
                     $sessionSpeaker->setSession($session);
@@ -336,38 +348,38 @@ class AdminController extends Controller
             }
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('event', 'form', $event)
-            ->add('name', 'text', array('attr' => array('size' => '60%')))
-            ->add('content', 'purifiedTextarea', array('attr' => array('class' => 'ckeditor')))
-            ->add('noDate', 'checkbox', array('required' => false))
-            ->add('startsAt', 'datetime', array())
-            ->add('endsAt', 'datetime', array())
-            ->add('external', 'choice', array(
+        $form = $this->container->get('form.factory')->createNamedBuilder('event', FormType::class, $event)
+            ->add('name', TextType::class, array('attr' => array('size' => '60%')))
+            ->add('content', PurifiedTextareaType::class, array('attr' => array('class' => 'ckeditor')))
+            ->add('noDate', CheckboxType::class, array('required' => false))
+            ->add('startsAt', DateTimeType::class)
+            ->add('endsAt', DateTimeType::class)
+            ->add('external', ChoiceType::class, array(
                 'choices' => array(
-                    '1' => 'No',
-                    '0' => 'Yes'
+                    'No' => 1,
+                    'Yes' => 0,
                 ),
                 'choices_as_values' => true,
             ))
-            ->add('registrationOption', 'choice', array(
+            ->add('registrationOption', ChoiceType::class, array(
                 'choices' => array(
-                    Event::REGISTRATION_ENABLED => 'Enabled',
-                    Event::REGISTRATION_DISABLED => 'Disabled',
+                    'Enabled' => Event::REGISTRATION_ENABLED,
+                    'Disabled' => Event::REGISTRATION_DISABLED,
                 ),
                 'choices_as_values' => true,
             ))
-            ->add('registrationFields', 'collection', [
+            ->add('registrationFields', CollectionType::class, [
                 'type' => new RegistrationFieldFormType(),
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
             ])
-            ->add('externalUrl', 'text', array('attr' => array('size' => '60%', 'placeholder' => 'http://')))
-            ->add('location', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
-            ->add('address1', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
-            ->add('address2', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
-            ->add('online', 'checkbox', array('required' => false))
-            ->add('private', 'checkbox', array('required' => false))
+            ->add('externalUrl', TextType::class, array('attr' => array('size' => '60%', 'placeholder' => 'http://')))
+            ->add('location', TextType::class, array('attr' => array('size' => '60%'), 'required' => '0'))
+            ->add('address1', TextType::class, array('attr' => array('size' => '60%'), 'required' => '0'))
+            ->add('address2', TextType::class, array('attr' => array('size' => '60%'), 'required' => '0'))
+            ->add('online', CheckboxType::class, array('required' => false))
+            ->add('private', CheckboxType::class, array('required' => false))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
@@ -462,31 +474,31 @@ class AdminController extends Controller
             $isNew = false;
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('event', 'form', $event)
-            ->add('name', 'text', array('attr' => array('size' => '60%')))
-            ->add('content', 'purifiedTextarea', array('attr' => array('class' => 'ckeditor')))
-            ->add('noDate', 'checkbox', array('required' => false))
-            ->add('externalUrl', 'text', array('attr' => array('size' => '60%', 'placeholder' => 'http://'), 'required' => true))
-            ->add('startsAt', 'datetime', array())
-            ->add('endsAt', 'datetime', array())
-            ->add('external', 'choice', array(
+        $form = $this->container->get('form.factory')->createNamedBuilder('event', FormType::class, $event)
+            ->add('name', TextType::class, array('attr' => array('size' => '60%')))
+            ->add('content', PurifiedTextareaType::class, array('attr' => array('class' => 'ckeditor')))
+            ->add('noDate', CheckboxType::class, array('required' => false))
+            ->add('externalUrl', TextType::class, array('attr' => array('size' => '60%', 'placeholder' => 'http://'), 'required' => true))
+            ->add('startsAt', DateTimeType::class)
+            ->add('endsAt', DateTimeType::class)
+            ->add('external', ChoiceType::class, array(
                 'choices' => array(
-                    '1' => 'No',
-                    '0' => 'Yes'
+                    'No' => 1,
+                    'Yes' => 0,
                 ),
                 'choices_as_values' => true,
             ))
-            ->add('registrationOption', 'choice', array(
+            ->add('registrationOption', ChoiceType::class, array(
                 'choices' => array(
-                    Event::REGISTRATION_ENABLED => 'Enabled',
-                    Event::REGISTRATION_DISABLED => 'Disabled',
+                     'Enabled' => Event::REGISTRATION_ENABLED,
+                     'Disabled' => Event::REGISTRATION_DISABLED,
                 ),
                 'choices_as_values' => true,
             ))
-            ->add('externalUrl', 'text', array('attr' => array('size' => '60%', 'placeholder' => 'http://')))
-            ->add('location', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
-            ->add('address1', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
-            ->add('address2', 'text', array('attr' => array('size' => '60%'), 'required' => '0'))
+            ->add('externalUrl', TextType::class, array('attr' => array('size' => '60%', 'placeholder' => 'http://')))
+            ->add('location', TextType::class, array('attr' => array('size' => '60%'), 'required' => '0'))
+            ->add('address1', TextType::class, array('attr' => array('size' => '60%'), 'required' => '0'))
+            ->add('address2', TextType::class, array('attr' => array('size' => '60%'), 'required' => '0'))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
@@ -504,7 +516,7 @@ class AdminController extends Controller
 
             if ($form->isValid()) {
 
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
 
                 if ($isNew) {
@@ -596,9 +608,9 @@ class AdminController extends Controller
             throw new AccessDeniedException;
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('htmlPage', 'form', $htmlPage)
-            ->add('title', 'text', array('attr' => array('size' => '60%')))
-            ->add('content', 'purifiedTextarea', array('attr' => array('class' => 'ckeditor')))
+        $form = $this->container->get('form.factory')->createNamedBuilder('htmlPage', FormType::class, $htmlPage)
+            ->add('title', TextType::class, array('attr' => array('size' => '60%')))
+            ->add('content', PurifiedTextareaType::class, array('attr' => array('class' => 'ckeditor')))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
@@ -613,7 +625,7 @@ class AdminController extends Controller
                     $htmlPage->setEvent($event);
                 }
 
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($htmlPage);
                 $em->flush();
 
@@ -641,7 +653,7 @@ class AdminController extends Controller
 
         $this->validateAuthorization($htmlPage);
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->remove($htmlPage);
         $em->flush();
 
@@ -673,39 +685,45 @@ class AdminController extends Controller
             return $this->redirect($this->generateUrl($cancelTarget->getLinkableRouteName(), $cancelTarget->getLinkableRouteParameters()));
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('entrySet', 'form', $entrySet)
-            ->add('name', 'text', array('label' => 'entrySet_name', 'translation_domain' => 'forms', 'attr' => array('style' => 'width:60%')))
-            ->add('type', 'choice', array(
+        $form = $this->container->get('form.factory')->createNamedBuilder('entrySet', FormType::class, $entrySet)
+            ->add('name', TextType::class, array('label' => 'entrySet_name', 'translation_domain' => 'forms', 'attr' => array('style' => 'width:60%')))
+            ->add('type', ChoiceType::class, array(
                 'label' => 'entrySet_type',
                 'translation_domain' => 'forms',
                 'choices' => array(
-                    EntrySet::TYPE_IDEA => 'Ideas',
-                    EntrySet::TYPE_SESSION => 'Sessions',
-                    EntrySet::TYPE_THREAD => 'Threads',
-                    EntrySet::TYPE_TASK => 'Tasks',
+                    'Ideas' => EntrySet::TYPE_IDEA,
+                    'Sessions' => EntrySet::TYPE_SESSION,
+                    'Threads' => EntrySet::TYPE_THREAD,
+                    'Tasks' => EntrySet::TYPE_TASK,
                 ),
                 'choices_as_values' => true,
             ))
-            ->add('description', 'textarea', array('label' => 'entrySet_description', 'translation_domain' => 'forms', 'attr' => array('style' => 'width:60%')))
-            ->add('isSubmissionActive', 'choice', array(
+            ->add('description', TextareaType::class, array('label' => 'entrySet_description', 'translation_domain' => 'forms', 'attr' => array('style' => 'width:60%')))
+            ->add('isSubmissionActive', ChoiceType::class, array(
                 'label' => 'entrySet_isSubmissionActive',
                 'translation_domain' => 'forms',
                 'choices' => array(
-                    '1' => 'Yes',
-                    '0' => 'No',
+                    'Yes' => 1,
+                    'No' => 0,
                 ),
                 'choices_as_values' => true,
             ))
-            ->add('isVotingActive', 'choice', array(
+            ->add('isVotingActive', ChoiceType::class, array(
                 'label' => 'entrySet_isVotingActive',
                 'translation_domain' => 'forms',
                 'choices' => array(
-                    '0' => 'No',
-                    '1' => 'Yes',
+                    'No' => 0,
+                    'Yes' => 1,
                 ),
                 'choices_as_values' => true,
             ))
-            ->add('allowedVoters', 'text', array('label' => 'entrySet_allowedVoters', 'translation_domain' => 'forms', 'max_length' => '5000', 'attr' => array('style' => 'width:60%', 'placeholder' => 'username1, username2, ...'), 'required' => '0',))
+            ->add('allowedVoters', TextType::class, array(
+                'label' => 'entrySet_allowedVoters',
+                'translation_domain' => 'forms',
+                'max_length' => '5000',
+                'attr' => array('style' => 'width:60%', 'placeholder' => 'username1, username2, ...'),
+                'required' => '0',
+            ))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
@@ -728,7 +746,7 @@ class AdminController extends Controller
                 $entrySet->setEntrySetRegistration($entrySetRegistration);
                 $entrySet->setAllowedVoters(implode(",", $validatedJudges));
 
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($entrySet);
                 $em->flush();
 
@@ -753,7 +771,7 @@ class AdminController extends Controller
 
         if ($this->canEditEntrySet($entrySet)) {
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->remove($entrySet);
             $em->flush();
 
@@ -796,17 +814,17 @@ class AdminController extends Controller
             $vc = new VoteCriteria();
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('criteria', 'form', $vc)
-            ->add('displayName', 'text', array('label' => 'criteria_displayName'))
-            ->add('description', 'textarea', array('label' => 'criteria_description', 'attr' => array('cols' => '60%', 'rows' => '3')))
-            ->add('id', 'hidden')
+        $form = $this->container->get('form.factory')->createNamedBuilder('criteria', FormType::class, $vc)
+            ->add('displayName', TextType::class, array('label' => 'criteria_displayName'))
+            ->add('description', TextareaType::class, array('label' => 'criteria_description', 'attr' => array('cols' => '60%', 'rows' => '3')))
+            ->add('id', HiddenType::class)
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
             if ($form->isValid()) {
 
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
                 if ($vc->getId() == null) {
                     $vc->setEvent($event);
@@ -841,7 +859,6 @@ class AdminController extends Controller
 
     public function criteriaListAction(Request $request, $groupSlug, $eventId)
     {
-
         // test if submission is from a 'new' button press
         if ($request->get('new') == 'New') {
             return $this->redirect($this->generateUrl('idea_admin_criteria', array(
@@ -862,12 +879,12 @@ class AdminController extends Controller
 
         $choices = array();
         foreach ($criteriaList as $criteria) {
-            $choices[$criteria->getId()] = $criteria->getDisplayName();
+            $choices[$criteria->getDisplayName()] = $criteria->getId();
         }
         $formAttributes = array('size' => count($choices) <= 10 ? count($choices) : 10, 'style' => 'width: 50%');
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('criteria', 'form')
-            ->add('displayName', 'choice', array(
+        $form = $this->container->get('form.factory')->createNamedBuilder('criteria', FormType::class)
+            ->add('displayName', ChoiceType::class, array(
                 'choices' => $choices,
                 'label' => 'criteria_displayName',
                 'attr' => $formAttributes,
@@ -1007,7 +1024,7 @@ class AdminController extends Controller
             }
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->flush();
 
 
@@ -1021,7 +1038,7 @@ class AdminController extends Controller
     {
 
         $newImage = new Media();
-        $form = $this->createForm(new MediaType(), $newImage, array('image_label' => 'Image File:'));
+        $form = $this->createForm(MediaType::class, $newImage, array('image_label' => 'Image File:'));
 
         $event = $this->getEvent($eventId);
 
@@ -1051,7 +1068,7 @@ class AdminController extends Controller
 
                     $event->getRotatorImages()->add($image);
 
-                    $em = $this->getDoctrine()->getEntityManager();
+                    $em = $this->getDoctrine()->getManager();
                     $em->flush();
                 }
             }
@@ -1110,7 +1127,7 @@ class AdminController extends Controller
         );
         $userRsvpStatus = reset($userRsvpActions);
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         if ($userRsvpStatus) {
             if ($action == 'approve') {
@@ -1148,7 +1165,7 @@ class AdminController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->remove($image);
         $em->flush();
 
@@ -1352,7 +1369,7 @@ class AdminController extends Controller
             throw new AccessDeniedException;
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sessions = $em->getRepository('EventBundle:EventSession')->findAll();
         $output = '';
 
@@ -1494,7 +1511,7 @@ class AdminController extends Controller
 
         $this->getGroupEventService()->createEvent($event, false);
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->persist($event);
         $em->flush();
 
@@ -1540,7 +1557,7 @@ class AdminController extends Controller
     public function addEntrySetCreatorsAction(Request $request)
     {
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $entrySets = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet')->findAll();
 
         $output = '';
@@ -1571,7 +1588,7 @@ class AdminController extends Controller
 
     public function addEntrySetRegistrationsToAllEventsAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $groupEvents = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->findAll();
         $globalEvents = $this->getDoctrine()->getRepository('EventBundle:GlobalEvent')->findAll();
@@ -1601,7 +1618,7 @@ class AdminController extends Controller
 
     public function createDepartmentsForAllExistingSponsorsAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sponsors = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor')->findAll();
 
         $groupRepo = $this->getDoctrine()->getRepository('GroupBundle:Group');
@@ -1768,7 +1785,7 @@ class AdminController extends Controller
     {
         global $svic_db;
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $criteriaList = $em->getRepository('IdeaBundle:VoteCriteria')->findByEventId($event);
         if (sizeof($criteriaList) < 4) {
             $vc1 = new VoteCriteria();
@@ -1837,7 +1854,7 @@ class AdminController extends Controller
         $result = mysql_query($sql, $svic_db) or die('Invalid query: ' . mysql_error());
         while ($row = mysql_fetch_assoc($result)) {
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $idea = $em->getRepository('IdeaBundle:Idea')->findOneBy(array('name' => $row['name']));
             if (!$idea) {
                 echo "Can't find idea named " . $row['name'] . "<br/>";
@@ -1876,7 +1893,7 @@ class AdminController extends Controller
         $result = mysql_query($sql, $svic_db) or die('Invalid query: ' . mysql_error());
         while ($row = mysql_fetch_assoc($result)) {
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $idea = $em->getRepository('IdeaBundle:Idea')->findOneBy(array('name' => $row['name']));
             if (!$idea) {
                 echo "Can't find idea named " . $row['name'] . "<br/>";
@@ -1911,7 +1928,7 @@ class AdminController extends Controller
         $result = mysql_query("SELECT idea.*, fos_user.email_canonical FROM idea, fos_user WHERE idea.creator_id = fos_user.id", $svic_db) or die('Invalid query: ' . mysql_error());
         while ($row = mysql_fetch_assoc($result)) {
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $creator = $em->getRepository('UserBundle:User')->findOneBy(array('emailCanonical' => $row['email_canonical']));
             if (!$creator) {
                 echo "Can't find user for idea " . $row[id] . "<br/>";

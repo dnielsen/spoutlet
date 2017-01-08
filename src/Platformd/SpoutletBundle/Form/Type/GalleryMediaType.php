@@ -4,6 +4,10 @@ namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Platformd\UserBundle\Entity\User;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class GalleryMediaType extends AbstractType
@@ -26,18 +30,18 @@ class GalleryMediaType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('title', 'text', array(
+        $builder->add('title', TextType::class, array(
             'max_length' => 255,
             'label'      => 'galleries.edit_photo.name',
             'attr'       => array('class' => 'photo-title')
         ));
-        $builder->add('description', 'textarea', array(
+        $builder->add('description', TextareaType::class, array(
             'max_length' => 512,
             'label'      => 'galleries.edit_photo.desc',
             'attr'       => array('class' => 'photo-description')
         ));
 
-        $builder->add('galleries', 'choice', array(
+        $builder->add('galleries', ChoiceType::class, array(
             'label'         => 'galleries.index_page_title',
             'required'      => true,
             'expanded'      => true,
@@ -47,7 +51,7 @@ class GalleryMediaType extends AbstractType
         ));
 
         if ($this->currentSite->getSiteFeatures()->getHasGroups()) {
-            $builder->add('groups', 'choice', array(
+            $builder->add('groups', ChoiceType::class, array(
                 'label'         => 'Groups',
                 'required'      => true,
                 'expanded'      => true,
@@ -58,14 +62,14 @@ class GalleryMediaType extends AbstractType
         }
 
         if ($this->user instanceof User && $this->user->hasRole('ROLE_SUPER_ADMIN')) {
-            $builder->add('featured', 'checkbox', array(
+            $builder->add('featured', CheckboxType::class, array(
                 'label'     => 'Featured',
                 'help'      => 'Check this checkbox to make this media item featured on the gallery front page.',
                 'required'  => false,
             ));
         }
 
-        $builder->add('tags', 'text', array(
+        $builder->add('tags', TextType::class, array(
             'label' => 'tags.forms.tags',
             'help' => "tags.forms.enter_keywords_help",
             'property_path' => false,
@@ -74,7 +78,7 @@ class GalleryMediaType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_gallery_media';
     }

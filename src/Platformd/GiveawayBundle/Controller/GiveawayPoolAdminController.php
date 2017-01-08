@@ -49,7 +49,7 @@ class GiveawayPoolAdminController extends Controller
 
         $request = $this->getRequest();
 
-        $form = $this->createForm(new GiveawayPoolType(), $pool);
+        $form = $this->createForm(GiveawayPoolType::class, $pool);
 
         if ('POST' === $request->getMethod()) {
             $form->handleRequest($request);
@@ -88,7 +88,7 @@ class GiveawayPoolAdminController extends Controller
 
         $request = $this->getRequest();
 
-         $form = $this->createForm(new GiveawayPoolType(), $pool);
+         $form = $this->createForm(GiveawayPoolType::class, $pool);
 
         if ('POST' === $request->getMethod()) {
             $form->handleRequest($request);
@@ -142,7 +142,7 @@ class GiveawayPoolAdminController extends Controller
      */
     protected function savePool(GiveawayPool $pool)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $ruleset    = $pool->getRuleset();
         $rules      = $ruleset->getRules();

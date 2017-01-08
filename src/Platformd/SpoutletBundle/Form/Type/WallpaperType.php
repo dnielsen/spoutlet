@@ -22,7 +22,7 @@ class WallpaperType extends AbstractType
         ;
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_wallpapertype';
     }

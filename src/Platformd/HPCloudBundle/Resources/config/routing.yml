@@ -1,3 +1,0 @@
-HPCloudBundle_homepage:
-    pattern:  /hello/{name}
-    defaults: { _controller: HPCloudBundle:Default:index }

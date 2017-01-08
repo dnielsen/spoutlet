@@ -3,6 +3,7 @@
 namespace Platformd\SweepstakesBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -14,8 +15,7 @@ class SweepstakesAnswerType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($builder)
-        {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($builder) {
             $form = $event->getForm();
             $data = $event->getData();
 
@@ -23,8 +23,8 @@ class SweepstakesAnswerType extends AbstractType
             if ($data instanceof SweepstakesAnswer) {
                 $label = $data->getQuestion()->getContent();
                 $form->add($builder->getFormFactory()->createNamed(
-                    'text',
                     'content',
+                    TextType::class,
                     null,
                     ['label' => $label]
                 ));
@@ -39,7 +39,7 @@ class SweepstakesAnswerType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'sweepstakes_answer';
     }

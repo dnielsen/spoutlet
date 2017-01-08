@@ -4,6 +4,10 @@ namespace Platformd\UserBundle\Form\Type;
 
 use Platformd\UserBundle\Entity\User;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -61,14 +65,14 @@ class RegistrationFormType extends BaseType
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('name', 'text', [
+            ->add('name', TextType::class, [
                 'label' => 'Full Name',
             ])
 //            ->add('firstname', null, array('required' => true, 'error_bubbling' => true))
 //            ->add('lastname', null, array('required' => true, 'error_bubbling' => true))
-            ->add('email', 'email', array('required' => true, 'error_bubbling' => true))
-            ->add('plainPassword', 'repeated', array(
-                'type' => 'password',
+            ->add('email', EmailType::class, array('required' => true, 'error_bubbling' => true))
+            ->add('plainPassword', RepeatedType::class, array(
+                'type' => PasswordType::class,
                 'first_options' => array('label' => 'Password:', 'required' => true),
                 'second_options' => array('label' => 'Confirm Password:', 'required' => true),
                 'invalid_message' => 'passwords_do_not_match',
@@ -172,7 +176,7 @@ class RegistrationFormType extends BaseType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_user_registration';
     }

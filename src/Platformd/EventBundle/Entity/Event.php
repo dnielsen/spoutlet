@@ -8,10 +8,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 use Platformd\IdeaBundle\Entity\RegistrationField;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints as Assert,
-    Symfony\Component\Validator\ExecutionContext;
+use Symfony\Component\Validator\Constraints as Assert;
 
-use Symfony\Component\Validator\Context\LegacyExecutionContext;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 use Vich\GeographicalBundle\Annotation as Vich;
 
 use Gedmo\Mapping\Annotation as Gedmo,
@@ -32,7 +31,7 @@ use Platformd\GameBundle\Entity\Game,
  *
  * @ORM\MappedSuperclass
  * @Vich\Geographical
- * @Assert\Callback(methods={"externalContentCheck", "validateDateRanges", "validateSlug"})
+ * Assert\Callback({"validateDateRanges", "validateSlug"})
  * @ORM\HasLifecycleCallbacks()
  *
  * @UniqueEntity(fields={"externalUrl"}, message="Please choose another URL string - this one is not unique within the system.")
@@ -1045,7 +1044,11 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         $this->attendeeCount += $increment;
     }
 
-    public function externalContentCheck(LegacyExecutionContext $context)
+    /**
+     * @param ExecutionContextInterface $context
+     * @Assert\Callback
+     */
+    public function externalContentCheck(ExecutionContextInterface $context)
     {
         if ($this instanceof GlobalEvent) {
             $external = $this->externalUrl ? true : false;
@@ -1064,7 +1067,12 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         }
     }
 
-    public function validateDateRanges(LegacyExecutionContext $executionContext)
+    /**
+     * @param ExecutionContextInterface $executionContext
+     * 
+     * @Assert\Callback
+     */
+    public function validateDateRanges(ExecutionContextInterface $executionContext)
     {
         if ($this->endsAt < $this->startsAt) {
             $propertyPath = $executionContext->getPropertyPath() . '.endsAt';
@@ -1108,7 +1116,7 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         return false;
     }
 
-    public function validateAddressField(ExecutionContext $executionContext)
+    public function validateAddressField(ExecutionContextInterface $executionContext)
     {
         if ($this->online == false) {
 
@@ -1155,7 +1163,11 @@ abstract class Event implements LinkableInterface, IndexableInterface, TaggableI
         }
     }
 
-    public function validateSlug(LegacyExecutionContext $executionContext)
+    /**
+     * @param ExecutionContextInterface $executionContext
+     * @Assert\Callback
+     */
+    public function validateSlug(ExecutionContextInterface $executionContext)
     {
         if (!$this->getSlug()) {
             $slug = Urlizer::urlize($this->getName());

@@ -2,12 +2,10 @@
 
 namespace Platformd\CEVOBundle\Api;
 
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Platformd\CEVOBundle\Security\CEVO\CEVOToken;
 use Platformd\CEVOBundle\CEVOAuthManager;
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
-use Platformd\CEVOBundle\Api\ApiException;
 
 /**
  * Handles all API interactions with CEVO
@@ -113,9 +111,7 @@ class ApiManager
     }
 
     /**
-     * Optional logger dependency
-     *
-     * @param null|\Symfony\Component\HttpKernel\Log\LoggerInterface $logger
+     * @param LoggerInterface|null $logger
      */
     public function setLogger(LoggerInterface $logger = null)
     {
@@ -132,7 +128,7 @@ class ApiManager
     private function getSessionId()
     {
         if ($this->sessionId === null) {
-            $token = $this->getSecurityContext()->getToken();
+            $token = $this->container->get('security.token_storage')->getToken();
 
             if ($token && $token instanceof CEVOToken) {
                 $this->sessionId = $token->getSessionId();
@@ -152,7 +148,7 @@ class ApiManager
     public function getUserId()
     {
         if ($this->userId === null) {
-            $token = $this->getSecurityContext()->getToken();
+            $token = $this->container->get('security.token_storage')->getToken();
 
             if ($token && $token instanceof CEVOToken) {
                 $this->userId = $token->getUserId();
@@ -281,17 +277,5 @@ class ApiManager
         if ($this->logger) {
             $this->logger->err($message);
         }
-    }
-
-    /**
-     * Returns the securiy context
-     *
-     * The container was injected to avoid a ciricular reference
-     *
-     * @return \Symfony\Component\Security\Core\SecurityContextInterface
-     */
-    private function getSecurityContext()
-    {
-        return $this->container->get('security.context');
     }
 }

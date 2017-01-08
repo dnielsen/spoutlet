@@ -6,13 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\Context\LegacyExecutionContext;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Knp\MediaBundle\Entity\Media
  *
  * @ORM\MappedSuperclass
- * @Assert\Callback(methods={"validateMimeTypes"})
  */
 abstract class Media
 {
@@ -252,7 +251,12 @@ abstract class Media
         $this->ignoreMime = $value;
     }
 
-    public function validateMimeTypes(LegacyExecutionContext $executionContext)
+    /**
+     * @param ExecutionContextInterface $executionContext
+     *
+     * @Assert\Callback
+     */
+    public function validateMimeTypes(ExecutionContextInterface $executionContext)
     {
         if (null === $this->getFileObject() || $this->ignoreMime) {
             return;

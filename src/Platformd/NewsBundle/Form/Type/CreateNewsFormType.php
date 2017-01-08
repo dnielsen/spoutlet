@@ -2,10 +2,17 @@
 
 namespace Platformd\NewsBundle\Form\Type;
 
+use Platformd\SpoutletBundle\Form\Type\PurifiedTextareaType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\NewsBundle\Entity\News;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class CreateNewsFormType extends AbstractType
@@ -31,13 +38,16 @@ class CreateNewsFormType extends AbstractType
     {
         $builder
             ->add('game', null, array(
+                'label' => 'Game',
                 'empty_value' => 'N/A',
             ))
-            ->add('title', 'text')
-            ->add('slug', new SlugType(), array(
-                'url_prefix' => '/news/',
+            ->add('title', TextType::class, [
+                'label' => 'Title',
+            ])
+            ->add('slug', SlugType::class, array(
+                'label' => 'URL string - /news/',
             ))
-            ->add('postedAt', 'date', array(
+            ->add('postedAt', DateType::class, array(
                 'widget' => 'single_text',
                 'attr' => array(
                     'class' => 'datetime-picker',
@@ -45,46 +55,51 @@ class CreateNewsFormType extends AbstractType
                 'label' => 'posted_at',
                 'format' => 'yyyy-MM-dd',
             ))
-            ->add('overrideUrl', 'url', array(
+            ->add('overrideUrl', UrlType::class, array(
                 'label' => 'override_url',
                 'required' => false
             ))
-            ->add('blurb', 'textarea')
-            ->add('body', 'purifiedTextarea', array(
+            ->add('blurb', TextareaType::class, [
+                'label' => 'Blurb',
+            ])
+            ->add('body', PurifiedTextareaType::class, array(
+                'label' => 'Body',
                 'attr' => array(
                     'class' => 'ckeditor',
                 ),
             ))
-            ->add('sites', 'entity', array(
+            ->add('sites', EntityType::class, array(
+                'label' => 'Sites',
                 'class' => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
                 'choice_label' => 'name',
             ))
-            ->add('published', 'choice', array(
+            ->add('published', ChoiceType::class, array(
                 'choices' => self::PUBLISHED_CHOICE,
                 'choices_as_values' => true,
                 'label' => 'published_status',
             ))
-            ->add('image', new MediaType(), array(
+            ->add('image', MediaType::class, array(
                 'image_label' => 'platformd.news.admin.upload_image',
                 'image_help' => 'platformd.news.admin.image_dimensions',
                 'with_remove_checkbox' => true,
             ))
-            ->add('type', 'choice', array(
+            ->add('type', ChoiceType::class, array(
+                'label' => 'Type',
                 'choices' => $this->getTypeChoices(),
                 'choices_as_values' => true,
                 'attr' => array(
                     'class' => 'news-type',
                 ),
             ))
-            ->add('thumbnail', new MediaType(), array(
+            ->add('thumbnail', MediaType::class, array(
                 'image_label' => 'platformd.news.admin.article_thumbnail',
                 'image_help' => 'platformd.news.admin.thumbnail_dimensions',
                 'with_remove_checkbox' => true,
             ));
 
-        $builder->add('tags', 'text', array(
+        $builder->add('tags', TextType::class, array(
             'label' => 'platformd.news.admin.tags',
 //            'help' => "platformd.news.admin.tags_help",
             'mapped' => false,
@@ -96,7 +111,7 @@ class CreateNewsFormType extends AbstractType
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'news';
     }

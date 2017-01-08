@@ -2,6 +2,7 @@
 
 namespace Platformd\NewsBundle\Controller;
 
+use Pagerfanta\Pagerfanta;
 use Platformd\SpoutletBundle\Controller\Controller;
 
 use Platformd\NewsBundle\Entity\News;
@@ -19,7 +20,7 @@ class AdminController extends Controller
     {
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
             $url = $this->generateUrl('NewsBundle_admin_siteList', array('site' => 2));
-            return $this->redirect($url);
+            return $this->redirectTo($url);
         }
 
         $this->addNewsBreadcrumb();
@@ -29,7 +30,7 @@ class AdminController extends Controller
         ));
     }
 
-    public function listAction($site)
+    public function listAction($site, Request $request)
     {
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
             $site = 2;
@@ -40,15 +41,15 @@ class AdminController extends Controller
 
         $em = $this
             ->getDoctrine()
-            ->getEntityManager();
+            ->getManager();
 
         $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
         $repo   = $em->getRepository('NewsBundle:News');
         $query  = $repo->getFindNewsForSiteQuery($site);
 
-        $pager = new PagerFanta(new DoctrineORMAdapter($query));
-        $pager->setCurrentPage($this->getRequest()->get('page', 1));
+        $pager = new Pagerfanta(new DoctrineORMAdapter($query));
+        $pager->setCurrentPage($request->get('page', 1));
 
         return $this->render('NewsBundle:Admin:list.html.twig', array(
             'news'  => $pager,
@@ -77,7 +78,7 @@ class AdminController extends Controller
     public function editAction($id)
     {
         $this->addNewsBreadcrumb()->addChild('Edit');
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
         $tagManager = $this->getTagManager();
 
         $news = $em
@@ -107,7 +108,7 @@ class AdminController extends Controller
 
     public function deleteAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $news = $em
             ->getRepository('NewsBundle:News')
             ->findOneBy(array('id' => $id));
@@ -126,7 +127,7 @@ class AdminController extends Controller
 
     private function processForm(Form $form, Request $request)
     {
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
         $tagManager = $this->getTagManager();
 
         if ('POST' === $request->getMethod()) {
@@ -138,7 +139,7 @@ class AdminController extends Controller
                 /** @var $news \Platformd\NewsBundle\Entity\News */
                 $news = $form->getData();
 
-                $mUtil = new MediaUtil($this->getDoctrine()->getEntityManager());
+                $mUtil = new MediaUtil($this->getDoctrine()->getManager());
 
                 if (!$mUtil->persistRelatedMedia($news->getImage())) {
                     $news->setImage(null);

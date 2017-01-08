@@ -2,6 +2,7 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
+use Platformd\SpoutletBundle\Form\Type\IncompleteAccountType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Platformd\EventBundle\Service\GroupEventService;
 use Symfony\Component\HttpFoundation\Request;
@@ -175,7 +176,7 @@ class AccountController extends Controller
             $i++;
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $assignedCodes = $em->getRepository('GiveawayBundle:CodeAssignmentCode')->getCodesAssignedForUser($this->getUser());
 
         foreach ($assignedCodes as $assignedCode) {
@@ -203,7 +204,7 @@ class AccountController extends Controller
     {
         $this->checkSecurity();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $dealCodes = $em->getRepository('GiveawayBundle:DealCode')
             ->getUserAssignedCodes($this->getUser());
@@ -251,7 +252,7 @@ class AccountController extends Controller
     {
         $this->checkSecurity();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $galleries = $em->getRepository('SpoutletBundle:Gallery')
             ->findAllGalleriesByCategoryForSite($this->getCurrentSite());
@@ -302,7 +303,7 @@ class AccountController extends Controller
 
     protected function checkSecurity()
     {
-        if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             throw new AccessDeniedException();
         }
     }
@@ -348,7 +349,7 @@ class AccountController extends Controller
 
         $newAvatar->setUser($this->getUser());
 
-        $avatarForm = $this->createForm(new AvatarType(), $newAvatar);
+        $avatarForm = $this->createForm(AvatarType::class, $newAvatar);
         $subscriptionForm = $this->createForm($this->getSubscriptionFormType(), $this->getUser());
 
         return $this->render('SpoutletBundle:Account:settings.html.twig', array(
@@ -387,7 +388,7 @@ class AccountController extends Controller
         $newAvatar = new Avatar();
         $newAvatar->setUser($this->getUser());
 
-        $form = $this->createForm(new AvatarType(), $newAvatar);
+        $form = $this->createForm(AvatarType::class, $newAvatar);
 
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
@@ -431,7 +432,7 @@ class AccountController extends Controller
             return $this->redirect($this->generateUrl('accounts_settings'));
         }
 
-        $form = $this->createForm('platformd_incomplete_account', $user);
+        $form = $this->createForm(IncompleteAccountType::class, $user);
         $childErrors = false;
 
         if ($request->getMethod() == 'POST') {
@@ -468,7 +469,7 @@ class AccountController extends Controller
 
                 if ($user) {
 
-                    $form = $this->createForm(new UnsubscribeFormType(), array('unsubscribe' => false, 'email' => $email));
+                    $form = $this->createForm(UnsubscribeFormType::class, array('unsubscribe' => false, 'email' => $email));
 
                     if ($request->getMethod() == 'POST') {
                         $form->handleRequest($request);

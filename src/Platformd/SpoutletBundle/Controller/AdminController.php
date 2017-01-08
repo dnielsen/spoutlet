@@ -2,12 +2,10 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
-use Platformd\MediaBundle\Entity\Media,
-    Platformd\MediaBundle\Form\Type\MediaType
-;
+use Platformd\MediaBundle\Entity\Media;
+use Platformd\MediaBundle\Form\Type\MediaType;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class AdminController extends Controller
 {
@@ -25,7 +23,7 @@ class AdminController extends Controller
         $medias = $pager->getCurrentPageResults();
 
         $media  = new Media();
-        $form   = $this->createForm(new MediaType(), $media);
+        $form   = $this->createForm(MediaType::class, $media);
 
         if($request->getMethod() == 'POST') {
             $form->handleRequest($request);
@@ -46,7 +44,7 @@ class AdminController extends Controller
 
     public function massUnsubscribeAction(Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $form = $this->createFormBuilder()
             ->add('emailsText', 'textarea', array(
@@ -122,7 +120,7 @@ class AdminController extends Controller
 
     private function saveMedia($mediaForm)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $media = $mediaForm->getData();
         $media->setOwner($this->getUser());
         $media->setIsAdmin(true);
@@ -134,7 +132,7 @@ class AdminController extends Controller
 
     private function getMediaRepo()
     {
-        return $this->getDoctrine()->getEntityManager()->getRepository('MediaBundle:Media');
+        return $this->getDoctrine()->getManager()->getRepository('MediaBundle:Media');
     }
 
     private function addManageMediaBreadcrumb()

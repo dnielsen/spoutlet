@@ -1,33 +1,33 @@
 api_group:
-    pattern:    /groups/{groupId}
+    path:    /groups/{groupId}
     defaults:   { _controller: ApiBundle:Api:group }
 
 api_all_groups:
-    pattern:    /allGroups/
+    path:    /allGroups/
     defaults:   { _controller: ApiBundle:Api:allGroups }
 
 api_all_events:
-    pattern:    /allEvents/
+    path:    /allEvents/
     defaults:   { _controller: ApiBundle:Api:allEvents }
 
 api_event:
-    pattern:    /events/{eventId}
+    path:    /events/{eventId}
     defaults:   { _controller: ApiBundle:Api:event }
 
 api_entrySet:
-    pattern:    /lists/{entrySetId}
+    path:    /lists/{entrySetId}
     defaults:   { _controller: ApiBundle:Api:entrySet }
 
 api_entry:
-    pattern:    /entries/{entryId}
+    path:    /entries/{entryId}
     defaults:   { _controller: ApiBundle:Api:entry }
 
 api_user:
-    pattern:    /users/{userId}
+    path:    /users/{userId}
     defaults:   { _controller: ApiBundle:Api:user }
 
 api_mobile:
-    pattern:    /mobile
+    path:    /mobile
     defaults:   { _controller: ApiBundle:Api:mobile }
 
 

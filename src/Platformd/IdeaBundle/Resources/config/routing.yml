@@ -2,57 +2,57 @@
 # Page Routes
 
 page_new:
-    pattern:    /pages/new
+    path:    /pages/new
     defaults:   { _controller: IdeaBundle:Admin:htmlPageForm }
 
 page_view:
-    pattern:    /pages/{id}
+    path:    /pages/{id}
     defaults:   { _controller: IdeaBundle:Idea:htmlPageView }
 
 page_edit:
-    pattern:    /pages/{id}/edit
+    path:    /pages/{id}/edit
     defaults:   { _controller: IdeaBundle:Admin:htmlPageForm }
 
 page_delete:
-    pattern:    /pages/{id}/delete
+    path:    /pages/{id}/delete
     defaults:   { _controller: IdeaBundle:Admin:htmlPageDelete }
 
 # Sponsor Routes
 
 sponsors:
-    pattern:    /sponsors
+    path:    /sponsors
     defaults:   { _controller: IdeaBundle:Idea:sponsors }
 
 sponsor_view:
-    pattern:    /sponsors/{id}
+    path:    /sponsors/{id}
     defaults:   { _controller: IdeaBundle:Idea:sponsorView }
 
 sponsor_form:
-    pattern:    /sponsors/{id}/edit
+    path:    /sponsors/{id}/edit
     defaults:   { _controller: IdeaBundle:Idea:sponsorForm }
 
 sponsor_add_form:
-    pattern:    /sponsors/{id}/addSponsor
+    path:    /sponsors/{id}/addSponsor
     defaults:   { _controller: IdeaBundle:Idea:sponsorAddForm }
 
 sponsor_remove:
-    pattern:    /sponsors/{id}/remove
+    path:    /sponsors/{id}/remove
     defaults:   { _controller: IdeaBundle:Idea:sponsorRemove }
 
 sponsor_delete:
-    pattern:    /sponsors/{id}/delete
+    path:    /sponsors/{id}/delete
     defaults:   { _controller: IdeaBundle:Idea:sponsorDelete }
 
 recommend_sponsor_list:
-    pattern:    /recommendSponsor
+    path:    /recommendSponsor
     defaults:   { _controller: IdeaBundle:Idea:recommendSponsorList }
 
 recommend_sponsor:
-    pattern:    /recommendSponsor/{department_id}
+    path:    /recommendSponsor/{department_id}
     defaults:   { _controller: IdeaBundle:Idea:recommendSponsor }
 
 update_sponsorship_status:
-    pattern:    /updateSponsorshipStatus/{sponsorship_id}
+    path:    /updateSponsorshipStatus/{sponsorship_id}
     defaults:   { _controller: IdeaBundle:Idea:updateSponsorshipStatus }
 
 # EntrySet Routes
@@ -62,328 +62,328 @@ entry_set_view:
     defaults:   { _controller: IdeaBundle:Idea:entrySetView }
 
 entry_set_new:
-    pattern:    /list/{entrySetId}/form
+    path:    /list/{entrySetId}/form
     defaults:   { _controller: IdeaBundle:Admin:entrySet }
 
 entry_set_edit:
-    pattern:    /list/{entrySetId}/edit
+    path:    /list/{entrySetId}/edit
     defaults:   { _controller: IdeaBundle:Admin:entrySet }
 
 entry_set_delete:
-    pattern:    /list/{entrySetId}/delete
+    path:    /list/{entrySetId}/delete
     defaults:   { _controller: IdeaBundle:Admin:entrySetDelete }
 
 # Session Routes
 
 event_session_schedule:
-    pattern:    /{groupSlug}/event/{eventId}/sessions
+    path:    /{groupSlug}/event/{eventId}/sessions
     defaults:   { _controller: IdeaBundle:Idea:eventSessions }
 
 event_session_create:
-    pattern:    /{groupSlug}/event/{eventId}/createSession
+    path:    /{groupSlug}/event/{eventId}/createSession
     defaults:   { _controller: IdeaBundle:Admin:eventSession }
 
 event_session_edit:
-    pattern:    /{groupSlug}/event/{eventId}/session/{sessionId}/edit
+    path:    /{groupSlug}/event/{eventId}/session/{sessionId}/edit
     defaults:   { _controller: IdeaBundle:Admin:eventSession }
 
 event_session_delete:
-    pattern:    /{groupSlug}/event/{eventId}/session/{sessionId}/delete
+    path:    /{groupSlug}/event/{eventId}/session/{sessionId}/delete
     defaults:   { _controller: IdeaBundle:Admin:eventSessionDelete }
 
 event_session_add_speaker:
-    pattern:    /{groupSlug}/event/{eventId}/session/{sessionId}/addSpeaker
+    path:    /{groupSlug}/event/{eventId}/session/{sessionId}/addSpeaker
     defaults:   { _controller: IdeaBundle:Admin:addEventSessionSpeaker }
 
 event_session_remove_speaker:
-    pattern:    /{groupSlug}/event/{eventId}/session/{sessionId}/removeSpeaker/{userId}
+    path:    /{groupSlug}/event/{eventId}/session/{sessionId}/removeSpeaker/{userId}
     defaults:   { _controller: IdeaBundle:Admin:removeEventSessionSpeaker }
 
 event_session:
-    pattern:    /{groupSlug}/event/{eventId}/session/{sessionId}
+    path:    /{groupSlug}/event/{eventId}/session/{sessionId}
     defaults:   { _controller: IdeaBundle:Idea:eventSession }
 
 
 # Watching Routes
 
 watch_event:
-    pattern:    /watch/{eventId}
+    path:    /watch/{eventId}
     defaults:   { _controller: IdeaBundle:Idea:watch }
 
 unwatch_event:
-    pattern:    /unwatch/{eventId}
+    path:    /unwatch/{eventId}
     defaults:   { _controller: IdeaBundle:Idea:unwatch }
 
 watch_group:
-    pattern:    /watchGroup/{groupId}
+    path:    /watchGroup/{groupId}
     defaults:   { _controller: IdeaBundle:Idea:watchGroup }
 
 unwatch_group:
-    pattern:    /unwatchGroup/{groupId}
+    path:    /unwatchGroup/{groupId}
     defaults:   { _controller: IdeaBundle:Idea:unwatchGroup }
 
 invite_user:
-    pattern:    /inviteUser
+    path:    /inviteUser
     defaults:   { _controller: IdeaBundle:Idea:inviteUser }
 
 dismiss_recommendation:
-    pattern:    /dismissRec/{recType}/{recId}
+    path:    /dismissRec/{recType}/{recId}
     defaults:   { _controller: IdeaBundle:Idea:dismissRecommendation }
 
 # Admin Routes
 
 idea_admin_feedback:
-    pattern:    /feedback
+    path:    /feedback
     defaults:   { _controller: IdeaBundle:Admin:feedback }
 
 idea_admin_event:
-    pattern:    /{groupSlug}/event/{eventId}/admin/configure
+    path:    /{groupSlug}/event/{eventId}/admin/configure
     defaults:   { _controller: IdeaBundle:Admin:event, eventId:newEvent}
 
 idea_admin_global_event:
-    pattern:    /publicEvent/{global_eventId}
+    path:    /publicEvent/{global_eventId}
     defaults:   { _controller: IdeaBundle:Admin:globalEvent, global_eventId:new}
 
 idea_admin:
-    pattern:    /{groupSlug}/event/{eventId}/admin
+    path:    /{groupSlug}/event/{eventId}/admin
     defaults:   { _controller: IdeaBundle:Admin:admin }
 
 idea_admin_criteria_all:
-    pattern:    /{groupSlug}/event/{eventId}/admin/criteriaList
+    path:    /{groupSlug}/event/{eventId}/admin/criteriaList
     defaults:   { _controller: IdeaBundle:Admin:criteriaList }
 
 idea_admin_criteria_get:
-    pattern:    /{groupSlug}/event/{eventId}/admin/criteria/{id}
+    path:    /{groupSlug}/event/{eventId}/admin/criteria/{id}
     defaults:   { _controller: IdeaBundle:Admin:criteria }
     requirements:
       _method: GET
 
 idea_admin_assign:
-    pattern:    /list/{entrySetId}/entry/{entryId}/assign
+    path:    /list/{entrySetId}/entry/{entryId}/assign
     defaults:   { _controller: IdeaBundle:Admin:assignJudges }
     requirements:
      _method: POST
 
 idea_admin_criteria:
-    pattern:    /{groupSlug}/event/{eventId}/admin/criteria
+    path:    /{groupSlug}/event/{eventId}/admin/criteria
     defaults:   { _controller: IdeaBundle:Admin:criteria }
 
 idea_admin_member_approvals:
-    pattern:    /{groupSlug}/event/{eventId}/admin/approvals
+    path:    /{groupSlug}/event/{eventId}/admin/approvals
     defaults:   { _controller: IdeaBundle:Admin:approvals }
 
 idea_admin_process_approval:
-    pattern:    /{groupSlug}/event/{eventId}/admin/approvals/{userId}/{action}
+    path:    /{groupSlug}/event/{eventId}/admin/approvals/{userId}/{action}
     defaults:   { _controller: IdeaBundle:Admin:processApproval }
 
 idea_summary:
-    pattern:    /{groupSlug}/event/{eventId}/admin/summary
+    path:    /{groupSlug}/event/{eventId}/admin/summary
     defaults:   { _controller: IdeaBundle:Admin:summary }
     requirements:
       _method:  GET
 
 idea_advance:
-    pattern:    /{groupSlug}/event/{eventId}/admin/advance
+    path:    /{groupSlug}/event/{eventId}/admin/advance
     defaults:   { _controller: IdeaBundle:Admin:advance }
     requirements:
       _method:  POST
 
 idea_admin_images:
-    pattern:    /{groupSlug}/event/{eventId}/admin/images
+    path:    /{groupSlug}/event/{eventId}/admin/images
     defaults:   { _controller: IdeaBundle:Admin:images }
     requirements:
       _method: GET|POST
 
 idea_admin_remove_image:
-    pattern:    /{groupSlug}/event/{eventId}/admin/images/remove/{imageId}
+    path:    /{groupSlug}/event/{eventId}/admin/images/remove/{imageId}
     defaults:   { _controller: IdeaBundle:Admin:removeImage }
     requirements:
       _method: GET
 
 idea_admin_export_ideas:
-    pattern:    /{groupSlug}/event/{eventId}/admin/exportIdeas
+    path:    /{groupSlug}/event/{eventId}/admin/exportIdeas
     defaults:   { _controller: IdeaBundle:Admin:exportIdeas }
     requirements:
       _method: GET
 
 idea_admin_export_users:
-    pattern:    /{groupSlug}/event/{eventId}/admin/exportUsers
+    path:    /{groupSlug}/event/{eventId}/admin/exportUsers
     defaults:   { _controller: IdeaBundle:Admin:exportUsers }
     requirements:
       _method: GET
 
 idea_admin_export_votes:
-    pattern:    /{groupSlug}/event/{eventId}/admin/exportVotes
+    path:    /{groupSlug}/event/{eventId}/admin/exportVotes
     defaults:   { _controller: IdeaBundle:Admin:exportVotes }
     requirements:
       _method: GET
 
 idea_admin_import_eventbrite_event:
-    pattern:    /{groupSlug}/eb_event_import/{ebEventId}
+    path:    /{groupSlug}/eb_event_import/{ebEventId}
     defaults:   { _controller: IdeaBundle:Admin:importEventbriteEvent }
 
 idea_admin_import_meetup_event:
-    pattern:    /{groupSlug}/mu_event_import/{muEventId}
+    path:    /{groupSlug}/mu_event_import/{muEventId}
     defaults:   { _controller: IdeaBundle:Admin:importMeetupEvent }
 
 
 # Admin Scripts
 
 update_session_speakers:
-    pattern:    /admin/updateSessionSpeakers
+    path:    /admin/updateSessionSpeakers
     defaults:   { _controller: IdeaBundle:Admin:updateSessionSpeakers }
 
 all_event_acl_fix:
-    pattern:    /admin/fixEventACLs
+    path:    /admin/fixEventACLs
     defaults:   { _controller: IdeaBundle:Admin:fixEventACLs }
 
 add_entry_set_creators:
-    pattern:    /admin/addEntrySetCreators
+    path:    /admin/addEntrySetCreators
     defaults:   { _controller: IdeaBundle:Admin:addEntrySetCreators }
 
 add_entry_set_registrations:
-    pattern:    /admin/addEntrySetRegistrations
+    path:    /admin/addEntrySetRegistrations
     defaults:   { _controller: IdeaBundle:Admin:addEntrySetRegistrationsToAllEvents }
 
 create_depts_for_sponsors:
-    pattern:    /admin/createDeptsForSponsors
+    path:    /admin/createDeptsForSponsors
     defaults:   { _controller: IdeaBundle:Admin:createDepartmentsForAllExistingSponsors }
 
 associate_group_to_site:
-    pattern:    /admin/associate_group_to_site/{groupSlug}
+    path:    /admin/associate_group_to_site/{groupSlug}
     defaults:   { _controller: IdeaBundle:Admin:associateGroupToSite }
 
 import_svic:
-    pattern:    /admin/import_svic
+    path:    /admin/import_svic
     defaults:   { _controller: IdeaBundle:Admin:importSvic }
 
 # Entry Routes
 
 
 idea_create:
-    pattern:    /list/{entrySetId}/create
+    path:    /list/{entrySetId}/create
     defaults:   { _controller: IdeaBundle:Idea:create }
     requirements:
       _method: POST
 
 idea_create_form:
-    pattern:    /list/{entrySetId}/create
+    path:    /list/{entrySetId}/create
     defaults:   { _controller: IdeaBundle:Idea:createForm}
     requirements:
       _method: GET
 
 idea_show:
-    pattern:    /list/{entrySetId}/entry/{entryId}
+    path:    /list/{entrySetId}/entry/{entryId}
     defaults:   { _controller: IdeaBundle:Idea:show }
     requirements:
       _method: GET
 
 idea_edit:
-    pattern:    /list/{entrySetId}/entry/{entryId}/edit
+    path:    /list/{entrySetId}/entry/{entryId}/edit
     defaults:   { _controller: IdeaBundle:Idea:edit }
     requirements:
       _method: POST
 
 idea_edit_form:
-    pattern:    /list/{entrySetId}/entry/{entryId}/edit
+    path:    /list/{entrySetId}/entry/{entryId}/edit
     defaults:   { _controller: IdeaBundle:Idea:editForm }
     requirements:
       _method: GET
 
 idea_upload:
-    pattern:    /list/{entrySetId}/entry/{entryId}/upload
+    path:    /list/{entrySetId}/entry/{entryId}/upload
     defaults:   { _controller: IdeaBundle:Idea:upload }
     requirements:
      _method:   POST
 
 idea_upload_form:
-    pattern:    /list/{entrySetId}/entry/{entryId}/upload
+    path:    /list/{entrySetId}/entry/{entryId}/upload
     defaults:   { _controller: IdeaBundle:Idea:upload }
     requirements:
       _method: GET
 
 idea_image_delete:
-    pattern:    /list/{entrySetId}/entry/{entryId}/deleteImage
+    path:    /list/{entrySetId}/entry/{entryId}/deleteImage
     defaults:   { _controller: IdeaBundle:Idea:deleteImage }
 
 idea_add_link:
-    pattern:    /list/{entrySetId}/entry/{entryId}/addLink
+    path:    /list/{entrySetId}/entry/{entryId}/addLink
     defaults:   { _controller: IdeaBundle:Idea:addLink }
     requirements:
      _method: POST
 
 idea_add_link_form:
-    pattern:    /list/{entrySetId}/entry/{entryId}/addLink
+    path:    /list/{entrySetId}/entry/{entryId}/addLink
     defaults:   { _controller: IdeaBundle:Idea:addLink }
     requirements:
      _method: GET
 
 idea_link_delete:
-    pattern:    /list/{entrySetId}/entry/{entryId}/deleteLink
+    path:    /list/{entrySetId}/entry/{entryId}/deleteLink
     defaults:   { _controller: IdeaBundle:Idea:deleteLink }
 
 idea_follow:
-    pattern:    /list/{entrySetId}/entry/{entryId}/follow
+    path:    /list/{entrySetId}/entry/{entryId}/follow
     defaults:   { _controller: IdeaBundle:Idea:follow }
     requirements:
      _method:   POST
 
 idea_vote:
-    pattern:    /list/{entrySetId}/entry/{entryId}/vote
+    path:    /list/{entrySetId}/entry/{entryId}/vote
     defaults:   { _controller: IdeaBundle:Idea:vote }
     requirements:
      _method:   POST
 
 idea_comment:
-    pattern:    /list/{entrySetId}/entry/{entryId}/comment
+    path:    /list/{entrySetId}/entry/{entryId}/comment
     defaults:   { _controller: IdeaBundle:Idea:comment }
     requirements:
      _method:   POST
 
 idea_complete:
-    pattern:    /list/{entrySetId}/entry/{entryId}/complete
+    path:    /list/{entrySetId}/entry/{entryId}/complete
     defaults:   { _controller: IdeaBundle:Idea:toggleCompleted }
 
 idea_comment_delete:
-    pattern:    /list/{entrySetId}/entry/{entryId}/commentDelete
+    path:    /list/{entrySetId}/entry/{entryId}/commentDelete
     defaults:   { _controller: IdeaBundle:Idea:commentDelete }
 
 idea_delete:
-    pattern:    /list/{entrySetId}/entry/{entryId}/delete
+    path:    /list/{entrySetId}/entry/{entryId}/delete
     defaults:   { _controller: IdeaBundle:Idea:delete }
 
 idea_add_speaker:
-    pattern:    /list/{entrySetId}/entry/{entryId}/addSpeaker
+    path:    /list/{entrySetId}/entry/{entryId}/addSpeaker
     defaults:   { _controller: IdeaBundle:Idea:addIdeaSpeaker }
 
 idea_remove_speaker:
-    pattern:    /list/{entrySetId}/entry/{entryId}/removeSpeaker/{userId}
+    path:    /list/{entrySetId}/entry/{entryId}/removeSpeaker/{userId}
     defaults:   { _controller: IdeaBundle:Idea:removeIdeaSpeaker }
 
 # Account Routes
 
 profile:
-    pattern:    /profile/{userId}
+    path:    /profile/{userId}
     defaults:   { _controller: IdeaBundle:Idea:profile, userId:null }
 
 profile_edit:
-    pattern:    /profile/{userId}/edit
+    path:    /profile/{userId}/edit
     defaults:   { _controller: IdeaBundle:Idea:profileEdit }
 
 contact_user:
-    pattern:    /profile/{userId}/contact
+    path:    /profile/{userId}/contact
     defaults:   { _controller: IdeaBundle:Idea:contactUser }
 
 login:
-    pattern:   /login
+    path:   /login
     defaults:  { _controller: FOSUserBundle:Registration:register }
 
 logout:
-    pattern:   /logout
+    path:   /logout
     defaults: { _controller: FOSUserBundle:Security:logout }
 
 change_password:
-    pattern:  /password
+    path:  /password
     defaults: { _controller: FOSUserBundle:ChangePassword:changePassword }
     requirements:
       _method: GET|POST
@@ -392,14 +392,14 @@ change_password:
 # Misc Routes
 
 info_page:
-    pattern:    /{groupSlug}/info/{page}
+    path:    /{groupSlug}/info/{page}
     defaults:   { _controller: IdeaBundle:Idea:infoPage }
 
 event_registration:
-    pattern:    /{groupSlug}/event/{eventId}/registrationForm
+    path:    /{groupSlug}/event/{eventId}/registrationForm
     defaults:   { _controller: IdeaBundle:Idea:eventRegistrationForm }
 
 user_event_reg_answers:
-    pattern:    /{groupSlug}/event/{eventId}/user/{userId}
+    path:    /{groupSlug}/event/{eventId}/user/{userId}
     defaults:   { _controller: IdeaBundle:Idea:userRegistrationAnswers }
     

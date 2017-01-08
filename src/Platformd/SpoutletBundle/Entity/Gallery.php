@@ -4,18 +4,15 @@ namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-use Platformd\SpoutletBundle\Entity\Site;
-use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Sluggable\Util\Urlizer;
 
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Validator\Context\LegacyExecutionContext;
-use Symfony\Component\Validator\ExecutionContext;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Our gallery entity
@@ -24,7 +21,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="pd_gallery")
  * @UniqueEntity(fields={"name"}, message="This gallery name is already used.")
  * @UniqueEntity(fields={"slug"}, message="This URL is already used.  If you have left slug blank, this means that an existing gallery is already using this gallery name.")
- * @Assert\Callback(methods={"validateSlug"})
  */
 class Gallery implements LinkableInterface
 {
@@ -356,7 +352,12 @@ class Gallery implements LinkableInterface
         $this->sitesPositions = $sitesPositions;
     }
 
-    public function validateSlug(LegacyExecutionContext $executionContext)
+    /**
+     * @param ExecutionContextInterface $executionContext
+     *
+     * @Assert\Callback
+     */
+    public function validateSlug(ExecutionContextInterface $executionContext)
     {
         if ($this->getSlug()) {
             return;

@@ -2,8 +2,8 @@
 
 namespace Platformd\EventBundle\Controller;
 
+use Platformd\EventBundle\Form\Type\GroupEventType;
 use Platformd\SpoutletBundle\Controller\Controller,
-    Platformd\EventBundle\Service\GlobalEventService,
     Platformd\EventBundle\Entity\GlobalEvent,
     Platformd\EventBundle\Form\Type\GlobalEventType,
     Platformd\EventBundle\Entity\GlobalEventTranslation,
@@ -12,7 +12,6 @@ use Platformd\SpoutletBundle\Controller\Controller,
 ;
 
 use Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException
 ;
 
@@ -43,7 +42,7 @@ class GlobalEventAdminController extends Controller
         $this->addEventsBreadcrumb();
         $this->addSiteBreadcrumbs($site);
 
-        $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->find($site);
+        $site = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Site')->find($site);
 
         $events = $this->getGlobalEventService()->findAllForSite($site);
 
@@ -83,7 +82,7 @@ class GlobalEventAdminController extends Controller
             }
         }
 
-        $form = $this->createForm('globalEvent', $event);
+        $form = $this->createForm(GlobalEventType::class, $event);
 
         if($request->getMethod() == 'POST')
         {
@@ -91,7 +90,7 @@ class GlobalEventAdminController extends Controller
 
             if($form->isValid())
             {
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
                 $event = $form->getData();
                     
@@ -148,7 +147,7 @@ class GlobalEventAdminController extends Controller
 
         $globalEvent = $this->getGlobalEventService()->cloneGlobalEvent($importedGlobalEvent);
 
-        $form = $this->createForm('globalEvent', $globalEvent);
+        $form = $this->createForm(GlobalEventType::class, $globalEvent);
 
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
@@ -189,7 +188,7 @@ class GlobalEventAdminController extends Controller
 
         $tagManager->loadTagging($event);
 
-        $form = $this->createForm('globalEvent', $event);
+        $form = $this->createForm(GlobalEventType::class, $event);
 
         if($request->getMethod() == 'POST')
         {
@@ -249,7 +248,7 @@ class GlobalEventAdminController extends Controller
         }
 
         $page  = $request->query->get('page', 1);
-        $em    = $this->getDoctrine()->getEntityManager();
+        $em    = $this->getDoctrine()->getManager();
         $japan = $em->getRepository('SpoutletBundle:Site')->find(2);
 
         $data = array(
@@ -260,7 +259,7 @@ class GlobalEventAdminController extends Controller
             'from'      => null,
             'thru'      => null,
         );
-        $form = $this->createForm(new EventFindType(), $data);
+        $form = $this->createForm(EventFindType::class, $data);
 
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
             $data['sites'] = new ArrayCollection(array($japan));

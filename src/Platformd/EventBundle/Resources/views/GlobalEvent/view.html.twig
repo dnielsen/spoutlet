@@ -3,7 +3,9 @@
 {% block content %}
 
 <div class="col_fifth">
-    <a href="{{ path('entry_set_new', {'registrationId': event.entrySetRegistration.id, 'entrySetId': 'new'}) }}" class="btnLg2">Create New List</a>
+    {% set registrationId = event.entrySetRegistration ? event.entrySetRegistration.id : '' %}
+
+    <a href="{{ path('entry_set_new', {'registrationId': registrationId, 'entrySetId': 'new'}) }}" class="btnLg2">Create New List</a>
 
     {% if event.entrySets|length > 0 %}
         <h2 class="widgetHeader">Lists</h2>
@@ -48,9 +50,11 @@
         {% endif %}
 
         <ul class="spcr-b3">
-            <li class="spcr-t7 spcr-l3">
-                <a href="{{ path('profile', {'userId': event.user.id}) }}"><h3 class="blu midtxt">{{ event.user.name }} (Organizer)</h3></a>
-            </li>
+            {% if event.user %}
+                <li class="spcr-t7 spcr-l3">
+                    <a href="{{ path('profile', {'userId': event.user.id}) }}"><h3 class="blu midtxt">{{ event.user.name }} (Organizer)</h3></a>
+                </li>
+            {% endif %}
             {% for member in attendeeList %}
                 {% if member.id != event.user.id %}
                     <li class="spcr-t7 spcr-l3">

@@ -2,31 +2,31 @@
 
 namespace Platformd\UserBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException,
     Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response;
 use Platformd\SpoutletBundle\Controller\Controller,
-    Platformd\GroupBundle\Entity\Group,
     Platformd\GroupBundle\Model\GroupManager,
-    Platformd\UserBundle\Entity\User,
     Platformd\UserBundle\Entity\Gallary,
     Platformd\UserBundle\Form\Type\GallaryType,
     Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage;
-use
-    Symfony\Component\HttpKernel\Exception\NotFoundHttpException,
-    Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 
 class GallaryController extends Controller
 {
     /**
-     * @param $slug
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @param         $groupSlug
+     * @param         $eventSlug
+     * @param Request $request
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
     public function gallaryAction($groupSlug, $eventSlug, Request $request)
     {
-        $this->checkSecurity();
         if ($this->isGallaryAttendee($groupSlug, $eventSlug) == 0) {
             throw new AccessDeniedException('Access Denied');
         }
@@ -41,7 +41,7 @@ class GallaryController extends Controller
 
         $newGallary->setUser($this->getUser());
 
-        $form = $this->createForm(new GallaryType(), $newGallary);
+        $form = $this->createForm(GallaryType::class, $newGallary);
         if (isset($_GET['url_pic'])) {
 
             $hpcloud_accesskey = $this->container->getParameter('hpcloud_accesskey');
@@ -94,7 +94,7 @@ class GallaryController extends Controller
 
     public function gallaryListAction($groupSlug, $eventSlug, Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $connection = $em->getConnection();
         $sql = "SELECT gallary.id , gallary.initial_format,fos_user.username,fos_user.uuid 
         FROM group_events_attendees_gallary
@@ -245,7 +245,7 @@ class GallaryController extends Controller
         $groupEventId = $groupEvent->getId();
         $userId = $this->getUser()->getId();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $connection = $em->getConnection();
         $sql = "INSERT INTO group_events_attendees_gallary (groupevent_id,user_id,gallary_id) VALUES ('" . $groupEventId . "','" . $userId . "','" . $gallaryId . "' )";
         //echo $sql;exit;
@@ -264,7 +264,7 @@ class GallaryController extends Controller
         //echo "UUID:".$uuid;
         //echo "facePrintImage:".$facePrintImage;exit;
         $user = $this->getUser();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         //echo $user->getId();
         //exit;
         $user->setFacePrintId($facePrintId);
@@ -277,10 +277,16 @@ class GallaryController extends Controller
         return $this->redirect($this->generateUrl('avatars'));
     }
 
+    /**
+     * @param $uuid
+     * @param $dimensions
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function processAvatarAction($uuid, $dimensions)
     {
-        $this->checkSecurity();
-
         $avatarManager = $this->getAvatarManager();
         $avatar = $this->findAvatar($uuid);
         $user = $this->getUser();
@@ -346,10 +352,15 @@ class GallaryController extends Controller
         return $response;
     }
 
+    /**
+     * @param $uuid
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function switchAction($uuid)
     {
-        $this->checkSecurity();
-
         $avatar = $this->findAvatar($uuid, false);
         $user = $this->getUser();
         $avatarManager = $this->getAvatarManager();
@@ -384,13 +395,6 @@ class GallaryController extends Controller
         }
 
         return $gallary;
-    }
-
-    protected function checkSecurity()
-    {
-        if (!$this->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            throw new AccessDeniedException();
-        }
     }
 
     /**

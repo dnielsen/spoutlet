@@ -83,7 +83,7 @@ class GiveawayController extends Controller
             if ($state->getCurrentState() != KeyRequestState::STATE_IN_QUEUE) {
 
                 $state->setUserHasSeenState(true);
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
                 $em->persist($state);
                 $em->flush();
@@ -280,7 +280,7 @@ class GiveawayController extends Controller
             die('Could not add you to the queue... please try again shortly.');
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
 
         try {
@@ -377,7 +377,7 @@ class GiveawayController extends Controller
         $machineCode->attachToUser($this->getUser(), $clientIp);
         $machineCode->setSiteAppliedFrom($this->getCurrentSite());
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->persist($machineCode);
         $em->flush();
 
@@ -416,7 +416,7 @@ class GiveawayController extends Controller
 
     protected function getMachineCodeEntryRepository()
     {
-        return $this->getDoctrine()->getEntityManager()->getRepository('GiveawayBundle:MachineCodeEntry');
+        return $this->getDoctrine()->getManager()->getRepository('GiveawayBundle:MachineCodeEntry');
     }
 
     protected function getKeyRepository()

@@ -187,7 +187,7 @@ class MediaPersistenceListener implements EventSubscriber
      */
     private function getUser()
     {
-        $token = $this->container->get('security.context')->getToken();
+        $token = $this->container->get('security.token_storage')->getToken();
 
         return $token ? $token->getUser() : null;
     }

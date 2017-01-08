@@ -6,8 +6,12 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Platformd\SpoutletBundle\Util\SiteUtil;
 use Platformd\GroupBundle\Entity\GroupRepository;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\TagBundle\Model\TagManager;
 
@@ -16,7 +20,7 @@ class YoutubeType extends AbstractType
     private $siteUtil;
     private $galleryRepo;
     private $groupRepo;
-    private $securityContext;
+    private $tokenStorage;
     private $request;
     private $tagManager;
     private $video;
@@ -25,14 +29,14 @@ class YoutubeType extends AbstractType
         SiteUtil $siteUtil,
         EntityRepository $galleryRepo,
         GroupRepository $groupRepo,
-        SecurityContext $securityContext,
+        TokenStorageInterface $tokenStorage,
         Request $request,
         TagManager $tagManager
     ) {
         $this->siteUtil         = $siteUtil;
         $this->galleryRepo      = $galleryRepo;
         $this->groupRepo        = $groupRepo;
-        $this->securityContext  = $securityContext;
+        $this->tokenStorage  = $tokenStorage;
         $this->request          = $request;
         $this->tagManager       = $tagManager;
     }
@@ -45,25 +49,21 @@ class YoutubeType extends AbstractType
         $referer = $this->request->headers->get('referer');
 
         $builder
-            ->add('youtubeLink', 'text', array(
+            ->add('youtubeLink', TextType::class, array(
                 'label'     => 'youtube.form.youtube_link',
-                'required'  => true,
                 'help'      => 'youtube.form.youtube_link_help',
                 'attr'      => array($disableYoutubeId => ''),
             ))
-            ->add('youtubeId', 'hidden', array(
+            ->add('youtubeId', HiddenType::class, array(
                 'label'     => 'youtube.form.youtube_link',
-                'required'  => true
             ))
-            ->add('title', 'text', array(
+            ->add('title', TextType::class, array(
                 'label'     => 'youtube.form.title',
-                'required'  => true,
             ))
-            ->add('description', 'textarea', array(
+            ->add('description', TextareaType::class, array(
                 'label'     => 'youtube.form.description',
-                'required'  => true,
             ))
-            ->add('galleries', 'choice', array(
+            ->add('galleries', ChoiceType::class, array(
                 'label'         => 'youtube.form.category',
                 'choices_as_values' => true,
                 'required'      => false,
@@ -71,21 +71,20 @@ class YoutubeType extends AbstractType
                 'multiple'      => true,
                 'choices'       => $this->getCategoryChoices(),
             ))
-            ->add('duration', 'hidden', array(
-                'property_path' => false,
+            ->add('duration', HiddenType::class, array(
+                'mapped' => false,
                 'data' => $youtube ? $youtube->getDuration() : 0
             ))
-            ->add('referer', 'hidden', array(
-                'property_path' => false,
+            ->add('referer', HiddenType::class, array(
+                'mapped' => false,
                 'data' => $referer,
-
             ))
         ;
 
         if($this->siteUtil->getCurrentSite()->getSiteFeatures()->getHasGroups()) {
-            $builder->add('groups', 'choice', array(
+            $builder->add('groups', ChoiceType::class, array(
                 'label'         => 'youtube.form.optional',
-                'empty_value'   => 'youtube.form.select_category',
+                'placeholder'   => 'youtube.form.select_category',
                 'required'      => false,
                 'expanded'      => true,
                 'multiple'      => true,
@@ -94,16 +93,16 @@ class YoutubeType extends AbstractType
             ));
         }
 
-        $builder->add('tags', 'text', array(
+        $builder->add('tags', TextType::class, array(
             'label'         => 'youtube.form.tags',
             'help'          => "youtube.form.tags_help",
-            'property_path' => false,
+            'mapped' => false,
             'data'          => $builder->getData() ? $this->tagManager->getConcatenatedTagNames($builder->getData()) : null,
             'required' => false,
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'youtube';
     }
@@ -125,7 +124,7 @@ class YoutubeType extends AbstractType
     private function getGroupChoices()
     {
         $choices    = array();
-        $user       = $this->securityContext->getToken()->getUser();
+        $user       = $this->tokenStorage->getToken()->getUser();
 
         if ($this->video->getAuthor() == $user) {
             $results = $this->groupRepo->getAllGroupsForUserAndSite($user, $this->siteUtil->getCurrentSite());

@@ -42,7 +42,7 @@ class GlobalEventController extends Controller
         $groupEvents = implode(',', $groupEvents);
         $globalEvents = implode(',', $globalEvents);
 
-        $watchedRepo = $this->getDoctrine()->getEntityManager()->getRepository('IdeaBundle:WatchedEventMapping');
+        $watchedRepo = $this->getDoctrine()->getManager()->getRepository('IdeaBundle:WatchedEventMapping');
         $watchedGlobalEventIds = $watchedRepo->getAllGlobalEventsUserIsWatching($user);
         $watchedGroupEventIds = $watchedRepo->getAllGroupEventsUserIsWatching($user);
 
@@ -293,7 +293,7 @@ class GlobalEventController extends Controller
         $id = (int)$params['id'];
         $rsvp = $params['rsvp'];
 
-        if (!$this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+        if (!$this->container->get('security.authorization_checker')->isGranted(array('ROLE_USER'))) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => 'You must be logged in to RSVP to an event')));
             return $response;
         }
@@ -343,7 +343,7 @@ class GlobalEventController extends Controller
 
         $id = (int)$params['id'];
 
-        if (!$this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+        if (!$this->container->get('security.authorization_checker')->isGranted(array('ROLE_USER'))) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => 'You must be logged in to delete an event')));
             return $response;
         }
@@ -384,7 +384,7 @@ class GlobalEventController extends Controller
             throw new AccessDeniedException();
         }
 
-        $hitEmailLimit = $this->getDoctrine()->getEntityManager()->getRepository('EventBundle:GlobalEventEmail')->hasUserHitEmailLimitForEvent($this->getCurrentUser(), $event);
+        $hitEmailLimit = $this->getDoctrine()->getManager()->getRepository('EventBundle:GlobalEventEmail')->hasUserHitEmailLimitForEvent($this->getCurrentUser(), $event);
 
         if ($hitEmailLimit) {
             $this->setFlash('error', 'platformd.events.event_contact.limit_hit');

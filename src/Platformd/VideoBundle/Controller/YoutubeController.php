@@ -249,7 +249,7 @@ class YoutubeController extends Controller
 
         $vote       = new YoutubeVote($user, $video, $voteType, $request->getClientIp(true));
 
-        if (!$this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+        if (!$this->container->get('security.authorization_checker')->isGranted(array('ROLE_USER'))) {
             $response->setContent(json_encode(array("success" => false, "messageForUser" => 'FORCE_LOGIN_TO_VOTE')));
             return $response;
         }
@@ -406,8 +406,8 @@ class YoutubeController extends Controller
         $tagManager     = $this->getTagManager();
         $groupManager   = $this->getGroupManager();
         $youtube        = $form->getData();
-        $siteRepo       = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site');
-        $galleryRepo    = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Gallery');
+        $siteRepo       = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Site');
+        $galleryRepo    = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Gallery');
         $youtube->setYoutubeId($form['youtubeId']->getData());
         $youtube->setDuration($form['duration']->getData());
         $youtube->setSite($this->getCurrentSite());

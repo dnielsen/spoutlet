@@ -9,8 +9,7 @@ use Gedmo\Sluggable\Util\Urlizer;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Context\LegacyExecutionContext;
-use Symfony\Component\Validator\ExecutionContext;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 use DateTime;
 
@@ -32,7 +31,6 @@ use Platformd\TagBundle\Model\TaggableInterface;
  * )
  * @UniqueEntity(fields={"slug"}, message="This URL is already used.  If you have left slug blank, this means that an existing deal is already using this deal name.")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\ContestRepository")
- * @Assert\Callback(methods={"validateDateRanges"})
  */
 class Contest implements LinkableInterface, TaggableInterface
 {
@@ -832,7 +830,12 @@ class Contest implements LinkableInterface, TaggableInterface
         );
     }
 
-    public function validateDateRanges(LegacyExecutionContext $executionContext)
+    /**
+     * @param ExecutionContextInterface $executionContext
+     *
+     * @Assert\Callback
+     */
+    public function validateDateRanges(ExecutionContextInterface $executionContext)
     {
         // error if submissionEnd or votingEnd datetime values are before their respective start datetimes
 

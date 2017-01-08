@@ -2,13 +2,14 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
+use Platformd\SpoutletBundle\Form\Type\ExportQueryType;
 use Symfony\Component\HttpFoundation\Request;
 
 class ExportQueryController extends Controller
 {
     public function reportsAction(Request $request)
     {
-        $form = $this->createForm('platformd_export_query_type');
+        $form = $this->createForm(ExportQueryType::class);
 
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);

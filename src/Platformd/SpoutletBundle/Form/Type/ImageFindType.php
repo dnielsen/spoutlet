@@ -2,7 +2,11 @@
 
 namespace Platformd\SpoutletBundle\Form\Type;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class ImageFindType extends AbstractType
@@ -20,30 +24,31 @@ class ImageFindType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', 'text', array(
+            ->add('title', TextType::class, array(
                 'label' => 'Title:'
             ))
-            ->add('deleted', 'choice', array(
+            ->add('deleted', ChoiceType::class, array(
                 'label' => 'Deleted:',
                 'choices' => self::STATUSES,
                 'choices_as_values' => true,
-                'empty_value' => 'Select All',
+                'placeholder' => 'Select All',
                 'required' => false,
             ))
-            ->add('published', 'choice', array(
+            ->add('published', ChoiceType::class, array(
                 'label' => 'Status:',
                 'choices' => self::PUBLISHES,
                 'choices_as_values' => true,
-                'empty_value' => 'Select All',
+                'placeholder' => 'Select All',
                 'required' => false,
             ))
-            ->add('sites', 'entity', array(
+            ->add('sites', EntityType::class, array(
+                'label' => 'Sites',
                 'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
                 'choice_label' => 'name',
             ))
-            ->add('startDate', 'date', array(
+            ->add('startDate', DateType::class, array(
                 'label' => 'Upload Start Date:',
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
@@ -51,7 +56,7 @@ class ImageFindType extends AbstractType
                     'class' => 'date-picker'
                 )
             ))
-            ->add('endDate', 'date', array(
+            ->add('endDate', DateType::class, array(
                 'label' => 'Upload End Date:',
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
@@ -61,7 +66,7 @@ class ImageFindType extends AbstractType
             ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_imagefindtype';
     }
