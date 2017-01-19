@@ -1,15 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: gimballock
- * Date: 1/28/14
- * Time: 4:35 PM
- */
-
 namespace Platformd\IdeaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Platformd\GroupBundle\Entity\Group;
 
 /**
  * @ORM\Entity(repositoryClass="Platformd\IdeaBundle\Entity\SponsorRepository")
@@ -74,6 +68,9 @@ class Sponsor
         $this->department = $department;
     }
 
+    /**
+     * @return Group
+     */
     public function getDepartment()
     {
         return $this->department;

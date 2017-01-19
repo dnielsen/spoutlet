@@ -8,8 +8,7 @@
         <h2>My Sponsorships</h2>
         <hr class="smallmargin"/>
 
-        {% for dept,dept_sponsorships in sponsorships %}
-
+        {% for dept, dept_sponsorships in sponsorships %}
             <h2>{{ dept }}</h2>
 
             <table class="myStuffTable">
@@ -48,16 +47,21 @@
                             </td>
                             <td style="width:200px;">
                                 {% if sponsorshipStatusLevel < 1 %}
-                                    <a href="{{ path('update_sponsorship_status', {'sponsorship_id': sponsorship.id, 'status': 'watching'}) }}" class="blu">Watch</a> | 
+                                    <a href="{{ path('update_sponsorship_status', {'sponsorship_id': sponsorship.id, 'status': 'watching'}) }}" class="blu">Watch</a> |
                                 {% endif %}
                                 {% if sponsorshipStatusLevel < 2 %}
-                                    <a href="{{ path('update_sponsorship_status', {'sponsorship_id': sponsorship.id, 'status': 'considering'}) }}" class="blu">Consider</a> | 
+                                    <a href="{{ path('update_sponsorship_status', {'sponsorship_id': sponsorship.id, 'status': 'considering'}) }}" class="blu">Consider</a> |
                                 {% endif %}
                                 {% if sponsorshipStatusLevel < 3 %}
                                     <a href="{{ path('update_sponsorship_status', {'sponsorship_id': sponsorship.id, 'status': 'sponsoring'}) }}" class="blu">Sponsor</a>
                                 {% endif %}
                                 {% if sponsorshipStatusLevel == 3 %}
-                                    <a href="{{ path('contact_user', {'userId': sponsoredOwner.id, 'type': 'sponsor', 'scope': sponsoredScope, 'containerId': sponsored.id }) }}" class="blu">Contact Organizer</a>
+                                    <a href="{{ path('contact_user', {
+                                        'userId': sponsoredOwner.id,
+                                        'type': 'sponsor',
+                                        'scope': sponsoredScope,
+                                        'containerId': sponsored.id
+                                    }) }}" class="blu">Contact Organizer</a>
                                 {% endif %}
                             </td>
                         </tr>

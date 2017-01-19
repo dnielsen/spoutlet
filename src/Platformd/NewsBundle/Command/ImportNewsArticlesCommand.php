@@ -4,17 +4,9 @@ namespace Platformd\NewsBundle\Command;
 
 use
     Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand,
-    Symfony\Component\Console\Input\InputArgument,
-    Symfony\Component\Console\Input\InputOption,
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface,
     Symfony\Component\HttpFoundation\File\UploadedFile
-;
-
-use
-    DateTime,
-    DateTimeZone,
-    DOMDocument
 ;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -75,7 +67,7 @@ EOT
     protected function extractThumbnailFile($html)
     {
         if (false !== strpos($html, 'src')) {
-            $DOM = new DOMDocument;
+            $DOM = new \DOMDocument();
             $DOM->loadHTML($html);
 
             $thumb = $DOM->getElementsByTagName('img')->item(0)->getAttribute('src');
@@ -94,7 +86,7 @@ EOT
     {
         // Hack to avoid extra HTML tags being wrapped around out HTML snippet.
         $html = '<div>' . $html . '</div>';
-        $DOM = new DOMDocument;
+        $DOM = new \DOMDocument();
         @$DOM->loadHTML($html);
 
         $images = $DOM->getElementsByTagName('img');
@@ -257,8 +249,8 @@ EOT
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
 
                 // Unused fields
-                $category       = $data[1];
-                $stamp          = $data[8];
+//                $category       = $data[1];
+//                $stamp          = $data[8];
 
                 // Used fields
                 $cevoArticleId  = $data[0];

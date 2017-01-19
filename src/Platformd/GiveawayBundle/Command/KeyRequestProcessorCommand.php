@@ -3,16 +3,11 @@
 namespace Platformd\GiveawayBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\Output;
 use Symfony\Component\Console\Output\OutputInterface;
 use Platformd\GroupBundle\Entity\GroupMembershipAction;
 use Platformd\GroupBundle\Event\GroupEvent;
 use Platformd\GroupBundle\GroupEvents;
-use Platformd\CEVOBundle\Api\ApiException;
-use Symfony\Component\Finder\Finder;
 
 use Platformd\GiveawayBundle\QueueMessage\KeyRequestQueueMessage;
 use Platformd\GiveawayBundle\Entity\KeyRequestState;

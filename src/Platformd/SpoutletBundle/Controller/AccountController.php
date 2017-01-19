@@ -3,6 +3,7 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Form\Type\IncompleteAccountType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Platformd\EventBundle\Service\GroupEventService;
 use Symfony\Component\HttpFoundation\Request;
@@ -214,38 +215,38 @@ class AccountController extends Controller
         ));
     }
 
+    /**
+     * @param Request $request
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function groupsAction(Request $request)
     {
-        $this->checkSecurity();
+        $groupRepo = $this->getDoctrine()->getRepository('GroupBundle:Group');
+        $recRepo = $this->getDoctrine()->getRepository('IdeaBundle:GroupRecommendation');
 
-        $doc = $this->getDoctrine();
+        $watchedGroups = $this->getUser()->getWatchedGroups();
 
-        $groupRepo = $doc->getRepository('GroupBundle:Group');
-        $recRepo = $doc->getRepository('IdeaBundle:GroupRecommendation');
-
-        $watchedGroups = $this->getCurrentUser()->getWatchedGroups();
         $joinedGroups = $groupRepo->getAllGroupsForUserAndSite($this->getUser(), $this->getCurrentSite());
-        $recommendations = $recRepo->findBy(array('user' => $this->getCurrentUser()->getId(), 'dismissed' => false));
+        $recommendations = $recRepo->getByUser($this->getUser());
 
         $groups = array_merge($joinedGroups, $watchedGroups);
-        usort($groups, array($this, 'groupCompare'));
+        usort($groups, [$this, 'groupCompare']);
 
-        $groupsAndWatchedEvents = array();
+        $groupsAndWatchedEvents = [];
+
         foreach ($groups as $group) {
-            $groupsAndWatchedEvents[] = array($group, $group->getUpcomingWatchedEvents($this->getCurrentUser()));
+            $groupsAndWatchedEvents[] = [$group, $group->getUpcomingWatchedEvents($this->getCurrentUser())];
         }
 
-        $action = null;
 
-        if ($then = $request->query->get('then')) {
-            $action = $then;
-        }
-
-        return $this->render('SpoutletBundle:Account:groups.html.twig', array(
+        return $this->render('SpoutletBundle:Account:groups.html.twig', [
             'groupsAndEvents' => $groupsAndWatchedEvents,
             'recommendations' => $recommendations,
-            'action' => $action,
-        ));
+            'action' => $request->query->get('then'),
+        ]);
     }
 
     public function photosAction($filter = 'all')

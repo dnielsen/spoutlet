@@ -8,11 +8,8 @@ use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 
 use Symfony\Component\HttpFoundation\Request;
 
-use DateInterval;
-
-use Pagerfanta\Pagerfanta,
-    Pagerfanta\Adapter\ArrayAdapter
-;
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\ArrayAdapter;
 
 class YoutubeAdminController extends Controller
 {
@@ -31,7 +28,7 @@ class YoutubeAdminController extends Controller
             $keyWords = $data['keyWords'];
 
             if($thruDate) {
-                $thruDate->add(DateInterval::createFromDateString('1439 minutes'));
+                $thruDate->add(\DateInterval::createFromDateString('1439 minutes'));
             }
 
             $this->setFilterFormData(array('fromDate' => $fromDate, 'thruDate' => $thruDate, 'keyWords' => $keyWords));

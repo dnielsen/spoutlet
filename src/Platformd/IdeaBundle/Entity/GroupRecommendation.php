@@ -3,19 +3,18 @@
 namespace Platformd\IdeaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use Platformd\GroupBundle\Entity\Group;
+use Platformd\UserBundle\Entity\User;
 
 /**
- * GroupRecommendation
  * @ORM\Table(name="group_recommendation")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Platformd\IdeaBundle\Repository\GroupRecommendationRepository")
  */
 class GroupRecommendation
 {
-    const TYPE_JOIN      = 'join';
-    const TYPE_SPONSOR   = 'sponsor';
-    const TYPE_SPEAK     = 'speak';
+    const TYPE_JOIN = 'join';
+    const TYPE_SPONSOR = 'sponsor';
+    const TYPE_SPEAK = 'speak';
     const TYPE_VOLUNTEER = 'volunteer';
 
     /**
@@ -55,26 +54,25 @@ class GroupRecommendation
      */
     protected $dismissed = false;
 
-
     /**
-     * Constructor
+     * @param User   $user
+     * @param Group  $group
+     * @param User   $referredBy
+     * @param string $type
      */
-    public function __construct($user, $group, $referredBy, $type=self::TYPE_JOIN)
+    public function __construct(User $user, Group $group, User $referredBy, $type = self::TYPE_JOIN)
     {
         $this->user = $user;
         $this->referredBy = $referredBy;
-
         $this->group = $group;
-
         $this->type = $type;
-
         $this->createdAt = new \DateTime();
     }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -84,9 +82,9 @@ class GroupRecommendation
     /**
      * Set createdAt
      *
-     * @param datetime $createdAt
+     * @param \DateTime $createdAt
      */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(\DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
     }
@@ -94,7 +92,7 @@ class GroupRecommendation
     /**
      * Get createdAt
      *
-     * @return datetime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -104,9 +102,9 @@ class GroupRecommendation
     /**
      * Set owner
      *
-     * @param Platformd\UserBundle\Entity\User $owner
+     * @param User $user
      */
-    public function setUser(\Platformd\UserBundle\Entity\User $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
     }
@@ -114,7 +112,7 @@ class GroupRecommendation
     /**
      * Get owner
      *
-     * @return Platformd\UserBundle\Entity\User 
+     * @return User
      */
     public function getUser()
     {
@@ -124,9 +122,9 @@ class GroupRecommendation
     /**
      * Set group
      *
-     * @param Platformd\GroupBundle\Entity\Group $group
+     * @param Group $group
      */
-    public function setGroup(\Platformd\GroupBundle\Entity\Group $group)
+    public function setGroup(Group $group)
     {
         $this->group = $group;
     }
@@ -134,7 +132,7 @@ class GroupRecommendation
     /**
      * Get group
      *
-     * @return Platformd\GroupBundle\Entity\Group 
+     * @return Group
      */
     public function getGroup()
     {
@@ -144,9 +142,9 @@ class GroupRecommendation
     /**
      * Set referredBy
      *
-     * @param Platformd\UserBundle\Entity\User $referredBy
+     * @param User $referredBy
      */
-    public function setReferredBy(\Platformd\UserBundle\Entity\User $referredBy)
+    public function setReferredBy(User $referredBy)
     {
         $this->referredBy = $referredBy;
     }
@@ -154,7 +152,7 @@ class GroupRecommendation
     /**
      * Get referredBy
      *
-     * @return Platformd\UserBundle\Entity\User 
+     * @return User
      */
     public function getReferredBy()
     {
@@ -163,6 +161,8 @@ class GroupRecommendation
 
     /**
      * Set type
+     *
+     * @param string $type
      */
     public function setType($type)
     {
@@ -191,10 +191,17 @@ class GroupRecommendation
         }
     }
 
+    /**
+     * @param bool $value
+     */
     public function setDismissed($value)
     {
         $this->dismissed = $value;
     }
+
+    /**
+     * @return bool
+     */
     public function isDismissed()
     {
         return $this->dismissed;

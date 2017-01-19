@@ -299,7 +299,7 @@ class SpoutletExtension extends \Twig_Extension
         // http://www.alienwarearena.com/member/9672b289-ec1b-4127-b8a7-a837d9ed0050/
         // http://www.alienwarearena.com/member/2126643/
         // http://www.alienwarearena.com/member/playitcool2/
-        $user = $this->userManager->findUserByUsername($username);
+        $user = $this->userManager->findUserBy(['username' => $username]);
 
         return sprintf('http://www.alienwarearena.com/member/%s', $user->getUuid());
     }

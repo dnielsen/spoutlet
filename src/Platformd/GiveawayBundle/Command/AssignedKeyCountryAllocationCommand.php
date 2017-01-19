@@ -4,8 +4,6 @@ namespace Platformd\GiveawayBundle\Command;
 
 use
     Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand,
-    Symfony\Component\Console\Input\InputArgument,
-    Symfony\Component\Console\Input\InputOption,
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface
 ;
@@ -60,7 +58,7 @@ EOT
     {
         $this->stdOutput     = $output;
         $container           = $this->getContainer();
-        $em                  = $container->get('doctrine')->getEntityManager();
+        $em                  = $container->get('doctrine')->getManager();
         $dealCodeRepo        = $em->getRepository('GiveawayBundle:DealCode');
         $giveawayKeyRepo     = $em->getRepository('GiveawayBundle:GiveawayKey');
         $countryRepo         = $em->getRepository('SpoutletBundle:Country');

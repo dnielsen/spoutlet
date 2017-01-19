@@ -20,8 +20,8 @@ use Platformd\TagBundle\Model\TaggableInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\SearchBundle\Model\IndexableInterface;
 
-use Platformd\IdeaBundle\Entity\EntrySetRegistry,
-    Platformd\IdeaBundle\Entity\EntrySetScopeable;
+use Platformd\IdeaBundle\Entity\EntrySetRegistry;
+use Platformd\IdeaBundle\Entity\EntrySetScopeable;
 
 /**
  * Platformd\GroupBundle\Entity\Group

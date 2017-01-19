@@ -365,6 +365,8 @@ idea_remove_speaker:
 profile:
     path:    /profile/{userId}
     defaults:   { _controller: IdeaBundle:Idea:profile, userId:null }
+    requirements:
+        userId: \d+
 
 profile_edit:
     path:    /profile/{userId}/edit

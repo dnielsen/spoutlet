@@ -13,17 +13,17 @@ use Platformd\EventBundle\Entity\GlobalEvent;
  */
 class SponsorRegistry
 {
-    const VENUE    = 0;
+    const VENUE = 0;
     const PLATINUM = 1;
-    const GOLD     = 2;
-    const SILVER   = 3;
-    const BRONZE   = 4;
-    const OTHER    = 5;
+    const GOLD = 2;
+    const SILVER = 3;
+    const BRONZE = 4;
+    const OTHER = 5;
 
     const STATUS_RECOMMENDED = 'recommended';
-    const STATUS_WATCHING    = 'watching';
+    const STATUS_WATCHING = 'watching';
     const STATUS_CONSIDERING = 'considering';
-    const STATUS_SPONSORING  = 'sponsoring';
+    const STATUS_SPONSORING = 'sponsoring';
 
     /**
      * @ORM\Id
@@ -62,7 +62,6 @@ class SponsorRegistry
      */
     protected $status = self::STATUS_SPONSORING;
 
-
     /**
      * Constructor
      */
@@ -75,7 +74,7 @@ class SponsorRegistry
                 $this->event = $event;
             } elseif ($event instanceof GlobalEvent) {
                 $this->global_event = $event;
-            }            
+            }
         }
 
         if ($sponsor) {
@@ -93,6 +92,7 @@ class SponsorRegistry
     {
         return $this->id;
     }
+
     public function setEvent($event)
     {
         if ($event instanceof GroupEvent) {
@@ -101,6 +101,7 @@ class SponsorRegistry
             $this->global_event = $event;
         }
     }
+
     public function getEvent()
     {
         if ($this->event) {
@@ -109,6 +110,7 @@ class SponsorRegistry
             return $this->global_event;
         }
     }
+
     public function getSponsoredObj()
     {
         if ($this->group) {
@@ -119,6 +121,7 @@ class SponsorRegistry
             return $this->global_event;
         }
     }
+
     public function getSponsoredObjOwner()
     {
         if ($this->group) {
@@ -145,32 +148,42 @@ class SponsorRegistry
     {
         $this->group = $group;
     }
+
     public function getGroup()
     {
         return $this->group;
     }
+
     public function setSponsor($sponsor)
     {
         $this->sponsor = $sponsor;
     }
+
+    /**
+     * @return Sponsor
+     */
     public function getSponsor()
     {
         return $this->sponsor;
     }
+
     public function setLevel($level)
     {
         $this->level = $level;
     }
+
     public function getLevel()
     {
         return $this->level;
     }
+
     public function setStatus($status)
     {
         $this->status = $status;
     }
+
     public function getStatus()
     {
         return $this->status;
     }
-} 
+}

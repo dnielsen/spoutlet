@@ -10,12 +10,10 @@ use Gaufrette\Filesystem;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Doctrine\ORM\AbstractQuery;
 use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Platformd\UserBundle\Exception\ApiRequestException;
 use Doctrine\ORM\EntityManager;
-use DateTime;
 
 class UserManager extends BaseUserManager
 {

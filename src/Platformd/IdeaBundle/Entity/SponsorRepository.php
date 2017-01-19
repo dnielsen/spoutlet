@@ -9,7 +9,6 @@ use Doctrine\ORM\EntityRepository;
  */
 class SponsorRepository extends EntityRepository
 {
-
     public function findAttachedSponsors($scope, $containerId)
     {
         $qb = $this->createQueryBuilder('s')
@@ -39,8 +38,4 @@ class SponsorRepository extends EntityRepository
 
         return $unattachedSponsors;
     }
-
 }
-
-?>
-

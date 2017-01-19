@@ -41,7 +41,12 @@ class RegistrationFormType extends BaseType
     ];
 
     /**
-     * @param string $class The User class name
+     * @param string              $class The User class name
+     * @param array               $sources
+     * @param TranslatorInterface $translator
+     * @param IpLookupUtil        $ipLookupUtil
+     * @param Request             $request
+     * @param bool                $includeRecaptcha
      */
     public function __construct($class, array $sources = [], TranslatorInterface $translator, IpLookupUtil $ipLookupUtil, Request $request, $includeRecaptcha)
     {
@@ -179,5 +184,10 @@ class RegistrationFormType extends BaseType
     public function getBlockPrefix()
     {
         return 'platformd_user_registration';
+    }
+
+    public function getName()
+    {
+        return $this->getBlockPrefix();
     }
 }

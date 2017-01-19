@@ -3,19 +3,14 @@
 namespace Platformd\GiveawayBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Output\Output;
-use Symfony\Component\Finder\Finder;
 
 use Platformd\GiveawayBundle\Pool\PoolLoader;
-use Platformd\GiveawayBundle\Entity\GiveawayPool;
-use Platformd\GiveawayBundle\Entity\DealPool;
 use Platformd\GiveawayBundle\QueueMessage\KeyPoolQueueMessage;
 
 use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
+
 /**
  * Command that places themes assets into a given directory.
  */
@@ -58,7 +53,7 @@ EOT
         $em             = $this->getContainer()->get('doctrine')->getEntityManager();
         $varnishUtil    = $this->getContainer()->get('platformd.util.varnish_util');
         $router         = $this->getContainer()->get('router');
-     
+
         $tick           = "<info>✔</info>";
         $cross          = "<fg=red>✘</fg=red>";
         $yellowCross    = "<fg=yellow>✘</fg=yellow>";
@@ -70,25 +65,25 @@ EOT
           $hpcloud_accesskey = $this->getContainer()->getParameter('hpcloud_accesskey');
           $hpcloud_secreatekey = $this->getContainer()->getParameter('hpcloud_secreatkey');
           $hpcloud_tenantid = $this->getContainer()->getParameter('hpcloud_tenantid');
-        
+
           $hpcloud = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatekey, $hpcloud_tenantid);
           $queue_url = $this->getContainer()->getParameter('hpcloud_messaging_url');
-          $hpObject = 1 ; 
+          $hpObject = 1 ;
         }
         // Get the first message in the queue
-      
+
         if( $hpObject == 1) {
-           $result = $hpcloud->getMessageFromQueue(KeyPoolQueueMessage::QUEUE_NAME,$queue_url);        
+           $result = $hpcloud->getMessageFromQueue(KeyPoolQueueMessage::QUEUE_NAME,$queue_url);
         } else {
              $messageResponse = $sqs->receive_message($queue_url, array(
               'VisibilityTimeout' => 5,
              ));
         }
         if ($hpObject == 1) {
-           $messageResponse = $result;     
-           $result1=explode("\n",$messageResponse);       
+           $messageResponse = $result;
+           $result1=explode("\n",$messageResponse);
            $message = (isset($result1[3])) ? json_decode($result1[3]) : '';
-           $receiptHandle  = '';    
+           $receiptHandle  = '';
         }
         else {
           $messageResponse = $messageResponse->isOk();
@@ -96,11 +91,11 @@ EOT
           $receiptHandle  = $messageResponse->body->ReceiveMessageResult->Message->ReceiptHandle;
 
         }
-     
+
         if ($messageResponse) { // We retrieved a message from the queue
           //  $message        = json_decode($messageResponse->body->ReceiveMessageResult->Message->Body);
           //  $receiptHandle  = $messageResponse->body->ReceiveMessageResult->Message->ReceiptHandle;
-            
+
             if ($message) {
 
                 $user = $userManager->findUserBy(array('id' => $message->userId));
@@ -126,7 +121,7 @@ EOT
                   $response   = $s3->get_object($message->bucket, $message->filename);
                   $response_data=$response->isOk();
                 }
-                
+
                 if ($response_data) { // We retrieved the key file from S3
 
                     $output->writeLn($tick);
@@ -268,7 +263,6 @@ EOT
         $emailManager   = $this->getContainer()->get('platformd.model.email_manager');
         $translator     = $this->getContainer()->get('translator');
         $tick           = "<info>✔</info>";
-        $cross          = "<fg=red>✘</fg=red>";
 
         $output->write("Emailing keyfile uploader...");
 
@@ -289,7 +283,6 @@ EOT
         $emailManager   = $this->getContainer()->get('platformd.model.email_manager');
         $translator     = $this->getContainer()->get('translator');
         $tick           = "<info>✔</info>";
-        $cross          = "<fg=red>✘</fg=red>";
 
         $output->write("Emailing keyfile uploader...");
 

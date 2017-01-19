@@ -4,12 +4,10 @@ namespace Platformd\UserBundle\Command;
 
 use
     Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand,
-    Symfony\Component\Console\Input\InputArgument,
     Symfony\Component\Console\Input\InputOption,
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface;
 
-use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\ScriptLastRun;
 
 class ApiQueryForUpdatedUsersCommand extends ContainerAwareCommand
@@ -36,7 +34,6 @@ EOT
 
     protected function output($indentationLevel = 0, $message = null, $withNewLine = true)
     {
-
         if ($message === null) {
             $message = '';
         }

@@ -54,6 +54,8 @@ parameters:
 
     google_ua:               UA-9917033-2
 
+    google_maps_api_key:     ~
+
     memcached_server1_ip:    127.0.0.1
     memcached_server1_port:  11211
 
@@ -92,6 +94,8 @@ parameters:
     rabbitmq.port:          5672
     rabbitmq.username:      <queue user>
     rabbitmq.password:      <queue pass>
+
+    app.version: ~
 
     # only set to true if you have implemented the API authentication system and have configured it properly
     api_authentication:     false

@@ -22,6 +22,7 @@ use Platformd\IdeaBundle\Entity\IdeaSpeaker;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -1728,16 +1729,22 @@ class IdeaController extends Controller
         ));
     }
 
-    public function userSponsorshipsAction(Request $request)
+    /**
+     * @Security("is_granted('IS_AUTHENTICATED_REMEMBERED')")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function userSponsorshipsAction()
     {
-        $this->enforceUserSecurity();
+        $departments = $this->getDoctrine()
+            ->getRepository(Group::class)
+            ->getUserDepartments($this->getUser());
 
-        $myDepartments = $this->getCurrentUser()->getOwnedDepartments();
-        $mySponsorships = array();
+        $mySponsorships = [];
 
-        foreach ($myDepartments as $dept) {
-            foreach ($dept->getSponsor()->getSponsorRegistrations() as $sponsorship) {
-                $mySponsorships[$dept->getName()][] = $sponsorship;
+        foreach ($departments as $department) {
+            foreach ($department->getSponsor()->getSponsorRegistrations() as $sponsorship) {
+                $mySponsorships[$department->getName()][] = $sponsorship;
             }
         }
 

@@ -22,7 +22,7 @@
 {% block content %}
 
 <div id="deals-wrapper">
-    {% render url('_deal_flash_message', { 'dealId': data.deal_id }) with {}, {'standalone': true } %}
+    {% render url('_deal_flash_message', { 'dealId': data.deal_id }) %}
     {% include 'GiveawayBundle:Deal:_dealHeaderCountdownShow.html.twig' %}
 
         <div id="deal-details-wrapper">
@@ -58,7 +58,7 @@
                             </div>
                         </div>
                         <div class="widget-content">
-                            {% render url('_deal_show_actions', { 'dealId': data.deal_id }) with {}, {'standalone': true } %}
+                            {% render url('_deal_show_actions', { 'dealId': data.deal_id }) %}
                         </div>
                     </div>
                     <div id="deals-recommend">

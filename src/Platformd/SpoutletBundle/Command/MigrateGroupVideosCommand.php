@@ -4,18 +4,13 @@ namespace Platformd\SpoutletBundle\Command;
 
 use
     Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand,
-    Symfony\Component\Console\Input\InputArgument,
-    Symfony\Component\Console\Input\InputOption,
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface
 ;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 use Platformd\VideoBundle\Entity\YoutubeVideo;
 
-use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface as aclProvider,
-    Symfony\Component\Security\Acl\Domain\ObjectIdentity,
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity,
     Symfony\Component\Security\Acl\Domain\UserSecurityIdentity,
     Symfony\Component\Security\Acl\Permission\MaskBuilder
 ;

@@ -2,9 +2,6 @@
 
 namespace Platformd\SpoutletBundle\Util;
 
-use Platformd\SpoutletBundle\Entity\Site;
-use Platformd\SpoutletBundle\Util\CacheUtil;
-
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -29,7 +26,6 @@ class SiteUtil extends Event
 
     public function getCurrentSite()
     {
-
         if ($this->currentSite) {
             return $this->currentSite;
         }

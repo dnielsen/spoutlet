@@ -2,20 +2,14 @@
 
 namespace Platformd\SpoutletBundle\Command;
 
-use Platformd\SpoutletBundle\Command\BaseCommand,
-    Platformd\SpoutletBundle\QueueMessage\MassEmailQueueMessage,
-    Platformd\SpoutletBundle\QueueMessage\ChunkedMassEmailQueueMessage
-;
+use Platformd\SpoutletBundle\QueueMessage\MassEmailQueueMessage;
+use Platformd\SpoutletBundle\QueueMessage\ChunkedMassEmailQueueMessage;
 
 use
-    Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand,
-    Symfony\Component\Console\Input\InputArgument,
     Symfony\Component\Console\Input\InputOption,
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface
 ;
-
-use DateTime;
 
 class ChunkedMassEmailQueueProcessorCommand extends BaseCommand
 {

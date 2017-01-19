@@ -44,7 +44,7 @@
                <!--  <div>{{ 'platformd.user.avatars.add' | pd_trans | raw }}</div> -->
             {% endif %}
             
-            {% render "UserBundle:Avatar:faceDetect" with { render:"1" } %}
+            {% render controller("UserBundle:Avatar:faceDetect") %}
 
              <div class="clear"></div>
 

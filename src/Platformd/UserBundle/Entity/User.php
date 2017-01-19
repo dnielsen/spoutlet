@@ -580,7 +580,7 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\WatchedGroupMapping", mappedBy="user")
      */
     protected $watchedGroups;
-   
+
     /**
      * The id for facematching
      *
@@ -588,11 +588,12 @@ class User extends BaseUser
      * @ORM\Column(type="integer", nullable=true)
      */
     private $faceprintId;
-     /**
-      * @ORM\Column(name="faceprint_image", type="string")
-      */
+
+    /**
+     * @ORM\Column(name="faceprint_image", type="string")
+     */
     protected $faceprintImage = '';
- 
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
@@ -1120,6 +1121,7 @@ class User extends BaseUser
      * Also see EditUserFormType
      *
      * @param string $role either ROLE_ORGANIZER or ROLE_SUPER_ADMIN
+     *
      * @throws \InvalidArgumentException
      */
     public function setAdminLevel($role)
@@ -1339,24 +1341,29 @@ class User extends BaseUser
     {
         $this->pdGroups = $pdGroups;
     }
+
     public function getOwnedGroups()
     {
         return $this->ownedGroups;
     }
+
     public function setOwnedGroups($groups)
     {
         $this->ownedGroups = $groups;
     }
+
     public function getOwnedDepartments()
     {
-        $ownedDepts = array();
-        foreach ($this->ownedGroups->toArray() as $group) {
-            if ($group->getCategory() == Group::CAT_DEPARTMENT) {
+        $ownedDepts = [];
+
+        foreach ($this->ownedGroups as $group) {
+            if ($group->getCategory() === Group::CAT_DEPARTMENT) {
                 $ownedDepts[] = $group;
             }
         }
         return $ownedDepts;
     }
+
     public function getGroupMembershipActions()
     {
         return $this->groupMembershipActions;
@@ -1405,15 +1412,16 @@ class User extends BaseUser
         $this->avatars = $value;
     }
 
-     public function getGallarys()
-     {
-         return $this->gallarys;
-     }
+    public function getGallarys()
+    {
+        return $this->gallarys;
+    }
 
     public function setGallarys($value)
     {
         $this->gallarys = $value;
     }
+
     public function getUuid()
     {
         return $this->uuid;
@@ -1574,6 +1582,7 @@ class User extends BaseUser
     {
         $this->name = $name;
     }
+
     public function getName()
     {
         return $this->name;
@@ -1583,6 +1592,7 @@ class User extends BaseUser
     {
         $this->organization = $value;
     }
+
     public function getOrganization()
     {
         return $this->organization;
@@ -1592,6 +1602,7 @@ class User extends BaseUser
     {
         $this->title = $value;
     }
+
     public function getTitle()
     {
         return $this->title;
@@ -1601,6 +1612,7 @@ class User extends BaseUser
     {
         $this->industry = $value;
     }
+
     public function getIndustry()
     {
         return $this->industry;
@@ -1610,6 +1622,7 @@ class User extends BaseUser
     {
         $this->affiliation = $affiliation;
     }
+
     public function getAffiliation()
     {
         return $this->affiliation;
@@ -1619,6 +1632,7 @@ class User extends BaseUser
     {
         $this->$eventRole = $eventRole;
     }
+
     public function getEventRole()
     {
         return $this->eventRole;
@@ -1629,38 +1643,47 @@ class User extends BaseUser
     {
         $this->comments[] = $comments;
     }
+
     public function getComments()
     {
         return $this->comments;
     }
+
     public function setEntrySets($entrySets)
     {
         $this->entrySets = $entrySets;
     }
+
     public function getEntrySets()
     {
         return $this->entrySets;
     }
+
     public function addIdea($idea)
     {
         $this->ideas[] = $idea;
     }
+
     public function removeIdea($idea)
     {
         $this->ideas->removeElement($idea);
     }
+
     public function getIdeas()
     {
         return $this->ideas;
     }
+
     public function addAnswer($answer)
     {
         $this->answers[] = $answer;
     }
+
     public function removeAnswer($answer)
     {
         $this->answers->removeElement($answer);
     }
+
     public function getAnswers()
     {
         return $this->answers;
@@ -1681,38 +1704,47 @@ class User extends BaseUser
 
         return $eventAnswers;
     }
+
     public function addHtmlPage($htmlPage)
     {
         $this->htmlPages[] = $htmlPage;
     }
+
     public function removeHtmlPage($htmlPage)
     {
         $this->htmlPages->removeElement($htmlPage);
     }
+
     public function getHtmlPages()
     {
         return $this->htmlPages;
     }
+
     public function addWatchedEvent($value)
     {
         $this->watchedEvents[] = $value;
     }
+
     public function removeWatchedEvent($value)
     {
         $this->watchedEvents->removeElement($value);
     }
+
     public function getWatchedEvents()
     {
         return $this->watchedEvents;
     }
+
     public function addWatchedGroup($value)
     {
         $this->watchedGroups[] = $value;
     }
+
     public function removeWatchedGroup($value)
     {
         $this->watchedGroups->removeElement($value);
     }
+
     public function getWatchedGroups()
     {
         $groups = array();
@@ -1725,9 +1757,9 @@ class User extends BaseUser
         return $groups;
     }
 
-   /**
-    * @return string
-    */
+    /**
+     * @return string
+     */
     public function getFaceprintId()
     {
         return $this->faceprintId;
@@ -1739,7 +1771,7 @@ class User extends BaseUser
     public function setFaceprintId($faceprintId)
     {
         $this->faceprintId = $faceprintId;
-    } 
+    }
 
     public function getFaceprintImage()
     {
@@ -1750,6 +1782,7 @@ class User extends BaseUser
     {
         $this->faceprintImage = $value;
     }
+
     public function getCodeAssignmentCodes()
     {
         return $this->codeAssignmentCodes;
@@ -1765,62 +1798,77 @@ class User extends BaseUser
     {
         return $this->linkedIn;
     }
+
     public function setLinkedIn($value)
     {
         $this->linkedIn = $value;
     }
+
     public function getProfessionalEmail()
     {
         return $this->professionalEmail;
     }
+
     public function setProfessionalEmail($value)
     {
         $this->professionalEmail = $value;
     }
+
     public function getTwitterUsername()
     {
         return $this->twitterUsername;
     }
+
     public function setTwitterUsername($value)
     {
         $this->twitterUsername = $value;
     }
+
     public function getWebsite()
     {
         return $this->website;
     }
+
     public function setWebsite($value)
     {
         $this->website = $value;
     }
+
     public function getMailingAddress()
     {
         return $this->mailingAddress;
     }
+
     public function setMailingAddress($value)
     {
         $this->mailingAddress = $value;
     }
+
     public function getTshirtSize()
     {
         return $this->tshirtSize;
     }
+
     public function setTshirtSize($value)
     {
         $this->tshirtSize = $value;
     }
+
     public function getDisplayProfile()
     {
         return $this->displayProfile;
     }
+
     public function setDisplayProfile($value)
     {
         $this->displayProfile = $value;
     }
+
     public function getDisplayPrivateInfoToOrganizers()
     {
         return $this->displayPrivateInfoToOrganizers;
     }
+
     public function setDisplayPrivateInfoToOrganizers($value)
     {
         $this->displayPrivateInfoToOrganizers = $value;

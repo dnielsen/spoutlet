@@ -1,7 +1,7 @@
 Campsite Install Instructions:
 ==
 
-Must use UBUNTU 12.04 LTS (won't work on UBUNTU 14.04 becuase Symfony2.0 requires PHP 5.4 which won't run on UBUNTU 14.04)
+Must use UBUNTU 16.04 LTS
 
 1. Download and extract Campsite zip OR install git and clone repo from GitHub
 
@@ -17,7 +17,7 @@ Must use UBUNTU 12.04 LTS (won't work on UBUNTU 14.04 becuase Symfony2.0 require
 
 3. Configure application parameters file:
 
-    a. cd ~/sites/campsite; cp app/config/parameters.ini.dist app/config/parameters.ini
+    a. cd ~/sites/campsite; cp app/config/parameters.yml.dist app/config/parameters.yml
 
     b. Edit app/config/parameters.ini and fill in DB details
 
@@ -50,7 +50,7 @@ Configuring Mass Emails
 -------------
 1. From [AWS SQS console](https://console.aws.amazon.com/sqs/home) create two queues: `PD_TESTING_CHUNKED_MASS_EMAIL`, `PD_TESTING_MASS_EMAIL`  
 
-2. In `app/config/parameters.ini` set `queue_prefix` to the url of the queues you just created minus everything after `PD_TESTING`
+2. In `app/config/parameters.yml` set `queue_prefix` to the url of the queues you just created minus everything after `PD_TESTING`
 
 3. Setup cron task to execute these two commands on a 1 minute interval:  
     > app/console pd:massEmails:process --env=prod  

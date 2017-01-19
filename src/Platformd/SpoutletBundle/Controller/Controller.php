@@ -2,7 +2,6 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
-use Platformd\EventBundle\Entity\Event;
 use Platformd\EventBundle\Entity\GroupEvent;
 use Platformd\EventBundle\Entity\GlobalEvent;
 use Platformd\EventBundle\Entity\EventSession;
@@ -15,11 +14,9 @@ use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Platformd\SpoutletBundle\Util\HttpUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 

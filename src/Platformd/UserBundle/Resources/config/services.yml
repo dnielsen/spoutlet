@@ -53,7 +53,7 @@ services:
         calls:
             - [ setPrefectures, [ %platformd.prefectures% ] ]
         tags:
-            - { name: form.type }
+            - { name: form.type, alias: platformd_user_registration }
 
     platformd_user.profile.form.type:
         class: Platformd\UserBundle\Form\Type\ProfileFormType

@@ -2,20 +2,11 @@
 
 namespace Platformd\SpoutletBundle\Command;
 
-use Platformd\SpoutletBundle\Command\BaseCommand,
-    Platformd\SpoutletBundle\QueueMessage\MassEmailQueueMessage,
-    Platformd\SpoutletBundle\QueueMessage\ChunkedMassEmailQueueMessage
-;
+use Platformd\SpoutletBundle\QueueMessage\MassEmailQueueMessage;
+use Platformd\SpoutletBundle\QueueMessage\ChunkedMassEmailQueueMessage;
 
-use
-    Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand,
-    Symfony\Component\Console\Input\InputArgument,
-    Symfony\Component\Console\Input\InputOption,
-    Symfony\Component\Console\Input\InputInterface,
-    Symfony\Component\Console\Output\OutputInterface
-;
-
-use DateTime;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class MassEmailQueueProcessorCommand extends BaseCommand
 {
@@ -46,7 +37,6 @@ EOT
     {
         $this->stdOutput = $output;
         $container       = $this->getContainer();
-        $em              = $container->get('doctrine')->getEntityManager();
         $queueUtil       = $container->get('platformd.util.queue_util');
         $emailManager    = $container->get('platformd.model.email_manager');
 

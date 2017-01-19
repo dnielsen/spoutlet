@@ -6,36 +6,21 @@ echo "Installing Additional Packages"
 echo "---------------------------------------"
 echo
 
-sudo apt-get install curl
-
-curl http://repo.varnish-cache.org/debian/GPG-key.txt | sudo apt-key add -
-
-if ! grep -q 'deb http://repo.varnish-cache.org/ubuntu/ precise varnish-3.0' /etc/apt/sources.list ;
-then
-echo "deb http://repo.varnish-cache.org/ubuntu/ precise varnish-3.0" | sudo tee -a /etc/apt/sources.list
-fi
-
-sudo add-apt-repository ppa:ondrej/php5-oldstable -y
-sudo apt-add-repository ppa:chris-lea/node.js -y
 sudo apt-get update
 
-sudo apt-get -q -y install varnish htop screen vim acl apache2-doc git-core libapache2-mod-php5 php5-intl php-apc php5-curl php5-gd php5-mysql php5-mcrypt memcached php5-memcache php5-memcached php5-sqlite ftp-upload ncurses-term php5-xdebug mysql-server mysql-client php-pear python-software-properties nodejs
+sudo apt-get install curl
+
+sudo apt-get -q -y install varnish htop screen vim acl git-core apache2 libapache2-mod-php7.0 php7.0-intl php-apcu php7.0-curl php7.0-gd php7.0-mysql php7.0-mcrypt memcached php-memcached php-memcache php7.0-sqlite3 php7.0-bcmath php7.0-mbstring php7.0-zip php-amqplib ftp-upload ncurses-term mysql-server mysql-client php-pear python-software-properties nodejs
 
 echo
 echo "---------------------------------------"
-echo "[custom] Adding PEAR channels"
+echo "[custom] Composer installation"
 echo
-sudo pear channel-discover pear.symfony.com
-sudo pear channel-discover pear.behat.org
-sudo pear channel-discover pear.phpunit.de
-sudo pear channel-discover pear.symfony-project.com
-sudo pear install behat/behat
-sudo pear install behat/mink
-sudo pear install phpunit/PHPUnit
-
+wget https://getcomposer.org/composer.phar
+chmod +x composer.phar
+sudo mv composer.phar /usr/local/bin/composer
 echo "---------------------------------------"
-echo "Package installation complete"
+echo "Composer installation complete"
 echo "---------------------------------------"
 
 echo
-

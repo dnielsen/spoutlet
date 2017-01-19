@@ -43,11 +43,6 @@ if [ `pwd` != $AwaResetDirectory ]; then
     exit
 fi
 
-echo "Syncing local clock and renewing 'sudo' token..."
-echo
-
-sudo ntpdate -u pool.ntp.org
-
 echo
 echo "Nuking cache from orbit..."
 
@@ -57,7 +52,7 @@ echo
 echo "Updating Vendor files..."
 echo
 
-./bin/vendors install 2>&1 >> bin/AwaReset.log
+composer install --prefer-dist 2>&1 >> bin/AwaReset.log
 
 sudo ls > /dev/null
 
@@ -65,60 +60,60 @@ echo
 echo "Updating all themes..."
 echo
 
-./app/console themes:update 2>&1 >> bin/AwaReset.log
+php app/console themes:update 2>&1 >> bin/AwaReset.log
 
 echo
 echo "Creating necessary symlinks for themes..."
 
-./app/console themes:install web --symlink >> bin/AwaReset.log
+php app/console themes:install web --symlink >> bin/AwaReset.log
 
 echo
 echo "Clearing developer specific indexed search documents..."
 
-./app/console pd:search:deleteAll --confirm-delete >> bin/AwaReset.log
+php app/console pd:search:deleteAll --confirm-delete >> bin/AwaReset.log
 
 echo
 echo "Resetting development database:"
 echo "  - Dropping database..."
 
-./app/console doctrine:database:drop --env=dev --force >> bin/AwaReset.log
+php app/console doctrine:database:drop --env=dev --force >> bin/AwaReset.log
 
 echo "  - Creating database..."
 
-./app/console doctrine:database:create --env=dev >> bin/AwaReset.log
+php app/console doctrine:database:create --env=dev >> bin/AwaReset.log
 
 echo "  - Migrating database..."
 
-./app/console doctrine:migrations:migrate --no-interaction --env=dev >> bin/AwaReset.log
+php app/console doctrine:migrations:migrate --no-interaction --env=dev >> bin/AwaReset.log
 
 echo "  - Loading fixtures..."
 
-./app/console doctrine:fixtures:load --env=dev >> bin/AwaReset.log
+php app/console doctrine:fixtures:load --env=dev >> bin/AwaReset.log
 
 echo "  - Dropping ACL database..."
 
-./app/console doctrine:database:drop --connection="acl" --force --env=dev >> bin/AwaReset.log
+php app/console doctrine:database:drop --connection="acl" --force --env=dev >> bin/AwaReset.log
 
 echo "  - Creating ACL database..."
 
-./app/console doctrine:database:create --connection="acl" --env=dev >> bin/AwaReset.log
+php app/console doctrine:database:create --connection="acl" --env=dev >> bin/AwaReset.log
 
 echo "  - Initialising ACL structure..."
 
-./app/console init:acl --env=dev >> bin/AwaReset.log
+php app/console init:acl --env=dev >> bin/AwaReset.log
 
 sudo ls > /dev/null
 
 echo
 echo "Clearing development cache:"
 
-./app/console cache:clear --no-debug --env=dev >> bin/AwaReset.log
+php app/console cache:clear --no-debug --env=dev >> bin/AwaReset.log
 
 echo
 echo "Installing web assets..."
 
-./app/console assets:install --symlink web >> bin/AwaReset.log
-./app/console assetic:dump >> bin/AwaReset.log
+php app/console assets:install --symlink web >> bin/AwaReset.log
+php app/console assetic:dump >> bin/AwaReset.log
 
 echo
 echo "Executing development web request:"
@@ -131,36 +126,36 @@ echo
 echo "Resetting test database:"
 echo "  - Dropping database..."
 
-./app/console doctrine:database:drop --env=test --force >> bin/AwaReset.log
+php app/console doctrine:database:drop --env=test --force >> bin/AwaReset.log
 
 echo "  - Creating database..."
 
-./app/console doctrine:database:create --env=test >> bin/AwaReset.log
+php app/console doctrine:database:create --env=test >> bin/AwaReset.log
 
 echo "  - Migrating database..."
 
-./app/console doctrine:migrations:migrate --no-interaction --env=test  >> bin/AwaReset.log
+php app/console doctrine:migrations:migrate --no-interaction --env=test  >> bin/AwaReset.log
 
 echo "  - Loading fixtures..."
 
-./app/console doctrine:fixtures:load --env=test >> bin/AwaReset.log
+php app/console doctrine:fixtures:load --env=test >> bin/AwaReset.log
 
 echo "  - Dropping ACL database..."
 
-./app/console doctrine:database:drop --env=test --connection="acl" --force >> bin/AwaReset.log
+php app/console doctrine:database:drop --env=test --connection="acl" --force >> bin/AwaReset.log
 
 echo "  - Creating ACL database..."
 
-./app/console doctrine:database:create --env=test --connection="acl" >> bin/AwaReset.log
+php app/console doctrine:database:create --env=test --connection="acl" >> bin/AwaReset.log
 
 echo "  - Initialising ACL structure..."
 
-./app/console init:acl --env=test >> bin/AwaReset.log
+php app/console init:acl --env=test >> bin/AwaReset.log
 
 echo
 echo "Clearing test cache:"
 
-./app/console cache:clear --no-debug --env=test >> bin/AwaReset.log
+php app/console cache:clear --no-debug --env=test >> bin/AwaReset.log
 
 echo
 echo "Executing test web request:"
@@ -173,10 +168,10 @@ echo "Changing cache & logs permissions..."
 sudo chmod -R 777 app/cache/ app/logs/
 
 echo
-echo "Running Behat tests..."
-echo
+#echo "Running Behat tests..."
+#echo
 
-./behat --format=progress
+#./behat --format=progress
 
 cd - > /dev/null
 

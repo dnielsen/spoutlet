@@ -77,7 +77,7 @@
             <img id="main-photo" src="{{ media.image | imagine_filter('media_photo_show') }}" alt="{{ media.title }}" style="display:none;" />
 
             {% if features.hasComments %}
-                {% include 'SpoutletBundle:Comments:_commentsLoader.html.twig' with({ 'threadId': media.threadId }) %}
+                {% include 'SpoutletBundle:Comments:_commentsLoader.html.twig' with { 'threadId': media.threadId } %}
             {% endif %}
         </div>
 
@@ -245,7 +245,7 @@
 {% include 'SpoutletBundle::_reportContentPopup.html.twig' %}
 {% include 'SpoutletBundle:Gallery:_quickVoteJavascript.html.twig' %}
 
-{% render url('_gallery_media_show_user_data', { 'id': media.id }) with {}, {'standalone': true } %}
+{% render url('_gallery_media_show_user_data', { 'id': media.id }) %}
 
 {% endblock %}
 
