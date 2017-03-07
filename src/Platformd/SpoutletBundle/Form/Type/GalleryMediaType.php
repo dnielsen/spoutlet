@@ -3,10 +3,12 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Form\Extension\Core\ChoiceList\ArrayChoiceList;
-use Doctrine\ORM\EntityRepository;
 use Platformd\UserBundle\Entity\User;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class GalleryMediaType extends AbstractType
 {
@@ -26,48 +28,48 @@ class GalleryMediaType extends AbstractType
         $this->tagManager   = $tagManager;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $currentSite = $this->currentSite;
-
-        $builder->add('title', 'text', array(
+        $builder->add('title', TextType::class, array(
             'max_length' => 255,
             'label'      => 'galleries.edit_photo.name',
             'attr'       => array('class' => 'photo-title')
         ));
-        $builder->add('description', 'textarea', array(
+        $builder->add('description', TextareaType::class, array(
             'max_length' => 512,
             'label'      => 'galleries.edit_photo.desc',
             'attr'       => array('class' => 'photo-description')
         ));
 
-        $builder->add('galleries', 'choice', array(
+        $builder->add('galleries', ChoiceType::class, array(
             'label'         => 'galleries.index_page_title',
             'required'      => true,
             'expanded'      => true,
             'multiple'      => true,
             'choices'       => $this->getCategoryChoices(),
+            'choices_as_values' => true,
         ));
 
         if ($this->currentSite->getSiteFeatures()->getHasGroups()) {
-            $builder->add('groups', 'choice', array(
+            $builder->add('groups', ChoiceType::class, array(
                 'label'         => 'Groups',
                 'required'      => true,
                 'expanded'      => true,
                 'multiple'      => true,
                 'choices'       => $this->getGroupChoices(),
+                'choices_as_values' => true,
             ));
         }
 
         if ($this->user instanceof User && $this->user->hasRole('ROLE_SUPER_ADMIN')) {
-            $builder->add('featured', 'checkbox', array(
+            $builder->add('featured', CheckboxType::class, array(
                 'label'     => 'Featured',
                 'help'      => 'Check this checkbox to make this media item featured on the gallery front page.',
                 'required'  => false,
             ));
         }
 
-        $builder->add('tags', 'text', array(
+        $builder->add('tags', TextType::class, array(
             'label' => 'tags.forms.tags',
             'help' => "tags.forms.enter_keywords_help",
             'property_path' => false,
@@ -76,20 +78,20 @@ class GalleryMediaType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_gallery_media';
     }
 
     private function getCategoryChoices()
     {
-        $choices = array();
+        $choices = [];
         $site = $this->currentSite;
 
         $results = $this->galleryRepo->findAllGalleriesByCategoryForSiteSortedByPosition($site, 'image');
 
         foreach ($results as $gallery) {
-            $choices[$gallery->getId()] = $gallery->getName($site->getId());
+            $choices[$gallery->getName($site->getId())] = $gallery->getId();
         }
 
         return $choices;
@@ -97,20 +99,18 @@ class GalleryMediaType extends AbstractType
 
     private function getGroupChoices()
     {
-        $choices = array();
+        $choices = [];
 
         if ($this->galleryMedia->getAuthor() == $this->user) {
             $results = $this->groupRepo->getAllGroupsForUserAndSite($this->user, $this->currentSite);
             foreach ($results as $group) {
-                $choices[$group[0]->getId()] = $group[0]->getName();
+                $choices[$group[0]->getName()] = $group[0]->getId();
             }
         } elseif ($this->user->getAdminLevel() == 'ROLE_SUPER_ADMIN') {
             $results = $this->groupRepo->findGroupsForImage($this->galleryMedia);
             foreach ($results as $group) {
-                $choices[$group->getId()] = $group->getName();
+                $choices[$group->getName()] = $group->getId();
             }
-        } else {
-            return array();
         }
 
         return $choices;

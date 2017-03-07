@@ -123,7 +123,7 @@ class Tag
     /**
      * Set createdAt
      *
-     * @param DateTime $value
+     * @param \DateTime $value
      */
     public function setCreatedAt(\DateTime $value)
     {
@@ -133,7 +133,7 @@ class Tag
     /**
      * Get createdAt
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -143,7 +143,7 @@ class Tag
     /**
      * Set updatedAt
      *
-     * @param DateTime $value
+     * @param \DateTime $value
      */
     public function setUpdatedAt(\DateTime $value)
     {
@@ -153,7 +153,7 @@ class Tag
     /**
      * Get updatedAt
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {

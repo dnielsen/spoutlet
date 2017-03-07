@@ -52,15 +52,17 @@ class SiteTranslationListener
         }
 
         $session       = $event->getRequest()->getSession();
-        $sessionLocale = $session->getLocale();
+//        $sessionLocale = $session->getLocale(); //TODO: get Locale fix
+
+        $sessionLocale = 'en';
 
         if ($this->currentSiteLocale === $sessionLocale) {
             $this->logInfo('Session locale already correctly set to "'.$this->currentSiteLocale.'".');
             return;
         }
 
-        $session->setLocale($this->currentSiteLocale);
-        $session->save();
+//        $session->setLocale($this->currentSiteLocale);
+//        $session->save();
 
         $this->logInfo('Session locale was set to "'.$sessionLocale.'" but it has now been correctly updated to be "'.$this->currentSiteLocale.'".');
     }

@@ -20,7 +20,7 @@ class WallpaperAdminController extends Controller
     public function indexAction()
     {
         $this->addWallpapersBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('SpoutletBundle:Wallpaper')->findAllNewestFirst();
 
@@ -38,7 +38,7 @@ class WallpaperAdminController extends Controller
         $this->addWallpapersBreadcrumb()->addChild('New Wallpaper');
 
         $wallpaper  = new Wallpaper();
-        $form    = $this->createForm(new WallpaperType(), $wallpaper);
+        $form    = $this->createForm(WallpaperType::class, $wallpaper);
 
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The wallpaper was created!');
@@ -54,7 +54,7 @@ class WallpaperAdminController extends Controller
 
     public function deleteAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $wallpaper = $em
             ->getRepository('SpoutletBundle:Wallpaper')
             ->findOneBy(array('id' => $id));
@@ -78,7 +78,7 @@ class WallpaperAdminController extends Controller
     public function editAction($id, Request $request)
     {
         $this->addWallpapersBreadcrumb()->addChild('Edit Wallpaper');
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $wallpaper = $em->getRepository('SpoutletBundle:Wallpaper')->find($id);
 
@@ -86,7 +86,7 @@ class WallpaperAdminController extends Controller
             throw $this->createNotFoundException('Unable to find Wallpaper wallpaper.');
         }
 
-        $editForm   = $this->createForm(new WallpaperType(), $wallpaper);
+        $editForm   = $this->createForm(WallpaperType::class, $wallpaper);
 
         if ($this->processForm($editForm, $request)) {
             $this->setFlash('success', 'The wallpaper was saved!');
@@ -102,11 +102,11 @@ class WallpaperAdminController extends Controller
 
     private function processForm(Form $form, Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         if ($request->getMethod() == 'POST') {
 
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 /** @var $wallpaper \Platformd\SpoutletBundle\Entity\Wallpaper */

@@ -2,7 +2,7 @@
 {% extends 'form_div_layout.html.twig' %}
 
 {# adds some classes to labels #}
-{% block generic_label %}
+{% block form_label %}
 {% spaceless %}
     {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-lbl'}) %}
     {% if required %}
@@ -18,7 +18,7 @@
 {% endblock %}
 
 {# adds a class to the errors #}
-{% block field_errors %}
+{% block form_errors %}
 {% spaceless %}
     {% if errors|length > 0 %}
     <ul class="form-msg-error">
@@ -28,13 +28,13 @@
     </ul>
     {% endif %}
 {% endspaceless %}
-{% endblock field_errors %}
+{% endblock form_errors %}
 
 {% block text_widget %}
 {% spaceless %}
     {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-txt'}) %}
 
-    {{ block ('field_widget') }}
+    {{ block ('form_widget') }}
 {% endspaceless %}
 {% endblock text_widget %}
 
@@ -42,7 +42,7 @@
 {% spaceless %}
     {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-txt'}) %}
 
-    {{ block ('field_widget') }}
+    {{ block ('form_widget') }}
 {% endspaceless %}
 {% endblock email_widget %}
 
@@ -55,32 +55,27 @@
 {% endblock password_widget %}
 
 {# give a form_row class to all form row divs #}
-{% block field_row %}
+{% block form_row %}
 {% spaceless %}
     <div class="form_row">
         {{ form_errors(form) }}
         {{ form_label(form, label|default(null)) }}
         {{ form_widget(form) }}
-        {% if form.get('help') %}
-            <p class="help-block">
-                {{ form.get('help') | trans }}
-            </p>
-        {% endif %}
     </div>
 {% endspaceless %}
-{% endblock field_row %}
+{% endblock form_row %}
 
 {% block knp_media_row %}
     <div class="file-upload">
         {{ form_row(form.fileObject) }}
-        {% if form.get('mediaObject') %}
-            {{ form_rest(form) }}
+        {#{% if form.get('mediaObject') %}#}
+            {#{{ form_rest(form) }}#}
 
-            {% set objPath = media_path(form.get('mediaObject')) %}
+            {#{% set objPath = media_path(form.get('mediaObject')) %}#}
 
-            {% if ends_with(objPath, '.png') or ends_with(objPath, '.jpg') or ends_with(objPath, '.jpeg') or ends_with(objPath, '.gif') %}
-                <img src="{{ objPath }}" />
-            {% endif %}
-        {% endif %}
+            {#{% if ends_with(objPath, '.png') or ends_with(objPath, '.jpg') or ends_with(objPath, '.jpeg') or ends_with(objPath, '.gif') %}#}
+                {#<img src="{{ objPath }}" />#}
+            {#{% endif %}#}
+        {#{% endif %}#}
     </div>
 {% endblock %}

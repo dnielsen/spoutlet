@@ -2,6 +2,9 @@
 
 namespace Platformd\EventBundle\Validator;
 
+/**
+ * @Annotation
+ */
 class GlobalEventUniqueSlug extends EventUniqueSlug
 {
     /**

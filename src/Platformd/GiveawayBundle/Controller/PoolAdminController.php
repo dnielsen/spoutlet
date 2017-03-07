@@ -48,10 +48,10 @@ class DealPoolAdminController extends Controller
 
         $request = $this->getRequest();
 
-        $form = $this->createForm(new DealPoolType(), $pool);
+        $form = $this->createForm(DealPoolType::class, $pool);
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->savePool($pool);
@@ -87,10 +87,10 @@ class DealPoolAdminController extends Controller
 
         $request = $this->getRequest();
 
-         $form = $this->createForm(new DealPoolType(), $pool);
+         $form = $this->createForm(DealPoolType::class, $pool);
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->savePool($pool);
@@ -132,7 +132,7 @@ class DealPoolAdminController extends Controller
 
     protected function savePool(DealPool $pool)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->persist($pool);
         $em->flush();
 

@@ -24,7 +24,18 @@ use Platformd\MediaBundle\Entity\Media;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\SpoutletBundle\Entity\Site;
-use Platformd\UserBundle\Entity\User;
+use Platformd\SpoutletBundle\Form\Type\PurifiedTextareaType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -39,16 +50,16 @@ class AdminController extends Controller
 {
     /**
      * @param Request $request
-     * @param string $groupSlug
-     * @param int $eventId
+     * @param string  $groupSlug
+     * @param int     $eventId
      */
     public function eventSessionAction(Request $request, $groupSlug, $eventId, $sessionId = null)
     {
-        if ($request->get('cancel') == 'Cancel') {
-            return $this->redirect($this->generateUrl('group_event_view', array(
-                'groupSlug'  => $groupSlug,
-                'eventId'    => $eventId,
-            )));
+        if ($request->get('cancel') === 'Cancel') {
+            return $this->redirectToRoute('group_event_view', [
+                'groupSlug' => $groupSlug,
+                'eventId' => $eventId,
+            ]);
         }
 
         $event = $this->getEvent($eventId);
@@ -62,40 +73,47 @@ class AdminController extends Controller
         if ($sessionId) {
             $this->validateAuthorization($event);
             $evtSession = $this->getEventSession($groupSlug, $eventId, $sessionId);
-        }
-        else {
+        } else {
             $evtSession = new EventSession($event);
             $isNew = true;
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'evtSession', $evtSession)
-            ->add('name',               'text',             array('attr'    => array('class' => 'formRowWidth')))
-            ->add('description',        'textarea',         array('attr'    => array('class' => 'formRowWidth', 'rows' => '6')))
-            ->add('room',               'text',             array('attr'    => array('class' => 'formRowWidth'), 'required' => false))
-            ->add('date',               'date',             array('widget'  => 'single_text',
-                                                                  'format'  => 'L/dd/yyyy',
-                                                                  'required' => false))
-            ->add('startsAt',           'time',             array('widget'  => 'single_text', 'required' => false))
-            ->add('endsAt',             'time',             array('widget'  => 'single_text', 'required' => false))
-            ->add('slidesLink',         'text',             array('attr'    => array('class' => 'formRowWidth', 'placeholder' => 'http://'),
-                                                                  'required' => false))
-            ->add('publicNotesLink',    'text',             array('attr'    => array('class' => 'formRowWidth', 'placeholder' => 'http://'),
-                                                                  'required' => false))
+        $form = $this->container->get('form.factory')->createNamedBuilder('evtSession', FormType::class, $evtSession)
+            ->add('name', TextType::class, array('attr' => array('class' => 'formRowWidth')))
+            ->add('description', TextareaType::class, array('attr' => array('class' => 'formRowWidth', 'rows' => '6')))
+            ->add('room', TextType::class, array('attr' => array('class' => 'formRowWidth'), 'required' => false))
+            ->add('date', DateType::class, [
+                'widget' => 'single_text',
+                'format' => 'MM/dd/yyyy',
+                'required' => false,
+            ])
+            ->add('startsAt', TimeType::class, [
+                'widget' => 'single_text',
+                'with_seconds' => true,
+                'required' => false,
+            ])
+            ->add('endsAt', TimeType::class, [
+                'widget' => 'single_text',
+                'with_seconds' => true,
+                'required' => false,
+            ])
+            ->add('slidesLink', TextType::class, array('attr' => array('class' => 'formRowWidth', 'placeholder' => 'http://'),
+                'required' => false))
+            ->add('publicNotesLink', TextType::class, array('attr' => array('class' => 'formRowWidth', 'placeholder' => 'http://'),
+                'required' => false))
             ->getForm();
 
-        if ($request->getMethod() == 'POST')
-        {
-            $form->bindRequest($request);
+        if ($request->getMethod() === 'POST') {
+            $form->handleRequest($request);
             $ideaId = $request->get('ideaId');
 
-            if($form->isValid() || $ideaId)
-            {
-                $em = $this->getDoctrine()->getEntityManager();
+            if ($form->isValid() || $ideaId) {
+                $em = $this->getDoctrine()->getManager();
                 $url = null;
 
-                if ($ideaId){
+                if ($ideaId) {
                     $idea = $em->getRepository('IdeaBundle:Idea')->find($ideaId);
-                    if (!$idea){
+                    if (!$idea) {
                         throw new NotFoundHttpException('Idea not found.');
                     }
 
@@ -113,17 +131,15 @@ class AdminController extends Controller
                     $eventStart = $event->getStartsAt();
 
                     if ($eventStart) {
-
-                        $sessionDate = new DateTime();
-                        $sessionDate->setDate($eventStart->format('Y'),  $eventStart->format('n'), $eventStart->format('d'));
+                        $sessionDate = new \DateTime();
+                        $sessionDate->setDate($eventStart->format('Y'), $eventStart->format('n'), $eventStart->format('d'));
                         $sessionDate->setTime($eventStart->format('H'), $eventStart->format('i'));
 
                         $evtSession->setDate($sessionDate);
                     }
-                    $this->setFlash('success', $evtSession->getName().' has been successfully added to the session schedule.');
+                    $this->setFlash('success', $evtSession->getName() . ' has been successfully added to the session schedule.');
                     $url = $this->generateUrl($idea->getEntrySet()->getLinkableRouteName(), $idea->getEntrySet()->getLinkableRouteParameters());
-                }
-                else {
+                } else {
 
                     $date = $evtSession->getDate();
                     $year = $date->format('Y');
@@ -143,14 +159,14 @@ class AdminController extends Controller
 //                    $evtSession->addTags($this->getIdeaService()->processTags($tagString));
                 }
 
-                if ($isNew){
+                if ($isNew) {
                     $event->addSession($evtSession);
                     $em->persist($evtSession);
                 }
 
                 $em->flush();
 
-                if (!$url){
+                if (!$url) {
                     $url = $this->generateUrl($evtSession->getLinkableRouteName(), $evtSession->getLinkableRouteParameters());
                 }
 
@@ -159,17 +175,17 @@ class AdminController extends Controller
         }
 
         return $this->render('IdeaBundle:Admin:sessionForm.html.twig', array(
-            'form'      => $form->createView(),
-            'isNew'     => $isNew,
-            'group'     => $event->getGroup(),
-            'event'     => $event,
-            'evtSession'=> $evtSession,
+            'form' => $form->createView(),
+            'isNew' => $isNew,
+            'group' => $event->getGroup(),
+            'event' => $event,
+            'evtSession' => $evtSession,
             'breadCrumbs' => $this->getBreadCrumbsString($evtSession),
         ));
     }
 
-    public function eventSessionDeleteAction($groupSlug, $eventId, $sessionId) {
-
+    public function eventSessionDeleteAction($groupSlug, $eventId, $sessionId)
+    {
         $event = $this->getEvent($eventId);
 
         if (!$event) {
@@ -184,28 +200,28 @@ class AdminController extends Controller
             throw new NotFoundHttpException('Session not found.');
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->remove($evtSession);
         $em->flush();
 
-        $this->setFlash('success', 'Session \''.$evtSession->getName().'\' has been deleted.');
+        $this->setFlash('success', 'Session \'' . $evtSession->getName() . '\' has been deleted.');
 
         return $this->redirect($this->generateUrl('event_session_schedule', $event->getLinkableRouteParameters()));
     }
 
-    public function addEventSessionSpeakerAction(Request $request, $groupSlug, $eventId, $sessionId) 
+    public function addEventSessionSpeakerAction(Request $request, $groupSlug, $eventId, $sessionId)
     {
         if ($request->get('cancel') == 'Cancel') {
             return $this->redirect($this->generateUrl('event_session', array('groupSlug' => $groupSlug,
-                                                                      'eventId'   => $eventId,
-                                                                      'sessionId' => $sessionId)));
+                'eventId' => $eventId,
+                'sessionId' => $sessionId)));
         }
 
         $doc = $this->getDoctrine();
         $session = $doc->getRepository('EventBundle:EventSession')->find($sessionId);
 
         if (!$session) {
-            throw new NotFoundHttpException('The session with id: '.$sessionId.' does not exist!');
+            throw new NotFoundHttpException('The session with id: ' . $sessionId . ' does not exist!');
         }
 
         $this->validateAuthorization($session);
@@ -223,18 +239,20 @@ class AdminController extends Controller
             $isNew = false;
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'session_speaker', $sessionSpeaker)
-            ->add('speaker',   'entity',    array('class'   => 'UserBundle:User',
-                                                               'choices' => $session->getEvent()->getAttendeesAlphabetical()))
-            ->add('role',      'text',      array('attr'    => array('class' => 'formRowWidth')))
-            ->add('biography', 'textarea',  array('attr'    => array('class' => 'formRowWidth', 'rows' => '6')))
+        $form = $this->container->get('form.factory')->createNamedBuilder('session_speaker', FormType::class, $sessionSpeaker)
+            ->add('speaker', EntityType::class, array(
+                'class' => 'UserBundle:User',
+                'choices' => $session->getEvent()->getAttendeesAlphabetical())
+            )
+            ->add('role', TextType::class, array('attr' => array('class' => 'formRowWidth')))
+            ->add('biography', TextareaType::class, array('attr' => array('class' => 'formRowWidth', 'rows' => '6')))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
             if ($form->isValid()) {
 
-                $em = $doc->getEntityManager();
+                $em = $doc->getManager();
 
                 if ($isNew) {
                     $sessionSpeaker->setSession($session);
@@ -244,16 +262,16 @@ class AdminController extends Controller
                 $em->flush();
 
                 return $this->redirect($this->generateUrl('event_session', array('groupSlug' => $groupSlug,
-                                                                                 'eventId'   => $eventId,
-                                                                                 'sessionId' => $sessionId)));
+                    'eventId' => $eventId,
+                    'sessionId' => $sessionId)));
             }
         }
 
         $params = array(
             'eventSession' => $session,
-            'event'        => $session->getEvent(),
-            'group'        => $session->getEvent()->getGroup(),
-            'form'         => $form->createView(),
+            'event' => $session->getEvent(),
+            'group' => $session->getEvent()->getGroup(),
+            'form' => $form->createView(),
         );
 
         if ($userId) {
@@ -263,12 +281,12 @@ class AdminController extends Controller
         return $this->render('IdeaBundle:Admin:sessionSpeakerForm.html.twig', $params);
     }
 
-    public function removeEventSessionSpeakerAction(Request $request, $groupSlug, $eventId, $sessionId, $userId) 
+    public function removeEventSessionSpeakerAction(Request $request, $groupSlug, $eventId, $sessionId, $userId)
     {
         $doc = $this->getDoctrine();
 
         $sessionSpeaker = $doc->getRepository('EventBundle:SessionSpeaker')->findOneBy(array('session' => $sessionId, 'speaker' => $userId));
-        
+
         if (!$sessionSpeaker) {
             throw new NotFoundHttpException('Session speaker not found.');
         }
@@ -279,25 +297,25 @@ class AdminController extends Controller
         $em->remove($sessionSpeaker);
         $em->flush();
 
-        $this->setFlash('success', 'Speaker '.$sessionSpeaker->getSpeaker()->getName().' has been removed.');
+        $this->setFlash('success', 'Speaker ' . $sessionSpeaker->getSpeaker()->getName() . ' has been removed.');
 
         return $this->redirect($this->generateUrl('event_session', array('groupSlug' => $groupSlug,
-                                                                         'eventId'   => $eventId,
-                                                                         'sessionId' => $sessionId)));
+            'eventId' => $eventId,
+            'sessionId' => $sessionId)));
     }
 
     public function eventAction(Request $request, $groupSlug, $eventId)
     {
         // test if submission is from a 'cancel' button press
         if ($request->get('cancel') == 'Cancel') {
-            if ($eventId == 'newEvent'){
+            if ($eventId == 'newEvent') {
                 return $this->redirect($this->generateUrl('group_show', array(
-                    'slug'  => $groupSlug,
+                    'slug' => $groupSlug,
                 )));
             } else {
                 return $this->redirect($this->generateUrl('group_event_view', array(
                     'groupSlug' => $groupSlug,
-                    'eventId' =>   $eventId,
+                    'eventId' => $eventId,
                 )));
             }
         }
@@ -321,49 +339,60 @@ class AdminController extends Controller
 
             $event->setNoDate(true);
 
-        }
-        else {
+        } else {
             $this->validateAuthorization($event);
 
             $isNew = false;
-            foreach ($event->getRegistrationFields() as $field){
+            foreach ($event->getRegistrationFields() as $field) {
                 $originalRegistrationFields->add($field);
             }
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
-            ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
-            ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
-            ->add('noDate',             'checkbox',         array('required' => false))
-            ->add('startsAt',           'datetime',         array())
-            ->add('endsAt',             'datetime',         array())
-            ->add('external',           'choice',           array('choices' => array('1' => 'No', '0' => 'Yes')))
-            ->add('registrationOption', 'choice',           array('choices' => array(Event::REGISTRATION_ENABLED   => 'Enabled',
-                                                                                     Event::REGISTRATION_DISABLED  => 'Disabled',)))
-            ->add('registrationFields', 'collection',       array('type'            => new RegistrationFieldFormType(),
-                                                                  'allow_add'       => true,
-                                                                  'allow_delete'    => true,
-                                                                  'by_reference'    => false))
-            ->add('externalUrl',        'text',             array('attr'    => array('size' => '60%', 'placeholder' => 'http://')))
-            ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
-            ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
-            ->add('address2',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
-            ->add('online',             'checkbox',         array('required'=> false))
-            ->add('private',            'checkbox',         array('required'=> false))
+        $form = $this->container->get('form.factory')->createNamedBuilder('event', FormType::class, $event)
+            ->add('name', TextType::class, array('attr' => array('size' => '60%')))
+            ->add('content', PurifiedTextareaType::class, array('attr' => array('class' => 'ckeditor')))
+            ->add('noDate', CheckboxType::class, array('required' => false))
+            ->add('startsAt', DateTimeType::class)
+            ->add('endsAt', DateTimeType::class)
+            ->add('external', ChoiceType::class, array(
+                'choices' => array(
+                    'No' => 1,
+                    'Yes' => 0,
+                ),
+                'choices_as_values' => true,
+            ))
+            ->add('registrationOption', ChoiceType::class, array(
+                'choices' => array(
+                    'Enabled' => Event::REGISTRATION_ENABLED,
+                    'Disabled' => Event::REGISTRATION_DISABLED,
+                ),
+                'choices_as_values' => true,
+            ))
+            ->add('registrationFields', CollectionType::class, [
+                'type' => new RegistrationFieldFormType(),
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+            ])
+            ->add('externalUrl', TextType::class, array('attr' => array('size' => '60%', 'placeholder' => 'http://')))
+            ->add('location', TextType::class, array('attr' => array('size' => '60%'), 'required' => '0'))
+            ->add('address1', TextType::class, array('attr' => array('size' => '60%'), 'required' => '0'))
+            ->add('address2', TextType::class, array('attr' => array('size' => '60%'), 'required' => '0'))
+            ->add('online', CheckboxType::class, array('required' => false))
+            ->add('private', CheckboxType::class, array('required' => false))
             ->getForm();
 
-        if($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
-            if($form->isValid()) {
+        if ($request->getMethod() == 'POST') {
+            $form->submit($request);
+            if ($form->isValid()) {
 
                 if ($event->isExternal()) {
                     $event->setRegistrationOption(Event::REGISTRATION_DISABLED);
                 }
 
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
                 if ($isNew) {
-
                     $group->addEvent($event);
 
                     $event->setUser($this->getCurrentUser());
@@ -378,8 +407,7 @@ class AdminController extends Controller
                     $em->persist($esReg);
 
                     $this->getGroupEventService()->register($event, $event->getUser());
-                }
-                else {
+                } else {
                     // If the form no longer contains fields that were in the original list, delete them
                     foreach ($originalRegistrationFields as $field) {
                         if ($event->getRegistrationFields()->contains($field) === false) {
@@ -398,24 +426,24 @@ class AdminController extends Controller
                     $acl = $aclProvider->createAcl($objectIdentity);
                     $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
                     $aclProvider->updateAcl($acl);
-                } catch(AclAlreadyExistsException $e) {}
+                } catch (AclAlreadyExistsException $e) {
+                }
 
                 return $this->redirect($this->generateUrl('group_event_view', array(
-                        'groupSlug' => $groupSlug,
-                        'eventId' => $event->getId(),
-                    )));
-            }
-            else {
+                    'groupSlug' => $groupSlug,
+                    'eventId' => $event->getId(),
+                )));
+            } else {
                 $errorString = '';
                 foreach ($form->getErrors() as $key => $error) {
                     $template = $error->getMessageTemplate();
                     $parameters = $error->getMessageParameters();
 
-                    foreach($parameters as $var => $value){
+                    foreach ($parameters as $var => $value) {
                         $template = str_replace($var, $value, $template);
                     }
 
-                    $errorString .= $template.'<br/>';
+                    $errorString .= $template . '<br/>';
                 }
                 if (!$errorString) {
                     $errorString = 'Please see fields below for errors';
@@ -425,15 +453,16 @@ class AdminController extends Controller
         }
 
         return $this->render('IdeaBundle:Admin:eventForm.html.twig', array(
-                'form'      => $form->createView(),
-                'isNew'     => $isNew,
-                'group'     => $group,
-                'event'     => $event,
-                'isAdmin'   => $this->isGranted('ROLE_ADMIN'),
-            ));
+            'form' => $form->createView(),
+            'isNew' => $isNew,
+            'group' => $group,
+            'event' => $event,
+            'isAdmin' => $this->isGranted('ROLE_ADMIN'),
+        ));
     }
 
-    public function globalEventAction(Request $request, $global_eventId) {
+    public function globalEventAction(Request $request, $global_eventId)
+    {
 
         if ($global_eventId == 'new') {
             $event = new GlobalEvent();
@@ -445,25 +474,36 @@ class AdminController extends Controller
             $isNew = false;
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'event', $event)
-            ->add('name',               'text',             array('attr'    => array('size'  => '60%')))
-            ->add('content',            'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
-            ->add('noDate',             'checkbox',         array('required' => false))
-            ->add('externalUrl',        'text',             array('attr'    => array('size' => '60%', 'placeholder' => 'http://'), 'required' => true))
-            ->add('startsAt',           'datetime',         array())
-            ->add('endsAt',             'datetime',         array())
-            ->add('external',           'choice',           array('choices' => array('1' => 'No', '0' => 'Yes')))
-            ->add('registrationOption', 'choice',           array('choices' => array(Event::REGISTRATION_ENABLED   => 'Enabled',
-                                                                                     Event::REGISTRATION_DISABLED  => 'Disabled',)))
-            ->add('externalUrl',        'text',             array('attr'    => array('size' => '60%', 'placeholder' => 'http://')))
-            ->add('location',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
-            ->add('address1',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
-            ->add('address2',           'text',             array('attr'    => array('size' => '60%'), 'required' => '0'))
+        $form = $this->container->get('form.factory')->createNamedBuilder('event', FormType::class, $event)
+            ->add('name', TextType::class, array('attr' => array('size' => '60%')))
+            ->add('content', PurifiedTextareaType::class, array('attr' => array('class' => 'ckeditor')))
+            ->add('noDate', CheckboxType::class, array('required' => false))
+            ->add('externalUrl', TextType::class, array('attr' => array('size' => '60%', 'placeholder' => 'http://'), 'required' => true))
+            ->add('startsAt', DateTimeType::class)
+            ->add('endsAt', DateTimeType::class)
+            ->add('external', ChoiceType::class, array(
+                'choices' => array(
+                    'No' => 1,
+                    'Yes' => 0,
+                ),
+                'choices_as_values' => true,
+            ))
+            ->add('registrationOption', ChoiceType::class, array(
+                'choices' => array(
+                     'Enabled' => Event::REGISTRATION_ENABLED,
+                     'Disabled' => Event::REGISTRATION_DISABLED,
+                ),
+                'choices_as_values' => true,
+            ))
+            ->add('externalUrl', TextType::class, array('attr' => array('size' => '60%', 'placeholder' => 'http://')))
+            ->add('location', TextType::class, array('attr' => array('size' => '60%'), 'required' => '0'))
+            ->add('address1', TextType::class, array('attr' => array('size' => '60%'), 'required' => '0'))
+            ->add('address2', TextType::class, array('attr' => array('size' => '60%'), 'required' => '0'))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
-            
+            $form->handleRequest($request);
+
             if ($event->isExternal()) {
                 $event->setRegistrationOption(Event::REGISTRATION_DISABLED);
             }
@@ -476,7 +516,7 @@ class AdminController extends Controller
 
             if ($form->isValid()) {
 
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
 
                 if ($isNew) {
@@ -492,7 +532,7 @@ class AdminController extends Controller
                     // Registration needs to be created after event is persisted, relies on generated event ID
                     $esReg = $event->createEntrySetRegistration();
                     $em->persist($esReg);
-                    
+
                     $flashMessage = 'New event posted successfully!';
 
                 } else {
@@ -505,19 +545,20 @@ class AdminController extends Controller
                 $this->setFlash('success', $flashMessage);
 
                 return $this->redirect($this->generateUrl('global_event_view', array(
-                        'id' => $event->getId(),
+                    'id' => $event->getId(),
                 )));
             }
         }
 
         return $this->render('IdeaBundle:Admin:globalEventForm.html.twig', array(
-            'form'      => $form->createView(),
-            'event'     => $event,
-            'isNew'     => $isNew,
+            'form' => $form->createView(),
+            'event' => $event,
+            'isNew' => $isNew,
         ));
     }
 
-    public function adminAction(Request $request, $groupSlug, $eventId) {
+    public function adminAction(Request $request, $groupSlug, $eventId)
+    {
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($eventId);
@@ -527,10 +568,10 @@ class AdminController extends Controller
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Admin:admin.html.twig', array(
-                'group'     => $group,
-                'event'     => $event,
-                'isAdmin'   => $isAdmin,
-            ));
+            'group' => $group,
+            'event' => $event,
+            'isAdmin' => $isAdmin,
+        ));
     }
 
     public function htmlPageFormAction(Request $request, $id = null)
@@ -546,7 +587,7 @@ class AdminController extends Controller
             $htmlPage = new HtmlPage();
         }
 
-        $scope       = $request->get('scope');
+        $scope = $request->get('scope');
         $containerId = $request->get('containerId');
 
         $group = null;
@@ -567,13 +608,13 @@ class AdminController extends Controller
             throw new AccessDeniedException;
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'htmlPage', $htmlPage)
-            ->add('title',   'text',             array('attr'    => array('size' => '60%')))
-            ->add('content', 'purifiedTextarea', array('attr'    => array('class' => 'ckeditor')))
-        ->getForm();
+        $form = $this->container->get('form.factory')->createNamedBuilder('htmlPage', FormType::class, $htmlPage)
+            ->add('title', TextType::class, array('attr' => array('size' => '60%')))
+            ->add('content', PurifiedTextareaType::class, array('attr' => array('class' => 'ckeditor')))
+            ->getForm();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
             if ($form->isValid()) {
 
                 $htmlPage->setCreator($this->getCurrentUser());
@@ -584,7 +625,7 @@ class AdminController extends Controller
                     $htmlPage->setEvent($event);
                 }
 
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($htmlPage);
                 $em->flush();
 
@@ -593,15 +634,16 @@ class AdminController extends Controller
         }
 
         return $this->render('IdeaBundle:Admin:htmlPageForm.html.twig', array(
-            'id'            => $id,
-            'scope'         => $scope,
-            'containerId'   => $containerId,
-            'htmlPage'      => $htmlPage,
-            'form'          => $form->createView(),
+            'id' => $id,
+            'scope' => $scope,
+            'containerId' => $containerId,
+            'htmlPage' => $htmlPage,
+            'form' => $form->createView(),
         ));
     }
 
-    public function htmlPageDeleteAction(Request $request, $id) {
+    public function htmlPageDeleteAction(Request $request, $id)
+    {
 
         $htmlPage = $this->getDoctrine()->getRepository('IdeaBundle:HtmlPage')->find($id);
 
@@ -611,11 +653,11 @@ class AdminController extends Controller
 
         $this->validateAuthorization($htmlPage);
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->remove($htmlPage);
         $em->flush();
 
-        $this->setFlash('success', 'Page \''.$htmlPage->getTitle().'\' has been deleted.');
+        $this->setFlash('success', 'Page \'' . $htmlPage->getTitle() . '\' has been deleted.');
 
         $parent = $htmlPage->getParent();
 
@@ -627,52 +669,75 @@ class AdminController extends Controller
         $this->enforceUserSecurity();
         $esRegRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry');
 
-        if( $entrySetId == 'new' )
-        {
-            $entrySet             = new EntrySet();
-            $registrationId       = $request->get('registrationId');
+        if ($entrySetId == 'new') {
+            $entrySet = new EntrySet();
+            $registrationId = $request->get('registrationId');
             $entrySetRegistration = $esRegRepo->find($registrationId);
-            $cancelTarget         = $esRegRepo->getContainer($entrySetRegistration);
-        }
-        else
-        {
-            $entrySet             = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet')->find($entrySetId);
+            $cancelTarget = $esRegRepo->getContainer($entrySetRegistration);
+        } else {
+            $entrySet = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet')->find($entrySetId);
             $entrySetRegistration = $entrySet->getEntrySetRegistration();
-            $registrationId       = $entrySetRegistration->getId();
-            $cancelTarget         = $entrySet;
+            $registrationId = $entrySetRegistration->getId();
+            $cancelTarget = $entrySet;
         }
 
         if ($request->get('cancel') == 'Cancel') {
             return $this->redirect($this->generateUrl($cancelTarget->getLinkableRouteName(), $cancelTarget->getLinkableRouteParameters()));
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'entrySet', $entrySet)
-            ->add('name',               'text',     array('attr'    => array('style' => 'width:60%')))
-            ->add('type',               'choice',   array('choices' => array(EntrySet::TYPE_IDEA      => 'Ideas',
-                                                                             EntrySet::TYPE_SESSION   => 'Sessions',
-                                                                             EntrySet::TYPE_THREAD    => 'Threads',
-                                                                             EntrySet::TYPE_TASK      => 'Tasks',)))
-            ->add('description',        'textarea', array('attr'    => array('style' => 'width:60%')))
-            ->add('isSubmissionActive', 'choice',   array('choices' => array('1' => 'Yes', '0' => 'No')))
-            ->add('isVotingActive',     'choice',   array('choices' => array('0' => 'No', '1' => 'Yes')))
-            ->add('allowedVoters',      'text',     array('max_length' => '5000', 'attr'    => array('style' => 'width:60%', 'placeholder' => 'username1, username2, ...'), 'required' => '0',))
+        $form = $this->container->get('form.factory')->createNamedBuilder('entrySet', FormType::class, $entrySet)
+            ->add('name', TextType::class, array('label' => 'entrySet_name', 'translation_domain' => 'forms', 'attr' => array('style' => 'width:60%')))
+            ->add('type', ChoiceType::class, array(
+                'label' => 'entrySet_type',
+                'translation_domain' => 'forms',
+                'choices' => array(
+                    'Ideas' => EntrySet::TYPE_IDEA,
+                    'Sessions' => EntrySet::TYPE_SESSION,
+                    'Threads' => EntrySet::TYPE_THREAD,
+                    'Tasks' => EntrySet::TYPE_TASK,
+                ),
+                'choices_as_values' => true,
+            ))
+            ->add('description', TextareaType::class, array('label' => 'entrySet_description', 'translation_domain' => 'forms', 'attr' => array('style' => 'width:60%')))
+            ->add('isSubmissionActive', ChoiceType::class, array(
+                'label' => 'entrySet_isSubmissionActive',
+                'translation_domain' => 'forms',
+                'choices' => array(
+                    'Yes' => 1,
+                    'No' => 0,
+                ),
+                'choices_as_values' => true,
+            ))
+            ->add('isVotingActive', ChoiceType::class, array(
+                'label' => 'entrySet_isVotingActive',
+                'translation_domain' => 'forms',
+                'choices' => array(
+                    'No' => 0,
+                    'Yes' => 1,
+                ),
+                'choices_as_values' => true,
+            ))
+            ->add('allowedVoters', TextType::class, array(
+                'label' => 'entrySet_allowedVoters',
+                'translation_domain' => 'forms',
+                'max_length' => '5000',
+                'attr' => array('style' => 'width:60%', 'placeholder' => 'username1, username2, ...'),
+                'required' => '0',
+            ))
             ->getForm();
 
-        if($request->getMethod() == 'POST') {
+        if ($request->getMethod() == 'POST') {
+            $form->handleRequest($request);
 
-            $form->bindRequest($request);
-
-            if($form->isValid()) {
-
-
+            if ($form->isValid()) {
                 //validate and clean up allowedVoters
                 $validatedJudges = array();
                 $candidateJudges = array_map('trim', explode(",", $entrySet->getAllowedVoters()));
 
                 $userRepo = $this->getDoctrine()->getRepository('UserBundle:User');
 
-                foreach($candidateJudges as $candidate) {
-                    if($userRepo->findOneBy(array('username' => $candidate)) != null) {
+                foreach ($candidateJudges as $candidate) {
+                    if ($userRepo->findOneBy(array('username' => $candidate)) != null) {
                         $validatedJudges[] = $candidate;
                     }
                 }
@@ -681,7 +746,7 @@ class AdminController extends Controller
                 $entrySet->setEntrySetRegistration($entrySetRegistration);
                 $entrySet->setAllowedVoters(implode(",", $validatedJudges));
 
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($entrySet);
                 $em->flush();
 
@@ -691,8 +756,8 @@ class AdminController extends Controller
         }
 
         return $this->render('IdeaBundle:Admin:entrySet.html.twig', array(
-            'form'           => $form->createView(),
-            'entrySetId'     => $entrySetId,
+            'form' => $form->createView(),
+            'entrySetId' => $entrySetId,
             'registrationId' => $registrationId,
         ));
     }
@@ -702,20 +767,19 @@ class AdminController extends Controller
         $this->enforceUserSecurity();
 
         $entrySet = $this->getEntrySet($entrySetId);
-        $parent   = $this->getParentByEntrySet($entrySet);
+        $parent = $this->getParentByEntrySet($entrySet);
 
         if ($this->canEditEntrySet($entrySet)) {
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->remove($entrySet);
             $em->flush();
 
-            $this->setFlash('success', 'List \''.$entrySet->getName().'\' has been deleted.');
+            $this->setFlash('success', 'List \'' . $entrySet->getName() . '\' has been deleted.');
 
             $url = $this->generateUrl($parent->getLinkableRouteName(), $parent->getLinkableRouteParameters());
             return $this->redirect($url);
-        }
-        else {
+        } else {
             throw new AccessDeniedException;
         }
     }
@@ -724,14 +788,15 @@ class AdminController extends Controller
     // Edit requets will provide id using GET
     // New request will not provide id using GET
     // Save request will have displayName and description parameters using POST
-    public function criteriaAction(Request $request, $groupSlug, $eventId, $id = null) {
+    public function criteriaAction(Request $request, $groupSlug, $eventId, $id = null)
+    {
 
         // test if submission is from a 'cancel' button press
-        if($request->get('cancel') == 'Cancel') {
+        if ($request->get('cancel') == 'Cancel') {
             return $this->redirect($this->generateUrl('idea_admin_criteria_all', array(
-                    'groupSlug' => $groupSlug,
-                    'eventId' => $eventId,
-                )));
+                'groupSlug' => $groupSlug,
+                'eventId' => $eventId,
+            )));
         }
 
         $group = $this->getGroup($groupSlug);
@@ -743,29 +808,28 @@ class AdminController extends Controller
 
         //retrieve criteria id if available
         $vc = null;
-        if(!is_null($id)) {
+        if (!is_null($id)) {
             $vc = $vcRepo->find($id);
         } else {
             $vc = new VoteCriteria();
         }
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'criteria', $vc)
-            ->add('displayName', 'text', array('label' => 'criteria_displayName'))
-            ->add('description', 'textarea', array('label' => 'criteria_description', 'attr' => array('cols' => '60%', 'rows' => '3')))
-            ->add('id', 'hidden')
+        $form = $this->container->get('form.factory')->createNamedBuilder('criteria', FormType::class, $vc)
+            ->add('displayName', TextType::class, array('label' => 'criteria_displayName'))
+            ->add('description', TextareaType::class, array('label' => 'criteria_description', 'attr' => array('cols' => '60%', 'rows' => '3')))
+            ->add('id', HiddenType::class)
             ->getForm();
 
-        if($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
-            if($form->isValid()) {
+        if ($request->getMethod() == 'POST') {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
 
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
-                if($vc->getId() == null) {
+                if ($vc->getId() == null) {
                     $vc->setEvent($event);
                     $em->persist($vc);
-                }
-                else {
+                } else {
                     $existingVc = $vcRepo->find($vc->getId());
                     $existingVc->setDisplayName($vc->getDisplayName());
                     $existingVc->setDescription($vc->getDescription());
@@ -775,32 +839,32 @@ class AdminController extends Controller
                 $em->flush();
 
                 return $this->redirect($this->generateUrl('idea_admin_criteria_all', array(
-                            'groupSlug' => $groupSlug,
-                            'eventId' => $eventId,
-                        )));
+                    'groupSlug' => $groupSlug,
+                    'eventId' => $eventId,
+                )));
             }
         }
 
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Admin:criteriaForm.html.twig', array(
-                'group'     => $group,
-                'event'     => $event,
-                'form'      => $form->createView(),
-                'id'        => $id,
-                'isAdmin'   => $isAdmin,
+            'group' => $group,
+            'event' => $event,
+            'form' => $form->createView(),
+            'id' => $id,
+            'isAdmin' => $isAdmin,
         ));
     }
 
 
-    public function criteriaListAction(Request $request, $groupSlug, $eventId) {
-
+    public function criteriaListAction(Request $request, $groupSlug, $eventId)
+    {
         // test if submission is from a 'new' button press
-        if($request->get('new') == 'New') {
+        if ($request->get('new') == 'New') {
             return $this->redirect($this->generateUrl('idea_admin_criteria', array(
-                    'groupSlug' => $groupSlug,
-                    'eventId' => $eventId,
-                )));
+                'groupSlug' => $groupSlug,
+                'eventId' => $eventId,
+            )));
         }
 
         $group = $this->getGroup($groupSlug);
@@ -814,39 +878,42 @@ class AdminController extends Controller
         $criteriaList = $vcRepo->findByEventId($event->getId());
 
         $choices = array();
-        foreach($criteriaList as $criteria) {
-            $choices[$criteria->getId()] = $criteria->getDisplayName();
+        foreach ($criteriaList as $criteria) {
+            $choices[$criteria->getDisplayName()] = $criteria->getId();
         }
         $formAttributes = array('size' => count($choices) <= 10 ? count($choices) : 10, 'style' => 'width: 50%');
 
-        $form = $this->container->get('form.factory')->createNamedBuilder('form', 'criteria')
-            ->add('displayName', 'choice', array('choices' => $choices,
-                                                 'label' => 'criteria_displayName',
-                                                 'attr' => $formAttributes))
+        $form = $this->container->get('form.factory')->createNamedBuilder('criteria', FormType::class)
+            ->add('displayName', ChoiceType::class, array(
+                'choices' => $choices,
+                'label' => 'criteria_displayName',
+                'attr' => $formAttributes,
+                'choices_as_values' => true,
+            ))
             ->getForm();
 
-        if($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+        if ($request->getMethod() == 'POST') {
+            $form->handleRequest($request);
             $data = $form->getData();
 
             //This should never happen b/c of validation
-            if(!array_key_exists('displayName',$data))
+            if (!array_key_exists('displayName', $data))
                 return;
 
             $selectedId = $data['displayName'];
 
             if ($request->get('edit') == 'Edit') {
                 return $this->redirect($this->generateUrl('idea_admin_criteria_get', array(
-                            'id' => $selectedId,
-                            'groupSlug' => $groupSlug,
-                            'eventId' => $eventId,
-                        )));
+                    'id' => $selectedId,
+                    'groupSlug' => $groupSlug,
+                    'eventId' => $eventId,
+                )));
             }
 
             //by process of elimination this must be a delete operation
             $selectedCriteria = null;
-            foreach($criteriaList as $criteria) {
-                if($criteria->getId() == $selectedId)
+            foreach ($criteriaList as $criteria) {
+                if ($criteria->getId() == $selectedId)
                     $selectedCriteria = $criteria;
             }
 
@@ -856,22 +923,23 @@ class AdminController extends Controller
             $doc->getEntityManager()->flush();
 
             return $this->redirect($this->generateUrl('idea_admin_criteria_all', array(
-                    'groupSlug' => $groupSlug,
-                    'eventId' => $eventId,
-                )));
+                'groupSlug' => $groupSlug,
+                'eventId' => $eventId,
+            )));
         }
 
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         return $this->render('IdeaBundle:Admin:criteriaAll.html.twig', array(
-                'form'      => $form->createView(),
-                'group'     => $group,
-                'event'     => $event,
-                'isAdmin'   => $isAdmin,
-            ));
+            'form' => $form->createView(),
+            'group' => $group,
+            'event' => $event,
+            'isAdmin' => $isAdmin,
+        ));
     }
 
-    public function summaryAction(Request $request, $groupSlug, $eventId) {
+    public function summaryAction(Request $request, $groupSlug, $eventId)
+    {
 
         $group = $this->getGroup($groupSlug);
         $event = $this->getEvent($eventId);
@@ -883,9 +951,9 @@ class AdminController extends Controller
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         $params = array(
-            'group'     => $group,
-            'event'     => $event,
-            'isAdmin'   => $isAdmin,
+            'group' => $group,
+            'event' => $event,
+            'isAdmin' => $isAdmin,
         );
 
 
@@ -895,7 +963,7 @@ class AdminController extends Controller
 
         $vcRepo = $this->getDoctrine()->getRepository('IdeaBundle:VoteCriteria');
         $sortCriteria = $vcRepo->find($critId);
-        
+
         $params['criteriaList'] = $vcRepo->findByEventId($this->getEvent($event->getSlug()));
 
         //retrieve tag filter parameter
@@ -912,7 +980,7 @@ class AdminController extends Controller
         $ideaRepo = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
 
         $ideaList = array();
-        foreach($entrySets as $entrySet){
+        foreach ($entrySets as $entrySet) {
             $ideaList = array_merge($ideaList, $ideaRepo->filter($entrySet, $round, $tag, $this->getCurrentUser()));
         }
 
@@ -924,16 +992,17 @@ class AdminController extends Controller
 
         //caluclate table values if criteria exist
         $voteRepo = $this->getDoctrine()->getRepository('IdeaBundle:Vote');
-        $criteriaCount =  count($params['criteriaList']);
+        $criteriaCount = count($params['criteriaList']);
 
-        if($criteriaCount > 0) {
+        if ($criteriaCount > 0) {
             $params['avgScore'] = $voteRepo->getIdeaCriteriaTable($ideaList, $criteriaCount, $round);
         }
 
         return $this->render('IdeaBundle:Admin:summary.html.twig', $params);
     }
 
-    public function advanceAction($groupSlug, $eventId) {
+    public function advanceAction($groupSlug, $eventId)
+    {
 
         $event = $this->getEvent($eventId);
 
@@ -946,29 +1015,30 @@ class AdminController extends Controller
         //update last round for each selected idea
         $params = $this->getRequest()->request->all();
 
-        if(count($params) > 0 ) {
+        if (count($params) > 0) {
             $ideaEm = $this->getDoctrine()->getRepository('IdeaBundle:Idea');
 
-            foreach($params as $key => $value) {
+            foreach ($params as $key => $value) {
                 $idea = $ideaEm->find($key);
                 $idea->setHighestRound($currentRound);
             }
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->flush();
 
 
-        return  $this->redirect($this->generateUrl('idea_summary', array(
-                'groupSlug' => $groupSlug,
-                'eventId' => $eventId,
-            )));
+        return $this->redirect($this->generateUrl('idea_summary', array(
+            'groupSlug' => $groupSlug,
+            'eventId' => $eventId,
+        )));
     }
 
-    public function imagesAction($groupSlug, $eventId, Request $request) {
+    public function imagesAction($groupSlug, $eventId, Request $request)
+    {
 
         $newImage = new Media();
-        $form = $this->createForm(new MediaType(), $newImage, array('image_label' => 'Image File:'));
+        $form = $this->createForm(MediaType::class, $newImage, array('image_label' => 'Image File:'));
 
         $event = $this->getEvent($eventId);
 
@@ -977,29 +1047,28 @@ class AdminController extends Controller
         $isAdmin = $this->isGranted('ROLE_ADMIN');
 
         $params = array(
-            'group'       => $this->getGroup($groupSlug),
-            'event'       => $event,
+            'group' => $this->getGroup($groupSlug),
+            'event' => $event,
             'breadCrumbs' => $this->getBreadCrumbsString($event, true),
-            'form'        => $form->createView(),
-            'isAdmin'     => $isAdmin,
+            'form' => $form->createView(),
+            'isAdmin' => $isAdmin,
         );
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $image = $form->getData();
 
                 if ($image->getFileObject() == null) {
                     $this->setFlash('error', 'You must select an image file');
-                }
-                else {
+                } else {
                     $mUtil = $this->getMediaUtil();
                     $mUtil->persistRelatedMedia($image);
 
                     $event->getRotatorImages()->add($image);
 
-                    $em = $this->getDoctrine()->getEntityManager();
+                    $em = $this->getDoctrine()->getManager();
                     $em->flush();
                 }
             }
@@ -1008,7 +1077,8 @@ class AdminController extends Controller
         return $this->render('IdeaBundle:Admin:images.html.twig', $params);
     }
 
-    public function approvalsAction($groupSlug, $eventId) {
+    public function approvalsAction($groupSlug, $eventId)
+    {
 
         $event = $this->getEvent($eventId);
 
@@ -1024,42 +1094,43 @@ class AdminController extends Controller
         foreach ($attendees as $attendee) {
             $userRsvpStatus = $rsvpRepo->getUserApprovedStatus($event, $attendee);
 
-            if ($userRsvpStatus == 'pending'){
+            if ($userRsvpStatus == 'pending') {
                 $awaitingApproval[] = $attendee;
             }
 
         }
 
         $params = array(
-            'group'             => $this->getGroup($groupSlug),
-            'event'             => $event,
-            'breadCrumbs'       => $this->getBreadCrumbsString($event, true),
-            'awaitingApproval'  => $awaitingApproval,
-            'isAdmin'           => $isAdmin,
+            'group' => $this->getGroup($groupSlug),
+            'event' => $event,
+            'breadCrumbs' => $this->getBreadCrumbsString($event, true),
+            'awaitingApproval' => $awaitingApproval,
+            'isAdmin' => $isAdmin,
         );
 
         return $this->render('IdeaBundle:Admin:approvals.html.twig', $params);
     }
 
-    public function processApprovalAction($groupSlug, $eventId, $userId, $action) {
+    public function processApprovalAction($groupSlug, $eventId, $userId, $action)
+    {
 
         $event = $this->getEvent($eventId);
 
         $this->validateAuthorization($event);
 
-        $user = $this->getDoctrine()->getRepository('UserBundle:User')->findOneBy(array('id'=>$userId));
+        $user = $this->getDoctrine()->getRepository('UserBundle:User')->findOneBy(array('id' => $userId));
 
         $rsvpRepo = $this->getDoctrine()->getRepository('EventBundle:GroupEventRsvpAction');
         $userRsvpActions = $rsvpRepo->findBy(
-            array('user' => $userId,'event' => $eventId),
+            array('user' => $userId, 'event' => $eventId),
             array('updatedAt' => 'DESC')
         );
         $userRsvpStatus = reset($userRsvpActions);
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
-        if ($userRsvpStatus){
-            if ($action == 'approve'){
+        if ($userRsvpStatus) {
+            if ($action == 'approve') {
 
                 $newRsvp = new GroupEventRsvpAction();
                 $newRsvp->setUser($user);
@@ -1068,13 +1139,12 @@ class AdminController extends Controller
                 $newRsvp->setAttendance(EventRsvpAction::ATTENDING_YES);
                 $em->persist($newRsvp);
                 $em->flush();
-            }
-            else {
+            } else {
                 $this->getGroupEventService()->unregister($event, $user, true);
             }
-            $this->setFlash('success', $user->getName().' has been '.$action.'ed for the event.');
+            $this->setFlash('success', $user->getName() . ' has been ' . $action . 'ed for the event.');
         } else {
-            $this->setFlash('error', $user->getName().' is not attending this event.');
+            $this->setFlash('error', $user->getName() . ' is not attending this event.');
         }
 
         return $this->redirect($this->generateUrl('idea_admin_member_approvals', array(
@@ -1084,7 +1154,8 @@ class AdminController extends Controller
 
     }
 
-    public function removeImageAction($groupSlug, $eventId, $imageId) {
+    public function removeImageAction($groupSlug, $eventId, $imageId)
+    {
 
         $this->validateAuthorization($this->getEvent($eventId));
 
@@ -1094,7 +1165,7 @@ class AdminController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->remove($image);
         $em->flush();
 
@@ -1104,14 +1175,15 @@ class AdminController extends Controller
         )));
     }
 
-    public function feedbackAction() {
+    public function feedbackAction()
+    {
 
         if (!$this->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
 
         $siteId = $this->getCurrentSite()->getId();
-        $siteRegistry = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry')->findOneBy(array('scope'=>'SpoutletBundle:Site','containerId'=>$siteId));
+        $siteRegistry = $this->getDoctrine()->getRepository('IdeaBundle:EntrySetRegistry')->findOneBy(array('scope' => 'SpoutletBundle:Site', 'containerId' => $siteId));
 
         $feedbackLists = $siteRegistry->getEntrySets();
 
@@ -1137,7 +1209,7 @@ class AdminController extends Controller
         });
 
         $recentFeedback = array_slice($feedbackEntries, 0, 6);
-        
+
         return $this->render('IdeaBundle:Admin:feedback.html.twig', array('feedbackLists' => $processedLists, 'recentFeedback' => $recentFeedback));
     }
 
@@ -1146,7 +1218,7 @@ class AdminController extends Controller
 
     public function canEditEvent(Event $event)
     {
-        if ($this->isAdmin() or $this->getCurrentUser() == $event->getUser()){
+        if ($this->isAdmin() or $this->getCurrentUser() == $event->getUser()) {
             return true;
         }
         return false;
@@ -1155,7 +1227,7 @@ class AdminController extends Controller
     public function getEvent($eventId)
     {
         $event = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->find($eventId);
-        
+
         if ($event == null) {
             return false;
         }
@@ -1166,13 +1238,13 @@ class AdminController extends Controller
     {
         $event = $this->getEvent($eventId);
 
-        if (!$event){
+        if (!$event) {
             return false;
         }
 
         $evtSession = $this->getDoctrine()->getRepository('EventBundle:EventSession')->find($sessionId);
 
-        if ($evtSession == null){
+        if ($evtSession == null) {
             return false;
         }
 
@@ -1191,14 +1263,14 @@ class AdminController extends Controller
         $judges = array();
 
         //Check if any judges are being assigned at all
-        if ( array_key_exists('judges',$judgeAssignment)) {
+        if (array_key_exists('judges', $judgeAssignment)) {
 
             $judgeUserNames = $judgeAssignment['judges'];
 
             $userRepo = $doc->getRepository('UserBundle:User');
-            foreach($judgeUserNames as $judgeUsername) {
+            foreach ($judgeUserNames as $judgeUsername) {
                 $judge = $userRepo->findOneBy(array('username' => $judgeUsername));
-                if($judge != null)
+                if ($judge != null)
                     $judges[] = $judge;
             }
 
@@ -1209,7 +1281,7 @@ class AdminController extends Controller
         $em = $doc->getEntityManager();
         $em->flush();
 
-        return  $this->redirect($this->generateUrl('idea_show', array(
+        return $this->redirect($this->generateUrl('idea_show', array(
             'groupSlug' => $groupSlug,
             'eventId' => $eventId,
             'id' => $ideaId,
@@ -1222,7 +1294,7 @@ class AdminController extends Controller
         $entrySetRepo = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet');
         $entrySet = $entrySetRepo->find($entrySetId);
 
-        if (!$entrySet){
+        if (!$entrySet) {
             throw new NotFoundHttpException('Entry Set not found');
         }
 
@@ -1233,18 +1305,18 @@ class AdminController extends Controller
     {
         $parent = $this->getParentByEntrySet($entrySet);
 
-        if ($parent instanceof GroupEvent){
+        if ($parent instanceof GroupEvent) {
             return $this->canEditEvent($parent);
-        }
-        elseif ($parent instanceof Group){
-            return ($this->isAdmin() || $parent->isOwner($this->getCurrentUser()) );
+        } elseif ($parent instanceof Group) {
+            return ($this->isAdmin() || $parent->isOwner($this->getCurrentUser()));
         }
 
         return false;
     }
 
 
-	public function exportIdeasAction($groupSlug, $eventId) {
+    public function exportIdeasAction($groupSlug, $eventId)
+    {
 
         $this->validateAuthorization($this->getEvent($eventId));
 
@@ -1253,12 +1325,13 @@ class AdminController extends Controller
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$eventId.'-ideas.csv"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $eventId . '-ideas.csv"');
         $response->setContent($csvString);
         return $response;
     }
 
-    public function exportUsersAction($groupSlug, $eventId) {
+    public function exportUsersAction($groupSlug, $eventId)
+    {
 
         $this->validateAuthorization($this->getEvent($eventId));
 
@@ -1272,7 +1345,8 @@ class AdminController extends Controller
         return $response;
     }
 
-    public function exportVotesAction($groupSlug, $eventId) {
+    public function exportVotesAction($groupSlug, $eventId)
+    {
 
         $event = $this->getEvent($eventId);
         $this->validateAuthorization($event);
@@ -1282,7 +1356,7 @@ class AdminController extends Controller
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$eventId.'-scores.csv"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $eventId . '-scores.csv"');
         $response->setContent($csvString);
         return $response;
     }
@@ -1295,7 +1369,7 @@ class AdminController extends Controller
             throw new AccessDeniedException;
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sessions = $em->getRepository('EventBundle:EventSession')->findAll();
         $output = '';
 
@@ -1318,7 +1392,7 @@ class AdminController extends Controller
                 $sessionSpeaker->setBiography($speakerBio);
                 $sessionSpeaker->setRole('Speaker');
 
-                $output.='Added '.$sessionSpeaker->getSpeaker()->getName().' to '.$sessionSpeaker->getSession()->getName().'<br/>';
+                $output .= 'Added ' . $sessionSpeaker->getSpeaker()->getName() . ' to ' . $sessionSpeaker->getSession()->getName() . '<br/>';
 
                 $em->persist($sessionSpeaker);
             }
@@ -1328,7 +1402,7 @@ class AdminController extends Controller
             $this->setFlash('success', $output);
             $em->flush();
         }
-        
+
         return $this->redirect($this->generateUrl('default_index'));
     }
 
@@ -1343,11 +1417,11 @@ class AdminController extends Controller
             $event_data = $this->getIdeaService()->getMeetupEvent($muEventId);
             var_dump($event_data);
         } catch (\Exception $e) {
-            echo 'Caught exception: ',  $e->getMessage(), "\n";
+            echo 'Caught exception: ', $e->getMessage(), "\n";
             return new Response();
         }
 
-        if( $event_data == null ) {
+        if ($event_data == null) {
             echo "Response does not contain an event, aborting";
             return new Response();
         }
@@ -1367,11 +1441,11 @@ class AdminController extends Controller
         try {
             $event_data = $this->getIdeaService()->getEventbriteEvent($ebEventId);
         } catch (\Exception $e) {
-            echo 'Caught exception: ',  $e->getMessage(), "\n";
+            echo 'Caught exception: ', $e->getMessage(), "\n";
             return new Response();
         }
 
-        if( $event_data == null ) {
+        if ($event_data == null) {
             echo "Response does not contain an event, aborting";
             return new Response();
         }
@@ -1380,7 +1454,7 @@ class AdminController extends Controller
         $event = new GroupEvent($group);
         $group->addEvent($event);
 
-        $user  = $this->getCurrentUser();
+        $user = $this->getCurrentUser();
         $event->setUser($user);
         $event->setActive(true);
         $event->setApproved(true);
@@ -1388,56 +1462,56 @@ class AdminController extends Controller
         $event->setRegistrationOption(Event::REGISTRATION_DISABLED);
 
         $title = $event_data['title'];
-        if(strlen($title) !== 0) $event->setName($title);
+        if (strlen($title) !== 0) $event->setName($title);
 
         $start_date = $event_data['start_date'];
-        if(strlen($start_date) !== 0) $event->setStartsAt(new \DateTime($start_date));
+        if (strlen($start_date) !== 0) $event->setStartsAt(new \DateTime($start_date));
 
         $end_date = $event_data['end_date'];
-        if(strlen($end_date) !== 0) $event->setEndsAt(new \DateTime($end_date));
+        if (strlen($end_date) !== 0) $event->setEndsAt(new \DateTime($end_date));
 
         $timezone = $event_data['timezone'];
-        if(strlen($timezone) !== 0) $event->setTimezone($timezone);
+        if (strlen($timezone) !== 0) $event->setTimezone($timezone);
 
         $description = $event_data['description'];
-        if(strlen($description) !== 0) $event->setContent($description);
+        if (strlen($description) !== 0) $event->setContent($description);
 
         $tags = $event_data['tags'];
-        if(strlen($tags) !== 0) $event->setEBTags($tags);
+        if (strlen($tags) !== 0) $event->setEBTags($tags);
 
 
         $venue = $event_data['venue'];
 
         $venue_name = $venue['name'];
-        if(strlen($venue_name) !== 0) $event->setLocation($venue_name);
+        if (strlen($venue_name) !== 0) $event->setLocation($venue_name);
 
         $venue_address1 = $venue['address'];
-        if(strlen($venue_address1) !== 0) $event->setAddress1($venue_address1);
+        if (strlen($venue_address1) !== 0) $event->setAddress1($venue_address1);
 
         $venue_address2 = $venue['address_2'];
-        if(strlen($venue_address2) !== 0) $event->setAddress2($venue_address2);
+        if (strlen($venue_address2) !== 0) $event->setAddress2($venue_address2);
 
         $longitude = $venue['longitude'];
-        if(strlen($longitude) !== 0) $event->setLongitude(''.$longitude);
+        if (strlen($longitude) !== 0) $event->setLongitude('' . $longitude);
 
         $latitude = $venue['latitude'];
-        if(strlen($latitude) !== 0) $event->setLatitude(''.$latitude);
+        if (strlen($latitude) !== 0) $event->setLatitude('' . $latitude);
 
         $city = $venue['city'];
-        if(strlen($city) !== 0) $event->setCity($city);
+        if (strlen($city) !== 0) $event->setCity($city);
 
         $state = $venue['region'];
-        if(strlen($state) !== 0) $event->setState($state);
+        if (strlen($state) !== 0) $event->setState($state);
 
         $country = $venue['country'];
-        if(strlen($country) !== 0) $event->setCountry($country);
+        if (strlen($country) !== 0) $event->setCountry($country);
 
         $postal_code = $venue['postal_code'];
-        if(strlen($postal_code) !== 0) $event->setPostalCode($postal_code);
+        if (strlen($postal_code) !== 0) $event->setPostalCode($postal_code);
 
         $this->getGroupEventService()->createEvent($event, false);
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->persist($event);
         $em->flush();
 
@@ -1451,25 +1525,26 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl($event->getLinkableRouteName(), $event->getLinkableRouteParameters()));
     }
 
-    public function fixEventACLsAction(Request $request) {
+    public function fixEventACLsAction(Request $request)
+    {
         $eventEm = $this->getDoctrine()->getRepository('EventBundle:GroupEvent');
         $aclProvider = $this->container->get('security.acl.provider');
 
         $output = "";
         $allEvents = $eventEm->findAll();
         $index = 0;
-        foreach($allEvents as $event) {
+        foreach ($allEvents as $event) {
             $index++;
 
             $objectIdentity = ObjectIdentity::fromDomainObject($event);
-            $securityIdentity = new UserSecurityIdentity($event->getUser()->getUsername(),'Platformd\UserBundle\Entity\User');
+            $securityIdentity = new UserSecurityIdentity($event->getUser()->getUsername(), 'Platformd\UserBundle\Entity\User');
 
             try {
                 $acl = $aclProvider->createAcl($objectIdentity);
-                $output .= $index.'. creating acl for \''.$event->getName().'\': '.$event->getUser()->getUsername().'<br>';
-            } catch(AclAlreadyExistsException $e) {
-                $acl = $aclProvider->findAcl($objectIdentity,array($securityIdentity));
-                $output .= $index.': updating acl for \''.$event->getName().'\': '.$event->getUser()->getUsername().'<br>';
+                $output .= $index . '. creating acl for \'' . $event->getName() . '\': ' . $event->getUser()->getUsername() . '<br>';
+            } catch (AclAlreadyExistsException $e) {
+                $acl = $aclProvider->findAcl($objectIdentity, array($securityIdentity));
+                $output .= $index . ': updating acl for \'' . $event->getName() . '\': ' . $event->getUser()->getUsername() . '<br>';
             }
             $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
             $aclProvider->updateAcl($acl);
@@ -1479,31 +1554,31 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('default_index'));
     }
 
-    public function addEntrySetCreatorsAction(Request $request){
+    public function addEntrySetCreatorsAction(Request $request)
+    {
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $entrySets = $this->getDoctrine()->getRepository('IdeaBundle:EntrySet')->findAll();
 
         $output = '';
 
-        foreach ($entrySets as $entrySet){
+        foreach ($entrySets as $entrySet) {
 
             $parent = $this->getParentByEntrySet($entrySet);
             $parentOwner = null;
 
-            if ($parent instanceof GroupEvent){
+            if ($parent instanceof GroupEvent) {
                 $parentOwner = $parent->getUser();
-            }
-            elseif ($parent instanceof Group){
+            } elseif ($parent instanceof Group) {
                 $parentOwner = $parent->getOwner();
             }
 
-            if ($parentOwner){
+            if ($parentOwner) {
                 $entrySet->setCreator($parentOwner);
-                $output = $output.$entrySet->getName().'\'s creator is now '.$parentOwner->getName().'<br/>';
+                $output = $output . $entrySet->getName() . '\'s creator is now ' . $parentOwner->getName() . '<br/>';
             }
         }
-        if ($output){
+        if ($output) {
             $em->flush();
             $this->setFlash('success', $output);
         }
@@ -1513,7 +1588,7 @@ class AdminController extends Controller
 
     public function addEntrySetRegistrationsToAllEventsAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $groupEvents = $this->getDoctrine()->getRepository('EventBundle:GroupEvent')->findAll();
         $globalEvents = $this->getDoctrine()->getRepository('EventBundle:GlobalEvent')->findAll();
@@ -1526,13 +1601,13 @@ class AdminController extends Controller
             if (!$event->getEntrySetRegistration()) {
                 $esReg = $event->createEntrySetRegistration();
                 $em->persist($esReg);
-                $output .= $event->getName().'<br/>';
+                $output .= $event->getName() . '<br/>';
             }
         }
 
         if ($output) {
             $em->flush();
-            $output = 'Creating EntrySet Registrations for: <br/>'.$output;
+            $output = 'Creating EntrySet Registrations for: <br/>' . $output;
         } else {
             $output = 'No worries, your events are already valid.';
         }
@@ -1543,7 +1618,7 @@ class AdminController extends Controller
 
     public function createDepartmentsForAllExistingSponsorsAction()
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $sponsors = $this->getDoctrine()->getRepository('IdeaBundle:Sponsor')->findAll();
 
         $groupRepo = $this->getDoctrine()->getRepository('GroupBundle:Group');
@@ -1559,10 +1634,10 @@ class AdminController extends Controller
             }
 
             $companyName = $sponsor->getName();
-            $deptName    = $companyName.' Marketing';
+            $deptName = $companyName . ' Marketing';
 
             // Check to see if company already exists
-            $company = $groupRepo->findOneBy(array('name'=>$companyName));
+            $company = $groupRepo->findOneBy(array('name' => $companyName));
 
             // Otherwise create it
             if (!$company) {
@@ -1579,17 +1654,17 @@ class AdminController extends Controller
                 $esReg = $company->createEntrySetRegistration();
                 $em->persist($esReg);
 
-                $output .= ' Creating: '.$companyName.'<br/>';
+                $output .= ' Creating: ' . $companyName . '<br/>';
             }
 
             // Check if department already exists
-            $dept = $groupRepo->findOneBy(array('name'=>($deptName)));
+            $dept = $groupRepo->findOneBy(array('name' => ($deptName)));
 
             // Otherwise create it
             if (!$dept) {
                 $dept = new Group();
                 $dept->setName($deptName);
-                $dept->setDescription($deptName.' Department');
+                $dept->setDescription($deptName . ' Department');
                 $dept->setOwner($sponsor->getCreator());
                 $dept->setGroupAvatar($sponsor->getImage());
                 $dept->setCategory(Group::CAT_DEPARTMENT);
@@ -1602,19 +1677,19 @@ class AdminController extends Controller
                 $esReg = $dept->createEntrySetRegistration();
                 $em->persist($esReg);
 
-                $output .= ' Creating: '.$deptName.'<br/>';
+                $output .= ' Creating: ' . $deptName . '<br/>';
             }
 
             // If the department is not already associated to a sponsor, attach it to this one
             if (!$dept->getSponsor()) {
                 $sponsor->setDepartment($dept);
-                $output .= ' Linking Sponsor to '.$deptName.'<br/>';
+                $output .= ' Linking Sponsor to ' . $deptName . '<br/>';
             }
         }
 
         if ($output) {
             $em->flush();
-            $output = '<strong>Processing Sponsors: </strong><br/><br/>'.$output;
+            $output = '<strong>Processing Sponsors: </strong><br/><br/>' . $output;
         } else {
             $output = 'No worries, your sponsors are already attached to departments.';
         }
@@ -1623,18 +1698,19 @@ class AdminController extends Controller
         return $this->redirect($this->generateUrl('default_index'));
     }
 
-    /** 
+    /**
      * Used to create new communities
-     * Example for creating new site: 
+     * Example for creating new site:
      * http://www.campsite.org/admin/associate_group_to_site/cloudcamp?domain=www.cloudcamp.org&force=1
      */
-    public function associateGroupToSiteAction(Request $request, $groupSlug) {
+    public function associateGroupToSiteAction(Request $request, $groupSlug)
+    {
 
         $force = $request->query->get('force') ?: false;
         $domain = $request->query->get('domain') ?: 'example.campsite.org';
 
         $group = $this->getGroup($groupSlug);
-        if( !$group) {
+        if (!$group) {
             echo $groupSlug . " could not be found.";
             exit;
         }
@@ -1642,15 +1718,15 @@ class AdminController extends Controller
         $doc = $this->getDoctrine();
         $siteEm = $doc->getRepository('SpoutletBundle:Site');
         $site = $siteEm->findOneByFullDomain($domain);
-        if(! $site) {
-            if($force) {
+        if (!$site) {
+            if ($force) {
                 echo 'Creating new domain: ' . $domain . "<br/>";
 
-                $subdomain = explode('.',$domain)[0];
+                $subdomain = explode('.', $domain)[0];
 
                 $site = new Site();
 
-                $site->setName( ucfirst($subdomain) . 'Camp' );
+                $site->setName(ucfirst($subdomain) . 'Camp');
                 $site->setFullDomain($domain);
                 $site->setDefaultLocale("en_campsite");
                 $site->setTheme("ideacontest");
@@ -1680,7 +1756,7 @@ class AdminController extends Controller
         $this->getIdeaService()->associateGroupToSite($group, $site);
         $doc->getEntityManager()->flush();
 
-        if($force) {
+        if ($force) {
             $site->createEntrySetRegistration();
             $doc->getEntityManager()->flush();
         }
@@ -1688,10 +1764,11 @@ class AdminController extends Controller
         return new Response(); //$this->redirect($this->generateUrl('default_index'));
     }
 
-    public function importSvicAction(Request $req) {
+    public function importSvicAction(Request $req)
+    {
         $EVENT_ID = 34;
         $evt = $this->getGroupEventService()->find($EVENT_ID);
-        
+
         //connect to svic db
         $svic_db = $this->connectToSvic();
         $this->importUsers($evt);
@@ -1704,31 +1781,32 @@ class AdminController extends Controller
         return new Response();
     }
 
-    private function importVotes($event) {
+    private function importVotes($event)
+    {
         global $svic_db;
-        
-        $em = $this->getDoctrine()->getEntityManager();
+
+        $em = $this->getDoctrine()->getManager();
         $criteriaList = $em->getRepository('IdeaBundle:VoteCriteria')->findByEventId($event);
-        if(sizeof($criteriaList) < 4){
-            $vc1 = new VoteCriteria(); 
+        if (sizeof($criteriaList) < 4) {
+            $vc1 = new VoteCriteria();
             $vc1->setEvent($event);
             $vc1->setDisplayName('Advantage');
             $vc1->setDescription('ADVANTAGE.     Idea exhibits a clear advantage over other existing products, services or technology currently available in the market. The idea definitely addresses a market need.');
             $em->persist($vc1);
-            
-            $vc2 = new VoteCriteria(); 
+
+            $vc2 = new VoteCriteria();
             $vc2->setEvent($event);
             $vc2->setDisplayName('Benefits');
             $vc2->setDescription('BENEFITS.     The target users of the product, service or technology are clearly defined. The idea has well-articulated benefits. The target users will definitely benefit from this product.');
             $em->persist($vc2);
-            
-            $vc3 = new VoteCriteria(); 
+
+            $vc3 = new VoteCriteria();
             $vc3->setEvent($event);
             $vc3->setDisplayName('Breadth of Impact');
             $vc3->setDescription('BREADTH OF IMPACT.     The potential market is widespread, adaptable to a large number of segments and markets.');
             $em->persist($vc3);
-            
-            $vc4 = new VoteCriteria(); 
+
+            $vc4 = new VoteCriteria();
             $vc4->setEvent($event);
             $vc4->setDisplayName('Doable');
             $vc4->setDescription('DOABLE.     The idea can be executed or implemented as it is.');
@@ -1741,19 +1819,19 @@ class AdminController extends Controller
         $result = mysql_query($sql, $svic_db) or die('Invalid query: ' . mysql_error());
         while ($row = mysql_fetch_assoc($result)) {
             $idea = $em->getRepository('IdeaBundle:Idea')->findOneBy(array('name' => $row['name']));
-            if(!$idea) {
+            if (!$idea) {
                 echo "Can't find idea named " . $row['name'] . "<br/>";
                 continue;
             }
 
             $user = $em->getRepository('UserBundle:User')->findOneBy(array('emailCanonical' => $row['email_canonical']));
-            if(!$user) {
+            if (!$user) {
                 echo "Can't find creator for idea " . $row['name'] . "<br/>";
                 continue;
             }
 
             $criteria = $em->getRepository('IdeaBundle:VoteCriteria')->findOneBy(array('displayName' => $row['displayName']));
-            if(!$user) {
+            if (!$user) {
                 echo "Can't find vote criteria " . $row['displayName'] . "<br/>";
                 continue;
             }
@@ -1768,22 +1846,23 @@ class AdminController extends Controller
         $em->flush();
     }
 
-    private function importFollows() {
+    private function importFollows()
+    {
         global $svic_db;
 
-        $sql =  "SELECT fos_user.email_canonical, idea.name, followmappings.* FROM followmappings, fos_user, idea WHERE fos_user.username = followmappings.user AND idea.id = followmappings.idea";
+        $sql = "SELECT fos_user.email_canonical, idea.name, followmappings.* FROM followmappings, fos_user, idea WHERE fos_user.username = followmappings.user AND idea.id = followmappings.idea";
         $result = mysql_query($sql, $svic_db) or die('Invalid query: ' . mysql_error());
         while ($row = mysql_fetch_assoc($result)) {
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $idea = $em->getRepository('IdeaBundle:Idea')->findOneBy(array('name' => $row['name']));
-            if(!$idea) {
+            if (!$idea) {
                 echo "Can't find idea named " . $row['name'] . "<br/>";
                 continue;
             }
 
             $user = $em->getRepository('UserBundle:User')->findOneBy(array('emailCanonical' => $row['email_canonical']));
-            if(!$user) {
+            if (!$user) {
                 echo "Can't find creator for idea " . $row['name'] . "<br/>";
                 continue;
             }
@@ -1795,33 +1874,34 @@ class AdminController extends Controller
 
         try {
             $em->flush();
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
 
         }
     }
 
-    private function importComments($event) {
+    private function importComments($event)
+    {
         global $svic_db;
 
         $list = null;
-        if(!$list = $event->getEntrySetRegistration()->getEntrySets()[0]) {
+        if (!$list = $event->getEntrySetRegistration()->getEntrySets()[0]) {
             echo "No Idea list found.";
             return;
         }
 
-        $sql =  "SELECT fos_user.email_canonical, idea.name, comments.* FROM comments, fos_user, idea WHERE comments.user_id = fos_user.id AND comments.idea_id = idea.id";
+        $sql = "SELECT fos_user.email_canonical, idea.name, comments.* FROM comments, fos_user, idea WHERE comments.user_id = fos_user.id AND comments.idea_id = idea.id";
         $result = mysql_query($sql, $svic_db) or die('Invalid query: ' . mysql_error());
         while ($row = mysql_fetch_assoc($result)) {
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $idea = $em->getRepository('IdeaBundle:Idea')->findOneBy(array('name' => $row['name']));
-            if(!$idea) {
+            if (!$idea) {
                 echo "Can't find idea named " . $row['name'] . "<br/>";
                 continue;
             }
 
             $user = $em->getRepository('UserBundle:User')->findOneBy(array('emailCanonical' => $row['email_canonical']));
-            if(!$user) {
+            if (!$user) {
                 echo "Can't find creator for idea " . $row['name'] . "<br/>";
                 continue;
             }
@@ -1835,21 +1915,22 @@ class AdminController extends Controller
         $em->flush();
     }
 
-    private function importIdeas($event) {
+    private function importIdeas($event)
+    {
         global $svic_db;
 
         $list = null;
-        if(!$list = $event->getEntrySetRegistration()->getEntrySets()[0]) {
+        if (!$list = $event->getEntrySetRegistration()->getEntrySets()[0]) {
             echo "No Idea list found.";
             return;
         }
-        
+
         $result = mysql_query("SELECT idea.*, fos_user.email_canonical FROM idea, fos_user WHERE idea.creator_id = fos_user.id", $svic_db) or die('Invalid query: ' . mysql_error());
         while ($row = mysql_fetch_assoc($result)) {
 
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $creator = $em->getRepository('UserBundle:User')->findOneBy(array('emailCanonical' => $row['email_canonical']));
-            if(!$creator) {
+            if (!$creator) {
                 echo "Can't find user for idea " . $row[id] . "<br/>";
                 continue;
             }
@@ -1873,13 +1954,12 @@ class AdminController extends Controller
             if (array_key_exists('forCourse', $row)) {
                 $idea->setForCourse(true);
                 $idea->setProfessors($row['professors']);
-            }
-            else{
+            } else {
                 $idea->setForCourse(false);
             }
 
             if (array_key_exists('amount', $row)) {
-                if (!empty($row['amount'])){
+                if (!empty($row['amount'])) {
                     $idea->setAmount($row['amount']);
                 }
             }
@@ -1887,7 +1967,7 @@ class AdminController extends Controller
             //no tag import
             //$idea->addTags($this->getIdeaService()->processTags($params['tags']));
 
-            if (isset($params['isPrivate'])){
+            if (isset($params['isPrivate'])) {
                 $idea->setIsPrivate(true);
             }
 
@@ -1899,23 +1979,24 @@ class AdminController extends Controller
         $em->flush();
     }
 
-    private function importUsers($event) {
+    private function importUsers($event)
+    {
         global $svic_db;
-        
+
         $result = mysql_query("SELECT * FROM fos_user", $svic_db) or die('Invalid query: ' . mysql_error());
 
         while ($row = mysql_fetch_assoc($result)) {
             $email = $row['email_canonical'];
 
             $toUser = $this->getUserManager()->findUserBy(array('emailCanonical' => $email));
-            if($toUser) {
+            if ($toUser) {
                 //echo ": '" . $email . "' already exists with id:" . $toUser->getId();
                 continue;
-            } 
-            
+            }
+
             //$password = mt_rand(100000, 999999);
             echo "Creating user: '" . $row['name'] . "<br/>";
-                
+
             $um = $this->getUserManager();
             $toUser = $um->createUser();
 
@@ -1930,7 +2011,7 @@ class AdminController extends Controller
             $toUser->setCountry($row['country']);
             $toUser->setName($row['name']);
             $toUser->setIpAddress($row['ipAddress']);
-            
+
             // $toUser->setDegree($row['major']);  // Need to add this one
 
             $um->updateUser($toUser);
@@ -1944,21 +2025,23 @@ class AdminController extends Controller
         mysql_free_result($result);
     }
 
-    private function connectToSvic() {
+    private function connectToSvic()
+    {
         global $svic_db;
         if ($svic_db) {
             return;
         }
 
-        $svic_db = mysql_connect('localhost', 'root', 'sqladmin', TRUE) or die('Could not connect to server.' );
+        $svic_db = mysql_connect('localhost', 'root', 'sqladmin', TRUE) or die('Could not connect to server.');
         mysql_select_db("svic", $svic_db) or die('Could not select database.');
 
         return $svic_db;
     }
 
-    private function disconnectFromSvic() {
+    private function disconnectFromSvic()
+    {
         global $svic_db;
-        if( $svic_db != false )
+        if ($svic_db != false)
             mysql_close($svic_db);
         $svic_db = false;
     }

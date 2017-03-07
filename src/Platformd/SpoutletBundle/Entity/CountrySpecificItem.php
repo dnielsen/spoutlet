@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Platformd\SpoutletBundle\Entity\CountrySpecificItem
  *
- * @ORM\Table(name="pd_country_specific_item", indexes={@ORM\index(name="name_site_country_idx", columns={"name", "site_id", "country_code"})})
+ * @ORM\Table(name="pd_country_specific_item", indexes={@ORM\Index(name="name_site_country_idx", columns={"name", "site_id", "country_code"})})
  * @ORM\Entity()
  */
 class CountrySpecificItem

@@ -8,7 +8,7 @@ use DateTime;
 
 /**
  * @ORM\Entity(repositoryClass="Platformd\UserBundle\Entity\SuspendedIpAddressRepository")
- * @ORM\Table(name="suspended_ip_address",indexes={@ORM\index(name="ip_date_idx", columns={"ip_address", "suspended_until"})})
+ * @ORM\Table(name="suspended_ip_address",indexes={@ORM\Index(name="ip_date_idx", columns={"ip_address", "suspended_until"})})
  */
 class SuspendedIpAddress
 {

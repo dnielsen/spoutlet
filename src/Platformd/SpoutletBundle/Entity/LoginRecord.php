@@ -22,7 +22,7 @@ class LoginRecord
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", inversedBy="loginRecords")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $user;

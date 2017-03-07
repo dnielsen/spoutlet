@@ -3,9 +3,11 @@
 namespace Platformd\UserBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Form\Form;
 use DateTime;
 
 use Platformd\SpoutletBundle\Entity\Country;
@@ -24,22 +26,23 @@ class MetricController extends Controller
 
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
 
-            $em     = $this->getDoctrine()->getEntityManager();
+            $em     = $this->getDoctrine()->getManager();
             $site   = $em->getRepository('SpoutletBundle:Site')->find(2);
 
             // create a select field for range
             $select = $this->get('form.factory')
-                ->createNamedBuilder('choice', 'results_range', 7, array(
+                ->createNamedBuilder('results_range', ChoiceType::class, 7, array(
                  'choices' => array(
-                            '7'  => 'Last 7 days',
-                            '30' => 'Last 30 days',
-                            ''   => 'All time',
-            ),
+                            'Last 7 days' => '7',
+                            'Last 30 days' => '30',
+                            'All time' => '',
+                    ),
+                    'choices_as_values' => true,
             ))->getForm();
 
             // bind only if we have that query parameter
             if (null !== $request->query->get($select->getName())) {
-                $select->bindRequest($request);
+                $select->handleRequest($request);
             }
 
             // used for MySQL query
@@ -56,34 +59,33 @@ class MetricController extends Controller
             ));
 
         } else {
-
             $form = $this->createFormBuilder()
-                ->add('country', 'entity', array(
+                ->add('country', EntityType::class, array(
                     'class'         => 'SpoutletBundle:Country',
-                    'empty_value'   => 'All',
-                    'property'      => 'name',
+                    'placeholder'   => 'All',
+                    'choice_label'      => 'name',
                 ))
-                ->add('from_date_country', 'datetime', array(
+                ->add('from_date_country', DateTimeType::class, array(
                     'widget'    => 'single_text',
                     'attr'      => array(
                         'class' => 'datetime-picker'
                 )))
-                ->add('to_date_country', 'datetime', array(
+                ->add('to_date_country', DateTimeType::class, array(
                     'widget'    => 'single_text',
                     'attr'      => array(
                         'class' => 'datetime-picker'
                 )))
-                ->add('region', 'entity', array(
+                ->add('region', EntityType::class, array(
                     'class'         => 'SpoutletBundle:Region',
-                    'empty_value'   => 'All',
-                    'property'      => 'name',
+                    'placeholder'   => 'All',
+                    'choice_label'      => 'name',
                 ))
-                ->add('from_date_region', 'datetime', array(
+                ->add('from_date_region', DateTimeType::class, array(
                     'widget'    => 'single_text',
                     'attr'      => array(
                         'class' => 'datetime-picker'
                 )))
-                ->add('to_date_region', 'datetime', array(
+                ->add('to_date_region', DateTimeType::class, array(
                     'widget'    => 'single_text',
                     'attr'      => array(
                         'class' => 'datetime-picker'
@@ -93,7 +95,7 @@ class MetricController extends Controller
 
             if ($request->getMethod() == 'POST') {
 
-                $form->bindRequest($request);
+                $form->handleRequest($request);
                 $formData = $form->getData();
                 $session = $request->getSession();
 
@@ -208,12 +210,11 @@ class MetricController extends Controller
         $this->getBreadcrumbs()->addChild('Registration Activities');
 
         $metricManager = $this->container->get('platformd.metric_manager');
-        $form          = $this->createForm(new RegistrationActivitiesMetricsType(), array());
+        $form          = $this->createForm(RegistrationActivitiesMetricsType::class, []);
         $data          = array();
 
         if ($request->getMethod() == 'POST') {
-
-            $form->bindRequest($request);
+            $form->handleRequest($request);
             $settings = $form->getData();
 
             $currentSettings = json_decode($settings['currentSettings'], true) ?: array();
@@ -275,7 +276,7 @@ class MetricController extends Controller
             return new Response();
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $repo = $em->getRepository($repoClass);
 
@@ -309,7 +310,7 @@ class MetricController extends Controller
             return 'Unknown';
         }
 
-        $repo = $this->getDoctrine()->getEntityManager()->getRepository($repoClass);
+        $repo = $this->getDoctrine()->getManager()->getRepository($repoClass);
 
         if (!$repo) {
             return 'Unknown';

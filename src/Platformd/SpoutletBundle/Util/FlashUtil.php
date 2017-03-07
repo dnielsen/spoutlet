@@ -2,27 +2,27 @@
 
 namespace Platformd\SpoutletBundle\Util;
 
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Platformd\UserBundle\Entity\User;
 
 class FlashUtil
 {
     private $cacheUtil;
     private $varnishUtil;
-    private $securityContext;
+    private $tokenStorage;
     private $router;
 
-    public function __construct($cacheUtil, SecurityContextInterface $securityContext, $varnishUtil, $router)
+    public function __construct($cacheUtil, TokenStorageInterface $tokenStorage, $varnishUtil, $router)
     {
         $this->cacheUtil       = $cacheUtil;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->varnishUtil     = $varnishUtil;
         $this->router          = $router;
     }
 
     public function setFlash($key, $message)
     {
-        $user = $this->securityContext->getToken() ? $this->securityContext->getToken()->getUser() : null;
+        $user = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
 
         if (!$user instanceof User) {
             return;
@@ -47,7 +47,7 @@ class FlashUtil
 
     public function getFlash($andDelete = true)
     {
-        $user = $this->securityContext->getToken() ? $this->securityContext->getToken()->getUser() : null;
+        $user = $this->tokenStorage->getToken() ? $this->tokenStorage->getToken()->getUser() : null;
 
         if (!$user instanceof User) {
             return;

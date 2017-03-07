@@ -4,34 +4,32 @@ namespace Platformd\GameBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Platformd\MediaBundle\Entity\Media;
-use Gedmo\Sluggable\Util\Urlizer;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\ExecutionContext;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Platformd\GameBundle\Entity\Game
  *
  * @ORM\Table(name="pd_game")
  * @ORM\Entity(repositoryClass="Platformd\GameBundle\Entity\GameRepository")
- * @Assert\Callback(methods={"validateGameCategory"})
  */
 class Game
 {
     const GAME_CATEGORY_LABEL_PREFIX    = 'platformd.admin.games.category.';
     const GAME_SUBCATEGORY_LABEL_PREFIX = 'platformd.admin.games.subcategory.';
 
-    static private $validCategories = array(
+    private static $validCategories = [
         'action',
         'rpg',
         'strategy',
         'other',
-    );
+    ];
 
-    static private $validSubcategories = array(
+    private static $validSubcategories = [
         'free-to-play',
         'mmo',
-    );
+    ];
 
     /**
      * @var integer $id
@@ -273,10 +271,11 @@ class Game
     /**
      * Category/Genre is a required field so ensure that it is present and valid in order to add game
      *
-     *
      * @param \Symfony\Component\Validator\ExecutionContext $executionContext
+     *
+     * @Assert\Callback
      */
-    public function validateGameCategory(ExecutionContext $executionContext)
+    public function validateGameCategory(ExecutionContextInterface $executionContext)
     {
         // error if invalid or no category is specified
 
@@ -285,12 +284,9 @@ class Game
         }
 
         $propertyPath = $executionContext->getPropertyPath() . '.category';
-        $executionContext->setPropertyPath($propertyPath);
 
-        $executionContext->addViolation(
-            "Please select a valid category for this game",
-            array(),
-            "category"
-        );
+        $executionContext->buildViolation("Please select a valid category for this game")
+            ->atPath($propertyPath)
+            ->addViolation();
     }
 }

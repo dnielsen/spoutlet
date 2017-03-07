@@ -2,12 +2,9 @@
 
 namespace Platformd\SpoutletBundle\Util;
 
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Platformd\SpoutletBundle\Exception\QueueFailureException;
 use Platformd\SpoutletBundle\QueueMessage\SqsMessageBase;
 use Platformd\SpoutletBundle\Util\Interfaces\QueueUtilInterface;
-use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
-use Platformd\SpoutletBundle\RabbitMQ\RabbitMq;
 
 class QueueUtil implements QueueUtilInterface
 {
@@ -17,6 +14,7 @@ class QueueUtil implements QueueUtilInterface
     private $sqsClient;
     private $queueUrlPrefix;
     private $hpcloudObj;
+
     public function __construct($sqsClient, $logger, $queueUrlPrefix, $mockWorkingFile, $hpcloud_accesskey='', $hpcloud_secreatkey='', $hpcloud_tenantid='', $hpcloud_messaging_url='', $object_storage='', $queue_service='', $rabbitmq_host = '',$rabbitmq_port='',$rabbitmq_username='',$rabbitmq_password='')
     {
         $this->sqsClient      = $sqsClient;

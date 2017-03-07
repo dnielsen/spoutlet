@@ -7,14 +7,14 @@ use Platformd\GiveawayBundle\Form\Type\GiveawayType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 use Platformd\SpoutletBundle\Controller\Controller;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Form;
-use DateTime;
 use Platformd\GiveawayBundle\Model\Exception\MissingKeyException;
 use Symfony\Component\Form\FormError;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Platformd\GiveawayBundle\Entity\MachineCodeEntry;
-use Symfony\Component\Form\FormBuilder;
 use Doctrine\ORM\EntityRepository;
 
 class GiveawayAdminController extends Controller
@@ -42,7 +42,7 @@ class GiveawayAdminController extends Controller
         $this->addGiveawayBreadcrumb();
         $this->addSiteBreadcrumbs($site);
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
@@ -50,7 +50,7 @@ class GiveawayAdminController extends Controller
 
         return $this->render('GiveawayBundle:GiveawayAdmin:list.html.twig', array(
             'giveaways' => $giveaways,
-            'site'     => $site,
+            'site' => $site,
         ));
     }
 
@@ -59,22 +59,21 @@ class GiveawayAdminController extends Controller
         $this->addGiveawayBreadcrumb()->addChild('New');
 
         $tagManager = $this->getTagManager();
-        $giveaway   = new Giveaway();
+        $giveaway = new Giveaway();
 
         // guarantee we have at least 5 open giveaway boxes
         $this->setupEmptyRedemptionInstructions($giveaway);
 
         $form = $this->createForm(new GiveawayType($giveaway, $tagManager), $giveaway);
 
-        if($request->getMethod() == 'POST')
-        {
-            $form->bindRequest($request);
+        if ($request->getMethod() === 'POST') {
+            $form->handleRequest($request);
 
-            if($form->isValid()) {
+            if ($form->isValid()) {
                 $this->saveGiveaway($form);
 
                 // redirect to the "new pool" page
-                return $this->redirect($this->generateUrl('admin_giveaway_pool_new', array('giveaway' => $giveaway->getId())));
+                return $this->redirectToRoute('admin_giveaway_pool_new', array('giveaway' => $giveaway->getId()));
             }
         }
 
@@ -89,6 +88,7 @@ class GiveawayAdminController extends Controller
      * Export CSV file of pending machine code entries for this giveaway
      *
      * @param int $id
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function exportAction($id)
@@ -96,7 +96,7 @@ class GiveawayAdminController extends Controller
         /** @var $giveaway \Platformd\GiveawayBundle\Entity\Giveaway */
         $giveaway = $this->getGiveawayRepo()->find($id);
         if (!$giveaway) {
-            throw $this->createNotFoundException('No giveaway found for id '.$id);
+            throw $this->createNotFoundException('No giveaway found for id ' . $id);
         }
 
         $machineCodes = $this->getMachineCodeRepository()->findPendingForGiveaway($giveaway);
@@ -110,7 +110,7 @@ class GiveawayAdminController extends Controller
         $giveaway = $this->getGiveawayRepo()->find($id);
 
         if (!$giveaway) {
-            throw $this->createNotFoundException('No giveaway found for id '.$id);
+            throw $this->createNotFoundException('No giveaway found for id ' . $id);
         }
 
         $machineCodes = $this->getMachineCodeRepository()->findApprovedAndDeniedForGiveaway($giveaway);
@@ -124,33 +124,33 @@ class GiveawayAdminController extends Controller
         $factory = new CsvResponseFactory();
 
         $factory->addRow(array(
-                'First Name',
-                'Last Name',
-                'Email',
-                'Submitted Date',
-                'Machine Code',
-                'Approval/Denied Action',
-                'Approval/Denied Date',
-                'Notification Email Sent'
+            'First Name',
+            'Last Name',
+            'Email',
+            'Submitted Date',
+            'Machine Code',
+            'Approval/Denied Action',
+            'Approval/Denied Date',
+            'Notification Email Sent'
         ));
 
         foreach ($machineCodes as $entry) {
 
-            $status                         = $entry->getStatus();
-            $statusDate                     = $entry->getStatus() == MachineCodeEntry::STATUS_APPROVED ? $entry->getApprovedAt() : $entry->getDeniedAt();
-            $statusDateFormatted            = $statusDate ? $statusDate->format('Y-m-d H:i:s') : "-";
-            $notificationDate               = $entry->getNotificationEmailSentAt();
-            $notificationStatusFormatted    = $notificationDate ? "yes" : "no";
+            $status = $entry->getStatus();
+            $statusDate = $entry->getStatus() == MachineCodeEntry::STATUS_APPROVED ? $entry->getApprovedAt() : $entry->getDeniedAt();
+            $statusDateFormatted = $statusDate ? $statusDate->format('Y-m-d H:i:s') : "-";
+            $notificationDate = $entry->getNotificationEmailSentAt();
+            $notificationStatusFormatted = $notificationDate ? "yes" : "no";
 
             $factory->addRow(array(
-                    $entry->getUser()->getFirstname(),
-                    $entry->getUser()->getLastname(),
-                    $entry->getUser()->getEmail(),
-                    $entry->getCreated()->format('Y-m-d H:i:s'),
-                    $entry->getMachineCode(),
-                    $status,
-                    $statusDateFormatted,
-                    $notificationStatusFormatted
+                $entry->getUser()->getFirstname(),
+                $entry->getUser()->getLastname(),
+                $entry->getUser()->getEmail(),
+                $entry->getCreated()->format('Y-m-d H:i:s'),
+                $entry->getMachineCode(),
+                $status,
+                $statusDateFormatted,
+                $notificationStatusFormatted
             ));
         }
 
@@ -165,20 +165,20 @@ class GiveawayAdminController extends Controller
         $factory = new CsvResponseFactory();
 
         $factory->addRow(array(
-                'First Name',
-                'Last Name',
-                'Email',
-                'Submitted Date',
-                'Machine Code',
+            'First Name',
+            'Last Name',
+            'Email',
+            'Submitted Date',
+            'Machine Code',
         ));
 
         foreach ($machineCodes as $entry) {
             $factory->addRow(array(
-                    $entry->getUser()->getFirstname(),
-                    $entry->getUser()->getLastname(),
-                    $entry->getUser()->getEmail(),
-                    $entry->getCreated()->format('Y-m-d H:i:s'),
-                    $entry->getMachineCode(),
+                $entry->getUser()->getFirstname(),
+                $entry->getUser()->getLastname(),
+                $entry->getUser()->getEmail(),
+                $entry->getCreated()->format('Y-m-d H:i:s'),
+                $entry->getMachineCode(),
             ));
         }
 
@@ -191,7 +191,7 @@ class GiveawayAdminController extends Controller
     {
         $this->addGiveawayBreadcrumb()->addChild('Edit');
         $tagManager = $this->getTagManager();
-        $giveaway   = $this->getGiveawayRepo()->findOneById($id);
+        $giveaway = $this->getGiveawayRepo()->findOneById($id);
 
         if (!$giveaway) {
             throw $this->createNotFoundException('No giveaway for that id');
@@ -199,7 +199,7 @@ class GiveawayAdminController extends Controller
 
         $tagManager->loadTagging($giveaway);
 
-        $test   = $giveaway->getTestOnly();
+        $test = $giveaway->getTestOnly();
         if ($test === null) {
             $giveaway->setTestOnly(0);
         }
@@ -208,12 +208,10 @@ class GiveawayAdminController extends Controller
 
         $form = $this->createForm(new GiveawayType($giveaway, $tagManager), $giveaway);
 
-        if($request->getMethod() == 'POST')
-        {
-            $form->bindRequest($request);
+        if ($request->getMethod() == 'POST') {
+            $form->handleRequest($request);
 
-            if($form->isValid())
-            {
+            if ($form->isValid()) {
                 $this->saveGiveaway($form);
                 return $this->redirect($this->generateUrl('admin_giveaway_edit', array('id' => $giveaway->getId())));
             }
@@ -231,6 +229,7 @@ class GiveawayAdminController extends Controller
      * @Template()
      *
      * @param $id
+     *
      * @return array
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
@@ -244,13 +243,12 @@ class GiveawayAdminController extends Controller
         }
 
         $form = $this->createFormBuilder()
-            ->add('emails', 'textarea', array('attr' => array('class' => 'input-xlarge')))
-            ->getForm()
-        ;
+            ->add('emails', TextareaType::class, array('attr' => array('class' => 'input-xlarge')))
+            ->getForm();
 
         $successEmails = array();
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $data = $form->getData();
@@ -273,9 +271,9 @@ class GiveawayAdminController extends Controller
                     }
 
                     // pop up the first one, ideally there's only one
-                    $machineCode    = $machineCodes[0];
-                    $ipAddress      = $machineCode->getIpAddress();
-                    $country        = $this->getIpLookupUtil()->getCountryCode($ipAddress);
+                    $machineCode = $machineCodes[0];
+                    $ipAddress = $machineCode->getIpAddress();
+                    $country = $this->getIpLookupUtil()->getCountryCode($ipAddress);
 
                     try {
                         $this->getGiveawayManager()->approveMachineCode($machineCode, $this->getCurrentSite(), $country);
@@ -302,7 +300,7 @@ class GiveawayAdminController extends Controller
 
         return array(
             'giveaway' => $giveaway,
-            'form'     => $form->createView(),
+            'form' => $form->createView(),
             'successEmails' => $successEmails,
         );
     }
@@ -313,6 +311,7 @@ class GiveawayAdminController extends Controller
      * @Template()
      *
      * @param $id
+     *
      * @return array
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
@@ -326,13 +325,12 @@ class GiveawayAdminController extends Controller
         }
 
         $form = $this->createFormBuilder()
-            ->add('emails', 'textarea', array('attr' => array('class' => 'input-xlarge')))
-            ->getForm()
-        ;
+            ->add('emails', TextareaType::class, array('attr' => array('class' => 'input-xlarge')))
+            ->getForm();
 
         $successEmails = array();
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $data = $form->getData();
@@ -371,7 +369,7 @@ class GiveawayAdminController extends Controller
 
         return array(
             'giveaway' => $giveaway,
-            'form'     => $form->createView(),
+            'form' => $form->createView(),
             'successEmails' => $successEmails,
         );
     }
@@ -389,15 +387,15 @@ class GiveawayAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Giveaways');
 
-        $em     = $this->getDoctrine()->getEntityManager();
-        $site   = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : null;
+        $em = $this->getDoctrine()->getManager();
+        $site = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : null;
 
         $filterForm = $metricManager->createFilterFormBuilder($this->get('form.factory'))
-            ->add('giveaway', 'entity', array(
+            ->add('giveaway', EntityType::class, array(
                 'class' => 'GiveawayBundle:Giveaway',
-                'property' => 'name',
-                'empty_value' => 'All Giveaways',
-                'query_builder' => function(EntityRepository $er) use ($site) {
+                'choice_label' => 'name',
+                'placeholder' => 'All Giveaways',
+                'query_builder' => function (EntityRepository $er) use ($site) {
                     $qb = $er->createQueryBuilder('g')
                         ->orderBy('g.name', 'ASC');
 
@@ -410,37 +408,36 @@ class GiveawayAdminController extends Controller
                     return $qb;
                 },
             ))
-            ->getForm()
-        ;
+            ->getForm();
 
-         // default filtering stuff
-        $from   = null;
-        $to     = null;
-        $giveaway   = null;
+        // default filtering stuff
+        $from = null;
+        $to = null;
+        $giveaway = null;
 
         $requestData = $request->query->get($filterForm->getName());
         if (!empty($requestData)) {
-            $filterForm->bindRequest($request);
+            $filterForm->handleRequest($request);
             if ($filterForm->isValid()) {
-                $data   = $filterForm->getData();
+                $data = $filterForm->getData();
 
-                $from   = $data['startDate'] ? : null;
-                $to     = $data['endDate'] ? : null;
-                $giveaway   = $data['giveaway'] ? : null;
+                $from = $data['startDate'] ?: null;
+                $to = $data['endDate'] ?: null;
+                $giveaway = $data['giveaway'] ?: null;
             }
         }
 
         if ($giveaway == null) {
-            $giveaways  = $this->getGiveawayRepo()->findAllOrderedByNewest($site);
+            $giveaways = $this->getGiveawayRepo()->findAllOrderedByNewest($site);
         } else {
-            $giveaways  = $giveaway ? array($giveaway) : $this->getGiveawayRepo()->findAllOrderedByNewest($site);
+            $giveaways = $giveaway ? array($giveaway) : $this->getGiveawayRepo()->findAllOrderedByNewest($site);
         }
 
         $giveawayMetrics = array();
 
         $giveawayData = $metricManager->getGiveawayRegionData($from, $to);
 
-        foreach($giveaways as $giveaway) {
+        foreach ($giveaways as $giveaway) {
             $giveawayMetrics[$giveaway->getId()] = $metricManager->createGiveawaysReport($giveaway, $from, $to);
         }
 
@@ -450,8 +447,8 @@ class GiveawayAdminController extends Controller
 
         return array(
             'metrics' => $giveawayMetrics,
-            'sites'   => $metricManager->getRegions(),
-            'form'    => $filterForm->createView()
+            'sites' => $metricManager->getRegions(),
+            'form' => $filterForm->createView()
         );
     }
 
@@ -478,7 +475,7 @@ class GiveawayAdminController extends Controller
     {
         // save to db
         $giveaway = $giveawayForm->getData();
-        $startsAt = $giveaway->getCreated() === NULL ? new DateTime : $giveaway->getCreated();
+        $startsAt = $giveaway->getCreated() === NULL ? new \DateTime() : $giveaway->getCreated();
         $giveaway->setStartsAt($startsAt);
 
         if ($giveawayForm['removeBannerImage'] && $removeBannerImage = $giveawayForm['removeBannerImage']->getData()) {
@@ -489,8 +486,8 @@ class GiveawayAdminController extends Controller
             $giveaway->setBackgroundImagePath(null);
         }
 
-        $ruleset    = $giveaway->getRuleset();
-        $rules      = $ruleset->getRules();
+        $ruleset = $giveaway->getRuleset();
+        $rules = $ruleset->getRules();
 
         $newRulesArray = array();
 
@@ -519,17 +516,17 @@ class GiveawayAdminController extends Controller
         $giveaway->getRuleset()->setDefaultAllow($defaultAllow);
 
         $groupId = $giveawayForm['group']->getData();
-        if($groupId) {
+        if ($groupId) {
             $group = $this->getEntityManager()->getRepository('GroupBundle:Group')->find($groupId);
 
-            if($group) {
+            if ($group) {
                 $giveaway->setGroup($group);
             }
         }
 
         // do the tag stuff
         $tagManager = $this->getTagManager();
-        $tags       = $tagManager->loadOrCreateTags($tagManager->splitTagNames($giveawayForm['tags']->getData()));
+        $tags = $tagManager->loadOrCreateTags($tagManager->splitTagNames($giveawayForm['tags']->getData()));
 
         $isEdit = $giveaway->getId();
 

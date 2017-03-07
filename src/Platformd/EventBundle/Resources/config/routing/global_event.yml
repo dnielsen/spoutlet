@@ -1,91 +1,91 @@
 global_events_index:
-    pattern: /events
+    path: /events
     defaults: { _controller: EventBundle:GlobalEvent:index }
 
 _user_event_list:
-    pattern: /esi/USER_SPECIFIC/userEventList
+    path: /esi/USER_SPECIFIC/userEventList
     defaults: { _controller: EventBundle:GlobalEvent:_userEventList }
 
 _global_event_user_info:
-    pattern: /esi/USER_SPECIFIC/_globalEventUserInfo/{id}
+    path: /esi/USER_SPECIFIC/_globalEventUserInfo/{id}
     defaults: { _controller: EventBundle:GlobalEvent:_globalEventUserInfo }
 
 global_event_contact:
-    pattern: /events/contact/{id}
+    path: /events/contact/{id}
     defaults: { _controller:"EventBundle:GlobalEvent:contact", site: ~ }
 
 global_event_attendees:
-    pattern: /events/attendees/{id}
+    path: /events/attendees/{id}
     defaults: { _controller:"EventBundle:GlobalEvent:attendees", site: ~ }
 
 global_event_email_preview:
-    pattern: /events/contact-preview/{slug}
+    path: /events/contact-preview/{slug}
     defaults: { _controller:"EventBundle:GlobalEvent:emailPreview", site: ~ }
     requirements:
         _method: POST
 
 global_event_rsvp:
-    pattern: /events/ajax/rsvp
+    path: /events/ajax/rsvp
     defaults: { _controller:"EventBundle:GlobalEvent:rsvpAjax", site: ~ }
     requirements:
         _format: json
         _method: POST
 
 global_event_disable:
-    pattern: /events/ajax/disable
+    path: /events/ajax/disable
     defaults: { _controller:"EventBundle:GlobalEvent:disableAjax", site: ~ }
     requirements:
         _format: json
         _method: POST
 
 global_event_remove_attendee:
-    pattern: /events/{id}/remove/{userId}
+    path: /events/{id}/remove/{userId}
     defaults: { _controller: EventBundle:GlobalEvent:removeAttendee }
 
 global_event_view:
-    pattern: /public/{id}
+    path: /public/{id}
     defaults: { _controller: EventBundle:GlobalEvent:view }
 
 admin_events_index:
-    pattern: /admin/events
+    path: /admin/events
     defaults: { _controller: EventBundle:GlobalEventAdmin:index }
 
 admin_events_new:
-    pattern: /admin/events/new
+    path: /admin/events/new
     defaults: { _controller: EventBundle:GlobalEventAdmin:newEvent }
 
 admin_events_list:
-    pattern: /admin/events/list/{site}
+    path: /admin/events/list/{site}
     defaults: { _controller: EventBundle:GlobalEventAdmin:list }
 
 admin_events_new_import:
-    pattern: /admin/events/new/import/{id}
+    path: /admin/events/new/import/{id}
     defaults: { _controller: EventBundle:GlobalEventAdmin:newFromImport }
 
 admin_events_edit:
-    pattern: /admin/events/edit/{id}
+    path: /admin/events/edit/{id}
     defaults: { _controller: EventBundle:GlobalEventAdmin:editEvent }
 
 admin_event_publish:
-    pattern: /admin/events/publish/{id}
+    path: /admin/events/publish/{id}
     defaults: { _controller: EventBundle:GlobalEventAdmin:publishEvent }
 
 admin_event_unpublish:
-    pattern: /admin/events/unpublish/{id}
+    path: /admin/events/unpublish/{id}
     defaults: { _controller: EventBundle:GlobalEventAdmin:unpublishEvent }
 
 admin_event_metrics:
-    pattern: /admin/events/metrics
+    path: /admin/events/metrics
     defaults: { _controller: EventBundle:GlobalEventAdmin:metrics }
 
 admin_event_summary_csv:
-    pattern: /admin/event/summary-csv
+    path: /admin/event/summary-csv
     defaults: { _controller: EventBundle:GlobalEventAdmin:eventSummaryCsv }
 
 admin_event_attendee_csv:
-    pattern: /admin/event/attendee-csv/{eventType}/{id}
+    path: /admin/event/attendee-csv/{eventType}/{id}
     defaults: { _controller: EventBundle:GlobalEventAdmin:eventAttendeeCsv, eventType: "group" }
 
 global_event_register:
-    pattern: /events/register/{id}
+    path: /events/register/{id}
     defaults: { _controller:"EventBundle:GlobalEvent:register", site: ~ }

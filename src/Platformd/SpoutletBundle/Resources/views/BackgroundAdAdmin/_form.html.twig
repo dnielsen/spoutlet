@@ -14,7 +14,7 @@
     <div id="admin_background_ad_adSites" data-prototype="{{ form_row(form.adSites.vars.prototype)|e }}">
         <div class="control-group">
         {% for adSite in form.adSites %}
-        {{ form_row(adSite, {'label': adSite.vars.value.site.name}) }}
+            {{ form_row(adSite, {'label': adSite.vars.value.site.name}) }}
         {% endfor %}
         </div>
     </div>
@@ -23,6 +23,9 @@
     {{ form_row(form.dateStart) }}
     {{ form_row(form.dateEnd) }}
     {{ form_row(form.timezone) }}
+    <p class="help">
+        Set the timezone that the start/end times are in.
+    </p>
 
     <div style="display:none;">
         {{ form_rest(form) }}

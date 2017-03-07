@@ -21,7 +21,6 @@ class BreadcrumbsRenderer extends ListRenderer
      */
     public function renderLink(ItemInterface $item, array $options = array())
     {
-        $text = '';
         if (!$item->getUri()) {
             $text = sprintf('<span%s>%s</span>', $this->renderHtmlAttributes($item->getLabelAttributes()), $item->getLabel());
         } elseif (!$item->isCurrent()) {
@@ -33,6 +32,6 @@ class BreadcrumbsRenderer extends ListRenderer
         // Add the &gt; if not the last item
         $text .= $item->isLast() ? '' : '&nbsp; &gt;';
 
-        return $this->format($text, 'link', $item->getLevel());
+        return $this->format($text, 'link', $item->getLevel(), []);
     }
 }

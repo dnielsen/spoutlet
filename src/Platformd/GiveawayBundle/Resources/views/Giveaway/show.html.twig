@@ -29,7 +29,7 @@
 
 {% block content %}
 
-    {% render url('_giveaway_flash_message', { 'giveawayId': data.giveaway_id }) with {}, {'standalone': true } %}
+    {% render url('_giveaway_flash_message', { 'giveawayId': data.giveaway_id }) %}
 
     <div class="std_1col">
 
@@ -48,7 +48,7 @@
                     {%  if data.giveaway_show_keys %}
                         <h3 class="key-count">{{ "platformd.giveaway.show.availaible_keys" | trans({ "%%count%%" : data.giveaway_available_keys }) }}</h3>
                     {%  endif %}
-                    {% render url('_giveaway_show_actions', { 'giveawayId': data.giveaway_id }) with {}, {'standalone': true } %}
+                    {% render url('_giveaway_show_actions', { 'giveawayId': data.giveaway_id }) %}
                 </div>
             </div>
 

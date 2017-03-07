@@ -15,7 +15,7 @@ class DefaultController extends Controller
     public function indexAction(Request $request)
     {
         $news           = $this->getNewsRepo()->findAllForSite($this->getCurrentSite());
-        $commentCounts  = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Thread')->findCommentCountsForAllThreadsLike('news-%');
+        $commentCounts  = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Thread')->findCommentCountsForAllThreadsLike('news-%');
 
         return $this->render('NewsBundle:Default:index.html.twig', array(
             'news'          => $news,

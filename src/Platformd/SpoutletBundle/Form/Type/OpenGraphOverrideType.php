@@ -2,38 +2,37 @@
 
 namespace Platformd\SpoutletBundle\Form\Type;
 
+use Platformd\SpoutletBundle\Entity\OpenGraphOverride;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Platformd\GiveawayBundle\Entity\Deal;
 use Platformd\MediaBundle\Form\Type\MediaType;
-use Platformd\SpoutletBundle\Form\Type\SlugType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class OpenGraphOverrideType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('description', 'textarea', array(
+            ->add('description', TextareaType::class, array(
                 'label' => 'Description',
-                'help' => 'Needs to be 140 characters or less. Tone: social, casual, conversational description that appears on someone\'s facebook wall/timeline when that person likes the page.
-',
                 'max_length' => 140
             ))
-            ->add('thumbnail', new MediaType(), array(
+            ->add('thumbnail', MediaType::class, array(
                 'image_label' => 'Thumbnail',
                 'image_help'  => 'The large thumbnail image will be resized for this image.  Alternatively, if you choose to upload an image, recommended size is 115 x 100.',
             ))
         ;
     }
 
-    public function getDefaultOptions(array $options)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return array(
-            'data_class' => new \Platformd\SpoutletBundle\Entity\OpenGraphOverride
-        );
+        $resolver->setDefaults([
+            'data_class' => OpenGraphOverride::class,
+        ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_opengraphoverridetype';
     }

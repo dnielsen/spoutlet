@@ -2,58 +2,62 @@
 
 namespace Platformd\SpoutletBundle\Form\Type;
 
-use Platformd\SpoutletBundle\Entity\GalleryMedia;
-use Platformd\SpoutletBundle\Entity\Gallery;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\FormInterface;
-
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class ImageFindType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    const STATUSES = [
+        'Active' => 0,
+        'Deleted' => 1,
+    ];
+
+    const PUBLISHES = [
+        'Published' => 1,
+        'Unpublished' => 0,
+    ];
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', 'text', array(
+            ->add('title', TextType::class, array(
                 'label' => 'Title:'
             ))
-            ->add('deleted', 'choice', array(
+            ->add('deleted', ChoiceType::class, array(
                 'label' => 'Deleted:',
-                'choices' => array(
-                    '0' => 'Active',
-                    '1' => 'Deleted'
-                ),
-                'empty_value' => 'Select All',
+                'choices' => self::STATUSES,
+                'choices_as_values' => true,
+                'placeholder' => 'Select All',
                 'required' => false,
             ))
-            ->add('published', 'choice', array(
+            ->add('published', ChoiceType::class, array(
                 'label' => 'Status:',
-                'choices' => array(
-                    '1' => 'Published',
-                    '0' => 'Unpublished'
-                ),
-                'empty_value' => 'Select All',
+                'choices' => self::PUBLISHES,
+                'choices_as_values' => true,
+                'placeholder' => 'Select All',
                 'required' => false,
             ))
-            ->add('sites', 'entity', array(
+            ->add('sites', EntityType::class, array(
+                'label' => 'Sites',
                 'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name',
+                'choice_label' => 'name',
             ))
-            ->add('startDate', 'date', array(
+            ->add('startDate', DateType::class, array(
                 'label' => 'Upload Start Date:',
-                'property_path' => false,
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'attr'   => array(
                     'class' => 'date-picker'
                 )
             ))
-            ->add('endDate', 'date', array(
+            ->add('endDate', DateType::class, array(
                 'label' => 'Upload End Date:',
-                'property_path' => false,
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'attr'   => array(
@@ -62,7 +66,7 @@ class ImageFindType extends AbstractType
             ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_imagefindtype';
     }

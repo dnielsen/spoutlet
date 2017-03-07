@@ -3,19 +3,11 @@
 namespace Platformd\EventBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller,
-    Platformd\EventBundle\Service\GlobalEventService,
-    Platformd\EventBundle\Entity\GlobalEvent,
-    Platformd\EventBundle\Entity\Event,
-    Platformd\EventBundle\Entity\GlobalEventEmail,
-    Platformd\EventBundle\Form\Type\GlobalEventType,
-    Platformd\EventBundle\Entity\GlobalEventTranslation
-;
+    Platformd\EventBundle\Entity\GlobalEventEmail;
 
 use Symfony\Component\HttpFoundation\Request,
     Symfony\Component\HttpFoundation\Response,
-    Symfony\Component\HttpFoundation\RedirectResponse,
-    Symfony\Component\Security\Core\Exception\AccessDeniedException
-;
+    Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\ArrayAdapter;
@@ -23,8 +15,6 @@ use Pagerfanta\Exception\OutOfRangeCurrentPageException;
 
 class GlobalEventController extends Controller
 {
-    private $globalEventService;
-
     public function _userEventListAction()
     {
         if (!$this->isGranted('ROLE_USER')) {
@@ -37,7 +27,7 @@ class GlobalEventController extends Controller
         $user = $this->getUser();
 
         $globalEventResult = $this->getGlobalEventService()->getAllEventsUserIsAttending($user);
-        $groupEventResult  = $this->getGroupEventService()->getAllEventsUserIsAttending($user);
+        $groupEventResult = $this->getGroupEventService()->getAllEventsUserIsAttending($user);
 
         $globalEvents = $groupEvents = array();
 
@@ -49,12 +39,12 @@ class GlobalEventController extends Controller
             $groupEvents[] = $event['id'];
         }
 
-        $groupEvents  = implode(',', $groupEvents);
+        $groupEvents = implode(',', $groupEvents);
         $globalEvents = implode(',', $globalEvents);
 
-        $watchedRepo           = $this->getDoctrine()->getEntityManager()->getRepository('IdeaBundle:WatchedEventMapping');
+        $watchedRepo = $this->getDoctrine()->getManager()->getRepository('IdeaBundle:WatchedEventMapping');
         $watchedGlobalEventIds = $watchedRepo->getAllGlobalEventsUserIsWatching($user);
-        $watchedGroupEventIds  = $watchedRepo->getAllGroupEventsUserIsWatching($user);
+        $watchedGroupEventIds = $watchedRepo->getAllGroupEventsUserIsWatching($user);
 
         $watchedGlobalEvents = $watchedGroupEvents = array();
 
@@ -67,13 +57,13 @@ class GlobalEventController extends Controller
         }
 
         $watchedGlobalEvents = implode(',', $watchedGlobalEvents);
-        $watchedGroupEvents  = implode(',', $watchedGroupEvents);
+        $watchedGroupEvents = implode(',', $watchedGroupEvents);
 
         $response = $this->render('EventBundle:GlobalEvent:_userEventList.html.twig', array(
-            'globalEvents'        => $globalEvents,
-            'groupEvents'         => $groupEvents,
+            'globalEvents' => $globalEvents,
+            'groupEvents' => $groupEvents,
             'watchedGlobalEvents' => $watchedGlobalEvents,
-            'watchedGroupEvents'  => $watchedGroupEvents,
+            'watchedGroupEvents' => $watchedGroupEvents,
         ));
 
         $this->varnishCache($response, 1);
@@ -92,13 +82,13 @@ class GlobalEventController extends Controller
         $user = $this->getUser();
 
         $isAttending = $this->isGranted('ROLE_USER') ? $this->getGlobalEventService()->isUserAttending($event, $user) : false;
-        $isOwner     = $user == $event->getUser();
+        $isOwner = $user == $event->getUser();
 
         $attendeeCount = $event->getAttendeeCount();
 
         $response = $this->render('EventBundle:GlobalEvent:_eventUserInfo.html.twig', array(
-            'isAttending'   => $isAttending,
-            'isOwner'       => $isOwner,
+            'isAttending' => $isAttending,
+            'isOwner' => $isOwner,
             'attendeeCount' => $attendeeCount,
         ));
 
@@ -107,8 +97,9 @@ class GlobalEventController extends Controller
         return $response;
     }
 
-    private function filter_internal_external_events($events, &$internal, &$external) {
-        for($i = 0; $i < count($events); ++$i) {
+    private function filter_internal_external_events($events, &$internal, &$external)
+    {
+        for ($i = 0; $i < count($events); ++$i) {
             $evt = $events[$i];
 
             if ($evt->isExternal()) {
@@ -126,22 +117,22 @@ class GlobalEventController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $useExternal = $request->query->get('useExternal') === 'true'? true: false;
+        $useExternal = $request->query->get('useExternal') === 'true' ? true : false;
 
         $page = $request->query->get('page', 1);
         $site = $this->getCurrentSite();
         $hasGroups = $site->getSiteFeatures()->getHasGroups();
 
         $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site, 0);
-        $pastGlobalEvents     = $this->getGlobalEventService()->findPastEventsForSite($site, 0);
-        $upcomingGroupEvents  = $hasGroups ? $this->getGroupEventService()->findUpcomingEventsForSite($site, 0) : array();
-        $pastGroupEvents      = $hasGroups ? $this->getGroupEventService()->findPastEventsForSite($site, 0) : array();
+        $pastGlobalEvents = $this->getGlobalEventService()->findPastEventsForSite($site, 0);
+        $upcomingGroupEvents = $hasGroups ? $this->getGroupEventService()->findUpcomingEventsForSite($site, 0) : array();
+        $pastGroupEvents = $hasGroups ? $this->getGroupEventService()->findPastEventsForSite($site, 0) : array();
 
-        $currentSweepstakes   = $this->getSweepstakesRepo()->getCurrentSweepstakes($site);
-        $pastSweepstakes      = $this->getSweepstakesRepo()->getPastSweepstakes($site);
+        $currentSweepstakes = $this->getSweepstakesRepo()->getCurrentSweepstakes($site);
+        $pastSweepstakes = $this->getSweepstakesRepo()->getPastSweepstakes($site);
 
-        $upcomingEvents       = array_merge($upcomingGlobalEvents, $upcomingGroupEvents, $currentSweepstakes);
-        $pastEvents           = array_merge($pastGroupEvents, $pastGlobalEvents, $pastSweepstakes);
+        $upcomingEvents = array_merge($upcomingGlobalEvents, $upcomingGroupEvents, $currentSweepstakes);
+        $pastEvents = array_merge($pastGroupEvents, $pastGlobalEvents, $pastSweepstakes);
 
         $upcomingInternalEvents = array();
         $upcomingExternalEvents = array();
@@ -163,7 +154,7 @@ class GlobalEventController extends Controller
         uasort($pastEvents, array($this, 'eventCompare'));
 
         $adapter = new ArrayAdapter($pastEvents);
-        $pager   = new Pagerfanta($adapter);
+        $pager = new Pagerfanta($adapter);
 
         $pager->setMaxPerPage(50);
 
@@ -173,14 +164,14 @@ class GlobalEventController extends Controller
             $pager->setCurrentPage(1);
         }
 
-        $pastEvents  = $pager->getCurrentPageResults();
+        $pastEvents = $pager->getCurrentPageResults();
 
         return $this->render('EventBundle:GlobalEvent:list.html.twig', array(
             'upcomingEvents' => $upcomingEvents,
-            'pastEvents'     => $pastEvents,
-            'pager'          => $pager,
-            'useExternal'    => $useExternal,
-            'page'           => $request->query->get('page'),
+            'pastEvents' => $pastEvents,
+            'pager' => $pager,
+            'useExternal' => $useExternal,
+            'page' => $request->query->get('page'),
         ));
     }
 
@@ -207,7 +198,7 @@ class GlobalEventController extends Controller
 
         return $this->render('EventBundle:GlobalEvent:view.html.twig', array(
             'event' => $event,
-            'isAttending'   => $isAttending,
+            'isAttending' => $isAttending,
         ));
     }
 
@@ -234,7 +225,7 @@ class GlobalEventController extends Controller
 
     public function removeAttendeeAction($slug, $userId)
     {
-        $event = $this->getGlobalEventService()->findOneBySlugForSite($slug,$this->getCurrentSite());
+        $event = $this->getGlobalEventService()->findOneBySlugForSite($slug, $this->getCurrentSite());
 
         if (!$event) {
             throw $this->createNotFoundException(sprintf('No event for slug "%s"', $slug));
@@ -258,16 +249,16 @@ class GlobalEventController extends Controller
             '%eventName%' => $event->getName(),
         ), 'messages', $locale);
 
-        $url        = $this->generateUrl('global_event_view', array('slug' => $event->getSlug()), true);
+        $url = $this->generateUrl('global_event_view', array('slug' => $event->getSlug()), true);
 
         $message = nl2br($this->trans('platformd.event.email.attendee_removed.message', array(
-            '%username%'       => $user->getUsername(),
-            '%url%'            => $url,
-            '%eventName%'      => $event->getName(),
+            '%username%' => $user->getUsername(),
+            '%url%' => $url,
+            '%eventName%' => $event->getName(),
         ), 'messages', $locale));
 
-        $emailType  = "Event unregister notification";
-        $emailTo    = $user->getEmail();
+        $emailType = "Event unregister notification";
+        $emailTo = $user->getEmail();
         $this->get('platformd.model.email_manager')->sendHtmlEmail($emailTo, $subject, $message, $emailType);
 
         $this->setFlash('success', sprintf('%s has been successfully removed from this event!', $user->getUsername()));
@@ -284,8 +275,8 @@ class GlobalEventController extends Controller
         $response = new Response();
         $response->headers->set('Content-type', 'text/json; charset=utf-8');
 
-        $params   = array();
-        $content  = $request->getContent();
+        $params = array();
+        $content = $request->getContent();
 
         if (empty($content)) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => "Some required information was not passed.")));
@@ -299,17 +290,17 @@ class GlobalEventController extends Controller
             return $response;
         }
 
-        $id     = (int) $params['id'];
-        $rsvp   = $params['rsvp'];
+        $id = (int)$params['id'];
+        $rsvp = $params['rsvp'];
 
-        if (!$this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+        if (!$this->container->get('security.authorization_checker')->isGranted(array('ROLE_USER'))) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => 'You must be logged in to RSVP to an event')));
             return $response;
         }
 
         $event = $this->getGlobalEventService()->find($id);
 
-        $user       = $this->getUser();
+        $user = $this->getUser();
 
         if (!$event) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => "Event not found!")));
@@ -335,8 +326,8 @@ class GlobalEventController extends Controller
         $response = new Response();
         $response->headers->set('Content-type', 'text/json; charset=utf-8');
 
-        $params   = array();
-        $content  = $request->getContent();
+        $params = array();
+        $content = $request->getContent();
 
         if (empty($content)) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => "Some required information was not passed.")));
@@ -350,15 +341,15 @@ class GlobalEventController extends Controller
             return $response;
         }
 
-        $id = (int) $params['id'];
+        $id = (int)$params['id'];
 
-        if (!$this->container->get('security.context')->isGranted(array('ROLE_USER'))) {
+        if (!$this->container->get('security.authorization_checker')->isGranted(array('ROLE_USER'))) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => 'You must be logged in to delete an event')));
             return $response;
         }
 
         $event = $this->getGlobalEventService()->find($id);
-        $user  = $this->getUser();
+        $user = $this->getUser();
 
         if (!$event) {
             $response->setContent(json_encode(array("success" => false, "errorMessage" => "Event not found!")));
@@ -389,12 +380,11 @@ class GlobalEventController extends Controller
         }
 
         // check for edit access (permissions match those required to send email)
-        if (false === $this->getSecurity()->isGranted('EDIT', $event) && $this->getUser()->getAdminLevel() === null)
-        {
+        if (false === $this->getSecurity()->isGranted('EDIT', $event) && $this->getUser()->getAdminLevel() === null) {
             throw new AccessDeniedException();
         }
 
-        $hitEmailLimit = $this->getDoctrine()->getEntityManager()->getRepository('EventBundle:GlobalEventEmail')->hasUserHitEmailLimitForEvent($this->getCurrentUser(), $event);
+        $hitEmailLimit = $this->getDoctrine()->getManager()->getRepository('EventBundle:GlobalEventEmail')->hasUserHitEmailLimitForEvent($this->getCurrentUser(), $event);
 
         if ($hitEmailLimit) {
             $this->setFlash('error', 'platformd.events.event_contact.limit_hit');
@@ -425,13 +415,13 @@ class GlobalEventController extends Controller
                 'help' => 'platformd.events.event_contact.form.recipient_help',
             ))
             ->add('message', 'purifiedTextarea', array(
-                'attr'  => array('class' => 'ckeditor'),
+                'attr' => array('class' => 'ckeditor'),
                 'label' => 'platformd.events.event_contact.form.message',
             ))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
@@ -465,7 +455,7 @@ class GlobalEventController extends Controller
 
                     return $this->render('EventBundle:GlobalEvent:contact.html.twig', array(
                         'event' => $event,
-                        'form'  => $form->createView(),
+                        'form' => $form->createView(),
                     ));
                 }
 
@@ -489,7 +479,7 @@ class GlobalEventController extends Controller
                 ));
 
                 $emailManager = $this->container->get('platformd.model.email_manager');
-                $queueResult  = $emailManager->queueMassEmail($email);
+                $queueResult = $emailManager->queueMassEmail($email);
 
                 $this->setFlash('success', $this->transChoice(
                     'platformd.events.event_contact.confirmation',
@@ -513,7 +503,7 @@ class GlobalEventController extends Controller
 
         return $this->render('EventBundle:GlobalEvent:contact.html.twig', array(
             'event' => $event,
-            'form'  => $form->createView(),
+            'form' => $form->createView(),
         ));
     }
 
@@ -537,13 +527,13 @@ class GlobalEventController extends Controller
                 'help' => 'platformd.events.event_contact.form.recipient_help',
             ))
             ->add('message', 'purifiedTextarea', array(
-                'attr'  => array('class' => 'ckeditor'),
+                'attr' => array('class' => 'ckeditor'),
                 'label' => 'platformd.events.event_contact.form.message',
             ))
             ->getForm();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $email = $form->getData();
@@ -572,7 +562,7 @@ class GlobalEventController extends Controller
         $this->setFlash('error', 'platformd.events.event_contact.error');
         return $this->redirect($this->generateUrl('global_event_contact', array(
             'slug' => $slug,
-            'form'  => $form->createView(),
+            'form' => $form->createView(),
         )));
     }
 
@@ -595,7 +585,8 @@ class GlobalEventController extends Controller
         )));
     }
 
-    private function eventCompare($a, $b) {
+    private function eventCompare($a, $b)
+    {
 
         if ($a->getStartsAt() == $b->getStartsAt()) {
             return 0;

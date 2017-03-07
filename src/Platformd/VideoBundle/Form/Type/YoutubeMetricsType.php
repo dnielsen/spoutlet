@@ -3,16 +3,16 @@
 namespace Platformd\VideoBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class YoutubeMetricsType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('fromDate', 'date', array(
+            ->add('fromDate', DateType::class, array(
                 'label' => 'From Date:',
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
@@ -20,7 +20,7 @@ class YoutubeMetricsType extends AbstractType
                     'class' => 'date-picker'
                 )
             ))
-            ->add('thruDate', 'date', array(
+            ->add('thruDate', DateType::class, array(
                 'label' => 'Thru Date:',
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
@@ -28,14 +28,13 @@ class YoutubeMetricsType extends AbstractType
                     'class' => 'date-picker'
                 )
             ))
-            ->add('keyWords', 'text', array(
+            ->add('keyWords', TextType::class, array(
                 'label' => 'Key Words',
-                'help'  => 'Enter key words for the video title or username',
             ))
         ;
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_videobundle_youtubemetricstype';
     }

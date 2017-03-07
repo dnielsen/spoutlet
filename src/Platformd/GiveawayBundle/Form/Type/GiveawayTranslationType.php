@@ -2,20 +2,27 @@
 
 namespace Platformd\GiveawayBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Platformd\GiveawayBundle\Entity\GiveawayTranslation;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GiveawayTranslationType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('locale', 'entity', array(
+        $builder->add('locale', EntityType::class, array(
             'label' => 'Language',
             'class' => 'Platformd\SpoutletBundle\Entity\Site',
-            'property' => 'name',
+            'choice_label' => 'name',
             'query_builder' => function($repository) {
                 return $repository->createQueryBuilder('s')
                     ->andWhere('s.defaultLocale IN (:siteNames)')
@@ -23,49 +30,55 @@ class GiveawayTranslationType extends AbstractType
                 ;
             },
         ));
-        $builder->add('name', 'textarea');
-        $builder->add('content', 'textarea', array(
+        $builder->add('name', TextareaType::class, [
+            'label' => 'Name',
+        ]);
+        $builder->add('content', TextareaType::class, array(
             'required' => false,
-            'attr' => array('class' => 'ckeditor'),
+            'attr' => [
+                'class' => 'ckeditor',
+            ],
             'label' => 'Description',
         ));
-        $builder->add('backgroundImage', 'file', array(
+        $builder->add('backgroundImage', FileType::class, array(
                 'label' => 'Background file'
             ));
-        $builder->add('removeBannerImage', 'checkbox', array(
+        $builder->add('removeBannerImage', CheckboxType::class, array(
             'label' => 'Remove Banner',
         ));
-        $builder->add('removeBackgroundImage', 'checkbox', array(
+        $builder->add('removeBackgroundImage', CheckboxType::class, array(
             'label' => 'Remove Background',
         ));
-        $builder->add('bannerImageFile', 'file', array(
+        $builder->add('bannerImageFile', FileType::class, array(
                 'label' => 'Banner file'
             ));
-        $builder->add('backgroundLink', 'text', array(
+        $builder->add('backgroundLink', TextType::class, array(
                 'label' => 'Background link'
             ));
-        $builder->add('redemptionInstructionsArray', 'collection', array(
-            'type' => 'textarea',
+        $builder->add('redemptionInstructionsArray', CollectionType::class, array(
+            'entry_type' => 'textarea',
             'label' => 'Redemption Instructions',
         ));
     }
 
-    public function getName()
-    {
-        return 'giveaway_translation';
-    }
-
-    public function getDefaultOptions(array $options)
-    {
-        $options['data_class'] = 'Platformd\GiveawayBundle\Entity\GiveawayTranslation';
-
-        return $options;
-    }
-
-    public function buildViewBottomUp(FormView $view, FormInterface $form)
+    public function finishView(FormView $view, FormInterface $form, array $options)
     {
         if ($data = $form->getData()) {
-            $view->set('mediaObjects', $data);
+            $view->vars = array_replace($view->vars, [
+                'mediaObjects' => $data,
+            ]);
         }
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => GiveawayTranslation::class,
+        ]);
+    }
+
+    public function getBlockPrefix()
+    {
+        return 'giveaway_translation';
     }
 }

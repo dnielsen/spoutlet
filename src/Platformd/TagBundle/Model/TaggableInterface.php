@@ -4,9 +4,9 @@ namespace Platformd\TagBundle\Model;
 
 interface TaggableInterface
 {
-    function getTaggableType();
+    public function getTaggableType();
 
-    function getTaggableId();
+    public function getTaggableId();
 
-    function getTags();
+    public function getTags();
 }

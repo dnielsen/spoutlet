@@ -3,27 +3,24 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class CommentType extends AbstractType
 {
-
     /**
      * Configures a Comment form.
      *
-     * @param FormBuilder $builder
+     * @param FormBuilderInterface $builder
      * @param array $options
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('body', 'textarea', array(
-            'required' => true,
-        ));
+        $builder->add('body', TextareaType::class);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_commenttype';
     }
-
 }

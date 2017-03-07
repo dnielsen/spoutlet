@@ -2,9 +2,9 @@
 
 namespace Platformd\SpoutletBundle\Form\DataTransformer;
 
+use Doctrine\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\Form\DataTransformerInterface;
 use Platformd\SpoutletBundle\Entity\RsvpCode;
-use Symfony\Bundle\DoctrineBundle\Registry;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 
 class RsvpCodeTransformer implements DataTransformerInterface

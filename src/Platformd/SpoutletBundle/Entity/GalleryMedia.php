@@ -152,7 +152,7 @@ class GalleryMedia implements LinkableInterface, ReportableContentInterface, Tag
     protected $contentReports;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\ContestEntry")
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\ContestEntry", inversedBy="medias")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $contestEntry;

@@ -2,7 +2,6 @@
 
 namespace Platformd\VideoBundle\DataFixtures\ORM;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -86,5 +85,3 @@ class LoadVideos extends AbstractFixture implements OrderedFixtureInterface, Con
         return 4;
     }
 }
-
-?>

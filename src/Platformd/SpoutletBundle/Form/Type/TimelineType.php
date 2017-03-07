@@ -3,35 +3,31 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class TimelineType extends AbstractType
 {
-
     /**
      * Configures a Timeline form.
      *
-     * @param FormBuilder $builder
+     * @param FormBuilderInterface $builder
      * @param array $options
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('googleDocUrl', 'text', array(
+            ->add('googleDocUrl', TextType::class, array(
                 'label' => 'Data Source URL:',
-                'help' => 'Currently, only Google Docs is supported as a datasource. Be sure your doc is published and made public before trying to use it.',
-                'required' => true,
             ))
-            ->add('name', 'text', array(
+            ->add('name', TextType::class, array(
                 'label' => 'Name',
-                'required' => true,
             ))
         ;
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_timelinetype';
     }
-
 }

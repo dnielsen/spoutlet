@@ -4,20 +4,13 @@ namespace Platformd\NewsBundle\Command;
 
 use
     Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand,
-    Symfony\Component\Console\Input\InputArgument,
-    Symfony\Component\Console\Input\InputOption,
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface,
-    Symfony\Component\HttpFoundation\File\UploadedFile,
     Symfony\Component\Security\Acl\Domain\ObjectIdentity,
     Symfony\Component\Security\Acl\Domain\UserSecurityIdentity,
     Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity,
     Symfony\Component\Security\Acl\Permission\MaskBuilder,
     Symfony\Component\Security\Acl\Exception\NoAceFoundException
-;
-
-use
-    DateTime
 ;
 
 use
@@ -116,7 +109,7 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $container          = $this->getContainer();
-        $em                 = $container->get('doctrine')->getEntityManager();
+        $em                 = $container->get('doctrine')->getManager();
         $newsRepo           = $em->getRepository('NewsBundle:News');
         $threadRepo         = $em->getRepository('SpoutletBundle:Thread');
         $commentRepo        = $em->getRepository('SpoutletBundle:Comment');
@@ -143,13 +136,13 @@ EOT
                     continue;
                 }
 
-                $oldData = $data;
+//                $oldData = $data;
 
-                $id             = $data[0];
+//                $id             = $data[0];
                 $cevoArticleId  = $data[1];
                 $cevoUserId     = $data[2];
                 $body           = $this->stripBBCode(html_entity_decode(trim($data[3]), ENT_QUOTES));
-                $postedAt       = DateTime::createFromFormat('U', $data[4]);
+                $postedAt       = \DateTime::createFromFormat('U', $data[4]);
                 $deleted        = $data[5] !== 'active';
 
                 if ($deleted) {

@@ -6,8 +6,8 @@ if [ ${SCRIPTPATH##*/} != "misc_scripts" ]; then
     exit 1
 fi
 
-INI_FILE_PATH="${SCRIPTPATH}/../app/config/parameters.ini";
-if [ ! -e $INI_FILE_PATH ]; then
+YML_FILE_PATH="${SCRIPTPATH}/../app/config/parameters.yml";
+if [ ! -e $YML_FILE_PATH ]; then
     echo "Fatal error: app/config/parameters.ini file not found."
     exit 1
 fi
@@ -15,12 +15,12 @@ fi
 DB_BACKUP=${SCRIPTPATH}/../db_backups/
 
 # Get db username, pass, schema from parameters.ini
-DB_USER=$( sed -n 's/^ *database_user *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
-DB_PASS=$( sed -n 's/^ *database_password *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
-DB_HOST=$( sed -n 's/^ *database_host *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
-PROD_DB_NAME=$( sed -n 's/^ *database_name *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
-ACL_DB_NAME=$( sed -n 's/^ *acl_database_name *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
-DB_PORT=$( sed -n 's/^ *database_port *= *\([^ ]*.*\)/\1/p' < ${INI_FILE_PATH} )
+DB_USER=$( sed -n 's/^ *database_user: *\([^ ]*.*\)/\1/p' < ${YML_FILE_PATH} )
+DB_PASS=$( sed -n 's/^ *database_password: *\([^ ]*.*\)/\1/p' < ${YML_FILE_PATH} )
+DB_HOST=$( sed -n 's/^ *database_host: *\([^ ]*.*\)/\1/p' < ${YML_FILE_PATH} )
+PROD_DB_NAME=$( sed -n 's/^ *database_name: *\([^ ]*.*\)/\1/p' < ${YML_FILE_PATH} )
+ACL_DB_NAME=$( sed -n 's/^ *acl_database_name: *\([^ ]*.*\)/\1/p' < ${YML_FILE_PATH} )
+DB_PORT=$( sed -n 's/^ *database_port: *\([^ ]*.*\)/\1/p' < ${YML_FILE_PATH} )
 
 if [ -z "$DB_USER" ] || [ -z "$DB_PASS" ] || [ -z "$DB_HOST" ] || [ -z "$DB_PORT" ] || [ -z "$PROD_DB_NAME" ] || [ -z "$ACL_DB_NAME" ]; then
     echo "Fatal error: One of the following database properties in parameters.ini is empty:"

@@ -2,13 +2,15 @@
 
 namespace Platformd\SpoutletBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Platformd\SpoutletBundle\Entity\Location;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class LocationType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
         ->add('address1', null, array(
@@ -25,15 +27,15 @@ class LocationType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return 'platformd_spoutletbundle_locationtype';
+        $resolver->setDefaults([
+            'data_class' => Location::class,
+        ]);
     }
 
-    public function getDefaultOptions(array $options)
+    public function getBlockPrefix()
     {
-        return array(
-            'data_class' => 'Platformd\SpoutletBundle\Entity\Location',
-        );
+        return 'platformd_spoutletbundle_locationtype';
     }
 }

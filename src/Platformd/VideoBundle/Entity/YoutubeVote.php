@@ -13,7 +13,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="pd_youtube_votes")
  * @ORM\Entity(repositoryClass="Platformd\VideoBundle\Repository\YoutubeVoteRepository")
  */
-
 class YoutubeVote extends AbstractVote
 {
     /**
@@ -24,24 +23,24 @@ class YoutubeVote extends AbstractVote
     protected $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\VideoBundle\Entity\YoutubeVideo")
-     * @ORM\JoinColumn(onDelete="cascade", nullable="false")
+     * @ORM\ManyToOne(targetEntity="Platformd\VideoBundle\Entity\YoutubeVideo", inversedBy="votes")
+     * @ORM\JoinColumn(onDelete="cascade", nullable=false)
      */
     protected $video;
 
     /**
      * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
-     * @ORM\JoinColumn(onDelete="cascade", nullable="false")
+     * @ORM\JoinColumn(onDelete="cascade", nullable=false)
      */
     protected $user;
 
     /**
-     * @ORM\Column(name="ip_address", type="string", length="20")
+     * @ORM\Column(name="ip_address", type="string", length=20)
      */
     protected $ipAddress;
 
     /**
-     * @ORM\Column(name="vote_type", type="string", length="255")
+     * @ORM\Column(name="vote_type", type="string", length=255)
      */
     protected $voteType;
 

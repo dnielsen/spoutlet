@@ -12,8 +12,8 @@ use Platformd\UserBundle\Entity\User;
  * @ORM\Table(
  *      name="giveaway_key",
  *      indexes={
- *          @ORM\index(name="user_pool_idx", columns={"user", "pool"}),
- *          @ORM\index(name="pool_ip_idx", columns={"pool", "ip_address"})
+ *          @ORM\Index(name="user_pool_idx", columns={"user", "pool"}),
+ *          @ORM\Index(name="pool_ip_idx", columns={"pool", "ip_address"})
  *      }
  * )
  * @ORM\Entity(repositoryClass="Platformd\GiveawayBundle\Entity\Repository\GiveawayKeyRepository")
@@ -22,7 +22,7 @@ class GiveawayKey extends AbstractCode
 {
     /**
      * @ORM\JoinColumn(name="pool", referencedColumnName="id", onDelete="CASCADE")
-     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\GiveawayPool", inversedBy="giveawayKeys", cascade={"persist", "remove", "merge"})
+     * @ORM\ManyToOne(targetEntity="Platformd\GiveawayBundle\Entity\GiveawayPool", cascade={"persist", "remove", "merge"})
      */
     protected $pool;
 

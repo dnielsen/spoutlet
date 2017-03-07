@@ -6,7 +6,7 @@ use Symfony\Component\Validator\Constraint;
 
 class GroupEventUniqueSlugValidator extends EventUniqueSlugValidator
 {
-    public function isValid($entity, Constraint $constraint)
+    public function validate($entity, Constraint $constraint)
     {
         $criteria = array(
             'slug' => $entity->getSlug(),
@@ -23,14 +23,11 @@ class GroupEventUniqueSlugValidator extends EventUniqueSlugValidator
          * unique.
          */
         if (0 == count($result) || (1 == count($result) && $entity === $result[0])) {
-            return true;
+            return false;
         }
 
-        $oldPath = $this->context->getPropertyPath();
-        $this->context->setPropertyPath(empty($oldPath) ? 'slug' : $oldPath.'.slug');
-        $this->context->addViolation($constraint->message, array(), $entity->getSlug());
-        $this->context->setPropertyPath($oldPath);
-
-        return true; // all true, we added the violation already!
+        $this->context->buildViolation($constraint->message)
+            ->atPath(empty($oldPath) ? 'slug' : $oldPath.'.slug')
+            ->addViolation();
     }
 }

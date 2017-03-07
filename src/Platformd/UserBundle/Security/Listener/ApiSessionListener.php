@@ -4,7 +4,7 @@ namespace Platformd\UserBundle\Security\Listener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
@@ -19,21 +19,27 @@ class ApiSessionListener
 {
     const COOKIE_NAME = 'awa_session_key';
 
-    protected $securityContext;
+    protected $tokenStorage;
     protected $sessionStrategy;
     protected $apiManager;
     protected $apiAuth;
     protected $userManager;
     protected $firewallName;
 
-    public function __construct(SecurityContextInterface $securityContext, SessionAuthenticationStrategyInterface $sessionStrategy, $apiManager, $apiAuth, $userManager, $firewallName)
-    {
-        $this->securityContext = $securityContext;
+    public function __construct(
+        TokenStorageInterface $tokenStorage,
+        SessionAuthenticationStrategyInterface $sessionStrategy,
+        $apiManager,
+        $apiAuth,
+        $userManager,
+        $firewallName
+    ) {
+        $this->tokenStorage = $tokenStorage;
         $this->sessionStrategy = $sessionStrategy;
-        $this->apiManager      = $apiManager;
-        $this->apiAuth         = $apiAuth;
-        $this->userManager     = $userManager;
-        $this->firewallName    = $firewallName;
+        $this->apiManager = $apiManager;
+        $this->apiAuth = $apiAuth;
+        $this->userManager = $userManager;
+        $this->firewallName = $firewallName;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -47,7 +53,7 @@ class ApiSessionListener
             return;
         }
 
-        $token = $this->securityContext->getToken();
+        $token = $this->tokenStorage->getToken();
 
         // already authenticated
         if ($token && !$token instanceof AnonymousToken && $token->getUser() instanceof UserInterface) {
@@ -83,7 +89,7 @@ class ApiSessionListener
                 return;
             }
 
-            $suspendedUntil     = $response['data']['user']['suspended_until'] ? new \DateTime($response['data']['user']['suspended_until']) : null;
+            $suspendedUntil = $response['data']['user']['suspended_until'] ? new \DateTime($response['data']['user']['suspended_until']) : null;
             $currentlySuspended = $suspendedUntil ? ($suspendedUntil > new \DateTime()) : false;
 
             if ($response['data']['user']['banned'] || $currentlySuspended) {
@@ -94,7 +100,7 @@ class ApiSessionListener
             $token = new UsernamePasswordToken($user, null, $this->firewallName, $user->getRoles());
 
             $this->sessionStrategy->onAuthentication($request, $token);
-            $this->securityContext->setToken($token);
+            $this->tokenStorage->setToken($token);
         }
     }
 

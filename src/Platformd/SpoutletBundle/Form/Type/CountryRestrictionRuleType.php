@@ -2,43 +2,47 @@
 
 namespace Platformd\SpoutletBundle\Form\Type;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-
-use Platformd\SpoutletBundle\Entity\Country;
 use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CountryRestrictionRuleType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('country', 'entity', array(
+            ->add('country', EntityType::class, array(
                 'label'     => 'Country',
                 'class'     => 'SpoutletBundle:Country',
-                'property'  => 'name',
-                'empty_value' => '',
+                'choice_label'  => 'name',
+                'placeholder' => '',
             ))
-            ->add('ruleType', 'choice', array(
+            ->add('ruleType', ChoiceType::class, array(
                 'choices'   => $this->getValidRuleTypes(),
                 'label'     => 'Allow/Deny',
+                'choices_as_values' => true,
             ));
     }
 
-    public function getName()
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => CountryAgeRestrictionRule::class,
+        ]);
+    }
+
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_countryrestrictionruletype';
     }
 
-    public function getDefaultOptions(array $options)
-    {
-        return array(
-            'data_class' => 'Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule',
-        );
-    }
-
     private function getValidRuleTypes()
     {
+        $choices = [];
+
         foreach (CountryAgeRestrictionRule::getValidRuleTypes() as $ruleType) {
             $choices[$ruleType] = $ruleType;
         }

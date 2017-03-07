@@ -1,26 +1,19 @@
 {% extends "form_div_layout.html.twig" %}
 
 {# give a form_row class to all form row divs #}
-{% block field_row %}
+{% block form_row %}
 {% spaceless %}
 <div class="control-group {% if errors|length > 0 %}error{% endif %}">
     {{ form_label(form, label|default(null)) }}
     <div class="controls">
         {{ form_widget(form) }}
         {{ form_errors(form) }}
-
-        {% if form.get('help') %}
-        <p class="alert alert-info help">
-            <i class="icon-info-sign"></i>
-            {{ form.get('help') | pd_trans | raw }}
-        </p>
-        {% endif %}
     </div>
 </div>
 {% endspaceless %}
-{% endblock field_row %}
+{% endblock form_row %}
 
-{% block field_errors %}
+{% block form_errors %}
 {% spaceless %}
     {% if errors|length > 0 %}
 
@@ -32,24 +25,9 @@
 
     {% endif %}
 {% endspaceless %}
-{% endblock field_errors %}
-
-{# special errors block for form errors - at the top of the form, for example #}
-{% block form_errors %}
-{% spaceless %}
-{% if errors|length > 0 %}
-<div class="help-inline">
-{#<div class="alert alert-error" style="display: inline-block;">#}
-    {% for error in errors %}
-    {{ error.messageTemplate|pd_trans(error.messageParameters, 'validators') }}
-    <br/>
-    {% endfor %}
-</div>
-{% endif %}
-{% endspaceless %}
 {% endblock form_errors %}
 
-{% block generic_label %}
+{% block form_label %}
 {% set attr = attr|merge({'class': ''}) %}
 {% spaceless %}
     {% if required %}
@@ -73,54 +51,76 @@
         </span>
     </div>
     {% set type = type|default('url') %}
-    {{ block('field_widget') }}
+    {{ block('form_widget') }}
 {% endblock %}
 
 {# the first part is overriden to give us checkboxes that look schweet in bootstrap#}
-{% block choice_widget %}
-{% spaceless %}
-    {% if expanded and multiple %}
-        {% for child in form %}
+{%- block choice_widget_expanded -%}
+    <div {{ block('widget_container_attributes') }}>
+        {%- for child in form %}
             <label class="checkbox">
-                {{ form_widget(child) }}
-                {{ child.get('label') | pd_trans }}
+                {{- form_widget(child) -}}
+                {{ child.vars.label|pd_trans }}
+                {#{{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}#}
             </label>
-        {% endfor %}
-    {% elseif expanded and not multiple %}
-        <table style="display:inline-table;position:relative;top:5px;">
-            <tr>
-            {% for child in form %}
-                <td style="vertical-align:top;">
-                    <label class="radio">
-                        {{ form_widget(child) }}
-                        {{ child.get('label') | pd_trans }}
-                    </label>
-                </td>
-            {% endfor %}
-            </tr>
-        </table>
-    {% else %}
-        {# this side is untouched #}
-        <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
-            {% if empty_value is not none %}
-                <option value="">{{ empty_value|pd_trans }}</option>
-            {% endif %}
-            {% if preferred_choices|length > 0 %}
-                {% set options = preferred_choices %}
-                {{ block('widget_choice_options') }}
-                {% if choices|length > 0 and separator is not none %}
-                    <option disabled="disabled">{{ separator }}</option>
-                {% endif %}
-            {% endif %}
-            {% set options = choices %}
-            {{ block('widget_choice_options') }}
-        </select>
-    {% endif %}
-{% endspaceless %}
-{% endblock choice_widget %}
+        {% endfor -%}
+    </div>
+{%- endblock choice_widget_expanded -%}
+
+{#{% block radio_widget %}#}
+    {#{% spaceless %}#}
+        {#{% if label is empty %}#}
+            {#{% set label = name|humanize %}#}
+        {#{% endif %}#}
+        {#<label for="{{ id }}">#}
+            {#<input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />{{ label|pd_trans }}#}
+        {#</label>#}
+    {#{% endspaceless %}#}
+{#{% endblock radio_widget %}#}
+
+{#{% block choice_widget %}#}
+{#{% spaceless %}#}
+    {#{% if expanded and multiple %}#}
+        {#{% for child in form %}#}
+            {#<label class="checkbox">#}
+                {#{{ form_widget(child) }}#}
+                {#{{ child.get('label') | pd_trans }}#}
+            {#</label>#}
+        {#{% endfor %}#}
+    {#{% elseif expanded and not multiple %}#}
+        {#<table style="display:inline-table;position:relative;top:5px;">#}
+            {#<tr>#}
+            {#{% for child in form %}#}
+                {#<td style="vertical-align:top;">#}
+                    {#<label class="radio">#}
+                        {#{{ form_widget(child) }}#}
+                        {#{{ child.get('label') | pd_trans }}#}
+                    {#</label>#}
+                {#</td>#}
+            {#{% endfor %}#}
+            {#</tr>#}
+        {#</table>#}
+    {#{% else %}#}
+         {#this side is untouched#}
+        {#<select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>#}
+            {#{% if empty_value is not none %}#}
+                {#<option value="">{{ empty_value|pd_trans }}</option>#}
+            {#{% endif %}#}
+            {#{% if preferred_choices|length > 0 %}#}
+                {#{% set options = preferred_choices %}#}
+                {#{{ block('widget_choice_options') }}#}
+                {#{% if choices|length > 0 and separator is not none %}#}
+                    {#<option disabled="disabled">{{ separator }}</option>#}
+                {#{% endif %}#}
+            {#{% endif %}#}
+            {#{% set options = choices %}#}
+            {#{{ block('widget_choice_options') }}#}
+        {#</select>#}
+    {#{% endif %}#}
+{#{% endspaceless %}#}
+{#{% endblock choice_widget %}#}
 
 {% block _giveaway_translations_row %}
-
  <div class="translation-collection form_row" data-prototype="{{ form_widget(form.vars.prototype)|e }}">
         {{ form_errors(form) }}
         {{ form_widget(form) }}
@@ -140,13 +140,13 @@
                 {{ form_row(form.locale) }}
 
                 {{ form_row(form.backgroundImage) }}
-                {% if form.get('mediaObjects') %}
-                    {% set objPath = media_path(form.get('mediaObjects'), {'type': 'background'}) %}
+                {#{% if form.get('mediaObjects') %}#}
+                    {#{% set objPath = media_path(form.get('mediaObjects'), {'type': 'background'}) %}#}
 
-                    {% if ends_with(objPath, '.png') or ends_with(objPath, '.jpg') or ends_with(objPath, '.jpeg') or ends_with(objPath, '.gif') %}
-                        <img src="{{ objPath }}" style="width: 200px; margin: -10px 0 10px 160px;" />
-                    {% endif %}
-                {% endif %}
+                    {#{% if ends_with(objPath, '.png') or ends_with(objPath, '.jpg') or ends_with(objPath, '.jpeg') or ends_with(objPath, '.gif') %}#}
+                        {#<img src="{{ objPath }}" style="width: 200px; margin: -10px 0 10px 160px;" />#}
+                    {#{% endif %}#}
+                {#{% endif %}#}
 
             {{ form_row(form.removeBackgroundImage) }}
 
@@ -154,13 +154,13 @@
 
                 {{ form_row(form.bannerImageFile) }}
 
-                {% if form.get('mediaObjects') %}
-                    {% set objPath = media_path(form.get('mediaObjects'), {type: "banner"}) %}
+                {#{% if form.get('mediaObjects') %}#}
+                    {#{% set objPath = media_path(form.get('mediaObjects'), {type: "banner"}) %}#}
 
-                    {% if ends_with(objPath, '.png') or ends_with(objPath, '.jpg') or ends_with(objPath, '.jpeg') or ends_with(objPath, '.gif') %}
-                        <img src="{{ objPath }}" style="width: 200px; margin: -10px 0 10px 160px;" />
-                    {% endif %}
-                {% endif %}
+                    {#{% if ends_with(objPath, '.png') or ends_with(objPath, '.jpg') or ends_with(objPath, '.jpeg') or ends_with(objPath, '.gif') %}#}
+                        {#<img src="{{ objPath }}" style="width: 200px; margin: -10px 0 10px 160px;" />#}
+                    {#{% endif %}#}
+                {#{% endif %}#}
 
                 {{ form_row(form.removeBannerImage) }}
 
@@ -171,7 +171,7 @@
                 {{ form_errors(form.redemptionInstructionsArray) }}
 
                 <ol class="input">
-                    {% include 'GiveawayBundle:Giveaway:_defaultSteps.html.twig' with {'giveaway': form.all.value} %}
+                    {% include 'GiveawayBundle:Giveaway:_defaultSteps.html.twig' with {'giveaway': form} %}
                     {% for redemptionForm in form.redemptionInstructionsArray %}
                         <li>
                             {{ form_widget(redemptionForm) }}

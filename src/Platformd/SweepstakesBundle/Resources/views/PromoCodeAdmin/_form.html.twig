@@ -41,8 +41,19 @@
         </div>
 
         {{ form_row(form.winnerMessage) }}
+        <p class="help">
+            This message will be displayed to users in the event that they have a winning code. Include the following placeholders in links/message body (e.g. &lt;a href="--w9Url--"&gt;w9&lt;/a&gt;): "--w9Url--", "--affidavitUrl--", and also "--contestName--"
+        </p>
+
         {{ form_row(form.loserMessage) }}
+        <p class="help">
+            This message will be displayed to users in the event that they do not have a winning code. To include a "Consolation Code", use the phrase "--code--"" as a placeholder.
+        </p>
+
         {{ form_row(form.backupLoserMessage) }}
+        <p class="help">
+            This message will be displayed to users in the event that they do not have a winning code and there are no "Consolation Codes" left.
+        </p>
     </fieldset>
 
     <fieldset id="files">

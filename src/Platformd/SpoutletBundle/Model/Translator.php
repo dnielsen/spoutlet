@@ -2,8 +2,8 @@
 
 namespace Platformd\SpoutletBundle\Model;
 
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\HttpFoundation\Session;
 
 class Translator implements TranslatorInterface
 {
@@ -13,10 +13,11 @@ class Translator implements TranslatorInterface
     private $locale;
     private $session;
 
-    function __construct(TranslatorInterface $translator, $siteUtil, Session $session) {
-        $this->translator   = $translator;
-        $this->siteUtil     = $siteUtil;
-        $this->session     = $session;
+    public function __construct(TranslatorInterface $translator, $siteUtil, Session $session)
+    {
+        $this->translator = $translator;
+        $this->siteUtil = $siteUtil;
+        $this->session = $session;
     }
 
     public function trans($key, array $params = array(), $domain = 'messages', $locale = null)
@@ -33,7 +34,7 @@ class Translator implements TranslatorInterface
 
         $translatedString = $this->translator->trans($key, $params, $domain, $locale);
 
-        if ($translatedString == $key) {
+        if ($translatedString === $key) {
             return $this->translator->trans($key, $params, 'messages', $locale);
         }
 
@@ -44,7 +45,7 @@ class Translator implements TranslatorInterface
     {
         $theme = $this->getTheme();
 
-        if ($domain == 'messages' && $theme != 'default') {
+        if ($domain === 'messages' && $theme !== 'default') {
             $domain = 'theme_' . $theme;
         }
 
@@ -54,7 +55,7 @@ class Translator implements TranslatorInterface
 
         $translatedString = $this->translator->transChoice($key, $number, $parameters, $domain, $locale);
 
-        if ($translatedString == $key) {
+        if ($translatedString === $key) {
             return $this->translator->transChoice($key, $number, $parameters, 'messages', $locale);
         }
 
@@ -83,7 +84,7 @@ class Translator implements TranslatorInterface
     public function getLocale()
     {
         if (null === $this->locale && null !== $this->session) {
-            $this->locale = $this->session->getLocale();
+            $this->locale = $this->session->get('_locale', 'en');
         }
 
         return $this->locale;

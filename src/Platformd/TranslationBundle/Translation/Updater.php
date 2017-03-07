@@ -2,15 +2,11 @@
 
 namespace Platformd\TranslationBundle\Translation;
 
-use JMS\TranslationBundle\Translation\Config;
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
-use JMS\TranslationBundle\Model\MessageCatalogue;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Doctrine\ORM\EntityManager;
-use JMS\TranslationBundle\Model\MessageCollection;
 use Platformd\TranslationBundle\Entity\TranslationToken;
 use Symfony\Component\Yaml\Yaml;
-use Platformd\TranslationBundle\Translation\TranslationMetadata;
 
 /**
  * Responsible for collecting the "scanned" catalog and then making changes to our TranslationToken database

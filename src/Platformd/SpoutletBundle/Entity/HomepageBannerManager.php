@@ -2,42 +2,37 @@
 
 namespace Platformd\SpoutletBundle\Entity;
 
-use Platformd\SpoutletBundle\Entity\HomepageBanner;
+use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
 use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\ORM\EntityManager;
 use Gaufrette\Filesystem;
 use Platformd\SpoutletBundle\Util\Image;
-use HPCloud\HPCloudPHP;
 
-/**
-* 
-*/
 class HomepageBannerManager
 {
-   /**
-    * @var Doctrine\ORM\EntityManager;
-    */
+    /**
+     * @var Doctrine\ORM\EntityManager;
+     */
     private $manager;
 
-   /**
-    * @var Gaufrette\Filesystem
-    */
+    /**
+     * @var Gaufrette\Filesystem
+     */
     private $filesystem;
 
     private $objectStorage = '';
 
-    public function __construct(EntityManager $manager, Filesystem $filesystem,$hpcloud_accesskey='', $hpcloud_secreatkey='', $hpcloud_tenantid='', $hpcloud_url='', $hpcloud_container='',  $objectStorage='',$bannerDir='')
+    public function __construct(EntityManager $manager, Filesystem $filesystem, $hpcloud_accesskey = '', $hpcloud_secreatkey = '', $hpcloud_tenantid = '', $hpcloud_url = '', $hpcloud_container = '', $objectStorage = '', $bannerDir = '')
     {
         $this->manager = $manager;
         $this->filesystem = $filesystem;
-        if($objectStorage == 'HpObjectStorage') {
-	     $this->objectStorage = $objectStorage;
-             $this->hpcloud_url = $hpcloud_url;
-             $this->hpcloud_container =  $hpcloud_container;
-             $this->bannerDir = $bannerDir;
-	     $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey,$hpcloud_secreatkey,$hpcloud_tenantid);
-	}
-     
+        if ($objectStorage == 'HpObjectStorage') {
+            $this->objectStorage = $objectStorage;
+            $this->hpcloud_url = $hpcloud_url;
+            $this->hpcloud_container = $hpcloud_container;
+            $this->bannerDir = $bannerDir;
+            $this->hpCloudObj = new HPCloudPHP($hpcloud_accesskey, $hpcloud_secreatkey, $hpcloud_tenantid);
+        }
     }
 
     public function save(HomepageBanner $banner)
@@ -64,11 +59,11 @@ class HomepageBannerManager
         $roundedPath = $this->createRoundedImage($file, $size);
 
         $filename = $this->generateFilename($size, $file);
-        
-        if($this->objectStorage == "HpObjectStorage")
-          $this->hpCloudObj->SaveToObjectStorage($this->hpcloud_container,$filename,$roundedPath, $this->bannerDir);
+
+        if ($this->objectStorage == "HpObjectStorage")
+            $this->hpCloudObj->SaveToObjectStorage($this->hpcloud_container, $filename, $roundedPath, $this->bannerDir);
         else
-	    $this->filesystem->write($filename, file_get_contents($roundedPath));
+            $this->filesystem->write($filename, file_get_contents($roundedPath));
         // remove the founded path
         unlink($roundedPath);
 
@@ -84,7 +79,8 @@ class HomepageBannerManager
      * Takes in a File object, rounds its corners based on size, and saves it to a file
      *
      * @param \Symfony\Component\HttpFoundation\File\File $file
-     * @param string $size Either banner or thumb
+     * @param string                                      $size Either banner or thumb
+     *
      * @return string $tmpFilename The path where the rounded file was saved
      */
     private function createRoundedImage(File $file, $size)
@@ -106,20 +102,20 @@ class HomepageBannerManager
      * Returns an image resource for the given file
      *
      * @param $filename
+     *
      * @return resource
      */
     private function getImageResourceFromFile($filename)
     {
         list($sourceWidth, $sourceHeight, $sourceType) = getimagesize($filename);
 
-        switch ($sourceType)
-        {
-          case IMAGETYPE_GIF:
-            return imagecreatefromgif($filename);
-          case IMAGETYPE_JPEG:
-            return imagecreatefromjpeg($filename);
-          case IMAGETYPE_PNG:
-            return imagecreatefrompng($filename);
+        switch ($sourceType) {
+            case IMAGETYPE_GIF:
+                return imagecreatefromgif($filename);
+            case IMAGETYPE_JPEG:
+                return imagecreatefromjpeg($filename);
+            case IMAGETYPE_PNG:
+                return imagecreatefrompng($filename);
         }
 
         throw new \InvalidArgumentException(sprintf('Unknown image format "%s"', $sourceType));

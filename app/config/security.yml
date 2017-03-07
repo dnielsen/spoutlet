@@ -1,13 +1,13 @@
-security:
+jms_security_extra:
+    secure_all_services: false
+    expressions: true
 
+security:
     encoders:
-        "FOS\UserBundle\Model\UserInterface":
+        FOS\UserBundle\Model\UserInterface:
             algorithm: sha512
             encode_as_base64: false
             iterations: 1
-
-    factories:
-            - "%kernel.root_dir%/../src/Platformd/UserBundle/Resources/config/security_factory.yml"
 
     providers:
         fos_userbundle:
@@ -17,17 +17,21 @@ security:
             id: platformd.security.user.provider.api
 
     firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
         # turn security off entirely for the fake cevo site
         cevo_fake_site:
             pattern: ^%cevo_fake_api_url%
             security: false
 
         main:
-            platformd-form-login:
-                success_handler: platformd_user.authentication_handler
-                failure_handler: platformd_user.authentication_handler
-                use_referer: true
-                api_authentication: %api_authentication%
+#            platformd-form-login:
+#                success_handler: platformd_user.authentication_handler
+#                failure_handler: platformd_user.authentication_handler
+#                use_referer: true
+#                api_authentication: %api_authentication%
             pattern: ^/
             anonymous:    true
             logout:
@@ -36,17 +40,14 @@ security:
                 success_handler: platformd_user.authentication_handler
             switch_user: ~
             remember_me:
-                key:      "%secret%"
+                secret:      "%secret%"
                 lifetime: 604800 # 1 week (in seconds)
                 path:     /
-                domain:   ~ # Defaults to the current domain from $_SERVER
 
     acl:
         connection: acl
 
     access_control:
-
-
         # the "([\w]+\/)?" pattern allows for the optional locale prefix (e.g. /jp/comments/new or just /comments/new)
         - { path: ^/([\w]+\/)?comments/new, role: ROLE_USER }
 

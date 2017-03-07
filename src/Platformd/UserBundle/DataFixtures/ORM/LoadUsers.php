@@ -95,5 +95,3 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface, OrderedFix
         return 1;
     }
 }
-
-?>

@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Platformd\HtmlWidgetBundle\Validator\HtmlWidgetSlug as AssertUniqueSlug;
 use Gedmo\Sluggable\Util\Urlizer;
-use Symfony\Component\Validator\ExecutionContext;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Platformd\HtmlWidgetBundle\Entity\HtmlWidget
@@ -15,7 +15,6 @@ use Symfony\Component\Validator\ExecutionContext;
  * @ORM\Table(name="html_widget")
  * @ORM\Entity(repositoryClass="Platformd\HtmlWidgetBundle\Entity\HtmlWidgetRepository")
  * @AssertUniqueSlug()
- * @Assert\Callback(methods={"validateSlug"})
  */
 class HtmlWidget
 {
@@ -158,23 +157,21 @@ class HtmlWidget
         return (string) $this->getName();
     }
 
-    public function validateSlug(ExecutionContext $executionContext)
+    /**
+     * @param ExecutionContextInterface $executionContext
+     * @Assert\Callback
+     */
+    public function validateSlug(ExecutionContextInterface $executionContext)
     {
         if (!$this->getSlug()) {
             $slug = Urlizer::urlize($this->getName());
 
             if (!$slug) {
                 $oldPath = $executionContext->getPropertyPath();
-                $propertyPath = $oldPath . '.name';
-                $executionContext->setPropertyPath($propertyPath);
 
-                $executionContext->addViolation(
-                    "Please enter a valid name for your widget.",
-                    array(),
-                    "name"
-                );
-
-                $executionContext->setPropertyPath($oldPath);
+                $executionContext->buildViolation("Please enter a valid name for your widget.")
+                    ->atPath($oldPath . '.name')
+                    ->addViolation();
             }
         }
     }

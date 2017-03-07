@@ -9,10 +9,9 @@ use Gedmo\Sluggable\Util\Urlizer;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\ExecutionContext;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 use DateTime;
-use DateTimezone;
 
 use Platformd\SpoutletBundle\Util\TimeZoneUtil as TzUtil;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
@@ -32,7 +31,6 @@ use Platformd\TagBundle\Model\TaggableInterface;
  * )
  * @UniqueEntity(fields={"slug"}, message="This URL is already used.  If you have left slug blank, this means that an existing deal is already using this deal name.")
  * @ORM\Entity(repositoryClass="Platformd\SpoutletBundle\Entity\ContestRepository")
- * @Assert\Callback(methods={"validateDateRanges"})
  */
 class Contest implements LinkableInterface, TaggableInterface
 {
@@ -832,7 +830,12 @@ class Contest implements LinkableInterface, TaggableInterface
         );
     }
 
-    public function validateDateRanges(ExecutionContext $executionContext)
+    /**
+     * @param ExecutionContextInterface $executionContext
+     *
+     * @Assert\Callback
+     */
+    public function validateDateRanges(ExecutionContextInterface $executionContext)
     {
         // error if submissionEnd or votingEnd datetime values are before their respective start datetimes
 
@@ -842,28 +845,21 @@ class Contest implements LinkableInterface, TaggableInterface
 
         if ($this->submissionEnd < $this->submissionStart) {
             $propertyPath = $executionContext->getPropertyPath() . '.submissionEnd';
-            $executionContext->setPropertyPath($propertyPath);
 
-            $executionContext->addViolation(
-                "The submission end date/time must be after the start date/time",
-                array(),
-                "submissionEnd"
-            );
+            $executionContext->buildViolation("The submission end date/time must be after the start date/time")
+                ->atPath($propertyPath)
+                ->addViolation();
 
             return;
         }
 
         if ($this->votingEnd < $this->votingStart) {
             $propertyPath = $executionContext->getPropertyPath() . '.votingEnd';
-            $executionContext->setPropertyPath($propertyPath);
 
-            $executionContext->addViolation(
-                "The voting end date/time must be after the start date/time",
-                array(),
-                "votingEnd"
-            );
+            $executionContext->buildViolation("The voting end date/time must be after the start date/time")
+                ->atPath($propertyPath)
+                ->addViolation();
         }
-
     }
 
     public function isFinished()

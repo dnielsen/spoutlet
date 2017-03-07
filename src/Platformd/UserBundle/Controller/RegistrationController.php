@@ -6,7 +6,6 @@ use FOS\UserBundle\Controller\RegistrationController as BaseRegistrationControll
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Platformd\UserBundle\Form\Type\TradeshowCompleteRegType;
 use Platformd\UserBundle\Entity\RegistrationSource;
 
 class RegistrationController extends BaseRegistrationController
@@ -15,13 +14,13 @@ class RegistrationController extends BaseRegistrationController
     {
         $this->enforceAgeProtection();
 
-        $request             = $this->container->get('request');
-        $session             = $request->getSession();
-        $form                = $this->container->get('fos_user.registration.form');
-        $formHandler         = $this->container->get('fos_user.registration.form.handler');
+        $request = $this->container->get('request');
+        $session = $request->getSession();
+        $form = $this->container->get('fos_user.registration.form');
+        $formHandler = $this->container->get('fos_user.registration.form.handler');
         $confirmationEnabled = $this->container->getParameter('fos_user.registration.confirmation.enabled');
-        $timedout            = $request->get('timedout') ? true : false;
-        $suspended           = $request->get('suspended') ? true : false;
+        $timedout = $request->get('timedout') ? true : false;
+        $suspended = $request->get('suspended') ? true : false;
 
         if ($queryString = $request->getQueryString()) {
             parse_str($queryString, $queryParams);
@@ -34,28 +33,29 @@ class RegistrationController extends BaseRegistrationController
         $sourceInfo = $session->get('registration_source');
 
         $process = $formHandler->process($confirmationEnabled);
+
         if ($process) {
-            $user       = $form->getData();
-            $authUser   = false;
+            $user = $form->getData();
+            $authUser = false;
 
             $ipLookupUtil = $this->container->get('platformd.model.ip_lookup_util');
-            $em           = $this->container->get('doctrine.orm.entity_manager');
-            $countryCode  = $ipLookupUtil->getCountryCode($ipLookupUtil->getClientIp($request));
-            $country      = $em->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
+            $em = $this->container->get('doctrine.orm.entity_manager');
+            $countryCode = $ipLookupUtil->getCountryCode($ipLookupUtil->getClientIp($request));
+            $country = $em->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
 
             $regSource = null;
 
             if ($sourceInfo) {
                 $sourceType = isset($sourceInfo['type']) ? $sourceInfo['type'] : null;
-                $sourceId   = isset($sourceInfo['id']) ? $sourceInfo['id'] : null;
+                $sourceId = isset($sourceInfo['id']) ? $sourceInfo['id'] : null;
 
                 if ($sourceType) {
-                    $regSource  = new RegistrationSource($user, $sourceType, $sourceId, $country);
+                    $regSource = new RegistrationSource($user, $sourceType, $sourceId, $country);
                 }
             }
 
             if (!$regSource) {
-                $regSource  = new RegistrationSource($user, RegistrationSource::REGISTRATION_SOURCE_TYPE_OTHER, null, $country);
+                $regSource = new RegistrationSource($user, RegistrationSource::REGISTRATION_SOURCE_TYPE_OTHER, null, $country);
             }
 
             $em->persist($regSource);
@@ -67,12 +67,12 @@ class RegistrationController extends BaseRegistrationController
                 $session->set('fos_user_send_confirmation_email/email', $user->getEmail());
                 $route = 'fos_user_registration_check_email';
             } else {
-                $authUser   = true;
-                $route      = 'fos_user_registration_confirmed';
+                $authUser = true;
+                $route = 'fos_user_registration_confirmed';
             }
 
-            $url        = $this->container->get('router')->generate($route);
-            $response   = new RedirectResponse($url);
+            $url = $this->container->get('router')->generate($route);
+            $response = new RedirectResponse($url);
 
             if ($authUser) {
                 $this->authenticateUser($user, $response);
@@ -82,14 +82,14 @@ class RegistrationController extends BaseRegistrationController
             return $response;
         }
 
-        return $this->container->get('templating')->renderResponse('UserBundle:Registration:register.html.'.$this->getEngine(), array(
-            'form'           => $form->createView(),
-            'theme'          => $this->container->getParameter('fos_user.template.theme'),
-            'errors'         => $form->getErrors(),
-            'config'         => $this->getCurrentSite()->getSiteConfig(),
-            'locale'         => $this->getCurrentSite()->getDefaultLocale(),
-            'timedout'       => $timedout,
-            'suspended'      => $suspended,
+        return $this->container->get('templating')->renderResponse('UserBundle:Registration:register.html.' . $this->getEngine(), array(
+            'form' => $form->createView(),
+//            'theme' => $this->container->getParameter('fos_user.template.theme'),
+            'errors' => $form->getErrors(),
+            'config' => $this->getCurrentSite()->getSiteConfig(),
+            'locale' => $this->getCurrentSite()->getDefaultLocale(),
+            'timedout' => $timedout,
+            'suspended' => $suspended,
         ));
     }
 
@@ -100,15 +100,14 @@ class RegistrationController extends BaseRegistrationController
     {
         return $this->container
             ->get('templating')
-            ->renderResponse('UserBundle:Registration:tooYoung.html.twig')
-        ;
+            ->renderResponse('UserBundle:Registration:tooYoung.html.twig');
     }
+
 
     private function getCurrentSite()
     {
         return $this->container->get('platformd.util.site_util')->getCurrentSite();
     }
-
 
     private function enforceAgeProtection()
     {
@@ -153,8 +152,8 @@ class RegistrationController extends BaseRegistrationController
             $this->setFlash('success', 'Welcome to Campsite!');
         }
 
-        $this->container->get('platformd_user.mailer')->sendWelcomeEmail($user);
-        
+//        $this->container->get('platformd_user.mailer')->sendWelcomeEmail($user); //TODO: fixme
+
         $response = new RedirectResponse($this->container->get('router')->generate($path, $params));
         $this->authenticateUser($user, $response);
 

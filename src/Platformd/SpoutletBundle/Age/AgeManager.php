@@ -2,21 +2,17 @@
 
 namespace Platformd\SpoutletBundle\Age;
 
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * Manager for keeping track of how old the current user is
  */
 class AgeManager
 {
-    private $securityContext;
-
     private $session;
 
-    public function __construct(SecurityContextInterface $securityContext, Session $session)
+    public function __construct(Session $session)
     {
-        $this->securityContext = $securityContext;
         $this->session = $session;
     }
 

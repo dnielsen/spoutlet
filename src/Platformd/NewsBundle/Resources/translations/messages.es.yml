@@ -11,12 +11,12 @@ platformd.news.admin.modified: Your news item has been modified !
 platformd.news.admin.deleted: Your news item has been deleted !
 platformd.news.admin.edit_title: Edit a news item
 platformd.news.admin.upload_image: Upload an image
-platformd.news.admin.image_dimensions: Used on news listings page (recommended size: 634x400)
+platformd.news.admin.image_dimensions: 'Used on news listings page (recommended size: 634x400)'
 platformd.news.admin.article_thumbnail: Article Thumbnail
-platformd.news.admin.thumbnail_dimensions: Used in news widgets (recommended size: 274x92)
-platformd.news.announced_date: %posted_date%
-platformd.news.published_date: %posted_date%
-platformd.news.comment_count: (%comment_count% comentario)|(%comment_count% comentarios)
+platformd.news.admin.thumbnail_dimensions: 'Used in news widgets (recommended size: 274x92)'
+platformd.news.announced_date: '%posted_date%'
+platformd.news.published_date: '%posted_date%'
+platformd.news.comment_count: '(%comment_count% comentario)|(%comment_count% comentarios)'
 platformd.news.widget.title: Novedades
 platformd.news.widget.article: Artículos
 platformd.news.widget.news: Novedades

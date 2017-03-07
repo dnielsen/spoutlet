@@ -3,27 +3,41 @@
 namespace Platformd\IdeaBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Platformd\IdeaBundle\Entity\RegistrationField;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RegistrationFieldFormType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('type',     'choice', array('required' => true,
-                                              'choices' => array(RegistrationField::TYPE_TEXT     => 'Text',
-                                                                 RegistrationField::TYPE_CHECKBOX => 'Checkbox')))
-            ->add('question', 'text',   array('attr' => array('size' => '60%'), 'required' => true))
-        ;
+            ->add('type', ChoiceType::class, array(
+                'required' => true,
+                'choices' => array(
+                    'Text' => RegistrationField::TYPE_TEXT,
+                    'Checkbox' => RegistrationField::TYPE_CHECKBOX,
+                ),
+                'choices_as_values' => true,
+            ))
+            ->add('question', TextType::class, array(
+                'attr' => array(
+                    'size' => '60%'
+                ),
+            ));
     }
 
-    public function getName()
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => RegistrationField::class
+        ]);
+    }
+
+    public function getBlockPrefix()
     {
         return 'registration_field';
-    }
-
-    public function getDefaultOptions(array $options){
-        return array('data_class' => 'Platformd\IdeaBundle\Entity\RegistrationField');
     }
 }

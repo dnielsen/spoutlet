@@ -33,6 +33,9 @@
             {{ form_row(form.entryInstructions) }}
             {{ form_row(form.voteInstructions) }}
             {{ form_row(form.tags) }}
+            <p class="help">
+                Enter keywords to help people discover the contest.
+            </p>
 
             {{ form_label(form.redemptionInstructionsArray) }}
             {{ form_errors(form.redemptionInstructionsArray) }}
@@ -47,14 +50,16 @@
             </ol>
 
             {{ form_row(form.maxEntries) }}
-
+            <p class="help">
+                To allow unlimited entries, select "0"
+            </p>
         </div>
     </fieldset>
 
     <fieldset>
         <legend>d) Restrictions</legend>
         <div class="game-page-form">
-            <div class="alert alert-info help" style="width: 600px;"><i class="icon-info-sign" style="padding-right: 10px;"></i>{{ form.ruleset.vars.help | raw }}</div>
+            {#<div class="alert alert-info help" style="width: 600px;"><i class="icon-info-sign" style="padding-right: 10px;"></i>{{ form.ruleset.vars.help | raw }}</div>#}
             <ul class="restrictions-list clearfix row-fluid rules" data-prototype="{{ form_widget(form.ruleset.rules.vars.prototype)|e }}">
                 {# see the CSS file this explanation #}
                 <li class="dummy"></li>
@@ -75,6 +80,9 @@
         <div class="row-fluid first">
             <div class="span6">
                 {{ form_row(form.openGraphOverride.description) }}
+                <p class="help">
+                    Needs to be 140 characters or less. Tone: social, casual, conversational description that appears on someone's facebook wall/timeline when that person likes the page
+                </p>
                 {{ form_row(form.openGraphOverride.thumbnail) }}
             </div>
         </div>
@@ -87,6 +95,9 @@
                 {{ form_row(form.status) }}
                 {{ form_row(form.hidden) }}
                 {{ form_row(form.testOnly) }}
+                <p class="help">
+                    This allows admins to still test the operation of the contest IF it is unpublished
+                </p>
             </div>
         </div>
     </fieldset>

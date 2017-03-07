@@ -25,7 +25,7 @@ class RegistrationSource
     const REGISTRATION_SOURCE_TYPE_IMAGES      = 11;
     const REGISTRATION_SOURCE_TYPE_OTHER       = 12;
 
-    static $sourceEntities = array(
+    public static $sourceEntities = array(
         self::REGISTRATION_SOURCE_TYPE_GIVEAWAY    => 'GiveawayBundle:Giveaway',
         self::REGISTRATION_SOURCE_TYPE_CONTEST     => 'SpoutletBundle:Contest',
         self::REGISTRATION_SOURCE_TYPE_SWEEPSTAKES => 'SweepstakesBundle:Sweepstakes',
@@ -68,7 +68,7 @@ class RegistrationSource
     /**
      * The id of the entity that caused the user to register - string because some entities use a string as the ID (e.g. comment thread)
      *
-     * @ORM\Column(name="source_id",type="string", nullable="true")
+     * @ORM\Column(name="source_id",type="string", nullable=true)
      */
     protected $sourceId;
 

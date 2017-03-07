@@ -18,25 +18,32 @@ class Mailer implements MailerInterface
     private $siteUtil;
     private $userManager;
 
-    function __construct(EmailManager $emailManager, RouterInterface $router, EngineInterface $templating, array $parameters, SiteUtil $siteUtil, $userManager) {
+    public function __construct(
+        EmailManager $emailManager,
+        RouterInterface $router,
+        EngineInterface $templating,
+        array $parameters,
+        SiteUtil $siteUtil,
+        $userManager
+    ) {
         $this->emailManager = $emailManager;
-        $this->router       = $router;
-        $this->templating   = $templating;
-        $this->parameters   = $parameters;
-        $this->siteUtil     = $siteUtil;
-        $this->userManager  = $userManager;
+        $this->router = $router;
+        $this->templating = $templating;
+        $this->parameters = $parameters;
+        $this->siteUtil = $siteUtil;
+        $this->userManager = $userManager;
     }
 
     public function sendResettedPasswordMessage(UserInterface $user)
     {
         $url = $this->router->generate('fos_user_resetting_reset', array(
-            'token'   => $user->getConfirmationToken(),
+            'token' => $user->getConfirmationToken(),
             '_locale' => $this->userManager->getCountryLocaleForUser($user),
         ), true);
 
         $rendered = $this->templating->render(
             'FOSUserBundle:Admin/Resetted:resetted_email.txt.twig', array(
-                'user'            => $user,
+                'user' => $user,
                 'confirmationUrl' => $url
             )
         );
@@ -51,9 +58,9 @@ class Mailer implements MailerInterface
     public function sendResettingEmailMessage(UserInterface $user)
     {
         $template = $this->parameters['resetting.template'];
-        $url      = $this->router->generate('fos_user_resetting_reset', array('token' => $user->getConfirmationToken()), true);
+        $url = $this->router->generate('fos_user_resetting_reset', array('token' => $user->getConfirmationToken()), true);
         $rendered = $this->templating->render($template, array(
-            'user'            => $user,
+            'user' => $user,
             'confirmationUrl' => $url
         ));
         $this->sendEmailMessage($rendered, $user->getEmail(), 'Password Reset Email');
@@ -62,10 +69,10 @@ class Mailer implements MailerInterface
     public function sendConfirmationEmailMessage(UserInterface $user)
     {
         $template = $this->parameters['confirmation.template'];
-        $url      = $this->router->generate('fos_user_registration_confirm', array('token' => $user->getConfirmationToken()), true);
+        $url = $this->router->generate('fos_user_registration_confirm', array('token' => $user->getConfirmationToken()), true);
         $rendered = $this->templating->render($template, array(
-            'user'            => $user,
-            'confirmationUrl' =>  $url
+            'user' => $user,
+            'confirmationUrl' => $url
         ));
         $this->sendEmailMessage($rendered, $user->getEmail(), 'Registration Email');
     }
@@ -75,8 +82,8 @@ class Mailer implements MailerInterface
         $template = 'UserBundle:Registration:email_welcome.txt.twig';
 
         $rendered = $this->templating->render($template, array(
-            'user'       => $user,
-            'profileUrl' => $this->router->generate('profile_edit', array('userId'=>$user->getId()), true),
+            'user' => $user,
+            'profileUrl' => $this->router->generate('profile_edit', array('userId' => $user->getId()), true),
         ));
 
         $this->sendEmailMessage($rendered, $user->getEmail(), 'Welcome');
@@ -85,11 +92,11 @@ class Mailer implements MailerInterface
     public function sendTradeshowConfirmationEmailMessage(UserInterface $user, $site)
     {
         $template = 'UserBundle:Registration:email_api.txt.twig';
-        $path     = $this->router->generate('accounts_tradeshow_confirm', array('token' => $user->getConfirmationToken()), false);
-        $url      = sprintf('https://%s%s', $site->getFullDomain(), $path);
+        $path = $this->router->generate('accounts_tradeshow_confirm', array('token' => $user->getConfirmationToken()), false);
+        $url = sprintf('https://%s%s', $site->getFullDomain(), $path);
         $rendered = $this->templating->render($template, array(
-            'user'            => $user,
-            'confirmationUrl' =>  $url
+            'user' => $user,
+            'confirmationUrl' => $url
         ));
         $this->sendEmailMessage($rendered, $user->getEmail(), 'Registration Email');
     }
@@ -100,7 +107,6 @@ class Mailer implements MailerInterface
      * This means that the body must be HTML - not text like normal
      *
      * @param $renderedTemplate
-     * @param $fromEmail
      * @param $toEmail
      * @param $type
      */
@@ -108,9 +114,9 @@ class Mailer implements MailerInterface
     {
         // Render the email, use the first line as the subject, and the rest as the body
         $renderedLines = explode("\n", trim($renderedTemplate));
-        $subject       = $renderedLines[0];
-        $body          = implode("\n", array_slice($renderedLines, 1));
-        $site          = $this->siteUtil->getCurrentSite() ? $this->siteUtil->getCurrentSite()->getFullDomain() : 'unknown';
+        $subject = $renderedLines[0];
+        $body = implode("\n", array_slice($renderedLines, 1));
+        $site = $this->siteUtil->getCurrentSite() ? $this->siteUtil->getCurrentSite()->getFullDomain() : 'unknown';
 
         $this->emailManager->sendHtmlEmail($toEmail, $subject, $body, $type, $site);
     }

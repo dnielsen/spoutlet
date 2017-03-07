@@ -2,24 +2,22 @@
 
 namespace Platformd\UserBundle\Model;
 
-use Doctrine\ORM\EntityRepository,
-    Doctrine\ORM\EntityManager
-;
+use Doctrine\ORM\EntityManager;
 
+use Platformd\UserBundle\ViewModel\AvatarIndexData;
 use Symfony\Component\HttpFoundation\File\File;
 use Gaufrette\Filesystem;
 
 use Platformd\UserBundle\Entity\User,
     Platformd\UserBundle\Entity\Avatar,
-    Platformd\UserBundle\ViewModel\avatar_index_data,
     Platformd\UserBundle\QueueMessage\AvatarResizeQueueMessage,
-    Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage
-;
+    Platformd\UserBundle\QueueMessage\AvatarFileSystemActionsQueueMessage;
 
 use Platformd\SpoutletBundle\HPCloud\HPCloudPHP;
+
 class AvatarManager
 {
-    const IMAGE_CROP_MAX_WIDTH  = 512;
+    const IMAGE_CROP_MAX_WIDTH = 512;
     const IMAGE_CROP_MAX_HEIGHT = 512;
 
     private $em;
@@ -33,31 +31,31 @@ class AvatarManager
     private $objectStorage = '';
 
     public function __construct(EntityManager $em, Filesystem $filesystem,
-            $publicBucket,
-            $privateBucket,
-            $s3, $queueUtil,
-            $userManager,
-            $hpcloud_accesskey='',
-            $hpcloud_secretkey='',
-            $hpcloud_tenantid='',
-            $hpcloud_url='',
-            $hpcloud_container='',
-            $objectStorage='')
+                                $publicBucket,
+                                $privateBucket,
+                                $s3, $queueUtil,
+                                $userManager,
+                                $hpcloud_accesskey = '',
+                                $hpcloud_secretkey = '',
+                                $hpcloud_tenantid = '',
+                                $hpcloud_url = '',
+                                $hpcloud_container = '',
+                                $objectStorage = '')
     {
-        $this->em            = $em;
-        $this->filesystem    = $filesystem;
-        $this->avatarRepo    = $em->getRepository('UserBundle:Avatar');
-        $this->publicBucket  = $publicBucket;
+        $this->em = $em;
+        $this->filesystem = $filesystem;
+        $this->avatarRepo = $em->getRepository('UserBundle:Avatar');
+        $this->publicBucket = $publicBucket;
         $this->privateBucket = $privateBucket;
-        $this->s3            = $s3;
-        $this->queueUtil     = $queueUtil;
-        $this->userManager   = $userManager;
+        $this->s3 = $s3;
+        $this->queueUtil = $queueUtil;
+        $this->userManager = $userManager;
 
-        if($objectStorage == "HpObjectStorage") {
+        if ($objectStorage == "HpObjectStorage") {
             $this->objectStorage = $objectStorage;
-            $this->hpcloud_container =   $hpcloud_container;
+            $this->hpcloud_container = $hpcloud_container;
             $this->hpcloud_url = $hpcloud_url;
-            $this->hpcloud_accesskey = $hpcloud_accesskey; 
+            $this->hpcloud_accesskey = $hpcloud_accesskey;
             $this->hpcloud_secretkey = $hpcloud_secretkey;
             $this->hpcloud_tenantid = $hpcloud_tenantid;
         }
@@ -89,11 +87,11 @@ class AvatarManager
     public function getAllApprovedForUser(User $user)
     {
         return $this->avatarRepo->findBy(array(
-            'user'      => $user->getId(),
-            'approved'  => true,
-            'deleted'   => false,
-            'cropped'   => true,
-            'resized'   => true,
+            'user' => $user->getId(),
+            'approved' => true,
+            'deleted' => false,
+            'cropped' => true,
+            'resized' => true,
             'processed' => true,
         ));
     }
@@ -121,18 +119,17 @@ class AvatarManager
         $fileUuid = $this->uuidGen();
         $this->checkUserUuid($user);
 
-        $rawFilename = 'raw.'.$file->guessExtension();
+        $rawFilename = 'raw.' . $file->guessExtension();
         $opts = array('headers' => array('Cache-Control' => 'max-age=0'));
-        $filename = $user->getUuid().'/'.$fileUuid.'/'.$rawFilename;
-        
+        $filename = $user->getUuid() . '/' . $fileUuid . '/' . $rawFilename;
+
         $filename = $user->getUuid();
         //$filename = $fileUuid;
-        if($this->objectStorage == 'HpObjectStorage') {
+        if ($this->objectStorage == 'HpObjectStorage') {
             $this->hpCloudObj = new HPCloudPHP($this->hpcloud_accesskey, $this->hpcloud_secretkey, $this->hpcloud_tenantid);
-            $this->hpCloudObj->SaveToObjectStorage($this->hpcloud_container,$filename,$file,AVATAR::AVATAR_DIRECTORY_PREFIX);
-    	}
-        else {
-            $data = $this->filesystem->write($filename, file_get_contents($file),$opts);
+            $this->hpCloudObj->SaveToObjectStorage($this->hpcloud_container, $filename, $file, AVATAR::AVATAR_DIRECTORY_PREFIX);
+        } else {
+            $data = $this->filesystem->write($filename, file_get_contents($file), $opts);
         }
         unlink($file);
 
@@ -141,17 +138,17 @@ class AvatarManager
 
     protected function uuidGen()
     {
-      $html = file_get_contents("http://www.famkruithof.net/uuid/uuidgen");
-      preg_match("/<h3>(.*)<\/h3>/i", $html, $match);
-      $title = $match[1];
-      return $title;
+        $html = file_get_contents("http://www.famkruithof.net/uuid/uuidgen");
+        preg_match("/<h3>(.*)<\/h3>/i", $html, $match);
+        $title = $match[1];
+        return $title;
     }
 
     public function getSignedImageUrl($avatarUuid, $filename, User $user)
     {
         $this->checkUserUuid($user);
 
-        $filePath = $this->filesystem->getAdapter()->getDirectory().'/'.$user->getUuid().'/'.$avatarUuid.'/'.$filename;
+        $filePath = $this->filesystem->getAdapter()->getDirectory() . '/' . $user->getUuid() . '/' . $avatarUuid . '/' . $filename;
         return $this->s3->get_object_url($this->privateBucket, $filePath, '1 hour');
     }
 
@@ -159,14 +156,14 @@ class AvatarManager
     {
         $this->checkUserUuid($user);
 
-        $message            = new AvatarResizeQueueMessage();
-        $message->userUuid  = $user->getUuid();
-        $message->fileUuid  = $fileUuid;
+        $message = new AvatarResizeQueueMessage();
+        $message->userUuid = $user->getUuid();
+        $message->fileUuid = $fileUuid;
         $message->extension = $extension;
-        $message->width     = $width;
-        $message->height    = $height;
-        $message->x         = $x;
-        $message->y         = $y;
+        $message->width = $width;
+        $message->height = $height;
+        $message->x = $x;
+        $message->y = $y;
 
         $result = $this->queueUtil->addToQueue($message);
 
@@ -176,12 +173,12 @@ class AvatarManager
 
     public function addToFilesystemActionsQueue($fileUuid, User $user, $action)
     {
-        $message  = new AvatarFileSystemActionsQueueMessage();
+        $message = new AvatarFileSystemActionsQueueMessage();
 
         $this->checkUserUuid($user);
 
         $message->userUuid = $user->getUuid();
-        $message->action   = $action;
+        $message->action = $action;
         $message->fileUuid = $fileUuid;
 
         $result = $this->queueUtil->addToQueue($message);
@@ -190,18 +187,18 @@ class AvatarManager
 
     }
 
-    public function getAvatarListingData(User $user, $size=84)
+    public function getAvatarListingData(User $user, $size = 84)
     {
         $this->checkUserUuid($user);
 
-        $data    = new avatar_index_data();
+        $data = new AvatarIndexData();
         $avatars = $this->getAllApprovedForUser($user);
 
         foreach ($avatars as $avatar) {
             $url = $this->getAvatarUrl($user->getUuid(), $size, $avatar->getUuid());
 
             $avatarDetails = array(
-                'id'  => $avatar->getId(),
+                'id' => $avatar->getId(),
                 'url' => $url,
                 'uuid' => $avatar->getUuid(),
             );
@@ -221,7 +218,7 @@ class AvatarManager
 
     public function getUnapprovedAvatars($maxPerPage = 64, $currentPage = 1, &$pager = null, $locale = null)
     {
-        $avatars   = $this->avatarRepo->getUnapprovedAvatars($maxPerPage, $currentPage, $pager, $locale);
+        $avatars = $this->avatarRepo->getUnapprovedAvatars($maxPerPage, $currentPage, $pager, $locale);
         $avatarArr = array();
 
         foreach ($avatars as $avatar) {
@@ -245,7 +242,7 @@ class AvatarManager
         }
 
         $approved = $processType == 'approve';
-        $avatars  = $this->avatarRepo->findIdsIn($avatarIds);
+        $avatars = $this->avatarRepo->findIdsIn($avatarIds);
 
         foreach ($avatars as $avatar) {
 
@@ -269,31 +266,31 @@ class AvatarManager
         $this->em->flush();
     }
 
-    public function getAvatarUrl($userUuid, $size, $fileUuid = 'by_size',$subDir= null)
+    public function getAvatarUrl($userUuid, $size, $fileUuid = 'by_size', $subDir = null)
     {
         if ($this->publicBucket == "platformd") {
             $cf = "http://media.alienwarearena.com";
         } else {
-	
-            $cf = ($this->objectStorage == "HpObjectStorage") ?  $this->hpcloud_url.$this->hpcloud_container : "https://s3.amazonaws.com/platformd-public";
-           // $cf =  "https://s3.amazonaws.com/platformd-public";
-        }
-       if($subDir != "") {
-           $url = $this->hpcloud_url.$this->hpcloud_container."/images/avatar/";
-           return $url.$userUuid;
 
-       }
-        
+            $cf = ($this->objectStorage == "HpObjectStorage") ? $this->hpcloud_url . $this->hpcloud_container : "https://s3.amazonaws.com/platformd-public";
+            // $cf =  "https://s3.amazonaws.com/platformd-public";
+        }
+        if ($subDir != "") {
+            $url = $this->hpcloud_url . $this->hpcloud_container . "/images/avatar/";
+            return $url . $userUuid;
+
+        }
+
         //return $cf.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid.'/'.$fileUuid.'/'.$size.'x'.$size.'.png';
-       return  $cf.'/'.Avatar::AVATAR_DIRECTORY_PREFIX.'/'.$userUuid;
-    
+        return $cf . '/' . Avatar::AVATAR_DIRECTORY_PREFIX . '/' . $userUuid;
+
 
     }
 
     private function checkUserUuid($user)
     {
         if (!$user->getUuid()) {
-            throw new \Exception('User [ ID => '.$user->getId().' ] tried to create an avatar but does not have a UUID set.');
+            throw new \Exception('User [ ID => ' . $user->getId() . ' ] tried to create an avatar but does not have a UUID set.');
         }
     }
 }

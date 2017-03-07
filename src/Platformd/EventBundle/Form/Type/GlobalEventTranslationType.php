@@ -2,17 +2,20 @@
 
 namespace Platformd\EventBundle\Form\Type;
 
+use Platformd\EventBundle\Entity\GlobalEventTranslation;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
 class GlobalEventTranslationType extends EventTranslationType
 {
-    public function getName()
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return 'platformd_global_event_translation';
+        $resolver->setDefaults([
+            'data_class' => GlobalEventTranslation::class,
+        ]);
     }
 
-    public function getDefaultOptions(array $options)
+    public function getBlockPrefix()
     {
-        $options['data_class'] = 'Platformd\EventBundle\Entity\GlobalEventTranslation';
-
-        return $options;
+        return 'platformd_global_event_translation';
     }
 }

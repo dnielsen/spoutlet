@@ -4,7 +4,6 @@ namespace Platformd\SpoutletBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Platformd\SpoutletBundle\Entity\Country;
 
 /**
  * Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule
@@ -48,21 +47,21 @@ class CountryAgeRestrictionRule
     /**
      * @var integer $minAge
      *
-     * @ORM\Column(name="min_age", type="integer", nullable="true")
+     * @ORM\Column(name="min_age", type="integer", nullable=true)
      */
     private $minAge;
 
     /**
      * @var integer $maxAge
      *
-     * @ORM\Column(name="max_age", type="integer", nullable="true")
+     * @ORM\Column(name="max_age", type="integer", nullable=true)
      */
     private $maxAge;
 
     /**
      * @var string $ruleType
      *
-     * @ORM\Column(name="rule_type", type="string", length="50")
+     * @ORM\Column(name="rule_type", type="string", length=50)
      */
     private $ruleType;
 

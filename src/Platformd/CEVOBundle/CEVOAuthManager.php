@@ -12,8 +12,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class CEVOAuthManager
 {
     const REGISTER_PATH = '/account/register';
-    const LOGIN_PATH    = '/account/login';
-    const LOGOUT_PATH   = '/cmd/account/logout';
+    const LOGIN_PATH = '/account/login';
+    const LOGOUT_PATH = '/cmd/account/logout';
     const CHANGE_PASSWORD_PATH = '/account/password';
 
     /**
@@ -69,7 +69,7 @@ class CEVOAuthManager
         $url = sprintf('%s%s%s', $this->getCevoBaseUrl(), $prefix, $path);
 
         if ($returnUrl) {
-            $url .= '?return='.urlencode($returnUrl);
+            $url .= '?return=' . urlencode($returnUrl);
         }
 
         return $url;
@@ -99,7 +99,7 @@ class CEVOAuthManager
         if (strpos($this->cevoSiteUrl, 'http://') !== 0) {
             $request = $this->getRequest();
 
-            $this->cevoSiteUrl = $request->getScheme().'://'.$request->getHttpHost().$request->getBaseUrl().$this->cevoSiteUrl;
+            $this->cevoSiteUrl = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBaseUrl() . $this->cevoSiteUrl;
         }
 
         return $this->cevoSiteUrl;

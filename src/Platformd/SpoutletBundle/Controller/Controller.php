@@ -2,7 +2,6 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
-use Platformd\EventBundle\Entity\Event;
 use Platformd\EventBundle\Entity\GroupEvent;
 use Platformd\EventBundle\Entity\GlobalEvent;
 use Platformd\EventBundle\Entity\EventSession;
@@ -15,10 +14,9 @@ use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
 use Platformd\SpoutletBundle\Util\HttpUtil;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller as BaseController;
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -29,19 +27,23 @@ class Controller extends BaseController
 {
     protected $cache;
 
-    protected function getCurrentSite() {
+    protected function getCurrentSite()
+    {
         return $this->container->get('platformd.util.site_util')->getCurrentSite();
     }
 
-    protected function getCurrentSiteCached() {
+    protected function getCurrentSiteCached()
+    {
         return $this->container->get('platformd.util.site_util')->getCurrentSiteCached();
     }
 
-    protected function getVarnishUtil() {
+    protected function getVarnishUtil()
+    {
         return $this->container->get('platformd.util.varnish_util');
     }
 
-    protected function varnishCache($response, $sharedMaxAge, $maxAge = 0) {
+    protected function varnishCache($response, $sharedMaxAge, $maxAge = 0)
+    {
         $this->getVarnishUtil()->cacheResponse($response, $sharedMaxAge, $maxAge);
     }
 
@@ -50,13 +52,15 @@ class Controller extends BaseController
         $this->getVarnishUtil()->banCachedObject($path, $parameters, $bestEffort);
     }
 
-    protected function getCurrentSiteId() {
+    protected function getCurrentSiteId()
+    {
         return $this->getCurrentSiteCached()->getId();
     }
 
-    protected function getCurrentUser() {
-        $token = $this->container->get('security.context')->getToken();
-        $user  = $token === null ? null : $token->getUser();
+    protected function getCurrentUser()
+    {
+        $token = $this->container->get('security.token_storage')->getToken();
+        $user = $token === null ? null : $token->getUser();
 
         if ($user === 'anon.') {
             return null;
@@ -65,11 +69,13 @@ class Controller extends BaseController
         return $user;
     }
 
-    protected function getParameter($parameterName) {
+    protected function getParameter($parameterName)
+    {
         return $this->container->getParameter($parameterName);
     }
 
-    protected function getCache() {
+    protected function getCache()
+    {
 
         if ($this->cache) {
             return $this->cache;
@@ -80,28 +86,33 @@ class Controller extends BaseController
         return $this->cache;
     }
 
-    protected function getTemplating() {
+    protected function getTemplating()
+    {
         return $this->container->get('templating');
     }
 
-    public function generateErrorPage($title = 'platformd.not_found.title', $body = 'platformd.not_found.body') {
+    public function generateErrorPage($title = 'platformd.not_found.title', $body = 'platformd.not_found.body')
+    {
         return $this->render('SpoutletBundle::error.html.twig',
             array(
                 'title' => $title,
-                'body'  => $body));
+                'body' => $body));
     }
 
-    protected function getSiteFromLocale($locale) {
-        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
+    protected function getSiteFromLocale($locale)
+    {
+        return $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
     }
 
     // See comment in config_dev.yml re. ip_lookup_override parameter when using this function in a dev environment.
-    protected function getCurrentCountry() {
+    protected function getCurrentCountry()
+    {
         $countryCode = $this->getCurrentCountryCode();
-        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
+        return $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
     }
 
-    protected function getCurrentCountryCode() {
+    protected function getCurrentCountryCode()
+    {
         return $this->getIpLookupUtil()->getCountryCode($this->getClientIp($this->getRequest()));
     }
 
@@ -110,15 +121,15 @@ class Controller extends BaseController
      */
     protected function getLocale()
     {
-        return $this->container->get('session')->getLocale();
+        return $this->container->get('request')->getLocale();
     }
 
     /**
-     * @return \Symfony\Component\Security\Core\SecurityContextInterface
+     * @return object|\Symfony\Component\Security\Core\Authorization\AuthorizationChecker
      */
     protected function getSecurity()
     {
-        return $this->get('security.context');
+        return $this->get('security.authorization_checker');
     }
 
     /**
@@ -127,7 +138,7 @@ class Controller extends BaseController
     protected function getGiveawayRepo()
     {
         return $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('GiveawayBundle:Giveaway');
     }
 
@@ -137,7 +148,7 @@ class Controller extends BaseController
     protected function getSweepstakesRepo()
     {
         return $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('SweepstakesBundle:Sweepstakes');
     }
 
@@ -147,7 +158,7 @@ class Controller extends BaseController
     protected function getNewsRepo()
     {
         return $this->getDoctrine()
-            ->getEntityManager()
+            ->getManager()
             ->getRepository('NewsBundle:News');
     }
 
@@ -171,21 +182,16 @@ class Controller extends BaseController
         return $this->container->get('platformd.util.queue_util');
     }
 
-    # this function getUser is only here because it exists in many files... we should no longer use this one and should instead use getCurrentUser()
-    protected function getUser()
-    {
-        return $this->getCurrentUser();
-    }
-
     /**
      * Shortcut for enforcing security
      *
      * @param array $roles
+     *
      * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
      */
     protected function basicSecurityCheck($roles)
     {
-        if (!$this->container->get('security.context')->isGranted($roles)) {
+        if (!$this->container->get('security.authorization_checker')->isGranted($roles)) {
             throw new AccessDeniedException();
         }
     }
@@ -206,15 +212,6 @@ class Controller extends BaseController
         return $this->get('fos_user.user_manager');
     }
 
-    /**
-     * @param $roles
-     * @return bool
-     */
-    protected function isGranted($roles)
-    {
-        return $this->container->get('security.context')->isGranted($roles);
-    }
-
     protected function enforceUserSecurity()
     {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
@@ -226,6 +223,7 @@ class Controller extends BaseController
      * Checks whether a Linkable object is actually a link to another site
      *
      * @param \Platformd\SpoutletBundle\Link\LinkableInterface $linkableObj
+     *
      * @return bool
      */
     protected function isExternalLink(LinkableInterface $linkableObj)
@@ -237,6 +235,7 @@ class Controller extends BaseController
      * Creates a redirect response to the URL of a Linkable object
      *
      * @param \Platformd\SpoutletBundle\Link\LinkableInterface $linkableObj
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
     protected function createLinkableResponse(LinkableInterface $linkableObj)
@@ -250,18 +249,20 @@ class Controller extends BaseController
      * Returns the URL for a Linkable object
      *
      * @param \Platformd\SpoutletBundle\Link\LinkableInterface $linkableObj
+     *
      * @return string
      */
-    protected function getLinkableUrl(LinkableInterface $linkableObj, $absolute=false)
+    protected function getLinkableUrl(LinkableInterface $linkableObj, $absolute = false)
     {
         return $this->container->get('platformd.link.linkable_manager')
             ->link($linkableObj, $absolute);
     }
 
     /**
-     * @param $key
-     * @param array $params
+     * @param        $key
+     * @param array  $params
      * @param string $domain
+     *
      * @return mixed
      */
     protected function trans($key, $params = array(), $domain = 'messages', $locale = null)
@@ -279,6 +280,7 @@ class Controller extends BaseController
      * if he/she is now.
      *
      * @param int $minimumAge
+     *
      * @throws \Platformd\SpoutletBundle\Exception\InsufficientAgeException
      */
     protected function enforceAgeProtection($minimumAge = 13)
@@ -290,7 +292,7 @@ class Controller extends BaseController
 
         $userAgent = $this->getRequest()->server->get('HTTP_USER_AGENT');
 
-        if(strpos($userAgent, 'facebookexternalhit') !== false) { # facebook OG scrapper user agent = facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)
+        if (strpos($userAgent, 'facebookexternalhit') !== false) { # facebook OG scrapper user agent = facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)
             return;
         }
 
@@ -306,18 +308,19 @@ class Controller extends BaseController
     {
         $country = $this->getCurrentCountry();
 
-        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Region')->findSiteByCountry($country);
+        return $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Region')->findSiteByCountry($country);
     }
 
-    protected function getSiteFromCountryCode($countryCode) {
-        $country = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
-        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Region')->findSiteByCountry($country);
+    protected function getSiteFromCountryCode($countryCode)
+    {
+        $country = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Country')->findOneByCode($countryCode);
+        return $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Region')->findSiteByCountry($country);
     }
 
     /**
      * @return \Platformd\SpoutletBundle\Age\AgeManager
      */
-    protected  function getAgeManager()
+    protected function getAgeManager()
     {
         return $this->container->get('platformd.age.age_manager');
     }
@@ -379,10 +382,12 @@ class Controller extends BaseController
     {
         return $this->get('platformd.model.avatar_manager');
     }
+
     protected function getGallaryManager()
     {
         return $this->get('platformd.model.gallary_manager');
     }
+
     protected function getApiManager()
     {
         return $this->get('platformd.user.api.manager');
@@ -414,39 +419,38 @@ class Controller extends BaseController
         return $this->container->get('platformd.twitter.provider');
     }
 
-    protected  function getEmailManager()
+    protected function getEmailManager()
     {
         return $this->container->get('platformd.model.email_manager');
     }
 
-    protected  function getCommentManager()
+    protected function getCommentManager()
     {
         return $this->container->get('platformd.model.comment_manager');
     }
 
-    protected function getErrorMessages(Form $form) {
+    protected function getErrorMessages(FormInterface $form)
+    {
         $errors = array();
         foreach ($form->getErrors() as $key => $error) {
             $template = $error->getMessageTemplate();
             $parameters = $error->getMessageParameters();
 
-            foreach($parameters as $var => $value){
+            foreach ($parameters as $var => $value) {
                 $template = str_replace($var, $value, $template);
             }
 
             $errors[$key] = $template;
         }
-        if ($form->hasChildren()) {
-            foreach ($form->getChildren() as $child) {
-                if (!$child->isValid()) {
-                    $errors[$child->getName()] = $this->getErrorMessages($child);
-                }
+
+        foreach ($form->all() as $child) {
+            if (!$child->isValid()) {
+                $errors[$child->getName()] = $this->getErrorMessages($child);
             }
         }
 
         return $errors;
     }
-
 
     public function getParentByIdea($idea)
     {
@@ -455,6 +459,7 @@ class Controller extends BaseController
 
         return $esRegRepo->getContainer($esRegistration);
     }
+
     public function getParentByEntrySet($entrySet)
     {
         $parentRegistration = $entrySet->getEntrySetRegistration();
@@ -462,6 +467,7 @@ class Controller extends BaseController
 
         return $esRegRepo->getContainer($parentRegistration);
     }
+
     protected function getBreadCrumbsString($scope, $showCurrentScope = false)
     {
         $breadCrumbs = $this->getHierarchy($scope);
@@ -470,53 +476,50 @@ class Controller extends BaseController
 
         foreach ($breadCrumbs as $crumb) {
             if ($crumb && ($showCurrentScope || $crumb != $scope)) {
-                $breadCrumbsHtml = $breadCrumbsHtml."> <a href=\"".$this->generateUrl($crumb->getLinkableRouteName(), $crumb->getLinkableRouteParameters())."\" class=\"blue\">".$crumb->getName()."</a> ";
+                $breadCrumbsHtml = $breadCrumbsHtml . "> <a href=\"" . $this->generateUrl($crumb->getLinkableRouteName(), $crumb->getLinkableRouteParameters()) . "\" class=\"blue\">" . $crumb->getName() . "</a> ";
             }
             if ($crumb instanceof EventSession) {
                 $event = $crumb->getEvent();
-                $breadCrumbsHtml = $breadCrumbsHtml."> <a href=\"".$this->generateUrl('event_session_schedule', $event->getLinkableRouteParameters())."\" class=\"blue\">Session Schedule</a> ";
+                $breadCrumbsHtml = $breadCrumbsHtml . "> <a href=\"" . $this->generateUrl('event_session_schedule', $event->getLinkableRouteParameters()) . "\" class=\"blue\">Session Schedule</a> ";
             }
         }
 
         return $breadCrumbsHtml;
     }
+
     protected function getHierarchy($scope)
     {
-        $group         = null;
-        $event         = null;
-        $entrySet      = null;
-        $entry         = null;
-        $eventSession  = null;
+        $group = null;
+        $event = null;
+        $entrySet = null;
+        $entry = null;
+        $eventSession = null;
 
-        $entrySetParent   = null;
+        $entrySetParent = null;
 
         if ($scope instanceof EventSession) {
             $eventSession = $scope;
-            $event        = $eventSession->getEvent();
-            $group        = $event->getGroup();
+            $event = $eventSession->getEvent();
+            $group = $event->getGroup();
         }
         if ($scope instanceof Idea) {
-            $entry          = $scope;
-            $entrySet       = $entry->getEntrySet();
+            $entry = $scope;
+            $entrySet = $entry->getEntrySet();
             $entrySetParent = $this->getParentByEntrySet($entrySet);
-        }
-        elseif ($scope instanceof EntrySet) {
-            $entrySet       = $scope;
+        } elseif ($scope instanceof EntrySet) {
+            $entrySet = $scope;
             $entrySetParent = $this->getParentByEntrySet($entrySet);
-        }
-        elseif ($scope instanceof GroupEvent) {
-            $event          = $scope;
-            $group          = $event->getGroup();
-        }
-        elseif ($scope instanceof Group) {
-            $group          = $scope;
+        } elseif ($scope instanceof GroupEvent) {
+            $event = $scope;
+            $group = $event->getGroup();
+        } elseif ($scope instanceof Group) {
+            $group = $scope;
         }
 
         if ($entrySetParent instanceof GroupEvent) {
             $event = $entrySetParent;
             $group = $event->getGroup();
-        }
-        elseif ($entrySetParent instanceof Group) {
+        } elseif ($entrySetParent instanceof Group) {
             $group = $entrySetParent;
         }
 
@@ -586,11 +589,13 @@ class Controller extends BaseController
         }
     }
 
-    public function isAdmin() {
+    public function isAdmin()
+    {
         return $this->isGranted('ROLE_ADMIN');
     }
 
-    private function ensureGroupExists($group) {
+    private function ensureGroupExists($group)
+    {
         if (!$group) {
             throw new NotFoundHttpException('Group does not exist.');
         }
@@ -598,38 +603,40 @@ class Controller extends BaseController
 
     public function getGroup($identifier)
     {
-        if(ctype_digit($identifier))
+        if (ctype_digit($identifier))
             $identifier = intval($identifier);
 
-        if( is_int($identifier) )
+        if (is_int($identifier))
             return $this->getGroupById($identifier);
 
-        if( is_string($identifier) )
+        if (is_string($identifier))
             return $this->getGroupBySlug($identifier);
 
         return null;
     }
 
-    public function getGroupById($id) {
+    public function getGroupById($id)
+    {
         return $this
             ->getDoctrine()
             ->getRepository('GroupBundle:Group')
             ->find($id);
     }
 
-    public function getGroupBySlug($slug) {
+    public function getGroupBySlug($slug)
+    {
         $repo = $this->getDoctrine()->getRepository('GroupBundle:Group');
         $group = null;
         $site = $this->getCurrentSite();
-        if($site->getCommunityGroup()) {
+        if ($site->getCommunityGroup()) {
             try {
                 $group = $repo->findGroupByRelativeSlugAndSite($slug, $site);
-            } catch(\Exception $e) {
+            } catch (\Exception $e) {
                 //log message
             }
         }
 
-        if(!$group) {
+        if (!$group) {
             $group = $repo->findOneBySlug($slug);
         }
 
@@ -638,9 +645,10 @@ class Controller extends BaseController
         return $group;
     }
 
-    public function getRelevantSlugForGroup($group) {
-        if($this->getCurrentSite()->getCommunityGroup()) {
-            if ($slug = $group->getRelativeSlug()){
+    public function getRelevantSlugForGroup($group)
+    {
+        if ($this->getCurrentSite()->getCommunityGroup()) {
+            if ($slug = $group->getRelativeSlug()) {
                 return $slug;
             }
         }

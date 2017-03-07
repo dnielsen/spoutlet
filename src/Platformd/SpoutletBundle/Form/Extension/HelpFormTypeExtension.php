@@ -2,10 +2,13 @@
 
 namespace Platformd\SpoutletBundle\Form\Extension;
 
-use Symfony\Component\Form\FormTypeExtensionInterface;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\AbstractTypeExtension;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
  * Adds a "help" option to every field
@@ -14,7 +17,7 @@ use Symfony\Component\Form\FormInterface;
  * customizations made in our form template, causes a help message to be
  * displayed.
  */
-class HelpFormTypeExtension implements FormTypeExtensionInterface
+class HelpFormTypeExtension extends AbstractTypeExtension
 {
     /**
      * Builds the form.
@@ -24,10 +27,10 @@ class HelpFormTypeExtension implements FormTypeExtensionInterface
      *
      * @see FormTypeInterface::buildForm()
      *
-     * @param FormBuilder   $builder The form builder
-     * @param array         $options The options
+     * @param FormBuilderInterface $builder The form builder
+     * @param array                $options The options
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->setAttribute('help', $options['help']);
     }
@@ -43,9 +46,11 @@ class HelpFormTypeExtension implements FormTypeExtensionInterface
      * @param FormView      $view The view
      * @param FormInterface $form The form
      */
-    public function buildView(FormView $view, FormInterface $form)
+    public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $view->set('help', $form->getAttribute('help'));
+        $view->vars = array_replace($view->vars, [
+            'help' => isset($options['help']) ? $options['help'] : '',
+        ]);
     }
 
     /**
@@ -63,30 +68,11 @@ class HelpFormTypeExtension implements FormTypeExtensionInterface
     {
     }
 
-    /**
-     * Overrides the default options form the extended type.
-     *
-     * @param array $options
-     *
-     * @return array
-     */
-    public function getDefaultOptions(array $options)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return array(
+        $resolver->setDefaults([
             'help' => '',
-        );
-    }
-
-    /**
-     * Returns the allowed option values for each option (if any).
-     *
-     * @param array $options
-     *
-     * @return array The allowed option values
-     */
-    public function getAllowedOptionValues(array $options)
-    {
-        return array();
+        ]);
     }
 
     /**
@@ -96,7 +82,6 @@ class HelpFormTypeExtension implements FormTypeExtensionInterface
      */
     public function getExtendedType()
     {
-        return 'field';
+        return FormType::class;
     }
-
 }

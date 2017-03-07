@@ -1,4 +1,3 @@
-
 <div id="topNav">
     <div id="topNav-content">
 
@@ -45,8 +44,9 @@
                 </ul>
             </li>
 
-            {% if is_granted('ROLE_SUPER_ADMIN') %}
-                <li><a>Administration</a>
+            {% if app.user and is_granted('ROLE_SUPER_ADMIN') %}
+                <li>
+                    <a>Administration</a>
                     <ul>
                         <li><a href="{{ path('admin_index') }}">Admin Panel</a></li>
                         <li><a href="{{ path('idea_admin_feedback') }}">View Feedback</a></li>

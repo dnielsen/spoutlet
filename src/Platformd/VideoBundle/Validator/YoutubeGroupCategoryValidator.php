@@ -26,7 +26,7 @@ class YoutubeGroupCategoryValidator extends ConstraintValidator
         $this->container    = $container;
     }
 
-    public function isValid($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint)
     {
         $hasGroups  = $this->siteUtil->getCurrentSite()->getSiteFeatures()->getHasGroups();
         $message    = $hasGroups ? 'youtube.errors.no_gallery' : 'youtube.errors.no_gallery_groups_disabled';

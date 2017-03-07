@@ -4,13 +4,9 @@ namespace Platformd\VideoBundle\Command;
 
 use
     Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand,
-    Symfony\Component\Console\Input\InputArgument,
-    Symfony\Component\Console\Input\InputOption,
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface
 ;
-
-use Doctrine\Common\Collections\ArrayCollection;
 
 use
     Platformd\SpoutletBundle\Entity\Gallery,

@@ -21,7 +21,7 @@ class GameAdminController extends Controller
     public function indexAction()
     {
         $this->addGamesBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('GameBundle:Game')->getAllGamesOrderedByName();
 
@@ -39,7 +39,7 @@ class GameAdminController extends Controller
         $this->addGamesBreadcrumb()->addChild('New Game');
 
         $game  = new Game();
-        $form    = $this->createForm(new GameType(), $game);
+        $form    = $this->createForm(GameType::class, $game);
 
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The game was created!');
@@ -60,7 +60,7 @@ class GameAdminController extends Controller
     public function editAction($id, Request $request)
     {
         $this->addGamesBreadcrumb()->addChild('Edit Game');
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $game = $em->getRepository('GameBundle:Game')->find($id);
 
@@ -68,7 +68,7 @@ class GameAdminController extends Controller
             throw $this->createNotFoundException('Unable to find Game game.');
         }
 
-        $editForm   = $this->createForm(new GameType(), $game);
+        $editForm   = $this->createForm(GameType::class, $game);
         $deleteForm = $this->createDeleteForm($id);
 
         if ($this->processForm($editForm, $request)) {
@@ -94,10 +94,10 @@ class GameAdminController extends Controller
 
     private function processForm(Form $form, Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 /** @var $game \Platformd\GameBundle\Entity\Game */

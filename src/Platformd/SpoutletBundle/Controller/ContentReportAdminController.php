@@ -23,7 +23,7 @@ class ContentReportAdminController extends Controller
         }
 
         $this->addReportedContentsBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $site = $site ? $em->getRepository('SpoutletBundle:Site')->find($site) : null;
 
@@ -103,7 +103,7 @@ class ContentReportAdminController extends Controller
     public function hideComplaintAction($contentReportId)
     {
         $this->addReportedContentsBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $repo = $em->getRepository('SpoutletBundle:ContentReport');
 
@@ -199,7 +199,7 @@ class ContentReportAdminController extends Controller
     public function removeContentAction($contentReportId)
     {
         $this->addReportedContentsBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $repo = $em->getRepository('SpoutletBundle:ContentReport');
 
@@ -327,7 +327,7 @@ class ContentReportAdminController extends Controller
     public function reinstateContentAction($contentReportId)
     {
         $this->addReportedContentsBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $repo = $em->getRepository('SpoutletBundle:ContentReport');
 
@@ -443,8 +443,8 @@ class ContentReportAdminController extends Controller
 
     private function sendUserNotificationEmail($id, $type, $removed=false, $report=null)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-        $contentReportRepo = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:ContentReport');
+        $em = $this->getDoctrine()->getManager();
+        $contentReportRepo = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:ContentReport');
         $typeBundle = $contentReportRepo->getBundleFromType($type);
         $item = $em->getRepository($typeBundle.':'.$type)->find($id);
 

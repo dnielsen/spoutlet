@@ -2,9 +2,6 @@
 
 namespace Platformd\SpoutletBundle\Util;
 
-use Platformd\SpoutletBundle\Entity\Site;
-use Platformd\SpoutletBundle\Util\CacheUtil;
-
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -22,13 +19,13 @@ class SiteUtil extends Event
 
     public function __construct($siteRepo, CacheUtil $cacheUtil, EventDispatcherInterface $eventDispatcher)
     {
-        $this->siteRepo        = $siteRepo;
-        $this->cacheUtil       = $cacheUtil;
+        $this->siteRepo = $siteRepo;
+        $this->cacheUtil = $cacheUtil;
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function getCurrentSite() {
-
+    public function getCurrentSite()
+    {
         if ($this->currentSite) {
             return $this->currentSite;
         }
@@ -42,11 +39,13 @@ class SiteUtil extends Event
         return $this->currentSite;
     }
 
-    private function abortCurrentRequest() {
-        die("Could not find current site (domain = '".$this->currentHost."').");
+    private function abortCurrentRequest()
+    {
+        die("Could not find current site (domain = '" . $this->currentHost . "').");
     }
 
-    private function getCurrentSiteFromDb() {
+    private function getCurrentSiteFromDb()
+    {
         return $this->siteRepo->findOneByFullDomain($this->currentHost);
     }
 
@@ -55,7 +54,8 @@ class SiteUtil extends Event
     # cached site information comes from the cache... so it's not an entity that is managed by the doctrine entity manager
     # and as such you need to correctly merge it, while taking care not to accidentally override valid live database changes
     # with this some what stale cached version.
-    public function getCurrentSiteCached() {
+    public function getCurrentSiteCached()
+    {
         return $this->currentSiteCached;
     }
 
@@ -66,18 +66,18 @@ class SiteUtil extends Event
         }
 
         $this->currentHost = $event->getRequest()->getHost();
-        $siteRepo          = $this->siteRepo;
-        $currentHost       = $this->currentHost;
+        $siteRepo = $this->siteRepo;
+        $currentHost = $this->currentHost;
 
         $this->cachedSiteInfoArray = $this->cacheUtil->getOrGen(array(
-            'key'                  => 'SITE_INFO_ARRAY_CACHE',
-            'hashKey'              => false,
+            'key' => 'SITE_INFO_ARRAY_CACHE',
+            'hashKey' => false,
             'cacheDurationSeconds' => 120,
-            'siteSpecific'         => false,
-            'genFunction'          => function & () use (&$siteRepo, &$currentHost) {
+            'siteSpecific' => false,
+            'genFunction' => function & () use (&$siteRepo, &$currentHost) {
 
                 $sites = $siteRepo->findAll();
-                $arr   = array();
+                $arr = array();
 
                 foreach ($sites as $site) {
                     $arr[$site->getFullDomain()] = $site;
@@ -96,7 +96,8 @@ class SiteUtil extends Event
         $this->eventDispatcher->dispatch('awa.site_util.current_site_set', $this);
     }
 
-    public function getSiteFromCountry($country) {
+    public function getSiteFromCountry($country)
+    {
         return $this->em->getRepository('SpoutletBundle:Region')->findOneByCountry($country);
     }
 

@@ -3,14 +3,10 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Gallery;
-use Platformd\SpoutletBundle\Entity\GalleryRepository;
-use Platformd\SpoutletBundle\Entity\GalleryCategory;
-use Platformd\SpoutletBundle\Entity\GalleryCategoryRepository;
 use Platformd\SpoutletBundle\Form\Type\GalleryType;
 use Platformd\SpoutletBundle\Form\Type\ImageFindType;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use Platformd\SpoutletBundle\Entity\GalleryTranslation;
 
@@ -35,7 +31,7 @@ class GalleryAdminController extends Controller
     {
         $this->addGalleriesBreadcrumb();
         $this->addSiteBreadcrumbs($site);
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
@@ -56,10 +52,10 @@ class GalleryAdminController extends Controller
     {
         $this->addGalleriesBreadcrumb()->addChild('New Gallery');
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $gallery  = new Gallery();
-        $form    = $this->createForm(new GalleryType(), $gallery);
+        $form    = $this->createForm(GalleryType::class, $gallery);
 
         if ($this->processForm($form, $request)) {
 
@@ -90,7 +86,7 @@ class GalleryAdminController extends Controller
     public function editAction($slug, Request $request)
     {
         $this->addGalleriesBreadcrumb()->addChild('Edit Gallery');
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $gallery = $em->getRepository('SpoutletBundle:Gallery')->findOneBy(array('slug' => $slug));
 
@@ -102,7 +98,7 @@ class GalleryAdminController extends Controller
 
         $sites = $gallery->getSites();
         if (!$sites) {
-            $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($gallery->getLocale());
+            $site = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($gallery->getLocale());
             $gallery->getSites()->add($site);
             $sitesPositions[$site->getId()] = 0;
         }
@@ -115,7 +111,7 @@ class GalleryAdminController extends Controller
             $translation->setSiteId($site->getId());
         }
 
-        $editForm   = $this->createForm(new GalleryType(), $gallery);
+        $editForm   = $this->createForm(GalleryType::class, $gallery);
 
         if ($this->processForm($editForm, $request)) {
 
@@ -130,15 +126,15 @@ class GalleryAdminController extends Controller
         ));
     }
 
-    public function findAction(Request $request) {
+    public function findAction(Request $request)
+    {
         set_time_limit(0); // this page has a tendency to timeout because the search params are always returning large data sets
         $this->addFindImagesBreadcrumb();
 
-        $form       = $this->createForm(new ImageFindType());
+        $form       = $this->createForm(ImageFindType::class);
         $results    = $this->processFindForm($form, $request);
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
         $upVotes    = array();
-        $likes      = array();
 
         if($results) {
 
@@ -167,7 +163,7 @@ class GalleryAdminController extends Controller
         $images = array();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $data = $form->getData();
@@ -212,7 +208,7 @@ class GalleryAdminController extends Controller
     {
         $user = $this->getUser();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $media = $em->getRepository('SpoutletBundle:GalleryMedia')->find($id);
 
         if(!$media)
@@ -297,7 +293,7 @@ class GalleryAdminController extends Controller
     public function featuredIndexAction()
     {
         $this->addFeaturedMediaBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $categories = $em->getRepository('SpoutletBundle:GalleryCategory')->findAllAlphabetically();
 
@@ -309,7 +305,7 @@ class GalleryAdminController extends Controller
     public function featuredListAction($category)
     {
         $this->addFeaturedMediaBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $items = $em->getRepository('SpoutletBundle:GalleryMedia')->findAllFeaturedForCategory($category);
 
@@ -322,7 +318,7 @@ class GalleryAdminController extends Controller
     public function unfeatureAction($item)
     {
         $this->addFeaturedMediaBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $item = $em->getRepository('SpoutletBundle:GalleryMedia')->find($item);
 
@@ -340,10 +336,10 @@ class GalleryAdminController extends Controller
 
     private function processForm(Form $form, Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
@@ -513,7 +509,7 @@ class GalleryAdminController extends Controller
 
     public function moveAction($id, $site, $direction)
     {
-        $em             = $this->getDoctrine()->getEntityManager();
+        $em             = $this->getDoctrine()->getManager();
         $galleryRepo    = $em->getRepository('SpoutletBundle:Gallery');
         $site           = $em->getRepository('SpoutletBundle:Site')->find($site);
 
@@ -564,7 +560,7 @@ class GalleryAdminController extends Controller
 
     private function moveGalleriesDown($gallery, $site)
     {
-        $em             = $this->getDoctrine()->getEntityManager();
+        $em             = $this->getDoctrine()->getManager();
         $galleryRepo    = $em->getRepository('SpoutletBundle:Gallery');
 
         foreach ($gallery->getCategories() as $category) {
@@ -592,7 +588,7 @@ class GalleryAdminController extends Controller
 
     private function moveAllGalleriesDown($gallery)
     {
-        $em             = $this->getDoctrine()->getEntityManager();
+        $em             = $this->getDoctrine()->getManager();
         $galleryRepo    = $em->getRepository('SpoutletBundle:Gallery');
 
         foreach ($gallery->getSites() as $site) {
@@ -622,7 +618,7 @@ class GalleryAdminController extends Controller
 
     private function repositionGalleries($gallery, $site, $direction)
     {
-        $em                     = $this->getDoctrine()->getEntityManager();
+        $em                     = $this->getDoctrine()->getManager();
         $galleryRepo            = $em->getRepository('SpoutletBundle:Gallery');
 
         foreach ($gallery->getCategories() as $category) {
@@ -651,7 +647,7 @@ class GalleryAdminController extends Controller
                     }
 
                     $otherGallery->setSitesPositions($otherGalleryPositions);
-                    $em = $this->getDoctrine()->getEntityManager();
+                    $em = $this->getDoctrine()->getManager();
                     $em->persist($otherGallery);
                     $em->flush();
 
@@ -662,7 +658,7 @@ class GalleryAdminController extends Controller
     }
 
     private function checkGalleryPositions($site, $category) {
-        $em             = $this->getDoctrine()->getEntityManager();
+        $em             = $this->getDoctrine()->getManager();
         $galleryRepo    = $em->getRepository('SpoutletBundle:Gallery');
         $galleries      = $galleryRepo->findAllGalleriesByCategoryForSite($site, $category);
 
@@ -702,11 +698,11 @@ class GalleryAdminController extends Controller
 
     private function getSiteRepository()
     {
-        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site');
+        return $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Site');
     }
 
     private function getGalleryRepository()
     {
-        return $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Gallery');
+        return $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Gallery');
     }
 }

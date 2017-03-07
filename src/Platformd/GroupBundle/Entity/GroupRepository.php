@@ -2,12 +2,10 @@
 
 namespace Platformd\GroupBundle\Entity;
 
-use Platformd\GroupBundle\Entity\Group;
-use Platformd\GroupBundle\Entity\GroupMembershipAction;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\QueryBuilder;
-use DateTime;
-use DateTimeZone;
+use Doctrine\ORM\Query;
+use Platformd\SpoutletBundle\Entity\Site;
+use Platformd\UserBundle\Entity\User;
 
 /**
  * GroupsRepository
@@ -17,7 +15,8 @@ use DateTimeZone;
  */
 class GroupRepository extends EntityRepository
 {
-    public function getAllGroupsForUser($user) {
+    public function getAllGroupsForUser($user)
+    {
         return $this->getEntityManager()->createQuery('
             SELECT g FROM GroupBundle:Group g
             LEFT JOIN g.members m
@@ -28,23 +27,39 @@ class GroupRepository extends EntityRepository
             ->execute();
     }
 
-    public function getAllGroupsForUserAndSite($user, $site)
+    /**
+     * @param User $user
+     * @param Site $site
+     *
+     * @return Group[]
+     */
+    public function getAllGroupsForUserAndSite(User $user, Site $site)
     {
-        return $this->createQueryBuilder('g')
-            ->select('g')
-            ->leftJoin('g.members', 'm')
-            ->leftJoin('g.sites', 's')
-            ->andWhere('g.deleted = false')
+        $qb = $this->createQueryBuilder('g');
+
+        $qb
+            ->select('g, m, s, e, o, er, sp')
+            ->innerJoin('g.members', 'm')
+            ->innerJoin('g.sites', 's')
+            ->innerJoin('g.events', 'e')
+            ->innerJoin('g.owner', 'o')
+            ->leftJoin('g.entrySetRegistration', 'er')
+            ->leftJoin('g.sponsor', 'sp')
+            ->where('g.deleted = :isDeleted')
             ->andWhere('m.id = :userId')
             ->andWhere('s.id = :siteId')
             ->orderBy('g.name')
-            ->setParameters(array(
+            ->setParameters([
                 'userId' => $user->getId(),
-                'siteId' => $site->getId()
-            ))
+                'siteId' => $site->getId(),
+                'isDeleted' => false,
+            ])
             ->groupBy('g.id')
-            ->getQuery()
-            ->execute();
+        ;
+
+        return $qb->getQuery()
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+            ->getResult();
     }
 
     public function getGroupAndMemberCountByRegion() {
@@ -458,10 +473,10 @@ class GroupRepository extends EntityRepository
             ->where('(s = :site OR g.allLocales = true)')
             ->andWhere('g.deleted = false')
             ->addOrderBy('member_count', 'DESC')
+            ->groupBy('g.id')
             ->distinct('g.id')
             ->setMaxResults($limit)
-            ->setParameter('site', $site)
-            ->groupBy('g.id');
+            ->setParameter('site', $site);
 
         return $qb->getQuery()->execute();
     }
@@ -643,5 +658,31 @@ class GroupRepository extends EntityRepository
             ->setParameter('media', $media);
 
         return $qb->getQuery()->execute();
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return Group[]
+     */
+    public function getUserDepartments(User $user)
+    {
+        $qb = $this->createQueryBuilder('d');
+
+        $qb
+            ->addSelect('s, o, sr, e, et, ge, get')
+            ->innerJoin('d.sponsor', 's')
+            ->innerJoin('d.owner', 'o')
+            ->innerJoin('s.sponsorRegistrations', 'sr')
+            ->leftJoin('sr.event', 'e')
+            ->leftJoin('e.translations', 'et')
+            ->leftJoin('sr.global_event', 'ge')
+            ->leftJoin('ge.translations', 'get')
+            ->where('d.owner = :owner')
+            ->setParameter('owner', $user)
+        ;
+
+        return $qb->getQuery()
+            ->getResult();
     }
 }

@@ -4,7 +4,6 @@ namespace Platformd\GiveawayBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller;
 use Platformd\GiveawayBundle\Entity\CodeAssignment;
-use Platformd\GiveawayBundle\Entity\CodeAssignmentCode;
 use Platformd\GiveawayBundle\Form\Type\CodeAssignmentType;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -17,19 +16,20 @@ class CodeAssignmentAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Assign Codes');
 
         $assignment = new CodeAssignment();
-        $form       = $this->createForm(new CodeAssignmentType(), $assignment);
+        $form       = $this->createForm(CodeAssignmentType::class, $assignment);
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
-                $em         = $this->getDoctrine()->getEntityManager();
+                $em         = $this->getDoctrine()->getManager();
                 $assignment = $form->getData();
 
                 if (null === $assignment->getCodesFile()) {
                     $this->setFlash('error', 'Please attach a .csv file containing the codes to be assigned.');
-                    return $this->redirect($this->generateUrl('admin_assign_codes'));
+
+                    return $this->redirectToRoute('admin_assign_codes');
                 }
 
                 $em->persist($assignment);
@@ -98,9 +98,9 @@ class CodeAssignmentAdminController extends Controller
             }
         }
 
-        return $this->render('GiveawayBundle:CodeAssignment:index.html.twig', array(
+        return $this->render('GiveawayBundle:CodeAssignment:index.html.twig', [
             'form' => $form->createView(),
-        ));
+        ]);
     }
 
     private function loadCodesFromFile(File $file, $assignment)
@@ -151,7 +151,7 @@ class CodeAssignmentAdminController extends Controller
             $codeInfo[$email][] = $csvRow[1];
         }
 
-        $em    = $this->getDoctrine()->getEntityManager();
+        $em    = $this->getDoctrine()->getManager();
         $usersQuery = $em->getRepository('UserBundle:User')->getFindUserListByEmailQuery($emails);
 
         $iterableResult = $usersQuery->iterate();
@@ -165,7 +165,7 @@ class CodeAssignmentAdminController extends Controller
         $invalidUsers  = array();
         $assignedCount = 0;
 
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
         $connection = $em->getConnection();
 
         foreach ($codeInfo as $email => $codes) {

@@ -18,10 +18,10 @@ class CodeAssignment
     const TYPE_USERS = 'users';
     const TYPE_LAN   = 'lancenters';
 
-    private static $validTypes = array(
-        self::TYPE_USERS => 'Users',
-        self::TYPE_LAN   => 'LAN Centers',
-    );
+    private static $validTypes = [
+        'Users' => self::TYPE_USERS,
+        'LAN Centers' => self::TYPE_LAN,
+    ];
 
     /**
      * @ORM\Column(name="id", type="integer")
@@ -39,12 +39,12 @@ class CodeAssignment
     /**
      * @Assert\Url
      * @Assert\NotBlank()
-     * @ORM\Column(name="url", type="string", length="255")
+     * @ORM\Column(name="url", type="string", length=255)
      */
     private $url;
 
     /**
-     * @ORM\Column(name="type", type="string", length="255")
+     * @ORM\Column(name="type", type="string", length=255)
      */
     private $type;
 
@@ -94,7 +94,7 @@ class CodeAssignment
 
     public function setType($value)
     {
-        if ($value && !isset(self::$validTypes[$value])) {
+        if (!in_array($value, self::$validTypes, true)) {
             throw new \InvalidArgumentException(sprintf('Invalid type passed: "%s"', $value));
         }
 

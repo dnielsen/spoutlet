@@ -2,10 +2,12 @@
 
 namespace Knp\Validator;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntityValidator as BaseUniqueEntityValidator;
 use Symfony\Component\Validator\Constraint;
-use Platformd\SpoutletBundle\Entity\RsvpAttendee;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\Validator\Exception\UnexpectedTypeException;
+use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 class UniqueEntityValidator extends BaseUniqueEntityValidator
 {
@@ -17,12 +19,12 @@ class UniqueEntityValidator extends BaseUniqueEntityValidator
     /**
      * @param RegistryInterface $registry
      */
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         $this->registry = $registry;
     }
 
-    public function isValid($entity, Constraint $constraint)
+    public function validate($entity, Constraint $constraint)
     {
         if (!is_array($constraint->fields) && !is_string($constraint->fields)) {
             throw new UnexpectedTypeException($constraint->fields, 'array');

@@ -2,44 +2,55 @@
 
 namespace Platformd\SpoutletBundle\Form;
 
+use Platformd\SpoutletBundle\Entity\Site;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class HomepageBannerType extends AbstractType
 {
+    const YES_NO = [
+        'Yes' => 1,
+        'No' => 0,
+    ];
+
     /**
      * {@inheritDoc}
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('thumb_file', 'file', array(
+            ->add('thumb_file', FileType::class, array(
+                'label' => 'Thumb File',
                 'required' => false,
-                'help'  => 'Recommended Size: 120x60px',
             ))
-            ->add('banner_file', 'file', array(
+            ->add('banner_file', FileType::class, array(
+                'label' => 'Banner File',
                 'required' => false,
-                'help'  => 'Recommended Size: Size: 634x183px',
             ))
-            ->add('url')
-            ->add('sites', 'entity', array(
-                'class'    => 'SpoutletBundle:Site',
+            ->add('url', null, [
+                'label' => 'Url',
+            ])
+            ->add('sites', EntityType::class, array(
+                'label' => 'Sites',
+                'class' => Site::class,
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name'
+                'choice_label' => 'name'
             ))
-            ->add('newWindow', 'choice', array(
-                'choices'   => array(1 => 'Yes', 0 => 'No',),
-                'label'     => 'Open In New Window?',
-            ))
-        ;
+            ->add('newWindow', ChoiceType::class, array(
+                'choices' => self::YES_NO,
+                'choices_as_values' => true,
+                'label' => 'Open In New Window?',
+            ));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_homepagebannertype';
     }

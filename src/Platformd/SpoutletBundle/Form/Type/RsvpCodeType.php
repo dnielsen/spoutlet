@@ -3,8 +3,9 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Platformd\SpoutletBundle\Form\DataTransformer\RsvpCodeTransformer;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class RsvpCodeType extends AbstractType
 {
@@ -14,21 +15,18 @@ class RsvpCodeType extends AbstractType
     {
         $this->transformer = $transformer;
     }
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->appendClientTransformer($this->transformer)
-        ;
+        $builder->addViewTransformer($this->transformer);
     }
 
-    public function getParent(array $options)
+    public function getParent()
     {
-        return 'text';
+        return TextType::class;
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'rsvp_code';
     }
 }
-

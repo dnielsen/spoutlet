@@ -2,8 +2,6 @@
 
 namespace Platformd\SpoutletBundle\Controller;
 
-use Platformd\SpoutletBundle\Controller\Controller;
-use Platformd\SpoutletBundle\Entity\Rsvp;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\SpoutletBundle\Form\Type\RsvpAttendeeType;
 use Platformd\SpoutletBundle\Entity\RsvpAttendee;
@@ -25,7 +23,7 @@ class RsvpController extends Controller
         $form = $this->createForm(new RsvpAttendeeType, new RsvpAttendee($rsvp));
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
                 $this->save($form->getData());
@@ -40,13 +38,14 @@ class RsvpController extends Controller
         return $this->render('SpoutletBundle:Rsvp:attend.html.twig', array(
             'form' => $form->createView(),
             'rsvp' => $rsvp,
+            '_isAdmin' => false,
         ));
     }
 
     private function save(RsvpAttendee $rsvp)
     {
-        $this->getDoctrine()->getEntityManager()->persist($rsvp);
-        $this->getDoctrine()->getEntityManager()->flush();
+        $this->getDoctrine()->getManager()->persist($rsvp);
+        $this->getDoctrine()->getManager()->flush();
     }
 
     private function getRsvpOr404($slug)

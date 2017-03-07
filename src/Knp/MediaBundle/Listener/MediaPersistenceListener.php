@@ -6,10 +6,8 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Knp\MediaBundle\Entity\Media;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Knp\MediaBundle\Model\MediaOwnerInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Gaufrette\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -81,10 +79,9 @@ class MediaPersistenceListener implements EventSubscriber
     public function prePersist(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
-        $entityManager = $args->getEntityManager();
 
         if ($entity instanceof Media) {
-            $this->processUpload($entity, $entityManager, false);
+            $this->processUpload($entity);
 
             $this->assignOwner($entity);
         }
@@ -190,7 +187,7 @@ class MediaPersistenceListener implements EventSubscriber
      */
     private function getUser()
     {
-        $token = $this->container->get('security.context')->getToken();
+        $token = $this->container->get('security.token_storage')->getToken();
 
         return $token ? $token->getUser() : null;
     }

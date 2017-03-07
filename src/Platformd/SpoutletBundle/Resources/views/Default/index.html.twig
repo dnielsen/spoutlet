@@ -136,9 +136,9 @@
     </div>
 
     <div id="contentRtMP">
-        {% render "SpoutletBundle:Default:groupsMap" %}
+        {% render (controller('SpoutletBundle:Default:groupsMap')) %}
         <hr class="clr">
-        {% render 'SpoutletBundle:Default:groupEvents' %}
+        {% render (controller('SpoutletBundle:Default:groupEvents')) %}
     </div>
 
 {% endblock %}

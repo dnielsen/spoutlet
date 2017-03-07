@@ -3,14 +3,16 @@
 namespace Platformd\UserBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SuspendUserType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('expiredUntil', 'datetime', array(
+            ->add('expiredUntil', DateTimeType::class, array(
                 'required' => false,
                 'label' => 'Suspend Until',
                 'widget' => 'single_text',
@@ -21,16 +23,15 @@ class SuspendUserType extends AbstractType
         ;
     }
 
-    public function getName()
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'validation_groups' => array('AdminSuspend')
+        ]);
+    }
+
+    public function getBlockPrefix()
     {
         return 'user_suspend';
     }
-
-    public function getDefaultOptions(array $options)
-    {
-        return array_merge($options, array(
-            'validation_groups' => array('AdminSuspend')
-        ));
-    }
 }
-

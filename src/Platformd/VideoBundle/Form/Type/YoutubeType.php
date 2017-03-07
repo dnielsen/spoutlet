@@ -4,11 +4,14 @@ namespace Platformd\VideoBundle\Form\Type;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Platformd\SpoutletBundle\Util\SiteUtil;
-use Platformd\SpoutletBundle\Entity\GalleryRepository;
 use Platformd\GroupBundle\Entity\GroupRepository;
-use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\TagBundle\Model\TagManager;
 
@@ -17,21 +20,28 @@ class YoutubeType extends AbstractType
     private $siteUtil;
     private $galleryRepo;
     private $groupRepo;
-    private $securityContext;
+    private $tokenStorage;
     private $request;
     private $tagManager;
     private $video;
 
-    function __construct(SiteUtil $siteUtil, EntityRepository $galleryRepo, GroupRepository $groupRepo, SecurityContext $securityContext, Request $request, TagManager $tagManager) {
+    public function __construct(
+        SiteUtil $siteUtil,
+        EntityRepository $galleryRepo,
+        GroupRepository $groupRepo,
+        TokenStorageInterface $tokenStorage,
+        Request $request,
+        TagManager $tagManager
+    ) {
         $this->siteUtil         = $siteUtil;
         $this->galleryRepo      = $galleryRepo;
         $this->groupRepo        = $groupRepo;
-        $this->securityContext  = $securityContext;
+        $this->tokenStorage  = $tokenStorage;
         $this->request          = $request;
         $this->tagManager       = $tagManager;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $youtube = $builder->getData();
         $this->video = $youtube;
@@ -39,63 +49,60 @@ class YoutubeType extends AbstractType
         $referer = $this->request->headers->get('referer');
 
         $builder
-            ->add('youtubeLink', 'text', array(
+            ->add('youtubeLink', TextType::class, array(
                 'label'     => 'youtube.form.youtube_link',
-                'required'  => true,
                 'help'      => 'youtube.form.youtube_link_help',
                 'attr'      => array($disableYoutubeId => ''),
             ))
-            ->add('youtubeId', 'hidden', array(
+            ->add('youtubeId', HiddenType::class, array(
                 'label'     => 'youtube.form.youtube_link',
-                'required'  => true
             ))
-            ->add('title', 'text', array(
+            ->add('title', TextType::class, array(
                 'label'     => 'youtube.form.title',
-                'required'  => true,
             ))
-            ->add('description', 'textarea', array(
+            ->add('description', TextareaType::class, array(
                 'label'     => 'youtube.form.description',
-                'required'  => true,
             ))
-            ->add('galleries', 'choice', array(
+            ->add('galleries', ChoiceType::class, array(
                 'label'         => 'youtube.form.category',
+                'choices_as_values' => true,
                 'required'      => false,
                 'expanded'      => true,
                 'multiple'      => true,
                 'choices'       => $this->getCategoryChoices(),
             ))
-            ->add('duration', 'hidden', array(
-                'property_path' => false,
+            ->add('duration', HiddenType::class, array(
+                'mapped' => false,
                 'data' => $youtube ? $youtube->getDuration() : 0
             ))
-            ->add('referer', 'hidden', array(
-                'property_path' => false,
+            ->add('referer', HiddenType::class, array(
+                'mapped' => false,
                 'data' => $referer,
-
             ))
         ;
 
         if($this->siteUtil->getCurrentSite()->getSiteFeatures()->getHasGroups()) {
-            $builder->add('groups', 'choice', array(
+            $builder->add('groups', ChoiceType::class, array(
                 'label'         => 'youtube.form.optional',
-                'empty_value'   => 'youtube.form.select_category',
+                'placeholder'   => 'youtube.form.select_category',
                 'required'      => false,
                 'expanded'      => true,
                 'multiple'      => true,
                 'choices'       => $this->getGroupChoices(),
+                'choices_as_values' => true,
             ));
         }
 
-        $builder->add('tags', 'text', array(
+        $builder->add('tags', TextType::class, array(
             'label'         => 'youtube.form.tags',
             'help'          => "youtube.form.tags_help",
-            'property_path' => false,
+            'mapped' => false,
             'data'          => $builder->getData() ? $this->tagManager->getConcatenatedTagNames($builder->getData()) : null,
             'required' => false,
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'youtube';
     }
@@ -108,7 +115,7 @@ class YoutubeType extends AbstractType
         $results = $this->galleryRepo->findAllGalleriesByCategoryForSiteSortedByPosition($site, 'video');
 
         foreach ($results as $gallery) {
-            $choices[$gallery->getId()] = $gallery->getName($site->getId());
+            $choices[$gallery->getName($site->getId())] = $gallery->getId();
         }
 
         return $choices;
@@ -117,20 +124,18 @@ class YoutubeType extends AbstractType
     private function getGroupChoices()
     {
         $choices    = array();
-        $user       = $this->securityContext->getToken()->getUser();
+        $user       = $this->tokenStorage->getToken()->getUser();
 
         if ($this->video->getAuthor() == $user) {
             $results = $this->groupRepo->getAllGroupsForUserAndSite($user, $this->siteUtil->getCurrentSite());
             foreach ($results as $group) {
-                $choices[$group[0]->getId()] = $group[0]->getName();
+                $choices[$group[0]->getName()] = $group[0]->getId();
             }
         } elseif ($user->getAdminLevel() == 'ROLE_SUPER_ADMIN') {
             $results = $this->groupRepo->findGroupsForVideo($this->video);
             foreach ($results as $group) {
-                $choices[$group->getId()] = $group->getName();
+                $choices[$group->getName()] = $group->getId();
             }
-        } else {
-            return array();
         }
 
         return $choices;

@@ -40,7 +40,7 @@ git pull
 echo '============================='
 echo 'Installing vendors'
 echo
-php bin/vendors install
+composer install --prefer-dist
 
 echo '============================='
 echo 'Installing assets'
@@ -96,8 +96,7 @@ fi
 echo '============================='
 echo 'Restarting Apache (gracefully)'
 echo
-sudo apache2ctl graceful
+sudo systemctl restart apache2.service
 
 echo '============================='
 echo
-

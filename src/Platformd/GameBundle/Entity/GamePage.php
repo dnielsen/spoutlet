@@ -75,21 +75,21 @@ class GamePage implements LinkableInterface
     /**
      * @Assert\Url
      * @var string
-     * @ORM\Column(name="external_url", length="255", nullable=true)
+     * @ORM\Column(name="external_url", length=255, nullable=true)
      */
     private $externalUrl;
 
     /**
      * @Assert\Url
      * @var string
-     * @ORM\Column(name="recommended_desktop_url", length="255", nullable=true)
+     * @ORM\Column(name="recommended_desktop_url", length=255, nullable=true)
      */
     private $recommendedDesktopUrl;
 
     /**
      * @Assert\Url
      * @var string
-     * @ORM\Column(name="recommended_laptop_url", length="255", nullable=true)
+     * @ORM\Column(name="recommended_laptop_url", length=255, nullable=true)
      */
     private $recommendedLaptopUrl;
 
@@ -103,7 +103,7 @@ class GamePage implements LinkableInterface
     /**
      * @Assert\Url
      * @var string
-     * @ORM\Column(name="button_image1", length="255", nullable=true)
+     * @ORM\Column(name="button_image1", length=255, nullable=true)
      */
     private $buttonUrl1;
 
@@ -117,7 +117,7 @@ class GamePage implements LinkableInterface
     /**
      * @Assert\Url
      * @var string
-     * @ORM\Column(name="button_image2", length="255", nullable=true)
+     * @ORM\Column(name="button_image2", length=255, nullable=true)
      */
     private $buttonUrl2;
 
@@ -284,7 +284,7 @@ class GamePage implements LinkableInterface
     private $openGraphOverride;
 
     /**
-     * @ORM\Column(name="sitified_at", type="datetime", nullable="true")
+     * @ORM\Column(name="sitified_at", type="datetime", nullable=true)
      */
     protected $sitifiedAt;
 

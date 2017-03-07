@@ -54,7 +54,7 @@ class AdminController extends Controller
         ));
     }
 
-    public function editAction($id)
+    public function editAction($id, Request $request)
     {
         $this->addUserBreadcrumb()->addChild('Edit');
         $manager = $this->get('fos_user.user_manager');
@@ -63,23 +63,23 @@ class AdminController extends Controller
             throw $this->createNotFoundException(sprintf('Unable to retrieve user #%d', $id));
         }
 
-        $form = $this->createForm(new EditUserFormType(), $user, array(
-            'allow_promote' => $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN'),
+        $form = $this->createForm(EditUserFormType::class, $user, [
+            'allow_promote' => $this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN'),
             'local_auth' => $this->container->getParameter('local_auth'),
-        ));
+        ]);
 
-        $commentsQuery = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Comment')->getFindCommentsForUserQuery($user);
+        $commentsQuery = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Comment')->getFindCommentsForUserQuery($user);
         $pager = new PagerFanta(new DoctrineORMAdapter($commentsQuery));
         $pager->setMaxPerPage(50);
 
-        $page = $this->getRequest()->get('comment_page', 1);
+        $page = $request->get('comment_page', 1);
         $page = $page > $pager->getNbPages() ? $pager->getNbPages() : $page;
         $pager->setCurrentPage($page);
 
         return $this->render('UserBundle:Admin:edit.html.twig', array(
             'user'        => $user,
             'form'        => $form->createView(),
-            'suspendForm' => $this->createForm(new SuspendUserType, $user)->createView(),
+            'suspendForm' => $this->createForm(SuspendUserType::class, $user)->createView(),
             'comments'    => $pager,
         ));
     }
@@ -109,7 +109,7 @@ class AdminController extends Controller
             return $response;
         }
 
-        $em      = $this->getDoctrine()->getEntityManager();
+        $em      = $this->getDoctrine()->getManager();
         $comment = $em->getRepository('SpoutletBundle:Comment')->find($params['commentId']);
 
         if (!$comment) {
@@ -163,7 +163,7 @@ class AdminController extends Controller
         $user->setExpired(true);
         $this->getUserManager()->updateUser($user);
 
-        $em             = $this->getDoctrine()->getEntityManager();
+        $em             = $this->getDoctrine()->getManager();
         $commentsQuery  = $em->getRepository('SpoutletBundle:Comment')->getAllActiveCommentsForUserQuery($user);
         $iterableResult = $commentsQuery->iterate();
 
@@ -181,7 +181,7 @@ class AdminController extends Controller
 
         if ($ipAddress) {
             $suspendedIp = new SuspendedIpAddress($ipAddress);
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->persist($suspendedIp);
         }
 
@@ -201,12 +201,12 @@ class AdminController extends Controller
             throw $this->createNotFoundException(sprintf('Unable to retrieve user #%d', $id));
         }
 
-        $form = $this->createForm(new EditUserFormType(), $user, array(
-            'allow_promote' => $this->get('security.context')->isGranted('ROLE_SUPER_ADMIN'),
+        $form = $this->createForm(EditUserFormType::class, $user, array(
+            'allow_promote' => $this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN'),
             'local_auth'    => $this->container->getParameter('local_auth'),
         ));
 
-        $form->bindRequest($request);
+        $form->handleRequest($request);
         if ($form->isValid()) {
 
             try {
@@ -226,7 +226,7 @@ class AdminController extends Controller
         return $this->render('UserBundle:Admin:edit.html.twig', array(
             'user'        => $user,
             'form'        => $form->createView(),
-            'suspendForm' => $this->createForm(new SuspendUserType, $user)->createView(),
+            'suspendForm' => $this->createForm(SuspendUserType::class, $user)->createView(),
         ));
     }
 

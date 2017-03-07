@@ -6,8 +6,8 @@ use Platformd\SpoutletBundle\QueueMessage\SqsMessageBase;
 
 class AvatarFileSystemActionsQueueMessage extends SqsMessageBase
 {
-    const AVATAR_FILESYSTEM_ACTION_APPROVE  = 'approve';
-    const AVATAR_FILESYSTEM_ACTION_SWITCH   = 'switch';
+    const AVATAR_FILESYSTEM_ACTION_APPROVE = 'approve';
+    const AVATAR_FILESYSTEM_ACTION_SWITCH = 'switch';
 
     private static $validActions = array(
         self::AVATAR_FILESYSTEM_ACTION_APPROVE,
@@ -18,11 +18,13 @@ class AvatarFileSystemActionsQueueMessage extends SqsMessageBase
     public $userUuid;
     public $fileUuid;
 
-    public function __toString() {
-        return 'AvatarResizeQueueMessage => { Action = "'.$this->action.'", User = "'.$this->userUuid.'", UUID = "'.$this->fileUuid.'" }';
+    public function __toString()
+    {
+        return 'AvatarResizeQueueMessage => { Action = "' . $this->action . '", User = "' . $this->userUuid . '", UUID = "' . $this->fileUuid . '" }';
     }
 
-    public function getQueueName() {
+    public function getQueueName()
+    {
         return 'AVATAR_FILESYSTEM_ACTIONS';
     }
 

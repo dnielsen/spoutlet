@@ -32,7 +32,7 @@ class SiteTakeoverAdminController extends Controller
         $this->addTakeoverBreadcrumb();
         $this->addSiteBreadcrumbs($site);
 
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
         $site       = $em->getRepository('SpoutletBundle:Site')->find($site);
         $takeovers  = $em->getRepository('SpoutletBundle:SiteTakeover')->findAllForSiteSoonestFirst($site);
 
@@ -47,7 +47,7 @@ class SiteTakeoverAdminController extends Controller
         $this->addTakeoverBreadcrumb()->addChild('New Takeover');
 
         $takeover   = new SiteTakeover();
-        $form       = $this->createForm(new SiteTakeoverType(), $takeover);
+        $form       = $this->createForm(SiteTakeoverType::class, $takeover);
 
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The site takeover was created successfully!');
@@ -64,14 +64,14 @@ class SiteTakeoverAdminController extends Controller
     {
         $this->addTakeoverBreadcrumb()->addChild('Edit Takeover');
 
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
         $takeover   = $em->getRepository('SpoutletBundle:SiteTakeover')->find($id);
 
         if (!$takeover) {
             throw $this->createNotFoundException('Unable to find site takeover.');
         }
 
-        $form   = $this->createForm(new SiteTakeoverType(), $takeover);
+        $form   = $this->createForm(SiteTakeoverType::class, $takeover);
 
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The site takeover was saved successfully!');
@@ -86,10 +86,10 @@ class SiteTakeoverAdminController extends Controller
 
     private function processForm(Form $form, Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 

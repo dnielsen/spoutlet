@@ -4,17 +4,17 @@ namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Form\HomepageBannerType;
 use Platformd\SpoutletBundle\Entity\HomepageBanner;
+use Symfony\Component\HttpFoundation\Request;
+
 /**
 * Admin controller for homepage banners
 */
 class HomepageBannerController extends Controller
 {
-
     public function indexAction()
     {
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
-            $url = $this->generateUrl('admin_homepage_banner_list', array('site' => 2));
-            return $this->redirect($url);
+            return $this->redirectToRoute('admin_homepage_banner_list', array('site' => 2));
         }
 
         $this->addBannersBreadcrumb();
@@ -34,7 +34,7 @@ class HomepageBannerController extends Controller
 
         $this->addBannersBreadcrumb();
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
         $banners = $this->getBannerRepo()->findForSite($site);
@@ -45,17 +45,16 @@ class HomepageBannerController extends Controller
         ));
     }
 
-    public function newAction()
+    public function newAction(Request $request)
     {
         $this->addBannersBreadcrumb()->addChild('New');
-        $request = $this->getRequest();
 
         $banner = new HomepageBanner();
 
-        $form = $this->createForm(new HomepageBannerType(), $banner);
+        $form = $this->createForm(HomepageBannerType::class, $banner);
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
@@ -72,7 +71,7 @@ class HomepageBannerController extends Controller
                 $this->moveAllBannersDown($banner);
 
                 $this->setFlash('success', 'success');
-                return $this->redirect($this->generateUrl('admin_homepage_banner_index'));
+                return $this->redirectToRoute('admin_homepage_banner_index');
             }
         }
 
@@ -97,7 +96,7 @@ class HomepageBannerController extends Controller
 
         $sites = $banner->getSites();
         if (!$sites) {
-            $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($banner->getLocale());
+            $site = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($banner->getLocale());
             $banner->getSites()->add($site);
             $sitesPositions[$site->getId()] = 0;
         }
@@ -116,10 +115,10 @@ class HomepageBannerController extends Controller
 
         $banner->setSitesPositions($sitesPositions);
 
-        $form = $this->createForm(new HomepageBannerType(), $banner);
+        $form = $this->createForm(HomepageBannerType::class, $banner);
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
@@ -138,7 +137,7 @@ class HomepageBannerController extends Controller
 
     public function moveAction($id, $site, $direction)
     {
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
         $bannerRepo = $this->getBannerRepo();
         $site       = $em->getRepository('SpoutletBundle:Site')->find($site);
 
@@ -190,7 +189,7 @@ class HomepageBannerController extends Controller
     private function moveBannersDown($banner, $site)
     {
         $bannerRepo         = $this->getBannerRepo();
-        $em                 = $this->getDoctrine()->getEntityManager();
+        $em                 = $this->getDoctrine()->getManager();
 
         $allBannersForSite  = $bannerRepo->findForSite($site);
 
@@ -213,7 +212,7 @@ class HomepageBannerController extends Controller
     private function moveAllBannersDown($banner)
     {
         $bannerRepo         = $this->getBannerRepo();
-        $em                 = $this->getDoctrine()->getEntityManager();
+        $em                 = $this->getDoctrine()->getManager();
 
         foreach ($banner->getSites() as $site) {
             $allBannersForSite  = $bannerRepo->findForSite($site);
@@ -263,7 +262,7 @@ class HomepageBannerController extends Controller
                 }
 
                 $otherBanner->setSitesPositions($otherBannerPositions);
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($otherBanner);
                 $em->flush();
 

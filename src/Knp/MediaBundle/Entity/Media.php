@@ -6,16 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Platformd\UserBundle\Entity\User;
-use Platformd\MediaBundle\Entity\MediaZip;
-use Symfony\Component\Validator\ExecutionContext;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * Knp\MediaBundle\Entity\Media
  *
  * @ORM\MappedSuperclass
- * @Assert\Callback(methods={"validateMimeTypes"})
  */
 abstract class Media
 {
@@ -85,16 +81,6 @@ abstract class Media
     public function __construct($ignoreMime = false)
     {
         $this->ignoreMime = $ignoreMime;
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**
@@ -236,7 +222,7 @@ abstract class Media
 
     public function __toString()
     {
-        return (string) $this->getFilename();
+        return (string)$this->getFilename();
     }
 
     /**
@@ -265,7 +251,12 @@ abstract class Media
         $this->ignoreMime = $value;
     }
 
-    public function validateMimeTypes(ExecutionContext $executionContext)
+    /**
+     * @param ExecutionContextInterface $executionContext
+     *
+     * @Assert\Callback
+     */
+    public function validateMimeTypes(ExecutionContextInterface $executionContext)
     {
         if (null === $this->getFileObject() || $this->ignoreMime) {
             return;
@@ -275,21 +266,15 @@ abstract class Media
 
         $mimeType = $this->getFileObject()->getMimeType();
 
-        if (!in_array($mimeType, $allowedMimeTypes)) {
+        if (!in_array($mimeType, $allowedMimeTypes, true)) {
             $oldPath = $executionContext->getPropertyPath();
 
             $propertyPath = $oldPath . '.fileObject';
-            $executionContext->setPropertyPath($propertyPath);
-
             $type = $this->isZip ? 'zip' : 'image';
 
-            $executionContext->addViolation(
-                'This is not a valid '.$type.' file',
-                array(),
-                null
-            );
-
-            $executionContext->setPropertyPath($oldPath);
+            $executionContext->buildViolation('This is not a valid ' . $type . ' file')
+                ->atPath($propertyPath)
+                ->addViolation();
         }
     }
 }

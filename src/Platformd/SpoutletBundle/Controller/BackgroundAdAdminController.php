@@ -5,14 +5,11 @@ namespace Platformd\SpoutletBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Platformd\SpoutletBundle\Form\Type\BackgroundAdType;
 use Platformd\SpoutletBundle\Entity\BackgroundAd;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Knp\MediaBundle\Util\MediaUtil;
-use Platformd\SpoutletBundle\Tenant\MultitenancyManager;
-use Platformd\SpoutletBundle\Entity\BackgroundAdSite;
 
 class BackgroundAdAdminController extends Controller
 {
-    public function indexAction(Request $request)
+    public function indexAction()
     {
         $this->addBackgroundAdBreadcrumb();
 
@@ -21,11 +18,11 @@ class BackgroundAdAdminController extends Controller
         ));
     }
 
-    public function listAction($site, Request $request)
+    public function listAction($site)
     {
         $this->addBackgroundAdBreadcrumb()->addChild($this->getSiteManager()->getSiteName($site));
 
-        $em = $this->get('doctrine')->getEntityManager();
+        $em = $this->get('doctrine')->getManager();
         $site = $em->getRepository('SpoutletBundle:Site')->find($site);
         $ads = $this->getRepository()->findBySite($site);
 
@@ -35,12 +32,11 @@ class BackgroundAdAdminController extends Controller
         ));
     }
 
-    public function newAction(Request $request)
+    public function newAction()
     {
         $this->addBackgroundAdBreadcrumb();
 
-        $ad = new BackgroundAd;
-        $form = $this->createForm(new BackgroundAdType(true), $ad);
+        $form = $this->createForm(new BackgroundAdType(true), new BackgroundAd());
 
         return $this->render('SpoutletBundle:BackgroundAdAdmin:new.html.twig', array(
             'form' => $form->createView(),
@@ -51,11 +47,11 @@ class BackgroundAdAdminController extends Controller
     {
         $this->addBackgroundAdBreadcrumb();
 
-        $em     = $this->getDoctrine()->getEntityManager();
-        $form   = $this->createForm(new BackgroundAdType(true), new BackgroundAd);
+        $em     = $this->getDoctrine()->getManager();
+        $form   = $this->createForm(new BackgroundAdType(true), new BackgroundAd());
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             $ad = $form->getData();
 
@@ -90,7 +86,7 @@ class BackgroundAdAdminController extends Controller
     {
         $this->addBackgroundAdBreadcrumb();
 
-        $form = $this->createForm(new BackgroundAdType, $this->findOr404($id));
+        $form = $this->createForm(BackgroundAdType::class, $this->findOr404($id));
 
         return $this->render('SpoutletBundle:BackgroundAdAdmin:edit.html.twig', array(
             'form' => $form->createView(),
@@ -100,11 +96,11 @@ class BackgroundAdAdminController extends Controller
 
     public function updateAction(Request $request, $id)
     {
-        $form = $this->createForm(new BackgroundAdType, $this->findOr404($id));
-        $em   = $this->getDoctrine()->getEntityManager();
+        $form = $this->createForm(BackgroundAdType::class, $this->findOr404($id));
+        $em   = $this->getDoctrine()->getManager();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             $ad = $form->getData();
 
@@ -143,7 +139,7 @@ class BackgroundAdAdminController extends Controller
 
     private function persist(BackgroundAd $ad)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $mUtil = new MediaUtil($em);
 
         if (!$mUtil->persistRelatedMedia($ad->getFile())) {

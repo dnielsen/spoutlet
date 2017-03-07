@@ -6,13 +6,11 @@ use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-use Doctrine\Common\Collections\ArrayCollection,
-    Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 use EWZ\Bundle\RecaptchaBundle\Validator\Constraints as Recaptcha;
-use FOS\UserBundle\Validator\Password;
 
 use Platformd\EventBundle\Entity\GroupEvent;
 use Platformd\GroupBundle\Entity\Group;
@@ -21,9 +19,9 @@ use Platformd\UserBundle\Validator\User as ValidateUser;
 /**
  * Platformd\UserBundle\Entity\User
  *
- * @ORM\Table(name="fos_user", indexes={@ORM\index(name="uuid_idx", columns={"uuid"}), @ORM\index(name="cevo_user_id_idx", columns={"cevoUserId"})})
+ * @ORM\Table(name="fos_user", indexes={@ORM\Index(name="uuid_idx", columns={"uuid"}), @ORM\Index(name="cevo_user_id_idx", columns={"cevoUserId"})})
  * @ORM\Entity(repositoryClass="Platformd\UserBundle\Entity\UserRepository")
- * @ORM\haslifecyclecallbacks
+ * @ORM\HasLifecycleCallbacks
  * @ValidateUser()
  * @UniqueEntity(fields={"username"}, message="fos_user.username.already_used")
  * @UniqueEntity(fields={"email"}, message="fos_user.email.already_used")
@@ -44,24 +42,25 @@ class User extends BaseUser
     protected $id;
 
     /**
-     * //Assert\NotBlank(message="fos_user.username.blank", groups={"Registration", "AdminEdit"});
-     * @ORM\Column(type="string", length="255", nullable=true)
+     * Assert\NotBlank(message="fos_user.username.blank", groups={"Registration", "AdminEdit"});
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $username;
 
     /**
-     * @ORM\Column(name="username_canonical", type="string", length="255", nullable=true, unique=true)
+     * @ORM\Column(name="username_canonical", type="string", length=255, nullable=true, unique=true)
      */
     protected $usernameCanonical;
 
     /**
      * @Assert\NotBlank(message="fos_user.email.blank", groups={"Registration", "AdminEdit"});
-     * @ORM\Column(type="string", length="255")
+     * @Assert\Email()
+     * @ORM\Column(type="string", length=255)
      */
     protected $email;
 
     /**
-     * @ORM\Column(name="email_canonical", type="string", length="255", unique=true)
+     * @ORM\Column(name="email_canonical", type="string", length=255, unique=true)
      */
     protected $emailCanonical;
 
@@ -82,7 +81,12 @@ class User extends BaseUser
 
     /**
      * Plain password. Used for model validation. Must not be persisted.
-     * @Assert\MinLength(limit="5", groups={"Registration"}, message="password_too_short")
+     *
+     * @Assert\Length(
+     *     min="5",
+     *     minMessage="password_too_short",
+     *     groups={"Registration"}
+     * )
      * @Assert\NotBlank(message="fos_user.password.blank", groups={"Registration"})
      */
     protected $plainPassword;
@@ -145,31 +149,38 @@ class User extends BaseUser
     /**
      * @var String $firstname
      *
-     * @ORM\Column(type="string", length="255", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * //@Assert\NotBlank(groups={"Registration", "IncompleteUser", "AdminEdit"}, message="first_name_not_blank")
-     * //@Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser", "AdminEdit"})
-     * //@Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser", "AdminEdit"})
+     * Assert\NotBlank(groups={"Registration", "IncompleteUser", "AdminEdit"}, message="first_name_not_blank")
+     * Assert\Length(
+     *     min=1,
+     *     max=255,
+     *     groups={"Registration", "IncompleteUser", "AdminEdit"}
+     * )
      */
     protected $firstname;
 
     /**
      * @var String $lastname
      *
-     * @ORM\Column(type="string", length="255", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * //@Assert\NotBlank(groups={"Registration", "IncompleteUser", "AdminEdit"}, message="last_name_not_blank")
-     * //@Assert\MinLength(limit="1", groups={"Registration", "IncompleteUser", "AdminEdit"})
-     * //@Assert\MaxLength(limit="255", groups={"Registration", "IncompleteUser", "AdminEdit"})
+     * Assert\NotBlank(groups={"Registration", "IncompleteUser", "AdminEdit"}, message="last_name_not_blank")
+     *
+     * Assert\Length(
+     *     min="1",
+     *     max="255",
+     *     groups={"Registration", "IncompleteUser", "AdminEdit"}
+     * )
      */
     protected $lastname;
 
     /**
-     * @var Datetime $birthdate
+     * @var \Datetime $birthdate
      *
      * @ORM\Column(type="date", nullable=true)
      *
-     * //@Assert\Date(groups={"Registration", "IncompleteUser", AdminEdit"})
+     * @Assert\Date(groups={"Registration", "IncompleteUser", "AdminEdit"})
      */
     protected $birthdate;
 
@@ -183,21 +194,21 @@ class User extends BaseUser
     /**
      * @var String $phone_number
      *
-     * @ORM\Column(name="phone_number", type="string", length="255", nullable=true)
+     * @ORM\Column(name="phone_number", type="string", length=255, nullable=true)
      */
     protected $phoneNumber;
 
     /**
      * @var String $work_phone_number
      *
-     * @ORM\Column(name="work_phone_number", type="string", length="255", nullable=true)
+     * @ORM\Column(name="work_phone_number", type="string", length=255, nullable=true)
      */
     protected $workPhoneNumber;
 
     /**
      * @var String $country
      *
-     * @ORM\Column(type="string", length="255", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      *
      * //@Assert\NotBlank(groups={"Registration", "AdminEdit"}, message="country_not_blank")
      */
@@ -241,7 +252,7 @@ class User extends BaseUser
     /**
      * @var String $latest_news_source
      *
-     * @ORM\Column(name="latest_news_source", type="string", length="255", nullable=true)
+     * @ORM\Column(name="latest_news_source", type="string", length=255, nullable=true)
      */
     protected $latestNewsSource;
 
@@ -265,7 +276,7 @@ class User extends BaseUser
     /**
      * @var Boolean $terms_accepted
      *
-     * //Assert\True(message="You must accept the terms and conditions and the privacy policy", groups={"Registration", "IncompleteUser"})
+     * //Assert\isTrue(message="You must accept the terms and conditions and the privacy policy", groups={"Registration", "IncompleteUser"})
      */
     protected $termsAccepted;
 
@@ -402,7 +413,7 @@ class User extends BaseUser
     protected $codeAssignmentCodes;
 
     /**
-     * @var datetime $created
+     * @var \Datetime $created
      *
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
@@ -410,7 +421,7 @@ class User extends BaseUser
     protected $created;
 
     /**
-     * @var datetime $updated
+     * @var \Datetime $updated
      *
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="update")
@@ -444,10 +455,10 @@ class User extends BaseUser
     private $groupMembershipActions;
 
     /**
-      * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\LoginRecord", mappedBy="user", cascade={"persist"})
-      * @ORM\JoinColumn(onDelete="SET NULL")
-      * @ORM\OrderBy({"dateTime" = "DESC"})
-      */
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\LoginRecord", mappedBy="user", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\OrderBy({"dateTime" = "DESC"})
+     */
     private $loginRecords;
 
     /**
@@ -475,7 +486,7 @@ class User extends BaseUser
     protected $uuid;
 
     /**
-     * @Recaptcha\True
+     * Recaptcha\True
      */
     public $recaptcha;
 
@@ -505,33 +516,33 @@ class User extends BaseUser
     protected $registrationSource;
 
     /**
-     * @ORM\Column(type="string", length="255", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Assert\NotBlank(message="Please enter your name.", groups={"Registration", "Profile"})
      */
     protected $name = null;
 
     /**
-     * @ORM\Column(type="string", length="255", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $organization = null;
 
     /**
-     * @ORM\Column(type="string", length="255", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $title = null;
 
     /**
-     * @ORM\Column(type="string", length="255", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $industry = null;
 
     /**
-     * @ORM\Column(type="string", length="255", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $affiliation = null;
 
     /**
-     * @ORM\Column(type="string", length="255", nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     protected $eventRole = null;
 
@@ -569,7 +580,7 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="Platformd\IdeaBundle\Entity\WatchedGroupMapping", mappedBy="user")
      */
     protected $watchedGroups;
-   
+
     /**
      * The id for facematching
      *
@@ -577,11 +588,12 @@ class User extends BaseUser
      * @ORM\Column(type="integer", nullable=true)
      */
     private $faceprintId;
-     /**
+
+    /**
      * @ORM\Column(name="faceprint_image", type="string")
      */
     protected $faceprintImage = '';
- 
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
@@ -625,27 +637,28 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
-        $this->events                   = new ArrayCollection();
-        $this->giveawayKeys             = new ArrayCollection();
-        $this->groupMembershipActions   = new ArrayCollection();
-        $this->loginRecords             = new ArrayCollection();
-        $this->pdGroups                 = new ArrayCollection();
-        $this->avatars                  = new ArrayCollection();
-        $this->gallarys                 = new ArrayCollection();
-        $this->ideas                    = new ArrayCollection();
-        $this->comments                 = new ArrayCollection();
-        $this->answers                  = new ArrayCollection();
-        $this->htmlPages                = new ArrayCollection();
-        $this->watchedEvents            = new ArrayCollection();
-        $this->watchedGroups            = new ArrayCollection();
-        $this->ownedGroups              = new ArrayCollection();
+        $this->events = new ArrayCollection();
+        $this->giveawayKeys = new ArrayCollection();
+        $this->groupMembershipActions = new ArrayCollection();
+        $this->loginRecords = new ArrayCollection();
+        $this->pdGroups = new ArrayCollection();
+        $this->avatars = new ArrayCollection();
+        $this->gallarys = new ArrayCollection();
+        $this->ideas = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+        $this->answers = new ArrayCollection();
+        $this->htmlPages = new ArrayCollection();
+        $this->watchedEvents = new ArrayCollection();
+        $this->watchedGroups = new ArrayCollection();
+        $this->ownedGroups = new ArrayCollection();
     }
 
     // public function __toString() {
     //     return 'User => { Id = '.$this->getId().', Name = "'.$this->getUsername().'", Age = '.$this->getAge().', IsSuperAdmin = '.($this->getIsSuperAdmin() ? 'True' : 'False').' }';
     // }
-    public function __toString() {
-        return $this->name;
+    public function __toString()
+    {
+        return $this->name ?: '';
     }
 
     /**
@@ -1108,6 +1121,7 @@ class User extends BaseUser
      * Also see EditUserFormType
      *
      * @param string $role either ROLE_ORGANIZER or ROLE_SUPER_ADMIN
+     *
      * @throws \InvalidArgumentException
      */
     public function setAdminLevel($role)
@@ -1178,7 +1192,7 @@ class User extends BaseUser
     protected function getUploadRootDir()
     {
 
-        return __DIR__.'/../../../../web/'.$this->getUploadDir();
+        return __DIR__ . '/../../../../web/' . $this->getUploadDir();
     }
 
     protected function getUploadDir()
@@ -1230,8 +1244,7 @@ class User extends BaseUser
 
         return $this->getBirthdate()
             ->diff(new \DateTime('now'))
-            ->y
-        ;
+            ->y;
     }
 
     /**
@@ -1328,25 +1341,29 @@ class User extends BaseUser
     {
         $this->pdGroups = $pdGroups;
     }
+
     public function getOwnedGroups()
     {
         return $this->ownedGroups;
     }
+
     public function setOwnedGroups($groups)
     {
         $this->ownedGroups = $groups;
     }
+
     public function getOwnedDepartments()
     {
-        $ownedDepts = array();
-        foreach ($this->ownedGroups->toArray() as $group)
-        {
-            if ($group->getCategory() == Group::CAT_DEPARTMENT) {
+        $ownedDepts = [];
+
+        foreach ($this->ownedGroups as $group) {
+            if ($group->getCategory() === Group::CAT_DEPARTMENT) {
                 $ownedDepts[] = $group;
             }
         }
         return $ownedDepts;
     }
+
     public function getGroupMembershipActions()
     {
         return $this->groupMembershipActions;
@@ -1377,7 +1394,7 @@ class User extends BaseUser
                 break;
         }
 
-        return sprintf('http://www.alienwarearena.com%s/member/%d', $subdomain , $this->cevoUserId);
+        return sprintf('http://www.alienwarearena.com%s/member/%d', $subdomain, $this->cevoUserId);
     }
 
     public function getLoginRecords()
@@ -1395,7 +1412,7 @@ class User extends BaseUser
         $this->avatars = $value;
     }
 
-     public function getGallarys()
+    public function getGallarys()
     {
         return $this->gallarys;
     }
@@ -1404,6 +1421,7 @@ class User extends BaseUser
     {
         $this->gallarys = $value;
     }
+
     public function getUuid()
     {
         return $this->uuid;
@@ -1491,6 +1509,22 @@ class User extends BaseUser
         }
     }
 
+    public function setEmail($email)
+    {
+        $this->email = $email;
+        $this->username = $email;
+
+        return $this;
+    }
+
+    public function setEmailCanonical($emailCanonical)
+    {
+        $this->emailCanonical = $emailCanonical;
+        $this->usernameCanonical = $emailCanonical;
+
+        return $this;
+    }
+
     public function getTwitterId()
     {
         return $this->twitterId;
@@ -1548,6 +1582,7 @@ class User extends BaseUser
     {
         $this->name = $name;
     }
+
     public function getName()
     {
         return $this->name;
@@ -1557,6 +1592,7 @@ class User extends BaseUser
     {
         $this->organization = $value;
     }
+
     public function getOrganization()
     {
         return $this->organization;
@@ -1566,6 +1602,7 @@ class User extends BaseUser
     {
         $this->title = $value;
     }
+
     public function getTitle()
     {
         return $this->title;
@@ -1575,6 +1612,7 @@ class User extends BaseUser
     {
         $this->industry = $value;
     }
+
     public function getIndustry()
     {
         return $this->industry;
@@ -1584,6 +1622,7 @@ class User extends BaseUser
     {
         $this->affiliation = $affiliation;
     }
+
     public function getAffiliation()
     {
         return $this->affiliation;
@@ -1593,6 +1632,7 @@ class User extends BaseUser
     {
         $this->$eventRole = $eventRole;
     }
+
     public function getEventRole()
     {
         return $this->eventRole;
@@ -1603,38 +1643,47 @@ class User extends BaseUser
     {
         $this->comments[] = $comments;
     }
+
     public function getComments()
     {
         return $this->comments;
     }
+
     public function setEntrySets($entrySets)
     {
         $this->entrySets = $entrySets;
     }
+
     public function getEntrySets()
     {
         return $this->entrySets;
     }
+
     public function addIdea($idea)
     {
         $this->ideas[] = $idea;
     }
+
     public function removeIdea($idea)
     {
         $this->ideas->removeElement($idea);
     }
+
     public function getIdeas()
     {
         return $this->ideas;
     }
+
     public function addAnswer($answer)
     {
         $this->answers[] = $answer;
     }
+
     public function removeAnswer($answer)
     {
         $this->answers->removeElement($answer);
     }
+
     public function getAnswers()
     {
         return $this->answers;
@@ -1655,38 +1704,47 @@ class User extends BaseUser
 
         return $eventAnswers;
     }
+
     public function addHtmlPage($htmlPage)
     {
         $this->htmlPages[] = $htmlPage;
     }
+
     public function removeHtmlPage($htmlPage)
     {
         $this->htmlPages->removeElement($htmlPage);
     }
+
     public function getHtmlPages()
     {
         return $this->htmlPages;
     }
+
     public function addWatchedEvent($value)
     {
         $this->watchedEvents[] = $value;
     }
+
     public function removeWatchedEvent($value)
     {
         $this->watchedEvents->removeElement($value);
     }
+
     public function getWatchedEvents()
     {
         return $this->watchedEvents;
     }
+
     public function addWatchedGroup($value)
     {
         $this->watchedGroups[] = $value;
     }
+
     public function removeWatchedGroup($value)
     {
         $this->watchedGroups->removeElement($value);
     }
+
     public function getWatchedGroups()
     {
         $groups = array();
@@ -1699,7 +1757,7 @@ class User extends BaseUser
         return $groups;
     }
 
-   /**
+    /**
      * @return string
      */
     public function getFaceprintId()
@@ -1713,7 +1771,7 @@ class User extends BaseUser
     public function setFaceprintId($faceprintId)
     {
         $this->faceprintId = $faceprintId;
-    } 
+    }
 
     public function getFaceprintImage()
     {
@@ -1724,6 +1782,7 @@ class User extends BaseUser
     {
         $this->faceprintImage = $value;
     }
+
     public function getCodeAssignmentCodes()
     {
         return $this->codeAssignmentCodes;
@@ -1735,52 +1794,83 @@ class User extends BaseUser
     }
 
 
-    public function getLinkedIn() {
+    public function getLinkedIn()
+    {
         return $this->linkedIn;
     }
-    public function setLinkedIn($value) {
+
+    public function setLinkedIn($value)
+    {
         $this->linkedIn = $value;
     }
-    public function getProfessionalEmail() {
+
+    public function getProfessionalEmail()
+    {
         return $this->professionalEmail;
     }
-    public function setProfessionalEmail($value) {
+
+    public function setProfessionalEmail($value)
+    {
         $this->professionalEmail = $value;
     }
-    public function getTwitterUsername() {
+
+    public function getTwitterUsername()
+    {
         return $this->twitterUsername;
     }
-    public function setTwitterUsername($value) {
+
+    public function setTwitterUsername($value)
+    {
         $this->twitterUsername = $value;
     }
-    public function getWebsite() {
+
+    public function getWebsite()
+    {
         return $this->website;
     }
-    public function setWebsite($value) {
+
+    public function setWebsite($value)
+    {
         $this->website = $value;
     }
-    public function getMailingAddress() {
+
+    public function getMailingAddress()
+    {
         return $this->mailingAddress;
     }
-    public function setMailingAddress($value) {
+
+    public function setMailingAddress($value)
+    {
         $this->mailingAddress = $value;
     }
-    public function getTshirtSize() {
+
+    public function getTshirtSize()
+    {
         return $this->tshirtSize;
     }
-    public function setTshirtSize($value) {
+
+    public function setTshirtSize($value)
+    {
         $this->tshirtSize = $value;
     }
-    public function getDisplayProfile() {
+
+    public function getDisplayProfile()
+    {
         return $this->displayProfile;
     }
-    public function setDisplayProfile($value) {
+
+    public function setDisplayProfile($value)
+    {
         $this->displayProfile = $value;
     }
-    public function getDisplayPrivateInfoToOrganizers() {
+
+    public function getDisplayPrivateInfoToOrganizers()
+    {
         return $this->displayPrivateInfoToOrganizers;
     }
-    public function setDisplayPrivateInfoToOrganizers($value) {
+
+    public function setDisplayPrivateInfoToOrganizers($value)
+    {
         $this->displayPrivateInfoToOrganizers = $value;
     }
 }

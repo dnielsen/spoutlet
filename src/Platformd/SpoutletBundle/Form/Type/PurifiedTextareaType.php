@@ -4,46 +4,45 @@ namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataTransformerInterface;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Platformd\UserBundle\Entity\User;
 
 class PurifiedTextareaType extends AbstractType
 {
     private $basicPurifierTransformer;
     private $adminPurifierTransformer;
-    private $security;
+    private $tokenStorage;
 
     public function __construct(
         DataTransformerInterface $basicPurifierTransformer,
         DataTransformerInterface $adminPurifierTransformer,
-        SecurityContextInterface $security
-    )
-    {
+        TokenStorageInterface $tokenStorage
+    ) {
         $this->basicPurifierTransformer = $basicPurifierTransformer;
         $this->adminPurifierTransformer = $adminPurifierTransformer;
-        $this->security = $security;
+        $this->tokenStorage = $tokenStorage;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $this->security->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         if ($user && $user instanceof User && $user->hasRole('ROLE_SUPER_ADMIN')) {
-
-            $builder->appendClientTransformer($this->adminPurifierTransformer);
+            $builder->addViewTransformer($this->adminPurifierTransformer);
         } else {
-            $builder->appendClientTransformer($this->basicPurifierTransformer);
+            $builder->addViewTransformer($this->basicPurifierTransformer);
         }
     }
 
-    public function getParent(array $options)
+    public function getParent()
     {
-        return 'textarea';
+        return TextareaType::class;
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
-        return 'purified_textarea';
+        return 'purifiedTextarea';
     }
 }

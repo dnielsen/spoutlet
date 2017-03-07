@@ -2,31 +2,34 @@
 
 namespace Platformd\UserBundle\Form\Type;
 
+use Platformd\UserBundle\Entity\Avatar;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Platformd\MediaBundle\Form\Type\MediaType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AvatarType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('file', 'file', array(
+            ->add('file', FileType::class, array(
                 'label' => 'platformd.user.avatars.file_label',
                 'required' => false,
             ))
         ;
     }
 
-    public function getName()
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return 'platformd_userbundle_avatartype';
+        $resolver->setDefaults([
+            'data_class' => Avatar::class,
+        ]);
     }
 
-    public function getDefaultOptions(array $options)
+
+    public function getBlockPrefix()
     {
-        return array(
-            'data_class' => 'Platformd\UserBundle\Entity\Avatar',
-        );
+        return 'platformd_userbundle_avatartype';
     }
 }

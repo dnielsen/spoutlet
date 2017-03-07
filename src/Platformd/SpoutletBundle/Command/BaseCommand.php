@@ -2,15 +2,7 @@
 
 namespace Platformd\SpoutletBundle\Command;
 
-use
-    Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand,
-    Symfony\Component\Console\Input\InputArgument,
-    Symfony\Component\Console\Input\InputOption,
-    Symfony\Component\Console\Input\InputInterface,
-    Symfony\Component\Console\Output\OutputInterface
-;
-
-use DateTime;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 abstract class BaseCommand extends ContainerAwareCommand
 {
@@ -106,7 +98,7 @@ abstract class BaseCommand extends ContainerAwareCommand
     }
 
     protected function getRepo($key) {
-        $em = $this->getContainer()->get('doctrine')->getEntityManager();
+        $em = $this->getContainer()->get('doctrine')->getManager();
         return $em->getRepository($key);
     }
 }

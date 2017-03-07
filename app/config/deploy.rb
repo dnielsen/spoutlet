@@ -40,7 +40,7 @@ set :vendors_mode,   "install"
 set :dump_assetic_assets, true
 
 set :shared_children,     [app_path + "/logs", web_path + "/uploads", "vendor", web_path + "/media", app_path + "/data", web_path + "/media", "misc_scripts/flock_files"]
-set :shared_files,      ["app/config/parameters.ini", "app/config/config_server.yml"]
+set :shared_files,      ["app/config/parameters.yml", "app/config/config_server.yml"]
 
 # After finalizing update - update translations
 after "deploy:finalize_update" do

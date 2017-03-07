@@ -52,7 +52,7 @@ class BackgroundAd
     protected $timezone = "UTC";
 
     /**
-     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\BackgroundAdSite", mappedBy="ad", cascade={"persist", "delete"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Platformd\SpoutletBundle\Entity\BackgroundAdSite", mappedBy="ad", cascade={"persist", "remove"}, orphanRemoval=true)
      */
      private $adSites;
 

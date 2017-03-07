@@ -5,6 +5,7 @@ namespace Platformd\TagBundle\EventListener;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Platformd\TagBundle\Model\TagManager;
 
 class TagListener implements EventSubscriber
 {
@@ -13,7 +14,7 @@ class TagListener implements EventSubscriber
     /**
      * Constructor
      *
-     * @param ContainerInterface $container
+     * @param TagManager $container
      */
     public function __construct(TagManager $manager)
     {

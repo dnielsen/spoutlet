@@ -7,14 +7,8 @@ use
     Symfony\Component\Console\Input\InputArgument,
     Symfony\Component\Console\Input\InputOption,
     Symfony\Component\Console\Input\InputInterface,
-    Symfony\Component\Console\Output\OutputInterface,
-    Symfony\Component\Finder\Finder
+    Symfony\Component\Console\Output\OutputInterface
 ;
-
-use Platformd\UserBundle\Entity\Avatar;
-use Platformd\UserBundle\Entity\User;
-
-use DateTime;
 
 class CevoUserImportCommand extends ContainerAwareCommand
 {
@@ -236,11 +230,11 @@ EOT
                     $userData['password']     = $data[2];
                     $userData['email']        = $data[3];
                     $userData['handle']       = $data[4];
-                    $userData['created']      = DateTime::createFromFormat('U', $data[6]);
+                    $userData['created']      = \DateTime::createFromFormat('U', $data[6]);
                     $userData['ipAddress']    = $data[7];
                     $userData['firstName']    = $data[11];
                     $userData['lastName']     = $data[12];
-                    $userData['birthDate']    = DateTime::createFromFormat('Y-m-d', $data[13]);
+                    $userData['birthDate']    = \DateTime::createFromFormat('Y-m-d', $data[13]);
                     $userData['phone']        = $data[14];
                     $userData['country']      = $data[16];
                     $userData['state']        = $data[17];

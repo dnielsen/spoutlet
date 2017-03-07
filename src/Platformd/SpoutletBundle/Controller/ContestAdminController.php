@@ -3,13 +3,9 @@
 namespace Platformd\SpoutletBundle\Controller;
 
 use Platformd\SpoutletBundle\Entity\Contest;
-use Platformd\SpoutletBundle\Entity\ContestRepository;
-use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule;
-use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRuleset;
 use Platformd\SpoutletBundle\Form\Type\ContestType;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use Knp\MediaBundle\Util\MediaUtil;
 
@@ -29,7 +25,7 @@ class ContestAdminController extends Controller
     public function listAction($site)
     {
         $this->addContestsBreadcrumb();
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
@@ -47,10 +43,10 @@ class ContestAdminController extends Controller
     {
         $this->addContestsBreadcrumb()->addChild('New Contest');
 
-        $em                 = $this->getDoctrine()->getEntityManager();
+        $em                 = $this->getDoctrine()->getManager();
         $tagManager         = $this->getTagManager();
         $existingContests   = $em->getRepository('SpoutletBundle:Contest')->findAllForSiteAlphabetically($this->getCurrentSite());
-        $importId           = $request->get('existing_contest_select');
+        $importId           = $request->get('existing_contest_select', 0);
         $importedContest    = $em->getRepository('SpoutletBundle:Contest')->find($importId);
 
         if ($importId) {
@@ -71,7 +67,7 @@ class ContestAdminController extends Controller
         if (!$importedContest && $this->processForm($form, $request)) {
             $this->setFlash('success', 'The contest was created!');
 
-            return $this->redirect($this->generateUrl('admin_contest_index'));
+            return $this->redirectToRoute('admin_contest_index');
         }
 
         return $this->render('SpoutletBundle:ContestAdmin:new.html.twig', array(
@@ -85,7 +81,7 @@ class ContestAdminController extends Controller
     {
         $this->addContestsBreadcrumb()->addChild('Edit Contest');
 
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
         $tagManager = $this->getTagManager();
 
         $contest = $em->getRepository('SpoutletBundle:Contest')->findOneBy(array('slug' => $slug));
@@ -117,7 +113,7 @@ class ContestAdminController extends Controller
 
     public function chooseWinnersAction($slug)
     {
-        $em                 = $this->getDoctrine()->getEntityManager();
+        $em                 = $this->getDoctrine()->getManager();
         $contestRepo        = $em->getRepository('SpoutletBundle:Contest');
         $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
         $voteRepo           = $em->getRepository('SpoutletBundle:Vote');
@@ -169,7 +165,7 @@ class ContestAdminController extends Controller
 
     public function confirmWinnersAction($slug, Request $request)
     {
-        $em                 = $this->getDoctrine()->getEntityManager();
+        $em                 = $this->getDoctrine()->getManager();
         $contestRepo        = $em->getRepository('SpoutletBundle:Contest');
         $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
         $contest            = $contestRepo->findOneBy(array('slug' => $slug));
@@ -206,7 +202,7 @@ class ContestAdminController extends Controller
         $this->getBreadcrumbs()->addChild('Metrics');
         $this->getBreadcrumbs()->addChild('Contests');
 
-        $em            = $this->getDoctrine()->getEntityManager();
+        $em            = $this->getDoctrine()->getManager();
         $site          = $this->isGranted('ROLE_JAPAN_ADMIN') ? $em->getRepository('SpoutletBundle:Site')->find(2) : $this->getCurrentSite();
         $imageContests = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('image', $site);
         $groupContests = $em->getRepository('SpoutletBundle:Contest')->findAllByCategoryAndSite('group', $site);
@@ -289,7 +285,7 @@ class ContestAdminController extends Controller
     {
         $likes      = array();
         $imageLikes = array();
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
 
         if(!$contest) {
             throw $this->createNotFoundException('Unable to find contest.');
@@ -319,7 +315,7 @@ class ContestAdminController extends Controller
 
     public function updateEntriesAction($slug, Request $request)
     {
-        $em                 = $this->getDoctrine()->getEntityManager();
+        $em                 = $this->getDoctrine()->getManager();
         $contestEntryRepo   = $em->getRepository('SpoutletBundle:ContestEntry');
         $galleryMediaRepo   = $em->getRepository('SpoutletBundle:GalleryMedia');
 
@@ -492,10 +488,10 @@ class ContestAdminController extends Controller
 
     private function processForm(Form $form, Request $request)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
@@ -529,7 +525,7 @@ class ContestAdminController extends Controller
                 $contest->getRuleset()->setParentType('contest');
                 $contest->getRuleset()->setDefaultAllow($defaultAllow);
 
-                $mUtil = new MediaUtil($this->getDoctrine()->getEntityManager());
+                $mUtil = new MediaUtil($this->getDoctrine()->getManager());
 
                 if (!$mUtil->persistRelatedMedia($contest->getBanner())) {
                     $contest->setBanner(null);

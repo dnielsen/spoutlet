@@ -2,12 +2,12 @@
 
 namespace Platformd\NewsBundle\Controller;
 
+use Pagerfanta\Pagerfanta;
 use Platformd\SpoutletBundle\Controller\Controller;
 
 use Platformd\NewsBundle\Entity\News;
 use Platformd\NewsBundle\Form\Type\CreateNewsFormType;
 
-use Pagerfanta\Pagerfanta;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +20,7 @@ class AdminController extends Controller
     {
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
             $url = $this->generateUrl('NewsBundle_admin_siteList', array('site' => 2));
-            return $this->redirect($url);
+            return $this->redirectTo($url);
         }
 
         $this->addNewsBreadcrumb();
@@ -30,7 +30,7 @@ class AdminController extends Controller
         ));
     }
 
-    public function listAction($site)
+    public function listAction($site, Request $request)
     {
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
             $site = 2;
@@ -41,15 +41,15 @@ class AdminController extends Controller
 
         $em = $this
             ->getDoctrine()
-            ->getEntityManager();
+            ->getManager();
 
         $site = $em->getRepository('SpoutletBundle:Site')->find($site);
 
         $repo   = $em->getRepository('NewsBundle:News');
         $query  = $repo->getFindNewsForSiteQuery($site);
 
-        $pager = new PagerFanta(new DoctrineORMAdapter($query));
-        $pager->setCurrentPage($this->getRequest()->get('page', 1));
+        $pager = new Pagerfanta(new DoctrineORMAdapter($query));
+        $pager->setCurrentPage($request->get('page', 1));
 
         return $this->render('NewsBundle:Admin:list.html.twig', array(
             'news'  => $pager,
@@ -57,17 +57,17 @@ class AdminController extends Controller
         ));
     }
 
-    public function newAction()
+    public function newAction(Request $request)
     {
         $this->addNewsBreadcrumb()->addChild('New');
         $news       = new News();
         $tagManager = $this->getTagManager();
         $form       = $this->createForm(new CreateNewsFormType($news, $tagManager), $news);
-        $request    = $this->getRequest();
 
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', $this->trans('platformd.news.admin.created'));
-            return $this->redirect($this->generateUrl('NewsBundle_admin_homepage'));
+
+            return $this->redirectToRoute('NewsBundle_admin_homepage');
         }
 
         return $this->render('NewsBundle:Admin:new.html.twig', array(
@@ -78,7 +78,7 @@ class AdminController extends Controller
     public function editAction($id)
     {
         $this->addNewsBreadcrumb()->addChild('Edit');
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
         $tagManager = $this->getTagManager();
 
         $news = $em
@@ -108,7 +108,7 @@ class AdminController extends Controller
 
     public function deleteAction($id)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $news = $em
             ->getRepository('NewsBundle:News')
             ->findOneBy(array('id' => $id));
@@ -127,11 +127,11 @@ class AdminController extends Controller
 
     private function processForm(Form $form, Request $request)
     {
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
         $tagManager = $this->getTagManager();
 
         if ('POST' === $request->getMethod()) {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
@@ -139,7 +139,7 @@ class AdminController extends Controller
                 /** @var $news \Platformd\NewsBundle\Entity\News */
                 $news = $form->getData();
 
-                $mUtil = new MediaUtil($this->getDoctrine()->getEntityManager());
+                $mUtil = new MediaUtil($this->getDoctrine()->getManager());
 
                 if (!$mUtil->persistRelatedMedia($news->getImage())) {
                     $news->setImage(null);

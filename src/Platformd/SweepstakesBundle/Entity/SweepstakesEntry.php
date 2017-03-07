@@ -23,7 +23,7 @@ use FOS\UserBundle\Model\UserInterface;
 class SweepstakesEntry
 {
     /**
-     * @Assert\True(message="sweepstakes.errors.agree_to_terms")
+     * @Assert\IsTrue(message="sweepstakes.errors.agree_to_terms")
      */
     public $termsAccepted;
 
@@ -82,7 +82,7 @@ class SweepstakesEntry
     protected $answers;
 
     /**
-     * @ORM\Column(name="optional_checkbox_answer", type="boolean", nullable="true")
+     * @ORM\Column(name="optional_checkbox_answer", type="boolean", nullable=true)
      */
     protected $optionalCheckboxAnswer;
 

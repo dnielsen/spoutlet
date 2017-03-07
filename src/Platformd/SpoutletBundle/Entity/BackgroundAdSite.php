@@ -30,7 +30,7 @@ class BackgroundAdSite
      private $site;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\BackgroundAd")
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\BackgroundAd", inversedBy="adSites")
      */
      private $ad;
 

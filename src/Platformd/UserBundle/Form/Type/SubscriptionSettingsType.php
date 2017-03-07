@@ -2,46 +2,46 @@
 
 namespace Platformd\UserBundle\Form\Type;
 
+use Platformd\UserBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Form\Event\DataEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class SubscriptionSettingsType extends AbstractType
 {
     private $encoderFactory;
-    private $securityContext;
+    private $tokenStorage;
     private $apiManager;
     private $apiAuth;
 
-    public function __construct($encoderFactory, $securityContext, $apiManager, $apiAuth)
+    public function __construct($encoderFactory, TokenStorageInterface $tokenStorage, $apiManager, $apiAuth)
     {
         $this->encoderFactory  = $encoderFactory;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->apiManager      = $apiManager;
         $this->apiAuth         = $apiAuth;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user       = $this->securityContext->getToken()->getUser();
-        $encoder    = $this->encoderFactory->getEncoder($user);
-        $apiManager = $this->apiManager;
-        $apiAuth    = $this->apiAuth;
+        $user       = $this->tokenStorage->getToken()->getUser();
+//        $encoder    = $this->encoderFactory->getEncoder($user);
+//        $apiManager = $this->apiManager;
+//        $apiAuth    = $this->apiAuth;
 
         $builder->add('subscribedAlienwareEvents');
     }
 
-    public function getDefaultOptions(array $options)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return array_merge($options, array(
-            'data_class' => 'Platformd\UserBundle\Entity\User',
-            'validation_groups' => array('Default')
-        ));
+        $resolver->setDefaults([
+            'data_class' => User::class,
+            'validation_groups' => ['Default'],
+        ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'subscription_settings';
     }

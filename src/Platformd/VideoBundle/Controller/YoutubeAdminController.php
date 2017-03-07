@@ -3,24 +3,13 @@
 namespace Platformd\VideoBundle\Controller;
 
 use Platformd\SpoutletBundle\Controller\Controller;
-use Platformd\VideoBundle\Entity\YoutubeVideo;
-use Platformd\VideoBundle\Entity\YoutubeVote;
 use Platformd\VideoBundle\Form\Type\YoutubeMetricsType;
-use Platformd\GroupBundle\Entity\GroupVideo;
 use Platformd\SpoutletBundle\Util\CsvResponseFactory;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-use Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 
-use DateTime,
-    DateInterval
-;
-
-use Pagerfanta\Pagerfanta,
-    Pagerfanta\Adapter\DoctrineORMAdapter,
-    Pagerfanta\Adapter\ArrayAdapter
-;
+use Pagerfanta\Pagerfanta;
+use Pagerfanta\Adapter\ArrayAdapter;
 
 class YoutubeAdminController extends Controller
 {
@@ -28,10 +17,10 @@ class YoutubeAdminController extends Controller
     {
         $page       = $request->query->get('page', 1);
         $filters    = $this->getFilterFormData();
-        $form       = $this->createForm(new YoutubeMetricsType(), $filters);
+        $form       = $this->createForm(YoutubeMetricsType::class, $filters);
 
         if($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             $data     = $form->getData();
             $fromDate = $data['fromDate'];
@@ -39,7 +28,7 @@ class YoutubeAdminController extends Controller
             $keyWords = $data['keyWords'];
 
             if($thruDate) {
-                $thruDate->add(DateInterval::createFromDateString('1439 minutes'));
+                $thruDate->add(\DateInterval::createFromDateString('1439 minutes'));
             }
 
             $this->setFilterFormData(array('fromDate' => $fromDate, 'thruDate' => $thruDate, 'keyWords' => $keyWords));

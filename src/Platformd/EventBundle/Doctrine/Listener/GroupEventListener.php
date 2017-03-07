@@ -1,6 +1,6 @@
 <?php
 
-namespace Platformd\EventBundle\Doctrine\listener;
+namespace Platformd\EventBundle\Doctrine\Listener;
 
 use Platformd\EventBundle\Entity\GroupEvent,
     Platformd\SpoutletBundle\Util\SiteUtil

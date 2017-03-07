@@ -144,8 +144,8 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% if app.session.locale == "es" or app.session.locale == "zh" or app.session.locale == "ja" %}
-        <script type="text/javascript" src="/bundles/spoutlet/js/jquery.timeago.{{ app.session.locale }}.js"></script>
+    {% if app.request.locale == "es" or app.request.locale == "zh" or app.request.locale == "ja" %}
+        <script type="text/javascript" src="/bundles/spoutlet/js/jquery.timeago.{{ app.request.locale }}.js"></script>
     {% endif %}
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.scrollTo-1.4.2-min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/spoutlet/js/jquery.localscroll-1.2.7-min.js') }}"></script>

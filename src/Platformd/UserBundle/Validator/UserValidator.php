@@ -24,7 +24,7 @@ class UserValidator extends ConstraintValidator
         $this->siteUtil = $siteUtil;
     }
 
-    public function isValid($entity, Constraint $constraint)
+    public function validate($entity, Constraint $constraint)
     {
         $site = $this->siteUtil->getCurrentSite();
 

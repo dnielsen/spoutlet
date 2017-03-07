@@ -2,128 +2,153 @@
 
 namespace Platformd\SpoutletBundle\Form\Type;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Platformd\SpoutletBundle\Entity\Contest;
 use Platformd\MediaBundle\Form\Type\MediaType;
-use Platformd\SpoutletBundle\Form\Type\SlugType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class ContestType extends AbstractType
 {
+    const YES_NO = [
+        'Yes' => 1,
+        'No' => 0,
+    ];
+
+    const ALLOWED_ENTRIES = [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+    ];
+
     private $contest;
     private $tagManager;
 
     public function __construct($contest, $tagManager)
     {
-        $this->contest         = $contest;
-        $this->tagManager   = $tagManager;
+        $this->contest = $contest;
+        $this->tagManager = $tagManager;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name', null, array(
                 'label' => 'Contest name',
             ))
-            ->add('category', 'choice', array(
-                'choices'   => self::getCategoryChoices(),
+            ->add('category', ChoiceType::class, array(
+                'label' => 'Category',
+                'choices' => self::getCategoryChoices(),
+                'choices_as_values' => true,
             ))
-            ->add('game', 'entity', array(
-                'class'     => 'GameBundle:Game',
-                'property'  => 'name',
-                'empty_value' => 'N/A'
+            ->add('game', EntityType::class, array(
+                'label' => 'Game',
+                'class' => 'GameBundle:Game',
+                'choice_label' => 'name',
+                'placeholder' => 'N/A'
             ))
-            ->add('slug', new SlugType(), array(
-                'url_prefix' => '/contest/'
+            ->add('slug', SlugType::class, array(
+                'label' => 'URL string - /contest/',
             ))
-            ->add('sites', 'entity', array(
+            ->add('sites', EntityType::class, array(
+                'label' => 'Sites',
                 'required' => true,
-                'class'    => 'SpoutletBundle:Site',
+                'class' => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name',
+                'choice_label' => 'name',
             ))
-            ->add('submissionStart', 'datetime', array(
-                'label'     => 'Submission Starts:',
-                'widget'    => 'single_text',
-                'attr'      => array(
+            ->add('submissionStart', DateTimeType::class, array(
+                'label' => 'Submission Starts:',
+                'widget' => 'single_text',
+                'attr' => array(
                     'class' => 'datetime-picker'
                 )
             ))
-            ->add('submissionEnd', 'datetime', array(
-                'label'     => 'Submission Ends:',
-                'widget'    => 'single_text',
-                'attr'      => array(
+            ->add('submissionEnd', DateTimeType::class, array(
+                'label' => 'Submission Ends:',
+                'widget' => 'single_text',
+                'attr' => array(
                     'class' => 'datetime-picker'
                 )
             ))
-            ->add('votingStart', 'datetime', array(
-                'label'     => 'Voting Starts:',
-                'widget'    => 'single_text',
-                'attr'      => array(
+            ->add('votingStart', DateTimeType::class, array(
+                'label' => 'Voting Starts:',
+                'widget' => 'single_text',
+                'attr' => array(
                     'class' => 'datetime-picker'
                 )
             ))
-            ->add('votingEnd', 'datetime', array(
-                'label'     => 'Voting Ends:',
-                'widget'    => 'single_text',
-                'attr'      => array(
+            ->add('votingEnd', DateTimeType::class, array(
+                'label' => 'Voting Ends:',
+                'widget' => 'single_text',
+                'attr' => array(
                     'class' => 'datetime-picker'
                 )
             ))
-            ->add('timezone', 'gmtTimezone')
-            ->add('banner', new MediaType(), array(
+            ->add('timezone', GmtOffsetTimezoneType::class, [
+                'label' => 'Timezone',
+            ])
+            ->add('banner', MediaType::class, array(
                 'image_label' => 'Banner Image',
-                'image_help'  => 'Recommended size: 950px x 160px with 40px on bottom of banner for submenu overlay.',
+                'image_help' => 'Recommended size: 950px x 160px with 40px on bottom of banner for submenu overlay.',
                 'with_remove_checkbox' => true,
             ))
-            ->add('rules', 'purifiedTextarea', array(
-                'required' => true,
-                'attr'  => array('class' => 'ckeditor'),
+            ->add('rules', PurifiedTextareaType::class, array(
+                'label' => 'Rules',
+                'attr' => array('class' => 'ckeditor'),
             ))
-            ->add('entryInstructions', 'purifiedTextarea', array(
-                'label'     => 'Instructions for contestants',
-                'attr'  => array('class' => 'ckeditor'),
+            ->add('entryInstructions', PurifiedTextareaType::class, array(
+                'label' => 'Instructions for contestants',
+                'attr' => array('class' => 'ckeditor'),
             ))
-            ->add('voteInstructions', 'purifiedTextarea', array(
-                'label'     => 'Instructions for voters',
-                'attr'  => array('class' => 'ckeditor'),
+            ->add('voteInstructions', PurifiedTextareaType::class, array(
+                'label' => 'Instructions for voters',
+                'attr' => array('class' => 'ckeditor'),
             ))
-            ->add('redemptionInstructionsArray', 'collection', array(
-                'type'  => 'textarea',
+            ->add('redemptionInstructionsArray', CollectionType::class, array(
+                'entry_type' => TextareaType::class,
                 'label' => 'Redemption Instructions',
             ))
-            ->add('maxEntries', 'choice', array(
-                'label'     => 'Entries allowed',
-                'choices'   => array(0, 1, 2, 3, 4, 5),
-                'help'      => 'To allow unlimited entries, select "0"',
+            ->add('maxEntries', ChoiceType::class, array(
+                'label' => 'Entries allowed',
+                'choices' => self::ALLOWED_ENTRIES,
             ))
-            ->add('openGraphOverride', new OpenGraphOverrideType(), array('label' => 'Facebook Info'))
+            ->add('openGraphOverride', OpenGraphOverrideType::class, array('label' => 'Facebook Info'))
             ->add('status', 'choice', array(
-                'choices'   =>  $this->getStatusChoices()
+                'label' => 'Status',
+                'choices' => $this->getStatusChoices(),
+                'choices_as_values' => true,
             ))
-            ->add('ruleset', new CountryAgeRestrictionRulesetType(), array('label' => 'Restrictions'))
-            ->add('testOnly', 'choice', array(
-                'choices' => array(
-                    1 => 'Yes',
-                    0 => 'No',
-                ),
+            ->add('ruleset', CountryAgeRestrictionRulesetType::class, array(
+                'label' => 'Restrictions',
+            ))
+            ->add('testOnly', ChoiceType::class, array(
+                'choices' => self::YES_NO,
+                'choices_as_values' => true,
                 'label' => 'Allow admin testing?',
-                'help'  => 'This allows admins to still test the operation of the contest IF it is unpublished',
             ))
-            ->add('hidden', 'checkbox', array(
+            ->add('hidden', CheckboxType::class, array(
                 'label' => 'Do not display listing',
             ));
 
-            $builder->add('tags', 'text', array(
-                'label' => 'Tags',
-                'help' => "Enter keywords to help people discover the contest.",
-                'property_path' => false,
-                'data' => $this->contest ? $this->tagManager->getConcatenatedTagNames($this->contest) : null,
-            ));
+        $builder->add('tags', TextType::class, array(
+            'label' => 'Tags',
+            'mapped' => false,
+            'data' => $this->contest ? $this->tagManager->getConcatenatedTagNames($this->contest) : null,
+        ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_contesttype';
     }
@@ -132,8 +157,10 @@ class ContestType extends AbstractType
     {
         $values = Contest::getValidCategories();
 
+        $choices = [];
+
         foreach ($values as $value) {
-            $choices[$value]  = $value;
+            $choices[$value] = $value;
         }
 
         return $choices;
@@ -141,8 +168,10 @@ class ContestType extends AbstractType
 
     private static function getStatusChoices()
     {
+        $choices = [];
+
         foreach (Contest::getValidStatuses() as $status) {
-            $choices[$status] = 'status.'.$status;
+            $choices['status.' . $status] = $status;
         }
 
         return $choices;

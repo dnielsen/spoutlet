@@ -4,13 +4,9 @@ namespace Platformd\UserBundle\Command;
 
 use
     Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand,
-    Symfony\Component\Console\Input\InputArgument,
-    Symfony\Component\Console\Input\InputOption,
     Symfony\Component\Console\Input\InputInterface,
-    Symfony\Component\Console\Output\OutputInterface
-;
+    Symfony\Component\Console\Output\OutputInterface;
 
-use Platformd\UserBundle\Entity\User;
 use Platformd\SpoutletBundle\Entity\ScriptLastRun;
 
 class ApiQueryForNewUsersCommand extends ContainerAwareCommand
@@ -33,16 +29,16 @@ EOT
             );
     }
 
-    protected function output($indentationLevel = 0, $message = null, $withNewLine = true) {
-
+    protected function output($indentationLevel = 0, $message = null, $withNewLine = true)
+    {
         if ($message === null) {
             $message = '';
         }
 
         if ($withNewLine) {
-            $this->stdOutput->writeLn(str_repeat(' ', $indentationLevel).$message);
+            $this->stdOutput->writeLn(str_repeat(' ', $indentationLevel) . $message);
         } else {
-            $this->stdOutput->write(str_repeat(' ', $indentationLevel).$message);
+            $this->stdOutput->write(str_repeat(' ', $indentationLevel) . $message);
         }
     }
 
@@ -54,7 +50,7 @@ EOT
     protected function error($message, $exit = false)
     {
         $this->output();
-        $this->output(0, '<error>'.$message.'</error>');
+        $this->output(0, '<error>' . $message . '</error>');
         $this->output();
 
         if ($exit) {
@@ -64,14 +60,14 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->stdOutput   = $output;
-        $container         = $this->getContainer();
-        $em                = $container->get('doctrine')->getEntityManager();
-        $userManager       = $container->get('fos_user.user_manager');
-        $apiManager        = $container->get('platformd.user.api.manager');
+        $this->stdOutput = $output;
+        $container = $this->getContainer();
+        $em = $container->get('doctrine')->getManager();
+        $userManager = $container->get('fos_user.user_manager');
+        $apiManager = $container->get('platformd.user.api.manager');
         $scriptLastRunRepo = $em->getRepository('SpoutletBundle:ScriptLastRun');
 
-        $apiAuth           = $container->getParameter('api_authentication');
+        $apiAuth = $container->getParameter('api_authentication');
 
         if (!$apiAuth) {
             $this->output();
@@ -80,11 +76,11 @@ EOT
             exit;
         }
 
-        $exitScript        = false;
-        $offset            = 0;
-        $limit             = 100;
+        $exitScript = false;
+        $offset = 0;
+        $limit = 100;
 
-        $runDateTime       = new \DateTime();
+        $runDateTime = new \DateTime();
 
         $this->output();
         $this->output(0, 'PlatformD New User Import');
@@ -97,12 +93,12 @@ EOT
             $em->flush();
         }
 
-        $since  = $hasRun->getLastRun();
+        $since = $hasRun->getLastRun();
 
         while ($exitScript === false) {
 
             $this->output();
-            $this->output(2, 'Getting next ['.$limit.'] users...', false);
+            $this->output(2, 'Getting next [' . $limit . '] users...', false);
 
             $apiResult = $apiManager->getUserList($offset, $limit, 'created', $since);
             $itemCount = count($apiResult['items']);
@@ -118,7 +114,7 @@ EOT
 
             foreach ($userList as $user) {
 
-                $this->output(4, 'Looking up user "'.$user['uuid'].'" in database.');
+                $this->output(4, 'Looking up user "' . $user['uuid'] . '" in database.');
                 $dbUser = $userManager->findByUuid($user['uuid']);
 
                 if ($dbUser) {
@@ -130,8 +126,8 @@ EOT
 
                 $dbUser = $userManager->createUser();
 
-                $created   = $user['created'] ? new \DateTime($user['created']) : null;
-                $updated   = $user['last_updated'] ? new \DateTime($user['last_updated']) : null;
+                $created = $user['created'] ? new \DateTime($user['created']) : null;
+                $updated = $user['last_updated'] ? new \DateTime($user['last_updated']) : null;
                 $birthdate = $user['birth_date'] ? new \DateTime($user['birth_date']) : null;
                 $suspendedUntil = $user['suspended_until'] ? new \DateTime($user['suspended_until']) : null;
 

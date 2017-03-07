@@ -28,7 +28,7 @@ class Translation
     /**
      * The language that this applies to
      *
-     * @ORM\Column(type="string", length="10")
+     * @ORM\Column(type="string", length=10)
      */
     protected $language;
 

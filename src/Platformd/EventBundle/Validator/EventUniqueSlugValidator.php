@@ -20,7 +20,7 @@ class EventUniqueSlugValidator extends ConstraintValidator
         $this->eventService = $eventService;
     }
 
-    public function isValid($entity, Constraint $constraint)
+    public function validate($entity, Constraint $constraint)
     {
         // @TODO add more criteria like sites, etc...
         $criteria = array(

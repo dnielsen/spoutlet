@@ -39,15 +39,12 @@ services:
         class: Platformd\SpoutletBundle\Menu\MenuBuilder
         arguments:
             - "@knp_menu.factory"
-            - "@router"
 
     platformd.breadcrumbs_admin_menu:
         class: Knp\Menu\MenuItem
-        scope: request
-        factory_service: "platformd.menu_builder"
-        factory_method: createAdminBreadcrumbs
+        factory: ['@platformd.menu_builder', createAdminBreadcrumbs]
         arguments:
-            - "@request"
+            - @request_stack
         tags:
             - { name: knp_menu.menu, alias: admin_breadcrumbs }
 
@@ -85,7 +82,7 @@ services:
             - "@platformd.link.linkable_manager"
             - "@media_exposer"
             - "@router"
-            - "@security.context"
+            - "@security.token_storage"
             - "@platformd.util.site_util"
             - "@platformd.model.translator"
             - "@fos_user.user_manager"
@@ -103,19 +100,17 @@ services:
     platformd.form.extension.help_form_type_extension:
         class: Platformd\SpoutletBundle\Form\Extension\HelpFormTypeExtension
         tags:
-            - { name: form.type_extension, alias: field }
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
 
     platformd.repository.comment_thread:
         class: Platformd\SpoutletBundle\Entity\ThreadRepository
-        factory_service: doctrine.orm.default_entity_manager
-        factory_method: getRepository
+        factory: ['@doctrine.orm.default_entity_manager', 'getRepository']
         arguments:
             - 'SpoutletBundle:Thread'
 
     platformd.repository.site:
         class: Platformd\SpoutletBundle\Entity\SiteRepository
-        factory_service: doctrine.orm.default_entity_manager
-        factory_method: getRepository
+        factory: ['@doctrine.orm.default_entity_manager', 'getRepository']
         arguments:
             - 'SpoutletBundle:Site'
 
@@ -147,7 +142,7 @@ services:
         class: Platformd\SpoutletBundle\Util\VarnishUtil
         arguments:
             - '@platformd.model.ip_lookup_util'
-            - '@security.context'
+            - '@security.token_storage'
             - '%varnish_server%'
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 250 }
@@ -204,7 +199,7 @@ services:
             - "@knp_media.util.media_util"
             - "@platformd.util.site_util"
             - "@pd.cevo.api.api_manager"
-            - "@security.context"
+            - "@security.token_storage"
             - "@event_dispatcher"
 
     # activity manager service
@@ -221,7 +216,6 @@ services:
     platformd.age.age_manager:
         class: Platformd\SpoutletBundle\Age\AgeManager
         arguments:
-            - "@security.context"
             - "@session"
         scope: request
 
@@ -232,10 +226,9 @@ services:
 
     pagerfanta.view.spoutlet:
         class: Platformd\SpoutletBundle\Pagerfanta\View\SpoutletView
-        arguments:
-            - @pagerfanta.view.default
         public: false
-        tags: [{ name: pagerfanta.view, alias: spoutlet }]
+        tags:
+            - { name: pagerfanta.view, alias: spoutlet }
 
     platformd.form.transformer.html_purifier_basic:
         class: Exercise\HTMLPurifierBundle\Form\HTMLPurifierTransformer
@@ -252,9 +245,9 @@ services:
         arguments:
             - "@platformd.form.transformer.html_purifier_basic"
             - "@platformd.form.transformer.html_purifier_admin"
-            - "@security.context"
+            - "@security.token_storage"
         tags:
-            - { name: form.type, alias: purifiedTextarea }
+            - { name: form.type }
 
     platformd.repository.content_reporting:
         class:           Platformd\SpoutletBundle\Entity\ContentReportRepository
@@ -285,7 +278,7 @@ services:
     platformd.form.type.gmtOffsetTimezone:
         class: Platformd\SpoutletBundle\Form\Type\GmtOffsetTimezoneType
         tags:
-            - { name: form.type, alias: gmtTimezone }
+            - { name: form.type }
 
     platformd.validator.unique.background_ad_per_site:
         class: Platformd\SpoutletBundle\Validator\Constraints\UniqueBackgroundAdPerTimeValidator
@@ -313,7 +306,7 @@ services:
         arguments:
             - "@platformd.form.transformer.rsvp_code"
         tags:
-            - { name: form.type, alias: rsvp_code }
+            - { name: form.type }
 
     platformd.form.transformer.rsvp_code:
         class: Platformd\SpoutletBundle\Form\DataTransformer\RsvpCodeTransformer
@@ -382,7 +375,7 @@ services:
         class: Platformd\SpoutletBundle\Util\FlashUtil
         arguments:
             - "@platformd.util.cache_util"
-            - "@security.context"
+            - "@security.token_storage"
             - "@platformd.util.varnish_util"
             - "@router"
 
@@ -391,7 +384,7 @@ services:
         arguments:
             - '@platformd.util.site_util'
         tags:
-            - { name: form.type, alias: platformd_incomplete_account }
+            - { name: form.type }
 
     # export query manager stuff
     platformd.model.export_query_manager:
@@ -405,7 +398,7 @@ services:
         arguments:
             - "@platformd.model.export_query_manager"
         tags:
-            - { name: form.type, alias: 'platformd_export_query_type' }
+            - { name: form.type }
 
     # csv factory
     platformd.csv.response_factory:

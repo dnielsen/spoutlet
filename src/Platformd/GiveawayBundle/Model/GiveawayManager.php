@@ -48,8 +48,26 @@ class GiveawayManager
     private $commentManager;
     private $varnishUtil;
 
-    public function __construct(ObjectManager $em, TranslatorInterface $translator, RouterInterface $router, EmailManager $emailManager, $fromAddress, $fromName, CacheUtil $cacheUtil, GiveawayRepository $giveawayRepo, SiteUtil $siteUtil, KeyCounterUtil $keyCounterUtil, GiveawayKeyRepository $giveawayKeyRepo, EntityManager $em, ThreadRepository $threadRepo, LinkableManager $linkableManager, Exposer $mediaExposer, Filesystem $filesystem, CountryRepository $countryRepo, $commentManager, $varnishUtil)
-    {
+    public function __construct(
+        EntityManager $em,
+        TranslatorInterface $translator,
+        RouterInterface $router,
+        EmailManager $emailManager,
+        $fromAddress,
+        $fromName,
+        CacheUtil $cacheUtil,
+        GiveawayRepository $giveawayRepo,
+        SiteUtil $siteUtil,
+        KeyCounterUtil $keyCounterUtil,
+        GiveawayKeyRepository $giveawayKeyRepo,
+        ThreadRepository $threadRepo,
+        LinkableManager $linkableManager,
+        Exposer $mediaExposer,
+        Filesystem $filesystem,
+        CountryRepository $countryRepo,
+        $commentManager,
+        $varnishUtil
+    ) {
         $this->emailManager    = $emailManager;
         $this->em              = $em;
         $this->fromAddress     = $fromAddress;
@@ -61,7 +79,6 @@ class GiveawayManager
         $this->siteUtil        = $siteUtil;
         $this->keyCounterUtil  = $keyCounterUtil;
         $this->giveawayKeyRepo = $giveawayKeyRepo;
-        $this->em              = $em;
         $this->threadRepo      = $threadRepo;
         $this->linkableManager = $linkableManager;
         $this->mediaExposer    = $mediaExposer;

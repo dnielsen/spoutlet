@@ -2,67 +2,78 @@
 
 namespace Platformd\EventBundle\Form\Type;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class EventFindType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    const STATUS = [
+        'Active' => 1,
+        'Inactive' => 0,
+    ];
+
+    const EVENT_TYPES = [
+        'Group' => 'group',
+        'Global' => 'global',
+    ];
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('eventName', 'text', array(
+            ->add('eventName', TextType::class, [
                 'label' => 'Name:'
-            ))
-            ->add('published', 'choice', array(
+            ])
+            ->add('published', ChoiceType::class, [
                 'label' => 'Status:',
-                'choices' => array(
-                    '1' => 'Active',
-                    '0' => 'Inactive'
-                ),
-                'empty_value' => 'Select All',
+                'choices' => self::STATUS,
+                'choices_as_values' => true,
+                'placeholder' => 'Select All',
                 'required' => false,
-            ))
-            ->add('eventType', 'choice', array(
+            ])
+            ->add('eventType', ChoiceType::class, [
                 'label' => 'Type',
-                'choices' => array(
-                    'group' => 'Group',
-                    'global' => 'Global'
-                )
-            ))
-            ->add('sites', 'entity', array(
+                'choices' => self::EVENT_TYPES,
+                'choices_as_values' => true,
+            ])
+            ->add('sites', EntityType::class, [
+                'label' => 'Sites',
                 'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name',
-            ))
-            ->add('from', 'date', array(
+                'choice_label' => 'name',
+            ])
+            ->add('from', DateType::class, [
                 'label' => 'Starts After:',
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'attr'   => array(
                     'class' => 'date-picker'
                 )
-            ))
-            ->add('thru', 'date', array(
+            ])
+            ->add('thru', DateType::class, [
                 'label' => 'Starts Before:',
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'attr'   => array(
                     'class' => 'date-picker'
                 )
-            ));
+            ]);
     }
 
-    public function getDefaultOptions(array $options)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return array(
+        $resolver->setDefaults([
             'csrf_protection' => false,
-        );
+        ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_eventbundle_eventfindtype';
     }
-
 }

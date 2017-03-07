@@ -2,8 +2,8 @@
 
 namespace Platformd\EventBundle\Controller;
 
+use Platformd\EventBundle\Form\Type\GroupEventType;
 use Platformd\SpoutletBundle\Controller\Controller,
-    Platformd\EventBundle\Service\GlobalEventService,
     Platformd\EventBundle\Entity\GlobalEvent,
     Platformd\EventBundle\Form\Type\GlobalEventType,
     Platformd\EventBundle\Entity\GlobalEventTranslation,
@@ -12,7 +12,6 @@ use Platformd\SpoutletBundle\Controller\Controller,
 ;
 
 use Symfony\Component\HttpFoundation\Request,
-    Symfony\Component\HttpFoundation\Response,
     Symfony\Component\HttpKernel\Exception\NotFoundHttpException
 ;
 
@@ -43,7 +42,7 @@ class GlobalEventAdminController extends Controller
         $this->addEventsBreadcrumb();
         $this->addSiteBreadcrumbs($site);
 
-        $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->find($site);
+        $site = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:Site')->find($site);
 
         $events = $this->getGlobalEventService()->findAllForSite($site);
 
@@ -65,7 +64,7 @@ class GlobalEventAdminController extends Controller
 
         $existingEvents         = $this->getGlobalEventService()->findAllOwnedEventsForUser($this->getUser());
         $importedGlobalEvent    = $this->getGlobalEventService()->findOneBy(array('id' => $request->get('existing_event_select')));
-        $tagManager             = $this->getTagManager();
+//        $tagManager             = $this->getTagManager();
 
         if ($importedGlobalEvent) {
             return $this->redirect($this->generateUrl('admin_events_new_import', array('id' => $importedGlobalEvent->getId())));
@@ -77,21 +76,21 @@ class GlobalEventAdminController extends Controller
         // TODO improve this
         $siteLocalesForTranslation = array('ja', 'zh', 'es');
         foreach ($siteLocalesForTranslation as $locale) {
-            $site = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
+            $site = $this->getDoctrine()->getRepository('SpoutletBundle:Site')->findOneByDefaultLocale($locale);
             if ($site) {
                 $event->addTranslation(new GlobalEventTranslation($site));
             }
         }
 
-        $form = $this->createForm('globalEvent', $event);
+        $form = $this->createForm(GlobalEventType::class, $event);
 
         if($request->getMethod() == 'POST')
         {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if($form->isValid())
             {
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
                 $event = $form->getData();
                     
@@ -148,10 +147,10 @@ class GlobalEventAdminController extends Controller
 
         $globalEvent = $this->getGlobalEventService()->cloneGlobalEvent($importedGlobalEvent);
 
-        $form = $this->createForm('globalEvent', $globalEvent);
+        $form = $this->createForm(GlobalEventType::class, $globalEvent);
 
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 
@@ -189,11 +188,11 @@ class GlobalEventAdminController extends Controller
 
         $tagManager->loadTagging($event);
 
-        $form = $this->createForm('globalEvent', $event);
+        $form = $this->createForm(GlobalEventType::class, $event);
 
         if($request->getMethod() == 'POST')
         {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if($form->isValid())
             {
@@ -249,7 +248,7 @@ class GlobalEventAdminController extends Controller
         }
 
         $page  = $request->query->get('page', 1);
-        $em    = $this->getDoctrine()->getEntityManager();
+        $em    = $this->getDoctrine()->getManager();
         $japan = $em->getRepository('SpoutletBundle:Site')->find(2);
 
         $data = array(
@@ -260,7 +259,7 @@ class GlobalEventAdminController extends Controller
             'from'      => null,
             'thru'      => null,
         );
-        $form = $this->createForm(new EventFindType(), $data);
+        $form = $this->createForm(EventFindType::class, $data);
 
         if ($this->isGranted('ROLE_JAPAN_ADMIN')) {
             $data['sites'] = new ArrayCollection(array($japan));
@@ -269,7 +268,7 @@ class GlobalEventAdminController extends Controller
 
         if ('POST' == $request->getMethod()) {
 
-            $form->bindRequest($request);
+            $form->handleRequest($request);
             if ($form->isValid()) {
 
                 $data = $form->getData();

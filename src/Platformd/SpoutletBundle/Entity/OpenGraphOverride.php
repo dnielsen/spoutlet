@@ -27,7 +27,7 @@ class OpenGraphOverride
 
     /**
      * @var string
-     * @ORM\Column(name="description", length="255", nullable=true)
+     * @ORM\Column(name="description", length=255, nullable=true)
      */
     private $description;
 

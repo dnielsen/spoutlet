@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Thread
 {
-	/**
+    /**
      * @ORM\Id
      * @ORM\Column(type="string", length=255, unique=true)
      */
@@ -78,7 +78,7 @@ class Thread
 
     public function setIsCommentable($isCommentable)
     {
-        $this->isCommentable = (bool) $isCommentable;
+        $this->isCommentable = (bool)$isCommentable;
     }
 
     public function getCommentCount()

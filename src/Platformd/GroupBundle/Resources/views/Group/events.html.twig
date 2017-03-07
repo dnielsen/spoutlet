@@ -94,7 +94,7 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% render url('_group_member_check', { 'groupId': group.id }) with {}, {'standalone': true } %}
+    {% render url('_group_member_check', { 'groupId': group.id }) %}
 
     <script type="text/javascript">
         $(function() {

@@ -77,25 +77,25 @@
 
     {{ form_row(form.bannerImageFile, {'help': 'platformd.events.admin.banner_note'}) }}
 
-    {% if form.get('mediaObjects') %}
-        {% set objPath = media_path(form.get('mediaObjects'), {type: "banner"}) %}
+    {#{% if form.get('mediaObjects') %}#}
+        {#{% set objPath = media_path(form.get('mediaObjects'), {type: "banner"}) %}#}
 
-        {% if ends_with(objPath, '.png') or ends_with(objPath, '.jpg') or ends_with(objPath, '.jpeg') or ends_with(objPath, '.gif') %}
-            <img src="{{ objPath }}" style="width: 200px; margin: -10px 0 10px 160px;" />
-        {% endif %}
-    {% endif %}
+        {#{% if ends_with(objPath, '.png') or ends_with(objPath, '.jpg') or ends_with(objPath, '.jpeg') or ends_with(objPath, '.gif') %}#}
+            {#<img src="{{ objPath }}" style="width: 200px; margin: -10px 0 10px 160px;" />#}
+        {#{% endif %}#}
+    {#{% endif %}#}
 
     {{ form_row(form.removeBannerImage) }}
 
     {{ form_row(form.backgroundImage) }}
 
-    {% if form.get('mediaObjects') %}
-        {% set objPath = media_path(form.get('mediaObjects'), {type: "background"}) %}
+    {#{% if form.get('mediaObjects') %}#}
+        {#{% set objPath = media_path(form.get('mediaObjects'), {type: "background"}) %}#}
 
-        {% if ends_with(objPath, '.png') or ends_with(objPath, '.jpg') or ends_with(objPath, '.jpeg') or ends_with(objPath, '.gif') %}
-            <img src="{{ objPath }}" style="width: 200px; margin: -10px 0 10px 160px;" />
-        {% endif %}
-    {% endif %}
+        {#{% if ends_with(objPath, '.png') or ends_with(objPath, '.jpg') or ends_with(objPath, '.jpeg') or ends_with(objPath, '.gif') %}#}
+            {#<img src="{{ objPath }}" style="width: 200px; margin: -10px 0 10px 160px;" />#}
+        {#{% endif %}#}
+    {#{% endif %}#}
 
     {{ form_row(form.removeBackgroundImage) }}
 
@@ -104,7 +104,7 @@
 
     <legend>e) Restrictions</legend>
     <div class="game-page-form">
-        <div class="alert alert-info help" style="width: 600px;"><i class="icon-info-sign" style="padding-right: 10px;"></i>{{ form.ruleset.vars.help | raw }}</div>
+        {#<div class="alert alert-info help" style="width: 600px;"><i class="icon-info-sign" style="padding-right: 10px;"></i>{{ form.ruleset.vars.help | raw }}</div>#}
         <ul class="restrictions-list clearfix row-fluid rules" data-prototype="{{ form_widget(form.ruleset.rules.vars.prototype)|e }}">
             {# see the CSS file this explanation #}
             <li class="dummy"></li>
@@ -150,7 +150,7 @@
             var collection = $(event.target).parent();
             var prototype = collection.data('prototype');
             var num = collection.children().length + 1;
-            var item = prototype.replace(/\$\$name\$\$/g, num);
+            var item = prototype.replace(/__name__/g, num);
 
             $(item).insertBefore(this);
             CKEDITOR.replace('giveaway_translations_' + num + '_content', {toolbar: "AdminToolbar"});

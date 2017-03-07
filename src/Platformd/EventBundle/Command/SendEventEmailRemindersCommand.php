@@ -5,7 +5,6 @@ namespace Platformd\EventBundle\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 class SendEventEmailRemindersCommand extends ContainerAwareCommand
@@ -31,7 +30,6 @@ EOT
         $container = $this->getContainer();
         $daysOffset = abs((int) $input->getArgument('days'));
 
-        $em                 = $container->get('doctrine')->getEntityManager();
         $groupEventService  = $container->get('platformd_event.service.group_event');
         $globalEventService = $container->get('platformd_event.service.global_event');
 

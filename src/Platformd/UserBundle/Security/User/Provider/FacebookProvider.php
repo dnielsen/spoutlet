@@ -21,10 +21,10 @@ class FacebookProvider implements UserProviderInterface
 
     public function __construct(BaseFacebook $facebook, $userManager, $validator, $container)
     {
-        $this->facebook     = $facebook;
-        $this->userManager  = $userManager;
-        $this->validator    = $validator;
-        $this->container    = $container;
+        $this->facebook = $facebook;
+        $this->userManager = $userManager;
+        $this->validator = $validator;
+        $this->container = $container;
     }
 
     public function supportsClass($class)
@@ -110,10 +110,10 @@ class FacebookProvider implements UserProviderInterface
     public function deauthorize()
     {
         $signedRequest = $this->facebook->getSignedRequest();
-        $facebookId    = $signedRequest['user_id'];
-        $user          = $this->findUserByFbId($facebookId);
+        $facebookId = $signedRequest['user_id'];
+        $user = $this->findUserByFbId($facebookId);
 
-        if($user) {
+        if ($user) {
             $user->setFacebookId('');
             $this->userManager->updateUser($user);
         }
@@ -130,17 +130,17 @@ class FacebookProvider implements UserProviderInterface
 
     public function getOauthUrl()
     {
-        $request        = $this->container->get('request');
-        $scope          = implode(',', $this->container->getParameter('fos_facebook.permissions'));
-        $redirectUri    = $this->container->get('router')->generate('_security_check', array(), true);
-        $state          = md5(uniqid(rand(), true)); //CSRF protection
+        $request = $this->container->get('request');
+        $scope = implode(',', $this->container->getParameter('fos_facebook.permissions'));
+        $redirectUri = $this->container->get('router')->generate('_security_check', array(), true);
+        $state = md5(uniqid(rand(), true)); //CSRF protection
 
         $oauthUrl = $this->facebook->getLoginUrl(
-           array(
-                'scope'         => $scope,
-                'redirect_uri'  => $redirectUri,
-                'state'         => $state,
-        ));
+            array(
+                'scope' => $scope,
+                'redirect_uri' => $redirectUri,
+                'state' => $state,
+            ));
 
         return $oauthUrl;
     }
@@ -150,7 +150,7 @@ class FacebookProvider implements UserProviderInterface
         try {
             $me = $this->facebook->api('/me');
             if ($me) {
-              return true;
+                return true;
             }
         } catch (FacebookApiException $e) {
             return false;
@@ -162,7 +162,7 @@ class FacebookProvider implements UserProviderInterface
         try {
             $me = $this->facebook->api('/me');
             if ($me) {
-              return $me['id'];
+                return $me['id'];
             }
         } catch (FacebookApiException $e) {
             return '0';
@@ -171,7 +171,7 @@ class FacebookProvider implements UserProviderInterface
 
     public function postToTimeline(array $params = array())
     {
-        if($this->isUserAuthenticated()) {
+        if ($this->isUserAuthenticated()) {
             $me = $this->facebook->api('/me/feed', 'post', $params);
         }
     }

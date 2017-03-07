@@ -2,7 +2,7 @@
     <div class="sub-nav groups-sub-nav">
         <ul>
 
-            <li><a href="{{ group | pd_link }) }}">Group Home</a></li>
+            <li><a href="{{ group | pd_link }}">Group Home</a></li>
 
             <span data-group-admin="true">
                 <li><a href="{{ path('group_edit', { 'slug': group.slug }) }}">Edit Group</a></li>
@@ -29,7 +29,7 @@
     </div>
 </div>
 
-{% render url('_group_member_check', { 'groupId': group.id }) with {}, {'standalone': true } %}
+{{ render(url('_group_member_check', { 'groupId': group.id })) }}
 
 <script type="text/javascript">
     jQuery(document).ready(function($) {

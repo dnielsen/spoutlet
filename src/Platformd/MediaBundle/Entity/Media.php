@@ -31,7 +31,7 @@ class Media extends BaseMedia implements MediaOwnerInterface
      * The person who uploaded this media
      *
      * @var \Platformd\UserBundle\Entity\User
-     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", cascade={"delete"})
+     * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User", cascade={"remove"})
      * @ORM\JoinColumn(onDelete="cascade")
      */
     protected $owner;
@@ -39,7 +39,7 @@ class Media extends BaseMedia implements MediaOwnerInterface
     /**
      * @var string $locale
      *
-     * @ORM\Column(name="locale", type="string", length="10", nullable=false)
+     * @ORM\Column(name="locale", type="string", length=10, nullable=false)
      */
     protected $locale;
 
@@ -59,6 +59,14 @@ class Media extends BaseMedia implements MediaOwnerInterface
      * @ORM\Column(name="is_admin", type="boolean")
      */
     private $isAdmin = false;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @return \Platformd\UserBundle\Entity\User
@@ -92,7 +100,7 @@ class Media extends BaseMedia implements MediaOwnerInterface
         $this->locale = $locale;
     }
 
-     /**
+    /**
      * @return boolean
      */
     public function getRemoved()

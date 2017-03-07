@@ -11,9 +11,7 @@ use Vich\GeographicalBundle\Annotation as Vich;
 
 use Platformd\SpoutletBundle\Entity\Site,
     Platformd\EventBundle\Validator\GlobalEventUniqueSlug as AssertUniqueSlug,
-    Platformd\UserBundle\Entity\User,
-    Platformd\SpoutletBundle\Link\LinkableInterface,
-    Platformd\SearchBundle\Model\IndexableInterface
+    Platformd\UserBundle\Entity\User
 ;
 
 /**
@@ -24,7 +22,7 @@ use Platformd\SpoutletBundle\Entity\Site,
  * @AssertUniqueSlug()
  * @Vich\Geographical(on="update")
  */
-class GlobalEvent extends Event implements LinkableInterface, IndexableInterface
+class GlobalEvent extends Event
 {
     const SEARCH_PREFIX  = 'global_event_';
 

@@ -1,88 +1,88 @@
 accounts_index:
-    pattern: /
+    path: /
     defaults: { _controller: SpoutletBundle:Account:account }
 
 accounts_profile_edit:
-    pattern: /profile/edit
+    path: /profile/edit
     defaults: { _controller: SpoutletBundle:Account:editProfile }
 
 accounts_events:
-    pattern: /profile/events
+    path: /profile/events
     defaults: { _controller: SpoutletBundle:Account:events }
 
 accounts_sponsorships:
-    pattern: /profile/sponsorships
+    path: /profile/sponsorships
     defaults: { _controller: IdeaBundle:Idea:userSponsorships }
 
 accounts_entrySets:
-    pattern:  /profile/lists
+    path:  /profile/lists
     defaults: { _controller: IdeaBundle:Idea:userEntrySets }
 
 accounts_entries:
-    pattern: /profile/entries
+    path: /profile/entries
     defaults: { _controller: IdeaBundle:Idea:userEntries }
 
 accounts_pages:
-    pattern: /profile/pages
+    path: /profile/pages
     defaults: { _controller: IdeaBundle:Idea:userPages }
 
 accounts_event_recommendations:
-    pattern: /profile/eventRecommendations
+    path: /profile/eventRecommendations
     defaults: { _controller: IdeaBundle:Idea:userEventRecommendations }
 
 accounts_group_recommendations:
-    pattern: /profile/groupRecommendations
+    path: /profile/groupRecommendations
     defaults: { _controller: IdeaBundle:Idea:userGroupRecommendations }
 
 accounts_giveaways:
-    pattern: /profile/giveaways
+    path: /profile/giveaways
     defaults: { _controller: SpoutletBundle:Account:giveaways }
 
 accounts_deals:
-    pattern: /profile/deals
+    path: /profile/deals
     defaults: { _controller: SpoutletBundle:Account:deals }
 
 accounts_groups:
-    pattern: /profile/groups
+    path: /profile/groups
     defaults: { _controller: SpoutletBundle:Account:groups }
 
 videos_edit:
-    pattern: /profile/videos
+    path: /profile/videos
     defaults: { _controller: SpoutletBundle:Account:videos }
 
 # profile page - null username means *this* user
 accounts_profile:
-    pattern: /profile/view/{username}
+    path: /profile/view/{username}
     defaults: { _controller: SpoutletBundle:Account:profile, username: null }
 
 accounts_photos:
-    pattern: /profile/photos/{filter}
+    path: /profile/photos/{filter}
     defaults: { _controller: SpoutletBundle:Account:photos, filter: 'all' }
 
 accounts_videos:
-    pattern: /profile/videos
+    path: /profile/videos
     defaults: { _controller: SpoutletBundle:Account:videos }
 
 accounts_settings:
-    pattern: /settings
+    path: /settings
     defaults: { _controller: SpoutletBundle:Account:settings }
 
 accounts_incomplete:
-    pattern: /incomplete
+    path: /incomplete
     defaults: { _controller: SpoutletBundle:Account:incomplete }
 
 accounts_change_password:
-    pattern: /change-password
+    path: /change-password
     defaults: { _controller: SpoutletBundle:Account:settings }
 
 subscription_settings:
-    pattern: /subscription-settings
+    path: /subscription-settings
     defaults: { _controller: SpoutletBundle:Account:subscriptionSettings }
 
 accounts_unsubscribe:
-    pattern: /unsubscribe/{email}
+    path: /unsubscribe/{email}
     defaults: { _controller: SpoutletBundle:Account:unsubscribe, email: null }
 
 accounts_tradeshow_confirm:
-    pattern: /tradeshow/confirm/{token}
+    path: /tradeshow/confirm/{token}
     defaults: { _controller: SpoutletBundle:Account:confirmTradeshowReg, token: null }

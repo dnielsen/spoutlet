@@ -2,20 +2,12 @@
 
 namespace Platformd\SpoutletBundle\Command;
 
-use Platformd\SpoutletBundle\Command\BaseCommand,
-    Platformd\SpoutletBundle\QueueMessage\MassEmailQueueMessage,
-    Platformd\SpoutletBundle\Entity\ScriptLastRun
-;
+use Platformd\SpoutletBundle\Entity\ScriptLastRun;
 
 use
-    Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand,
-    Symfony\Component\Console\Input\InputArgument,
-    Symfony\Component\Console\Input\InputOption,
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface
 ;
-
-use DateTime;
 
 class EDialogOptInCommand extends BaseCommand
 {
@@ -57,7 +49,7 @@ EOT
 
         $this->countryLocaleMap = $countryRepo->getCountryCodeLocaleArray();
 
-        $dateTime          = new DateTime();
+        $dateTime          = new \DateTime();
 
         $this->output();
         $this->output(0, 'PlatformD E-Dialog Dell Opt In Upload');

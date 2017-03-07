@@ -68,7 +68,7 @@ class Deal implements LinkableInterface, CommentableInterface, IndexableInterfac
 
     /**
      * @Assert\Url
-     * @ORM\Column(name="external_url", length="255", nullable=true)
+     * @ORM\Column(name="external_url", length=255, nullable=true)
      */
     private $externalUrl;
 
@@ -214,7 +214,7 @@ class Deal implements LinkableInterface, CommentableInterface, IndexableInterfac
     private $ruleset;
 
     /**
-     * @ORM\Column(name="sitified_at", type="datetime", nullable="true")
+     * @ORM\Column(name="sitified_at", type="datetime", nullable=true)
      */
     protected $sitifiedAt;
 
@@ -224,7 +224,7 @@ class Deal implements LinkableInterface, CommentableInterface, IndexableInterfac
     protected $testOnly = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group")
+     * @ORM\ManyToOne(targetEntity="Platformd\GroupBundle\Entity\Group", inversedBy="deals")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $group = null;

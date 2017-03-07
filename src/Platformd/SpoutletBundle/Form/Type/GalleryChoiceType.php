@@ -2,21 +2,21 @@
 
 namespace Platformd\SpoutletBundle\Form\Type;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Form\Extension\Core\ChoiceList\ArrayChoiceList;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Special form type for a drop-down menu of all available "galleries"
  */
 class GalleryChoiceType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('galleries', 'entity', array(
+        $builder->add('galleries', EntityType::class, array(
             'class' => 'SpoutletBundle:Gallery',
-            'property' => 'name',
+            'choice_label' => 'name',
             'multiple' => true,
             'expanded' => true,
             'query_builder' => function(EntityRepository $er) {
@@ -30,7 +30,7 @@ class GalleryChoiceType extends AbstractType
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_gallery_choice';
     }

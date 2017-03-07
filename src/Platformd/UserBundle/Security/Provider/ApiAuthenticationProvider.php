@@ -29,7 +29,7 @@ class ApiAuthenticationProvider extends UserAuthenticationProvider
         parent::__construct($userChecker, $providerKey, $hideUserNotFoundExceptions);
         $this->encoderFactory      = $encoderFactory;
         $this->userProvider        = $userProvider;
-        $this->apiManager          = $apiManager;
+        $this->apiManager = $apiManager;
         $this->cevoPasswordHandler = $cevoPasswordHandler;
     }
 

@@ -4,18 +4,13 @@ namespace Platformd\SpoutletBundle\Command;
 
 use
     Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand,
-    Symfony\Component\Console\Input\InputArgument,
-    Symfony\Component\Console\Input\InputOption,
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface
 ;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 use Platformd\SpoutletBundle\Entity\GalleryMedia;
 use Platformd\SpoutletBundle\Entity\ContentReport;
 
-use DateTime;
 
 class MigrateGroupImagesCommand extends ContainerAwareCommand
 {
@@ -35,9 +30,8 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $container      = $this->getContainer();
-        $em             = $container->get('doctrine')->getEntityManager();
+        $em             = $container->get('doctrine')->getManager();
         $giRepo         = $em->getRepository('GroupBundle:GroupImage');
-        $gmRepo         = $em->getRepository('SpoutletBundle:GalleryMedia');
 
         $groupImages = $giRepo->findAll();
 

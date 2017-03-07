@@ -44,7 +44,6 @@ services:
         arguments:
             - %fos_user.model.user.class%
             - %platformd.news_source%
-            - @session
             - @platformd.model.translator
             - @platformd.model.ip_lookup_util
             - @request
@@ -61,27 +60,27 @@ services:
         arguments:
             - %fos_user.model.user.class%
         tags:
-            - { name: form.type, alias: platformd_user_profile }
+            - { name: form.type }
 
     platformd_user.account_settings.form.type:
         class: Platformd\UserBundle\Form\Type\AccountSettingsType
         arguments:
             - '@security.encoder_factory'
-            - '@security.context'
+            - '@security.token_storage'
             - '@platformd.user.api.manager'
             - '%api_authentication%'
         tags:
-            - { name: form.type, alias: platformd_user_profile }
+            - { name: form.type }
 
     platformd_user.subscription_settings.form.type:
         class: Platformd\UserBundle\Form\Type\SubscriptionSettingsType
         arguments:
             - '@security.encoder_factory'
-            - '@security.context'
+            - '@security.token_storage'
             - '@platformd.user.api.manager'
             - '%api_authentication%'
         tags:
-            - { name: form.type, alias: platformd_user_profile }
+            - { name: form.type }
 
 
     platformd_user.registration.form.handler:
@@ -91,6 +90,7 @@ services:
             - @request
             - @platformd_user.manager
             - @platformd_user.mailer
+            - @fos_user.util.token_generator
             - @doctrine.orm.entity_manager
             - @service_container
             - @platformd.model.ip_lookup_util
@@ -101,7 +101,7 @@ services:
         class: Platformd\UserBundle\Form\Type\ResettingFormType
         parent: fos_user.resetting.form.type
         tags:
-            - { name: form.type, alias: platformd_user_resetting }
+            - { name: form.type }
 
     platformd_user.resetting.form.handler:
         class: Platformd\UserBundle\Form\Handler\ResettingFormHandler

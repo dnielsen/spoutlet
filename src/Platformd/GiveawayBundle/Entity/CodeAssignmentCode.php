@@ -32,12 +32,12 @@ class CodeAssignmentCode
     protected $assignment;
 
     /**
-     * @ORM\Column(name="code", type="string", length="255")
+     * @ORM\Column(name="code", type="string", length=255)
      */
     private $code;
 
     /**
-     * @ORM\Column(name="email_sent_at", type="datetime", nullable="true")
+     * @ORM\Column(name="email_sent_at", type="datetime", nullable=true)
      */
     protected $emailSentAt;
 

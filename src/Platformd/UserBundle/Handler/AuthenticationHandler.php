@@ -137,5 +137,4 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
 
         return $response;
     }
-
 }

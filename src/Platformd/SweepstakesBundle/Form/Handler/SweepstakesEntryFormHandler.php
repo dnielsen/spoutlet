@@ -2,7 +2,6 @@
 
 namespace Platformd\SweepstakesBundle\Form\Handler;
 
-use FOS\UserBundle\Form\Handler\RegistrationFormHandler as BaseRegistrationFormHandler;
 use FOS\UserBundle\Model\UserManagerInterface;
 use FOS\UserBundle\Model\UserInterface;
 use FOS\UserBundle\Mailer\MailerInterface;
@@ -10,15 +9,12 @@ use FOS\UserBundle\Mailer\MailerInterface;
 use Doctrine\ORM\EntityManager;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
 use Platformd\SpoutletBundle\Util\IpLookupUtil;
 use Platformd\SpoutletBundle\Exception\InsufficientAgeException;
 use Platformd\SpoutletBundle\Util\SiteUtil;
-use Platformd\UserBundle\Exception\ApiRequestException;
 use Platformd\UserBundle\Exception\UserRegistrationTimeoutException;
 use Platformd\CEVOBundle\Api\ApiManager as CevoApiManager;
 use Platformd\CEVOBundle\Api\ApiException as CevoApiException;
@@ -83,7 +79,7 @@ class SweepstakesEntryFormHandler
             }
 
             if ('POST' == $this->request->getMethod()) {
-                $this->form->bindRequest($this->request);
+                $this->form->handleRequest($this->request);
 
                 $ageManager = $this->container->get('platformd.age.age_manager');
                 $site       = $this->siteUtil->getCurrentSite();
@@ -148,7 +144,7 @@ class SweepstakesEntryFormHandler
             $valid = true;
 
             if (!$this->form->isBound()) {
-                $this->form->bindRequest($this->request);
+                $this->form->handleRequest($this->request);
                 $valid = $this->form->isValid();
             }
 

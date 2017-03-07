@@ -3,11 +3,10 @@
 namespace Platformd\IdeaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use Platformd\GroupBundle\Entity\Group;
+use Platformd\UserBundle\Entity\User;
 
 /**
- * WatchedGroupMapping
  * @ORM\Table(name="watched_groups")
  * @ORM\Entity
  */
@@ -36,9 +35,10 @@ class WatchedGroupMapping
     protected $createdAt;
 
     /**
-     * Constructor
+     * @param User  $user
+     * @param Group $group
      */
-    public function __construct($user, $group)
+    public function __construct(User $user, Group $group)
     {
         $this->user = $user;
         $this->group = $group;
@@ -48,7 +48,7 @@ class WatchedGroupMapping
     /**
      * Get id
      *
-     * @return integer 
+     * @return int
      */
     public function getId()
     {
@@ -58,9 +58,9 @@ class WatchedGroupMapping
     /**
      * Set createdAt
      *
-     * @param datetime $createdAt
+     * @param \DateTime $createdAt
      */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(\DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
     }
@@ -68,7 +68,7 @@ class WatchedGroupMapping
     /**
      * Get createdAt
      *
-     * @return datetime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -78,9 +78,9 @@ class WatchedGroupMapping
     /**
      * Set owner
      *
-     * @param Platformd\UserBundle\Entity\User $owner
+     * @param User $user
      */
-    public function setUser(\Platformd\UserBundle\Entity\User $user)
+    public function setUser(User $user)
     {
         $this->user = $user;
     }
@@ -88,7 +88,7 @@ class WatchedGroupMapping
     /**
      * Get owner
      *
-     * @return Platformd\UserBundle\Entity\User 
+     * @return User
      */
     public function getUser()
     {
@@ -98,9 +98,9 @@ class WatchedGroupMapping
     /**
      * Set group
      *
-     * @param Platformd\GroupBundle\Entity\Group $group
+     * @param Group $group
      */
-    public function setGroup(\Platformd\GroupBundle\Entity\Group $group)
+    public function setGroup(Group $group)
     {
         $this->group = $group;
     }
@@ -108,11 +108,10 @@ class WatchedGroupMapping
     /**
      * Get group
      *
-     * @return Platformd\GroupBundle\Entity\Group
+     * @return Group
      */
     public function getGroup()
     {
         return $this->group;
     }
-
 }

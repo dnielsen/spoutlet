@@ -2,41 +2,47 @@
 
 namespace Platformd\SpoutletBundle\Form\Type;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-use Platformd\SpoutletBundle\Form\Type\GalleryTranslationType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class GalleryType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    const STATUSES = [
+        'Published' => 0,
+        'Unpublished' => 1,
+    ];
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name', null, array(
                 'label' => 'Gallery name',
             ))
-            ->add('slug', new SlugType(), array('url_prefix' => '/galleries/{slug}'))
-            ->add('categories', 'entity', array(
+            ->add('slug', SlugType::class, array('url_prefix' => '/galleries/{slug}'))
+            ->add('categories', EntityType::class, array(
                 'class' => 'SpoutletBundle:GalleryCategory',
                 'multiple' => true,
                 'expanded' => true,
                 'label' => 'Enabled for',
-                'property' => 'name',
+                'choice_label' => 'name',
             ))
-            ->add('sites', 'entity', array(
+            ->add('sites', EntityType::class, array(
+                'label' => 'Sites',
                 'class'    => 'SpoutletBundle:Site',
                 'multiple' => true,
                 'expanded' => true,
-                'property' => 'name'
+                'choice_label' => 'name'
             ))
-            ->add('deleted', 'choice', array(
+            ->add('deleted', ChoiceType::class, array(
                 'label'     => 'Status',
-                'choices'   => array(
-                    0 => 'Published',
-                    1 => 'Unpublished',
-                ),
+                'choices'   => self::STATUSES,
+                'choices_as_values' => true,
             ))
-            ->add('translations', 'collection', array(
-                'type' => new GalleryTranslationType,
+            ->add('translations', CollectionType::class, array(
+                'entry_type' => new GalleryTranslationType,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'required' => false,
@@ -45,7 +51,7 @@ class GalleryType extends AbstractType
         ;
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_gallerytype';
     }

@@ -23,14 +23,13 @@ class HtmlWidgetAdminController extends Controller
         return $this->render('HtmlWidgetBundle:HtmlWidgetAdmin:index.html.twig', array(
             'sites' => $siteManager->getSiteChoices()
         ));
-
     }
 
     public function listAction($site)
     {
         $this->addHtmlWidgetsBreadcrumb();
 
-        $em     = $this->getDoctrine()->getEntityManager();
+        $em     = $this->getDoctrine()->getManager();
         $site   = $em->getRepository('SpoutletBundle:Site')->find($site);
 
         $widgets = $this->getHtmlWidgetManager()->findAllForSite($site);
@@ -51,7 +50,7 @@ class HtmlWidgetAdminController extends Controller
             $widget->setSlug($slug);
         }
 
-        $form    = $this->createForm(new HtmlWidgetType(), $widget);
+        $form    = $this->createForm(HtmlWidgetType::class, $widget);
 
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The HTML widget was created!');
@@ -69,14 +68,14 @@ class HtmlWidgetAdminController extends Controller
     {
         $this->addHtmlWidgetsBreadcrumb()->addChild('Edit Game Page');
 
-        $em         = $this->getDoctrine()->getEntityManager();
+        $em         = $this->getDoctrine()->getManager();
         $widget   = $em->getRepository('HtmlWidgetBundle:HtmlWidget')->find($id);
 
         if (!$widget) {
             throw $this->createNotFoundException('Unable to find HTML Widget.');
         }
 
-        $form   = $this->createForm(new HtmlWidgetType(), $widget);
+        $form   = $this->createForm(HtmlWidgetType::class, $widget);
 
         if ($this->processForm($form, $request)) {
             $this->setFlash('success', 'The HTML widget was saved!');
@@ -95,7 +94,7 @@ class HtmlWidgetAdminController extends Controller
     private function processForm(Form $form, Request $request)
     {
         if ($request->getMethod() == 'POST') {
-            $form->bindRequest($request);
+            $form->handleRequest($request);
 
             if ($form->isValid()) {
 

@@ -9,5 +9,5 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 interface MediaOwnerInterface
 {
-    function setOwner(UserInterface $author);
+    public function setOwner(UserInterface $author);
 }

@@ -15,7 +15,8 @@ use Platformd\GroupBundle\Entity\Group;
 
 class DefaultController extends Controller
 {
-    public function _mainUserStripAction() {
+    public function _mainUserStripAction()
+    {
         $incompleteAccount = $this->getCurrentUser() ? ($this->getCurrentUser()->getFacebookId() && !$this->getCurrentUser()->getPassword()) : false;
         $response = $this->render('SpoutletBundle::_mainUserStrip.html.twig', array(
             'incompleteAccount' => $incompleteAccount,
@@ -69,15 +70,16 @@ class DefaultController extends Controller
         }
 
         $response = $this->render('SpoutletBundle::_flashMessage.html.twig', array(
-            'type' =>  $flashes['type'],
-            'message' =>  $flashes['message'],
+            'type' => $flashes['type'],
+            'message' => $flashes['message'],
         ));
 
         $this->varnishCache($response, 0);
         return $response;
     }
 
-    public function _layoutFooterAction() {
+    public function _layoutFooterAction()
+    {
         $response = $this->render('SpoutletBundle::_footer.html.twig');
 
         $this->varnishCache($response, 2628000);
@@ -87,14 +89,14 @@ class DefaultController extends Controller
 
     public function _popularGroupsAction(Request $request)
     {
-        $groupRepo = $this->getDoctrine()->getEntityManager()->getRepository('GroupBundle:Group');
-        $site      = $this->getCurrentSite();
+        $groupRepo = $this->getDoctrine()->getRepository('GroupBundle:Group');
+        $site = $this->getCurrentSite();
 
-        $groups    = $groupRepo->findPopularGroupsForSite($site);
+        $groups = $groupRepo->findPopularGroupsForSite($site);
 
         $response = $this->render('SpoutletBundle:Default:popularGroups.html.twig', array(
-                'groups' => $groups,
-            ));
+            'groups' => $groups,
+        ));
 
         $this->varnishCache($response, 30);
 
@@ -116,9 +118,9 @@ class DefaultController extends Controller
         #$response = $this->render('SpoutletBundle:Default:_arp.html.twig');
         #
         #$this->varnishCache($response, 30);
-        $baseUrl    = 'http://www.alienwarearena.com%s/arp';
-        $subDomain  = $this->getCurrentSite()->getSubDomain() == 'latam' ? '/'.$this->getCurrentSite()->getSubDomain() : '/';
-        $url        = sprintf($baseUrl, $subDomain);
+        $baseUrl = 'http://www.alienwarearena.com%s/arp';
+        $subDomain = $this->getCurrentSite()->getSubDomain() == 'latam' ? '/' . $this->getCurrentSite()->getSubDomain() : '/';
+        $url = sprintf($baseUrl, $subDomain);
 
         $response = new RedirectResponse($url);
 
@@ -161,17 +163,17 @@ class DefaultController extends Controller
 
     public function forumsAction(Request $request)
     {
-        $baseUrl    = 'http://www.alienwarearena.com/%s/forums';
-        $subDomain  = $this->getCurrentSite()->getSubDomain();
-        $url        = sprintf($baseUrl, $subDomain);
+        $baseUrl = 'http://www.alienwarearena.com/%s/forums';
+        $subDomain = $this->getCurrentSite()->getSubDomain();
+        $url = sprintf($baseUrl, $subDomain);
 
         return new RedirectResponse($url);
     }
 
-    public function forceLogoutAction(Request $request, $returnUrl) {
-
+    public function forceLogoutAction(Request $request, $returnUrl)
+    {
         $request->getSession()->invalidate();
-        $this->getSecurity()->setToken(null);
+        $this->get('security.token_storage')->setToken(null);
 
         $baseHost = $this->getParameter('base_host');
 
@@ -194,18 +196,18 @@ class DefaultController extends Controller
 
     public function setApiSessionCookieAction($uuid, $expires, Request $request)
     {
-        $return   = $request->get('return') ? urldecode($request->get('return')) : $this->generateUrl('default_index');
+        $return = $request->get('return') ? urldecode($request->get('return')) : $this->generateUrl('default_index');
         $response = new RedirectResponse($return);
 
         if (!$uuid || !$expires) {
             return $response;
         }
 
-        $cookieName     = 'awa_session_key';
-        $cookieValue    = $uuid;
-        $cookieExpiry   = \DateTime::createFromFormat('U', $expires);
-        $cookiePath     = '/';
-        $cookieHost     = '.'.$this->getParameter('base_host');
+        $cookieName = 'awa_session_key';
+        $cookieValue = $uuid;
+        $cookieExpiry = \DateTime::createFromFormat('U', $expires);
+        $cookiePath = '/';
+        $cookieHost = '.' . $this->getParameter('base_host');
 
         $cookie = new Cookie($cookieName, $cookieValue, $cookieExpiry, $cookiePath, $cookieHost, false, false);
         $response->headers->setCookie($cookie);
@@ -234,11 +236,11 @@ class DefaultController extends Controller
             return $response;
         }
 
-        $cookieName     = 'awa_session_key';
-        $cookieValue    = $uuid;
-        $cookieExpiry   = new \DateTime($info['data']['expires']);
-        $cookiePath     = '/';
-        $cookieHost     = '.'.$this->getParameter('base_host');
+        $cookieName = 'awa_session_key';
+        $cookieValue = $uuid;
+        $cookieExpiry = new \DateTime($info['data']['expires']);
+        $cookiePath = '/';
+        $cookieHost = '.' . $this->getParameter('base_host');
 
         $cookie = new Cookie($cookieName, $cookieValue, $cookieExpiry, $cookiePath, $cookieHost, false, false);
         $response->headers->setCookie($cookie);
@@ -268,15 +270,15 @@ class DefaultController extends Controller
 
         if ($community = $site->getCommunityGroup()) {
             $upcomingEvents = $this->getGroupEventService()->findUpcomingEventsForGroupMostRecentFirst($community);
-            $pastEvents     = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($community);
+            $pastEvents = $this->getGroupEventService()->findPastEventsForGroupMostRecentFirst($community);
 
             $locationGroups = array();
             $locationGroups = $this->collectLocations($community, $locationGroups);
 
             return $this->render('GroupBundle:Group:show.html.twig', array(
-                'group'          => $community,
+                'group' => $community,
                 'upcomingEvents' => $upcomingEvents,
-                'pastEvents'     => $pastEvents,
+                'pastEvents' => $pastEvents,
                 'locationGroups' => $locationGroups,
             ));
         }
@@ -284,10 +286,11 @@ class DefaultController extends Controller
         return $this->render('SpoutletBundle:Default:index.html.twig');
     }
 
-    private function collectLocations($group) {
+    private function collectLocations($group)
+    {
 
         $locationGroups = array();
-        foreach($group->getChildren() as $child) {
+        foreach ($group->getChildren() as $child) {
             if ($child->getCategory() == Group::CAT_LOCATION) {
                 $data = $this->getGroupManager()->getGroupIndexData($child);
                 if ($data) {
@@ -298,9 +301,10 @@ class DefaultController extends Controller
         return $locationGroups;
     }
 
-    public function healthCheckAction() {
-        $site      = $this->getCurrentSite();
-        $giveaways = $this->getDoctrine()->getEntityManager()->getRepository('GiveawayBundle:Giveaway')->findAllActiveForSiteWithLimit($site);
+    public function healthCheckAction()
+    {
+        $site = $this->getCurrentSite();
+        $giveaways = $this->getDoctrine()->getManager()->getRepository('GiveawayBundle:Giveaway')->findAllActiveForSiteWithLimit($site);
         $ipAddress = $this->getClientIp($this->getRequest());
 
         return new Response('OK');
@@ -318,12 +322,11 @@ class DefaultController extends Controller
         $articleCount = $featuredArticle ? ($featuredArticle->getThumbnail() ? 4 : 6) : 6;
 
         $news = $this->getNewsRepo()
-            ->findMostRecentForSiteExcept($this->getCurrentSite(), $articleCount, $exceptId)
-        ;
+            ->findMostRecentForSiteExcept($this->getCurrentSite(), $articleCount, $exceptId);
 
         $response = $this->render('SpoutletBundle:Default:_hotStories.html.twig', array(
             'featuredArticle' => $featuredArticle,
-            'news'            => $news,
+            'news' => $news,
         ));
 
         $this->varnishCache($response, 30);
@@ -343,11 +346,10 @@ class DefaultController extends Controller
         $sweepstakes = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:AbstractEvent')
-            ->getCurrentSweepstakes($site)
-        ;
+            ->getCurrentSweepstakes($site);
 
         $sweepstakes_list = array();
-        foreach($sweepstakes as $sweepstake) {
+        foreach ($sweepstakes as $sweepstake) {
             $sweepstakes_list[] = $sweepstake;
         }
 
@@ -355,11 +357,10 @@ class DefaultController extends Controller
         $giveaways = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Giveaway')
-            ->findAllActiveForSiteWithLimit($site)
-        ;
+            ->findAllActiveForSiteWithLimit($site);
 
         $giveaways_list = array();
-        foreach($giveaways as $giveaway) {
+        foreach ($giveaways as $giveaway) {
             // filter out proper Event objects
             if ($giveaway instanceof Giveaway) {
                 $giveaways_list[] = $giveaway;
@@ -368,20 +369,18 @@ class DefaultController extends Controller
 
         // global events
         $globalEvents = $this->getGlobalEventService()
-            ->findUpcomingEventsForSiteLimited($site)
-        ;
+            ->findUpcomingEventsForSiteLimited($site);
 
         $events_list = array();
         $all_list = array();
-        foreach($globalEvents as $globalEvent) {
-            $all_list[]     = $globalEvent;
-            $events_list[]  = $globalEvent;
+        foreach ($globalEvents as $globalEvent) {
+            $all_list[] = $globalEvent;
+            $events_list[] = $globalEvent;
         }
 
         // group events
         $groupEvents = $this->getGroupEventService()
-            ->findUpcomingEventsForSiteLimited($site)
-        ;
+            ->findUpcomingEventsForSiteLimited($site);
 
         foreach ($groupEvents as $groupEvent) {
             $events_list[] = $groupEvent;
@@ -391,8 +390,7 @@ class DefaultController extends Controller
         $deals = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('GiveawayBundle:Deal')
-            ->findAllActiveDealsForSiteId($site->getId(), false)
-        ;
+            ->findAllActiveDealsForSiteId($site->getId(), false);
 
         $deals_list = array();
         foreach ($deals as $deal) {
@@ -403,18 +401,17 @@ class DefaultController extends Controller
         $contests = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:Contest')
-            ->findAllForSiteByDate($site->getDefaultLocale())
-        ;
+            ->findAllForSiteByDate($site->getDefaultLocale());
 
         $contest_list = array();
         foreach ($contests as $contest) {
             $contest_list[] = $contest;
         }
 
-        $combined_list  = array_merge($all_list, $giveaways_list, $sweepstakes_list, $deals_list);
-        $other          = array_merge($sweepstakes_list, $deals_list, $contest_list);
+        $combined_list = array_merge($all_list, $giveaways_list, $sweepstakes_list, $deals_list);
+        $other = array_merge($sweepstakes_list, $deals_list, $contest_list);
 
-        usort($other, function($a, $b) {
+        usort($other, function ($a, $b) {
             $aDate = $a instanceof Contest ? $a->getSubmissionStart() : $a->getStartsAt();
             $bDate = $b instanceof Contest ? $b->getSubmissionStart() : $b->getStartsAt();
 
@@ -428,20 +425,20 @@ class DefaultController extends Controller
 
         $other_list = array();
         foreach ($other as $item) {
-            if($item instanceof Sweepstakes) {
+            if ($item instanceof Sweepstakes) {
                 $other_list[] = array('name' => $item->getName(), 'target' => '', 'link' => $this->generateUrl('sweepstakes_show', array('slug' => $item->getSlug())));
             }
 
-            if($item instanceof Deal) {
+            if ($item instanceof Deal) {
                 $other_list[] = array('name' => $item->getName(), 'target' => '', 'link' => $this->generateUrl('deal_show', array('slug' => $item->getSlug())));
             }
 
-            if($item instanceof Contest) {
+            if ($item instanceof Contest) {
                 $other_list[] = array('name' => $item->getName(), 'target' => '', 'link' => $this->generateUrl('contest_show', array('slug' => $item->getSlug())));
             }
         }
 
-        usort($combined_list, function($a, $b) {
+        usort($combined_list, function ($a, $b) {
 
             $aDate = $a instanceof Giveaway ? $a->getCreated() : $a->getStartsAt();
             $bDate = $b instanceof Giveaway ? $b->getCreated() : $b->getStartsAt();
@@ -455,11 +452,11 @@ class DefaultController extends Controller
         });
 
         $response = $this->render('SpoutletBundle:Default:featuredContent.html.twig', array(
-            'all_events'     => $combined_list,
-            'giveaways'      => $giveaways_list,
-            'competitions'   => $events_list,
-            'sweepstakes'    => $sweepstakes_list,
-            'other'          => $other_list,
+            'all_events' => $combined_list,
+            'giveaways' => $giveaways_list,
+            'competitions' => $events_list,
+            'sweepstakes' => $sweepstakes_list,
+            'other' => $other_list,
         ));
 
         $this->varnishCache($response, 30);
@@ -521,8 +518,7 @@ class DefaultController extends Controller
         $wallpapers = $this->getDoctrine()
             ->getEntityManager()
             ->getRepository('SpoutletBundle:Wallpaper')
-            ->findTopXMostRecentNewestFirst(12)
-        ;
+            ->findTopXMostRecentNewestFirst(12);
 
         return $this->render('SpoutletBundle:Default:wallpaper.html.twig', array('wallpapers' => $wallpapers));
     }
@@ -542,14 +538,14 @@ class DefaultController extends Controller
     {
         $locale = $this->getLocale();
 
-        if($locale != 'en_US') {
+        if ($locale != 'en_US') {
             throw $this->createNotFoundException('Page not found');
         }
 
         return $this->render('SpoutletBundle:Default:military.html.twig');
     }
 
-    public function videoFeedAction(Request $request, $height='252')
+    public function videoFeedAction(Request $request, $height = '252')
     {
         $videos = $this->getYoutubeManager()->findFeaturedVideosForCountry($this->getCurrentSite(), $this->getCurrentCountry(), 6);
 
@@ -568,8 +564,8 @@ class DefaultController extends Controller
         $site = $this->getCurrentSite();
 
         $upcomingGlobalEvents = $this->getGlobalEventService()->findUpcomingEventsForSite($site);
-        $upcomingGroupEvents  = $this->getGroupEventService()->findUpcomingEventsForSite($site);
-        $upcomingEvents       = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
+        $upcomingGroupEvents = $this->getGroupEventService()->findUpcomingEventsForSite($site);
+        $upcomingEvents = array_merge($upcomingGlobalEvents, $upcomingGroupEvents);
         uasort($upcomingEvents, array($this->getGlobalEventService(), 'eventCompare'));
 
         $events = array_slice($upcomingEvents, 0, 6);
@@ -580,7 +576,7 @@ class DefaultController extends Controller
     public function groupEventsAction()
     {
         $site = $this->getCurrentSite();
-        $events  = $this->getGroupEventService()->findUpcomingEventsForSiteLimited($site, 8);
+        $events = $this->getGroupEventService()->findUpcomingEventsForSiteLimited($site, 8);
 
         return $this->render('SpoutletBundle:Default:events.html.twig', array('events' => $events));
     }

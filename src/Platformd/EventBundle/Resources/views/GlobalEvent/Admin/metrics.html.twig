@@ -19,7 +19,7 @@
 {% if pager.haveToPaginate %}
     {# Warning: when using pagerfanta, make sure to specify the routeName otherwise pagerfanta will try to guess it #}
     {# which is very resource intensive and can increase page load time by 5 seconds !!! #}
-    {{ pagerfanta(pager, 'twitter_bootstrap', {'routeName': 'admin_event_metrics', 'pageParameter' : 'page'}) }}
+    {{ pagerfanta(pager, 'twitter_bootstrap') }}
 {% endif %}
 <table class="table table-striped table-bordered tablesorter">
     <thead>

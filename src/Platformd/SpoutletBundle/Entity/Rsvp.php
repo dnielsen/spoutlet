@@ -5,16 +5,14 @@ namespace Platformd\SpoutletBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\HttpFoundation\File\File;
 use Gedmo\Sluggable\Util\Urlizer;
 use Platformd\SpoutletBundle\Link\LinkableInterface;
-use Symfony\Component\Validator\ExecutionContext;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="rsvp")
- * @Assert\Callback(methods={"validateCodeUpload"})
- **/
+ */
 class Rsvp implements LinkableInterface
 {
     const RSVP_DEFAULT_SUCCESS_MESSAGE = 'Thank you for your RSVP';
@@ -256,17 +254,19 @@ class Rsvp implements LinkableInterface
         $this->successMessage = $value;
     }
 
-    public function validateCodeUpload(ExecutionContext $executionContext)
+    /**
+     * @param ExecutionContextInterface $executionContext
+     *
+     * @Assert\Callback
+     */
+    public function validateCodeUpload(ExecutionContextInterface $executionContext)
     {
         if ($this->getCodes() === false) {
             $oldPath = $executionContext->getPropertyPath();
-            $executionContext->setPropertyPath($oldPath.'.codes');
 
-            $executionContext->addViolation(
-                "You must upload your codes in CSV format.",
-                array(),
-                "codes"
-            );
+            $executionContext->addViolation('You must upload your codes in CSV format.')
+                ->atPath($oldPath.'.codes')
+                ->addVioladtion();
 
             $executionContext->setPropertyPath($oldPath);
 

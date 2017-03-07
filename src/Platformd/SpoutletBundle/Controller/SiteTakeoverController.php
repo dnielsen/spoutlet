@@ -15,7 +15,7 @@ class SiteTakeoverController extends Controller
     public function takeoverAction($returnUrl = null)
     {
         $site           = $this->getCurrentSite();
-        $em             = $this->getDoctrine()->getEntityManager();
+        $em             = $this->getDoctrine()->getManager();
         $takeover       = $em->getRepository('SpoutletBundle:SiteTakeover')->getCurrentTakeover($site);
         $session        = $this->get('session');
 
@@ -32,7 +32,7 @@ class SiteTakeoverController extends Controller
     public function takeoverSpecifiedAction($id)
     {
         $site           = $this->getCurrentSite();
-        $em             = $this->getDoctrine()->getEntityManager();
+        $em             = $this->getDoctrine()->getManager();
         $takeover       = $em->getRepository('SpoutletBundle:SiteTakeover')->find($id);
         $continueUrl    = $this->generateUrl('default_index');
 

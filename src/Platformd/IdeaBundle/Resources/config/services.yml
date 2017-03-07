@@ -1,14 +1,10 @@
-parameters:
-
 services:
-
-    platformd_user.registration.form.type:
+    idea_user.registration.form.type:
         class: Platformd\IdeaBundle\Form\Type\RegistrationFormType
         arguments:  [%fos_user.model.user.class%]
         tags:
-            - { name: 'form.type', alias: 'platformd_user_registration' }
+            - { name: form.type }
 
     platformd.service.idea:
         class: Platformd\IdeaBundle\Service\IdeaService
         arguments: [ @doctrine.orm.entity_manager ]
-

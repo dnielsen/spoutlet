@@ -15,7 +15,6 @@ use Platformd\GroupBundle\Event\GroupDiscussionEvent;
 use Platformd\GroupBundle\Event\GroupDiscussionPostEvent;
 use Platformd\GroupBundle\Event\GroupEvent;
 use Platformd\EventBundle\Entity\GroupEvent as GroupEventEntity;
-use Platformd\SpoutletBundle\Locale\LocalesRelationshipHelper;
 use Platformd\SpoutletBundle\Util\SiteUtil;
 use Platformd\CEVOBundle\Api\ApiManager;
 use Platformd\CEVOBundle\Api\ApiException;
@@ -26,10 +25,8 @@ use Platformd\SpoutletBundle\Entity\Site;
 use Doctrine\ORM\EntityManager;
 use Knp\MediaBundle\Util\MediaUtil;
 
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Session;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -52,7 +49,10 @@ class GroupManager
 
     private $CEVOApiManager;
 
-    private $securityContext;
+    /**
+     * @var TokenStorageInterface
+     */
+    private $tokenStorage;
 
     private $eventDispatcher;
 
@@ -75,18 +75,17 @@ class GroupManager
         MediaUtil $mediaUtil,
         SiteUtil $siteUtil,
         ApiManager $CEVOApiManager,
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $eventDispatcher,
         GroupEventService $groupEventService,
         $mediaExposer
-    )
-    {
+    ) {
         $this->em = $em;
         $this->session = $session;
         $this->mediaUtil = $mediaUtil;
         $this->siteUtil = $siteUtil;
         $this->CEVOApiManager = $CEVOApiManager;
-        $this->securityContext = $securityContext;
+        $this->tokenStorage = $tokenStorage;
         $this->eventDispatcher = $eventDispatcher;
         $this->groupEventService = $groupEventService;
         $this->isMemberCache = array();
@@ -121,7 +120,7 @@ class GroupManager
     public function saveGroup(Group $group, $flush = true)
     {
         if (!$group->getOwner()) {
-            $user = $this->securityContext->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()->getUser();
             $group->setOwner($user);
         }
 
@@ -244,7 +243,7 @@ class GroupManager
     public function saveGroupNews(GroupNews $groupNews, $flush = true)
     {
         if (!$groupNews->getAuthor()) {
-            $user = $this->securityContext->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()->getUser();
             $groupNews->setAuthor($user);
         }
 
@@ -258,7 +257,7 @@ class GroupManager
     public function saveGroupImage(GroupImage $groupImage, $flush = true)
     {
         if (!$groupImage->getAuthor()) {
-            $user = $this->securityContext->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()->getUser();
             $groupImage->setAuthor($user);
         }
 
@@ -276,7 +275,7 @@ class GroupManager
     public function saveGroupVideo(GroupVideo $groupVideo, $flush = true)
     {
         if (!$groupVideo->getAuthor()) {
-            $user = $this->securityContext->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()->getUser();
             $groupVideo->setAuthor($user);
         }
 
@@ -353,7 +352,7 @@ class GroupManager
     public function saveGroupDiscussion(GroupDiscussion $groupDiscussion, $flush = true)
     {
         if (!$groupDiscussion->getAuthor()) {
-            $user = $this->securityContext->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()->getUser();
             $groupDiscussion->setAuthor($user);
             $groupDiscussion->setLastUpdatedBy($user);
         }
@@ -374,7 +373,7 @@ class GroupManager
     {
         $groupDiscussion->setDeleted(true);
 
-        $user = $this->securityContext->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
         $this->em->persist($groupDiscussion);
         $this->em->flush();
@@ -393,7 +392,7 @@ class GroupManager
     public function saveGroupDiscussionPost(GroupDiscussionPost $groupDiscussionPost, $flush = true)
     {
         if (!$groupDiscussionPost->getAuthor()) {
-            $user = $this->securityContext->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()->getUser();
             $groupDiscussionPost->setAuthor($user);
         }
 

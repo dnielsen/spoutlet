@@ -6,7 +6,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Platformd\GroupBundle\Entity\Group;
 use Platformd\EventBundle\Entity\Event;
-use Platformd\IdeaBundle\Entity\EventSession;
+use Platformd\EventBundle\Entity\EventSession;
 
 /**
  * Responsible for creating links to objects that implement LinkableInterface
@@ -23,6 +23,10 @@ class LinkableManager
      */
     private $container;
 
+    /**
+     * @param UrlGeneratorInterface $router
+     * @param ContainerInterface    $container
+     */
     public function __construct(UrlGeneratorInterface $router, ContainerInterface $container)
     {
         $this->router = $router;
@@ -36,9 +40,11 @@ class LinkableManager
      *      b) Else, a URL is generated from the route name and params
      *
      * @param LinkableInterface $linkableObject
+     * @param int               $absolute
+     *
      * @return string
      */
-    public function link(LinkableInterface $linkableObject, $absolute=false)
+    public function link(LinkableInterface $linkableObject, $absolute = UrlGeneratorInterface::ABSOLUTE_URL)
     {
         if ($linkableObject->getLinkableOverrideUrl()) {
             return $linkableObject->getLinkableOverrideUrl();
@@ -56,14 +62,14 @@ class LinkableManager
             $isTopParent = true;
             $topParent = $group;
             $slugVariableName = 'groupSlug';
-            while($topParent->getParent() != null) {
+            while ($topParent->getParent() !== null) {
                 $isTopParent = false;
                 $topParent = $topParent->getParent();
             }
 
-            if ($this->isGroup($linkableObject) ) {
+            if ($this->isGroup($linkableObject)) {
                 if ($isTopParent) {
-                    return $this->router->generate('default_index', array(), $absolute);
+                    return $this->router->generate('default_index', [], $absolute);
                 }
                 $slugVariableName = 'slug';
             }
@@ -74,20 +80,25 @@ class LinkableManager
                 }
             }
         }
+
         return $this->router->generate($route, $params, $absolute);
     }
 
-    private function isGroup($linkable) {
+    private function isGroup($linkable)
+    {
         return $linkable instanceof Group;
     }
 
-    private function getGroup($linkableObject) {
-        if ($linkableObject instanceof Group)
+    private function getGroup($linkableObject)
+    {
+        if ($linkableObject instanceof Group) {
             return $linkableObject;
-        else if( $linkableObject instanceof Event )
+        } else if ($linkableObject instanceof Event) {
             return $linkableObject->getGroup();
-        else if( $linkableObject instanceof EventSession )
+        } else if ($linkableObject instanceof EventSession) {
             return $linkableObject->getEvent()->Group();
+        }
+
         return null;
     }
 }

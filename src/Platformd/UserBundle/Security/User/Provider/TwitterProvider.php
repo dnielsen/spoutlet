@@ -6,7 +6,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\HttpFoundation\Session;
+use Symfony\Component\HttpFoundation\Session\Session;
 use \TwitterOAuth;
 use FOS\UserBundle\Entity\UserManager;
 use Symfony\Component\Validator\Validator;
@@ -23,18 +23,18 @@ class TwitterProvider implements UserProviderInterface
     protected $api;
     protected $container;
 
-    public function __construct(TwitterOAuth $twitter_oauth, UserManager $userManager,Validator $validator, Session $session, $api, $container)
+    public function __construct(TwitterOAuth $twitter_oauth, UserManager $userManager, Validator $validator, Session $session, $api, $container)
     {
-        $this->twitter_oauth    = $twitter_oauth;
-        $this->userManager      = $userManager;
-        $this->validator        = $validator;
-        $this->session          = $session;
-        $this->api              = $api;
-        $this->container        = $container;
+        $this->twitter_oauth = $twitter_oauth;
+        $this->userManager = $userManager;
+        $this->validator = $validator;
+        $this->session = $session;
+        $this->api = $api;
+        $this->container = $container;
 
-        $this->twitter_oauth->host              = 'https://api.twitter.com/1.1/';
-        $this->twitter_oauth->ssl_verifypeer    = true;
-        $this->twitter_oauth->content_type      = 'application/x-www-form-urlencoded';
+        $this->twitter_oauth->host = 'https://api.twitter.com/1.1/';
+        $this->twitter_oauth->ssl_verifypeer = true;
+        $this->twitter_oauth->content_type = 'application/x-www-form-urlencoded';
     }
 
     public function supportsClass($class)
@@ -56,12 +56,12 @@ class TwitterProvider implements UserProviderInterface
     {
         $user = $this->findUserByUsername($username);
 
-        $this->twitter_oauth->setOAuthToken($this->session->get('access_token') , $this->session->get('access_token_secret'));
+        $this->twitter_oauth->setOAuthToken($this->session->get('access_token'), $this->session->get('access_token_secret'));
 
         try {
-             $info = $this->twitter_oauth->get('account/verify_credentials');
+            $info = $this->twitter_oauth->get('account/verify_credentials');
         } catch (\Exception $e) {
-             $info = null;
+            $info = null;
         }
 
         if (!empty($info)) {
@@ -84,16 +84,16 @@ class TwitterProvider implements UserProviderInterface
         $this->twitter_oauth->setOAuthToken($this->session->get('access_token'), $this->session->get('access_token_secret'));
 
         try {
-             $info = $this->twitter_oauth->get('account/verify_credentials');
+            $info = $this->twitter_oauth->get('account/verify_credentials');
 
         } catch (\Exception $e) {
-             $info = null;
+            $info = null;
         }
 
         if (!empty($info)) {
             if (empty($user)) {
-                $user       = $this->userManager->createUser();
-                $username   = $info->screen_name;
+                $user = $this->userManager->createUser();
+                $username = $info->screen_name;
 
                 $user->setEnabled(true);
                 $user->setPassword('');
@@ -125,10 +125,10 @@ class TwitterProvider implements UserProviderInterface
     public function isUserAuthenticated()
     {
         try {
-             $info = $this->twitter_oauth->get('account/verify_credentials');
+            $info = $this->twitter_oauth->get('account/verify_credentials');
 
         } catch (\Exception $e) {
-             return false;
+            return false;
         }
 
         return true;
@@ -146,7 +146,8 @@ class TwitterProvider implements UserProviderInterface
         }
     }
 
-    public function tweet($status) {
+    public function tweet($status)
+    {
         try {
             $this->twitter_oauth->setOAuthToken($this->session->get('access_token'), $this->session->get('access_token_secret'));
             $tweet = $this->twitter_oauth->post('statuses/update', array('status' => $status));

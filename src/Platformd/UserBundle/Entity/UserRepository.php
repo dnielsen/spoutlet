@@ -15,54 +15,50 @@ use DateTime;
  */
 class UserRepository extends EntityRepository
 {
+    /**
+     * get users that signed for a specificed giveaway key
+     *
+     * @param $giveaway_pool = giveaway_key.pool
+     * @param $site = 'en'
+     */
+    public function findAssignedToUser($giveaway_pool, $site)
+    {
+        $qb = $this->createSiteQueryBuilder($site)
+            // ->select('u.id, u.firstname, u.lastname, u.email, u.system_tag, k.ipAddress, k.assignedAt')
+            ->select('u.id, u.firstname, u.lastname, u.email, k.ipAddress, k.assignedAt')
+            ->leftJoin('u.giveawayKeys', 'k')
+            ->andWhere('u.id = k.user')
+            ->andWhere('k.pool = :pool_id')
+            ->setParameters(array(
+                'pool_id' => $giveaway_pool,
+            ))
+            ->getQuery()
+            ->getResult();
 
-	/**
-	 * get users that signed for a specificed giveaway key
-	 *
-	 * @param $giveaway_pool = giveaway_key.pool
-	 * @param $site = 'en'
-	 */
-	public function findAssignedToUser($giveaway_pool, $site)
-	{
-      $qb =  $this->createSiteQueryBuilder($site)
-       // ->select('u.id, u.firstname, u.lastname, u.email, u.system_tag, k.ipAddress, k.assignedAt')
-        ->select('u.id, u.firstname, u.lastname, u.email, k.ipAddress, k.assignedAt')
-    	->leftJoin('u.giveawayKeys', 'k')
-    	->andWhere('u.id = k.user')
-    	->andWhere('k.pool = :pool_id')
-    	->setParameters(array(
-    			'pool_id'  => $giveaway_pool,
-    	))
-    	->getQuery()
-    	->getResult();
-
-      return  $qb ;
-	}
+        return $qb;
+    }
 
     public function getFindUserListByEmailQuery($users)
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.emailCanonical IN (:users)')
             ->setParameter('users', $users)
-            ->getQuery()
-        ;
+            ->getQuery();
     }
 
     public function findUserListByEmail($users)
     {
-        return $getFindUserListByEmailQuery($users)
-            ->execute()
-        ;
+        return $this->getFindUserListByEmailQuery($users)
+            ->execute();
     }
 
-	public function getTotalUsersForSite($site)
+    public function getTotalUsersForSite($site)
     {
         return $this->createSiteQueryBuilder($site)
             ->select('COUNT(u.id)')
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
-        ;
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 
     public function getTotalUsersForCountry($country)
@@ -71,8 +67,7 @@ class UserRepository extends EntityRepository
             ->select('COUNT(u.id)')
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
-        ;
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 
     public function getTotalUsersForCountries($countries)
@@ -81,11 +76,10 @@ class UserRepository extends EntityRepository
             ->select('COUNT(u.id)')
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
-        ;
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 
-    public function getArenaOptInForAllCountries($from=null, $to=null)
+    public function getArenaOptInForAllCountries($from = null, $to = null)
     {
         $qb = $this->createQueryBuilder('u');
 
@@ -97,11 +91,10 @@ class UserRepository extends EntityRepository
             ->select('COUNT(u.id)')
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
-        ;
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 
-    public function getDellOptInForAllCountries($from=null, $to=null)
+    public function getDellOptInForAllCountries($from = null, $to = null)
     {
         $qb = $this->createQueryBuilder('u');
 
@@ -113,8 +106,7 @@ class UserRepository extends EntityRepository
             ->select('COUNT(u.id)')
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
-        ;
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 
     public function countNewRegistrantsForAllCountries($from, $to)
@@ -125,8 +117,7 @@ class UserRepository extends EntityRepository
             ->select('COUNT(u.id)')
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
-        ;
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 
 
@@ -138,11 +129,10 @@ class UserRepository extends EntityRepository
             ->select('COUNT(u.id)')
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
-        ;
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 
-    public function getArenaOptInForCountry($country, $from=null, $to=null)
+    public function getArenaOptInForCountry($country, $from = null, $to = null)
     {
         $qb = $this->createCountryQueryBuilder($country);
 
@@ -154,11 +144,10 @@ class UserRepository extends EntityRepository
             ->select('COUNT(u.id)')
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
-        ;
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 
-    public function getArenaOptInForCountries($countries, $from=null, $to=null)
+    public function getArenaOptInForCountries($countries, $from = null, $to = null)
     {
         $qb = $this->createCountriesQueryBuilder($countries);
 
@@ -170,8 +159,7 @@ class UserRepository extends EntityRepository
             ->select('COUNT(u.id)')
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
-        ;
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 
     public function getDellOptInForSite($site)
@@ -182,11 +170,10 @@ class UserRepository extends EntityRepository
             ->select('COUNT(u.id)')
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
-        ;
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 
-    public function getDellOptInForCountry($country, $from=null, $to=null)
+    public function getDellOptInForCountry($country, $from = null, $to = null)
     {
         $qb = $this->createCountryQueryBuilder($country);
 
@@ -198,11 +185,10 @@ class UserRepository extends EntityRepository
             ->select('COUNT(u.id)')
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
-        ;
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 
-    public function getDellOptInForCountries($countries, $from=null, $to=null)
+    public function getDellOptInForCountries($countries, $from = null, $to = null)
     {
         $qb = $this->createCountriesQueryBuilder($countries);
 
@@ -214,8 +200,7 @@ class UserRepository extends EntityRepository
             ->select('COUNT(u.id)')
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
-        ;
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 
     /**
@@ -232,8 +217,7 @@ class UserRepository extends EntityRepository
             ->select('COUNT(u.id)')
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
-        ;
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 
     public function countNewRegistrantsForCountry($country, $from, $to)
@@ -244,8 +228,7 @@ class UserRepository extends EntityRepository
             ->select('COUNT(u.id)')
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
-        ;
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 
     public function countNewRegistrantsForCountries($countries, $from, $to)
@@ -256,20 +239,19 @@ class UserRepository extends EntityRepository
             ->select('COUNT(u.id)')
             ->getQuery()
             ->setMaxResults(1)
-            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR)
-        ;
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
     }
 
     /**
-    * @param \Doctrine\ORM\QueryBuilder $qb
-    * @param $since
-    * @return \Doctrine\ORM\QueryBuilder
-    */
+     * @param \Doctrine\ORM\QueryBuilder $qb
+     * @param $since
+     * @return \Doctrine\ORM\QueryBuilder
+     */
     private function addSinceQuery(QueryBuilder $qb, $since)
     {
         if ($since != null) {
             $qb->andWhere('u.created >= :since')
-            ->setParameter('since', $since);
+                ->setParameter('since', $since);
         }
         return $qb;
     }
@@ -278,11 +260,11 @@ class UserRepository extends EntityRepository
     {
         if ($from != null) {
             $qb->andWhere('u.created >= :from')
-            ->setParameter('from', $from);
+                ->setParameter('from', $from);
         }
         if ($to != null) {
             $qb->andWhere('u.created <= :to')
-            ->setParameter('to', $to);
+                ->setParameter('to', $to);
         }
         return $qb;
     }
@@ -295,16 +277,14 @@ class UserRepository extends EntityRepository
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.locale = :locale')
-            ->setParameter('locale', $site)
-        ;
+            ->setParameter('locale', $site);
     }
 
     private function createCountryQueryBuilder($country)
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.country = :country')
-            ->setParameter('country', $country)
-        ;
+            ->setParameter('country', $country);
     }
 
     private function createCountriesQueryBuilder($countries)
@@ -322,8 +302,7 @@ class UserRepository extends EntityRepository
     private function addArenaOptQuery(QueryBuilder $qb, $optIn)
     {
         return $qb->andWhere('u.subscribedAlienwareEvents = :optIn')
-            ->setParameter('optIn', $optIn)
-        ;
+            ->setParameter('optIn', $optIn);
     }
 
     /**
@@ -334,8 +313,7 @@ class UserRepository extends EntityRepository
     private function addDellOptQuery(QueryBuilder $qb, $optIn)
     {
         return $qb->andWhere('u.subscribedGamingNews = :optIn')
-            ->setParameter('optIn', $optIn)
-        ;
+            ->setParameter('optIn', $optIn);
     }
 
     /**
@@ -370,7 +348,7 @@ class UserRepository extends EntityRepository
                 }
             }
 
-            if(count($countries) > 0) {
+            if (count($countries) > 0) {
                 $qb->andWhere($qb->expr()->in('u.country', $countries));
             }
         }
@@ -378,7 +356,8 @@ class UserRepository extends EntityRepository
         return $qb->getQuery();
     }
 
-    private function createCsvString($data) {
+    private function createCsvString($data)
+    {
         // Open temp file pointer
         if (!$fp = fopen('php://temp', 'w+')) return FALSE;
 
@@ -392,7 +371,8 @@ class UserRepository extends EntityRepository
         return stream_get_contents($fp);
     }
 
-    public function toCSV() {
+    public function toCSV()
+    {
         $usersArray = array();
 
         //Add header
@@ -402,7 +382,7 @@ class UserRepository extends EntityRepository
         );
         $usersArray[] = $headerArray;
 
-        foreach($this->findAll() as $user) {
+        foreach ($this->findAll() as $user) {
             $userArray = array(
                 $user->getId(),
                 $user->getUsername(),

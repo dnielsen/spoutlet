@@ -15,7 +15,6 @@ use Platformd\UserBundle\Exception\ApiRequestException;
 
 class ResettingController extends BaseController
 {
-
     /**
      * Reset user password
      */

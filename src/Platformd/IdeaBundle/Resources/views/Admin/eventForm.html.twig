@@ -189,7 +189,7 @@
         {% endif %}
         {{ form_label(form) }}
         <div {{ block('widget_container_attributes') }}>
-            {% block field_rows %}
+            {% block form_row %}
                 {{ form_errors(form) }}
                 {% for child in form %}
                     {{ form_widget(child, {'attr': {'class': 'left'} }) }}

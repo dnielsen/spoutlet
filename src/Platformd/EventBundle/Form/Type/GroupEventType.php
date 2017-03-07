@@ -2,54 +2,43 @@
 
 namespace Platformd\EventBundle\Form\Type;
 
-use Symfony\Component\Form\FormBuilder,
-    Symfony\Component\Security\Core\SecurityContextInterface
-;
-
-use Platformd\EventBundle\Form\EventSubscriber\AdminGroupEventSubscriber as EventSubscriber;
+use Platformd\SpoutletBundle\Form\Type\GmtOffsetTimezoneType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class GroupEventType extends EventType
 {
     protected $eventSubscriber;
     private $tagManager;
+    private $authChecker;
 
-    public function __construct(SecurityContextInterface $security, $eventSubscriber, $tagManager)
+    public function __construct(AuthorizationCheckerInterface $authChecker, $eventSubscriber, $tagManager)
     {
-        parent::__construct($security);
-
-        $this->eventSubscriber  = $eventSubscriber;
-        $this->tagManager       = $tagManager;
+        $this->authChecker = $authChecker;
+        $this->eventSubscriber = $eventSubscriber;
+        $this->tagManager = $tagManager;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
 
-        $builder->add('private', 'choice', array(
-            'choices' => array(
-                1 => 'platformd.event.form.choice.private_event',
-                0 => 'platformd.event.form.choice.public_event'
-            ),
-            'label' => 'platformd.event.form.private_public',
-            'expanded' => true
-        ))
-        ->add('timezone', 'gmtTimezone', array(
-            'label' => 'platformd.event.form.timezone',
-            'full' => true,
-        ))
-        ;
-
-        $builder->add('tags', 'text', array(
-            'label' => 'platformd.event.form.tags',
-            'help' => 'platformd.event.form.tags_help',
-            'property_path' => false,
-            'data' => $builder->getData() ? $this->tagManager->getConcatenatedTagNames($builder->getData()) : null,
-            'required' => false,
-        ))
-        ;
+        $builder
+            ->add('timezone', GmtOffsetTimezoneType::class, [
+                'label' => 'platformd.event.form.timezone',
+                'full' => true,
+            ])
+            ->add('tags', TextType::class, array(
+                'label' => 'platformd.event.form.tags',
+//                'help' => 'platformd.event.form.tags_help',
+                'mapped' => false,
+                'data' => $builder->getData() ? $this->tagManager->getConcatenatedTagNames($builder->getData()) : null,
+                'required' => false,
+            ));
 
         // Needed to show fields only to admins
-        $adminEventSubscriber = new $this->eventSubscriber($builder->getFormFactory(), $this->security);
+        $adminEventSubscriber = new $this->eventSubscriber($builder->getFormFactory(), $this->authChecker);
         $builder->addEventSubscriber($adminEventSubscriber);
     }
 }

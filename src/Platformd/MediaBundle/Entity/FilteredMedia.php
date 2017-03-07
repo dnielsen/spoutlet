@@ -20,12 +20,12 @@ class FilteredMedia
     protected $id;
 
     /**
-     * @ORM\Column(name="path", type="string", length="255", nullable=false)
+     * @ORM\Column(name="path", type="string", length=255, nullable=false)
      */
     protected $path;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", cascade={"remove"})
+     * @ORM\ManyToOne(targetEntity="Platformd\MediaBundle\Entity\Media", inversedBy="filteredMedias")
      * @ORM\JoinColumn(onDelete="SET NULL")
      */
     protected $parent;

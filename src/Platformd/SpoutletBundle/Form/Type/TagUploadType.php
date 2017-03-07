@@ -3,26 +3,26 @@
 namespace Platformd\SpoutletBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class TagUploadType extends AbstractType
 {
     /**
      * Configures a Tag Upload form.
      *
-     * @param FormBuilder $builder
+     * @param FormBuilderInterface $builder
      * @param array $options
      */
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('attachment', 'file', array(
+        $builder->add('attachment', FileType::class, array(
             'label' => 'tags.forms.upload_tags',
-            'help' => 'tags.forms.csv_restrictions',
             'required' => true,
         ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_taguploadtype';
     }

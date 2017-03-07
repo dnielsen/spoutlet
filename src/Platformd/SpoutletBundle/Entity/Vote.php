@@ -29,26 +29,26 @@ class Vote
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\GalleryMedia")
-     * @ORM\JoinColumn(onDelete="cascade", nullable="false")
+     * @ORM\ManyToOne(targetEntity="Platformd\SpoutletBundle\Entity\GalleryMedia", inversedBy="votes")
+     * @ORM\JoinColumn(onDelete="cascade", nullable=false)
      */
     private $galleryMedia;
 
     /**
      * @ORM\ManyToOne(targetEntity="Platformd\UserBundle\Entity\User")
-     * @ORM\JoinColumn(onDelete="cascade", nullable="false")
+     * @ORM\JoinColumn(onDelete="cascade", nullable=false)
      */
     protected $user;
 
     /**
-     * @ORM\Column(name="ip_address", type="string", length="20")
+     * @ORM\Column(name="ip_address", type="string", length=20)
      */
     protected $ipAddress;
 
     /**
      * e.g. "up", "down" to denote how the vote was placed
      *
-     * @ORM\Column(name="vote_type", type="string", length="255")
+     * @ORM\Column(name="vote_type", type="string", length=255)
      */
 
     private $voteType = false;

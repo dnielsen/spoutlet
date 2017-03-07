@@ -2,49 +2,53 @@
 
 namespace Platformd\SpoutletBundle\Form\Type;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
-
-use Platformd\SpoutletBundle\Entity\Country;
 use Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CountryAgeRestrictionRuleType extends AbstractType
 {
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('country', 'entity', array(
-                'label'     => 'Country',
-                'class'     => 'SpoutletBundle:Country',
-                'property'  => 'name',
-                'empty_value' => '',
+            ->add('country', EntityType::class, array(
+                'label' => 'Country',
+                'class' => 'SpoutletBundle:Country',
+                'choice_label' => 'name',
+                'placeholder' => '',
             ))
-            ->add('ruleType', 'choice', array(
-                'choices'   => $this->getValidRuleTypes(),
-                'label'     => 'Allow/Deny',
+            ->add('ruleType', ChoiceType::class, array(
+                'choices' => $this->getValidRuleTypes(),
+                'label' => 'Allow/Deny',
+                'choices_as_values' => true,
             ))
             ->add('minAge', null, array(
-                'label'     => 'Min Age',
+                'label' => 'Min Age',
             ))
             ->add('maxAge', null, array(
-                'label'     => 'Max Age',
+                'label' => 'Max Age',
             ));
     }
 
-    public function getName()
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'data_class' => CountryAgeRestrictionRule::class,
+        ]);
+    }
+
+    public function getBlockPrefix()
     {
         return 'platformd_spoutletbundle_countryagerestrictionruletype';
     }
 
-    public function getDefaultOptions(array $options)
-    {
-        return array(
-            'data_class' => 'Platformd\SpoutletBundle\Entity\CountryAgeRestrictionRule',
-        );
-    }
-
     private function getValidRuleTypes()
     {
+        $choices = [];
+
         foreach (CountryAgeRestrictionRule::getValidRuleTypes() as $ruleType) {
             $choices[$ruleType] = $ruleType;
         }

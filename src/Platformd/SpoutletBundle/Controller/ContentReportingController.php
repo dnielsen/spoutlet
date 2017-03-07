@@ -45,7 +45,7 @@ class ContentReportingController extends Controller
         $user   = $this->getCurrentUser();
         $site   = $this->getCurrentSite();
 
-        $contentReportRepo = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:ContentReport');
+        $contentReportRepo = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:ContentReport');
         $lastReport = $contentReportRepo->getLastReportDateForUser($user);
 
         if (!in_array($reason, $report->getValidReasons())) {
@@ -71,7 +71,7 @@ class ContentReportingController extends Controller
             return new Response(json_encode(array("success" => false, "messageForUser" => "Valid content type not given.")));
         }
 
-        $content = $this->getDoctrine()->getEntityManager()->getRepository(sprintf('%s:%s', $typeBundle, $type))->find($id);
+        $content = $this->getDoctrine()->getManager()->getRepository(sprintf('%s:%s', $typeBundle, $type))->find($id);
 
 
 
@@ -97,7 +97,7 @@ class ContentReportingController extends Controller
 
         $report->$setType($content);
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $em->persist($report);
         $em->flush();
@@ -133,9 +133,9 @@ class ContentReportingController extends Controller
 
     private function sendUserReportedNotificationEmail($id, $type, $reason)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
-        $contentReportRepo = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:ContentReport');
+        $contentReportRepo = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:ContentReport');
         $typeBundle = $contentReportRepo->getBundleFromType($type);
 
         $item = $em->getRepository($typeBundle.':'.$type)->find($id);
@@ -203,9 +203,9 @@ class ContentReportingController extends Controller
 
     private function sendStaffReportedNotificationEmail($id, $type, $reason, $report)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
-        $contentReportRepo = $this->getDoctrine()->getEntityManager()->getRepository('SpoutletBundle:ContentReport');
+        $contentReportRepo = $this->getDoctrine()->getManager()->getRepository('SpoutletBundle:ContentReport');
         $typeBundle = $contentReportRepo->getBundleFromType($type);
 
         $item       = $em->getRepository($typeBundle.':'.$type)->find($id);

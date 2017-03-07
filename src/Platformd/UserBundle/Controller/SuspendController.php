@@ -16,8 +16,8 @@ class SuspendController extends Controller
             throw $this->createNotFoundException();
         }
 
-        $form = $this->createForm(new SuspendUserType, $user);
-        $form->bindRequest($request);
+        $form = $this->createForm(SuspendUserType::class, $user);
+        $form->handleRequest($request);
 
         if ($form->isValid()) {
 
@@ -39,7 +39,7 @@ class SuspendController extends Controller
 
             if ($ipAddress) {
                 $suspendedIp = new SuspendedIpAddress($ipAddress, $user->getExpiredUntil());
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
                 $em->persist($suspendedIp);
                 $em->flush();
             }
@@ -76,7 +76,7 @@ class SuspendController extends Controller
 
         if ($ipAddress) {
             $suspendedIp = new SuspendedIpAddress($ipAddress);
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $em->persist($suspendedIp);
             $em->flush();
         }
@@ -112,7 +112,7 @@ class SuspendController extends Controller
         $ipAddress = $user->getLoginRecords()->first() ? $user->getLoginRecords()->first()->getIpAddress() : ($user->getIpAddress() ?: null);
 
         if ($ipAddress) {
-            $em = $this->getDoctrine()->getEntityManager();
+            $em = $this->getDoctrine()->getManager();
             $suspendedIpRepo = $em->getRepository('UserBundle:SuspendedIpAddress');
             $suspendedIps = $suspendedIpRepo->findByIpAddress($ipAddress);
 

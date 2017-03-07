@@ -87,7 +87,7 @@ class DealController extends Controller
             if ($state->getCurrentState() != KeyRequestState::STATE_IN_QUEUE) {
 
                 $state->setUserHasSeenState(true);
-                $em = $this->getDoctrine()->getEntityManager();
+                $em = $this->getDoctrine()->getManager();
 
                 $em->persist($state);
                 $em->flush();
@@ -301,7 +301,7 @@ class DealController extends Controller
             die('Could not add you to the queue... please try again shortly.');
         }
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
 
         try {

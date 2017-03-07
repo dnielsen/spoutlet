@@ -4,18 +4,11 @@ namespace Platformd\SpoutletBundle\Command;
 
 use
     Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand,
-    Symfony\Component\Console\Input\InputArgument,
-    Symfony\Component\Console\Input\InputOption,
     Symfony\Component\Console\Input\InputInterface,
     Symfony\Component\Console\Output\OutputInterface
 ;
 
 use Doctrine\Common\Collections\ArrayCollection;
-
-use
-    DateTime,
-    DateTimeZone
-;
 
 use
     Platformd\EventBundle\Entity\GlobalEvent,
@@ -59,7 +52,7 @@ EOT
             $sql    = 'SELECT * FROM `'.$this->getContainer()->getParameter('database_name').'`.`event` e LEFT JOIN `'.$this->getContainer()->getParameter('database_name').'`.`pd_event_site` s ON `s`.`abstractevent_id` = e.`id` WHERE e.`discr`="event" AND s.`site_id` = 2';
             $events = $dbh->query($sql);
 
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             echo 'Connection failed: ' . $e->getMessage();
         }
 
@@ -278,14 +271,14 @@ EOT
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
 
                 $status     = strtolower($data[4]);
-                $startsAt   = DateTime::createFromFormat('d/m/Y', $data[5]);
+                $startsAt   = \DateTime::createFromFormat('d/m/Y', $data[5]);
 
                 if ($alreadyMigrated = $eventService->findOneBy(array('name' => $data[7], 'startsAt' => $startsAt))) {
                     continue;
                 }
 
                 if ($status == 'archived') {
-                    $endsAt = DateTime::createFromFormat('d/m/Y', $data[5]);
+                    $endsAt = \DateTime::createFromFormat('d/m/Y', $data[5]);
                     $endsAt->modify('+1 day');
 
                     $name                   = htmlspecialchars_decode($data[6], ENT_QUOTES);

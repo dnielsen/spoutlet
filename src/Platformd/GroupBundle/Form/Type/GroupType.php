@@ -5,14 +5,28 @@ namespace Platformd\GroupBundle\Form\Type;
 use Platformd\GroupBundle\Entity\Group;
 use Platformd\MediaBundle\Form\Type\MediaType;
 use Platformd\SpoutletBundle\Form\Type\LocationType;
+use Platformd\SpoutletBundle\Form\Type\PurifiedTextareaType;
 use Platformd\SpoutletBundle\Form\Type\SlugType;
 use Platformd\UserBundle\Entity\User;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilder;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 
 class GroupType extends AbstractType
 {
+    const YES_NO = [
+        'Yes' => 1,
+        'No' => 0,
+    ];
+
+    const GROUP_VISIBILITY = [
+        'Public Group' => 1,
+        'Private Group' => 0,
+    ];
 
     private $user;
     private $group;
@@ -20,169 +34,176 @@ class GroupType extends AbstractType
     private $hasMultiSiteGroups;
     private $currentSite;
 
-    public function __construct($user, Group $group, $tagManager, $hasMultiSiteGroups, $currentSite=null) {
-        $this->user         = $user;
-        $this->group        = $group;
-        $this->tagManager   = $tagManager;
+    public function __construct($user, Group $group, $tagManager, $hasMultiSiteGroups, $currentSite = null)
+    {
+        $this->user = $user;
+        $this->group = $group;
+        $this->tagManager = $tagManager;
         $this->hasMultiSiteGroups = $hasMultiSiteGroups;
         $this->currentSite = $currentSite;
     }
 
-    public function buildForm(FormBuilder $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', null, array(
+            ->add('name', TextType::class, array(
                 'label' => 'Name',
             ))
-            ->add('slug', new SlugType(), array(
+            ->add('slug', SlugType::class, array(
                 'label' => 'URL Text',
             ))
-            ->add('relativeSlug', 'text', array(
+            ->add('relativeSlug', TextType::class, array(
                 'label' => 'Community URL Slug',
             ))
-            ->add('category', 'choice', array(
-                'choices'   => self::getCategoryChoices(),
-                'label'     => 'Group Category',
+            ->add('category', ChoiceType::class, array(
+                'choices' => self::getCategoryChoices(),
+                'label' => 'Group Category',
+                'choices_as_values' => true,
             ))
-            ->add('groupAvatar', new MediaType(), array(
-                'image_label'   => 'Group Logo',
-                'image_help'    => 'Maximum width: 830px, maximum height: 72px. Please use JPEG or PNG.',
+            ->add('groupAvatar', MediaType::class, array(
+                'image_label' => 'Group Logo',
+                'image_help' => 'Maximum width: 830px, maximum height: 72px. Please use JPEG or PNG.',
                 'with_remove_checkbox' => $this->group->getId() == null ? false : true
             ))
-            ->add('backgroundImage', new MediaType(), array(
-                'image_label'   => 'Background Image',
-                'image_help'    => 'Recommended width: 2000px. File formats accepted: JPEG and PNG.',
+            ->add('backgroundImage', MediaType::class, array(
+                'image_label' => 'Background Image',
+                'image_help' => 'Recommended width: 2000px. File formats accepted: JPEG and PNG.',
                 'with_remove_checkbox' => $this->group->getId() == 0 ? false : true
             ))
-            ->add('thumbNail', new MediaType(), array(
-                'image_label'   => 'Thumbnail Image',
-                'image_help'    => 'Recommended size: 135x80. File formats accepted: JPEG and PNG.',
+            ->add('thumbNail', MediaType::class, array(
+                'image_label' => 'Thumbnail Image',
+                'image_help' => 'Recommended size: 135x80. File formats accepted: JPEG and PNG.',
                 'with_remove_checkbox' => $this->group->getId() == 0 ? false : true
             ))
-            ->add('description', 'purifiedTextarea', array(
+            ->add('description', PurifiedTextareaType::class, array(
                 'label' => 'Description',
-                'attr'  => array('class' => 'ckeditor')
+                'attr' => array('class' => 'ckeditor')
             ))
-            ->add('isPublic', 'choice', array(
-                'choices'   => array(
-                    1 => 'Public Group',
-                    0 => 'Private Group',
-                ),
-                'expanded'  => true,
-                'label'     => 'Group Visibility',
-                'help'      => 'Public: Group information is visible to all users and any user can join your group. Private: Group information is visible to approved group members only. Group organizer must approve users to be in group.',
+            ->add('isPublic', ChoiceType::class, array(
+                'label' => 'Group Visibility',
+                'expanded' => true,
+                'choices' => self::GROUP_VISIBILITY,
+                'choices_as_values' => true,
             ))
-            ->add('location', new LocationType(), array(
+            ->add('location', LocationType::class, array(
                 'label' => 'Location',
             ))
-            ->add('external', 'choice', array(
-                  'choices' => array(
-                    1 => 'No',
-                    0 => 'Yes'),
-                  'label' => 'Would you like this group to be listed on Campsite?'
+            ->add('external', ChoiceType::class, array(
+                'label' => 'Would you like this group to be listed on Campsite?',
+                'choices' => self::YES_NO,
+                'choices_as_values' => true,
             ))
-            ->add('externalUrl', 'text', array(
-                  'attr' => array(
-                     'size' => '60%', 
-                     'placeholder' => 'http://'),
-                  'label'    => 'Link to Group Website',
-                  'required' => 0,
+            ->add('externalUrl', TextType::class, array(
+                'attr' => array(
+                    'size' => '60%',
+                    'placeholder' => 'http://'
+                ),
+                'label' => 'Link to Group Website',
+                'required' => 0,
             ));
 
-            if ($this->user instanceof User && $this->user->hasRole('ROLE_SUPER_ADMIN')) {
+        if ($this->user instanceof User && $this->user->hasRole('ROLE_SUPER_ADMIN')) {
 
-                if ($this->hasMultiSiteGroups) {
-                    $builder->add('sites', 'entity', array(
-                            'class'    => 'SpoutletBundle:Site',
-                            'multiple' => true,
-                            'expanded' => true,
-                            'property' => 'name'
-                        ))
-                        ->add('allLocales', 'checkbox', array('label' => 'Enable for all Locales', 'help' => 'If set to true this overrides the "locales" setting and sets this group to be visible to all sites'));
-                }
-
-                if ($this->group->getId() > 0) {
-                    $builder->add('deleted', 'checkbox', array(
-                        'label' => 'Delete Group', 'help' => 'Administratively disable this group.',
+            if ($this->hasMultiSiteGroups) {
+                $builder
+                    ->add('sites', EntityType::class, array(
+                        'class' => 'SpoutletBundle:Site',
+                        'multiple' => true,
+                        'expanded' => true,
+                        'choice_label' => 'name'
+                    ))
+                    ->add('allLocales', CheckboxType::class, array(
+                        'label' => 'Enable for all Locales',
+//                        'help' => 'If set to true this overrides the "locales" setting and sets this group to be visible to all sites',
                     ));
-                }
+            }
 
-                $builder->add('featured', 'checkbox', array(
-                    'label' => 'Featured',
-                    'help'  => 'Make this group featured on the homepage.',
-                ));
-
-                $builder->add('discussionsEnabled', 'checkbox', array(
-                    'label' => 'Discussions',
-                    'help'  => 'Enable discussions for this group.',
+            if ($this->group->getId() > 0) {
+                $builder->add('deleted', CheckboxType::class, array(
+                    'label' => 'Delete Group', 'help' => 'Administratively disable this group.',
                 ));
             }
 
-            $formAttributes = array('class'=>"formRowWidth", 'size' => 6);
+            $builder->add('featured', CheckboxType::class, array(
+                'label' => 'Featured',
+//                'help' => 'Make this group featured on the homepage.',
+            ));
 
-            $builder->add('parent', 'entity', array(
-                'class' => 'Platformd\GroupBundle\Entity\Group',
-                'property' => 'name',
-                'empty_value' => '<None>',
-                'label' => 'Parent Group',
-                'attr' => $formAttributes,
-                'query_builder' => function(EntityRepository $er) {
-                    $qb = $er->createQueryBuilder('g')
-                        ->leftJoin('g.sites', 's')
-                        ->andWhere('(s = :site OR g.allLocales = true)')
-                        ->andWhere('g.deleted = false')
-                        ->setParameter('site', $this->currentSite);
-                    if ($groupId = $this->group->getId()) {
-                            // Where the group is not the current group
-                        $qb ->andWhere('g.id != :thisGroupId')
-                            // Where the current group is not the parent of the group
-                            ->andWhere('g.parentGroup is NULL or g.parentGroup != :thisGroupId')
-                            ->setParameter('thisGroupId', $groupId);
+            $builder->add('discussionsEnabled', CheckboxType::class, array(
+                'label' => 'Discussions',
+//                'help' => 'Enable discussions for this group.',
+            ));
+        }
+
+        $builder->add('parent', EntityType::class, array(
+            'class' => Group::class,
+            'choice_label' => 'name',
+            'placeholder' => '<None>',
+            'label' => 'Parent Group',
+            'attr' => array(
+                'class' => 'formRowWidth',
+                'size' => 6
+            ),
+            'query_builder' => function (EntityRepository $er) {
+                $qb = $er->createQueryBuilder('g')
+                    ->leftJoin('g.sites', 's')
+                    ->andWhere('(s = :site OR g.allLocales = true)')
+                    ->andWhere('g.deleted = false')
+                    ->setParameter('site', $this->currentSite);
+                if ($groupId = $this->group->getId()) {
+                    // Where the group is not the current group
+                    $qb->andWhere('g.id != :thisGroupId')
+                        // Where the current group is not the parent of the group
+                        ->andWhere('g.parentGroup is NULL or g.parentGroup != :thisGroupId')
+                        ->setParameter('thisGroupId', $groupId);
+                }
+                return $qb;
+            },
+        ));
+
+        $builder->add('children', EntityType::class, array(
+            'class' => 'Platformd\GroupBundle\Entity\Group',
+            'choice_label' => 'name',
+            'label' => 'Sub Groups (Ctrl + Click to select more than one)',
+            'multiple' => true,
+            'attr' => array(
+                'class' => 'formRowWidth',
+                'size' => 6
+            ),
+            'query_builder' => function (EntityRepository $er) {
+                $qb = $er->createQueryBuilder('g')
+                    ->leftJoin('g.sites', 's')
+                    ->andWhere('(s = :site OR g.allLocales = true)')
+                    ->andWhere('g.deleted = false')
+                    ->setParameter('site', $this->currentSite);
+
+                if ($groupId = $this->group->getId()) {
+                    // Where the group is not already parented by another group
+                    $qb->andWhere('g.parentGroup is NULL or g.parentGroup = :thisGroupId')
+                        // Where the group is not the current group
+                        ->andWhere('g.id != :thisGroupId')
+                        ->setParameter('thisGroupId', $groupId);
+
+                    if ($parent = $this->group->getParent()) {
+                        // Where the group is not our own parent
+                        $qb->andWhere('g.id != :thisGroupsParentId')
+                            ->setParameter('thisGroupsParentId', $parent->getId());
                     }
-                    return $qb;
-                },
-            ));
+                }
+                return $qb;
+            },
+        ));
 
-            $builder->add('children', 'entity', array(
-                'class' => 'Platformd\GroupBundle\Entity\Group',
-                'property' => 'name',
-                'label' => 'Sub Groups (Ctrl + Click to select more than one)',
-                'multiple' => true,
-                'attr' => $formAttributes,
-                'query_builder' => function(EntityRepository $er) {
-                    $qb = $er->createQueryBuilder('g')
-                        ->leftJoin('g.sites', 's')
-                        ->andWhere('(s = :site OR g.allLocales = true)')
-                        ->andWhere('g.deleted = false')
-                        ->setParameter('site', $this->currentSite);
-
-                    if ($groupId = $this->group->getId()) {
-                        // Where the group is not already parented by another group
-                        $qb ->andWhere('g.parentGroup is NULL or g.parentGroup = :thisGroupId')
-                            // Where the group is not the current group
-                            ->andWhere('g.id != :thisGroupId')
-                            ->setParameter('thisGroupId', $groupId);
-
-                        if ($parent = $this->group->getParent()) {
-                            // Where the group is not our own parent
-                            $qb ->andWhere('g.id != :thisGroupsParentId')
-                                ->setParameter('thisGroupsParentId', $parent->getId());
-                        }
-                    }
-                    return $qb;
-                },
-            ));
-
-            $builder->add('tags', 'text', array(
-                'label' => 'tags.forms.tags',
-                'help' => "tags.forms.enter_keywords_help",
-                'property_path' => false,
-                'data' => $this->group ? $this->tagManager->getConcatenatedTagNames($this->group) : null,
-                'required' => false,
-            ));
+        $builder->add('tags', TextType::class, array(
+            'mapped' => false,
+            'label' => 'tags.forms.tags',
+//                'help' => "tags.forms.enter_keywords_help",
+            'data' => $this->group ? $this->tagManager->getConcatenatedTagNames($this->group) : null,
+            'required' => false,
+        ));
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'platformd_groupbundle_grouptype';
     }
@@ -200,24 +221,25 @@ class GroupType extends AbstractType
         $values = Group::getValidCategories();
 
         if ($parentGroup = $this->group->getParent()) {
-
-            $parentGroupCategory = $parentGroup->getCategory();
-
-            if ($parentGroupCategory == Group::CAT_TOPIC) {
-                return array(Group::CAT_LOCATION => Group::GROUP_CATEGORY_LABEL_PREFIX.Group::CAT_LOCATION);
+            if ($parentGroup->getCategory() === Group::CAT_TOPIC) {
+                return [
+                    Group::GROUP_CATEGORY_LABEL_PREFIX . Group::CAT_LOCATION => Group::CAT_LOCATION,
+                ];
+            } elseif ($parentGroup->getCategory() === Group::CAT_COMPANY) {
+                return [
+                    Group::GROUP_CATEGORY_LABEL_PREFIX . Group::CAT_DEPARTMENT => Group::CAT_DEPARTMENT,
+                ];
             }
-            elseif ($parentGroupCategory == Group::CAT_COMPANY) {
-                return array(Group::CAT_DEPARTMENT => Group::GROUP_CATEGORY_LABEL_PREFIX.Group::CAT_DEPARTMENT);
-            }
-            
+
         }
 
         // If we get here, this is not a subgroup form, don't want to show department
         foreach ($values as $value) {
-            if ($value == Group::CAT_DEPARTMENT) {
+            if ($value === Group::CAT_DEPARTMENT) {
                 continue;
             }
-            $choices[$value]  = Group::GROUP_CATEGORY_LABEL_PREFIX.$value;
+
+            $choices[Group::GROUP_CATEGORY_LABEL_PREFIX . $value] = $value ;
         }
 
         return $choices;

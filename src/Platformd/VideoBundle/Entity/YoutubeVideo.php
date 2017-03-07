@@ -190,7 +190,7 @@ class YoutubeVideo implements LinkableInterface, CommentableInterface, Reportabl
 
     /**
      * 1 = allow, 0 = deny
-     * @ORM\Column(name="restriction_type", type="boolean", nullable="true")
+     * @ORM\Column(name="restriction_type", type="boolean", nullable=true)
      */
     private $restrictionType;
 
@@ -206,7 +206,7 @@ class YoutubeVideo implements LinkableInterface, CommentableInterface, Reportabl
     private $restrictionsChecked;
 
     /**
-     * @ORM\Column(name="is_accessible", type="boolean", nullable="true")
+     * @ORM\Column(name="is_accessible", type="boolean", nullable=true)
      */
     private $isAccessible = true;
 

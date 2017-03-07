@@ -57,8 +57,7 @@ class SiteProtectionListener
         return;
 
         $request = $event->getRequest();
-        $session = $request->getSession();
-        $locale = $session->getLocale();
+        $locale = $request->getLocale();
 
         // if we're on of the "allowed" sites, then we're totally good
         if (in_array($locale, $this->allowedSites)) {
